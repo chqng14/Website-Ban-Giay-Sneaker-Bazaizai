@@ -14,7 +14,7 @@ namespace App_Data.Models
         public DateTime NgayBatDau { get; set; }
         public DateTime NgayKetThuc { get; set; }
         public string LoaiHinhKM { get; set; }
-        public float MucGiam { get; set; }
+        public decimal MucGiam { get; set; }
         public string PhamVi { get; set; }
         public int TrangThai { get; set; }
         public virtual ICollection<KhuyenMaiChiTiet> KhuyenMaiChiTiet { get; set; }
