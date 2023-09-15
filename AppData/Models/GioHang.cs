@@ -8,7 +8,7 @@ namespace App_Data.Models
 {
     public class GioHang
     {
-        public Guid IDUser { get; set; }
+        public Guid IdNguoiDung { get; set; }
         public DateTime NgayTao { get; set; }
         public int TrangThai { get; set; }
         public virtual IEnumerable<GioHangChiTiet> GioHangChiTiet { get; set; }
