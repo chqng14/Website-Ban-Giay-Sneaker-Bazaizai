@@ -11,7 +11,7 @@ namespace App_Data.Models
         public Guid IDUser { get; set; }
         public DateTime NgayTao { get; set; }
         public int TrangThai { get; set; }
-        //public virtual IEnumerable<> GioHangCt { get; set; }
-        //public virtual User User { get; set; }
+        public virtual IEnumerable<GioHangChiTiet> GioHangChiTiet { get; set; }
+        public virtual NguoiDung NguoiDung { get; set; }
     }
 }

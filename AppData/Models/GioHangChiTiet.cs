@@ -14,7 +14,7 @@ namespace App_Data.Models
         public int? Soluong { get; set; }
         public double? GiaGoc { get; set; }
         public int TrangThai { get; set; }
-        //public virtual Cart Cart { get; set; }
-        //public virtual ProductDetail ProductDetail { get; set; }
+        public virtual GioHang GioHang { get; set; }
+        public virtual SanPhamChiTiet SanPhamChiTiet { get; set; }
     }
 }

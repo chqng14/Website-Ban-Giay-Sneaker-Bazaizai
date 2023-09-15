@@ -13,7 +13,7 @@ namespace App_Data.Models
         public Guid IDAnh { get; set; }
         public string Url { get; set; }
         public int TrangThai { get; set; }
-
         public Guid IdSanPhamChiTiet { get; set; }
+        public virtual SanPhamChiTiet SanPhamChiTiets { get; set; }
     }
 }

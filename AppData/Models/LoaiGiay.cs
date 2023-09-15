@@ -12,6 +12,6 @@ namespace App_Data.Models
         public string? MaLoaiGiay { get; set; }
         public string? TenLoaiGiay { get; set; }
         public int? TrangThai { get; set; }
-        //public virtual List<ProductDetail> ProductDetail { get; set; }
+        public virtual List<SanPhamChiTiet> SanPhamChiTiets { get; set; }
     }
 }

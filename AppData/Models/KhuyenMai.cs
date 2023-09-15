@@ -6,19 +6,18 @@ using System.Threading.Tasks;
 
 namespace App_Data.Models
 {
-    public class Sale
+    public class KhuyenMai
     {
-        public Guid IDSale { get; set; }
-        public string Ma { get; set; }
+        public Guid IDKhuyenMai { get; set; }
+        public string MaKhuyenMai { get; set; }
         public string TenKhuyenMai { get; set; }
         public DateTime NgayBatDau { get; set; }
         public DateTime NgayKetThuc { get; set; }
-        public string LoạiHinhKM { get; set; }
+        public string LoaiHinhKM { get; set; }
         public float MucGiam { get; set; }
         public string PhamVi { get; set; }
-
         public int TrangThai { get; set; }
-        public virtual ICollection<SaleDetails> SaleDetails { get; set; }
+        public virtual ICollection<KhuyenMaiChiTiet> KhuyenMaiChiTiet { get; set; }
 
     }
 }

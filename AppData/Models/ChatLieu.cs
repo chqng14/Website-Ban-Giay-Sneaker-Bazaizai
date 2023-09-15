@@ -12,6 +12,6 @@ namespace App_Data.Models
         public string MaChatLieu { get; set; }
         public string TenChatLieu { get; set; }
         public int TrangThai { get; set; }
-        //public virtual List<SanPhamChiTiet> SanPhamChiTiets { get; set; }
+        public virtual List<SanPhamChiTiet> SanPhamChiTiets { get; set; }
     }
 }

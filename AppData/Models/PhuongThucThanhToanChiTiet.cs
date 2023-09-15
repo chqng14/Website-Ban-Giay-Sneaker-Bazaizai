@@ -14,6 +14,6 @@ namespace App_Data.Models
 
         public double SoTien { get; set; }
         public virtual PhuongThucThanhToan PhuongThucThanhToan { get; set; }
-        //public virtual HoaDon HoaDons { get; set; }
+        public virtual HoaDon HoaDons { get; set; }
     }
 }

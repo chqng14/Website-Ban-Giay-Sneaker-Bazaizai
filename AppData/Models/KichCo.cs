@@ -9,8 +9,9 @@ namespace App_Data.Models
     public class KichCo
     {
         public Guid IDKichCo { get; set; }
-        public string Ma { get; set; }
-        public int SoZise { get; set; }
+        public string MaKichCo { get; set; }
+        public int SoKichCo { get; set; }
         public int TrangThai { get; set; }
+        public virtual List<SanPhamChiTiet> SanPhamChiTiets { get; set; }
     }
 }

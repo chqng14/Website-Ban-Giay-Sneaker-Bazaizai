@@ -8,11 +8,10 @@ namespace App_Data.Models
 {
     public class SanPhamYeuThich
     {
-        public Guid IDWhiteList { get; set; }
-        public Guid IDUser { get; set; }
-        public Guid IDChiTietSp { get; set; }
-
+        public Guid IDSanPhamYeuThich { get; set; }
+        public Guid IDNguoiDung { get; set; }
+        public Guid IDSanPhamChiTiet { get; set; }
         public int TrangThai { get; set; }
-
+        public virtual NguoiDung NguoiDung { get; set; }
     }
 }
