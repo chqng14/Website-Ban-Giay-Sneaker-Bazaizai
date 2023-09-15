@@ -6,21 +6,4 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.22" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.22">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\AppData\App_Data.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="IServices\" />
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
