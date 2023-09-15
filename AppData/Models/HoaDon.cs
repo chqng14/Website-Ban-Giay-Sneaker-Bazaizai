@@ -24,8 +24,8 @@ namespace App_Data.Models
         public int? TrangThai { get; set; }
         public int? TrangThaiThanhToan { get; set; }
         public virtual List<HoaDonChiTiet> HoaDonChiTiet { get; set; }
-        //public virtual PhuongThucGiaoHang PhuongThucGiaoHang { get; set; }
-        //public virtual Voucher Voucher { get; set; }
-        //public virtual List<PhuongThucThanhToanChiTiet> PhuongThucThanhToanChiTiet { get; set; }
+        public virtual ThongTinGiaoHang ThongTinGiaoHang { get; set; }
+        public virtual Voucher Voucher { get; set; }
+        public virtual List<PhuongThucThanhToanChiTiet> PhuongThucThanhToanChiTiet { get; set; }
     }
 }
