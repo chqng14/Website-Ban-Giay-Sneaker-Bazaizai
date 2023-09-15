@@ -8,7 +8,7 @@ namespace App_Data.Models
 {
     public class Voucher
     {
-        public Guid IdVoucher {get; set;}
+        public Guid IdVoucher { get; set; }
         public string MaVoucher { get; set; }
         public string TenVoucher { get; set; }
         public string DieuKien { get; set; }
@@ -19,5 +19,6 @@ namespace App_Data.Models
         public DateTime NgayKetThuc { get; set; }
         public int TrangThai { get; set; }
         public virtual IEnumerable<VoucherNguoiDung> VoucherNguoiDungs { get; set; }
+        public virtual List<HoaDon> HoaDon { get; set; }
     }
 }

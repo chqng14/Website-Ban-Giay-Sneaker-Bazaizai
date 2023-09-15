@@ -22,7 +22,6 @@ namespace App_Data.Models
         public int TrangThai { get; set; }
         public virtual ICollection<ChucVu> ChucVus { get; set; }
         public virtual IEnumerable<ThongTinGiaoHang> ThongTinGiaoHangs { get; set; }
-
         public virtual List<SanPhamYeuThich> SanPhamYeuThich { get; set; }
     }
 }
