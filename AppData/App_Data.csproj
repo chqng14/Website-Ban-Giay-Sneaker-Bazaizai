@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <Folder Include="DbContext\" />
-    <Folder Include="Models\" />
     <Folder Include="IServices\" />
     <Folder Include="Services\" />
   </ItemGroup>
