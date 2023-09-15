@@ -18,7 +18,7 @@ namespace App_Data.Models
         public DateTime NgayBatDau { get; set; }
         public DateTime NgayKetThuc { get; set; }
         public int TrangThai { get; set; }
-        public virtual IEnumerable<VoucherNguoiDung> VoucherNguoiDungs { get; set; }
+        public virtual List<VoucherNguoiDung> VoucherNguoiDungs { get; set; }
         public virtual List<HoaDon> HoaDon { get; set; }
     }
 }

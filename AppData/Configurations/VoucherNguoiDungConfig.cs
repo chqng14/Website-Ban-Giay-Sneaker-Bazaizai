@@ -14,6 +14,10 @@ namespace App_Data.Configurations
         public void Configure(EntityTypeBuilder<VoucherNguoiDung> builder)
         {
             builder.HasKey(c => c.IdVouCherNguoiDung);
+
+            builder.HasOne(x => x.Vouchers).WithMany(c => c.VoucherNguoiDungs).HasForeignKey(c => c.IdVouCher);
+
+            builder.HasOne(x => x.NguoiDungs).WithMany(c => c.VoucherNguoiDungs).HasForeignKey(c => c.IdNguoiDung);
         }
     }
 }

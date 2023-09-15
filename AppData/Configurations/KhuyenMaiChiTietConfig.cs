@@ -13,7 +13,7 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<KhuyenMaiChiTiet> builder)
         {
-            //builder.ToTable("KhuyenMaiChiTiet");
+            builder.ToTable("KhuyenMaiChiTiet");
             builder.HasKey(e => e.IDKhuyenMaiChiTiet);
             builder.Property(e => e.IDKhuyenMaiChiTiet).HasDefaultValueSql("(newid())");
             builder.Property(e => e.IDSanPhamChiTiet).HasColumnName("IDSanPhamChiTiet");

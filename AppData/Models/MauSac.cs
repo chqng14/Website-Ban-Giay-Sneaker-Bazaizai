@@ -11,8 +11,8 @@ namespace App_Data.Models
     {
         [Key]
         public Guid IDMauSac { get; set; }
-        public string Ma { get; set; }
-        public string Ten { get; set; }
+        public string MaMauSac { get; set; }
+        public string TenMauSac { get; set; }
         public int TrangThai { get; set; }
         public virtual List<SanPhamChiTiet> SanPhamChiTiets { get; set; }
     }

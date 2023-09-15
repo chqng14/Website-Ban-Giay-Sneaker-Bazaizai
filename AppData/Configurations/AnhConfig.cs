@@ -15,7 +15,7 @@ namespace App_Data.Configurations
         {
 
             builder.HasKey(x => x.IDAnh);
-            builder.Property(x => x.Url).HasColumnType("nvachar(max)").
+            builder.Property(x => x.Url).HasColumnType("nvarchar(max)").
             IsRequired();
             builder.HasOne(x => x.SanPhamChiTiets).WithMany(y => y.Anh).
             HasForeignKey(c => c.IdSanPhamChiTiet);
