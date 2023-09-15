@@ -10,7 +10,7 @@ namespace App_Data.Models
     {
         public Guid IdNguoiDung { get; set; }
         public Guid IdChucVu { get; set; }
-        public string MaUser { get; set; }
+        public string MaNguoiDung { get; set; }
         public string TenNguoiDung { get; set; }
         public string SDT { get; set; }
         public int GioiTinh { get; set; }
@@ -20,9 +20,8 @@ namespace App_Data.Models
         public string MatKhau { get; set; }
         public string AnhDaiDien { get; set; }
         public int TrangThai { get; set; }
-        public virtual ICollection<ChucVu> ChucVus { get; set; }
+        public virtual ICollection<ChucVu> ChucVu { get; set; }
         public virtual IEnumerable<ThongTinGiaoHang> ThongTinGiaoHangs { get; set; }
-
         public virtual List<SanPhamYeuThich> SanPhamYeuThich { get; set; }
     }
 }

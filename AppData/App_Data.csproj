@@ -16,12 +16,12 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="OpenXmlPowerTools" Version="4.5.3.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="DbContext\" />
     <Folder Include="IServices\" />
-    <Folder Include="Configurations\" />
     <Folder Include="Services\" />
   </ItemGroup>
 
