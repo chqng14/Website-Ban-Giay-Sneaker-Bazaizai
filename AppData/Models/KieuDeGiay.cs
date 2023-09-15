@@ -9,10 +9,9 @@ namespace App_Data.Models
     public class KieuDeGiay
     {
         public Guid IdKieuDeGiay { get; set; }
-        public string MaKieuDeGiay { get; set; }
+        public string  MaKieuDeGiay { get; set; }
         public string TenKieuDeGiay { get; set; }
         public int Trangthai { get; set; }
-
         public virtual List<SanPhamChiTiet> SanPhamChiTiets { get; set; }
     }
 }
