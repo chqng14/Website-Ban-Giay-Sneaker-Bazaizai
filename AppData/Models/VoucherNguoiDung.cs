@@ -12,7 +12,8 @@ namespace App_Data.Models
         public Guid IdNguoiDung { get; set; }
         public Guid IdVouCher { get; set; }
         public int TrangThai { get; set; }
-        public virtual ICollection<NguoiDung> NguoiDungs { get; set; }
-        public virtual ICollection<Voucher> Vouchers { get; set; }
+        public virtual NguoiDung NguoiDungs { get; set; }
+        public virtual Voucher Vouchers { get; set; }
+
     }
 }

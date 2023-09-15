@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,9 @@ namespace App_Data.Models
         public string MatKhau { get; set; }
         public string AnhDaiDien { get; set; }
         public int TrangThai { get; set; }
-        public virtual ICollection<ChucVu> ChucVu { get; set; }
+        public virtual List<VoucherNguoiDung> VoucherNguoiDungs { get; set; }
+        public virtual List<ChucVu> ChucVu
+        { get; set; }
         public virtual IEnumerable<ThongTinGiaoHang> ThongTinGiaoHangs { get; set; }
         public virtual List<SanPhamYeuThich> SanPhamYeuThich { get; set; }
     }

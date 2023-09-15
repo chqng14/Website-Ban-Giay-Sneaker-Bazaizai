@@ -15,7 +15,7 @@ namespace App_Data.Configurations
         {
             builder.HasKey(x => x.IDChatLieu);
             builder.Property(x => x.MaChatLieu).HasColumnType("nvarchar(1000)");
-            builder.Property(x => x.TenChatLieu).HasColumnType("nvarchar(1000");
+            builder.Property(x => x.TenChatLieu).HasColumnType("nvarchar(1000)");
         }
     }
 }

@@ -16,7 +16,6 @@ namespace App_Data.Configurations
             builder.HasKey(c => c.IDSanPhamYeuThich);
             builder.Property(e => e.IDSanPhamYeuThich).HasDefaultValueSql("(newid())");
             builder.HasOne(d => d.NguoiDung).WithMany(p => p.SanPhamYeuThich).HasForeignKey(d => d.IDNguoiDung);
-            builder.Property(c => c.IDSanPhamChiTiet).IsRequired(false);
             builder.Property(e => e.TrangThai).HasDefaultValueSql("((0))");
         }
     }

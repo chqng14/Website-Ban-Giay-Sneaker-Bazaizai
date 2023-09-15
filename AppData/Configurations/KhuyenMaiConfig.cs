@@ -14,7 +14,7 @@ namespace App_Data.Configurations
         public void Configure(EntityTypeBuilder<KhuyenMai> builder)
         {
 
-            //builder.ToTable("KhuyenMai");
+            builder.ToTable("KhuyenMai");
             builder.HasKey(e => e.IDKhuyenMai);
             builder.Property(e => e.IDKhuyenMai).HasDefaultValueSql("(newid())");
             builder.Property(e => e.TenKhuyenMai).HasMaxLength(1000);

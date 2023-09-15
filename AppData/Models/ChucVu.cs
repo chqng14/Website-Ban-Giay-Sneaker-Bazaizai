@@ -11,7 +11,7 @@ namespace App_Data.Models
         public Guid IdChucVu { get; set; }
         public string MaChucVu { get; set; }
         public string TenChucVu { get; set; }
-        public string TrangThai { get; set; }
+        public int TrangThai { get; set; }
         public virtual IEnumerable<NguoiDung> NguoiDungs { get; set; }
     }
 }
