@@ -41,7 +41,7 @@ namespace App_Api.Controllers
                 MaTS = "KC" + (repos.GetAll().Count() + 1);
             }
             KichCo b = new KichCo();
-            b.IDKichCo = Guid.NewGuid();
+            b.IdKichCo = Guid.NewGuid().ToString();
             b.MaKichCo = MaTS;
             b.SoKichCo = KichCo;      
             b.TrangThai = TrangThai;
@@ -50,9 +50,9 @@ namespace App_Api.Controllers
 
 
         [HttpPut("{id}")]
-        public bool EditKichCo(Guid id,int TrangThai, int KichCo, string ma)
+        public bool EditKichCo(string id,int TrangThai, int KichCo, string ma)
         {
-            var b = repos.GetAll().First(p => p.IDKichCo == id);
+            var b = repos.GetAll().First(p => p.IdKichCo == id);
             b.MaKichCo = ma;
             b.SoKichCo = KichCo ;
             b.TrangThai = TrangThai;
@@ -60,9 +60,9 @@ namespace App_Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteKichCo(Guid id)
+        public bool DeleteKichCo(string id)
         {
-            var KichCo = repos.GetAll().First(p => p.IDKichCo == id);
+            var KichCo = repos.GetAll().First(p => p.IdKichCo == id);
             return repos.RemoveItem(KichCo);
         }
     }

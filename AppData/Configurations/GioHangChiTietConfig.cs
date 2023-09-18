@@ -16,8 +16,8 @@ namespace App_Data.Configurations
             builder.HasKey(x => x.IdGioHangChiTiet);
             builder.Property(x => x.Soluong).HasColumnType("int");
             builder.Property(x => x.TrangThai).HasColumnType("int");
-            builder.HasOne(x => x.GioHang).WithMany(x => x.GioHangChiTiet).HasForeignKey(x => x.IDNguoiDung);
-            builder.HasOne(x => x.SanPhamChiTiet).WithMany(x => x.GioHangChiTiet).HasForeignKey(x => x.IDSanPhamCT);
+            builder.HasOne(x => x.GioHang).WithMany(x => x.GioHangChiTiet).HasForeignKey(x => x.IdNguoiDung);
+            builder.HasOne(x => x.SanPhamChiTiet).WithMany(x => x.GioHangChiTiet).HasForeignKey(x => x.IdSanPhamCT);
         }
     }
 }

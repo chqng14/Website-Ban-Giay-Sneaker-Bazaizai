@@ -13,8 +13,8 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ThuongHieu> builder)
         {
-            builder.HasKey(e => e.IDThuongHieu);
-            builder.Property(e => e.IDThuongHieu).HasDefaultValueSql("(newid())");        
+            builder.HasKey(e => e.IdThuongHieu);
+            builder.Property(e => e.IdThuongHieu).HasDefaultValueSql("(newid())");        
             builder.Property(e => e.MaThuongHieu).HasColumnType("nvarchar(20)");
             builder.Property(c => c.TenThuongHieu).HasColumnType("nvarchar(1000)").IsRequired(true);
             builder.Property(e => e.TrangThai).HasDefaultValueSql("((0))");

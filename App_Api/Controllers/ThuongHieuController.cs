@@ -50,7 +50,7 @@ namespace App_Api.Controllers
                 MaTS = "TH" + (repos.GetAll().Count() + 1);
             }
             ThuongHieu b = new ThuongHieu();
-            b.IDThuongHieu = Guid.NewGuid();
+            b.IdThuongHieu = Guid.NewGuid().ToString();
             b.MaThuongHieu = MaTS;
             b.TenThuongHieu = Ten;
             b.TrangThai = trangThai;
@@ -58,9 +58,9 @@ namespace App_Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public bool EditThuongHieu(Guid id,string Ma, int trangThai, string Ten)
+        public bool EditThuongHieu(string id,string Ma, int trangThai, string Ten)
         {
-            var b = repos.GetAll().First(p => p.IDThuongHieu == id);
+            var b = repos.GetAll().First(p => p.IdThuongHieu == id);
             b.MaThuongHieu = Ma;
             b.TenThuongHieu = Ten;
             b.TrangThai = trangThai;
@@ -68,9 +68,9 @@ namespace App_Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteThuongHieu(Guid id)
+        public bool DeleteThuongHieu(string id)
         {
-            var ThuongHieu = repos.GetAll().First(p => p.IDThuongHieu == id);
+            var ThuongHieu = repos.GetAll().First(p => p.IdThuongHieu == id);
             return repos.RemoveItem(ThuongHieu);
         }
     }

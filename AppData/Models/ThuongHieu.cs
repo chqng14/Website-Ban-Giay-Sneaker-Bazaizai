@@ -8,7 +8,7 @@ namespace App_Data.Models
 {
     public class ThuongHieu
     {
-        public Guid IDThuongHieu { get; set; }
+        public string IdThuongHieu { get; set; }
         public string MaThuongHieu { get; set; }
         public string TenThuongHieu { get; set; }
         public int TrangThai { get; set; }

@@ -30,7 +30,7 @@ namespace App_Api.Controllers
 
         [HttpPost]
 
-        public bool CreateKhuyenMai(Guid id, string Ten, DateTime ngayBD, DateTime ngayKT,int trangThai,decimal mucGiam, string PhamVi, string loaiHinh)
+        public bool CreateKhuyenMai( string Ten, DateTime ngayBD, DateTime ngayKT,int trangThai,decimal mucGiam, string PhamVi, string loaiHinh)
         {
             string MaTS;
             if (repos.GetAll().Count() == null)
@@ -45,7 +45,7 @@ namespace App_Api.Controllers
             KhuyenMai KhuyenMai = new KhuyenMai();
             KhuyenMai.TenKhuyenMai = Ten;
             KhuyenMai.MaKhuyenMai = MaTS;
-            KhuyenMai.IDKhuyenMai = Guid.NewGuid();
+            KhuyenMai.IdKhuyenMai = Guid.NewGuid().ToString();
             KhuyenMai.TrangThai = trangThai;
             KhuyenMai.NgayBatDau = ngayBD;
             KhuyenMai.NgayKetThuc =ngayKT;
@@ -57,9 +57,9 @@ namespace App_Api.Controllers
 
 
         [HttpPut("{id}")]
-        public bool EditKhuyenMai(Guid id, string Ten, string ma, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, string PhamVi, string loaiHinh)
+        public bool EditKhuyenMai(string id, string Ten, string ma, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, string PhamVi, string loaiHinh)
         {
-            var KhuyenMai = repos.GetAll().First(p => p.IDKhuyenMai == id);
+            var KhuyenMai = repos.GetAll().First(p => p.IdKhuyenMai == id);
             KhuyenMai.TenKhuyenMai = Ten;
             KhuyenMai.MaKhuyenMai = ma;
             KhuyenMai.TrangThai = trangThai;
@@ -72,9 +72,9 @@ namespace App_Api.Controllers
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteKhuyenMai(Guid id)
+        public bool DeleteKhuyenMai(string id)
         {
-            var KhuyenMai = repos.GetAll().First(p => p.IDKhuyenMai == id);
+            var KhuyenMai = repos.GetAll().First(p => p.IdKhuyenMai == id);
             return repos.RemoveItem(KhuyenMai);
         }
     }

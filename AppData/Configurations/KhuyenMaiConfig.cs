@@ -14,8 +14,8 @@ namespace App_Data.Configurations
         public void Configure(EntityTypeBuilder<KhuyenMai> builder)
         {
             builder.ToTable("KhuyenMai");
-            builder.HasKey(e => e.IDKhuyenMai);
-            builder.Property(e => e.IDKhuyenMai).HasDefaultValueSql("(newid())");
+            builder.HasKey(e => e.IdKhuyenMai);
+            builder.Property(e => e.IdKhuyenMai).HasDefaultValueSql("(newid())");
             builder.Property(e => e.TenKhuyenMai).HasMaxLength(1000);
             builder.Property(e => e.MaKhuyenMai).HasColumnType("nvarchar(20)");
             builder.Property(e => e.MucGiam).HasColumnType("decimal(18, 0)").HasDefaultValueSql("((0))");

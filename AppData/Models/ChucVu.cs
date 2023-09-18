@@ -8,7 +8,7 @@ namespace App_Data.Models
 {
     public class ChucVu
     {
-        public Guid IdChucVu { get; set; }
+        public string IdChucVu { get; set; }
         public string MaChucVu { get; set; }
         public string TenChucVu { get; set; }
         public int TrangThai { get; set; }

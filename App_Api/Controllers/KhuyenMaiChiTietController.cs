@@ -30,7 +30,7 @@ namespace App_Api.Controllers
 
         [HttpPost]
 
-        public bool CreateKhuyenMaiChiTiet(string mota, int trangThai, Guid IDKm, Guid IDSpCt)
+        public bool CreateKhuyenMaiChiTiet(string mota, int trangThai, string IDKm, string IDSpCt)
         {
             string MaTS;
             if (repos.GetAll().Count() == null)
@@ -42,9 +42,9 @@ namespace App_Api.Controllers
                 MaTS = "KMCT" + (repos.GetAll().Count() + 1);
             }
             KhuyenMaiChiTiet b = new KhuyenMaiChiTiet();
-            b.IDKhuyenMaiChiTiet = Guid.NewGuid();
-            b.IDKhuyenMai = IDKm;
-            b.IDSanPhamChiTiet = IDSpCt;
+            b.IdKhuyenMaiChiTiet = Guid.NewGuid().ToString();
+            b.IdKhuyenMai = IDKm;
+            b.IdSanPhamChiTiet = IDSpCt;
             b.MoTa=mota;
             b.TrangThai=trangThai;
             return repos.AddItem(b);
@@ -52,20 +52,20 @@ namespace App_Api.Controllers
 
 
         [HttpPut("{id}")]
-        public bool EditKhuyenMaiChiTiet(Guid id, string mota, int trangThai, Guid IDKm, Guid IDSpCt)
+        public bool EditKhuyenMaiChiTiet(string id, string mota, int trangThai, string IDKm, string IDSpCt)
         {
-            var b = repos.GetAll().First(p => p.IDKhuyenMaiChiTiet == a.IDKhuyenMaiChiTiet);
-            b.IDKhuyenMai = IDKm;
-            b.IDSanPhamChiTiet = IDSpCt;
+            var b = repos.GetAll().First(p => p.IdKhuyenMaiChiTiet == id);
+            b.IdKhuyenMai = IDKm;
+            b.IdSanPhamChiTiet = IDSpCt;
             b.MoTa = mota;
             b.TrangThai = trangThai;
             return repos.EditItem(b);
         }
 
         [HttpDelete("{id}")]
-        public bool DeleteKhuyenMaiChiTiet(Guid id)
+        public bool DeleteKhuyenMaiChiTiet(string id)
         {
-            var KhuyenMaiChiTiet = repos.GetAll().First(p => p.IDKhuyenMaiChiTiet == id);
+            var KhuyenMaiChiTiet = repos.GetAll().First(p => p.IdKhuyenMaiChiTiet == id);
             return repos.RemoveItem(KhuyenMaiChiTiet);
         }
     }

@@ -8,10 +8,11 @@ namespace App_Data.Models
 {
     public class SanPhamYeuThich
     {
-        public Guid IDSanPhamYeuThich { get; set; }
-        public Guid IDNguoiDung { get; set; }
-        public Guid IDSanPhamChiTiet { get; set; }
+        public string IdSanPhamYeuThich { get; set; }
+        public string IdNguoiDung { get; set; }
+        public string IdSanPhamChiTiet { get; set; }
         public int TrangThai { get; set; }
         public virtual NguoiDung NguoiDung { get; set; }
+        public virtual SanPhamChiTiet SanPhamChiTiet { get; set; }
     }
 }
