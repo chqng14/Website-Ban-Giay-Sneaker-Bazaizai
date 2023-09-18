@@ -30,7 +30,7 @@ namespace App_Api.Controllers
 
         // GET api/<LoaiGiayController>/5
         [HttpGet("GetLoaiGiayById")]
-        public LoaiGiay GetLoaiGiayById(Guid id)
+        public LoaiGiay GetLoaiGiayById(string id)
         {
             return allRepo.GetAll().FirstOrDefault(c => c.IdLoaiGiay == id);
         }
@@ -42,15 +42,15 @@ namespace App_Api.Controllers
             string ma;
             if (allRepo.GetAll().Count() == null)
             {
-                ma = "HD1";
+                ma = "LG1";
             }
             else
             {
-                ma = "HD" + (allRepo.GetAll().Count() + 1);
+                ma = "LG" + (allRepo.GetAll().Count() + 1);
             }
             LoaiGiay lg = new LoaiGiay()
             {
-                IdLoaiGiay = Guid.NewGuid(),
+                IdLoaiGiay = Guid.NewGuid().ToString(),
                 MaLoaiGiay = ma,
                 TenLoaiGiay = TenLoaiGiay,
                 TrangThai = TrangThai,
@@ -60,7 +60,7 @@ namespace App_Api.Controllers
 
         // PUT api/<LoaiGiayController>/5
         [HttpPut("Edit")]
-        public bool Put(Guid idLoaiGiay, string TenLoaiGiay, string MaLoaiGiay, int TrangThai)
+        public bool Put(string idLoaiGiay, string TenLoaiGiay, string MaLoaiGiay, int TrangThai)
         {
             var lg = allRepo.GetAll().First(p => p.IdLoaiGiay == idLoaiGiay);
             lg.TenLoaiGiay = TenLoaiGiay;
@@ -71,7 +71,7 @@ namespace App_Api.Controllers
 
         // DELETE api/<LoaiGiayController>/5
         [HttpDelete("Delete")]
-        public bool Delete(Guid idLoaiGiay)
+        public bool Delete(string idLoaiGiay)
         {
             var lg = allRepo.GetAll().First(p => p.IdLoaiGiay == idLoaiGiay);
             return allRepo.RemoveItem(lg);

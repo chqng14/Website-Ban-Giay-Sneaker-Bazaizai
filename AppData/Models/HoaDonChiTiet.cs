@@ -8,9 +8,9 @@ namespace App_Data.Models
 {
     public class HoaDonChiTiet
     {
-        public Guid IdHoaDonChiTiet { get; set; }
-        public Guid? IdHoaDon { get; set; }
-        public Guid? IdSanPhamChiTiet { get; set; }
+        public string IdHoaDonChiTiet { get; set; }
+        public string? IdHoaDon { get; set; }
+        public string? IdSanPhamChiTiet { get; set; }
         public int? SoLuong { get; set; }
         public double? GiaGoc { get; set; }
         public double? GiaBan { get; set; }

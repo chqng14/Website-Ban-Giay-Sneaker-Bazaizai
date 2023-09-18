@@ -10,7 +10,7 @@ namespace App_Data.Models
     public class MauSac
     {
         [Key]
-        public Guid IDMauSac { get; set; }
+        public string IdMauSac { get; set; }
         public string MaMauSac { get; set; }
         public string TenMauSac { get; set; }
         public int TrangThai { get; set; }

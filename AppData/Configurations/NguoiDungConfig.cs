@@ -26,7 +26,7 @@ namespace App_Data.Configurations
             builder.Property(c => c.TenDangNhap).HasColumnType("nvarchar(300)").IsRequired();
             builder.Property(c => c.TrangThai).HasColumnType("int").IsRequired();
             builder.Property(c => c.AnhDaiDien).HasColumnType("nvarchar(300)").IsRequired(false);
-
+            builder.HasOne(x => x.ChucVu).WithMany(x => x.NguoiDungs).HasForeignKey(x => x.IdChucVu);
 
         }
     }

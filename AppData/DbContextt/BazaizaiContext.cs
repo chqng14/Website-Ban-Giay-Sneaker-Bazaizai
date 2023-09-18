@@ -14,14 +14,14 @@ namespace App_Data.DbContextt
     {
         public BazaizaiContext()
         {
-                
+
         }
-     
+
         public BazaizaiContext(DbContextOptions options) : base(options)
         {
         }
 
-      
+
 
         public DbSet<Anh> Anh { get; set; }
         public DbSet<ChatLieu> ChatLieus { get; set; }
@@ -57,6 +57,6 @@ namespace App_Data.DbContextt
             optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-8RSAFN0\HKLADOI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
         }
 
-    
+
     }
 }

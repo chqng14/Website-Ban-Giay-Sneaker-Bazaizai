@@ -31,14 +31,14 @@ namespace App_Api.Controllers
 
         // GET api/<HoaDonController>/5
         [HttpGet("GetHoaDonById")]
-        public HoaDon GetHoaDonById(Guid id)
+        public HoaDon GetHoaDonById(string id)
         {
             return allRepo.GetAll().FirstOrDefault(c => c.IdHoaDon == id);
         }
 
         // POST api/<HoaDonController>
         [HttpPost("Create")]
-        public bool Post(Guid IdVoucher, Guid IdKhachHang, Guid IdThongTinGH, DateTime NgayTao, DateTime NgayThanhToan, DateTime NgayShip, DateTime NgayNhan, double TienShip, double TienGiam, double TongTien, string MoTa, int TrangThai, int TrangThaiThanhToan)
+        public bool Post(string IdVoucher, string IdNguoiDung, string IdKhachHang, string IdThongTinGH, DateTime NgayTao, DateTime NgayThanhToan, DateTime NgayShip, DateTime NgayNhan, double TienShip, double TienGiam, double TongTien, string MoTa, int TrangThai, int TrangThaiThanhToan)
         {
             string ma;
             if (allRepo.GetAll().Count() == null)
@@ -51,8 +51,10 @@ namespace App_Api.Controllers
             }
             HoaDon hd = new HoaDon()
             {
-                IdHoaDon = Guid.NewGuid(),
+                IdHoaDon = Guid.NewGuid().ToString(),
                 IdVoucher = IdVoucher,
+                IdKhachHang = IdKhachHang,
+                IdNguoiDung = IdNguoiDung,
                 IdThongTinGH = IdThongTinGH,
                 MaHoaDon = ma,
                 NgayTao = NgayTao,
@@ -71,10 +73,14 @@ namespace App_Api.Controllers
 
         // PUT api/<HoaDonController>/5
         [HttpPut("Edit")]
-        public bool Put(Guid idHoaDon, Guid IdVoucher, Guid IdThongTinGH, string MaHoaDon, DateTime NgayTao, DateTime NgayThanhToan, DateTime NgayShip, DateTime NgayNhan, double TienShip, double TienGiam, double TongTien, string MoTa, int TrangThai, int TrangThaiThanhToan)
+        public bool Put(string idHoaDon, string IdVoucher, string IdNguoiDung, string IdKhachHang, string IdThongTinGH, string MaHoaDon, DateTime NgayTao, DateTime NgayThanhToan, DateTime NgayShip, DateTime NgayNhan, double TienShip, double TienGiam, double TongTien, string MoTa, int TrangThai, int TrangThaiThanhToan)
         {
             var hd = allRepo.GetAll().First(p => p.IdHoaDon == idHoaDon);
             hd.IdVoucher = IdVoucher;
+            hd.IdThongTinGH = IdThongTinGH;
+            hd.IdVoucher = IdVoucher;
+            hd.IdKhachHang = IdKhachHang;
+            hd.IdNguoiDung = IdNguoiDung;
             hd.IdThongTinGH = IdThongTinGH;
             hd.MaHoaDon = MaHoaDon;
             hd.NgayTao = NgayTao;
@@ -92,7 +98,7 @@ namespace App_Api.Controllers
 
         // DELETE api/<HoaDonController>/5
         [HttpDelete("Delete")]
-        public bool Delete(Guid idHoaDon)
+        public bool Delete(string idHoaDon)
         {
             var hd = allRepo.GetAll().First(p => p.IdHoaDon == idHoaDon);
             return allRepo.RemoveItem(hd);
