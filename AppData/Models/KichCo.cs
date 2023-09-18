@@ -9,7 +9,7 @@ namespace App_Data.Models
 {
     public class KichCo
     {
-        public Guid IDKichCo { get; set; }
+        public string IDKichCo { get; set; }
         public string MaKichCo { get; set; }
         public int SoKichCo { get; set; }
         public int TrangThai { get; set; }

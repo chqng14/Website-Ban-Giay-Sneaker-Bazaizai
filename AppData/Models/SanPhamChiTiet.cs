@@ -10,7 +10,7 @@ namespace App_Data.Models
     public class SanPhamChiTiet
     {
         [Key]
-        public Guid IDChiTietSp { get; set; }
+        public string IDChiTietSp { get; set; }
 
         public string? Ma { get; set; }
 
@@ -28,14 +28,14 @@ namespace App_Data.Models
 
         public int? TrangThaiSale { get; set; }
 
-        public Guid? IdSanPham { get; set; }
-        public Guid? IdKieuDeGiay { get; set; }
-        public Guid? IdXuatXu { get; set; }
-        public Guid? IdChatLieu { get; set; }
-        public Guid? IdMauSac { get; set; }
-        public Guid? IdKichCo { get; set; }
-        public Guid? IdLoaiGiay { get; set; }
-        public Guid? IdThuongHieu { get; set; }
+        public string? IdSanPham { get; set; }
+        public string? IdKieuDeGiay { get; set; }
+        public string? IdXuatXu { get; set; }
+        public string? IdChatLieu { get; set; }
+        public string? IdMauSac { get; set; }
+        public string? IdKichCo { get; set; }
+        public string? IdLoaiGiay { get; set; }
+        public string? IdThuongHieu { get; set; }
         public virtual SanPham SanPham { get; set; }
         public virtual KieuDeGiay KieuDeGiay { get; set; }
         public virtual XuatXu XuatXu { get; set; }

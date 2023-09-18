@@ -8,10 +8,10 @@ namespace App_Data.Models
 {
     public class HoaDon
     {
-        public Guid IdHoaDon { get; set; }
-        public Guid? IdUser { get; set; }
-        public Guid? IdVoucher { get; set; }
-        public Guid? IdThongTinGH { get; set; }
+        public string IdHoaDon { get; set; }
+        public string? IdUser { get; set; }
+        public string? IdVoucher { get; set; }
+        public string? IdThongTinGH { get; set; }
         public string? MaHoaDon { get; set; }
         public DateTime? NgayTao { get; set; }
         public DateTime? NgayThanhToan { get; set; }

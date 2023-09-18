@@ -8,7 +8,7 @@ namespace App_Data.Models
 {
     public class KhuyenMai
     {
-        public Guid IDKhuyenMai { get; set; }
+        public string IDKhuyenMai { get; set; }
         public string MaKhuyenMai { get; set; }
         public string TenKhuyenMai { get; set; }
         public DateTime NgayBatDau { get; set; }
