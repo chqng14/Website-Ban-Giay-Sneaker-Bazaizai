@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App_Data", "AppData\App_Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App_Api", "App_Api\App_Api.csproj", "{932E5A51-279A-42B4-AB9B-E4233EB12561}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App_View", "App_View\App_View.csproj", "{B88D5EDA-2007-4003-A2D3-F17CDFFF7663}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App_View", "App_View\App_View.csproj", "{B88D5EDA-2007-4003-A2D3-F17CDFFF7663}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
