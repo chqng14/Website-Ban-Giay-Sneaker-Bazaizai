@@ -31,7 +31,7 @@ namespace App_Api.Controllers
 
         // GET api/<SanPhamController>/5
         [HttpGet("TimSanPham={id}")]
-        public SanPham GetSanPhamByID(Guid id)
+        public SanPham GetSanPhamByID(string id)
         {
             return allRepo.GetAll().FirstOrDefault(c => c.IdSanPham == id);
         }
@@ -51,7 +51,7 @@ namespace App_Api.Controllers
             }
             var SanPham = new SanPham()
             {
-                IdSanPham = Guid.NewGuid(),
+                IdSanPham = Guid.NewGuid().ToString(),
                 MaSanPham = ma,
                 TenSanPham = ten,
                 Trangthai = trangthai
@@ -60,7 +60,7 @@ namespace App_Api.Controllers
         }
 
         [HttpPut("SuaSanPham={id}")]
-        public bool SuaSanPham(Guid id, string ma, string ten, int trangthai)
+        public bool SuaSanPham(string id, string ma, string ten, int trangthai)
         {
             var SanPham = new SanPham()
             {
@@ -74,7 +74,7 @@ namespace App_Api.Controllers
 
         // DELETE api/<SanPhamController>/5
         [HttpDelete("XoaSanPham={id}")]
-        public bool XoaSanPham(Guid id)
+        public bool XoaSanPham(string id)
         {
             var SanPham = allRepo.GetAll().FirstOrDefault(c => c.IdSanPham == id);
             return allRepo.RemoveItem(SanPham);

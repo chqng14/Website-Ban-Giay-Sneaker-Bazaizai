@@ -8,9 +8,9 @@ namespace App_Data.Models
 {
     public class PhuongThucThanhToanChiTiet
     {
-        public Guid IDPhuongThucThanhToanChiTiet { get; set; }
-        public Guid IdHoaDon { get; set; }
-        public Guid IdThanhToan { get; set; }
+        public string IDPhuongThucThanhToanChiTiet { get; set; }
+        public string IdHoaDon { get; set; }
+        public string IdThanhToan { get; set; }
 
         public double SoTien { get; set; }
         public virtual PhuongThucThanhToan PhuongThucThanhToan { get; set; }

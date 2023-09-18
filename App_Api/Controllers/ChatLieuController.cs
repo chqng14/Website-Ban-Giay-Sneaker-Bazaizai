@@ -31,7 +31,7 @@ namespace App_Api.Controllers
 
         // GET api/<ChatLieuController>/5
         [HttpGet("{id}")]
-        public ChatLieu GetChatLieuById(Guid id)
+        public ChatLieu GetChatLieuById(string id)
         {
             return allRepo.GetAll().FirstOrDefault(c => c.IDChatLieu == id);
         }
@@ -51,7 +51,7 @@ namespace App_Api.Controllers
             }
             var Chatlieu = new ChatLieu()
             {
-                IDChatLieu = Guid.NewGuid(),
+                IDChatLieu = Guid.NewGuid().ToString(),
                 MaChatLieu = ma,
                 TenChatLieu = ten,
                 TrangThai = trangthai
@@ -61,7 +61,7 @@ namespace App_Api.Controllers
 
         // PUT api/<ChatLieuController>/5
         [HttpPut("SuaChatLieu {id}")]
-        public bool SuaChatLieu(Guid id, string ma, string ten, int trangthai)
+        public bool SuaChatLieu(string id, string ma, string ten, int trangthai)
         {
             var chatlieu = new ChatLieu()
             {
@@ -74,7 +74,7 @@ namespace App_Api.Controllers
         }
         // DELETE api/<ChatLieuController>/5
         [HttpDelete("XoaChatLieu{id}")]
-        public bool Delete(Guid id)
+        public bool Delete(string id)
         {
             var cl = allRepo.GetAll().FirstOrDefault(c => c.IDChatLieu == id);
             return allRepo.RemoveItem(cl);

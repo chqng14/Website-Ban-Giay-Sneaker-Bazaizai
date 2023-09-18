@@ -31,7 +31,7 @@ namespace App_Api.Controllers
 
         // GET api/<KieuDeGiayController>/5
         [HttpGet("TimKieuDeGiay={id}")]
-        public KieuDeGiay GetKieuDeGiayByID(Guid id)
+        public KieuDeGiay GetKieuDeGiayByID(string id)
         {
             return allRepo.GetAll().FirstOrDefault(c => c.IdKieuDeGiay == id);
         }
@@ -51,7 +51,7 @@ namespace App_Api.Controllers
             }
             var KieuDeGiay = new KieuDeGiay()
             {
-                IdKieuDeGiay = Guid.NewGuid(),
+                IdKieuDeGiay = Guid.NewGuid().ToString(),
                 MaKieuDeGiay = ma,
                 TenKieuDeGiay = ten,
                 Trangthai = trangthai
@@ -60,7 +60,7 @@ namespace App_Api.Controllers
         }
 
         [HttpPut("SuaKieuDeGiay={id}")]
-        public bool SuaKieuDeGiay(Guid id, string ma, string ten, int trangthai)
+        public bool SuaKieuDeGiay(string id, string ma, string ten, int trangthai)
         {
             var KieuDeGiay = new KieuDeGiay()
             {
@@ -74,7 +74,7 @@ namespace App_Api.Controllers
 
         // DELETE api/<KieuDeGiayController>/5
         [HttpDelete("XoaKieuDeGiay={id}")]
-        public bool XoaKieuDeGiay(Guid id)
+        public bool XoaKieuDeGiay(string id)
         {
             var KieuDeGiay = allRepo.GetAll().FirstOrDefault(c => c.IdKieuDeGiay == id);
             return allRepo.RemoveItem(KieuDeGiay);
