@@ -9,7 +9,8 @@ namespace App_Data.Models
     public class HoaDon
     {
         public string IdHoaDon { get; set; }
-        public string? IdUser { get; set; }
+        public string? IdNguoiDung { get; set; }
+        public string? IdKhachHang { get; set; }
         public string? IdVoucher { get; set; }
         public string? IdThongTinGH { get; set; }
         public string? MaHoaDon { get; set; }
@@ -25,6 +26,7 @@ namespace App_Data.Models
         public int? TrangThaiThanhToan { get; set; }
         public virtual List<HoaDonChiTiet> HoaDonChiTiet { get; set; }
         public virtual ThongTinGiaoHang ThongTinGiaoHang { get; set; }
+        public virtual KhachHang KhachHang { get; set; }
         public virtual Voucher Voucher { get; set; }
         public virtual List<PhuongThucThanhToanChiTiet> PhuongThucThanhToanChiTiet { get; set; }
     }

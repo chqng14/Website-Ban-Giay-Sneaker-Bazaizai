@@ -13,7 +13,7 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<MauSac> builder)
         {
-            builder.HasKey(x => x.IDMauSac);
+            builder.HasKey(x => x.IdMauSac);
 
         }
     }

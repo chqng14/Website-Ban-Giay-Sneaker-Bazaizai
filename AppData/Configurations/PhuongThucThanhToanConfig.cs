@@ -13,7 +13,7 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<PhuongThucThanhToan> builder)
         {
-            builder.HasKey(x => x.IDPhuongThucThanhToan);
+            builder.HasKey(x => x.IdPhuongThucThanhToan);
             builder.Property(x => x.MaPhuongThucThanhToan).HasColumnType("nvarchar(1000)");
             builder.Property(x => x.TenPhuongThucThanhToan).HasColumnType("nvarchar(1000)");
             builder.Property(x => x.MoTa).HasColumnType("nvarchar(1000)").IsRequired(false);

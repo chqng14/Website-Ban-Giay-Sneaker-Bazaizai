@@ -13,9 +13,10 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<SanPhamYeuThich> builder)
         {
-            builder.HasKey(c => c.IDSanPhamYeuThich);
-            builder.Property(e => e.IDSanPhamYeuThich).HasDefaultValueSql("(newid())");
-            builder.HasOne(d => d.NguoiDung).WithMany(p => p.SanPhamYeuThich).HasForeignKey(d => d.IDNguoiDung);
+            builder.HasKey(c => c.IdSanPhamYeuThich);
+            builder.Property(e => e.IdSanPhamYeuThich).HasDefaultValueSql("(newid())");
+            builder.HasOne(d => d.NguoiDung).WithMany(p => p.SanPhamYeuThich).HasForeignKey(d => d.IdNguoiDung);
+            builder.HasOne(d => d.SanPhamChiTiet).WithMany(p => p.SanPhamYeuThichs).HasForeignKey(d => d.IdSanPhamChiTiet);
             builder.Property(e => e.TrangThai).HasDefaultValueSql("((0))");
         }
     }

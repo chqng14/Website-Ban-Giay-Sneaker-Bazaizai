@@ -34,7 +34,7 @@ namespace App_Api.Controllers
         [HttpGet("TimPhuongThucThanhToan={id}")]
         public PhuongThucThanhToan GetPhuongThucThanhToanByID(string id)
         {
-            return allRepo.GetAll().FirstOrDefault(c => c.IDPhuongThucThanhToan == id);
+            return allRepo.GetAll().FirstOrDefault(c => c.IdPhuongThucThanhToan == id);
         }
 
         // POST api/<PhuongThucThanhToanController>
@@ -52,7 +52,7 @@ namespace App_Api.Controllers
             }
             var PhuongThucThanhToan = new PhuongThucThanhToan()
             {
-                IDPhuongThucThanhToan = Guid.NewGuid().ToString(),
+                IdPhuongThucThanhToan = Guid.NewGuid().ToString(),
                 MaPhuongThucThanhToan = ma,
                 TenPhuongThucThanhToan = ten,
                 MoTa = mota,
@@ -66,7 +66,7 @@ namespace App_Api.Controllers
         {
             var PhuongThucThanhToan = new PhuongThucThanhToan()
             {
-                IDPhuongThucThanhToan = id,
+                IdPhuongThucThanhToan = id,
                 MaPhuongThucThanhToan = ma,
                 TenPhuongThucThanhToan = ten,
                 MoTa = mota,
@@ -79,7 +79,7 @@ namespace App_Api.Controllers
         [HttpDelete("XoaPhuongThucThanhToan={id}")]
         public bool XoaPhuongThucThanhToan(string id)
         {
-            var PhuongThucThanhToan = allRepo.GetAll().FirstOrDefault(c => c.IDPhuongThucThanhToan == id);
+            var PhuongThucThanhToan = allRepo.GetAll().FirstOrDefault(c => c.IdPhuongThucThanhToan == id);
             return allRepo.RemoveItem(PhuongThucThanhToan);
         }
     }

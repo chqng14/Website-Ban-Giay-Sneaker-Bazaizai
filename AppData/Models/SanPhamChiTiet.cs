@@ -10,7 +10,7 @@ namespace App_Data.Models
     public class SanPhamChiTiet
     {
         [Key]
-        public string IDChiTietSp { get; set; }
+        public string IdChiTietSp { get; set; }
 
         public string? Ma { get; set; }
 
@@ -46,6 +46,7 @@ namespace App_Data.Models
         public virtual ThuongHieu ThuongHieu { get; set; }
         public virtual IEnumerable<Anh> Anh { get; set; }
         public virtual IEnumerable<HoaDonChiTiet> HoaDonChiTiet { get; set; }
+        public virtual IEnumerable<SanPhamYeuThich> SanPhamYeuThichs { get; set; }
         public virtual IEnumerable<GioHangChiTiet> GioHangChiTiet { get; set; }
         public virtual IEnumerable<KhuyenMaiChiTiet> KhuyenMaiChiTiet { get; set; }
     }

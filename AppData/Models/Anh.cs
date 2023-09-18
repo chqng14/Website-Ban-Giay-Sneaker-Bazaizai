@@ -10,7 +10,7 @@ namespace App_Data.Models
     public class Anh
     {
         [Key]
-        public string IDAnh { get; set; }
+        public string IdAnh { get; set; }
         public string Url { get; set; }
         public int TrangThai { get; set; }
         public string IdSanPhamChiTiet { get; set; }
