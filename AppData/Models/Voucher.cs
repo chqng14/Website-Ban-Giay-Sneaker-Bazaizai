@@ -8,7 +8,7 @@ namespace App_Data.Models
 {
     public class Voucher
     {
-        public Guid IdVoucher { get; set; }
+        public string IdVoucher { get; set; }
         public string MaVoucher { get; set; }
         public string TenVoucher { get; set; }
         public string DieuKien { get; set; }

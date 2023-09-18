@@ -24,12 +24,12 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.Anh", b =>
                 {
-                    b.Property<Guid>("IDAnh")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IDAnh")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("IdSanPhamChiTiet")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdSanPhamChiTiet")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("TrangThai")
                         .HasColumnType("int");
@@ -47,9 +47,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.ChatLieu", b =>
                 {
-                    b.Property<Guid>("IDChatLieu")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IDChatLieu")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaChatLieu")
                         .IsRequired()
@@ -69,9 +68,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.ChucVu", b =>
                 {
-                    b.Property<Guid>("IdChucVu")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdChucVu")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaChucVu")
                         .IsRequired()
@@ -91,15 +89,15 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.GioHang", b =>
                 {
-                    b.Property<Guid>("IdNguoiDung")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdNguoiDung")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("NgayTao")
                         .HasColumnType("datetime");
 
-                    b.Property<Guid>("NguoiDungIdNguoiDung")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("NguoiDungIdNguoiDung")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("TrangThai")
                         .ValueGeneratedOnAdd()
@@ -115,18 +113,17 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.GioHangChiTiet", b =>
                 {
-                    b.Property<Guid>("IdGioHangChiTiet")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdGioHangChiTiet")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double?>("GiaGoc")
                         .HasColumnType("float");
 
-                    b.Property<Guid?>("IDNguoiDung")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IDNguoiDung")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("IDSanPhamCT")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IDSanPhamCT")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("Soluong")
                         .HasColumnType("int");
@@ -145,18 +142,17 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.HoaDon", b =>
                 {
-                    b.Property<Guid>("IdHoaDon")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdHoaDon")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("IdThongTinGH")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdThongTinGH")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("IdUser")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdUser")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("IdVoucher")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdVoucher")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaHoaDon")
                         .HasColumnType("nvarchar(1000)");
@@ -202,9 +198,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.HoaDonChiTiet", b =>
                 {
-                    b.Property<Guid>("IdHoaDonChiTiet")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdHoaDonChiTiet")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double?>("GiaBan")
                         .HasColumnType("float");
@@ -212,11 +207,11 @@ namespace App_Data.Migrations
                     b.Property<double?>("GiaGoc")
                         .HasColumnType("float");
 
-                    b.Property<Guid?>("IdHoaDon")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdHoaDon")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("IdSanPhamChiTiet")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdSanPhamChiTiet")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("SoLuong")
                         .HasColumnType("int");
@@ -235,9 +230,9 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.KhuyenMai", b =>
                 {
-                    b.Property<Guid>("IDKhuyenMai")
+                    b.Property<string>("IDKhuyenMai")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("nvarchar(450)")
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("LoaiHinhKM")
@@ -281,17 +276,19 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.KhuyenMaiChiTiet", b =>
                 {
-                    b.Property<Guid>("IDKhuyenMaiChiTiet")
+                    b.Property<string>("IDKhuyenMaiChiTiet")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("nvarchar(450)")
                         .HasDefaultValueSql("(newid())");
 
-                    b.Property<Guid>("IDKhuyenMai")
-                        .HasColumnType("uniqueidentifier")
+                    b.Property<string>("IDKhuyenMai")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("IDKhuyenMai");
 
-                    b.Property<Guid>("IDSanPhamChiTiet")
-                        .HasColumnType("uniqueidentifier")
+                    b.Property<string>("IDSanPhamChiTiet")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)")
                         .HasColumnName("IDSanPhamChiTiet");
 
                     b.Property<string>("MoTa")
@@ -315,9 +312,9 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.KichCo", b =>
                 {
-                    b.Property<Guid>("IDKichCo")
+                    b.Property<string>("IDKichCo")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("nvarchar(450)")
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("MaKichCo")
@@ -339,9 +336,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.KieuDeGiay", b =>
                 {
-                    b.Property<Guid>("IdKieuDeGiay")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdKieuDeGiay")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaKieuDeGiay")
                         .IsRequired()
@@ -361,9 +357,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.LoaiGiay", b =>
                 {
-                    b.Property<Guid>("IdLoaiGiay")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdLoaiGiay")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaLoaiGiay")
                         .IsRequired()
@@ -383,9 +378,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.MauSac", b =>
                 {
-                    b.Property<Guid>("IDMauSac")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IDMauSac")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaMauSac")
                         .IsRequired()
@@ -405,9 +399,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.NguoiDung", b =>
                 {
-                    b.Property<Guid>("IdNguoiDung")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdNguoiDung")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AnhDaiDien")
                         .HasColumnType("nvarchar(300)");
@@ -419,8 +412,9 @@ namespace App_Data.Migrations
                     b.Property<int>("GioiTinh")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("IdChucVu")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdChucVu")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaNguoiDung")
                         .IsRequired()
@@ -455,9 +449,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.PhuongThucThanhToan", b =>
                 {
-                    b.Property<Guid>("IDPhuongThucThanhToan")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IDPhuongThucThanhToan")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaPhuongThucThanhToan")
                         .IsRequired()
@@ -480,15 +473,16 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.PhuongThucThanhToanChiTiet", b =>
                 {
-                    b.Property<Guid>("IDPhuongThucThanhToanChiTiet")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IDPhuongThucThanhToanChiTiet")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("IdHoaDon")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdHoaDon")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("IdThanhToan")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdThanhToan")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<double>("SoTien")
                         .HasColumnType("float");
@@ -504,9 +498,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.SanPham", b =>
                 {
-                    b.Property<Guid>("IdSanPham")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdSanPham")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaSanPham")
                         .IsRequired()
@@ -526,9 +519,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.SanPhamChiTiet", b =>
                 {
-                    b.Property<Guid>("IDChiTietSp")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IDChiTietSp")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Day")
                         .HasColumnType("nvarchar(250)");
@@ -539,29 +531,29 @@ namespace App_Data.Migrations
                     b.Property<double?>("GiaNhap")
                         .HasColumnType("float");
 
-                    b.Property<Guid?>("IdChatLieu")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdChatLieu")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("IdKichCo")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdKichCo")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("IdKieuDeGiay")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdKieuDeGiay")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("IdLoaiGiay")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdLoaiGiay")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("IdMauSac")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdMauSac")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("IdSanPham")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdSanPham")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("IdThuongHieu")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdThuongHieu")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("IdXuatXu")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdXuatXu")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Ma")
                         .HasColumnType("varchar(50)");
@@ -601,16 +593,18 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.SanPhamYeuThich", b =>
                 {
-                    b.Property<Guid>("IDSanPhamYeuThich")
+                    b.Property<string>("IDSanPhamYeuThich")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("nvarchar(450)")
                         .HasDefaultValueSql("(newid())");
 
-                    b.Property<Guid>("IDNguoiDung")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IDNguoiDung")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("IDSanPhamChiTiet")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IDSanPhamChiTiet")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TrangThai")
                         .ValueGeneratedOnAdd()
@@ -626,16 +620,16 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.ThongTinGiaoHang", b =>
                 {
-                    b.Property<Guid>("IdThongTinGH")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdThongTinGH")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DiaChi")
                         .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<Guid>("IdNguoiDung")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdNguoiDung")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SDT")
                         .IsRequired()
@@ -657,9 +651,9 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.ThuongHieu", b =>
                 {
-                    b.Property<Guid>("IDThuongHieu")
+                    b.Property<string>("IDThuongHieu")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("nvarchar(450)")
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("MaThuongHieu")
@@ -682,9 +676,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.Voucher", b =>
                 {
-                    b.Property<Guid>("IdVoucher")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdVoucher")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DieuKien")
                         .IsRequired()
@@ -724,15 +717,16 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.VoucherNguoiDung", b =>
                 {
-                    b.Property<Guid>("IdVouCherNguoiDung")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdVouCherNguoiDung")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("IdNguoiDung")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdNguoiDung")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("IdVouCher")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IdVouCher")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("TrangThai")
                         .HasColumnType("int");
@@ -748,9 +742,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.XuatXu", b =>
                 {
-                    b.Property<Guid>("IDXuatXu")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("IDXuatXu")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Ma")
                         .IsRequired()
@@ -770,11 +763,11 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("ChucVuNguoiDung", b =>
                 {
-                    b.Property<Guid>("ChucVuIdChucVu")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("ChucVuIdChucVu")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid>("NguoiDungsIdNguoiDung")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("NguoiDungsIdNguoiDung")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ChucVuIdChucVu", "NguoiDungsIdNguoiDung");
 
