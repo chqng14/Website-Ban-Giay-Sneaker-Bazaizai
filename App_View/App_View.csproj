@@ -24,4 +24,8 @@
     <ProjectReference Include="..\AppData\App_Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\AnhSanPham\" />
+  </ItemGroup>
+
 </Project>

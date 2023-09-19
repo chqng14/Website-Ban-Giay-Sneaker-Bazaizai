@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IAllRepo<Anh>, AllRepo<Anh>>();
 builder.Services.AddScoped<IAllRepo<ChatLieu>, AllRepo<ChatLieu>>();
 builder.Services.AddScoped<IAllRepo<ChucVu>, AllRepo<ChucVu>>();

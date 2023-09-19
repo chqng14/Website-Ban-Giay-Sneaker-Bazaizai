@@ -1,5 +1,7 @@
 ﻿using App_Data.IRepositories;
 using App_Data.Models;
+using App_Data.Models.ViewModels.MauSac;
+using AutoMapper;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +12,12 @@ namespace App_Api.Controllers
     public class MauSacController : ControllerBase
     {
         private readonly IAllRepo<MauSac> _mauSacRespo;
+        private readonly IMapper _mapper;
 
-        public MauSacController(IAllRepo<MauSac> mauSacRespo)
+        public MauSacController(IAllRepo<MauSac> mauSacRespo, IMapper mapper)
         {
             _mauSacRespo = mauSacRespo;
+            _mapper = mapper;
         }
 
 
@@ -27,30 +31,40 @@ namespace App_Api.Controllers
         [HttpGet("GetAllMauSac")]
         public List<MauSac> GetListMauSac()
         {
-            return _mauSacRespo.GetAll().Where(x=>x.TrangThai>0).ToList();
+            return _mauSacRespo.GetAll().Where(x => x.TrangThai == 0).ToList();
         }
 
         [HttpPost("CreateMauSac")]
-        public bool Create(MauSac mauSac)
+        public bool Create(MauSacDTO mauSacDTO)
         {
-            mauSac.MaMauSac = _mauSacRespo.GetAll().Count() == null ? "MM1" : "MM" + (_mauSacRespo.GetAll().Count() + 1);
+            mauSacDTO.IdMauSac = Guid.NewGuid().ToString();
+            var mauSac = _mapper.Map<MauSac>(mauSacDTO);
+            mauSac.TrangThai = 0;
+            mauSac.MaMauSac = _mauSacRespo.GetAll().Count() == 0 ? "MS1" : "MS" + (_mauSacRespo.GetAll().Count() + 1);
             return _mauSacRespo.AddItem(mauSac);
         }
 
         [HttpDelete("DeleteMauSac/{id}")]
-        public bool Delete(MauSac mauSac)
+        public bool Delete(string id)
         {
-            mauSac.TrangThai = 0;
-            return _mauSacRespo.EditItem(mauSac);
+            var mauSac = GetMauSac(id);
+            if(mauSac != null)
+            {
+                mauSac!.TrangThai = 1;
+                return _mauSacRespo.EditItem(mauSac);
+            }
+            return false;
+            
         }
 
-        [HttpDelete("UpdateMauSac/{id}")]
-        public bool Update(MauSac mauSac)
+        [HttpPut("UpdateMauSac")]
+        public bool Update(MauSacDTO mauSacDTO)
         {
-            var mauSacGet = GetMauSac(mauSac.IdMauSac);
-            if(mauSacGet != null)
+            var mauSacGet = GetMauSac(mauSacDTO.IdMauSac);
+            if (mauSacGet != null)
             {
-                return _mauSacRespo.AddItem(mauSac);
+                _mapper.Map(mauSacDTO,mauSacGet);
+                return _mauSacRespo.EditItem(mauSacGet);
             }
             return false;
         }
