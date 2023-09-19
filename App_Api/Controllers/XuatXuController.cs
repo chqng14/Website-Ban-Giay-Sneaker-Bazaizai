@@ -20,7 +20,7 @@ namespace App_Api.Controllers
         [HttpGet("GetXuatXu/{id}")]
         public XuatXu? GetXuatXu(string id)
         {
-            return _xuatXuRespo.GetAll().FirstOrDefault(x => x.IDXuatXu == id);
+            return _xuatXuRespo.GetAll().FirstOrDefault(x => x.IdXuatXu == id);
         }
 
 
@@ -47,7 +47,7 @@ namespace App_Api.Controllers
         [HttpDelete("UpdateXuatXu/{id}")]
         public bool Update(XuatXu xuatXu)
         {
-            var xuatXuGet = GetXuatXu(xuatXu.IDXuatXu);
+            var xuatXuGet = GetXuatXu(xuatXu.IdXuatXu);
             if (xuatXuGet != null)
             {
                 return _xuatXuRespo.AddItem(xuatXu);

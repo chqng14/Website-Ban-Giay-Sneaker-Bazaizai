@@ -20,7 +20,7 @@ namespace App_Api.Controllers
         [HttpGet("GetMauSac/{id}")]
         public MauSac? GetMauSac(string id)
         {
-            return _mauSacRespo.GetAll().FirstOrDefault(x => x.IDMauSac == id);
+            return _mauSacRespo.GetAll().FirstOrDefault(x => x.IdMauSac == id);
         }
 
 
@@ -47,7 +47,7 @@ namespace App_Api.Controllers
         [HttpDelete("UpdateMauSac/{id}")]
         public bool Update(MauSac mauSac)
         {
-            var mauSacGet = GetMauSac(mauSac.IDMauSac);
+            var mauSacGet = GetMauSac(mauSac.IdMauSac);
             if(mauSacGet != null)
             {
                 return _mauSacRespo.AddItem(mauSac);
