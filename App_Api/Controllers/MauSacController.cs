@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace App_Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class MauSacController : ControllerBase
     {
         private readonly IAllRepo<MauSac> _mauSacRespo;
@@ -16,7 +18,7 @@ namespace App_Api.Controllers
 
 
         [HttpGet("GetMauSac/{id}")]
-        public MauSac? GetMauSac(Guid id)
+        public MauSac? GetMauSac(string id)
         {
             return _mauSacRespo.GetAll().FirstOrDefault(x => x.IDMauSac == id);
         }

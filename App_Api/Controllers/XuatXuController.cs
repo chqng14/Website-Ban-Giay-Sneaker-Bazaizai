@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace App_Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class XuatXuController : ControllerBase
     {
         private readonly IAllRepo<XuatXu> _xuatXuRespo;
@@ -16,7 +18,7 @@ namespace App_Api.Controllers
 
 
         [HttpGet("GetXuatXu/{id}")]
-        public XuatXu? GetXuatXu(Guid id)
+        public XuatXu? GetXuatXu(string id)
         {
             return _xuatXuRespo.GetAll().FirstOrDefault(x => x.IDXuatXu == id);
         }

@@ -2,11 +2,10 @@
 
 namespace App_Api.Controllers
 {
-    public class SanPhamChiTietController : Controller
+    [Route("api/[controller]")]
+    [ApiController]
+    public class SanPhamChiTietController : ControllerBase
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+       
     }
 }
