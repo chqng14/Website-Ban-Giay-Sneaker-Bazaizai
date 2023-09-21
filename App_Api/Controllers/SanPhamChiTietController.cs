@@ -20,11 +20,11 @@ namespace App_Api.Controllers
         private readonly IAllRepo<SanPham> _sanPhamRes;
         private readonly IAllRepo<MauSac> _mauSacRes;
         private readonly IAllRepo<XuatXu> _xuatXuRes;
-        private readonly IAllRepo<SanPhamChiTiet> _sanPhamChiTietRes;
+        private readonly ISanPhamChiTietRespo _sanPhamChiTietRes;
         private readonly IAllRepo<Anh> _AnhRes;
         private readonly IMapper _mapper;
 
-        public SanPhamChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<ThuongHieu> thuongHieuRes, IAllRepo<LoaiGiay> loaiGiayRes, IAllRepo<KieuDeGiay> kieuDeGiayRes, IAllRepo<ChatLieu> chatLieuRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<XuatXu> xuatXuRes, IAllRepo<MauSac> mauSacRes, IAllRepo<SanPhamChiTiet> sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes)
+        public SanPhamChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<ThuongHieu> thuongHieuRes, IAllRepo<LoaiGiay> loaiGiayRes, IAllRepo<KieuDeGiay> kieuDeGiayRes, IAllRepo<ChatLieu> chatLieuRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<XuatXu> xuatXuRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes)
         {
             _kickcoRes = kickcoRes;
             _thuongHieuRes = thuongHieuRes;
@@ -63,51 +63,57 @@ namespace App_Api.Controllers
         }
 
         [HttpGet("Get-List-SanPhamChiTietViewModel")]
-        public List<SanPhamChiTietViewModel> GetListSanPham()
+        public async Task<List<SanPhamChiTietViewModel>> GetListSanPham()
         {
-            return _sanPhamChiTietRes.GetAll()
+            return (await _sanPhamChiTietRes.GetListAsync())
                 .Where(sp => sp.TrangThai == 0)
                 .Select(item => GetSanPhamChiTietViewModdel(item)).ToList();
         }
 
-        [HttpGet("Get-SanPhamChiTiet/{id}")]
-        public SanPhamChiTiet? GetSanPham(string id)
+        [HttpGet("Get-List-SanPhamChiTiet")]
+        public async Task<List<SanPhamChiTiet>> GetListSanPhamChiTiet()
         {
-            return _sanPhamChiTietRes.GetAll().FirstOrDefault(sp => sp.IdChiTietSp == id);
+            return (await _sanPhamChiTietRes.GetListAsync()).ToList();
+        }
+
+        [HttpGet("Get-SanPhamChiTiet/{id}")]
+        public async Task<SanPhamChiTiet?> GetSanPham(string id)
+        {
+            return await _sanPhamChiTietRes.GetByKeyAsync(id);
         }
 
         [HttpPost("Creat-SanPhamChiTiet")]
-        public bool CreateSanPhamChiTiet(SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<bool> CreateSanPhamChiTiet(SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietDTO);
             sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
-            sanPhamChiTiet.Ma = _sanPhamChiTietRes.GetAll().Count() == 0 ? "MASP1" : "MASP" + (_sanPhamChiTietRes.GetAll().Count() + 1);
+            sanPhamChiTiet.Ma = (await _sanPhamChiTietRes.GetListAsync()).Count() == 0 ? "MASP1" : "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
             sanPhamChiTiet.TrangThai = 0;
             sanPhamChiTiet.TrangThaiSale = 0;
-            return _sanPhamChiTietRes.AddItem(sanPhamChiTiet);
+            return await _sanPhamChiTietRes.AddAsync(sanPhamChiTiet);
         }
 
         [HttpDelete]
-        public bool DeleteSanPham(string IdSanChiTiet)
+        public async Task<bool> DeleteSanPham(string IdSanChiTiet)
         {
-            var sanPhamChiTiet = GetSanPham(IdSanChiTiet);
+            var sanPhamChiTiet = await GetSanPham(IdSanChiTiet);
             if (sanPhamChiTiet != null)
             {
                 sanPhamChiTiet.TrangThai = 1;
-                _sanPhamChiTietRes.EditItem(sanPhamChiTiet);
+                return await _sanPhamChiTietRes.UpdateAsync(sanPhamChiTiet);
             }
             return false;
         }
 
 
         [HttpPut("Update-SanPhamChiTiet")]
-        public bool Update(SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<bool> Update(SanPhamChiTietDTO sanPhamChiTietDTO)
         {
-            var spChiTiet = GetSanPham(sanPhamChiTietDTO.IdChiTietSp!);
+            var spChiTiet = await GetSanPham(sanPhamChiTietDTO.IdChiTietSp!);
             if(spChiTiet != null)
             {
                 _mapper.Map(spChiTiet, sanPhamChiTietDTO);
-                return _sanPhamChiTietRes.EditItem(spChiTiet);
+                return await _sanPhamChiTietRes.UpdateAsync(spChiTiet);
             }
             return false;
         }
