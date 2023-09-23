@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App_Data.Models.ViewModels.SanPhamChiTiet
+namespace App_Data.ViewModels.SanPhamChiTiet
 {
     public class SanPhamChiTietDTO
     {
@@ -28,5 +28,6 @@ namespace App_Data.Models.ViewModels.SanPhamChiTiet
         public string? IdKichCo { get; set; }
         public string? IdLoaiGiay { get; set; }
         public string? IdThuongHieu { get; set; }
+        public List<string>? DanhSachAnh { get; set;}
     }
 }

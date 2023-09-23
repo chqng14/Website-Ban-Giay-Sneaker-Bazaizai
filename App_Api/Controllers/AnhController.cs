@@ -1,11 +1,13 @@
 ﻿using App_Data.IRepositories;
 using App_Data.Models;
-using App_Data.Models.ViewModels.Anh;
+using App_Data.ViewModels.Anh;
 using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace App_Api.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AnhController : ControllerBase
     {
         private readonly IAllRepo<Anh> _allRepoImage;
@@ -27,38 +29,32 @@ namespace App_Api.Controllers
                 {
                     if (file.Length > 0)
                     {
-                        using (var stream = new MemoryStream())
+                        using var stream = new MemoryStream();
+                        file.CopyTo(stream);
+                        stream.Position = 0;
+
+                        using var image = SixLabors.ImageSharp.Image.Load(stream);
+
+                        if (image.Width > 400 || image.Height > 300)
                         {
-                            file.CopyTo(stream);
-                            stream.Position = 0;
-
-                            using (var image = SixLabors.ImageSharp.Image.Load(stream))
+                            image.Mutate(x => x.Resize(new ResizeOptions
                             {
-                                if (image.Width > 400 || image.Height > 300)
-                                {
-                                    image.Mutate(x => x.Resize(new ResizeOptions
-                                    {
-                                        Size = new SixLabors.ImageSharp.Size(400, 300),
-                                        Mode = ResizeMode.Max
-                                    }));
-                                }
-
-                                var encoder = new JpegEncoder
-                                {
-                                    Quality = 80
-                                };
-
-                                string fileName = Guid.NewGuid().ToString() + file.FileName;
-                                string outputPath = Path.Combine(uploadDirectory, fileName);
-
-                                using (var outputStream = new FileStream(outputPath, FileMode.Create))
-                                {
-                                    await image.SaveAsync(outputStream, encoder);
-                                }
-                                _allRepoImage.AddItem(new Anh { IdAnh = Guid.NewGuid().ToString(), IdSanPhamChiTiet = idProductDetail, Url = fileName, TrangThai = 0 });
-
-                            }
+                                Size = new SixLabors.ImageSharp.Size(400, 300),
+                                Mode = ResizeMode.Max
+                            }));
                         }
+
+                        var encoder = new JpegEncoder
+                        {
+                            Quality = 80
+                        };
+
+                        string fileName = Guid.NewGuid().ToString() + file.FileName;
+                        string outputPath = Path.Combine(uploadDirectory, fileName);
+
+                        using var outputStream = new FileStream(outputPath, FileMode.Create);
+                        await image.SaveAsync(outputStream, encoder);
+                        _allRepoImage.AddItem(new Anh { IdAnh = Guid.NewGuid().ToString(), IdSanPhamChiTiet = idProductDetail, Url = fileName, TrangThai = 0 });
                     }
                 }
 
@@ -73,7 +69,7 @@ namespace App_Api.Controllers
 
 
         [HttpDelete("delete-list-image")]
-        public IActionResult DeleteListImage(ResponseImageDeleteVM responseImageDeleteVM)
+        public IActionResult DeleteListImage(ImageDTO responseImageDeleteVM)
         {
             string currentDirectory = Directory.GetCurrentDirectory();
             string rootPath = Directory.GetParent(currentDirectory).FullName;

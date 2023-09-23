@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App_Data.Models.ViewModels.Anh
+namespace App_Data.ViewModels.Anh
 {
-    public class ResponseImageDeleteVM
+    public class ImageDTO
     {
         public string idProductDetail { get; set; }
         public List<string>? lstImageRemove { get; set; }

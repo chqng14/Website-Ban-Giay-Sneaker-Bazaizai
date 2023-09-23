@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App_Data.Models.ViewModels.SanPhamChiTiet
+namespace App_Data.ViewModels.SanPhamChiTiet
 {
     public class SanPhamChiTietViewModel
     {
