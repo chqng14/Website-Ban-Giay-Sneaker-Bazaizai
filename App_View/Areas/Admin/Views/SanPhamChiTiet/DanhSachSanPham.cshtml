@@ -1,0 +1,218 @@
+﻿@model List<App_Data.ViewModels.SanPhamChiTiet.SanPhamChiTietViewModel>
+@{
+    ViewData["Title"] = "Danh Sách sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .cursor-image {
+        cursor: pointer;
+    }
+</style>
+<div class="modal fade" id="modalSanPham">
+
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row m-b-30">
+            <div class="col-lg-8">
+                <div class="d-md-flex">
+                    <div class="m-b-10 m-r-15">
+                        <select class="custom-select" style="min-width: 180px;">
+                            <option selected="">Catergory</option>
+                            <option value="all">All</option>
+                            <option value="homeDeco">Home Decoration</option>
+                            <option value="eletronic">Eletronic</option>
+                            <option value="jewellery">Jewellery</option>
+                        </select>
+                    </div>
+                    <div class="m-b-10">
+                        <select class="custom-select" style="min-width: 180px;">
+                            <option selected="">Status</option>
+                            <option value="all">All</option>
+                            <option value="inStock">In Stock </option>
+                            <option value="outOfStock">Out of Stock</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 text-right">
+                <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("ManageSanPham", "SanPhamChiTiet")'">
+                    <i class="anticon anticon-plus-circle m-r-5"></i>
+                    <span>Quản lý sản phẩm</span>
+                </button>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <table class="table table-hover no-footer w-100" id="table-sanpham">
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).on('click', '.cursor-image', function () {
+        const id = $(this).data('data');
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/LoadPartialView?idSanPhamChiTiet='+id,
+            type: 'GET',
+            success: function (result) {
+                const modal = $('#modalSanPham');
+                modal.empty();
+                modal.html(result);
+                modal.modal("show")
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    })
+    $(() => {
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    })
+   $(document).ready(function () {
+    var table = $('#table-sanpham').DataTable({
+        ajax: {
+            url: '@Url.Action("GetDanhSachSanPham", "SanPhamChiTiet", new { area= "Admin" })',
+            type: 'GET',
+            dataType: 'json',
+            data: function (e) {
+                return {
+                    draw: e.draw,
+                    start: e.start,
+                    length: e.length,
+                    searchValue: e.search.value
+                };
+            },
+            cache: true
+        },
+        serverSide: true,
+        paging: true,
+        scrollX: true,
+        columns: [
+            {
+                data: 'idChiTietSp',
+                title: '<div class="checkbox"><input id="checkAll" type="checkbox"><label for="checkAll" class="m-b-0"></label></div>',
+                render: function (data, type, row, meta) {
+                    return `
+                    <div class="checkbox"><input id="check-item-${data}" type="checkbox"><label for="check-item-${data}" class="m-b-0"></label></div>
+                    `;
+                },
+                orderable: false
+            },
+            {
+                data: null,
+                title: 'STT',
+                render: function (data, type, row, meta) {
+                    return meta.row + 1;
+                },
+                orderable: false
+            },
+            {
+                data: null,
+                title: 'Sản phẩm',
+                render: function (data, type, row, meta) {
+                    return `
+                    <div class="d-flex align-items-center"><img data-data="${data.idChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sán phẩm" class="img-fluid cursor-image rounded" src="/AnhSanPham/${data.listTenAnh[0]}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.sanPham}</h6></div>
+                    `;
+                },
+                orderable: false
+            },
+            {
+                data: 'mauSac',
+                title: 'Màu Sắc',
+                orderable: false
+            },
+            {
+                data: 'kichCo',
+                title: 'Size',
+                orderable: false
+            },
+            {
+                data: 'kieuDeGiay',
+                title: 'Kiểu đế giầy',
+                orderable: false
+            },
+            {
+                data: 'giaBan',
+                title: 'Giá bán',
+                render: function (data, type, row, meta) {
+                    return new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    }).format(data).replace(",00", "");
+                },
+                orderable: false
+            },
+            {
+                data: 'giaNhap',
+                title: 'Giá nhập',
+                render: function (data, type, row, meta) {
+                    return new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    }).format(data).replace(",00", "");
+                },
+                orderable: false
+            },
+            {
+                data: 'thuongHieu',
+                title: 'Thương Hiệu',
+                orderable: false
+            },
+            {
+                data: 'xuatXu',
+                title: 'Xuất xứ',
+                orderable: false
+            },
+            {
+                data: 'soLuongTon',
+                title: 'Số lượng',
+                orderable: false,
+                render: function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        return formatNumber(data);
+                    }
+                    return data;
+                }
+            },
+            {
+                data: null,
+                title: '#',
+                render: function (data, type, row, meta) {
+                    return `<button class="btn btn-icon btn-primary btn-rounded btn-tone"><i class="anticon anticon-google"></i></button>
+                    <button class="btn btn-icon btn-primary btn-rounded btn-tone"><i class="anticon anticon-google"></i></button>
+                    <button class="btn btn-icon btn-primary btn-rounded btn-tone"><i class="anticon anticon-google"></i></button>`;
+                },
+                orderable: false
+            },
+        ],
+        initComplete: function (settings, json) {
+            console.log(json);
+        },
+    });
+});
+
+    function formatNumber(number) {
+        if (number >= 1000) {
+            const formattedNumber = (number / 1000).toFixed(1) + 'k';
+            return formattedNumber.replace('.0', ''); 
+        }
+        return number.toString();
+    }
+</script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+}

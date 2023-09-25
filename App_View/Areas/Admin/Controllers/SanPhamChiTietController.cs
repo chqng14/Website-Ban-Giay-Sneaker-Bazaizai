@@ -28,6 +28,11 @@ namespace App_View.Areas.Admin.Controllers
         // GET: Admin/SanPhamChiTiet/DanhSachSanPham
         public async Task<IActionResult> DanhSachSanPham(int draw, int start, int length, string searchValue)
         {
+            return View(await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync());
+        }
+
+        public async Task<IActionResult> GetDanhSachSanPham(int draw, int start, int length, string searchValue)
+        {
             var query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync())
                 .Skip(start)
                 .Take(length)
@@ -53,6 +58,7 @@ namespace App_View.Areas.Admin.Controllers
                 data = query
             });
         }
+
 
         // GET: Admin/SanPhamChiTiet/Details/5
         public async Task<IActionResult> Details(string id)
@@ -94,7 +100,11 @@ namespace App_View.Areas.Admin.Controllers
             return View();
         }
 
-
+        public async Task<IActionResult> LoadPartialView(string idSanPhamChiTiet)
+        {
+            var model = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).FirstOrDefault(x => x.IdChiTietSp == idSanPhamChiTiet);
+            return PartialView("_DetailPartialView", model);
+        }
 
         [HttpPost]
         public async Task<IActionResult> CheckSanPhamAddOrUpdate([FromBody]SanPhamChiTietDTO sanPhamChiTietDTO)
