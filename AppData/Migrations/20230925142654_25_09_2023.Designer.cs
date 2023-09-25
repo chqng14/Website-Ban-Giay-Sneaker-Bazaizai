@@ -4,6 +4,7 @@ using App_Data.DbContextt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App_Data.Migrations
 {
     [DbContext(typeof(BazaizaiContext))]
-    partial class BazaizaiContextModelSnapshot : ModelSnapshot
+    [Migration("20230925142654_25_09_2023")]
+    partial class _25_09_2023
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,6 +36,7 @@ namespace App_Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Url")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdAnh");
@@ -68,12 +71,15 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaChucVu")
+                        .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("TenChucVu")
+                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("TrangThai")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("IdChucVu");
@@ -236,15 +242,19 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaKhachHang")
+                        .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("SDT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("TenKhachHang")
+                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("TrangThai")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("IdKhachHang");
@@ -338,9 +348,11 @@ namespace App_Data.Migrations
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("MaKichCo")
+                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<int?>("SoKichCo")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("TrangThai")
@@ -378,9 +390,11 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaLoaiGiay")
+                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenLoaiGiay")
+                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<int?>("TrangThai")
@@ -397,10 +411,10 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaMauSac")
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenMauSac")
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("TrangThai")
                         .HasColumnType("int");
@@ -419,33 +433,42 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("GioiTinh")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("IdChucVu")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaNguoiDung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("MatKhau")
+                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<DateTime?>("NgaySinh")
+                        .IsRequired()
                         .HasColumnType("datetime");
 
                     b.Property<string>("SDT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("TenDangNhap")
+                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("TenNguoiDung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("TrangThai")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("IdNguoiDung");
@@ -626,15 +649,18 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DiaChi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("IdNguoiDung")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SDT")
+                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("TenNguoiNhan")
+                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("TrangThai")
@@ -658,6 +684,7 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("TenThuongHieu")
+                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<int?>("TrangThai")
@@ -676,15 +703,19 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DieuKien")
+                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("LoaiHinhUuDai")
+                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("MaVoucher")
+                        .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<double?>("MucUuDai")
+                        .IsRequired()
                         .HasColumnType("float");
 
                     b.Property<DateTime>("NgayBatDau")
@@ -694,9 +725,11 @@ namespace App_Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("SoLuong")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("TenVoucher")
+                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("TrangThai")

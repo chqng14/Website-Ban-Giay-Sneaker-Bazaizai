@@ -16,8 +16,8 @@ namespace App_Data.Configurations
         {
             builder.HasKey(e => e.IdKichCo);
             builder.Property(e => e.IdKichCo).HasDefaultValueSql("(newid())");
-            builder.Property(c => c.MaKichCo).HasColumnType("nvarchar(1000)").IsRequired(true);
-            builder.Property(c => c.SoKichCo).HasColumnType("int").IsRequired(true);
+            builder.Property(c => c.MaKichCo).HasColumnType("nvarchar(1000)");
+            builder.Property(c => c.SoKichCo).HasColumnType("int");
             builder.Property(e => e.TrangThai).HasDefaultValueSql("((0))");
         }
     }
