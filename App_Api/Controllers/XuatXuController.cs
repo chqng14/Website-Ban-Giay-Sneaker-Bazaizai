@@ -1,7 +1,7 @@
 ﻿using App_Data.IRepositories;
 using App_Data.Models;
-using App_Data.Models.ViewModels.XuatXu;
 using App_Data.Repositories;
+using App_Data.ViewModels.XuatXu;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 

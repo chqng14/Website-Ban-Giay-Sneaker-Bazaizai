@@ -1,6 +1,6 @@
 ﻿using App_Data.IRepositories;
 using App_Data.Models;
-using App_Data.Models.ViewModels.MauSac;
+using App_Data.ViewModels.MauSac;
 using AutoMapper;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +40,7 @@ namespace App_Api.Controllers
             mauSacDTO.IdMauSac = Guid.NewGuid().ToString();
             var mauSac = _mapper.Map<MauSac>(mauSacDTO);
             mauSac.TrangThai = 0;
-            mauSac.MaMauSac = _mauSacRespo.GetAll().Count() == 0 ? "MS1" : "MS" + (_mauSacRespo.GetAll().Count() + 1);
+            mauSac.MaMauSac =  !_mauSacRespo.GetAll().Any()? "MS1" : "MS" + (_mauSacRespo.GetAll().Count() + 1);
             return _mauSacRespo.AddItem(mauSac);
         }
 
@@ -54,7 +54,6 @@ namespace App_Api.Controllers
                 return _mauSacRespo.EditItem(mauSac);
             }
             return false;
-            
         }
 
         [HttpPut("UpdateMauSac")]

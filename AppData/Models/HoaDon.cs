@@ -8,7 +8,7 @@ namespace App_Data.Models
 {
     public class HoaDon
     {
-        public string IdHoaDon { get; set; }
+        public string? IdHoaDon { get; set; }
         public string? IdNguoiDung { get; set; }
         public string? IdKhachHang { get; set; }
         public string? IdVoucher { get; set; }

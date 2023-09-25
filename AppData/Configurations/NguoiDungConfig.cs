@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using App_Data.Models;
-using System.Reflection.Emit;
 
 namespace App_Data.Configurations
 {
@@ -16,17 +15,18 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<NguoiDung> builder)
         {
-            //            modelBuilder.Entity<NguoiDung>()
-            //.Property(e => e.Id)
-            //.ValueGeneratedOnAdd();
-            //builder.Property(c => c.Id).ValueGeneratedOnAdd();
-            builder.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            builder.HasKey(c => c.IdNguoiDung);
             builder.Property(c => c.MaNguoiDung).HasColumnType("nvarchar(100)");
             builder.Property(c => c.TenNguoiDung).HasColumnType("nvarchar(300)");
             builder.Property(c => c.GioiTinh).HasColumnType("int");
-            builder.Property(c => c.NgaySinh).HasColumnType("datetime");        
+            builder.Property(c => c.NgaySinh).HasColumnType("datetime");
+            builder.Property(c => c.SDT).HasColumnType("nvarchar(10)");
+            builder.Property(c => c.MatKhau).HasColumnType("nvarchar(300)");
+            builder.Property(c => c.Email).HasColumnType("nvarchar(300)");
+            builder.Property(c => c.TenDangNhap).HasColumnType("nvarchar(300)");
             builder.Property(c => c.TrangThai).HasColumnType("int");
             builder.Property(c => c.AnhDaiDien).HasColumnType("nvarchar(300)");
+            builder.HasOne(x => x.ChucVu).WithMany(x => x.NguoiDungs).HasForeignKey(x => x.IdChucVu);
 
         }
     }

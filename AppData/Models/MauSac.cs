@@ -10,10 +10,10 @@ namespace App_Data.Models
     public class MauSac
     {
         [Key]
-        public string IdMauSac { get; set; }
-        public string MaMauSac { get; set; }
-        public string TenMauSac { get; set; }
-        public int TrangThai { get; set; }
+        public string? IdMauSac { get; set; }
+        public string? MaMauSac { get; set; }
+        public string? TenMauSac { get; set; }
+        public int? TrangThai { get; set; }
         public virtual List<SanPhamChiTiet> SanPhamChiTiets { get; set; }
     }
 }

@@ -28,14 +28,12 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IdSanPhamChiTiet")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
                     b.Property<string>("Url")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdAnh");
@@ -51,14 +49,12 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaChatLieu")
-                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenChatLieu")
-                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
                     b.HasKey("IdChatLieu");
@@ -68,35 +64,21 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.ChucVu", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("IdChucVu")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaChucVu")
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                    b.Property<string>("TenChucVu")
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("IdChucVu");
 
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("chucVus");
                 });
 
             modelBuilder.Entity("App_Data.Models.GioHang", b =>
@@ -104,20 +86,21 @@ namespace App_Data.Migrations
                     b.Property<string>("IdNguoiDung")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("NgayTao")
+                    b.Property<DateTime?>("NgayTao")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("NguoiDungId")
+                    b.Property<string>("NguoiDungIdNguoiDung")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValueSql("((0))");
 
                     b.HasKey("IdNguoiDung");
 
-                    b.HasIndex("NguoiDungId");
+                    b.HasIndex("NguoiDungIdNguoiDung");
 
                     b.ToTable("gioHangs");
                 });
@@ -139,7 +122,7 @@ namespace App_Data.Migrations
                     b.Property<int?>("Soluong")
                         .HasColumnType("int");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
                     b.HasKey("IdGioHangChiTiet");
@@ -250,22 +233,18 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IdNguoiDung")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaKhachHang")
-                        .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("SDT")
-                        .IsRequired()
                         .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("TenKhachHang")
-                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
                     b.HasKey("IdKhachHang");
@@ -283,23 +262,21 @@ namespace App_Data.Migrations
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("LoaiHinhKM")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("MaKhuyenMai")
-                        .IsRequired()
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<decimal>("MucGiam")
+                    b.Property<decimal?>("MucGiam")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(18,0)")
                         .HasDefaultValueSql("((0))");
 
-                    b.Property<DateTime>("NgayBatDau")
+                    b.Property<DateTime?>("NgayBatDau")
                         .HasColumnType("datetime");
 
-                    b.Property<DateTime>("NgayKetThuc")
+                    b.Property<DateTime?>("NgayKetThuc")
                         .HasColumnType("datetime");
 
                     b.Property<string>("PhamVi")
@@ -307,11 +284,10 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenKhuyenMai")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValueSql("((0))");
@@ -329,21 +305,18 @@ namespace App_Data.Migrations
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("IdKhuyenMai")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("IdKhuyenMai");
 
                     b.Property<string>("IdSanPhamChiTiet")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)")
                         .HasColumnName("IdSanPhamChiTiet");
 
                     b.Property<string>("MoTa")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValueSql("((0))");
@@ -365,13 +338,12 @@ namespace App_Data.Migrations
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("MaKichCo")
-                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("SoKichCo")
+                    b.Property<int?>("SoKichCo")
                         .HasColumnType("int");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValueSql("((0))");
@@ -387,14 +359,12 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaKieuDeGiay")
-                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenKieuDeGiay")
-                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("Trangthai")
+                    b.Property<int?>("Trangthai")
                         .HasColumnType("int");
 
                     b.HasKey("IdKieuDeGiay");
@@ -408,11 +378,9 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaLoaiGiay")
-                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenLoaiGiay")
-                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<int?>("TrangThai")
@@ -429,14 +397,12 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaMauSac")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenMauSac")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
                     b.HasKey("IdMauSac");
@@ -446,62 +412,35 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.NguoiDung", b =>
                 {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)")
-                        .HasDefaultValueSql("(newid())");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
+                    b.Property<string>("IdNguoiDung")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("AnhDaiDien")
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("GioiTinh")
                         .HasColumnType("int");
 
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
+                    b.Property<string>("IdChucVu")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaNguoiDung")
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("MatKhau")
+                        .HasColumnType("nvarchar(300)");
+
                     b.Property<DateTime?>("NgaySinh")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                    b.Property<string>("SDT")
+                        .HasColumnType("nvarchar(10)");
 
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<string>("TenDangNhap")
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("TenNguoiDung")
                         .HasColumnType("nvarchar(300)");
@@ -509,24 +448,11 @@ namespace App_Data.Migrations
                     b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
+                    b.HasKey("IdNguoiDung");
 
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                    b.HasIndex("IdChucVu");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("NguoiDungs");
                 });
 
             modelBuilder.Entity("App_Data.Models.PhuongThucThanhToan", b =>
@@ -535,17 +461,15 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaPhuongThucThanhToan")
-                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("MoTa")
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenPhuongThucThanhToan")
-                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
                     b.HasKey("IdPhuongThucThanhToan");
@@ -559,14 +483,12 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IdHoaDon")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IdThanhToan")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<double>("SoTien")
+                    b.Property<double?>("SoTien")
                         .HasColumnType("float");
 
                     b.HasKey("IdPhuongThucThanhToanChiTiet");
@@ -584,14 +506,12 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaSanPham")
-                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenSanPham")
-                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("Trangthai")
+                    b.Property<int?>("Trangthai")
                         .HasColumnType("int");
 
                     b.HasKey("IdSanPham");
@@ -681,14 +601,12 @@ namespace App_Data.Migrations
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("IdNguoiDung")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IdSanPhamChiTiet")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValueSql("((0))");
@@ -708,22 +626,18 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DiaChi")
-                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("IdNguoiDung")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SDT")
-                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("TenNguoiNhan")
-                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
                     b.HasKey("IdThongTinGH");
@@ -741,14 +655,12 @@ namespace App_Data.Migrations
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("MaThuongHieu")
-                        .IsRequired()
                         .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("TenThuongHieu")
-                        .IsRequired()
                         .HasColumnType("nvarchar(1000)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValueSql("((0))");
@@ -764,18 +676,15 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DieuKien")
-                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("LoaiHinhUuDai")
-                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("MaVoucher")
-                        .IsRequired()
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<double>("MucUuDai")
+                    b.Property<double?>("MucUuDai")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("NgayBatDau")
@@ -784,14 +693,13 @@ namespace App_Data.Migrations
                     b.Property<DateTime>("NgayKetThuc")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("SoLuong")
+                    b.Property<int?>("SoLuong")
                         .HasColumnType("int");
 
                     b.Property<string>("TenVoucher")
-                        .IsRequired()
                         .HasColumnType("nvarchar(300)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
                     b.HasKey("IdVoucher");
@@ -805,14 +713,12 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IdNguoiDung")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IdVouCher")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
                     b.HasKey("IdVouCherNguoiDung");
@@ -830,14 +736,12 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Ma")
-                        .IsRequired()
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Ten")
-                        .IsRequired()
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<int>("TrangThai")
+                    b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
                     b.HasKey("IdXuatXu");
@@ -845,119 +749,11 @@ namespace App_Data.Migrations
                     b.ToTable("xuatXus");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("RoleClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserLogins", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("UserRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("UserTokens", (string)null);
-                });
-
             modelBuilder.Entity("App_Data.Models.Anh", b =>
                 {
                     b.HasOne("App_Data.Models.SanPhamChiTiet", "SanPhamChiTiets")
                         .WithMany("Anh")
-                        .HasForeignKey("IdSanPhamChiTiet")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdSanPhamChiTiet");
 
                     b.Navigation("SanPhamChiTiets");
                 });
@@ -966,7 +762,9 @@ namespace App_Data.Migrations
                 {
                     b.HasOne("App_Data.Models.NguoiDung", "NguoiDung")
                         .WithMany()
-                        .HasForeignKey("NguoiDungId");
+                        .HasForeignKey("NguoiDungIdNguoiDung")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("NguoiDung");
                 });
@@ -1026,9 +824,7 @@ namespace App_Data.Migrations
                 {
                     b.HasOne("App_Data.Models.NguoiDung", "NguoiDung")
                         .WithMany("KhachHangs")
-                        .HasForeignKey("IdNguoiDung")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdNguoiDung");
 
                     b.Navigation("NguoiDung");
                 });
@@ -1037,34 +833,35 @@ namespace App_Data.Migrations
                 {
                     b.HasOne("App_Data.Models.KhuyenMai", "KhuyenMai")
                         .WithMany("KhuyenMaiChiTiet")
-                        .HasForeignKey("IdKhuyenMai")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdKhuyenMai");
 
                     b.HasOne("App_Data.Models.SanPhamChiTiet", "SanPhamChiTiet")
                         .WithMany("KhuyenMaiChiTiet")
-                        .HasForeignKey("IdSanPhamChiTiet")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdSanPhamChiTiet");
 
                     b.Navigation("KhuyenMai");
 
                     b.Navigation("SanPhamChiTiet");
                 });
 
+            modelBuilder.Entity("App_Data.Models.NguoiDung", b =>
+                {
+                    b.HasOne("App_Data.Models.ChucVu", "ChucVu")
+                        .WithMany("NguoiDungs")
+                        .HasForeignKey("IdChucVu");
+
+                    b.Navigation("ChucVu");
+                });
+
             modelBuilder.Entity("App_Data.Models.PhuongThucThanhToanChiTiet", b =>
                 {
                     b.HasOne("App_Data.Models.HoaDon", "HoaDons")
                         .WithMany("PhuongThucThanhToanChiTiet")
-                        .HasForeignKey("IdHoaDon")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdHoaDon");
 
                     b.HasOne("App_Data.Models.PhuongThucThanhToan", "PhuongThucThanhToan")
                         .WithMany("PhuongThucThanhToanChiTiets")
-                        .HasForeignKey("IdThanhToan")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdThanhToan");
 
                     b.Navigation("HoaDons");
 
@@ -1126,15 +923,11 @@ namespace App_Data.Migrations
                 {
                     b.HasOne("App_Data.Models.NguoiDung", "NguoiDung")
                         .WithMany("SanPhamYeuThich")
-                        .HasForeignKey("IdNguoiDung")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdNguoiDung");
 
                     b.HasOne("App_Data.Models.SanPhamChiTiet", "SanPhamChiTiet")
                         .WithMany("SanPhamYeuThichs")
-                        .HasForeignKey("IdSanPhamChiTiet")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdSanPhamChiTiet");
 
                     b.Navigation("NguoiDung");
 
@@ -1145,9 +938,7 @@ namespace App_Data.Migrations
                 {
                     b.HasOne("App_Data.Models.NguoiDung", "NguoiDungs")
                         .WithMany("ThongTinGiaoHangs")
-                        .HasForeignKey("IdNguoiDung")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdNguoiDung");
 
                     b.Navigation("NguoiDungs");
                 });
@@ -1156,75 +947,25 @@ namespace App_Data.Migrations
                 {
                     b.HasOne("App_Data.Models.NguoiDung", "NguoiDungs")
                         .WithMany("VoucherNguoiDungs")
-                        .HasForeignKey("IdNguoiDung")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdNguoiDung");
 
                     b.HasOne("App_Data.Models.Voucher", "Vouchers")
                         .WithMany("VoucherNguoiDungs")
-                        .HasForeignKey("IdVouCher")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("IdVouCher");
 
                     b.Navigation("NguoiDungs");
 
                     b.Navigation("Vouchers");
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.HasOne("App_Data.Models.ChucVu", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.HasOne("App_Data.Models.NguoiDung", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.HasOne("App_Data.Models.NguoiDung", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("App_Data.Models.ChucVu", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("App_Data.Models.NguoiDung", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.HasOne("App_Data.Models.NguoiDung", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("App_Data.Models.ChatLieu", b =>
                 {
                     b.Navigation("SanPhamChiTiets");
+                });
+
+            modelBuilder.Entity("App_Data.Models.ChucVu", b =>
+                {
+                    b.Navigation("NguoiDungs");
                 });
 
             modelBuilder.Entity("App_Data.Models.GioHang", b =>
