@@ -10,7 +10,6 @@ namespace App_Data.Models
     {
         public string? IdKhachHang { get; set; }
         public string? IdNguoiDung { get; set; }
-        public string? MaKhachHang { get; set; }
         public string? TenKhachHang { get; set; } 
         public string? SDT { get; set; }
         public int? TrangThai { get; set; }
