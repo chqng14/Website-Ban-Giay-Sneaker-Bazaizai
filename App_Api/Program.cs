@@ -1,3 +1,7 @@
+using App_Data.IRepositories;
+using App_Data.Models;
+using App_Data.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,7 +10,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddScoped<IAllRepo<Voucher>, AllRepo<Voucher>>();
+builder.Services.AddScoped<IAllRepo<VoucherNguoiDung>, AllRepo<VoucherNguoiDung>>();
+builder.Services.AddScoped<IAllRepo<NguoiDung>, AllRepo<NguoiDung>>();
+builder.Services.AddScoped<IAllRepo<ChucVu>, AllRepo<ChucVu>>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
