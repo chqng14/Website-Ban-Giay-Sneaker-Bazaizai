@@ -8,9 +8,9 @@ namespace App_Data.Models
 {
     public class GioHang
     {
-        public string IdNguoiDung { get; set; }
-        public DateTime NgayTao { get; set; }
-        public int TrangThai { get; set; }
+        public string? IdNguoiDung { get; set; }
+        public DateTime? NgayTao { get; set; }
+        public int? TrangThai { get; set; }
         public virtual IEnumerable<GioHangChiTiet> GioHangChiTiet { get; set; }
         public virtual NguoiDung NguoiDung { get; set; }
     }

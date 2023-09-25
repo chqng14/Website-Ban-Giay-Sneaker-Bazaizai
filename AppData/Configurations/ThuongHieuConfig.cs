@@ -16,7 +16,7 @@ namespace App_Data.Configurations
             builder.HasKey(e => e.IdThuongHieu);
             builder.Property(e => e.IdThuongHieu).HasDefaultValueSql("(newid())");        
             builder.Property(e => e.MaThuongHieu).HasColumnType("nvarchar(20)");
-            builder.Property(c => c.TenThuongHieu).HasColumnType("nvarchar(1000)").IsRequired(true);
+            builder.Property(c => c.TenThuongHieu).HasColumnType("nvarchar(1000)");
             builder.Property(e => e.TrangThai).HasDefaultValueSql("((0))");
         }
     }

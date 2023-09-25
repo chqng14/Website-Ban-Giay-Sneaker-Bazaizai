@@ -10,7 +10,7 @@ namespace App_Data.Models
     public class SanPhamChiTiet
     {
         [Key]
-        public string IdChiTietSp { get; set; }
+        public string? IdChiTietSp { get; set; }
 
         public string? Ma { get; set; }
 

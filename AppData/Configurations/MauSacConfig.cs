@@ -14,7 +14,9 @@ namespace App_Data.Configurations
         public void Configure(EntityTypeBuilder<MauSac> builder)
         {
             builder.HasKey(x => x.IdMauSac);
-
+            builder.Property(c => c.MaMauSac).HasColumnType("nvarchar(1000)");
+            builder.Property(c => c.TenMauSac).HasColumnType("nvarchar(1000)");
+            builder.Property(c => c.TrangThai).HasColumnType("int");
         }
     }
 }
