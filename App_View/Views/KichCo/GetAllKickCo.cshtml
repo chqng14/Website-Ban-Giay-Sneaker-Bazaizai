@@ -1,0 +1,53 @@
+﻿@model IEnumerable<App_Data.Models.KichCo>
+
+@{
+    ViewData["Title"] = "GetAllKickCo";
+}
+
+<h1>GetAllKickCo</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdKichCo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaKichCo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SoKichCo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TrangThai)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdKichCo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaKichCo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SoKichCo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrangThai)
+            </td>
+            <td>
+                    @Html.ActionLink("Edit", "Edit", new { id=item.IdKichCo }) |
+                    @Html.ActionLink("Details", "Details", new {  id=item.IdKichCo }) |
+                    @Html.ActionLink("Delete", "Delete", new {  id=item.IdKichCo })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

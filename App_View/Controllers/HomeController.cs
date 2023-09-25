@@ -1,4 +1,5 @@
 ﻿using App_View.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -17,7 +18,8 @@ namespace App_View.Controllers
         {
             return View();
         }
-
+     //   [AllowAnonymous]
+        [Authorize]
         public IActionResult Privacy()
         {
             return View();
