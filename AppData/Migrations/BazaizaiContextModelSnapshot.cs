@@ -64,21 +64,35 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.ChucVu", b =>
                 {
-                    b.Property<string>("IdChucVu")
+                    b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaChucVu")
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("TenChucVu")
-                        .HasColumnType("nvarchar(300)");
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
-                    b.HasKey("IdChucVu");
+                    b.HasKey("Id");
 
-                    b.ToTable("chucVus");
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("App_Data.Models.GioHang", b =>
@@ -89,8 +103,7 @@ namespace App_Data.Migrations
                     b.Property<DateTime?>("NgayTao")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("NguoiDungIdNguoiDung")
-                        .IsRequired()
+                    b.Property<string>("NguoiDungId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("TrangThai")
@@ -100,7 +113,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdNguoiDung");
 
-                    b.HasIndex("NguoiDungIdNguoiDung");
+                    b.HasIndex("NguoiDungId");
 
                     b.ToTable("gioHangs");
                 });
@@ -234,9 +247,6 @@ namespace App_Data.Migrations
 
                     b.Property<string>("IdNguoiDung")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("MaKhachHang")
-                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("SDT")
                         .HasColumnType("nvarchar(10)");
@@ -412,35 +422,62 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.NguoiDung", b =>
                 {
-                    b.Property<string>("IdNguoiDung")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValueSql("(newid())");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
 
                     b.Property<string>("AnhDaiDien")
                         .HasColumnType("nvarchar(300)");
 
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(300)");
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("GioiTinh")
                         .HasColumnType("int");
 
-                    b.Property<string>("IdChucVu")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("MaNguoiDung")
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("MatKhau")
-                        .HasColumnType("nvarchar(300)");
-
                     b.Property<DateTime?>("NgaySinh")
                         .HasColumnType("datetime");
 
-                    b.Property<string>("SDT")
-                        .HasColumnType("nvarchar(10)");
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("TenDangNhap")
-                        .HasColumnType("nvarchar(300)");
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenNguoiDung")
                         .HasColumnType("nvarchar(300)");
@@ -448,11 +485,24 @@ namespace App_Data.Migrations
                     b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
-                    b.HasKey("IdNguoiDung");
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
 
-                    b.HasIndex("IdChucVu");
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
-                    b.ToTable("NguoiDungs");
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("App_Data.Models.PhuongThucThanhToan", b =>
@@ -749,6 +799,112 @@ namespace App_Data.Migrations
                     b.ToTable("xuatXus");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("UserTokens", (string)null);
+                });
+
             modelBuilder.Entity("App_Data.Models.Anh", b =>
                 {
                     b.HasOne("App_Data.Models.SanPhamChiTiet", "SanPhamChiTiets")
@@ -762,9 +918,7 @@ namespace App_Data.Migrations
                 {
                     b.HasOne("App_Data.Models.NguoiDung", "NguoiDung")
                         .WithMany()
-                        .HasForeignKey("NguoiDungIdNguoiDung")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("NguoiDungId");
 
                     b.Navigation("NguoiDung");
                 });
@@ -842,15 +996,6 @@ namespace App_Data.Migrations
                     b.Navigation("KhuyenMai");
 
                     b.Navigation("SanPhamChiTiet");
-                });
-
-            modelBuilder.Entity("App_Data.Models.NguoiDung", b =>
-                {
-                    b.HasOne("App_Data.Models.ChucVu", "ChucVu")
-                        .WithMany("NguoiDungs")
-                        .HasForeignKey("IdChucVu");
-
-                    b.Navigation("ChucVu");
                 });
 
             modelBuilder.Entity("App_Data.Models.PhuongThucThanhToanChiTiet", b =>
@@ -958,14 +1103,60 @@ namespace App_Data.Migrations
                     b.Navigation("Vouchers");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("App_Data.Models.ChucVu", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("App_Data.Models.NguoiDung", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("App_Data.Models.NguoiDung", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("App_Data.Models.ChucVu", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("App_Data.Models.NguoiDung", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("App_Data.Models.NguoiDung", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("App_Data.Models.ChatLieu", b =>
                 {
                     b.Navigation("SanPhamChiTiets");
-                });
-
-            modelBuilder.Entity("App_Data.Models.ChucVu", b =>
-                {
-                    b.Navigation("NguoiDungs");
                 });
 
             modelBuilder.Entity("App_Data.Models.GioHang", b =>

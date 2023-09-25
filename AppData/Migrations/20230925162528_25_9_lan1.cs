@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace App_Data.Migrations
 {
-    public partial class mi : Migration
+    public partial class _25_9_lan1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,9 +14,9 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdChatLieu = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MaChatLieu = table.Column<string>(type: "nvarchar(1000)", nullable: false),
-                    TenChatLieu = table.Column<string>(type: "nvarchar(1000)", nullable: false),
-                    TrangThai = table.Column<int>(type: "int", nullable: false)
+                    MaChatLieu = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    TenChatLieu = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    TrangThai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -28,14 +28,14 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdKhuyenMai = table.Column<string>(type: "nvarchar(450)", nullable: false, defaultValueSql: "(newid())"),
-                    MaKhuyenMai = table.Column<string>(type: "nvarchar(20)", nullable: false),
-                    TenKhuyenMai = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    NgayBatDau = table.Column<DateTime>(type: "datetime", nullable: false),
-                    NgayKetThuc = table.Column<DateTime>(type: "datetime", nullable: false),
-                    LoaiHinhKM = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
-                    MucGiam = table.Column<decimal>(type: "decimal(18,0)", nullable: false, defaultValueSql: "((0))"),
+                    MaKhuyenMai = table.Column<string>(type: "nvarchar(20)", nullable: true),
+                    TenKhuyenMai = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    NgayBatDau = table.Column<DateTime>(type: "datetime", nullable: true),
+                    NgayKetThuc = table.Column<DateTime>(type: "datetime", nullable: true),
+                    LoaiHinhKM = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    MucGiam = table.Column<decimal>(type: "decimal(18,0)", nullable: true, defaultValueSql: "((0))"),
                     PhamVi = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    TrangThai = table.Column<int>(type: "int", nullable: false, defaultValueSql: "((0))")
+                    TrangThai = table.Column<int>(type: "int", nullable: true, defaultValueSql: "((0))")
                 },
                 constraints: table =>
                 {
@@ -47,9 +47,9 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdKichCo = table.Column<string>(type: "nvarchar(450)", nullable: false, defaultValueSql: "(newid())"),
-                    MaKichCo = table.Column<string>(type: "nvarchar(1000)", nullable: false),
-                    SoKichCo = table.Column<int>(type: "int", nullable: false),
-                    TrangThai = table.Column<int>(type: "int", nullable: false, defaultValueSql: "((0))")
+                    MaKichCo = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    SoKichCo = table.Column<int>(type: "int", nullable: true),
+                    TrangThai = table.Column<int>(type: "int", nullable: true, defaultValueSql: "((0))")
                 },
                 constraints: table =>
                 {
@@ -61,9 +61,9 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdKieuDeGiay = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MaKieuDeGiay = table.Column<string>(type: "nvarchar(1000)", nullable: false),
-                    TenKieuDeGiay = table.Column<string>(type: "nvarchar(1000)", nullable: false),
-                    Trangthai = table.Column<int>(type: "int", nullable: false)
+                    MaKieuDeGiay = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    TenKieuDeGiay = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    Trangthai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -75,8 +75,8 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdLoaiGiay = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MaLoaiGiay = table.Column<string>(type: "nvarchar(1000)", nullable: false),
-                    TenLoaiGiay = table.Column<string>(type: "nvarchar(1000)", nullable: false),
+                    MaLoaiGiay = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    TenLoaiGiay = table.Column<string>(type: "nvarchar(1000)", nullable: true),
                     TrangThai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -89,9 +89,9 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdMauSac = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MaMauSac = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TenMauSac = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TrangThai = table.Column<int>(type: "int", nullable: false)
+                    MaMauSac = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    TenMauSac = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    TrangThai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -103,10 +103,10 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdPhuongThucThanhToan = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MaPhuongThucThanhToan = table.Column<string>(type: "nvarchar(1000)", nullable: false),
-                    TenPhuongThucThanhToan = table.Column<string>(type: "nvarchar(1000)", nullable: false),
+                    MaPhuongThucThanhToan = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    TenPhuongThucThanhToan = table.Column<string>(type: "nvarchar(1000)", nullable: true),
                     MoTa = table.Column<string>(type: "nvarchar(1000)", nullable: true),
-                    TrangThai = table.Column<int>(type: "int", nullable: false)
+                    TrangThai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -134,9 +134,9 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdSanPham = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MaSanPham = table.Column<string>(type: "nvarchar(1000)", nullable: false),
-                    TenSanPham = table.Column<string>(type: "nvarchar(1000)", nullable: false),
-                    Trangthai = table.Column<int>(type: "int", nullable: false)
+                    MaSanPham = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    TenSanPham = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    Trangthai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -148,9 +148,9 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdThuongHieu = table.Column<string>(type: "nvarchar(450)", nullable: false, defaultValueSql: "(newid())"),
-                    MaThuongHieu = table.Column<string>(type: "nvarchar(20)", nullable: false),
-                    TenThuongHieu = table.Column<string>(type: "nvarchar(1000)", nullable: false),
-                    TrangThai = table.Column<int>(type: "int", nullable: false, defaultValueSql: "((0))")
+                    MaThuongHieu = table.Column<string>(type: "nvarchar(20)", nullable: true),
+                    TenThuongHieu = table.Column<string>(type: "nvarchar(1000)", nullable: true),
+                    TrangThai = table.Column<int>(type: "int", nullable: true, defaultValueSql: "((0))")
                 },
                 constraints: table =>
                 {
@@ -161,7 +161,7 @@ namespace App_Data.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false, defaultValueSql: "(newid())"),
                     MaNguoiDung = table.Column<string>(type: "nvarchar(100)", nullable: true),
                     TenNguoiDung = table.Column<string>(type: "nvarchar(300)", nullable: true),
                     GioiTinh = table.Column<int>(type: "int", nullable: true),
@@ -193,15 +193,15 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdVoucher = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MaVoucher = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    TenVoucher = table.Column<string>(type: "nvarchar(300)", nullable: false),
-                    DieuKien = table.Column<string>(type: "nvarchar(300)", nullable: false),
-                    LoaiHinhUuDai = table.Column<string>(type: "nvarchar(300)", nullable: false),
-                    SoLuong = table.Column<int>(type: "int", nullable: false),
-                    MucUuDai = table.Column<double>(type: "float", nullable: false),
+                    MaVoucher = table.Column<string>(type: "nvarchar(100)", nullable: true),
+                    TenVoucher = table.Column<string>(type: "nvarchar(300)", nullable: true),
+                    DieuKien = table.Column<string>(type: "nvarchar(300)", nullable: true),
+                    LoaiHinhUuDai = table.Column<string>(type: "nvarchar(300)", nullable: true),
+                    SoLuong = table.Column<int>(type: "int", nullable: true),
+                    MucUuDai = table.Column<double>(type: "float", nullable: true),
                     NgayBatDau = table.Column<DateTime>(type: "datetime2", nullable: false),
                     NgayKetThuc = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TrangThai = table.Column<int>(type: "int", nullable: false)
+                    TrangThai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -213,9 +213,9 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdXuatXu = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Ma = table.Column<string>(type: "varchar(50)", nullable: false),
-                    Ten = table.Column<string>(type: "nvarchar(250)", nullable: false),
-                    TrangThai = table.Column<int>(type: "int", nullable: false)
+                    Ma = table.Column<string>(type: "varchar(50)", nullable: true),
+                    Ten = table.Column<string>(type: "nvarchar(250)", nullable: true),
+                    TrangThai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -248,8 +248,8 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    NgayTao = table.Column<DateTime>(type: "datetime", nullable: false),
-                    TrangThai = table.Column<int>(type: "int", nullable: false, defaultValueSql: "((0))"),
+                    NgayTao = table.Column<DateTime>(type: "datetime", nullable: true),
+                    TrangThai = table.Column<int>(type: "int", nullable: true, defaultValueSql: "((0))"),
                     NguoiDungId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -267,11 +267,10 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdKhachHang = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IdNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MaKhachHang = table.Column<string>(type: "nvarchar(100)", nullable: false),
-                    TenKhachHang = table.Column<string>(type: "nvarchar(300)", nullable: false),
-                    SDT = table.Column<string>(type: "nvarchar(10)", nullable: false),
-                    TrangThai = table.Column<int>(type: "int", nullable: false)
+                    IdNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    TenKhachHang = table.Column<string>(type: "nvarchar(300)", nullable: true),
+                    SDT = table.Column<string>(type: "nvarchar(10)", nullable: true),
+                    TrangThai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -280,8 +279,7 @@ namespace App_Data.Migrations
                         name: "FK_KhachHang_Users_IdNguoiDung",
                         column: x => x.IdNguoiDung,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -289,11 +287,11 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdThongTinGH = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IdNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TenNguoiNhan = table.Column<string>(type: "nvarchar(300)", nullable: false),
-                    SDT = table.Column<string>(type: "nvarchar(300)", nullable: false),
-                    DiaChi = table.Column<string>(type: "nvarchar(300)", nullable: false),
-                    TrangThai = table.Column<int>(type: "int", nullable: false)
+                    IdNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    TenNguoiNhan = table.Column<string>(type: "nvarchar(300)", nullable: true),
+                    SDT = table.Column<string>(type: "nvarchar(300)", nullable: true),
+                    DiaChi = table.Column<string>(type: "nvarchar(300)", nullable: true),
+                    TrangThai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -302,8 +300,7 @@ namespace App_Data.Migrations
                         name: "FK_thongTinGiaoHangs_Users_IdNguoiDung",
                         column: x => x.IdNguoiDung,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -396,9 +393,9 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdVouCherNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IdNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IdVouCher = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TrangThai = table.Column<int>(type: "int", nullable: false)
+                    IdNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IdVouCher = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    TrangThai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -407,14 +404,12 @@ namespace App_Data.Migrations
                         name: "FK_voucherNguoiDungs_Users_IdNguoiDung",
                         column: x => x.IdNguoiDung,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_voucherNguoiDungs_vouchers_IdVouCher",
                         column: x => x.IdVouCher,
                         principalTable: "vouchers",
-                        principalColumn: "IdVoucher",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdVoucher");
                 });
 
             migrationBuilder.CreateTable(
@@ -530,9 +525,9 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdAnh = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TrangThai = table.Column<int>(type: "int", nullable: false),
-                    IdSanPhamChiTiet = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    TrangThai = table.Column<int>(type: "int", nullable: true),
+                    IdSanPhamChiTiet = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -541,8 +536,7 @@ namespace App_Data.Migrations
                         name: "FK_Anh_sanPhamChiTiets_IdSanPhamChiTiet",
                         column: x => x.IdSanPhamChiTiet,
                         principalTable: "sanPhamChiTiets",
-                        principalColumn: "IdChiTietSp",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdChiTietSp");
                 });
 
             migrationBuilder.CreateTable(
@@ -554,7 +548,7 @@ namespace App_Data.Migrations
                     IdSanPhamCT = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Soluong = table.Column<int>(type: "int", nullable: true),
                     GiaGoc = table.Column<double>(type: "float", nullable: true),
-                    TrangThai = table.Column<int>(type: "int", nullable: false)
+                    TrangThai = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -576,10 +570,10 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdKhuyenMaiChiTiet = table.Column<string>(type: "nvarchar(450)", nullable: false, defaultValueSql: "(newid())"),
-                    IdKhuyenMai = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IdSanPhamChiTiet = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    MoTa = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    TrangThai = table.Column<int>(type: "int", nullable: false, defaultValueSql: "((0))")
+                    IdKhuyenMai = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IdSanPhamChiTiet = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    MoTa = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    TrangThai = table.Column<int>(type: "int", nullable: true, defaultValueSql: "((0))")
                 },
                 constraints: table =>
                 {
@@ -588,14 +582,12 @@ namespace App_Data.Migrations
                         name: "FK_KhuyenMaiChiTiet_KhuyenMai_IdKhuyenMai",
                         column: x => x.IdKhuyenMai,
                         principalTable: "KhuyenMai",
-                        principalColumn: "IdKhuyenMai",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdKhuyenMai");
                     table.ForeignKey(
                         name: "FK_KhuyenMaiChiTiet_sanPhamChiTiets_IdSanPhamChiTiet",
                         column: x => x.IdSanPhamChiTiet,
                         principalTable: "sanPhamChiTiets",
-                        principalColumn: "IdChiTietSp",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdChiTietSp");
                 });
 
             migrationBuilder.CreateTable(
@@ -603,9 +595,9 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdSanPhamYeuThich = table.Column<string>(type: "nvarchar(450)", nullable: false, defaultValueSql: "(newid())"),
-                    IdNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IdSanPhamChiTiet = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TrangThai = table.Column<int>(type: "int", nullable: false, defaultValueSql: "((0))")
+                    IdNguoiDung = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IdSanPhamChiTiet = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    TrangThai = table.Column<int>(type: "int", nullable: true, defaultValueSql: "((0))")
                 },
                 constraints: table =>
                 {
@@ -614,14 +606,12 @@ namespace App_Data.Migrations
                         name: "FK_sanPhamYeuThiches_sanPhamChiTiets_IdSanPhamChiTiet",
                         column: x => x.IdSanPhamChiTiet,
                         principalTable: "sanPhamChiTiets",
-                        principalColumn: "IdChiTietSp",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdChiTietSp");
                     table.ForeignKey(
                         name: "FK_sanPhamYeuThiches_Users_IdNguoiDung",
                         column: x => x.IdNguoiDung,
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -656,9 +646,9 @@ namespace App_Data.Migrations
                 columns: table => new
                 {
                     IdPhuongThucThanhToanChiTiet = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IdHoaDon = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    IdThanhToan = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    SoTien = table.Column<double>(type: "float", nullable: false)
+                    IdHoaDon = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    IdThanhToan = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    SoTien = table.Column<double>(type: "float", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -667,14 +657,12 @@ namespace App_Data.Migrations
                         name: "FK_phuongThucThanhToanChiTiets_HoaDons_IdHoaDon",
                         column: x => x.IdHoaDon,
                         principalTable: "HoaDons",
-                        principalColumn: "IdHoaDon",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdHoaDon");
                     table.ForeignKey(
                         name: "FK_phuongThucThanhToanChiTiets_PhuongThucThanhToans_IdThanhToan",
                         column: x => x.IdThanhToan,
                         principalTable: "PhuongThucThanhToans",
-                        principalColumn: "IdPhuongThucThanhToan",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "IdPhuongThucThanhToan");
                 });
 
             migrationBuilder.CreateIndex(
