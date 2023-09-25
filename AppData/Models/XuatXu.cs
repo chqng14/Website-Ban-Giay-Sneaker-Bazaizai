@@ -10,10 +10,10 @@ namespace App_Data.Models
     public class XuatXu
     {
         [Key]
-        public string IdXuatXu { get; set; }
-        public string Ma { get; set; }
-        public string Ten { get; set; }
-        public int TrangThai { get; set; }
+        public string? IdXuatXu { get; set; }
+        public string? Ma { get; set; }
+        public string? Ten { get; set; }
+        public int? TrangThai { get; set; }
         public virtual List<SanPhamChiTiet> SanPhamChiTiets { get; set; }
     }
 }

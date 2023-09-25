@@ -16,12 +16,12 @@ namespace App_Data.Configurations
         public void Configure(EntityTypeBuilder<Voucher> builder)
         {
             builder.HasKey(c => c.IdVoucher);
-            builder.Property(c => c.MaVoucher).HasColumnType("nvarchar(100)").IsRequired();
-            builder.Property(c => c.TenVoucher).HasColumnType("nvarchar(300)").IsRequired();
-            builder.Property(c => c.DieuKien).HasColumnType("nvarchar(300)").IsRequired();
-            builder.Property(c => c.LoaiHinhUuDai).HasColumnType("nvarchar(300)").IsRequired();
-            builder.Property(c => c.SoLuong).HasColumnType("int").IsRequired();
-            builder.Property(c => c.MucUuDai).IsRequired();
+            builder.Property(c => c.MaVoucher).HasColumnType("nvarchar(100)");
+            builder.Property(c => c.TenVoucher).HasColumnType("nvarchar(300)");
+            builder.Property(c => c.DieuKien).HasColumnType("nvarchar(300)");
+            builder.Property(c => c.LoaiHinhUuDai).HasColumnType("nvarchar(300)");
+            builder.Property(c => c.SoLuong).HasColumnType("int");
+            builder.Property(c => c.MucUuDai);
         }
     }
 }

@@ -8,7 +8,7 @@ namespace App_Data.Models
 {
     public class LoaiGiay
     {
-        public string IdLoaiGiay { get; set; }
+        public string? IdLoaiGiay { get; set; }
         public string? MaLoaiGiay { get; set; }
         public string? TenLoaiGiay { get; set; }
         public int? TrangThai { get; set; }

@@ -22,7 +22,7 @@ namespace App_Data.Configurations
             builder.Property(e => e.NgayKetThuc).HasColumnType("datetime");
             builder.Property(e => e.NgayBatDau).HasColumnType("datetime");
             builder.Property(e => e.LoaiHinhKM).HasMaxLength(1000);
-            builder.Property(e => e.PhamVi).HasMaxLength(1000).IsRequired(false);
+            builder.Property(e => e.PhamVi).HasMaxLength(1000);
             builder.Property(e => e.TrangThai).HasDefaultValueSql("((0))");
         }
     }
