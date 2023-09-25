@@ -8,7 +8,7 @@ namespace App_Data.Models
 {
     public class ChatLieu
     {
-        public string IDChatLieu { get; set; }
+        public string IdChatLieu { get; set; }
         public string MaChatLieu { get; set; }
         public string TenChatLieu { get; set; }
         public int TrangThai { get; set; }

@@ -13,7 +13,7 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<XuatXu> builder)
         {
-            builder.HasKey(x => x.IDXuatXu);
+            builder.HasKey(x => x.IdXuatXu);
             builder.Property(x => x.Ma).HasColumnType("varchar(50)");
             builder.Property(x => x.Ten).HasColumnType("nvarchar(250)");
         }

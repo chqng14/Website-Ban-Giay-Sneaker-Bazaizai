@@ -15,6 +15,7 @@ namespace App_Data.Configurations
         {
             builder.HasKey(x => x.IdHoaDon);
             builder.HasOne(x => x.ThongTinGiaoHang).WithMany(x => x.HoaDon).HasForeignKey(x => x.IdThongTinGH);
+            builder.HasOne(x => x.KhachHang).WithMany(x => x.HoaDons).HasForeignKey(x => x.IdNguoiDung);
             builder.HasOne(x => x.Voucher).WithMany(x => x.HoaDon).HasForeignKey(x => x.IdVoucher);
             builder.Property(x => x.MaHoaDon).HasColumnType("nvarchar(1000)");
             builder.Property(x => x.NgayTao).HasColumnType("DateTime");

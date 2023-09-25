@@ -13,7 +13,7 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<PhuongThucThanhToanChiTiet> builder)
         {
-            builder.HasKey(x => x.IDPhuongThucThanhToanChiTiet);
+            builder.HasKey(x => x.IdPhuongThucThanhToanChiTiet);
 
             builder.HasOne(x => x.HoaDons).WithMany(c => c.PhuongThucThanhToanChiTiet).HasForeignKey(c => c.IdHoaDon);
 
