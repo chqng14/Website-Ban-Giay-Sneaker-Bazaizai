@@ -7,7 +7,7 @@
 <h1>GetAllKickCo</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="CreateKichCo">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -44,7 +44,7 @@
             </td>
             <td>
                     @Html.ActionLink("Edit", "Edit", new { id=item.IdKichCo }) |
-                    @Html.ActionLink("Details", "Details", new {  id=item.IdKichCo }) |
+                    @Html.ActionLink("DetailKickCo", "DetailKickCo", new {  id=item.IdKichCo }) |
                     @Html.ActionLink("Delete", "Delete", new {  id=item.IdKichCo })
             </td>
         </tr>
