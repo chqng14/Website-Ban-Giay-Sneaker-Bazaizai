@@ -1,6 +1,6 @@
 ﻿using App_Data.IRepositories;
 using App_Data.Models;
-using App_Data.Models.ViewModels.SanPhamChiTiet;
+using App_Data.ViewModels.SanPhamChiTiet;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
@@ -20,11 +20,11 @@ namespace App_Api.Controllers
         private readonly IAllRepo<SanPham> _sanPhamRes;
         private readonly IAllRepo<MauSac> _mauSacRes;
         private readonly IAllRepo<XuatXu> _xuatXuRes;
-        private readonly IAllRepo<SanPhamChiTiet> _sanPhamChiTietRes;
+        private readonly ISanPhamChiTietRespo _sanPhamChiTietRes;
         private readonly IAllRepo<Anh> _AnhRes;
         private readonly IMapper _mapper;
 
-        public SanPhamChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<ThuongHieu> thuongHieuRes, IAllRepo<LoaiGiay> loaiGiayRes, IAllRepo<KieuDeGiay> kieuDeGiayRes, IAllRepo<ChatLieu> chatLieuRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<XuatXu> xuatXuRes, IAllRepo<MauSac> mauSacRes, IAllRepo<SanPhamChiTiet> sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes)
+        public SanPhamChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<ThuongHieu> thuongHieuRes, IAllRepo<LoaiGiay> loaiGiayRes, IAllRepo<KieuDeGiay> kieuDeGiayRes, IAllRepo<ChatLieu> chatLieuRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<XuatXu> xuatXuRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes)
         {
             _kickcoRes = kickcoRes;
             _thuongHieuRes = thuongHieuRes;
@@ -39,7 +39,35 @@ namespace App_Api.Controllers
             _AnhRes = anhRes;
         }
 
-        private SanPhamChiTietViewModel GetSanPhamChiTietViewModdel(SanPhamChiTiet spChiTiet)
+        [HttpPost("check-add-or-update")]
+        public async Task<ResponseCheckAddOrUpdate> CheckProductForAddOrUpdate(SanPhamChiTietDTO sanPhamChiTietDTO)
+        {
+            var productDetails = (await _sanPhamChiTietRes.GetListAsync())
+                .FirstOrDefault(x=>
+                x.IdXuatXu == sanPhamChiTietDTO.IdXuatXu &&
+                x.IdMauSac == sanPhamChiTietDTO.IdMauSac &&
+                x.IdKichCo == sanPhamChiTietDTO.IdKichCo &&
+                x.IdChatLieu == sanPhamChiTietDTO.IdChatLieu &&
+                x.IdSanPham == sanPhamChiTietDTO.IdSanPham &&
+                x.IdThuongHieu == sanPhamChiTietDTO.IdThuongHieu &&
+                x.IdLoaiGiay == sanPhamChiTietDTO.IdLoaiGiay &&
+                x.IdKieuDeGiay == sanPhamChiTietDTO.IdKieuDeGiay
+                );
+
+            if (productDetails != null)
+            {
+                var productDetaiDTOMap = _mapper.Map<SanPhamChiTietDTO>(productDetails);
+                productDetaiDTOMap.DanhSachAnh = _AnhRes.GetAll()
+                                .Where(img => img.TrangThai == 0 && img.IdSanPhamChiTiet == productDetaiDTOMap.IdChiTietSp)
+                                .Select(x => x.Url)
+                                .ToList();
+                return new ResponseCheckAddOrUpdate() { Success = true, Data = productDetaiDTOMap };
+
+            }
+            return new ResponseCheckAddOrUpdate() { Success = false, Data = null };
+        }
+
+        private SanPhamChiTietViewModel CreateSanPhamChiTietVM(SanPhamChiTiet spChiTiet)
         {
             return new SanPhamChiTietViewModel()
             {
@@ -59,55 +87,67 @@ namespace App_Api.Controllers
                 XuatXu = _xuatXuRes.GetAll().Where(xx => xx.TrangThai == 0).FirstOrDefault(it => it.IdXuatXu == spChiTiet.IdXuatXu)?.Ten,
                 ListTenAnh = _AnhRes.GetAll().Where(a => a.IdSanPhamChiTiet == spChiTiet.IdChiTietSp && a.TrangThai == 0).Select(x => x.Url).ToList()
             };
-
         }
 
         [HttpGet("Get-List-SanPhamChiTietViewModel")]
-        public List<SanPhamChiTietViewModel> GetListSanPham()
+        public async Task<List<SanPhamChiTietViewModel>> GetListSanPham()
         {
-            return _sanPhamChiTietRes.GetAll()
+            return (await _sanPhamChiTietRes.GetListAsync())
                 .Where(sp => sp.TrangThai == 0)
-                .Select(item => GetSanPhamChiTietViewModdel(item)).ToList();
+                .Select(item => CreateSanPhamChiTietVM(item)).ToList();
+        }
+
+        [HttpGet("Get-List-SanPhamChiTiet")]
+        public async Task<List<SanPhamChiTiet>> GetListSanPhamChiTiet()
+        {
+            return (await _sanPhamChiTietRes.GetListAsync()).ToList();
         }
 
         [HttpGet("Get-SanPhamChiTiet/{id}")]
-        public SanPhamChiTiet? GetSanPham(string id)
+        public async Task<SanPhamChiTiet?> GetSanPham(string id)
         {
-            return _sanPhamChiTietRes.GetAll().FirstOrDefault(sp => sp.IdChiTietSp == id);
+            return await _sanPhamChiTietRes.GetByKeyAsync(id);
         }
 
         [HttpPost("Creat-SanPhamChiTiet")]
-        public bool CreateSanPhamChiTiet(SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<ResponseCreataDTO> CreateSanPhamChiTiet(SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietDTO);
             sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
-            sanPhamChiTiet.Ma = _sanPhamChiTietRes.GetAll().Count() == 0 ? "MASP1" : "MASP" + (_sanPhamChiTietRes.GetAll().Count() + 1);
+            sanPhamChiTiet.Ma = !(await _sanPhamChiTietRes.GetListAsync()).Any() ? 
+                "MASP1" : 
+                "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
             sanPhamChiTiet.TrangThai = 0;
             sanPhamChiTiet.TrangThaiSale = 0;
-            return _sanPhamChiTietRes.AddItem(sanPhamChiTiet);
+            return new ResponseCreataDTO() 
+            { 
+                Success = await _sanPhamChiTietRes.AddAsync(sanPhamChiTiet),
+                IdChiTietSp = sanPhamChiTiet.IdChiTietSp 
+            }; 
+
         }
 
-        [HttpDelete]
-        public bool DeleteSanPham(string IdSanChiTiet)
+        [HttpDelete("Delete-SanPhamChiTiet/{id}")]
+        public async Task<bool> DeleteSanPham(string id)
         {
-            var sanPhamChiTiet = GetSanPham(IdSanChiTiet);
+            var sanPhamChiTiet = await GetSanPham(id);
             if (sanPhamChiTiet != null)
             {
                 sanPhamChiTiet.TrangThai = 1;
-                _sanPhamChiTietRes.EditItem(sanPhamChiTiet);
+                return await _sanPhamChiTietRes.UpdateAsync(sanPhamChiTiet);
             }
             return false;
         }
 
 
         [HttpPut("Update-SanPhamChiTiet")]
-        public bool Update(SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<bool> Update(SanPhamChiTietDTO sanPhamChiTietDTO)
         {
-            var spChiTiet = GetSanPham(sanPhamChiTietDTO.IdChiTietSp!);
-            if(spChiTiet != null)
+            var spChiTiet = await GetSanPham(sanPhamChiTietDTO.IdChiTietSp!);
+            if (spChiTiet != null)
             {
-                _mapper.Map(spChiTiet, sanPhamChiTietDTO);
-                return _sanPhamChiTietRes.EditItem(spChiTiet);
+                _mapper.Map(sanPhamChiTietDTO, spChiTiet);
+                return await _sanPhamChiTietRes.UpdateAsync(spChiTiet);
             }
             return false;
         }

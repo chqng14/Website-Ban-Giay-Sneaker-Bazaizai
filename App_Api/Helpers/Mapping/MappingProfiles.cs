@@ -1,6 +1,7 @@
 ﻿using App_Data.Models;
-using App_Data.Models.ViewModels.MauSac;
-using App_Data.Models.ViewModels.XuatXu;
+using App_Data.ViewModels.MauSac;
+using App_Data.ViewModels.SanPhamChiTiet;
+using App_Data.ViewModels.XuatXu;
 using AutoMapper;
 
 namespace App_Api.Helpers.Mapping
@@ -11,6 +12,7 @@ namespace App_Api.Helpers.Mapping
         {
             CreateMap<MauSacDTO, MauSac>();
             CreateMap<XuatXuDTO, XuatXu>();
+            CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
         }
     }
 }

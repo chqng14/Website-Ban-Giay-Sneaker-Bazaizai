@@ -1,3 +1,4 @@
+using App_Api.Helpers.CustomJson;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -6,7 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = new CustomJsonNamingPolicy();
+});
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -35,7 +39,10 @@ builder.Services.AddScoped<IAllRepo<ThuongHieu>, AllRepo<ThuongHieu>>();
 builder.Services.AddScoped<IAllRepo<Voucher>, AllRepo<Voucher>>();
 builder.Services.AddScoped<IAllRepo<VoucherNguoiDung>, AllRepo<VoucherNguoiDung>>();
 builder.Services.AddScoped<IAllRepo<XuatXu>, AllRepo<XuatXu>>();
-
+builder.Services.AddScoped<ISanPhamChiTietRespo, SanPhamChiTietRespo>();
+builder.Services.AddScoped<IXuatXuRespo ,XuatXuRespo>();
+builder.Services.AddScoped<IMauSacRespo ,MauSacRespo>();
+builder.Services.AddScoped<IAnhRespo ,AnhRespo>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
