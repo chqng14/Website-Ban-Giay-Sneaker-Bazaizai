@@ -35,7 +35,10 @@ builder.Services.AddScoped<IAllRepo<ThuongHieu>, AllRepo<ThuongHieu>>();
 builder.Services.AddScoped<IAllRepo<Voucher>, AllRepo<Voucher>>();
 builder.Services.AddScoped<IAllRepo<VoucherNguoiDung>, AllRepo<VoucherNguoiDung>>();
 builder.Services.AddScoped<IAllRepo<XuatXu>, AllRepo<XuatXu>>();
-
+builder.Services.AddScoped<ISanPhamChiTietRespo, SanPhamChiTietRespo>();
+builder.Services.AddScoped<IXuatXuRespo ,XuatXuRespo>();
+builder.Services.AddScoped<IMauSacRespo ,MauSacRespo>();
+builder.Services.AddScoped<IAnhRespo ,AnhRespo>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
