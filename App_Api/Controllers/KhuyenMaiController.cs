@@ -57,11 +57,10 @@ namespace App_Api.Controllers
 
 
         [HttpPut("{id}")]
-        public bool EditKhuyenMai(string id, string Ten, string ma, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, string PhamVi, string loaiHinh)
+        public bool EditKhuyenMai(string id, string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, string PhamVi, string loaiHinh)
         {
             var KhuyenMai = repos.GetAll().First(p => p.IdKhuyenMai == id);
             KhuyenMai.TenKhuyenMai = Ten;
-            KhuyenMai.MaKhuyenMai = ma;
             KhuyenMai.TrangThai = trangThai;
             KhuyenMai.NgayBatDau = ngayBD;
             KhuyenMai.NgayKetThuc = ngayKT;
