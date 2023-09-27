@@ -40,15 +40,6 @@ namespace App_Api.Controllers
         [HttpPost("Create")]
         public bool Post(string IdHoaDon, string IdSanPhamChiTiet, int SoLuong, double GiaGoc, double GiaBan, int TrangThai)
         {
-            string ma;
-            if (allRepo.GetAll().Count() == null)
-            {
-                ma = "HDCT1";
-            }
-            else
-            {
-                ma = "HDCT" + (allRepo.GetAll().Count() + 1);
-            }
             HoaDonChiTiet hdct = new HoaDonChiTiet()
             {
                 IdHoaDonChiTiet = Guid.NewGuid().ToString(),
