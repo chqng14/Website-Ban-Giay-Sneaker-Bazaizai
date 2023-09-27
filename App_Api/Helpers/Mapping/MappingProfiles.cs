@@ -13,7 +13,7 @@ namespace App_Api.Helpers.Mapping
         {
             CreateMap<MauSacDTO, MauSac>();
             CreateMap<XuatXuDTO, XuatXu>();
-            CreateMap<VoucherDTO, Voucher>();
+            CreateMap<VoucherDTO, Voucher>().ReverseMap();
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
         }
     }

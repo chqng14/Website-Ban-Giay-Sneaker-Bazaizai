@@ -1,0 +1,53 @@
+﻿@model IEnumerable<App_Data.Models.ThuongHieu>
+
+@{
+    ViewData["Title"] = "GetAllThuongHieu";
+}
+
+<h1>GetAllThuongHieu</h1>
+
+<p>
+    <a asp-action="CreateThuongHieu">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdThuongHieu)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaThuongHieu)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TenThuongHieu)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TrangThai)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdThuongHieu)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaThuongHieu)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TenThuongHieu)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrangThai)
+            </td>
+            <td>
+                    @Html.ActionLink("Edit", "EditThuongHieu", new {id=item.IdThuongHieu }) |
+                    @Html.ActionLink("Details", "DetailThuongHieu", new { id=item.IdThuongHieu }) |
+                    @Html.ActionLink("Delete", "DeleteThuongHieu", new {id=item.IdThuongHieu })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -54,7 +54,7 @@ namespace App_Data.DbContextt
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-        
+
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {

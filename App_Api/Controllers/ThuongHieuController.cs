@@ -58,10 +58,9 @@ namespace App_Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public bool EditThuongHieu(string id,string Ma, int trangThai, string Ten)
+        public bool EditThuongHieu(string id, int trangThai, string Ten)
         {
             var b = repos.GetAll().First(p => p.IdThuongHieu == id);
-            b.MaThuongHieu = Ma;
             b.TenThuongHieu = Ten;
             b.TrangThai = trangThai;
             return repos.EditItem(b);
