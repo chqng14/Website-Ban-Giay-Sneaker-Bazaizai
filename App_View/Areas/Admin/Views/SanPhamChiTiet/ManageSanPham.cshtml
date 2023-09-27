@@ -4,6 +4,7 @@
     ViewData["Title"] = "Quản lý sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+
 <div class="modal fade" id="cauHinh">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -26,7 +27,7 @@
                         </div>
                         <div class="form-group col-4">
                             <label>Số lượng</label>
-                            <input id="soLuongTon" class="form-control formatNumber" name="SoLuongTon" >
+                            <input id="soLuongTon" class="form-control formatNumber" name="SoLuongTon">
                         </div>
                         <div class="col-12">
                             <div class="form-group d-flex align-items-center">
@@ -66,6 +67,150 @@
     </div>
 </div>
 
+@*Add san pham*@
+<div class="modal fade" id="addSanPham">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm sản phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label>Tên sản phẩm</label>
+                <select name="listNameSanPham" multiple="multiple" class="js-example-basic-multiple select2-active">
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Add thương hiệu*@
+<div class="modal fade" id="addThuongHieu">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm thương hiệu</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label>Tên thương hiệu</label>
+                <select name="listNameThuongHieu" multiple="multiple" class="js-example-basic-multiple select2-active">
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Add thương hiệu*@
+<div class="modal fade" id="addThuongHieu">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm thương hiệu</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label>Tên thương hiệu</label>
+                <select name="listNameThuongHieu" multiple="multiple" class="js-example-basic-multiple select2-active">
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Add xuất xứ*@
+<div class="modal fade" id="addXuatXu">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm xuất xứ</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <label>Tên xuất xứ</label>
+                <select name="listNameXuatXu" multiple="multiple" class="js-example-basic-multiple select2-active">
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".select2-active").select2();
+
+        $('#addSanPham').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var $select2 = $("[name='listNameSanPham']");
+
+                    var newOption = new Option(inputValue, inputValue, true, true);
+                    $select2.append(newOption).trigger('change');
+
+                    $(this).val('');
+                    console.log($("[name='listNameSanPham']").select2('data'));
+                }
+            }
+        });
+
+
+        $('#addThuongHieu').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var $select2 = $("[name='listNameThuongHieu']");
+
+                    var newOption = new Option(inputValue, inputValue, true, true);
+                    $select2.append(newOption).trigger('change');
+
+                    $(this).val('');
+                    console.log($("[name='listNameThuongHieu']").select2('data'));
+                }
+            }
+        });
+
+        $('#addXuatXu').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var $select2 = $("[name='listNameThuongHieu']");
+
+                    var newOption = new Option(inputValue, inputValue, true, true);
+                    $select2.append(newOption).trigger('change');
+
+                    $(this).val('');
+                    console.log($("[name='listNameThuongHieu']").select2('data'));
+                }
+            }
+        });
+    });
+
+</script>
 <div class="card">
     <div class="card-body" id="formGen">
         <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -82,65 +227,94 @@
 
                 <div class="col-4" style="margin-top: 10px">
                     <label>Tên sản phẩm</label>
-                    <select class="select2" asp-for="IdSanPham">
-                        @foreach (var item in (SelectList)ViewData["IdSanPham"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                    <div class="d-flex justify-content-between">
+                        <select class="select2 w-90" asp-for="IdSanPham">
+                            @foreach (var item in (SelectList)ViewData["IdSanPham"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
+                            <i class="anticon anticon-plus-circle"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="col-4" style="margin-top: 10px">
                     <label>Thương hiệu</label>
-                    <select class="select2" asp-for="IdThuongHieu">
+                    <div class="d-flex justify-content-between">
+                        <select class="select2 w-90" asp-for="IdThuongHieu">
 
-                        @foreach (var item in (SelectList)ViewData["IdThuongHieu"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                            @foreach (var item in (SelectList)ViewData["IdThuongHieu"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addThuongHieu">
+                            <i class="anticon anticon-plus-circle"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="col-4" style="margin-top: 10px">
                     <label>Xuất xứ</label>
-                    <select class="select2" asp-for="IdXuatXu">
-                        @foreach (var item in (SelectList)ViewData["IdXuatXu"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                    <div class="d-flex justify-content-between">
+                        <select class="select2 w-90" asp-for="IdXuatXu">
+                            @foreach (var item in (SelectList)ViewData["IdXuatXu"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
+                            <i class="anticon anticon-plus-circle"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="col-4" style="margin-top: 10px">
                     <label>Chất liệu</label>
-                    <select class="select2" asp-for="IdChatLieu">
-                        @foreach (var item in (SelectList)ViewData["IdChatLieu"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                    <div class="d-flex justify-content-between">
+                        <select class="select2 w-90" asp-for="IdChatLieu">
+                            @foreach (var item in (SelectList)ViewData["IdChatLieu"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
+                            <i class="anticon anticon-plus-circle"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="col-4" style="margin-top: 10px">
                     <label>Loại giầy</label>
-                    <select class="select2" asp-for="IdLoaiGiay">
-                        @foreach (var item in (SelectList)ViewData["IdLoaiGiay"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                    <div class="d-flex justify-content-between">
+                        <select class="select2 w-90" asp-for="IdLoaiGiay">
+                            @foreach (var item in (SelectList)ViewData["IdLoaiGiay"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
+                            <i class="anticon anticon-plus-circle"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="col-4" style="margin-top: 10px">
                     <label>Kiểu đế giầy</label>
-                    <select class="select2" asp-for="IdKieuDeGiay">
-                        @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                    <div class="d-flex justify-content-between">
+                        <select class="select2 w-90" asp-for="IdKieuDeGiay">
+                            @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                        <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
+                            <i class="anticon anticon-plus-circle"></i>
+                        </button>
+                    </div>
                 </div>
-
             </div>
 
             <div class="row">
@@ -148,13 +322,18 @@
                     <label>Color</label>
                     <div class="row">
                         <div class="col-12">
-                            <select id="IdColor" class="select2"
-                                    multiple="multiple">
-                                @foreach (var item in (SelectList)ViewData["IdMauSac"])
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
+                            <div class="d-flex justify-content-between">
+                                <select id="IdColor" class="select2 w-95"
+                                        multiple="multiple">
+                                    @foreach (var item in (SelectList)ViewData["IdMauSac"])
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                                <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
+                                    <i class="anticon anticon-plus-circle"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -163,13 +342,18 @@
                     <label>Size</label>
                     <div class="row">
                         <div class="col-12">
-                            <select id="IdSize" class="select2"
-                                    multiple="multiple">
-                                @foreach (var item in (SelectList)ViewData["IdKichCo"])
-                                {
-                                    <option value="@item.Value">@item.Text</option>
-                                }
-                            </select>
+                            <div class="d-flex justify-content-between">
+                                <select id="IdSize" class="select2 w-95"
+                                        multiple="multiple">
+                                    @foreach (var item in (SelectList)ViewData["IdKichCo"])
+                                    {
+                                        <option value="@item.Value">@item.Text</option>
+                                    }
+                                </select>
+                                <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
+                                    <i class="anticon anticon-plus-circle"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -244,89 +428,89 @@
     const ItemTemplate = (index, isUpdate, idProduct, idcolor, idsize, Title, giaNhap, giaBan, soLuong, moTa) => {
         return `
 <div class="card item-accordion" data-update="${isUpdate}" data-idproductdetail="${idProduct}">
-    <div class="card-header d-flex">
-        <h5 class="card-title">
-            <a data-toggle="collapse" data-IdMauSac="${idcolor}" data-IdKichCo="${idsize}"
-               href="#collapseOneBorderless${index}">
-                <span>${Title}</span>
-            </a>
-        </h5>
-        <button class="btn btn-icon btn-primary btn-rounded btn-tone btnn-close">
-            <i class="anticon anticon-close"></i>
-        </button>
-    </div>
-    <div id="collapseOneBorderless${index}" class="collapse" data-parent="#accordion-borderless">
+        <div class="card-header d-flex">
+            <h5 class="card-title">
+                <a data-toggle="collapse" data-IdMauSac="${idcolor}" data-IdKichCo="${idsize}"
+                   href="#collapseOneBorderless${index}">
+                    <span>${Title}</span>
+                </a>
+            </h5>
+            <button class="btn btn-icon btn-primary btn-rounded btn-tone btnn-close">
+                <i class="anticon anticon-close"></i>
+            </button>
+        </div>
+        <div id="collapseOneBorderless${index}" class="collapse" data-parent="#accordion-borderless">
 
-        <div class="d-flex">
-            <ul class="nav nav-tabs flex-column" id="myTabVertical" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="home-tab-vertical" data-toggle="tab" href="#home-vertical${index}"
-                       role="tab" aria-controls="home-vertical${index}" aria-selected="true">Information</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="profile-tab-vertical" data-toggle="tab" href="#profile-vertical${index}"
-                       role="tab" aria-controls="profile-${index}" aria-selected="false">Image</a>
-                </li>
-            </ul>
+            <div class="d-flex">
+                <ul class="nav nav-tabs flex-column" id="myTabVertical" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab-vertical" data-toggle="tab" href="#home-vertical${index}"
+                           role="tab" aria-controls="home-vertical${index}" aria-selected="true">Information</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab-vertical" data-toggle="tab" href="#profile-vertical${index}"
+                           role="tab" aria-controls="profile-${index}" aria-selected="false">Image</a>
+                    </li>
+                </ul>
 
-            <div class="tab-content m-l-15" id="myTabContentVertical">
-                <div class="tab-pane fade show active" id="home-vertical${index}" role="tabpanel"
-                     aria-labelledby="home-tab-vertical${index}">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="form-group col-4">
-                                <label>Giá Nhập(*)</label>
-                                <input min="1" class="form-control formatPrice" name="GiaNhap" value="${giaNhap}"
-                                       placeholder="">
-                            </div>
-                            <div class="form-group col-4">
-                                <label>Giá Bán(*)</label>
-                                <input min="1" class="form-control formatPrice" name="GiaBan" value="${giaBan}"
-                                       placeholder="">
-                            </div>
-                            <div class="form-group col-4">
-                                <label>Số lượng(*)</label>
-                                <input class="form-control formatNumber" name="SoLuongTon" value="${soLuong}">
-                            </div>
-                            <div class="col-12">
-                                    <div class="form-group d-flex align-items-center">
-                                        <div class="switch m-r-10">
-                                            <input type="checkbox" id="switch-${index}" class="switch-2">
-                                            <label for="switch-${index}"></label>
-                                        </div>
-                                        <label>Dây</label>
-                                    </div>
+                <div class="tab-content m-l-15" id="myTabContentVertical">
+                    <div class="tab-pane fade show active" id="home-vertical${index}" role="tabpanel"
+                         aria-labelledby="home-tab-vertical${index}">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="form-group col-4">
+                                    <label>Giá Nhập(*)</label>
+                                    <input min="1" class="form-control formatPrice" name="GiaNhap" value="${giaNhap}"
+                                           placeholder="">
                                 </div>
+                                <div class="form-group col-4">
+                                    <label>Giá Bán(*)</label>
+                                    <input min="1" class="form-control formatPrice" name="GiaBan" value="${giaBan}"
+                                           placeholder="">
+                                </div>
+                                <div class="form-group col-4">
+                                    <label>Số lượng(*)</label>
+                                    <input class="form-control formatNumber" name="SoLuongTon" value="${soLuong}">
+                                </div>
+                                <div class="col-12">
+                                        <div class="form-group d-flex align-items-center">
+                                            <div class="switch m-r-10">
+                                                <input type="checkbox" id="switch-${index}" class="switch-2">
+                                                <label for="switch-${index}"></label>
+                                            </div>
+                                            <label>Dây</label>
+                                        </div>
+                                    </div>
 
-                            <div class="form-group col-12">
-                                <div class="m-b-5" style="margin-top: 10px;">
-                                    <label style="display: block; margin-bottom: 5px;">
-                                        Mô tả sản phẩm
-                                    </label>
-                                    <div class="moTa" style="width: 100%; " name="MoTa">${moTa}</div>
+                                <div class="form-group col-12">
+                                    <div class="m-b-5" style="margin-top: 10px;">
+                                        <label style="display: block; margin-bottom: 5px;">
+                                            Mô tả sản phẩm
+                                        </label>
+                                        <div class="moTa" style="width: 100%; " name="MoTa">${moTa}</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="tab-pane fade" id="profile-vertical${index}" role="tabpanel"
-                     aria-labelledby="profile-tab-vertical${index}">
-                    <div class="card-body">
-                        <div class="upload">
-                            <button name="choseFile" class="custom-btn mb-2">
-                                Choose file
-                            </button>
-                            <input type="file" class="fileInput default-btn 1" multiple hidden>
-                            <div class="container-file" style="display: flex;">
+                    <div class="tab-pane fade" id="profile-vertical${index}" role="tabpanel"
+                         aria-labelledby="profile-tab-vertical${index}">
+                        <div class="card-body">
+                            <div class="upload">
+                                <button name="choseFile" class="custom-btn mb-2">
+                                    Choose file
+                                </button>
+                                <input type="file" class="fileInput default-btn 1" multiple hidden>
+                                <div class="container-file" style="display: flex;">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </div>
-        `;
+            `;
     }
 
 
@@ -623,17 +807,17 @@
                 $('#preloader').hide();
                 if (checkSS > 0) {
                     var toastHTML = `<div class="toast fade hide" data-delay="3000">
-    <div class="toast-header">
-        <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-        <strong class="mr-auto">Bootstrap</strong>
-        <small>1 second ago</small>
-        <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="toast-body">
-        ${checkSS} thực thể được cập nhật thành công
-    </div>
+        <div class="toast-header">
+            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+            <strong class="mr-auto">Bootstrap</strong>
+            <small>1 second ago</small>
+            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            ${checkSS} thực thể được cập nhật thành công
+        </div>
 </div>`
 
                     $('#notification-toast').append(toastHTML)
@@ -646,19 +830,19 @@
 
                 if (checkErr > 0) {
                     var toastHTML = `<div class="toast fade hide" data-delay="3000">
-        <div class="toast-header">
-            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-            <strong class="mr-auto">Bootstrap</strong>
-            <small>1 second ago</small>
-            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="toast-body">
-            Một vài thực thể dữ liệu chưa được nhập.
-            Vui lòng nhập để tiếp tục
-        </div>
-    </div>`
+            <div class="toast-header">
+                <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                <strong class="mr-auto">Bootstrap</strong>
+                <small>1 second ago</small>
+                <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                Một vài thực thể dữ liệu chưa được nhập.
+                Vui lòng nhập để tiếp tục
+            </div>
+        </div>`
 
                     $('#notification-toast').append(toastHTML)
                     $('#notification-toast .toast').toast('show');

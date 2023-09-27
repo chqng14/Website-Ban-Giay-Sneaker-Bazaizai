@@ -60,7 +60,7 @@ namespace App_Api.Controllers
                 productDetaiDTOMap.DanhSachAnh = _AnhRes.GetAll()
                                 .Where(img => img.TrangThai == 0 && img.IdSanPhamChiTiet == productDetaiDTOMap.IdChiTietSp)
                                 .Select(x => x.Url)
-                                .ToList();
+                                .ToList()!;
                 return new ResponseCheckAddOrUpdate() { Success = true, Data = productDetaiDTOMap };
 
             }
@@ -85,7 +85,7 @@ namespace App_Api.Controllers
                 SoLuongTon = spChiTiet.SoLuongTon,
                 ThuongHieu = _thuongHieuRes.GetAll().Where(th => th.TrangThai == 0).FirstOrDefault(ite => ite.IdThuongHieu == spChiTiet.IdThuongHieu)?.TenThuongHieu,
                 XuatXu = _xuatXuRes.GetAll().Where(x => x.TrangThai == 0).FirstOrDefault(it => it.IdXuatXu == spChiTiet.IdXuatXu)?.Ten,
-                ListTenAnh = _AnhRes.GetAll().Where(a => a.IdSanPhamChiTiet == spChiTiet.IdChiTietSp && a.TrangThai == 0).Select(x => x.Url).ToList()
+                ListTenAnh = _AnhRes.GetAll().Where(a => a.IdSanPhamChiTiet == spChiTiet.IdChiTietSp && a.TrangThai == 0).Select(x => x.Url).ToList()!
             };
         }
 
@@ -151,6 +151,27 @@ namespace App_Api.Controllers
             }
             return false;
         }
+
+
+        //SanPham
+        //[HttpPost("Create-List-SanPham")]
+        //public async Task<List<SanPham>> CreateListSanPham(List<string> lstSanPham)
+        //{
+        //    var listTenSP = _sanPhamRes.GetAll().Where(sa=>sa.Trangthai == 0).Select(it=>it.TenSanPham).ToList();
+        //    foreach (var item in lstSanPham)
+        //    {
+        //        if (!listTenSP.Contains(item))
+        //        {
+        //            _sanPhamRes.AddItem(new SanPham()
+        //            {
+        //                IdSanPham = Guid.NewGuid().ToString(),
+        //                MaSanPham = _sanPhamRes.GetAll().Any() ? "SP1" : "SP" + _sanPhamRes.GetAll().Count(),
+        //                TenSanPham = item,
+        //                Trangthai = 0
+        //            });
+        //        }
+        //    }
+        //}
 
 
     }
