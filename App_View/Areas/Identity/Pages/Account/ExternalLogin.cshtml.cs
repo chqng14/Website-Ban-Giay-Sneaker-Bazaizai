@@ -65,7 +65,8 @@ namespace App_View.Areas.Identity.Pages.Account
         
         public IActionResult OnGet() => RedirectToPage("./Login");
 
-        public IActionResult OnPost(string provider, string returnUrl = null)
+        //mặc định 
+        public IActionResult OnPost(string provider, string returnUrl = null)              
         {
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
@@ -196,5 +197,6 @@ namespace App_View.Areas.Identity.Pages.Account
             }
             return (IUserEmailStore<NguoiDung>)_userStore;
         }
+        //mặc định 
     }
 }
