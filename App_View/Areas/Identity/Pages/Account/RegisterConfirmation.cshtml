@@ -1,11 +1,12 @@
-﻿@page
+﻿@page "Xác nhận đăng ký"
 @model RegisterConfirmationModel
 @{
-    ViewData["Title"] = "Register confirmation";
+    //ViewData["Title"] = "Register confirmation";
+    ViewData["Title"] = "Xác nhận đăng ký";
 }
 
 <h1>@ViewData["Title"]</h1>
-@{
+@*@{
     if (@Model.DisplayConfirmAccountLink)
     {
 <p>
@@ -16,8 +17,10 @@
     else
     {
 <p>
-        Please check your email to confirm your account.
+            Vui lòng kiểm tra email để xác nhận tài khoản của bạn.
 </p>
     }
-}
-
+}*@
+<p>
+    Chúng tôi đã gửi một email đến tài khoản của bạn. Vui lòng kiểm tra email để xác nhận tài khoản của bạn.
+</p>

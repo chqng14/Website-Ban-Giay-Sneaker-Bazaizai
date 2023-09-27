@@ -6,6 +6,7 @@ using App_View.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,7 +51,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     //Cấu hình đăng nhập.
     options.SignIn.RequireConfirmedEmail = true;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
     options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
-
+    options.SignIn.RequireConfirmedAccount = true;// sau khi đăng kí....(tự hiểu)
 
 });
 builder.Services.ConfigureApplicationCookie(options =>
@@ -59,6 +60,19 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/Lockout/";
     options.AccessDeniedPath = "/KhongDuocTruyCap.html";
 });
+builder.Services.AddAuthentication()
+    .AddGoogle(googleOptions =>
+    {
+        // Đọc thông tin Authentication:Google từ appsettings.json
+        IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+
+        // Thiết lập ClientID và ClientSecret để truy cập API google
+        googleOptions.ClientId = googleAuthNSection["ClientId"];
+        googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+        // Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
+        //googleOptions.CallbackPath = "/dang-nhap-tu-google";
+
+    });
 //thêm
 var app = builder.Build();
 
