@@ -1,6 +1,7 @@
 ﻿using App_Data.DbContextt;
 using App_Data.IRepositories;
 using App_Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace App_Data.Repositories
 
         public IEnumerable<GioHangChiTiet> GetAll()
         {
-            return context.gioHangChiTiets.ToList();
+            return context.gioHangChiTiets.Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.SanPham).ToList();
         }
 
         public bool RemoveCartDetail(GioHangChiTiet item)

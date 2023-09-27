@@ -69,7 +69,7 @@ namespace App_Api.Controllers
 
         private SanPhamChiTietViewModel CreateSanPhamChiTietVM(SanPhamChiTiet spChiTiet)
         {
-            return new SanPhamChiTietViewModel()
+            return new SanPhamChiTietViewModel()    
             {
                 ChatLieu = _chatLieuRes.GetAll().Where(x => x.TrangThai == 0).FirstOrDefault(x => x.IdChatLieu == spChiTiet.IdChatLieu)?.TenChatLieu,
                 Day = spChiTiet.Day,
@@ -84,7 +84,7 @@ namespace App_Api.Controllers
                 SanPham = _sanPhamRes.GetAll().Where(s => s.Trangthai == 0).FirstOrDefault(sp => sp.IdSanPham == spChiTiet.IdSanPham)?.TenSanPham,
                 SoLuongTon = spChiTiet.SoLuongTon,
                 ThuongHieu = _thuongHieuRes.GetAll().Where(th => th.TrangThai == 0).FirstOrDefault(ite => ite.IdThuongHieu == spChiTiet.IdThuongHieu)?.TenThuongHieu,
-                XuatXu = _xuatXuRes.GetAll().Where(xx => xx.TrangThai == 0).FirstOrDefault(it => it.IdXuatXu == spChiTiet.IdXuatXu)?.Ten,
+                XuatXu = _xuatXuRes.GetAll().Where(x => x.TrangThai == 0).FirstOrDefault(it => it.IdXuatXu == spChiTiet.IdXuatXu)?.Ten,
                 ListTenAnh = _AnhRes.GetAll().Where(a => a.IdSanPhamChiTiet == spChiTiet.IdChiTietSp && a.TrangThai == 0).Select(x => x.Url).ToList()
             };
         }

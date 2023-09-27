@@ -147,7 +147,7 @@ namespace App_View.Services
 
         public async Task<List<SanPhamChiTietViewModel>> GetListSanPhamChiTietViewModelAsync()
         {
-            return (await _httpClient.GetFromJsonAsync<List<SanPhamChiTietViewModel>>("/api/SanPhamChiTiet/Get-List-SanPhamChiTiet"))!;
+            return (await _httpClient.GetFromJsonAsync<List<SanPhamChiTietViewModel>>("/api/SanPhamChiTiet/Get-List-SanPhamChiTietViewModel"))!;
         }
 
         public async Task<bool> UpdateAynsc(SanPhamChiTietDTO sanPhamChiTietDTO)

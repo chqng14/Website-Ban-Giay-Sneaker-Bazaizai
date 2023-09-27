@@ -43,9 +43,9 @@
                 @Html.DisplayFor(modelItem => item.TrangThai)
             </td>
             <td>
-                    @Html.ActionLink("Edit", "Edit", new { id=item.IdKichCo }) |
-                    @Html.ActionLink("DetailKickCo", "DetailKickCo", new {  id=item.IdKichCo }) |
-                    @Html.ActionLink("Delete", "Delete", new {  id=item.IdKichCo })
+                    @Html.ActionLink("Edit", "EditKichCo", new { IdKichCo=item.IdKichCo }) |
+                    @Html.ActionLink("Detail", "DetailKickCo", new {  id=item.IdKichCo }) |
+                    @Html.ActionLink("Delete", "DeleteKichCo", new {  id=item.IdKichCo })
             </td>
         </tr>
 }

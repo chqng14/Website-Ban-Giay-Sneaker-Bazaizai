@@ -1,4 +1,6 @@
 ﻿using App_Data.Models;
+using App_Data.Repositories;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using OpenXmlPowerTools;
@@ -13,15 +15,15 @@ namespace App_View.Controllers
         {
             httpClient = new HttpClient();
         }
-        
+
         public async Task<IActionResult> GetAllKickCo()
-        {                 
+        {
             var KichCos = JsonConvert.DeserializeObject<List<KichCo>>(await (await httpClient.GetAsync("https://localhost:7038/api/KichCo")).Content.ReadAsStringAsync());
             return View(KichCos);
         }
         public async Task<IActionResult> DetailKickCo(string id)
         {
-          
+
             var kichCo = (JsonConvert.DeserializeObject<List<KichCo>>(await (await httpClient.GetAsync("https://localhost:7038/api/KichCo")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKichCo == id);
             return View(kichCo);
 
@@ -33,42 +35,46 @@ namespace App_View.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateKichCo(KichCo p)
+        public async Task<IActionResult> CreateKichCo(KichCo q)
         {
-            JsonConvert.DeserializeObject<KichCo>(await (await httpClient.PostAsync($"https://localhost:7038/api/KichCo?TrangThai={p.TrangThai}&KichCo={p.SoKichCo}", null)).Content.ReadAsStringAsync());
+            await httpClient.PostAsync($"https://localhost:7038/api/KichCo?TrangThai={q.TrangThai}&KichCo={q.SoKichCo}", null);
             return RedirectToAction("GetAllKickCo");
         }
 
 
+        public async Task<IActionResult> DeleteKichCo(string id)
+        {
+            await httpClient.DeleteAsync($"https://localhost:7038/api/KichCo/{id}");
+            return RedirectToAction("GetAllKickCo");
+        }
 
-        //public async Task<IActionResult> DeleteSale(Guid id)
-        //{
-        //    if (await SaleService.DeleteSale(id))
-        //    {
-        //        return RedirectToAction("GetAllSale");
-        //    }
-        //    else return BadRequest();
-        //}
-        //public async Task<IActionResult> EditSale(Guid id)
-        //{
-        //    var sp = (await SaleService.GetAllSale()).FirstOrDefault(x => x.Id == id);
+        public async Task<IActionResult> EditKichCo(string IdKichCo)
+        {
+            var kichCo = (JsonConvert.DeserializeObject<List<KichCo>>(await (await httpClient.GetAsync("https://localhost:7038/api/KichCo")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKichCo ==IdKichCo);
 
-        //    if (sp == null)
-        //    {
-        //        return NotFound();
-        //    }
+            if (kichCo == null)
+            {
+                return NotFound();
+            }
 
-        //    return View(sp);
-        //}
+            return View(kichCo);
+        }
+        [HttpPost]
 
-        //[HttpPost]
-        //public async Task<IActionResult> EditSale(Sale p)
-        //{
-        //    if (await SaleService.EditSale(p))
-        //    {
-        //        return RedirectToAction("GetAllSale");
-        //    }
-        //    else return BadRequest();
-        //}
+        public async Task<IActionResult> EditKichCo(KichCo a)
+        {
+            var apiUrl = $"https://localhost:7038/api/KichCo/{a.IdKichCo}?TrangThai={a.TrangThai}&KichCo={a.SoKichCo}";
+
+            var response = await httpClient.PutAsync(apiUrl, null);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return RedirectToAction("GetAllKickCo"); 
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }

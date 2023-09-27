@@ -14,7 +14,11 @@ namespace App_Api.Helpers.Mapping
             CreateMap<MauSacDTO, MauSac>();
             CreateMap<XuatXuDTO, XuatXu>();
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
-            CreateMap<GioHangDTO, GioHangChiTiet>().ReverseMap();
+            CreateMap<GioHangChiTietDTO, GioHangChiTiet>().ReverseMap()
+                 .ForMember(
+                    dest => dest.TenSanPham,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.SanPham.TenSanPham)
+                );
         }
     }
 }

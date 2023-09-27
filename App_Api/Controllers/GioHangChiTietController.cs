@@ -27,7 +27,7 @@ namespace App_Api.Controllers
         private readonly IAllRepo<Anh> _AnhRes;
         private readonly IAllRepo<NguoiDung> _NguoiDung;
         private readonly IMapper _mapper;
-        public GioHangChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<SanPham> sanPhamRes,IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes, IAllRepo<NguoiDung> nguoiDung)
+        public GioHangChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes, IAllRepo<NguoiDung> nguoiDung)
         {
             gioHangChiTiets = DbContextModel.gioHangChiTiets;
             allRepo = new AllRepo<GioHangChiTiet>(DbContextModel, gioHangChiTiets);
@@ -41,9 +41,10 @@ namespace App_Api.Controllers
         }
         // GET: api/<GioHangChiTietController>
         [HttpGet]
-        public IEnumerable<GioHangChiTiet> Get()
+        public IEnumerable<GioHangChiTietDTO> Get()
         {
-            return allRepo.GetAll();
+            var data = _mapper.Map<List<GioHangChiTiet>, List<GioHangChiTietDTO>>(gioHangChiTiets.ToList());
+            return data;
         }
 
         // GET api/<GioHangChiTietController>/5
@@ -55,12 +56,15 @@ namespace App_Api.Controllers
 
         // POST api/<GioHangChiTietController>
         [HttpPost("Create")]
-        public async Task<bool> TaoGioHangDTO(GioHangDTO gioHangDTO)
+        public async Task<bool> TaoGioHangDTO(GioHangChiTietDTO gioHangDTO)
         {
             var giohangChiTiet = _mapper.Map<GioHangChiTiet>(gioHangDTO);
             giohangChiTiet.IdGioHangChiTiet = Guid.NewGuid().ToString();
             giohangChiTiet.IdSanPhamCT = gioHangDTO.sanPhamChiTietDTO.IdChiTietSp;
-            giohangChiTiet.IdNguoiDung = gioHangDTO.NguoiDung.Id;
+            giohangChiTiet.IdNguoiDung = gioHangDTO.GioHangDTO.IdNguoiDung;
+            giohangChiTiet.Soluong = 1;
+            giohangChiTiet.GiaGoc = gioHangDTO.sanPhamChiTietDTO.GiaBan;
+            giohangChiTiet.TrangThai = 0;
             allRepo.AddItem(giohangChiTiet);
             return true;
         }
