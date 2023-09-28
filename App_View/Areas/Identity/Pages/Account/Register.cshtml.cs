@@ -191,7 +191,6 @@ namespace App_View.Areas.Identity.Pages.Account
             return true;
         }
 
-        // [HttpPost]
 
     }
 }

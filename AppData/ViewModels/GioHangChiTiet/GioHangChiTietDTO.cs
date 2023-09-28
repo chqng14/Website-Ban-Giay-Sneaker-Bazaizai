@@ -12,7 +12,7 @@ namespace App_Data.ViewModels.Cart
 {
     public class GioHangChiTietDTO
     {
-        public SanPhamChiTietDTO sanPhamChiTietDTO { get; set; }
+        public SanPhamChiTietDTO.SanPhamChiTietDTO sanPhamChiTietDTO { get; set; }
         public GioHangDTO GioHangDTO { get; set; }
         public string IdGioHangChiTiet { get; set; }
         public string IdNguoiDung { get; set; }

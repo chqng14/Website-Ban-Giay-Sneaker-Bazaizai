@@ -46,4 +46,8 @@
     <Folder Include="wwwroot\AnhSanPham\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\js\site.js" />
+  </ItemGroup>
+
 </Project>
