@@ -88,6 +88,12 @@ namespace App_Api.Controllers
             return (await _sanPhamChiTietRes.GetListAsync()).ToList();
         }
 
+        [HttpGet("Get-DanhSachGiayViewModel")]
+        public async Task<DanhSachGiayViewModel> GetDanhSachGiay()
+        {
+            return await _sanPhamChiTietRes.GetDanhSachGiayViewModelAsync(); ;
+        }
+
         [HttpGet("Get-SanPhamChiTiet/{id}")]
         public async Task<SanPhamChiTiet?> GetSanPham(string id)
         {
