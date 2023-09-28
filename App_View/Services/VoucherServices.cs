@@ -38,19 +38,24 @@ namespace App_View.Services
 
         }
 
-        public Task<bool> DeleteVoucher(string id)
+        public async Task<bool> DeleteVoucher(string id)
         {
-            return _httpClient.GetFromJsonAsync<bool>($"/api/Voucher/DeleteVoucher/{id}");
+            return await _httpClient.GetFromJsonAsync<bool>($"/api/Voucher/DeleteVoucher/{id}");
         }
 
-        public Task<List<Voucher>> GetAllVoucher()
+        public async Task<List<Voucher>> GetAllVoucher()
         {
-            return _httpClient.GetFromJsonAsync<List<Voucher>>("/api/Voucher/GetVoucher");
+            return await _httpClient.GetFromJsonAsync<List<Voucher>>("/api/Voucher/GetVoucher");
         }
 
-        public Task<Voucher> GetVoucherById(string id)
+        public async Task<Voucher> GetVoucherById(string id)
         {
-            throw new NotImplementedException();
+            return await _httpClient.GetFromJsonAsync<Voucher>($"/api/Voucher/GetVoucherByMa/{id}");
+        }
+
+        public async Task<VoucherDTO> GetVoucherDTOById(string id)
+        {
+            return await _httpClient.GetFromJsonAsync<VoucherDTO>($"/api/Voucher/GetVoucherDTOByMa/{id}");
         }
 
         public async Task<bool> UpdateVoucher(VoucherDTO voucherDTO)
