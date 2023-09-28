@@ -29,6 +29,7 @@ namespace App_View.Areas.Identity.Pages.Account
         public string StatusMessage { get; set; }
         public async Task<IActionResult> OnGetAsync(string userId, string code)
         {
+
             if (userId == null || code == null)
             {
                 return RedirectToPage("/Index");
@@ -45,10 +46,11 @@ namespace App_View.Areas.Identity.Pages.Account
             StatusMessage = result.Succeeded ? "Cảm ơn bạn đã xác nhận email của mình." : "Lỗi xác nhận email của bạn.";
             if (result.Succeeded)
             {
-                await _signInManager.SignInAsync(user, false);
-                return RedirectToPage("/Index");
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                //return  RedirectToPage("/Index");
+                return RedirectToAction("Index", "Home", new { area = "" });
             }
-            else return Content(" \"Lỗi xác nhận email của bạn.");
+            else return Content("Lỗi xác nhận email của bạn.");
             //return Page();
         }
     }
