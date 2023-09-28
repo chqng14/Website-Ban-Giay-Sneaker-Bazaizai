@@ -4,10 +4,7 @@ using App_Data.ViewModels.KichCoDTO;
 using App_Data.ViewModels.KieuDeGiayDTO;
 using App_Data.ViewModels.LoaiGiayDTO;
 using App_Data.ViewModels.MauSac;
-using App_Data.ViewModels.SanPhamChiTiet.SanPhamDTO;
-using App_Data.ViewModels.SanPhamChiTiet.ThuongHieuDTO;
-using App_Data.ViewModels.SanPhamChiTietDTO;
-using App_Data.ViewModels.SanPhamChiTietViewModel;
+using App_Data.ViewModels.SanPhamChiTiet;
 using App_Data.ViewModels.XuatXu;
 using AutoMapper;
 
@@ -19,6 +16,7 @@ namespace App_Api.Helpers.Mapping
         {
             CreateMap<MauSacDTO, MauSac>();
             CreateMap<XuatXuDTO, XuatXu>();
+            CreateMap<VoucherDTO, Voucher>().ReverseMap();
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
             CreateMap<SanPhamChiTiet, SanPhamChiTietViewModel>()
                 .ForMember(
