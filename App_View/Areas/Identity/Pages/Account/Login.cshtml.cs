@@ -22,11 +22,13 @@ namespace App_View.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<NguoiDung> _userManager;
 
-        public LoginModel(SignInManager<NguoiDung> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<NguoiDung> signInManager, ILogger<LoginModel> logger, UserManager<NguoiDung> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
         }
 
         [BindProperty]
@@ -40,9 +42,13 @@ namespace App_View.Areas.Identity.Pages.Account
         public string ErrorMessage { get; set; }
         public class InputModel
         {
+            //[Required]
+            //[EmailAddress]
+            //public string Email { get; set; }
+
             [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            [Display(Name = "Địa chỉ Email hoặc Tên tài khoản")]
+            public string UserNameOrEmail { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
@@ -75,11 +81,23 @@ namespace App_View.Areas.Identity.Pages.Account
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
+
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+                var result = await _signInManager.PasswordSignInAsync(Input.UserNameOrEmail, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+                if (!result.Succeeded)
+                {
+                    // Thất bại username/password -> tìm user theo email, nếu thấy thì thử đăng nhập
+                    // bằng user tìm được
+                    var user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
+                    if (user != null)
+                    {
+                        result = await _signInManager.PasswordSignInAsync(user.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+                       
+                    }
+                }
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");

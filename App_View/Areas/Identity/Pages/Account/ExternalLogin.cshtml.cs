@@ -129,44 +129,88 @@ namespace App_View.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
-
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-
-                var result = await _userManager.CreateAsync(user);
-                if (result.Succeeded)
+                var registerUser = await _userManager.FindByEmailAsync(Input.Email);
+                string externalEmail = null;
+                NguoiDung externalEmailUser = null;
+                // claim - đặc tính mô tả 1 đối tượng
+                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
                 {
-                    result = await _userManager.AddLoginAsync(user, info);
-                    if (result.Succeeded)
+                    externalEmail = info.Principal.FindFirstValue(ClaimTypes.Email);
+                }
+                if (externalEmail != null)
+                {
+                    externalEmailUser = await _userManager.FindByEmailAsync(externalEmail);
+                }
+                if (externalEmailUser != null && registerUser != null)
+                {
+                    //Input.Email==externalEmailregisterUser.Id == externalEmailUser.Id
+                    if (Input.Email == externalEmail)
                     {
-                        _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
-
-                        var userId = await _userManager.GetUserIdAsync(user);
-                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                        code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                        var callbackUrl = Url.Page(
-                            "/Account/ConfirmEmail",
-                            pageHandler: null,
-                            values: new { area = "Identity", userId = userId, code = code },
-                            protocol: Request.Scheme);
-
-                        await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                            $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                        // If account confirmation is required, we need to show the link if we don't have a real email sender
-                        if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                        // liên kết tài khoản, đăng nhập
+                        var resultLink = await _userManager.AddLoginAsync(registerUser, info);
+                        if (resultLink.Succeeded)
                         {
-                            return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
+                            await _signInManager.SignInAsync(registerUser, isPersistent: false);
+                            return LocalRedirect(returnUrl);
                         }
-
-                        await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
-                        return LocalRedirect(returnUrl);
+                    }
+                    else
+                    {
+                        //externalEmailUser==registerUser (Input.Email!=externalEmail)
+                        /*
+                            info -> user1= (abc1@gmail.com)
+                                    user2= (abc2@gmail.com)
+                         */
+                        ModelState.AddModelError(string.Empty, "Không liên kết được tài khoản, hãy sử dụng email khác");
+                        return Page();
                     }
                 }
-                foreach (var error in result.Errors)
+                if (externalEmailUser != null && registerUser == null)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    ModelState.AddModelError(string.Empty, "Không hỗ trợ tạo tài khoản mới có email khác với email từ dịch vụ ngoài");
+                    return Page();
+                }
+                if (externalEmailUser == null && externalEmail == Input.Email)
+                {
+                    var user = CreateUser();
+
+                    await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                    await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+                    var result = await _userManager.CreateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        result = await _userManager.AddLoginAsync(user, info);
+                        if (result.Succeeded)
+                        {
+                            _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+
+                            var userId = await _userManager.GetUserIdAsync(user);
+                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                            //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                            //var callbackUrl = Url.Page(
+                            //    "/Account/ConfirmEmail",
+                            //    pageHandler: null,
+                            //    values: new { area = "Identity", userId = userId, code = code },
+                            //    protocol: Request.Scheme);
+
+                            //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                            //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+
+                            // If account confirmation is required, we need to show the link if we don't have a real email sender
+                            //if (_userManager.Options.SignIn.RequireConfirmedAccount)
+                            //{
+                            //    return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
+                            //}
+                            await _userManager.ConfirmEmailAsync(user, code);//thêm
+                            await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                            return LocalRedirect(returnUrl);
+                        }
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
             }
 
