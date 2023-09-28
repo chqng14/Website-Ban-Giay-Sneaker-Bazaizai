@@ -9,12 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App_Api", "App_Api\App_Api.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App_View", "App_View\App_View.csproj", "{B88D5EDA-2007-4003-A2D3-F17CDFFF7663}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{58D47E36-F51B-4F0A-8FA6-ED5920959F96}"
-	ProjectSection(SolutionItems) = preProject
-		..\..\..\Downloads\ludus-free-premium-ecommerce-template-master\LICENSE = ..\..\..\Downloads\ludus-free-premium-ecommerce-template-master\LICENSE
-		..\..\..\Downloads\ludus-free-premium-ecommerce-template-master\README.md = ..\..\..\Downloads\ludus-free-premium-ecommerce-template-master\README.md
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
