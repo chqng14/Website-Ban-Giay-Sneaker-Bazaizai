@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App_Data.ViewModels.Cart
+namespace App_Data.ViewModels.GioHangChiTiet
 {
     public class GioHangChiTietDTO
     {

@@ -676,7 +676,10 @@
                         const itemAppend = $(ItemTemplate(index, true, respose.data.idChswitchiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa))
                         container.append(itemAppend)
                         if (respose.data.day = "true") {
-                            itemAppend.find('.switch-2').prop('checked', true);
+                            itemAppend.find('.switch-2-day').prop('checked', true);
+                        }
+                        if (respose.data.noiBat) {
+                            itemAppend.find('.switch-2-noibat').prop('checked', true);
                         }
                         const key = itemAppend.find('.collapse').attr('id');
                         const containerFile = itemAppend.find('.upload').find('.container-file');
@@ -1051,13 +1054,6 @@
 
             } else {
                 if (dataBienThe.GiaBan != 0 && dataBienThe.GiaNhap != 0 && dataBienThe.SoLuongTon != 0) {
-                    console.log({
-                        ...GetDataMain()
-                        , ...dataBienThe
-                        , ...DataInDataset
-                        , ...moTa
-                        , ...{ Day: currentItem.find('.switch-2').prop('checked') ? "true" : "false", NoiBat: currentItem.find('.switch-2-noibat').prop('checked') }
-                    });
                     $.ajax({
                         url: URL_CREATE_PRODUCT,
                         type: 'POST',
@@ -1066,7 +1062,7 @@
                             , ...dataBienThe
                             , ...DataInDataset
                             , ...moTa
-                            , ...{ Day: currentItem.find('.switch-2').prop('checked') ? "true" : "false", NoiBat: currentItem.find('.switch-2-noibat').prop('checked') }
+                            , ...{ Day: currentItem.find('.switch-2-day').prop('checked') ? "true" : "false", NoiBat: currentItem.find('.switch-2-noibat').prop('checked') }
                         }),
                         contentType: 'application/json',
                         success: function (result) {
@@ -1092,10 +1088,10 @@
                                         }
                                     });
                                 }
-                                checkSS++;
-                                currentItem.remove();
-                                currentIndex++;
-                                processNextItem();
+                                //checkSS++;
+                                //currentItem.remove();
+                                //currentIndex++;
+                                //processNextItem();
                             }
                         },
                         error: function (xhr, status, error) {

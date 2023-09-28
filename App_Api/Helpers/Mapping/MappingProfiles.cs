@@ -1,6 +1,5 @@
 ﻿using App_Data.Models;
 
-using App_Data.ViewModels.Cart;
 using App_Data.ViewModels.GioHangChiTiet;
 
 using App_Data.ViewModels.ChatLieuDTO;
@@ -27,6 +26,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<VoucherDTO, Voucher>().ReverseMap();
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
 
+
             CreateMap<GioHangChiTiet, GioHangChiTietDTO>()
                  .ForMember(
                     dest => dest.TenSanPham,
@@ -39,6 +39,11 @@ namespace App_Api.Helpers.Mapping
                     opt => opt.MapFrom(src => src.SanPhamChiTiet.KichCo.SoKichCo)
                 );
             CreateMap<GioHangChiTietDTOCUD, GioHangChiTiet>().ReverseMap();
+
+            CreateMap<List<SanPhamChiTiet>, DanhSachGiayViewModel>()
+                .ConvertUsing<SanPhamChiTietToListItemViewModelConverter>();
+
+
 
             CreateMap<SanPhamChiTiet, SanPhamChiTietViewModel>()
                 .ForMember(

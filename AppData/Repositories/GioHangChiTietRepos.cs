@@ -1,7 +1,7 @@
 ﻿using App_Data.DbContextt;
 using App_Data.IRepositories;
 using App_Data.Models;
-using App_Data.ViewModels.Cart;
+using App_Data.ViewModels.GioHangChiTiet;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;

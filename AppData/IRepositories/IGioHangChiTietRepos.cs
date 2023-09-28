@@ -1,5 +1,5 @@
 ﻿using App_Data.Models;
-using App_Data.ViewModels.Cart;
+using App_Data.ViewModels.GioHangChiTiet;
 using System;
 using System.Collections.Generic;
 using System.Linq;
