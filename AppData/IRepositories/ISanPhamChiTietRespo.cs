@@ -1,4 +1,5 @@
 ﻿using App_Data.Models;
+using App_Data.ViewModels.SanPhamChiTietViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,6 @@ namespace App_Data.IRepositories
         Task<bool> DeleteAsync(string id);
         Task<bool> UpdateAsync(SanPhamChiTiet entity);
         Task<bool> AddAsync(SanPhamChiTiet entity);
-
+        Task<IEnumerable<SanPhamChiTietViewModel>> GetListViewModelAsync();
     }
 }

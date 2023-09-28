@@ -1,6 +1,15 @@
 ﻿using App_Data.IRepositories;
 using App_Data.Models;
-using App_Data.ViewModels.SanPhamChiTiet;
+using App_Data.ViewModels.ChatLieuDTO;
+using App_Data.ViewModels.KichCoDTO;
+using App_Data.ViewModels.KieuDeGiayDTO;
+using App_Data.ViewModels.LoaiGiayDTO;
+using App_Data.ViewModels.MauSac;
+using App_Data.ViewModels.SanPhamChiTiet.SanPhamDTO;
+using App_Data.ViewModels.SanPhamChiTiet.ThuongHieuDTO;
+using App_Data.ViewModels.SanPhamChiTietDTO;
+using App_Data.ViewModels.SanPhamChiTietViewModel;
+using App_Data.ViewModels.XuatXu;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
@@ -43,7 +52,7 @@ namespace App_Api.Controllers
         public async Task<ResponseCheckAddOrUpdate> CheckProductForAddOrUpdate(SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             var productDetails = (await _sanPhamChiTietRes.GetListAsync())
-                .FirstOrDefault(x=>
+                .FirstOrDefault(x =>
                 x.IdXuatXu == sanPhamChiTietDTO.IdXuatXu &&
                 x.IdMauSac == sanPhamChiTietDTO.IdMauSac &&
                 x.IdKichCo == sanPhamChiTietDTO.IdKichCo &&
@@ -67,34 +76,10 @@ namespace App_Api.Controllers
             return new ResponseCheckAddOrUpdate() { Success = false, Data = null };
         }
 
-        private SanPhamChiTietViewModel CreateSanPhamChiTietVM(SanPhamChiTiet spChiTiet)
-        {
-            return new SanPhamChiTietViewModel()    
-            {
-                ChatLieu = _chatLieuRes.GetAll().Where(x => x.TrangThai == 0).FirstOrDefault(x => x.IdChatLieu == spChiTiet.IdChatLieu)?.TenChatLieu,
-                Day = spChiTiet.Day,
-                GiaBan = spChiTiet.GiaBan,
-                GiaNhap = spChiTiet.GiaNhap,
-                IdChiTietSp = spChiTiet.IdChiTietSp,
-                KichCo = _kickcoRes.GetAll().Where(x => x.TrangThai == 0).FirstOrDefault(x => x.IdKichCo == spChiTiet.IdKichCo)?.SoKichCo,
-                KieuDeGiay = _kieuDeGiayRes.GetAll().Where(x => x.Trangthai == 0).FirstOrDefault(ki => ki.IdKieuDeGiay == spChiTiet.IdKieuDeGiay)?.TenKieuDeGiay,
-                LoaiGiay = _loaiGiayRes.GetAll().Where(lo => lo.TrangThai == 0).FirstOrDefault(l => l.IdLoaiGiay == spChiTiet.IdLoaiGiay)?.TenLoaiGiay,
-                MauSac = _mauSacRes.GetAll().Where(ma => ma.TrangThai == 0).FirstOrDefault(m => m.IdMauSac == spChiTiet.IdMauSac)?.TenMauSac,
-                MoTa = spChiTiet.MoTa,
-                SanPham = _sanPhamRes.GetAll().Where(s => s.Trangthai == 0).FirstOrDefault(sp => sp.IdSanPham == spChiTiet.IdSanPham)?.TenSanPham,
-                SoLuongTon = spChiTiet.SoLuongTon,
-                ThuongHieu = _thuongHieuRes.GetAll().Where(th => th.TrangThai == 0).FirstOrDefault(ite => ite.IdThuongHieu == spChiTiet.IdThuongHieu)?.TenThuongHieu,
-                XuatXu = _xuatXuRes.GetAll().Where(x => x.TrangThai == 0).FirstOrDefault(it => it.IdXuatXu == spChiTiet.IdXuatXu)?.Ten,
-                ListTenAnh = _AnhRes.GetAll().Where(a => a.IdSanPhamChiTiet == spChiTiet.IdChiTietSp && a.TrangThai == 0).Select(x => x.Url).ToList()!
-            };
-        }
-
         [HttpGet("Get-List-SanPhamChiTietViewModel")]
         public async Task<List<SanPhamChiTietViewModel>> GetListSanPham()
         {
-            return (await _sanPhamChiTietRes.GetListAsync())
-                .Where(sp => sp.TrangThai == 0)
-                .Select(item => CreateSanPhamChiTietVM(item)).ToList();
+            return (await _sanPhamChiTietRes.GetListViewModelAsync()).ToList();
         }
 
         [HttpGet("Get-List-SanPhamChiTiet")]
@@ -114,16 +99,18 @@ namespace App_Api.Controllers
         {
             var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietDTO);
             sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
-            sanPhamChiTiet.Ma = !(await _sanPhamChiTietRes.GetListAsync()).Any() ? 
-                "MASP1" : 
+            sanPhamChiTiet.Ma = !(await _sanPhamChiTietRes.GetListAsync()).Any() ?
+                "MASP1" :
                 "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
             sanPhamChiTiet.TrangThai = 0;
             sanPhamChiTiet.TrangThaiSale = 0;
-            return new ResponseCreataDTO() 
-            { 
+            sanPhamChiTiet.SoLuongDaBan = 0;
+            sanPhamChiTiet.NgayTao = DateTime.Now;
+            return new ResponseCreataDTO()
+            {
                 Success = await _sanPhamChiTietRes.AddAsync(sanPhamChiTiet),
-                IdChiTietSp = sanPhamChiTiet.IdChiTietSp 
-            }; 
+                IdChiTietSp = sanPhamChiTiet.IdChiTietSp
+            };
 
         }
 
@@ -154,24 +141,143 @@ namespace App_Api.Controllers
 
 
         //SanPham
-        //[HttpPost("Create-List-SanPham")]
-        //public async Task<List<SanPham>> CreateListSanPham(List<string> lstSanPham)
-        //{
-        //    var listTenSP = _sanPhamRes.GetAll().Where(sa=>sa.Trangthai == 0).Select(it=>it.TenSanPham).ToList();
-        //    foreach (var item in lstSanPham)
-        //    {
-        //        if (!listTenSP.Contains(item))
-        //        {
-        //            _sanPhamRes.AddItem(new SanPham()
-        //            {
-        //                IdSanPham = Guid.NewGuid().ToString(),
-        //                MaSanPham = _sanPhamRes.GetAll().Any() ? "SP1" : "SP" + _sanPhamRes.GetAll().Count(),
-        //                TenSanPham = item,
-        //                Trangthai = 0
-        //            });
-        //        }
-        //    }
-        //}
+        [HttpPost("Create-SanPham")]
+        public SanPhamDTO? CreateSanPham(SanPhamDTO sanPhamDTO)
+        {
+
+            if (!_sanPhamRes.GetAll().Where(sp => sp.Trangthai == 0).Select(i => i.TenSanPham).Contains(sanPhamDTO.TenSanPham))
+            {
+                var sanPham = _mapper.Map<SanPham>(sanPhamDTO);
+                sanPham.IdSanPham = Guid.NewGuid().ToString();
+                sanPham.MaSanPham = !_sanPhamRes.GetAll().Any() ? "SP1" : "SP" + _sanPhamRes.GetAll().Count() + 1;
+                sanPham.Trangthai = 0;
+                _sanPhamRes.AddItem(sanPham);
+                sanPhamDTO.IdSanPham = sanPham.IdSanPham;
+                return sanPhamDTO;
+            }
+            return null;
+        }
+
+
+        //ThuongHieu
+        [HttpPost("Create-ThuongHieu")]
+        public ThuongHieuDTO? CreateThuongHieu(ThuongHieuDTO thuongHieuDTO)
+        {
+            if (!_thuongHieuRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.TenThuongHieu).Contains(thuongHieuDTO.TenThuongHieu))
+            {
+                var thuongHieu = _mapper.Map<ThuongHieu>(thuongHieuDTO);
+                thuongHieu.IdThuongHieu = Guid.NewGuid().ToString();
+                thuongHieu.MaThuongHieu = !_xuatXuRes.GetAll().Any() ? "TH1" : "TH" + _xuatXuRes.GetAll().Count() + 1;
+                thuongHieu.TrangThai = 0;
+                _thuongHieuRes.AddItem(thuongHieu);
+                thuongHieuDTO.IdThuongHieu = thuongHieu.IdThuongHieu;
+                return thuongHieuDTO;
+            }
+            return null;
+        }
+
+        //XuatXu
+        [HttpPost("Create-XuatXu")]
+        public XuatXuDTO? CreateXuatXu(XuatXuDTO xuaXuDTO)
+        {
+            if (!_xuatXuRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.Ten).Contains(xuaXuDTO.Ten))
+            {
+                var xuatXu = _mapper.Map<XuatXu>(xuaXuDTO);
+                xuatXu.IdXuatXu = Guid.NewGuid().ToString();
+                xuatXu.Ma = !_xuatXuRes.GetAll().Any() ? "XX1" : "XX" + _xuatXuRes.GetAll().Count() + 1;
+                xuatXu.TrangThai = 0;
+                _xuatXuRes.AddItem(xuatXu);
+                xuaXuDTO.IdXuatXu = xuatXu.IdXuatXu;
+                return xuaXuDTO;
+            }
+            return null;
+        }
+
+        //ChatLieu
+        [HttpPost("Create-ChatLieu")]
+        public ChatLieuDTO? CreateChatLieu(ChatLieuDTO chatLieuDTO)
+        {
+            if (!_chatLieuRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.TenChatLieu).Contains(chatLieuDTO.TenChatLieu))
+            {
+                var chatLieu = _mapper.Map<ChatLieu>(chatLieuDTO);
+                chatLieu.IdChatLieu = Guid.NewGuid().ToString();
+                chatLieu.MaChatLieu = !_chatLieuRes.GetAll().Any() ? "CL1" : "CL" + _chatLieuRes.GetAll().Count() + 1;
+                chatLieu.TrangThai = 0;
+                _chatLieuRes.AddItem(chatLieu);
+                chatLieuDTO.IdChatLieu = chatLieu.IdChatLieu;
+                return chatLieuDTO;
+            }
+            return null;
+        }
+
+        //LoaiGiay
+        [HttpPost("Create-LoaiGiay")]
+        public LoaiGiayDTO? CreateLoaiGiay(LoaiGiayDTO loaiGiayDTO)
+        {
+            if (!_loaiGiayRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.TenLoaiGiay).Contains(loaiGiayDTO.TenLoaiGiay))
+            {
+                var loaiGiay = _mapper.Map<LoaiGiay>(loaiGiayDTO);
+                loaiGiay.IdLoaiGiay = Guid.NewGuid().ToString();
+                loaiGiay.MaLoaiGiay = !_loaiGiayRes.GetAll().Any() ? "LG1" : "LG" + _loaiGiayRes.GetAll().Count() + 1;
+                loaiGiay.TrangThai = 0;
+                _loaiGiayRes.AddItem(loaiGiay);
+                loaiGiayDTO.IdLoaiGiay = loaiGiay.IdLoaiGiay;
+                return loaiGiayDTO;
+            }
+            return null;
+        }
+
+        //KieuDeGiay
+        [HttpPost("Create-KieuDeGiay")]
+        public KieuDeGiayDTO? CreateKieuDeGiay(KieuDeGiayDTO kieuDeGiay)
+        {
+            if (!_kieuDeGiayRes.GetAll().Where(sp => sp.Trangthai == 0).Select(i => i.TenKieuDeGiay).Contains(kieuDeGiay.TenKieuDeGiay))
+            {
+                var loaiGiay = _mapper.Map<KieuDeGiay>(kieuDeGiay);
+                loaiGiay.IdKieuDeGiay = Guid.NewGuid().ToString();
+                loaiGiay.MaKieuDeGiay = !_kieuDeGiayRes.GetAll().Any() ? "KDG1" : "KDG" + _kieuDeGiayRes.GetAll().Count() + 1;
+                loaiGiay.Trangthai = 0;
+                _kieuDeGiayRes.AddItem(loaiGiay);
+                kieuDeGiay.IdKieuDeGiay = loaiGiay.IdKieuDeGiay;
+                return kieuDeGiay;
+            }
+            return null;
+        }
+
+        //MauSac
+        [HttpPost("Create-MauSac")]
+        public MauSacDTO? CreateMauSac(MauSacDTO kieuDeGiay)
+        {
+            if (!_mauSacRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.TenMauSac).Contains(kieuDeGiay.TenMauSac))
+            {
+                var loaiGiay = _mapper.Map<MauSac>(kieuDeGiay);
+                loaiGiay.IdMauSac = Guid.NewGuid().ToString();
+                loaiGiay.MaMauSac = !_mauSacRes.GetAll().Any() ? "MS1" : "MS" + _mauSacRes.GetAll().Count() + 1;
+                loaiGiay.TrangThai = 0;
+                _mauSacRes.AddItem(loaiGiay);
+                kieuDeGiay.IdMauSac = loaiGiay.IdMauSac;
+                return kieuDeGiay;
+            }
+            return null;
+        }
+
+        //KichCo
+        [HttpPost("Create-KichCo")]
+        public KichCoDTO? CreateKichCo(KichCoDTO kieuDeGiay)
+        {
+            if (!_kickcoRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.SoKichCo).Contains(kieuDeGiay.SoKichCo))
+            {
+                var loaiGiay = _mapper.Map<KichCo>(kieuDeGiay);
+                loaiGiay.IdKichCo = Guid.NewGuid().ToString();
+                loaiGiay.MaKichCo = !_kickcoRes.GetAll().Any() ? "MS1" : "MS" + _kickcoRes.GetAll().Count() + 1;
+                loaiGiay.TrangThai = 0;
+                _kickcoRes.AddItem(loaiGiay);
+                kieuDeGiay.IdKichCo = loaiGiay.IdKichCo;
+                return kieuDeGiay;
+            }
+            return null;
+        }
+
 
 
     }

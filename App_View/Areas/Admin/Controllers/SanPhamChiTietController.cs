@@ -8,8 +8,17 @@ using Microsoft.EntityFrameworkCore;
 using App_Data.DbContextt;
 using App_Data.Models;
 using App_View.IServices;
-using App_Data.ViewModels.SanPhamChiTiet;
 using App_Data.ViewModels.Anh;
+using System.Security.Cryptography;
+using App_Data.ViewModels.SanPhamChiTiet.SanPhamDTO;
+using App_Data.ViewModels.SanPhamChiTiet.ThuongHieuDTO;
+using App_Data.ViewModels.XuatXu;
+using App_Data.ViewModels.ChatLieuDTO;
+using App_Data.ViewModels.LoaiGiayDTO;
+using App_Data.ViewModels.KieuDeGiayDTO;
+using App_Data.ViewModels.MauSac;
+using App_Data.ViewModels.KichCoDTO;
+using App_Data.ViewModels.SanPhamChiTietDTO;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -135,6 +144,54 @@ namespace App_View.Areas.Admin.Controllers
         public async Task<bool> UpdateSanPham([FromBody]SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             return await _sanPhamChiTietService.UpdateAynsc(sanPhamChiTietDTO);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenSanPham([FromBody]SanPhamDTO sanPhamDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenSanPhamAynsc(sanPhamDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenThuongHieu([FromBody] ThuongHieuDTO thuongHieuDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenThuongHieuAynsc(thuongHieuDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenChatLieu([FromBody] ChatLieuDTO chatLieuDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenChatLieuAynsc(chatLieuDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenLoaiGiay([FromBody] LoaiGiayDTO loaiGiayDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenLoaiGiayAynsc(loaiGiayDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenKieuDeGiay([FromBody] KieuDeGiayDTO kieuDeGiayDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenKieuDeGiayAynsc(kieuDeGiayDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenMauSac([FromBody] MauSacDTO kieuDeGiayDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenMauSacAynsc(kieuDeGiayDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenKichCo([FromBody] KichCoDTO kichCoDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenKichCoAynsc(kichCoDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenXuatXu([FromBody] XuatXuDTO xuatXuDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenXuatXuAynsc(xuatXuDTO));
         }
 
         [HttpPost]

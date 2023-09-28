@@ -1,4 +1,4 @@
-﻿@model App_Data.ViewModels.SanPhamChiTiet.SanPhamChiTietDTO
+﻿@model App_Data.ViewModels.SanPhamChiTietDTO.SanPhamChiTietDTO
 
 @{
     ViewData["Title"] = "Quản lý sản phẩm";
@@ -29,14 +29,19 @@
                             <label>Số lượng</label>
                             <input id="soLuongTon" class="form-control formatNumber" name="SoLuongTon">
                         </div>
-                        <div class="col-12">
-                            <div class="form-group d-flex align-items-center">
-                                <div class="switch m-r-10">
-                                    <input type="checkbox" id="switch-2" class="switch-2">
-                                    <label for="switch-2"></label>
-                                </div>
-                                <label>Dây</label>
+                        <div class="form-group d-flex align-items-center col-2">
+                            <div class="switch m-r-10">
+                                <input type="checkbox" id="switch-1-day" class="switch-2-day">
+                                <label for="switch-1-day"></label>
                             </div>
+                            <label>Dây</label>
+                        </div>
+                        <div class="form-group d-flex align-items-center col-2">
+                            <div class="switch m-r-10">
+                                <input type="checkbox" id="switch-1-noibat" class="switch-2-noibat">
+                                <label for="switch-1-noibat"></label>
+                            </div>
+                            <label>Nổi bật</label>
                         </div>
 
                         <div class="form-group col-12">
@@ -67,150 +72,6 @@
     </div>
 </div>
 
-@*Add san pham*@
-<div class="modal fade" id="addSanPham">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Thêm sản phẩm</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <i class="anticon anticon-close"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <label>Tên sản phẩm</label>
-                <select name="listNameSanPham" multiple="multiple" class="js-example-basic-multiple select2-active">
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Add</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@*Add thương hiệu*@
-<div class="modal fade" id="addThuongHieu">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Thêm thương hiệu</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <i class="anticon anticon-close"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <label>Tên thương hiệu</label>
-                <select name="listNameThuongHieu" multiple="multiple" class="js-example-basic-multiple select2-active">
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Add</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@*Add thương hiệu*@
-<div class="modal fade" id="addThuongHieu">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Thêm thương hiệu</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <i class="anticon anticon-close"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <label>Tên thương hiệu</label>
-                <select name="listNameThuongHieu" multiple="multiple" class="js-example-basic-multiple select2-active">
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Add</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-@*Add xuất xứ*@
-<div class="modal fade" id="addXuatXu">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Thêm xuất xứ</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <i class="anticon anticon-close"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <label>Tên xuất xứ</label>
-                <select name="listNameXuatXu" multiple="multiple" class="js-example-basic-multiple select2-active">
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
-                <button type="button" class="btn btn-primary">Add</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    $(document).ready(function () {
-        $(".select2-active").select2();
-
-        $('#addSanPham').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                var inputValue = $(this).val();
-                if (inputValue) {
-                    var $select2 = $("[name='listNameSanPham']");
-
-                    var newOption = new Option(inputValue, inputValue, true, true);
-                    $select2.append(newOption).trigger('change');
-
-                    $(this).val('');
-                    console.log($("[name='listNameSanPham']").select2('data'));
-                }
-            }
-        });
-
-
-        $('#addThuongHieu').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                var inputValue = $(this).val();
-                if (inputValue) {
-                    var $select2 = $("[name='listNameThuongHieu']");
-
-                    var newOption = new Option(inputValue, inputValue, true, true);
-                    $select2.append(newOption).trigger('change');
-
-                    $(this).val('');
-                    console.log($("[name='listNameThuongHieu']").select2('data'));
-                }
-            }
-        });
-
-        $('#addXuatXu').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                var inputValue = $(this).val();
-                if (inputValue) {
-                    var $select2 = $("[name='listNameThuongHieu']");
-
-                    var newOption = new Option(inputValue, inputValue, true, true);
-                    $select2.append(newOption).trigger('change');
-
-                    $(this).val('');
-                    console.log($("[name='listNameThuongHieu']").select2('data'));
-                }
-            }
-        });
-    });
-
-</script>
 <div class="card">
     <div class="card-body" id="formGen">
         <div style="display: flex; align-items: center; justify-content: space-between;">
@@ -224,138 +85,88 @@
         </div>
         <div class="m-b-15" style="margin-bottom: 30px">
             <div class="row">
-
-                <div class="col-4" style="margin-top: 10px">
+                <div class="col-4" style="margin-top: 10px" id="sanpham">
                     <label>Tên sản phẩm</label>
-                    <div class="d-flex justify-content-between">
-                        <select class="select2 w-90" asp-for="IdSanPham">
-                            @foreach (var item in (SelectList)ViewData["IdSanPham"])
-                            {
-                                <option value="@item.Value">@item.Text</option>
-                            }
-                        </select>
-                        <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
-                            <i class="anticon anticon-plus-circle"></i>
-                        </button>
-                    </div>
+                    <select class="w-100 select2-active" asp-for="IdSanPham">
+                        @foreach (var item in (SelectList)ViewData["IdSanPham"])
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
                 </div>
 
-                <div class="col-4" style="margin-top: 10px">
+                <div class="col-4" style="margin-top: 10px" id="thuonghieu">
                     <label>Thương hiệu</label>
-                    <div class="d-flex justify-content-between">
-                        <select class="select2 w-90" asp-for="IdThuongHieu">
-
-                            @foreach (var item in (SelectList)ViewData["IdThuongHieu"])
-                            {
-                                <option value="@item.Value">@item.Text</option>
-                            }
-                        </select>
-                        <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addThuongHieu">
-                            <i class="anticon anticon-plus-circle"></i>
-                        </button>
-                    </div>
+                    <select class="select2-active w-100" asp-for="IdThuongHieu">
+                        @foreach (var item in (SelectList)ViewData["IdThuongHieu"])
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
                 </div>
 
-                <div class="col-4" style="margin-top: 10px">
+                <div class="col-4" style="margin-top: 10px" id="xuatxu">
                     <label>Xuất xứ</label>
-                    <div class="d-flex justify-content-between">
-                        <select class="select2 w-90" asp-for="IdXuatXu">
-                            @foreach (var item in (SelectList)ViewData["IdXuatXu"])
-                            {
-                                <option value="@item.Value">@item.Text</option>
-                            }
-                        </select>
-                        <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
-                            <i class="anticon anticon-plus-circle"></i>
-                        </button>
-                    </div>
+                    <select class="select2-active w-100" asp-for="IdXuatXu">
+                        @foreach (var item in (SelectList)ViewData["IdXuatXu"])
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
                 </div>
 
-                <div class="col-4" style="margin-top: 10px">
+                <div class="col-4" style="margin-top: 10px" id="chatlieu">
                     <label>Chất liệu</label>
-                    <div class="d-flex justify-content-between">
-                        <select class="select2 w-90" asp-for="IdChatLieu">
-                            @foreach (var item in (SelectList)ViewData["IdChatLieu"])
-                            {
-                                <option value="@item.Value">@item.Text</option>
-                            }
-                        </select>
-                        <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
-                            <i class="anticon anticon-plus-circle"></i>
-                        </button>
-                    </div>
+                    <select class="select2-active w-100" asp-for="IdChatLieu">
+                        @foreach (var item in (SelectList)ViewData["IdChatLieu"])
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
                 </div>
 
-                <div class="col-4" style="margin-top: 10px">
+                <div class="col-4" style="margin-top: 10px" id="loaigiay">
                     <label>Loại giầy</label>
-                    <div class="d-flex justify-content-between">
-                        <select class="select2 w-90" asp-for="IdLoaiGiay">
-                            @foreach (var item in (SelectList)ViewData["IdLoaiGiay"])
-                            {
-                                <option value="@item.Value">@item.Text</option>
-                            }
-                        </select>
-                        <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
-                            <i class="anticon anticon-plus-circle"></i>
-                        </button>
-                    </div>
+                    <select class="select2-active w-100" asp-for="IdLoaiGiay">
+                        @foreach (var item in (SelectList)ViewData["IdLoaiGiay"])
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
                 </div>
 
-                <div class="col-4" style="margin-top: 10px">
+                <div class="col-4" style="margin-top: 10px" id="kieudegiay">
                     <label>Kiểu đế giầy</label>
-                    <div class="d-flex justify-content-between">
-                        <select class="select2 w-90" asp-for="IdKieuDeGiay">
-                            @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"])
-                            {
-                                <option value="@item.Value">@item.Text</option>
-                            }
-                        </select>
-                        <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
-                            <i class="anticon anticon-plus-circle"></i>
-                        </button>
-                    </div>
+                    <select class="select2-active w-100" asp-for="IdKieuDeGiay">
+                        @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"])
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-6" style="margin-top: 10px">
-                    <label>Color</label>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="d-flex justify-content-between">
-                                <select id="IdColor" class="select2 w-95"
-                                        multiple="multiple">
-                                    @foreach (var item in (SelectList)ViewData["IdMauSac"])
-                                    {
-                                        <option value="@item.Value">@item.Text</option>
-                                    }
-                                </select>
-                                <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
-                                    <i class="anticon anticon-plus-circle"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-6" style="margin-top: 10px" id="mausac">
+                    <label>Màu Sắc</label>
+                    <select id="IdColor" class="select2-active w-100"
+                            multiple="multiple">
+                        @foreach (var item in (SelectList)ViewData["IdMauSac"])
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
                 </div>
 
-                <div class="col-6" style="margin-top: 10px">
-                    <label>Size</label>
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="d-flex justify-content-between">
-                                <select id="IdSize" class="select2 w-95"
-                                        multiple="multiple">
-                                    @foreach (var item in (SelectList)ViewData["IdKichCo"])
-                                    {
-                                        <option value="@item.Value">@item.Text</option>
-                                    }
-                                </select>
-                                <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#addSanPham">
-                                    <i class="anticon anticon-plus-circle"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="col-6" style="margin-top: 10px" id="kichco">
+                    <label>Kích cỡ</label>
+                    <select id="IdSize" class="select2-active w-100"
+                            multiple="multiple">
+                        @foreach (var item in (SelectList)ViewData["IdKichCo"])
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
                 </div>
             </div>
         </div>
@@ -371,6 +182,280 @@
 
 <div class="accordion borderless" id="accordion-borderless">
 </div>
+
+<script>
+    $(() => {
+        $(".select2-active").select2();
+        $('#thuonghieu').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        TenThuongHieu: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenThuongHieu',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("[name='IdThuongHieu']");
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.tenThuongHieu, result.idThuongHieu, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                            console.log($select2.val());
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#xuatxu').find('input.select2-input').on('keyup', function (e) {
+            console.log('xuatxu');
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        Ten: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenXuatXu',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("[name='IdXuatXu']");
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.ten, result.idXuatXu, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                            console.log($select2.val());
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#sanpham').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        TenSanPham: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenSanPham',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("[name='IdSanPham']");
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.tenSanPham, result.idSanPham, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                            console.log($select2.val());
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#loaigiay').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        TenLoaiGiay: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenLoaiGiay',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("[name='IdLoaiGiay']");
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.tenLoaiGiay, result.idLoaiGiay, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                            console.log($select2.val());
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#chatlieu').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        TenChatLieu: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenChatLieu',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("[name='IdChatLieu']");
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.tenChatLieu, result.idChatLieu, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                            console.log($select2.val());
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#kieudegiay').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        TenKieuDeGiay: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenKieuDeGiay',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("[name='IdKieuDeGiay']");
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.tenKieuDeGiay, result.idKieuDeGiay, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                            console.log($select2.val());
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#mausac').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        TenMauSac: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenMauSac',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("#IdColor");
+
+                            var newOption = new Option(result.tenMauSac, result.idMauSac, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                            console.log($("[name='listNameSanPham']").select2('data'));
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#kichco').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        soKichCo: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenKichCo',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            console.log(result);
+                            var $select2 = $("#IdSize");
+
+                            var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+    })
+</script>
+
 <script>
     $(() => {
         $('#MoTaCauHinh').summernote();
@@ -416,7 +501,6 @@
     }
 
 
-    $(() => $('.select2').select2());
     const disabledFormMain = () => $('#formGen').find('*').prop("disabled", true);
     const unDisabledFormMain = () => $('#formGen').find('*').prop("disabled", false);
     //Huy
@@ -472,16 +556,20 @@
                                     <label>Số lượng(*)</label>
                                     <input class="form-control formatNumber" name="SoLuongTon" value="${soLuong}">
                                 </div>
-                                <div class="col-12">
-                                        <div class="form-group d-flex align-items-center">
-                                            <div class="switch m-r-10">
-                                                <input type="checkbox" id="switch-${index}" class="switch-2">
-                                                <label for="switch-${index}"></label>
-                                            </div>
-                                            <label>Dây</label>
-                                        </div>
+                                <div class="form-group d-flex align-items-center col-2">
+                                    <div class="switch m-r-10">
+                                        <input type="checkbox" id="switch-${index}" class="switch-2-day">
+                                        <label for="switch-${index}"></label>
                                     </div>
-
+                                    <label>Dây</label>
+                                </div>
+                                <div class="form-group d-flex align-items-center col-2">
+                                    <div class="switch m-r-10">
+                                        <input type="checkbox" id="switch-${index}-1" class="switch-2-noibat">
+                                        <label for="switch-${index}-1"></label>
+                                    </div>
+                                    <label>Nổi bật</label>
+                                </div>
                                 <div class="form-group col-12">
                                     <div class="m-b-5" style="margin-top: 10px;">
                                         <label style="display: block; margin-bottom: 5px;">
@@ -585,7 +673,7 @@
                 promise.then((respose) => {
                     console.log(respose);
                     if (respose.success) {
-                        const itemAppend = $(ItemTemplate(index, true, respose.data.idChiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa))
+                        const itemAppend = $(ItemTemplate(index, true, respose.data.idChswitchiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa))
                         container.append(itemAppend)
                         if (respose.data.day = "true") {
                             itemAppend.find('.switch-2').prop('checked', true);
@@ -943,7 +1031,7 @@
                 $.ajax({
                     url: URL_UPDATE_PRODUCT_DETAIL,
                     type: 'POST',
-                    data: JSON.stringify({ ...GetDataMain(), ...dataBienThe, ...DataInDataset, ...{ IdChiTietSp: currentItem.attr('data-idproductdetail') }, ...moTa, ...{ Day: currentItem.find('.switch-2').prop('checked') ? "true" : "false" } }),
+                    data: JSON.stringify({ ...GetDataMain(), ...dataBienThe, ...DataInDataset, ...{ IdChiTietSp: currentItem.attr('data-idproductdetail') }, ...moTa, ...{ Day: currentItem.find('.switch-2-day').prop('checked') ? "true" : "false", NoiBat: currentItem.find('.switch-2-noibat').prop('checked') } }),
                     contentType: 'application/json',
                     success: function (result) {
                         checkSS++;
@@ -968,7 +1056,7 @@
                         , ...dataBienThe
                         , ...DataInDataset
                         , ...moTa
-                        , ...{ Day: currentItem.find('.switch-2').prop('checked') ? "true" : "false" }
+                        , ...{ Day: currentItem.find('.switch-2').prop('checked') ? "true" : "false", NoiBat: currentItem.find('.switch-2-noibat').prop('checked') }
                     });
                     $.ajax({
                         url: URL_CREATE_PRODUCT,
@@ -978,7 +1066,7 @@
                             , ...dataBienThe
                             , ...DataInDataset
                             , ...moTa
-                            , ...{ Day: currentItem.find('.switch-2').prop('checked') ? "true" : "false" }
+                            , ...{ Day: currentItem.find('.switch-2').prop('checked') ? "true" : "false", NoiBat: currentItem.find('.switch-2-noibat').prop('checked') }
                         }),
                         contentType: 'application/json',
                         success: function (result) {
@@ -1023,11 +1111,8 @@
                     currentIndex++;
                     processNextItem();
                 }
-
             }
-
         }
-
         processNextItem();
     }
 </script>
