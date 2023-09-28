@@ -22,6 +22,10 @@ builder.Services.AddIdentity<NguoiDung, ChucVu>()
     .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IVoucherServices, VoucherServices>();
+//builder.Services.AddDefaultIdentity<NguoiDung>()
+//    .AddEntityFrameworkStores<BazaizaiContext>()
+//    .AddDefaultTokenProviders();
+builder.Services.AddControllersWithViews();builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
@@ -73,7 +77,16 @@ builder.Services.AddAuthentication()
         // Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
         //googleOptions.CallbackPath = "/dang-nhap-tu-google";
 
+    })
+    .AddFacebook(facebookOptions => {
+        // Đọc cấu hình
+        IConfigurationSection facebookAuthNSection = builder.Configuration.GetSection("Authentication:Facebook");
+        facebookOptions.AppId = facebookAuthNSection["AppId"];
+        facebookOptions.AppSecret = facebookAuthNSection["AppSecret"];
+        // Thiết lập đường dẫn Facebook chuyển hướng đến
+        //facebookOptions.CallbackPath = "/dang-nhap-tu-facebook";
     });
+
 //thêm
 var app = builder.Build();
 

@@ -22,6 +22,10 @@ namespace App_Api.Helpers.Mapping
             CreateMap<XuatXuDTO, XuatXu>();
             CreateMap<VoucherDTO, Voucher>().ReverseMap();
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
+            CreateMap<List<SanPhamChiTiet>, DanhSachGiayViewModel>()
+                .ConvertUsing<SanPhamChiTietToListItemViewModelConverter>();
+
+
             CreateMap<SanPhamChiTiet, SanPhamChiTietViewModel>()
                 .ForMember(
                         dest => dest.SanPham, 

@@ -59,9 +59,19 @@ namespace App_Data.Repositories
             return await _context.sanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == id);
         }
 
+        public async Task<DanhSachGiayViewModel> GetDanhSachGiayViewModelAsync()
+        {
+            var lstSanPhamChiTiet = await _context.sanPhamChiTiets
+                .Include(it=>it.SanPham)
+                .Include(it=>it.ThuongHieu)
+                .Include(it=>it.Anh)
+                .ToListAsync();
+            return _mapper.Map<DanhSachGiayViewModel>(lstSanPhamChiTiet);
+        }
+
         public async Task<IEnumerable<SanPhamChiTiet>> GetListAsync()
         {
-            return await _context.sanPhamChiTiets.Include(x => x.MauSac).ToListAsync();
+            return await _context.sanPhamChiTiets.ToListAsync();
         }
 
         public async Task<IEnumerable<SanPhamChiTietViewModel>> GetListViewModelAsync()

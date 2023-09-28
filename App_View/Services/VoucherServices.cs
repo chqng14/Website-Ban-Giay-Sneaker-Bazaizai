@@ -38,14 +38,14 @@ namespace App_View.Services
 
         }
 
-        public async Task<bool> DeleteVoucher(string id)
+        public Task<bool> DeleteVoucher(string id)
         {
-            return await _httpClient.GetFromJsonAsync<bool>($"/api/Voucher/DeleteVoucher/{id}");
+            return _httpClient.GetFromJsonAsync<bool>($"/api/Voucher/DeleteVoucher/{id}");
         }
 
-        public async Task<List<Voucher>> GetAllVoucher()
+        public Task<List<Voucher>> GetAllVoucher()
         {
-            return await _httpClient.GetFromJsonAsync<List<Voucher>>("/api/Voucher/GetVoucher");
+            return _httpClient.GetFromJsonAsync<List<Voucher>>("/api/Voucher/GetVoucher");
         }
 
         public async Task<Voucher> GetVoucherById(string id)
