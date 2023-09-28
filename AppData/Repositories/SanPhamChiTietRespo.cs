@@ -57,7 +57,7 @@ namespace App_Data.Repositories
 
         public async Task<IEnumerable<SanPhamChiTiet>> GetListAsync()
         {
-            return await _context.sanPhamChiTiets.ToListAsync();
+            return await _context.sanPhamChiTiets.Include(c => c.SanPham).ToListAsync();
         }
 
         public async Task<bool> UpdateAsync(SanPhamChiTiet entity)

@@ -3,8 +3,10 @@ using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
 using App_Data.ViewModels.Cart;
+using App_Data.ViewModels.GioHangChiTiet;
 using App_Data.ViewModels.SanPhamChiTiet;
 using AutoMapper;
+using DocumentFormat.OpenXml.Office.CustomUI;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +21,7 @@ namespace App_Api.Controllers
     {
         private readonly IAllRepo<GioHangChiTiet> allRepo;
         BazaizaiContext DbContextModel = new BazaizaiContext();
-        DbSet<GioHangChiTiet> gioHangChiTiets;
+        private readonly IGioHangChiTietRepos _gioHangChiTiet;
         private readonly IAllRepo<KichCo> _kickcoRes;
         private readonly IAllRepo<SanPham> _sanPhamRes;
         private readonly IAllRepo<MauSac> _mauSacRes;
@@ -29,8 +31,7 @@ namespace App_Api.Controllers
         private readonly IMapper _mapper;
         public GioHangChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes, IAllRepo<NguoiDung> nguoiDung)
         {
-            gioHangChiTiets = DbContextModel.gioHangChiTiets;
-            allRepo = new AllRepo<GioHangChiTiet>(DbContextModel, gioHangChiTiets);
+            _gioHangChiTiet = new GioHangChiTietRepos(mapper);
             _kickcoRes = kickcoRes;
             _sanPhamRes = sanPhamRes;
             _mauSacRes = mauSacRes;
@@ -40,11 +41,11 @@ namespace App_Api.Controllers
             _NguoiDung = nguoiDung;
         }
         // GET: api/<GioHangChiTietController>
-        [HttpGet]
-        public IEnumerable<GioHangChiTietDTO> Get()
+
+        [HttpGet("Get-List-GioHangChiTietDTO")]
+        public async Task<IEnumerable<GioHangChiTietDTO>> GetAll()
         {
-            var data = _mapper.Map<List<GioHangChiTiet>, List<GioHangChiTietDTO>>(gioHangChiTiets.ToList());
-            return data;
+            return _gioHangChiTiet.GetAllGioHangDTO();
         }
 
         // GET api/<GioHangChiTietController>/5
@@ -56,16 +57,16 @@ namespace App_Api.Controllers
 
         // POST api/<GioHangChiTietController>
         [HttpPost("Create")]
-        public async Task<bool> TaoGioHangDTO(GioHangChiTietDTO gioHangDTO)
+        public async Task<bool> TaoGioHangDTO(GioHangChiTietDTOCUD GioHangChiTietDTOCUD)
         {
-            var giohangChiTiet = _mapper.Map<GioHangChiTiet>(gioHangDTO);
+            var giohangChiTiet = _mapper.Map<GioHangChiTiet>(GioHangChiTietDTOCUD);
             giohangChiTiet.IdGioHangChiTiet = Guid.NewGuid().ToString();
-            giohangChiTiet.IdSanPhamCT = gioHangDTO.sanPhamChiTietDTO.IdChiTietSp;
-            giohangChiTiet.IdNguoiDung = gioHangDTO.GioHangDTO.IdNguoiDung;
+            giohangChiTiet.IdSanPhamCT = GioHangChiTietDTOCUD.sanPhamChiTietDTO.IdChiTietSp;
+            giohangChiTiet.IdNguoiDung = GioHangChiTietDTOCUD.GioHangDTO.IdNguoiDung;
             giohangChiTiet.Soluong = 1;
-            giohangChiTiet.GiaGoc = gioHangDTO.sanPhamChiTietDTO.GiaBan;
+            giohangChiTiet.GiaGoc = GioHangChiTietDTOCUD.sanPhamChiTietDTO.GiaBan;
             giohangChiTiet.TrangThai = 0;
-            allRepo.AddItem(giohangChiTiet);
+            _gioHangChiTiet.AddCartDetail(giohangChiTiet);
             return true;
         }
 

@@ -1,6 +1,8 @@
 ﻿using App_Data.DbContextt;
 using App_Data.IRepositories;
 using App_Data.Models;
+using App_Data.ViewModels.Cart;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,10 +15,13 @@ namespace App_Data.Repositories
     public class GioHangChiTietRepos : IGioHangChiTietRepos
     {
         BazaizaiContext context;
-        public GioHangChiTietRepos()
+        private readonly IMapper _mapper;
+        public GioHangChiTietRepos(IMapper mapper)
         {
+            _mapper = mapper;
             context = new BazaizaiContext();
         }
+
         public bool AddCartDetail(GioHangChiTiet item)
         {
             try
@@ -49,6 +54,16 @@ namespace App_Data.Repositories
         public IEnumerable<GioHangChiTiet> GetAll()
         {
             return context.gioHangChiTiets.Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.SanPham).ToList();
+        }
+
+        public IEnumerable<GioHangChiTietDTO> GetAllGioHangDTO()
+        {
+            var a = context.gioHangChiTiets
+                .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.SanPham)
+                .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.MauSac)
+                .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.KichCo)
+                .ToList();
+            return _mapper.Map<List<GioHangChiTietDTO>>(a);
         }
 
         public bool RemoveCartDetail(GioHangChiTiet item)

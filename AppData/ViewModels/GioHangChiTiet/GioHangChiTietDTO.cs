@@ -19,10 +19,10 @@ namespace App_Data.ViewModels.Cart
         public string IdSanPhamCT { get; set; }
         public string? TenSanPham { get; set; }
         public string? TenMauSac { get; set; }
-        public string? TenKichCo { get; set; }
-        public int SoLuong { get; set; }
-        public decimal? GiaGoc { get; set; }
+        public int? TenKichCo { get; set; }
+        public int? SoLuong { get; set; }
+        public double? GiaGoc { get; set; }
         public int? TrangThai { get; set; }
-        public string? LinkAnh { get; set; }
+        public List<string?> LinkAnh { get; set; }
     }
 }
