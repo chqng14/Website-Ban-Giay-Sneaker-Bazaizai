@@ -17,7 +17,12 @@ builder.Services.AddDbContext<BazaizaiContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddOptions();
 builder.Services.AddRazorPages();
-builder.Services.AddIdentity<NguoiDung, ChucVu>()
+builder.Services.AddIdentity<NguoiDung, ChucVu>(options =>
+{
+    // Cấu hình tên bảng tùy chỉnh cho IdentityRole và IdentityUser
+    options.Stores.MaxLengthForKeys = 128;
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+})
     .AddEntityFrameworkStores<BazaizaiContext>()
     .AddDefaultTokenProviders();
 //builder.Services.AddDefaultIdentity<NguoiDung>()
