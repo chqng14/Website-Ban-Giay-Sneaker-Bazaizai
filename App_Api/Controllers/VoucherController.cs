@@ -35,7 +35,7 @@ namespace App_Api.Controllers
         [HttpGet("GetVoucher")]
         public List<Voucher> GetAllVoucher()
         {
-            return allRepo.GetAll().ToList(); 
+            return allRepo.GetAll().ToList();
         }
         [HttpGet("GetVoucherByMa/{id}")]
         public Voucher? GetVoucher(string id)
@@ -74,7 +74,7 @@ namespace App_Api.Controllers
                 voucher.TrangThai = 0;
             return allRepo.AddItem(voucher);
         }
-        [HttpDelete("DeleteVoucher/{id}")]
+        [HttpPut("DeleteVoucher/{id}")]
         public bool Delete(string id)
         {
             var VoucherGet = GetVoucher(id);
