@@ -60,10 +60,10 @@ namespace App_View.Controllers
         }
 
         // GET: GioHangChiTiets/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> CapNhatSoLuongGioHang(string IdGioHangChiTiet, int SoLuong, string IdSanPhamChiTiet)
         {
-
-            return View();
+            var jsonupdate = await GioHangChiTietServices.UpdateGioHang(IdGioHangChiTiet, SoLuong);
+            return Ok(jsonupdate);
         }
 
         // POST: GioHangChiTiets/Edit/5

@@ -8,7 +8,7 @@ namespace App_View.IServices
     {
         Task<List<GioHangChiTietDTO>> GetAllGioHang();
         Task<bool> CreateGioHang(GioHangChiTietDTO GioHangChiTietDTO);
-        Task<bool> UpdateGioHang(GioHangChiTietDTO GioHangChiTietDTO);
+        Task<bool> UpdateGioHang(string IdGioHangChiTiet, int SoLuong);
         Task<bool> DeleteGioHang(string id);
     }
 }

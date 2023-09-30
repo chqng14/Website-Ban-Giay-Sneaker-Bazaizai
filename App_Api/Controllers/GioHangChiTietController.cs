@@ -71,15 +71,11 @@ namespace App_Api.Controllers
 
         // PUT api/<GioHangChiTietController>/5
         [HttpPut("Edit")]
-        public bool Put(string IdGioHangChiTiet, string IdNguoiDung, string IdSanPhamChiTiet, int SoLuong, double GiaGoc, int TrangThai)
+        public bool UpdateCart(string IdGioHangChiTiet, int SoLuong)
         {
-            var ghct = allRepo.GetAll().FirstOrDefault(c => c.IdGioHangChiTiet == IdGioHangChiTiet);
-            ghct.IdNguoiDung = IdNguoiDung;
-            ghct.IdSanPhamCT = IdSanPhamChiTiet;
+            var ghct = _gioHangChiTiet.GetAll().FirstOrDefault(c => c.IdGioHangChiTiet == IdGioHangChiTiet);
             ghct.Soluong = SoLuong;
-            ghct.GiaGoc = GiaGoc;
-            ghct.TrangThai = TrangThai;
-            return allRepo.EditItem(ghct);
+            return _gioHangChiTiet.EditCartDetail(ghct);
         }
 
         // DELETE api/<GioHangChiTietController>/5

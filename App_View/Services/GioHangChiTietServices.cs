@@ -21,14 +21,27 @@ namespace App_View.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<GioHangChiTietDTO>> GetAllGioHang()
+        public async Task<List<GioHangChiTietDTO>> GetAllGioHang()
         {
-            return _httpClient.GetFromJsonAsync<List<GioHangChiTietDTO>>("https://localhost:7038/api/GioHangChiTiet/Get-List-GioHangChiTietDTO");
+            return await _httpClient.GetFromJsonAsync<List<GioHangChiTietDTO>>("https://localhost:7038/api/GioHangChiTiet/Get-List-GioHangChiTietDTO");
         }
 
-        public Task<bool> UpdateGioHang(GioHangChiTietDTO GioHangChiTietDTO)
+        public async Task<bool> UpdateGioHang(string IdGioHangChiTiet, int SoLuong)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var httpResponse = await _httpClient.PutAsync($"https://localhost:7038/api/GioHangChiTiet/Edit?IdGioHangChiTiet={IdGioHangChiTiet}&SoLuong={SoLuong}", null);
+                if (httpResponse.IsSuccessStatusCode)
+                {
+                    return await httpResponse.Content.ReadAsAsync<bool>();
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+
+                return false;
+            }
         }
     }
 }
