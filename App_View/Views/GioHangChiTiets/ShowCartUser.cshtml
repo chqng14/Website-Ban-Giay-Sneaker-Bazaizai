@@ -74,11 +74,11 @@
                                                 <!--====== Input Counter ======-->
                                                 <div class="input-counter">
 
-                                                    <span class="input-counter__minus fas fa-minus" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong"></span>
+                                                    <span class="input-counter__minus fas fa-minus" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" onclick="UpdateCart()"></span>
 
-                                                    <input class="input-counter__text input-counter--text-primary-style" type="text" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" value="@item.SoLuong" data-min="1" data-max="1000">
+                                                    <input class="input-counter__text input-counter--text-primary-style" type="text" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" value="@item.SoLuong" data-min="1" data-max="1000" onchange="UpdateCart()">
 
-                                                    <span class="input-counter__plus fas fa-plus" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong"></span>
+                                                    <span class="input-counter__plus fas fa-plus" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" onclick="UpdateCart()"></span>
                                                 </div>
                                                 <!--====== End - Input Counter ======-->
                                             </div>
@@ -145,7 +145,7 @@
                                         <!--====== Select Box ======-->
                                         <!--====== Thành phố ======-->
                                         <label class="gl-label" for="city">THÀNH PHỐ *</label><select class="select-box select-box--primary-style" id="city" required onclick="shipping()">
-                                            <option selected value="">Chọn thành phố</option>
+                                            <option selected>Chọn thành phố</option>
                                         </select>
                                         <!--====== End - Select Box ======-->
                                     </div>
@@ -154,7 +154,7 @@
                                         <!--====== Select Box ======-->
                                         <!--====== Huyện ======-->
                                         <label class="gl-label" for="district">HUYỆN *</label><select class="select-box select-box--primary-style" id="district" required>
-                                            <option selected value="">Chọn huyện</option>
+                                            <option selected>Chọn huyện</option>
                                         </select>
                                         <!--====== End - Select Box ======-->
                                     </div>
@@ -163,7 +163,7 @@
                                         <!--====== Select Box ======-->
                                         <!--====== Phường/Xã ======-->
                                         <label class="gl-label" for="wards">PHƯỜNG/XÃ *</label><select class="select-box select-box--primary-style" id="wards" required>
-                                            <option selected value="">Chọn phường/xã</option>
+                                            <option selected>Chọn phường/xã</option>
                                         </select>
                                         <!--====== End - Select Box ======-->
                                     </div>
@@ -222,9 +222,10 @@
     <!--====== End - Section Content ======-->
 </div>
 <!--====== End - Section 3 ======-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="~/js/CapNhatGioHang.js"></script>
-<script>
-    
-</script>
+
+@* <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> *@
+<a href="~/lib/jquery/dist/jquery.min.map">~/lib/jquery/dist/jquery.min.map</a>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script type="text/javascript" src="~/js/CapNhatGioHang.js"></script>

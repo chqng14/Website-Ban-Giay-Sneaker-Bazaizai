@@ -1,34 +1,45 @@
-﻿$(document).on("input click", ".input-counter__text, .input-counter__plus, .input-counter__minus", function () {
-    console.log($(this));
-    var SoLuong = $(this).data('value');
-    var IdSanPhamChiTiet = $(this).data('product-id');
-    var IdGioHangChiTiet = $(this).data('cart-id');
-    console.log(SoLuong);
-    console.log(IdSanPhamChiTiet);
-    console.log(IdGioHangChiTiet);
-    if ($(this).hasClass('input-counter__plus')) {
-        SoLuong++;
-    } else if ($(this).hasClass('input-counter__minus') && SoLuong > 1) {
-        SoLuong--;
-    }
-    $.ajax({
-        url: '/GioHangChiTiets/CapNhatSoLuongGioHang',
-        method: 'POST',
-        data: { IdSanPhamChiTiet: IdSanPhamChiTiet, SoLuong: SoLuong, IdGioHangChiTiet: IdGioHangChiTiet },
-        success: function (response) {
-            var inputs = document.getElementsByClassName('input-counter__text');
-            var sum = 0;
+﻿function UpdateCart() {
 
-            for (var i = 0; i < inputs.length; i++) {
-                var inputValue = parseInt(inputs[i].value);
-                if (!isNaN(inputValue)) {
-                    sum += inputValue;
-                }
-            }
-            console.log(sum);
+    $(document).on("input click", ".input-counter__text, .input-counter__plus, .input-counter__minus", function () {
+        /*console.log($(this));*/
+        var inputElement = $(this).siblings('.input-counter__text');
+        var SoLuong = inputElement.val();
+        var IdSanPhamChiTiet = $(this).data('product-id');
+        var IdGioHangChiTiet = $(this).data('cart-id');
+        console.log(SoLuong);
+        //console.log(IdSanPhamChiTiet);
+        //console.log(IdGioHangChiTiet);
+        //if ($(this).hasClass('input-counter__plus')) {
+        //    SoLuong++;
+        //} else if ($(this).hasClass('input-counter__minus') && SoLuong > 1) {
+        //    SoLuong--;
+        //}
+        inputElement.val(SoLuong);
+        if (isNaN(SoLuong)) {
+            // Nếu không phải là số, có thể hiển thị thông báo hoặc đặt giá trị mặc định.
+            console.log("Giá trị không hợp lệ");
         }
+
+        inputElement.val(SoLuong);
+        $.ajax({
+            url: '/GioHangChiTiets/CapNhatSoLuongGioHang',
+            method: 'POST',
+            data: { IdSanPhamChiTiet: IdSanPhamChiTiet, SoLuong: SoLuong, IdGioHangChiTiet: IdGioHangChiTiet },
+            success: function (response) {
+                var inputs = document.getElementsByClassName('input-counter__text');
+                var sum = 0;
+
+                for (var i = 0; i < inputs.length; i++) {
+                    var inputValue = parseInt(inputs[i].value);
+                    if (!isNaN(inputValue)) {
+                        sum += inputValue;
+                    }
+                }
+                console.log(sum);
+            }
+        });
     });
-});
+}
 function shipping() {
     //var tongtien = "";
     //var ship = "";
@@ -103,7 +114,7 @@ function shipping() {
                 var selectElement = $('#wards');
                 selectElement.empty();
                 selectElement.val('').trigger('change');
-                selectElement.append($('<option>').val('').text('Chọn xã'));
+                selectElement.append($('<option>').val('').text('Chọn phường/xã'));
             }
             const apiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/ward';
             const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
