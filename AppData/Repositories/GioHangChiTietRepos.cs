@@ -62,6 +62,7 @@ namespace App_Data.Repositories
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.SanPham)
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.MauSac)
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.KichCo)
+                .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.Anh)
                 .ToList();
             return _mapper.Map<List<GioHangChiTietDTO>>(a);
         }

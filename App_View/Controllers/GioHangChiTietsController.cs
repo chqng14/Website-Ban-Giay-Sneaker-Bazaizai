@@ -25,7 +25,7 @@ namespace App_View.Controllers
         }
 
         // GET: GioHangChiTiets
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> ShowCartUser()
         {
             //var acc = SessionServices.GetObjFromSession(HttpContext.Session, "acc").TaiKhoan;
             //var idCart = (await userServices.GetAllUser()).FirstOrDefault(c => c.TaiKhoan == acc).Id;

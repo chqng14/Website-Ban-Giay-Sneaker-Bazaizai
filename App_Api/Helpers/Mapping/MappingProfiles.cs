@@ -37,6 +37,9 @@ namespace App_Api.Helpers.Mapping
                 ).ForMember(
                     dest => dest.TenKichCo,
                     opt => opt.MapFrom(src => src.SanPhamChiTiet.KichCo.SoKichCo)
+                ).ForMember(
+                dest => dest.LinkAnh,
+                opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.Select(x => x.Url).ToList())
                 );
             CreateMap<GioHangChiTietDTOCUD, GioHangChiTiet>().ReverseMap();
 
