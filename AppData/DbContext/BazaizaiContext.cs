@@ -54,7 +54,7 @@ namespace App_Data.DbContextt
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-        
+
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
@@ -64,13 +64,15 @@ namespace App_Data.DbContextt
                     entityType.SetTableName(tableName.Substring(6));
                 }
             }
-
+            //Cấu hình tên bảng tùy chỉnh ở đây
+            //modelBuilder.Entity<NguoiDung>().ToTable("NguoiDung");
+            //modelBuilder.Entity<ChucVu>().ToTable("ChucVu");
             modelBuilder.
                ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-8RSAFN0\HKLADOI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
+            optionsBuilder.UseSqlServer(@"Data Source=MI\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
         }
 
 
