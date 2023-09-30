@@ -15,6 +15,7 @@ using App_Data.ViewModels.KichCoDTO;
 using App_Data.ViewModels.MauSac;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using App_Data.ViewModels.SanPhamChiTietDTO;
+using static App_View.Areas.Admin.Controllers.SanPhamChiTietController;
 
 namespace App_View.Services
 {
@@ -281,7 +282,7 @@ namespace App_View.Services
         {
             try
             {
-                var response = await _httpClient.DeleteAsync("/api/SanPhamChiTiet/Creat-SanPhamChiTiet");
+                var response = await _httpClient.DeleteAsync($"/api/SanPhamChiTiet/Delete-SanPhamChiTiet/{id}");
                 if (response.IsSuccessStatusCode)
                 {
                     return await response.Content.ReadAsAsync<bool>();
@@ -305,6 +306,29 @@ namespace App_View.Services
         {
             return (await _httpClient.GetFromJsonAsync<List<SanPhamChiTiet>>("/api/SanPhamChiTiet/Get-List-SanPhamChiTiet"))!;
         }
+
+        public async Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(ListGuildDTO listGuildDTO)
+        {
+            try
+            {
+                var content = new StringContent(JsonConvert.SerializeObject(listGuildDTO.listGuild), Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("/api/SanPhamChiTiet/Get-List-SanPhamChiTietDTO", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<List<SanPhamChiTietDTO>>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
 
         public async Task<List<SanPhamChiTietViewModel>> GetListSanPhamChiTietViewModelAsync()
         {

@@ -1,6 +1,6 @@
 
 using App_View.IServices;
-﻿using App_Data.DbContextt;
+using App_Data.DbContextt;
 using App_Data.Models;
 using App_View.Services;
 using Microsoft.AspNetCore.Identity;
@@ -25,16 +25,19 @@ builder.Services.AddIdentity<NguoiDung, ChucVu>(options =>
 })
     .AddEntityFrameworkStores<BazaizaiContext>()
     .AddDefaultTokenProviders();
+builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
+builder.Services.AddScoped<IVoucherServices, VoucherServices>();
 //builder.Services.AddDefaultIdentity<NguoiDung>()
 //    .AddEntityFrameworkStores<BazaizaiContext>()
 //    .AddDefaultTokenProviders();
-builder.Services.AddControllersWithViews();builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
+builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
+builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
 var mailsetting = builder.Configuration.GetSection("MailSettings");
 builder.Services.Configure<MailSettings>(mailsetting);
-builder.Services.AddSingleton<IEmailSender,SendMailService>();
+builder.Services.AddSingleton<IEmailSender, SendMailService>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -81,7 +84,8 @@ builder.Services.AddAuthentication()
         //googleOptions.CallbackPath = "/dang-nhap-tu-google";
 
     })
-    .AddFacebook(facebookOptions => {
+    .AddFacebook(facebookOptions =>
+    {
         // Đọc cấu hình
         IConfigurationSection facebookAuthNSection = builder.Configuration.GetSection("Authentication:Facebook");
         facebookOptions.AppId = facebookAuthNSection["AppId"];
