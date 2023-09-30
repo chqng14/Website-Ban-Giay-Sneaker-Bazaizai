@@ -1,6 +1,6 @@
 
 using App_View.IServices;
-﻿using App_Data.DbContextt;
+using App_Data.DbContextt;
 using App_Data.Models;
 using App_View.Services;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +20,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
     .AddEntityFrameworkStores<BazaizaiContext>()
     .AddDefaultTokenProviders();
+builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
+builder.Services.AddScoped<IVoucherServices, VoucherServices>();
 //builder.Services.AddDefaultIdentity<NguoiDung>()
 //    .AddEntityFrameworkStores<BazaizaiContext>()
 //    .AddDefaultTokenProviders();
@@ -29,7 +31,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https:/
 //Thêm
 var mailsetting = builder.Configuration.GetSection("MailSettings");
 builder.Services.Configure<MailSettings>(mailsetting);
-builder.Services.AddSingleton<IEmailSender,SendMailService>();
+builder.Services.AddSingleton<IEmailSender, SendMailService>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {

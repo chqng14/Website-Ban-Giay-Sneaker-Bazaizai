@@ -1,7 +1,8 @@
-﻿@model App_Data.Models.Voucher
+﻿@model App_Data.ViewModels.Voucher.VoucherDTO;
 
 @{
     ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <h1>Edit</h1>
@@ -13,11 +14,6 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdVoucher" />
-            <div class="form-group">
-                <label asp-for="MaVoucher" class="control-label"></label>
-                <input asp-for="MaVoucher" class="form-control" />
-                <span asp-validation-for="MaVoucher" class="text-danger"></span>
-            </div>
             <div class="form-group">
                 <label asp-for="TenVoucher" class="control-label"></label>
                 <input asp-for="TenVoucher" class="form-control" />
@@ -52,11 +48,6 @@
                 <label asp-for="NgayKetThuc" class="control-label"></label>
                 <input asp-for="NgayKetThuc" class="form-control" />
                 <span asp-validation-for="NgayKetThuc" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TrangThai" class="control-label"></label>
-                <input asp-for="TrangThai" class="form-control" />
-                <span asp-validation-for="TrangThai" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
