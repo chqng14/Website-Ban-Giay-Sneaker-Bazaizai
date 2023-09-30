@@ -35,11 +35,28 @@ namespace App_View.Areas.Admin.Controllers
         }
         [HttpGet]
         // GET: Admin/SanPhamChiTiet/DanhSachSanPham
-        public async Task<IActionResult> DanhSachSanPham(int draw, int start, int length, string searchValue)
+        public async Task<IActionResult> DanhSachSanPham()
         {
-            return View(await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync());
+            return View();
         }
-
+        public class ListGuildDTO
+        {
+            public List<string>? listGuild { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetPartialViewListUpdate([FromBody]ListGuildDTO listGuildDTO)
+        {
+            ViewData["IdChatLieu"] = new SelectList(_context.ChatLieus, "IdChatLieu", "TenChatLieu");
+            ViewData["IdKichCo"] = new SelectList(_context.kichCos, "IdKichCo", "SoKichCo");
+            ViewData["IdKieuDeGiay"] = new SelectList(_context.kieuDeGiays, "IdKieuDeGiay", "TenKieuDeGiay");
+            ViewData["IdLoaiGiay"] = new SelectList(_context.LoaiGiays, "IdLoaiGiay", "TenLoaiGiay");
+            ViewData["IdMauSac"] = new SelectList(_context.mauSacs, "IdMauSac", "TenMauSac");
+            ViewData["IdSanPham"] = new SelectList(_context.SanPhams, "IdSanPham", "TenSanPham");
+            ViewData["IdThuongHieu"] = new SelectList(_context.thuongHieus, "IdThuongHieu", "TenThuongHieu");
+            ViewData["IdXuatXu"] = new SelectList(_context.xuatXus, "IdXuatXu", "Ten");
+            var model = await _sanPhamChiTietService.GetListSanPhamChiTietDTOAsync(listGuildDTO);
+            return PartialView("_DanhSachSanPhamUpdate", model);
+        }
         public async Task<IActionResult> GetDanhSachSanPham(int draw, int start, int length, string searchValue)
         {
             var query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync())
@@ -270,27 +287,8 @@ namespace App_View.Areas.Admin.Controllers
         // GET: Admin/SanPhamChiTiet/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.sanPhamChiTiets == null)
-            {
-                return NotFound();
-            }
-
-            var sanPhamChiTiet = await _context.sanPhamChiTiets
-                .Include(s => s.ChatLieu)
-                .Include(s => s.KichCo)
-                .Include(s => s.KieuDeGiay)
-                .Include(s => s.LoaiGiay)
-                .Include(s => s.MauSac)
-                .Include(s => s.SanPham)
-                .Include(s => s.ThuongHieu)
-                .Include(s => s.XuatXu)
-                .FirstOrDefaultAsync(m => m.IdChiTietSp == id);
-            if (sanPhamChiTiet == null)
-            {
-                return NotFound();
-            }
-
-            return View(sanPhamChiTiet);
+            var result = await _sanPhamChiTietService.DeleteAysnc(id);
+            return Ok(result);
         }
 
         // POST: Admin/SanPhamChiTiet/Delete/5

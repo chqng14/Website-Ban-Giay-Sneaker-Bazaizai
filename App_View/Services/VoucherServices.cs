@@ -48,9 +48,14 @@ namespace App_View.Services
             return _httpClient.GetFromJsonAsync<List<Voucher>>("/api/Voucher/GetVoucher");
         }
 
-        public Task<Voucher> GetVoucherById(string id)
+        public async Task<Voucher> GetVoucherById(string id)
         {
-            throw new NotImplementedException();
+            return await _httpClient.GetFromJsonAsync<Voucher>($"/api/Voucher/GetVoucherByMa/{id}");
+        }
+
+        public async Task<VoucherDTO> GetVoucherDTOById(string id)
+        {
+            return await _httpClient.GetFromJsonAsync<VoucherDTO>($"/api/Voucher/GetVoucherDTOByMa/{id}");
         }
 
         public async Task<bool> UpdateVoucher(VoucherDTO voucherDTO)

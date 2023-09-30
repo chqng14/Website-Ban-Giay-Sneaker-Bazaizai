@@ -88,6 +88,12 @@ namespace App_Api.Controllers
             return (await _sanPhamChiTietRes.GetListAsync()).ToList();
         }
 
+        [HttpPost("Get-List-SanPhamChiTietDTO")]
+        public async Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTO(List<string> lstGuid)
+        {
+            return await _sanPhamChiTietRes.GetListSanPhamChiTietDTOAsync(lstGuid);
+        }
+
         [HttpGet("Get-DanhSachGiayViewModel")]
         public async Task<DanhSachGiayViewModel> GetDanhSachGiay()
         {
@@ -132,7 +138,6 @@ namespace App_Api.Controllers
             return false;
         }
 
-
         [HttpPut("Update-SanPhamChiTiet")]
         public async Task<bool> Update(SanPhamChiTietDTO sanPhamChiTietDTO)
         {
@@ -144,7 +149,6 @@ namespace App_Api.Controllers
             }
             return false;
         }
-
 
         //SanPham
         [HttpPost("Create-SanPham")]
@@ -163,7 +167,6 @@ namespace App_Api.Controllers
             }
             return null;
         }
-
 
         //ThuongHieu
         [HttpPost("Create-ThuongHieu")]

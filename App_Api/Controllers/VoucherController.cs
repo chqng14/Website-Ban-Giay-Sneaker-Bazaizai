@@ -35,13 +35,21 @@ namespace App_Api.Controllers
         [HttpGet("GetVoucher")]
         public List<Voucher> GetAllVoucher()
         {
-            return allRepo.GetAll().ToList(); // Wrap the data in an OkObjectResult
+            return allRepo.GetAll().ToList(); 
         }
         [HttpGet("GetVoucherByMa/{id}")]
         public Voucher? GetVoucher(string id)
         {
             return allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == id);
         }
+        [HttpGet("GetVoucherDTOByMa/{id}")]
+        public VoucherDTO? GetVoucherDTO(string id)
+        {
+            var Voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == id);
+            var VoucherDTO = _mapper.Map<VoucherDTO>(Voucher);
+            return VoucherDTO;
+        }
+
         private string GenerateRandomVoucherCode()
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

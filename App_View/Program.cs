@@ -20,6 +20,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
     .AddEntityFrameworkStores<BazaizaiContext>()
     .AddDefaultTokenProviders();
+builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
+builder.Services.AddScoped<IVoucherServices, VoucherServices>();
 //builder.Services.AddDefaultIdentity<NguoiDung>()
 //    .AddEntityFrameworkStores<BazaizaiContext>()
 //    .AddDefaultTokenProviders();

@@ -1,11 +1,11 @@
-﻿@model App_Data.ViewModels.Voucher.VoucherDTO;
+﻿@model App_Data.Models.Voucher;
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <h1>Create</h1>
+
 <h4>Voucher</h4>
 <hr />
 <div class="row">
@@ -48,6 +48,11 @@
                 <span asp-validation-for="NgayKetThuc" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="TrangThai" class="control-label"></label>
+                <input asp-for="TrangThai" class="form-control" />
+                <span asp-validation-for="TrangThai" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
@@ -59,5 +64,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

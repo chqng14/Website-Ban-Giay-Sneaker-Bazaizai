@@ -1,8 +1,10 @@
 ﻿using App_Data.DbContextt;
 using App_Data.IRepositories;
 using App_Data.Models;
+using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using AutoMapper;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -59,6 +61,12 @@ namespace App_Data.Repositories
             return await _context.sanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == id);
         }
 
+        public async Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(List<string> lstGuid)
+        {
+           var lstSanPhamChiTiet = (await _context.sanPhamChiTiets.Include(x=>x.Anh).ToListAsync()).Where(sp=>lstGuid.Contains(sp.IdChiTietSp!)).ToList();
+            return _mapper.Map<List<SanPhamChiTietDTO>>(lstSanPhamChiTiet);
+        }
+
         public async Task<DanhSachGiayViewModel> GetDanhSachGiayViewModelAsync()
         {
             var lstSanPhamChiTiet = await _context.sanPhamChiTiets
@@ -76,7 +84,7 @@ namespace App_Data.Repositories
 
         public async Task<IEnumerable<SanPhamChiTietViewModel>> GetListViewModelAsync()
         {
-            var sanPhamChiTiets = await _context.sanPhamChiTiets
+            var sanPhamChiTiets = await _context.sanPhamChiTiets.Where(it=>it.TrangThai == 0)
                                      .Include(x => x.MauSac)
                                      .Include(x => x.ChatLieu)
                                      .Include(x => x.KichCo)

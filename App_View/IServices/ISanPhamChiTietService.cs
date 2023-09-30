@@ -10,6 +10,7 @@ using App_Data.ViewModels.SanPhamChiTiet.ThuongHieuDTO;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using App_Data.ViewModels.XuatXu;
+using static App_View.Areas.Admin.Controllers.SanPhamChiTietController;
 
 namespace App_View.IServices
 {
@@ -21,6 +22,7 @@ namespace App_View.IServices
         Task<bool> UpdateAynsc(SanPhamChiTietDTO sanPhamChiTietDTO);
         Task<SanPhamChiTiet?> GetByKeyAsync(string id);
         Task<List<SanPhamChiTiet>> GetListSanPhamChiTietAsync();
+        Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(ListGuildDTO listGuildDTO);
         Task<List<SanPhamChiTietViewModel>> GetListSanPhamChiTietViewModelAsync();
         Task<ResponseCheckAddOrUpdate> CheckSanPhamAddOrUpdate(SanPhamChiTietDTO sanPhamChiTietDTO);
         Task CreateAnhAysnc(string IdChiTietSp, List<IFormFile> lstIFormFile);
