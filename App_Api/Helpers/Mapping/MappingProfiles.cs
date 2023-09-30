@@ -21,7 +21,12 @@ namespace App_Api.Helpers.Mapping
             CreateMap<MauSacDTO, MauSac>();
             CreateMap<XuatXuDTO, XuatXu>();
             CreateMap<VoucherDTO, Voucher>().ReverseMap();
-            CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
+            CreateMap<SanPhamChiTiet,SanPhamChiTietDTO>()
+                .ForMember(
+                        dest => dest.DanhSachAnh,
+                        opt => opt.MapFrom(src => src.Anh.Select(x=>x.Url))
+                )
+                .ReverseMap();
             CreateMap<List<SanPhamChiTiet>, DanhSachGiayViewModel>()
                 .ConvertUsing<SanPhamChiTietToListItemViewModelConverter>();
 
