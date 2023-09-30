@@ -8,49 +8,43 @@ using Microsoft.EntityFrameworkCore;
 using App_Data.DbContextt;
 using App_Data.Models;
 
+using App_Data.ViewModels.GioHangChiTiet;
+using App_View.Services;
+using App_View.IServices;
+
 namespace App_View.Controllers
 {
     public class GioHangChiTietsController : Controller
     {
-        private readonly BazaizaiContext _context;
-
-        public GioHangChiTietsController(BazaizaiContext context)
+        private readonly HttpClient httpClient;
+        IGioHangChiTietServices GioHangChiTietServices;
+        public GioHangChiTietsController()
         {
-            _context = context;
+            httpClient = new HttpClient();
+            GioHangChiTietServices = new GioHangChiTietServices();
         }
 
         // GET: GioHangChiTiets
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> ShowCartUser()
         {
-            var bazaizaiContext = _context.gioHangChiTiets.Include(g => g.GioHang).Include(g => g.SanPhamChiTiet);
-            return View(await bazaizaiContext.ToListAsync());
+            //var acc = SessionServices.GetObjFromSession(HttpContext.Session, "acc").TaiKhoan;
+            //var idCart = (await userServices.GetAllUser()).FirstOrDefault(c => c.TaiKhoan == acc).Id;
+            var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == "43037").ToList();
+            return View(giohang);
         }
 
         // GET: GioHangChiTiets/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.gioHangChiTiets == null)
-            {
-                return NotFound();
-            }
 
-            var gioHangChiTiet = await _context.gioHangChiTiets
-                .Include(g => g.GioHang)
-                .Include(g => g.SanPhamChiTiet)
-                .FirstOrDefaultAsync(m => m.IdGioHangChiTiet == id);
-            if (gioHangChiTiet == null)
-            {
-                return NotFound();
-            }
 
-            return View(gioHangChiTiet);
+            return View();
         }
 
         // GET: GioHangChiTiets/Create
         public IActionResult Create()
         {
-            ViewData["IdNguoiDung"] = new SelectList(_context.gioHangs, "IdNguoiDung", "IdNguoiDung");
-            ViewData["IdSanPhamCT"] = new SelectList(_context.sanPhamChiTiets, "IdChiTietSp", "IdChiTietSp");
+
             return View();
         }
 
@@ -61,33 +55,15 @@ namespace App_View.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdGioHangChiTiet,IdNguoiDung,IdSanPhamCT,Soluong,GiaGoc,TrangThai")] GioHangChiTiet gioHangChiTiet)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(gioHangChiTiet);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["IdNguoiDung"] = new SelectList(_context.gioHangs, "IdNguoiDung", "IdNguoiDung", gioHangChiTiet.IdNguoiDung);
-            ViewData["IdSanPhamCT"] = new SelectList(_context.sanPhamChiTiets, "IdChiTietSp", "IdChiTietSp", gioHangChiTiet.IdSanPhamCT);
-            return View(gioHangChiTiet);
+
+            return View();
         }
 
         // GET: GioHangChiTiets/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.gioHangChiTiets == null)
-            {
-                return NotFound();
-            }
 
-            var gioHangChiTiet = await _context.gioHangChiTiets.FindAsync(id);
-            if (gioHangChiTiet == null)
-            {
-                return NotFound();
-            }
-            ViewData["IdNguoiDung"] = new SelectList(_context.gioHangs, "IdNguoiDung", "IdNguoiDung", gioHangChiTiet.IdNguoiDung);
-            ViewData["IdSanPhamCT"] = new SelectList(_context.sanPhamChiTiets, "IdChiTietSp", "IdChiTietSp", gioHangChiTiet.IdSanPhamCT);
-            return View(gioHangChiTiet);
+            return View();
         }
 
         // POST: GioHangChiTiets/Edit/5
@@ -97,54 +73,16 @@ namespace App_View.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("IdGioHangChiTiet,IdNguoiDung,IdSanPhamCT,Soluong,GiaGoc,TrangThai")] GioHangChiTiet gioHangChiTiet)
         {
-            if (id != gioHangChiTiet.IdGioHangChiTiet)
-            {
-                return NotFound();
-            }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(gioHangChiTiet);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!GioHangChiTietExists(gioHangChiTiet.IdGioHangChiTiet))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["IdNguoiDung"] = new SelectList(_context.gioHangs, "IdNguoiDung", "IdNguoiDung", gioHangChiTiet.IdNguoiDung);
-            ViewData["IdSanPhamCT"] = new SelectList(_context.sanPhamChiTiets, "IdChiTietSp", "IdChiTietSp", gioHangChiTiet.IdSanPhamCT);
-            return View(gioHangChiTiet);
+            return View();
         }
 
         // GET: GioHangChiTiets/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.gioHangChiTiets == null)
-            {
-                return NotFound();
-            }
 
-            var gioHangChiTiet = await _context.gioHangChiTiets
-                .Include(g => g.GioHang)
-                .Include(g => g.SanPhamChiTiet)
-                .FirstOrDefaultAsync(m => m.IdGioHangChiTiet == id);
-            if (gioHangChiTiet == null)
-            {
-                return NotFound();
-            }
 
-            return View(gioHangChiTiet);
+            return View();
         }
 
         // POST: GioHangChiTiets/Delete/5
@@ -152,23 +90,13 @@ namespace App_View.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.gioHangChiTiets == null)
-            {
-                return Problem("Entity set 'BazaizaiContext.gioHangChiTiets'  is null.");
-            }
-            var gioHangChiTiet = await _context.gioHangChiTiets.FindAsync(id);
-            if (gioHangChiTiet != null)
-            {
-                _context.gioHangChiTiets.Remove(gioHangChiTiet);
-            }
-            
-            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GioHangChiTietExists(string id)
-        {
-          return (_context.gioHangChiTiets?.Any(e => e.IdGioHangChiTiet == id)).GetValueOrDefault();
-        }
+        //private bool GioHangChiTietExists(string id)
+        //{
+        //    return View();
+        //}
     }
 }

@@ -35,48 +35,13 @@
 
     <!--====== Main App ======-->
     <div id="app">
-        <div class="fixed-list">
-            <ul class="nav" id="init-scrollspy">
-                <li>
-
-                    <a class="nav-link" href="#electronic-01" data-click-scroll="#electronic-01"><i class="fas fa-tv"></i></a>
-                </li>
-                <li>
-
-                    <a class="nav-link" href="#female-02" data-click-scroll="#female-02"><i class="fas fa-female"></i></a>
-                </li>
-                <li>
-
-                    <a class="nav-link" href="#male-03" data-click-scroll="#male-03"><i class="fas fa-male"></i></a>
-                </li>
-                <li>
-
-                    <a class="nav-link"><i class="fas fa-fighter-jet"></i></a>
-                </li>
-                <li>
-
-                    <a class="nav-link"><i class="fas fa-cookie-bite"></i></a>
-                </li>
-                <li>
-
-                    <a class="nav-link"><i class="fas fa-futbol"></i></a>
-                </li>
-                <li>
-
-                    <a class="nav-link"><i class="fas fa-book-open"></i></a>
-                </li>
-                <li>
-
-                    <a class="nav-link"><i class="fas fa-briefcase-medical"></i></a>
-                </li>
-            </ul>
-        </div>
+        
 
         <!--====== Main Header ======-->
-        <header class="header--style-2">
+        <header class="header--style-1 header--box-shadow">
 
             <!--====== Nav 1 ======-->
-            <nav class="primary-nav-wrapper">
+            <nav class="primary-nav primary-nav-wrapper--border">
                 <div class="container">
 
                     <!--====== Primary Nav ======-->
@@ -84,9 +49,9 @@
 
                         <!--====== Main Logo ======-->
 
-                        <a class="main-logo" href="index-2.html">
+                        <a class="main-logo" href="/">
 
-                            <img src="images/logo/logo-2.png" alt="">
+                            <img src="/images/logo/logo-1.png" alt="">
                         </a>
                         <!--====== End - Main Logo ======-->
                         <!--====== Search Form ======-->
@@ -94,7 +59,7 @@
 
                             <label for="main-search"></label>
 
-                            <input class="input-text input-text--border-radius input-text--style-2" type="text" id="main-search" placeholder="Search">
+                            <input class="input-text input-text--border-radius input-text--style-1" type="text" id="main-search" placeholder="Search">
 
                             <button class="btn btn--icon fas fa-search main-search-button" type="submit"></button>
                         </form>
@@ -102,7 +67,7 @@
                         <!--====== Dropdown Main plugin ======-->
                         <div class="menu-init" id="navigation">
 
-                            <button class="btn btn--icon toggle-button toggle-button--white fas fa-cogs" type="button"></button>
+                            <button class="btn btn--icon toggle-button fas fa-cogs" type="button"></button>
 
                             <!--====== Menu ======-->
                             <div class="ah-lg-mode">
@@ -110,8 +75,8 @@
                                 <span class="ah-close">✕ Close</span>
 
                                 <!--====== List ======-->
-                                <ul class="ah-list ah-list--design1 ah-list--link-color-white">
-                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="Account">
+                                <ul class="ah-list ah-list--design1 ah-list--link-color-secondary">
+                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Account">
 
                                         <a><i class="far fa-user-circle"></i></a>
 
@@ -128,20 +93,25 @@
                                                 </a>
                                             </li>
                                             <li>
-
-                                                <a href="signup.html">
+                                                <a asp-area="Identity" asp-page="/Account/Register">
+                                                    <i class="fas fa-lock u-s-m-r-6"></i>
+                                                    <span>Signup</span>
+                                                </a>
+                                                @*<a href="signup.html">
                                                     <i class="fas fa-user-plus u-s-m-r-6"></i>
 
                                                     <span>Signup</span>
-                                                </a>
+                                                </a>*@
                                             </li>
                                             <li>
-
-                                                <a href="signin.html">
+                                                <a  asp-area="Identity" asp-page="/Account/Login">
                                                     <i class="fas fa-lock u-s-m-r-6"></i>
-
                                                     <span>Signin</span>
                                                 </a>
+                                                @*<a href="signin.html">
+                                                    <i class="fas fa-lock u-s-m-r-6"></i>
+                                                    <span>Signin</span>
+                                                </a>*@
                                             </li>
                                             <li>
 
@@ -154,7 +124,7 @@
                                         </ul>
                                         <!--====== End - Dropdown ======-->
                                     </li>
-                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="Settings">
+                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Settings">
 
                                         <a><i class="fas fa-user-cog"></i></a>
 
@@ -215,11 +185,11 @@
                                         </ul>
                                         <!--====== End - Dropdown ======-->
                                     </li>
-                                    <li data-tooltip="tooltip" data-placement="left" title="Contact">
+                                    <li data-tooltip="tooltip" data-placement="left" title="" data-original-title="Contact">
 
                                         <a href="tel:+0900901904"><i class="fas fa-phone-volume"></i></a>
                                     </li>
-                                    <li data-tooltip="tooltip" data-placement="left" title="Mail">
+                                    <li data-tooltip="tooltip" data-placement="left" title="" data-original-title="Mail">
 
                                         <a href="mailto:contact@domain.com"><i class="far fa-envelope"></i></a>
                                     </li>
@@ -296,40 +266,40 @@
                                                         </li>
                                                         <li>
 
-                                                            <a href="index-2.html">
+                                                            <a href="index.html">
                                                                 <i class="fas fa-utensils u-s-m-r-6"></i>
 
-                                                                <span>Food & Supplies</span>
+                                                                <span>Food &amp; Supplies</span>
                                                             </a>
 
                                                             <span class="js-menu-toggle"></span>
                                                         </li>
                                                         <li>
 
-                                                            <a href="index-2.html">
+                                                            <a href="index.html">
                                                                 <i class="fas fa-couch u-s-m-r-6"></i>
 
-                                                                <span>Furniture & Decor</span>
+                                                                <span>Furniture &amp; Decor</span>
                                                             </a>
 
                                                             <span class="js-menu-toggle"></span>
                                                         </li>
                                                         <li>
 
-                                                            <a href="index-2.html">
+                                                            <a href="index.html">
                                                                 <i class="fas fa-football-ball u-s-m-r-6"></i>
 
-                                                                <span>Sports & Game</span>
+                                                                <span>Sports &amp; Game</span>
                                                             </a>
 
                                                             <span class="js-menu-toggle"></span>
                                                         </li>
                                                         <li>
 
-                                                            <a href="index-2.html">
+                                                            <a href="index.html">
                                                                 <i class="fas fa-heartbeat u-s-m-r-6"></i>
 
-                                                                <span>Beauty & Health</span>
+                                                                <span>Beauty &amp; Health</span>
                                                             </a>
 
                                                             <span class="js-menu-toggle"></span>
@@ -346,7 +316,7 @@
                                                             <ul>
                                                                 <li class="mega-list-title">
 
-                                                                    <a href="shop-side-version-2.html">3D PRINTER & SUPPLIES</a>
+                                                                    <a href="shop-side-version-2.html">3D PRINTER &amp; SUPPLIES</a>
                                                                 </li>
                                                                 <li>
 
@@ -370,7 +340,7 @@
                                                             <ul>
                                                                 <li class="mega-list-title">
 
-                                                                    <a href="shop-side-version-2.html">HOME AUDIO & VIDEO</a>
+                                                                    <a href="shop-side-version-2.html">HOME AUDIO &amp; VIDEO</a>
                                                                 </li>
                                                                 <li>
 
@@ -378,7 +348,7 @@
                                                                 </li>
                                                                 <li>
 
-                                                                    <a href="shop-side-version-2.html">TC Receiver & Accessories</a>
+                                                                    <a href="shop-side-version-2.html">TC Receiver &amp; Accessories</a>
                                                                 </li>
                                                                 <li>
 
@@ -406,7 +376,7 @@
                                                                 </li>
                                                                 <li>
 
-                                                                    <a href="shop-side-version-2.html">Speakers & Radios</a>
+                                                                    <a href="shop-side-version-2.html">Speakers &amp; Radios</a>
                                                                 </li>
                                                                 <li>
 
@@ -444,7 +414,7 @@
                                                             <ul>
                                                                 <li class="mega-list-title">
 
-                                                                    <a href="shop-side-version-2.html">SECURITY & PROTECTION</a>
+                                                                    <a href="shop-side-version-2.html">SECURITY &amp; PROTECTION</a>
                                                                 </li>
                                                                 <li>
 
@@ -460,7 +430,7 @@
                                                                 </li>
                                                                 <li>
 
-                                                                    <a href="shop-side-version-2.html">CCTV Security & Accessories</a>
+                                                                    <a href="shop-side-version-2.html">CCTV Security &amp; Accessories</a>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -468,7 +438,7 @@
                                                             <ul>
                                                                 <li class="mega-list-title">
 
-                                                                    <a href="shop-side-version-2.html">PHOTOGRAPHY & CAMERA</a>
+                                                                    <a href="shop-side-version-2.html">PHOTOGRAPHY &amp; CAMERA</a>
                                                                 </li>
                                                                 <li>
 
@@ -476,7 +446,7 @@
                                                                 </li>
                                                                 <li>
 
-                                                                    <a href="shop-side-version-2.html">Sport Camera & Accessories</a>
+                                                                    <a href="shop-side-version-2.html">Sport Camera &amp; Accessories</a>
                                                                 </li>
                                                                 <li>
 
@@ -484,7 +454,7 @@
                                                                 </li>
                                                                 <li>
 
-                                                                    <a href="shop-side-version-2.html">Lenses & Accessories</a>
+                                                                    <a href="shop-side-version-2.html">Lenses &amp; Accessories</a>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -496,7 +466,7 @@
                                                                 </li>
                                                                 <li>
 
-                                                                    <a href="shop-side-version-2.html">Raspberry Pi & Orange Pi</a>
+                                                                    <a href="shop-side-version-2.html">Raspberry Pi &amp; Orange Pi</a>
                                                                 </li>
                                                                 <li>
 
@@ -620,7 +590,7 @@
                                                                 </li>
                                                                 <li>
 
-                                                                    <a href="shop-side-version-2.html">Blouses & Shirts</a>
+                                                                    <a href="shop-side-version-2.html">Blouses &amp; Shirts</a>
                                                                 </li>
                                                                 <li>
 
@@ -648,7 +618,7 @@
                                                                 </li>
                                                                 <li>
 
-                                                                    <a href="shop-side-version-2.html">Bustiers & Corsets</a>
+                                                                    <a href="shop-side-version-2.html">Bustiers &amp; Corsets</a>
                                                                 </li>
                                                                 <li>
 
@@ -660,7 +630,7 @@
                                                             <ul>
                                                                 <li class="mega-list-title">
 
-                                                                    <a href="shop-side-version-2.html">WEDDING & EVENTS</a>
+                                                                    <a href="shop-side-version-2.html">WEDDING &amp; EVENTS</a>
                                                                 </li>
                                                                 <li>
 
@@ -730,7 +700,7 @@
                                                                 </li>
                                                                 <li>
 
-                                                                    <a href="shop-side-version-2.html">Leather & Suede</a>
+                                                                    <a href="shop-side-version-2.html">Leather &amp; Suede</a>
                                                                 </li>
                                                             </ul>
                                                         </div>
@@ -1131,7 +1101,7 @@
                         <!--====== Dropdown Main plugin ======-->
                         <div class="menu-init" id="navigation2">
 
-                            <button class="btn btn--icon toggle-button toggle-button--white fas fa-cog" type="button"></button>
+                            <button class="btn btn--icon toggle-button fas fa-cog" type="button"></button>
 
                             <!--====== Menu ======-->
                             <div class="ah-lg-mode">
@@ -1139,7 +1109,7 @@
                                 <span class="ah-close">✕ Close</span>
 
                                 <!--====== List ======-->
-                                <ul class="ah-list ah-list--design2 ah-list--link-color-white">
+                                <ul class="ah-list ah-list--design2 ah-list--link-color-secondary">
                                     <li>
 
                                         <a href="shop-side-version-2.html">NEW ARRIVALS</a>
@@ -1270,7 +1240,7 @@
                                                     </li>
                                                     <li>
 
-                                                        <a href="dash-cancellation.html">My Returns & Cancellations</a>
+                                                        <a href="dash-cancellation.html">My Returns &amp; Cancellations</a>
                                                     </li>
                                                 </ul>
                                                 <!--====== End - Dropdown ======-->
@@ -1450,7 +1420,7 @@
                         <!--====== Dropdown Main plugin ======-->
                         <div class="menu-init" id="navigation3">
 
-                            <button class="btn btn--icon toggle-button toggle-button--white fas fa-shopping-bag toggle-button-shop" type="button"></button>
+                            <button class="btn btn--icon toggle-button fas fa-shopping-bag toggle-button-shop" type="button"></button>
 
                             <span class="total-item-round">2</span>
 
@@ -1460,10 +1430,10 @@
                                 <span class="ah-close">✕ Close</span>
 
                                 <!--====== List ======-->
-                                <ul class="ah-list ah-list--design1 ah-list--link-color-white">
+                                <ul class="ah-list ah-list--design1 ah-list--link-color-secondary">
                                     <li>
 
-                                        <a href="index-2.html"><i class="fas fa-home u-c-brand"></i></a>
+                                        <a href="index.html"><i class="fas fa-home"></i></a>
                                     </li>
                                     <li>
 
@@ -1623,7 +1593,7 @@
 
                                                     <a class="mini-link btn--e-brand-b-2" href="checkout.html">PROCEED TO CHECKOUT</a>
 
-                                                    <a class="mini-link btn--e-transparent-secondary-b-2" href="cart.html">VIEW CART</a>
+                                                    <a class="mini-link btn--e-transparent-secondary-b-2" href="/giohangchitiets/showcartuser">VIEW CART</a>
                                                 </div>
                                             </div>
                                             <!--====== End - Mini Product Statistics ======-->
@@ -1647,100 +1617,11 @@
         <div class="app-content">
 
             <!--====== Anti Flash White Background ======-->
-            <div class="bg-anti-flash-white">
+            <div class="bg-anti-flash-white" style="background-color: #ffffff">
 
                 <!--====== White Container ======-->
-                <div class="white-container">
-                    <div class="container">
-
-                        <!--====== Primary Slider ======-->
-                        <div class="s-skeleton s-skeleton--h-600 s-skeleton--bg-black">
-                            <div class="owl-carousel primary-style-2" id="hero-slider">
-                                <div class="hero-slide hero-slide--4">
-                                    <div class="primary-style-2-container">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="slider-content slider-content--animation">
-
-                                                    <span class="content-span-1 u-c-white">Find Top Brands</span>
-
-                                                    <span class="content-span-2 u-c-white">10% Off On Intimates</span>
-
-                                                    <span class="content-span-3 u-c-white">Find Intimates on best prices</span>
-
-                                                    <span class="content-span-4 u-c-white">
-                                                        Starting At
-
-                                                        <span class="u-c-brand">$100.00</span>
-                                                    </span>
-
-                                                    <a class="shop-now-link btn--e-brand" href="shop-side-version-2.html">SHOP NOW</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="hero-slide hero-slide--5">
-                                    <div class="primary-style-2-container">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="slider-content slider-content--animation">
-
-                                                    <span class="content-span-1 u-c-white">Find Top Brands</span>
-
-                                                    <span class="content-span-2 u-c-white">10% Off On Electronics</span>
-
-                                                    <span class="content-span-3 u-c-white">Find electronics on best prices</span>
-
-                                                    <span class="content-span-4 u-c-white">
-                                                        Starting At
-
-                                                        <span class="u-c-brand">$1000.00</span>
-                                                    </span>
-
-                                                    <a class="shop-now-link btn--e-brand" href="shop-side-version-2.html">SHOP NOW</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="hero-slide hero-slide--6">
-                                    <div class="primary-style-2-container">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <div class="slider-content slider-content--animation">
-
-                                                    <span class="content-span-1 u-c-white">Find Top Brands</span>
-
-                                                    <span class="content-span-2 u-c-white">10% Off On Outwear</span>
-
-                                                    <span class="content-span-3 u-c-white">Find outwear on best prices</span>
-
-                                                    <span class="content-span-4 u-c-white">
-                                                        Starting At
-
-                                                        <span class="u-c-brand">$100.00</span>
-                                                    </span>
-
-                                                    <a class="shop-now-link btn--e-brand" href="shop-side-version-2.html">SHOP NOW</a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--====== End - Primary Slider ======-->
-                    </div>
-
-                    <!--====== Section 1 ======-->
-                    <!--====== Electronic Category ======-->
-                   @await Component.InvokeAsync("ElectronicCategory")
-
-                    <!--====== Electronic Category ======-->
-                    <!--====== End - Section 1 ======-->
-                    @RenderBody()
-                </div>
+                
+                @RenderBody()
                 <!--====== End - White Container ======-->
             </div>
             <!--====== End - Anti Flash White Background ======-->

@@ -1,0 +1,704 @@
+﻿@model IEnumerable<App_Data.ViewModels.SanPhamChiTietDTO.SanPhamChiTietDTO>
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>QUẢN LÝ SẢN PHẨM</a>
+            <a class="breadcrumb-item" href="#">Cập nhật sản phẩm</a>
+        </nav>
+    </div>
+</div>
+
+<div class="accordion" id="accordion-default">
+    @foreach (var sp in Model)
+    {
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">
+                    <a class="collapsed" data-toggle="collapse" href="#collapseTwoDefault-@sp.IdChiTietSp">
+                        <span>Collapsible Group Item #2</span>
+                    </a>
+                </h5>
+            </div>
+            <div id="collapseTwoDefault-@sp.IdChiTietSp" class="collapse" data-parent="#accordion-default">
+                <div class="card-body">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home-@sp.IdChiTietSp" role="tab"
+                               aria-controls="home-@sp.IdChiTietSp" aria-selected="true">Thông tin sản phẩm</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile--@sp.IdChiTietSp" role="tab"
+                               aria-controls="profile--@sp.IdChiTietSp" aria-selected="false">Ảnh</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact-@sp.IdChiTietSp" role="tab"
+                               aria-controls="contact-@sp.IdChiTietSp" aria-selected="false">Mô tả</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content m-t-15" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home-@sp.IdChiTietSp" role="tabpanel" aria-labelledby="home-tab" style="height: 450px">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-4" style="margin-top: 10px" id="sanpham">
+                                            <label class="font-weight-semibold">Tên sản phẩm</label>
+                                            <select class="w-100 select2-active" name="IdSanPham">
+                                                @foreach (var item in (SelectList)ViewData["IdSanPham"])
+                                                {
+                                                    if (item.Value == sp.IdSanPham)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="col-4" style="margin-top: 10px" id="thuonghieu">
+                                            <label class="font-weight-semibold">Thương hiệu</label>
+                                            <select class="select2-active w-100" name="IdThuongHieu">
+                                                @foreach (var item in (SelectList)ViewData["IdThuongHieu"])
+                                                {
+                                                    if (item.Value == sp.IdThuongHieu)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="col-4" style="margin-top: 10px" id="xuatxu">
+                                            <label class="font-weight-semibold">Xuất xứ</label>
+                                            <select class="select2-active w-100" name="IdXuatXu">
+                                                @foreach (var item in (SelectList)ViewData["IdXuatXu"])
+                                                {
+                                                    if (item.Value == sp.IdXuatXu)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="col-4" style="margin-top: 10px" id="chatlieu">
+                                            <label class="font-weight-semibold">Chất liệu</label>
+                                            <select class="select2-active w-100" name="IdChatLieu">
+                                                @foreach (var item in (SelectList)ViewData["IdChatLieu"])
+                                                {
+                                                    if (item.Value == sp.IdChatLieu)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="col-4" style="margin-top: 10px" id="loaigiay">
+                                            <label class="font-weight-semibold">Loại giầy</label>
+                                            <select class="select2-active w-100" name="IdLoaiGiay">
+                                                @foreach (var item in (SelectList)ViewData["IdLoaiGiay"])
+                                                {
+                                                    if (item.Value == sp.IdLoaiGiay)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="col-4 form-group" style="margin-top: 10px" id="kieudegiay">
+                                            <label class="font-weight-semibold">Kiểu đế giầy</label>
+                                            <select class="select2-active w-100" name="IdKieuDeGiay">
+                                                @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"])
+                                                {
+                                                    if (item.Value == sp.IdKieuDeGiay)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-6" id="mausac">
+                                            <label class="font-weight-semibold">Màu Sắc</label>
+                                            <select id="IdColor" class="select2-active w-100">
+                                                @foreach (var item in (SelectList)ViewData["IdMauSac"])
+                                                {
+                                                    if (item.Value == sp.IdMauSac)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+
+                                        <div class="col-6" id="kichco">
+                                            <label class="font-weight-semibold">Kích cỡ</label>
+                                            <select id="IdSize" class="select2-active w-100">
+                                                @foreach (var item in (SelectList)ViewData["IdKichCo"])
+                                                {
+                                                    if (item.Value == sp.IdKichCo)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mt-2">
+                                        <div class="form-group col-4">
+                                            <label class="font-weight-semibold" for="productBrand">Giá nhập</label>
+                                            <input type="text" class="form-control formatPrice" value="@sp.GiaNhap">
+                                        </div>
+
+                                        <div class="form-group col-4">
+                                            <label class="font-weight-semibold" for="productBrand">Giá bán</label>
+                                            <input type="text" class="form-control formatPrice" value="@sp.GiaNhap">
+                                        </div>
+
+                                        <div class="form-group col-4">
+                                            <label class="font-weight-semibold" for="productBrand">Số lượng tồn</label>
+                                            <input type="text" class="form-control formatNumber" value="@sp.SoLuongTon">
+                                        </div>
+
+                                        <div class="form-group d-flex align-items-center col-2">
+                                            <div class="switch m-r-10">
+                                                @if (sp.Day == "true")
+                                                {
+                                                    <input type="checkbox" id="switch-day-@sp.IdChiTietSp" class="switch-2-day" checked>
+
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" id="switch-day-@sp.IdChiTietSp" class="switch-2-day">
+                                                }
+
+                                                <label class="font-weight-semibold" for="switch-day-@sp.IdChiTietSp"></label>
+                                            </div>
+                                            <label class="font-weight-semibold">Dây</label>
+                                        </div>
+                                        <div class="form-group d-flex align-items-center col-2">
+                                            <div class="switch m-r-10">
+                                                @if (sp.NoiBat == true)
+                                                {
+                                                    <input type="checkbox" id="switch-noibat-@sp.IdChiTietSp" class="switch-2-noibat" checked>
+
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" id="switch-noibat-@sp.IdChiTietSp" class="switch-2-noibat">
+                                                }
+                                                <label class="font-weight-semibold" for="switch-noibat-@sp.IdChiTietSp"></label>
+                                            </div>
+                                            <label class="font-weight-semibold">Nổi bật</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="profile--@sp.IdChiTietSp" role="tabpanel" aria-labelledby="profile-tab">
+                            <div class="upload">
+                                <button name="choseFile" class="custom-btn mb-2">
+                                    Choose file
+                                </button>
+                                <input type="file" class="fileInput default-btn 1" multiple hidden>
+                                <div class="container-file" style="display: flex;">
+                                    @foreach (var img in sp.DanhSachAnh!)
+                                    {
+                                        <div class="wrapper-file">
+                                            <div class="image">
+                                                <img class="file-image"
+                                                     src="/AnhSanPham/@img"><i class="fas fa-times close-icon"></i>
+                                            </div>
+                                            <div class="content">
+                                                <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                            </div>
+                                            <div class="cancel-btn"><i class="fas fa-times"></i></div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="contact-@sp.IdChiTietSp" role="tabpanel" aria-labelledby="contact-tab">
+                            <div class="form-group col-12">
+                                <div class="m-b-5" style="margin-top: 10px;">
+                                    <label class="font-weight-semibold" style="display: block; margin-bottom: 5px;">
+                                        Mô tả sản phẩm
+                                    </label>
+                                    <div class="moTa" style="width: 100%; "></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    const selectedFiles = {};
+    const lstAnhRemove = {};
+    $(() => {
+        $(".select2-active").select2();
+        $('#thuonghieu').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        TenThuongHieu: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenThuongHieu',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("[name='IdThuongHieu']");
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.tenThuongHieu, result.idThuongHieu, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#xuatxu').find('input.select2-input').on('keyup', function (e) {
+            console.log('xuatxu');
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        Ten: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenXuatXu',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("[name='IdXuatXu']");
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.ten, result.idXuatXu, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#sanpham').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        TenSanPham: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenSanPham',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("[name='IdSanPham']");
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.tenSanPham, result.idSanPham, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#loaigiay').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        TenLoaiGiay: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenLoaiGiay',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("[name='IdLoaiGiay']");
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.tenLoaiGiay, result.idLoaiGiay, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#chatlieu').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        TenChatLieu: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenChatLieu',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("[name='IdChatLieu']");
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.tenChatLieu, result.idChatLieu, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#kieudegiay').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        TenKieuDeGiay: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenKieuDeGiay',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("[name='IdKieuDeGiay']");
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.tenKieuDeGiay, result.idKieuDeGiay, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#mausac').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        TenMauSac: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenMauSac',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("#IdColor");
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.tenMauSac, result.idMauSac, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('#kichco').find('input.select2-input').on('keyup', function (e) {
+            if (e.keyCode === 13) {
+                var inputValue = $(this).val();
+                if (inputValue) {
+                    var data = {
+                        soKichCo: inputValue,
+                    };
+                    $.ajax({
+                        url: 'CreateTenKichCo',
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
+                        success: function (result) {
+                            var $select2 = $("#IdSize");
+
+                            var selectedValue = $select2.val();
+                            if (selectedValue && selectedValue.length > 0) {
+                                $select2.val(null).trigger('change');
+                            }
+                            var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
+                            $select2.append(newOption).trigger('change');
+
+                            $(this).val('');
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            }
+        });
+        $('.moTa').summernote();
+        $(".formatPrice").each(function () {
+            var autoNumeric = new AutoNumeric(this, {
+                decimalCharacter: ".",
+                digitGroupSeparator: ",",
+                decimalPlaces: 0,
+                currencySymbol: " ₫",
+                currencySymbolPlacement: "s",
+                minimumValue: 0
+            });
+        });
+        $(".formatNumber").each(function () {
+            var autoNumeric = new AutoNumeric(this, {
+                decimalCharacter: ".",
+                digitGroupSeparator: ",",
+                decimalPlaces: 0,
+                minimumValue: 0
+            });
+        });
+    })
+    $(document).on('click', '[name= "choseFile"]', function () {
+        $(this).closest('.upload').find('.fileInput').click()
+    })
+
+    $(document).on("click", ".file-image", function () {
+        const key = $(this).closest('.collapse').attr('id').replace("collapseTwoDefault-", "");
+        console.log(key);
+        changeImage($(this), $(this).attr('src').replace("/AnhSanPham/",""), key)
+    })
+
+    $(document).on("click", ".close-icon", function () {
+        const wrapper = $(this).closest('.wrapper-file');
+        const key =  wrapper.closest('.collapse').attr('id').replace("collapseTwoDefault-", "")
+        const fileInput = wrapper.find('input');
+        const nameFile = wrapper.find('.file-image').attr('src').replace("/AnhSanPham/", "")
+        if (fileInput.length == 0) {
+            if (!lstAnhRemove[key]) {
+                lstAnhRemove[key]=[]
+            }
+            lstAnhRemove[key].push(nameFile)
+            console.log(lstAnhRemove[key]);
+        } else {
+            const file = fileInput.files[0]
+            const indexDelete = selectedFiles[key].findIndex(item => item.key === file.name);
+            selectedFiles[key].splice(indexDelete, 1);
+        }
+        wrapper.remove();
+    })
+
+    $(document).on('change', '.fileInput', function () {
+        const imageList = $(this).closest('.upload').find('.container-file');
+        const key = imageList.closest('.collapse').attr('id').replace("collapseTwoDefault-", "");
+        console.log(key);
+
+        Array.from(this.files).map((file) => {
+            if (file.type.startsWith("image")) {
+                const wrapper = $('<div>').addClass('wrapper-file');
+                const image = $('<div>').addClass('image');
+                const imageElement = $('<img>').addClass('file-image').attr('src', URL.createObjectURL(file));
+
+                if (!selectedFiles[key]) {
+                    selectedFiles[key] = []
+                }
+                selectedFiles[key].push({ key: file.name, data: file });
+
+                imageElement.on('click', () =>
+                    changeImage(imageElement, file, key)
+                );
+
+                const closeIcon = $('<i>').addClass('fas fa-times close-icon');
+
+
+                image.append(imageElement);
+                image.append(closeIcon);
+
+                const content = $('<div>').addClass('content');
+                const icon = $('<div>').addClass('icon');
+                icon.html('<i class="fas fa-cloud-upload-alt"></i>');
+                content.append(icon);
+
+                var cancelBtn = $('<div>').addClass('cancel-btn');
+                cancelBtn.html('<i class="fas fa-times"></i>');
+
+                wrapper.append(image);
+                wrapper.append(content);
+                wrapper.append(cancelBtn);
+                imageList.append(wrapper);
+
+                closeIcon.on('click', function () {
+                    const fileInput = wrapper.find('input');
+                    if (fileInput.length == 0) {
+                        const indexDelete = selectedFiles[key].findIndex(item => item.data.name === file.name);
+                        selectedFiles[key].splice(indexDelete, 1);
+                    } else {
+                        const indexDelete = selectedFiles[key].findIndex(item => item.data.name === fileInput.name);
+                        selectedFiles[key].splice(indexDelete, 1);
+                    }
+                    console.log(selectedFiles[key]);
+                    wrapper.remove();
+                });
+
+                return;
+            }
+            this.files = "";
+            alert('Vui lòng chọn đúng định dạng');
+        });
+    })
+
+    const changeImage = (imageElement, file, key) => {
+        const newInputFile = $('<input>').attr('type', 'file').css('display', 'none');
+        newInputFile.on('change', function () {
+            const newFile = this.files[0]
+            if (newFile) {
+                const container = imageElement.closest('.wrapper-file')
+                container.append(newInputFile)
+                console.log(file);
+                if (newFile && newFile.type.startsWith('image/')) {
+                    //if (typeof file === 'object' && file instanceof File) {
+                    //    const CheckIndex = selectedFiles[key].findIndex(file => file.data.name === newFile.name);
+                    //    if (CheckIndex !== -1) {
+                    //        alert('File này đã tồn tại')
+                    //    } else {
+                    //        const indexChange = selectedFiles[key].findIndex(item => item.key === file.name);
+                    //        imageElement.attr('src', URL.createObjectURL(newFile));
+                    //        selectedFiles[key][indexChange] = { key: file.name, data: newFile };
+                    //    }
+                    //    console.log(selectedFiles[key]);
+                    //} else {
+                    //    if (!selectedFiles[key]) {
+                    //        selectedFiles[key] = []
+                    //        selectedFiles[key].push({ key: file, data: newFile });
+                    //        imageElement.attr('src', URL.createObjectURL(newFile));
+                    //        console.log(imageElement);
+                    //        lstAnhRemove[key].push(file)
+                    //    } else {
+                    //        if (Array.from(selectedFiles[key]).find(item => item.data.name === newFile.name)) {
+                    //            alert('File này đã được chọn trước đó!')
+                    //        } else {
+                    //            const foundItem = selectedFiles[key].find(item => item.key === file);
+                    //            if (foundItem) {
+                    //                selectedFiles[key].find(item => item.key === file).data = newFile;
+                    //                imageElement.attr('src', URL.createObjectURL(newFile))
+                    //            } else {
+                    //                selectedFiles[key].push({ key: file, data: newFile })
+                    //                lstAnhRemove[key].push(file)
+                    //                imageElement.attr('src', URL.createObjectURL(newFile))
+                    //            }
+                    //        }
+                    //    }
+                    //    console.log(selectedFiles[key]);
+                    //}
+                    console.log(lstAnhRemove[key]);
+                }
+                
+            }
+        })
+    }
+</script>

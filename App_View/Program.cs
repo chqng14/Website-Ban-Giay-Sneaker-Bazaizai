@@ -17,7 +17,12 @@ builder.Services.AddDbContext<BazaizaiContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddOptions();
 builder.Services.AddRazorPages();
-builder.Services.AddIdentity<NguoiDung, ChucVu>()
+builder.Services.AddIdentity<NguoiDung, ChucVu>(options =>
+{
+    // Cấu hình tên bảng tùy chỉnh cho IdentityRole và IdentityUser
+    options.Stores.MaxLengthForKeys = 128;
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+})
     .AddEntityFrameworkStores<BazaizaiContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
@@ -25,7 +30,8 @@ builder.Services.AddScoped<IVoucherServices, VoucherServices>();
 //builder.Services.AddDefaultIdentity<NguoiDung>()
 //    .AddEntityFrameworkStores<BazaizaiContext>()
 //    .AddDefaultTokenProviders();
-builder.Services.AddControllersWithViews();builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
+builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
+builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
@@ -78,7 +84,8 @@ builder.Services.AddAuthentication()
         //googleOptions.CallbackPath = "/dang-nhap-tu-google";
 
     })
-    .AddFacebook(facebookOptions => {
+    .AddFacebook(facebookOptions =>
+    {
         // Đọc cấu hình
         IConfigurationSection facebookAuthNSection = builder.Configuration.GetSection("Authentication:Facebook");
         facebookOptions.AppId = facebookAuthNSection["AppId"];
