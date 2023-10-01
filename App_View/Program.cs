@@ -1,6 +1,6 @@
 
 using App_View.IServices;
-﻿using App_Data.DbContextt;
+using App_Data.DbContextt;
 using App_Data.Models;
 using App_View.Services;
 using Microsoft.AspNetCore.Identity;
@@ -17,16 +17,27 @@ builder.Services.AddDbContext<BazaizaiContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddOptions();
 builder.Services.AddRazorPages();
-builder.Services.AddIdentity<NguoiDung, ChucVu>()
+builder.Services.AddIdentity<NguoiDung, ChucVu>(options =>
+{
+    // Cấu hình tên bảng tùy chỉnh cho IdentityRole và IdentityUser
+    options.Stores.MaxLengthForKeys = 128;
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+})
     .AddEntityFrameworkStores<BazaizaiContext>()
     .AddDefaultTokenProviders();
-builder.Services.AddControllersWithViews();builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
+builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
+builder.Services.AddScoped<IVoucherServices, VoucherServices>();
+//builder.Services.AddDefaultIdentity<NguoiDung>()
+//    .AddEntityFrameworkStores<BazaizaiContext>()
+//    .AddDefaultTokenProviders();
+builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
+builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
 var mailsetting = builder.Configuration.GetSection("MailSettings");
 builder.Services.Configure<MailSettings>(mailsetting);
-builder.Services.AddSingleton<IEmailSender,SendMailService>();
+builder.Services.AddSingleton<IEmailSender, SendMailService>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -72,7 +83,17 @@ builder.Services.AddAuthentication()
         // Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
         //googleOptions.CallbackPath = "/dang-nhap-tu-google";
 
+    })
+    .AddFacebook(facebookOptions =>
+    {
+        // Đọc cấu hình
+        IConfigurationSection facebookAuthNSection = builder.Configuration.GetSection("Authentication:Facebook");
+        facebookOptions.AppId = facebookAuthNSection["AppId"];
+        facebookOptions.AppSecret = facebookAuthNSection["AppSecret"];
+        // Thiết lập đường dẫn Facebook chuyển hướng đến
+        //facebookOptions.CallbackPath = "/dang-nhap-tu-facebook";
     });
+
 //thêm
 var app = builder.Build();
 

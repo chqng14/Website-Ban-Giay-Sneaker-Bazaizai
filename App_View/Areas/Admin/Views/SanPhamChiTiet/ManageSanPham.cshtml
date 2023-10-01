@@ -18,35 +18,35 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="form-group col-4">
-                            <label>Giá Nhập</label>
+                            <label class="font-weight-semibold">Giá Nhập</label>
                             <input id="giaNhap" class="form-control formatPrice" name="GiaNhap" placeholder="">
                         </div>
                         <div class="form-group col-4">
-                            <label>Giá Bán</label>
+                            <label class="font-weight-semibold">Giá Bán</label>
                             <input min="1" id="giaBan" class="form-control formatPrice" name="GiaBan" placeholder="">
                         </div>
                         <div class="form-group col-4">
-                            <label>Số lượng</label>
+                            <label class="font-weight-semibold">Số lượng</label>
                             <input id="soLuongTon" class="form-control formatNumber" name="SoLuongTon">
                         </div>
                         <div class="form-group d-flex align-items-center col-2">
                             <div class="switch m-r-10">
                                 <input type="checkbox" id="switch-1-day" class="switch-2-day">
-                                <label for="switch-1-day"></label>
+                                <label class="font-weight-semibold" for="switch-1-day"></label>
                             </div>
-                            <label>Dây</label>
+                            <label class="font-weight-semibold">Dây</label>
                         </div>
                         <div class="form-group d-flex align-items-center col-2">
                             <div class="switch m-r-10">
                                 <input type="checkbox" id="switch-1-noibat" class="switch-2-noibat">
-                                <label for="switch-1-noibat"></label>
+                                <label class="font-weight-semibold" for="switch-1-noibat"></label>
                             </div>
-                            <label>Nổi bật</label>
+                            <label class="font-weight-semibold">Nổi bật</label>
                         </div>
 
                         <div class="form-group col-12">
                             <div class="m-b-5" style="margin-top: 10px;">
-                                <label style="display: block; margin-bottom: 5px;">
+                                <label class="font-weight-semibold" style="display: block; margin-bottom: 5px;">
                                     Mô tả sản phẩm
                                 </label>
                                 <div class="moTa" style="width: 100%; " id="MoTaCauHinh"></div>
@@ -86,7 +86,7 @@
         <div class="m-b-15" style="margin-bottom: 30px">
             <div class="row">
                 <div class="col-4" style="margin-top: 10px" id="sanpham">
-                    <label>Tên sản phẩm</label>
+                    <label class="font-weight-semibold">Tên sản phẩm</label>
                     <select class="w-100 select2-active" asp-for="IdSanPham">
                         @foreach (var item in (SelectList)ViewData["IdSanPham"])
                         {
@@ -96,7 +96,7 @@
                 </div>
 
                 <div class="col-4" style="margin-top: 10px" id="thuonghieu">
-                    <label>Thương hiệu</label>
+                    <label class="font-weight-semibold">Thương hiệu</label>
                     <select class="select2-active w-100" asp-for="IdThuongHieu">
                         @foreach (var item in (SelectList)ViewData["IdThuongHieu"])
                         {
@@ -106,7 +106,7 @@
                 </div>
 
                 <div class="col-4" style="margin-top: 10px" id="xuatxu">
-                    <label>Xuất xứ</label>
+                    <label class="font-weight-semibold">Xuất xứ</label>
                     <select class="select2-active w-100" asp-for="IdXuatXu">
                         @foreach (var item in (SelectList)ViewData["IdXuatXu"])
                         {
@@ -116,7 +116,7 @@
                 </div>
 
                 <div class="col-4" style="margin-top: 10px" id="chatlieu">
-                    <label>Chất liệu</label>
+                    <label class="font-weight-semibold">Chất liệu</label>
                     <select class="select2-active w-100" asp-for="IdChatLieu">
                         @foreach (var item in (SelectList)ViewData["IdChatLieu"])
                         {
@@ -126,7 +126,7 @@
                 </div>
 
                 <div class="col-4" style="margin-top: 10px" id="loaigiay">
-                    <label>Loại giầy</label>
+                    <label class="font-weight-semibold">Loại giầy</label>
                     <select class="select2-active w-100" asp-for="IdLoaiGiay">
                         @foreach (var item in (SelectList)ViewData["IdLoaiGiay"])
                         {
@@ -136,7 +136,7 @@
                 </div>
 
                 <div class="col-4" style="margin-top: 10px" id="kieudegiay">
-                    <label>Kiểu đế giầy</label>
+                    <label class="font-weight-semibold">Kiểu đế giầy</label>
                     <select class="select2-active w-100" asp-for="IdKieuDeGiay">
                         @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"])
                         {
@@ -148,7 +148,7 @@
 
             <div class="row">
                 <div class="col-6" style="margin-top: 10px" id="mausac">
-                    <label>Màu Sắc</label>
+                    <label class="font-weight-semibold">Màu Sắc</label>
                     <select id="IdColor" class="select2-active w-100"
                             multiple="multiple">
                         @foreach (var item in (SelectList)ViewData["IdMauSac"])
@@ -159,7 +159,7 @@
                 </div>
 
                 <div class="col-6" style="margin-top: 10px" id="kichco">
-                    <label>Kích cỡ</label>
+                    <label class="font-weight-semibold">Kích cỡ</label>
                     <select id="IdSize" class="select2-active w-100"
                             multiple="multiple">
                         @foreach (var item in (SelectList)ViewData["IdKichCo"])
@@ -489,15 +489,11 @@
     const selectedFiles = {};
     const lstAnhRemove = {};
 
-
-
     const AddEditor = () => {
         var lstThucThe = $('.accordion').find('.moTa');
         lstThucThe.each(function (index, item) {
             $(item).summernote();
         });
-
-
     }
 
 
@@ -543,36 +539,36 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="form-group col-4">
-                                    <label>Giá Nhập(*)</label>
+                                    <label class="font-weight-semibold">Giá Nhập(*)</label>
                                     <input min="1" class="form-control formatPrice" name="GiaNhap" value="${giaNhap}"
                                            placeholder="">
                                 </div>
                                 <div class="form-group col-4">
-                                    <label>Giá Bán(*)</label>
+                                    <label class="font-weight-semibold">Giá Bán(*)</label>
                                     <input min="1" class="form-control formatPrice" name="GiaBan" value="${giaBan}"
                                            placeholder="">
                                 </div>
                                 <div class="form-group col-4">
-                                    <label>Số lượng(*)</label>
+                                    <label class="font-weight-semibold">Số lượng(*)</label>
                                     <input class="form-control formatNumber" name="SoLuongTon" value="${soLuong}">
                                 </div>
                                 <div class="form-group d-flex align-items-center col-2">
                                     <div class="switch m-r-10">
                                         <input type="checkbox" id="switch-${index}" class="switch-2-day">
-                                        <label for="switch-${index}"></label>
+                                        <label class="font-weight-semibold" for="switch-${index}"></label>
                                     </div>
-                                    <label>Dây</label>
+                                    <label class="font-weight-semibold">Dây</label>
                                 </div>
                                 <div class="form-group d-flex align-items-center col-2">
                                     <div class="switch m-r-10">
                                         <input type="checkbox" id="switch-${index}-1" class="switch-2-noibat">
-                                        <label for="switch-${index}-1"></label>
+                                        <label class="font-weight-semibold" for="switch-${index}-1"></label>
                                     </div>
-                                    <label>Nổi bật</label>
+                                    <label class="font-weight-semibold">Nổi bật</label>
                                 </div>
                                 <div class="form-group col-12">
                                     <div class="m-b-5" style="margin-top: 10px;">
-                                        <label style="display: block; margin-bottom: 5px;">
+                                        <label class="font-weight-semibold" style="display: block; margin-bottom: 5px;">
                                             Mô tả sản phẩm
                                         </label>
                                         <div class="moTa" style="width: 100%; " name="MoTa">${moTa}</div>
@@ -676,7 +672,10 @@
                         const itemAppend = $(ItemTemplate(index, true, respose.data.idChswitchiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa))
                         container.append(itemAppend)
                         if (respose.data.day = "true") {
-                            itemAppend.find('.switch-2').prop('checked', true);
+                            itemAppend.find('.switch-2-day').prop('checked', true);
+                        }
+                        if (respose.data.noiBat) {
+                            itemAppend.find('.switch-2-noibat').prop('checked', true);
                         }
                         const key = itemAppend.find('.collapse').attr('id');
                         const containerFile = itemAppend.find('.upload').find('.container-file');
@@ -1051,13 +1050,6 @@
 
             } else {
                 if (dataBienThe.GiaBan != 0 && dataBienThe.GiaNhap != 0 && dataBienThe.SoLuongTon != 0) {
-                    console.log({
-                        ...GetDataMain()
-                        , ...dataBienThe
-                        , ...DataInDataset
-                        , ...moTa
-                        , ...{ Day: currentItem.find('.switch-2').prop('checked') ? "true" : "false", NoiBat: currentItem.find('.switch-2-noibat').prop('checked') }
-                    });
                     $.ajax({
                         url: URL_CREATE_PRODUCT,
                         type: 'POST',
@@ -1066,7 +1058,7 @@
                             , ...dataBienThe
                             , ...DataInDataset
                             , ...moTa
-                            , ...{ Day: currentItem.find('.switch-2').prop('checked') ? "true" : "false", NoiBat: currentItem.find('.switch-2-noibat').prop('checked') }
+                            , ...{ Day: currentItem.find('.switch-2-day').prop('checked') ? "true" : "false", NoiBat: currentItem.find('.switch-2-noibat').prop('checked') }
                         }),
                         contentType: 'application/json',
                         success: function (result) {
@@ -1123,6 +1115,5 @@
     <script src="~/Admin/js/pages/form-elements.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.8.1/autoNumeric.min.js"></script>
-
 }
 

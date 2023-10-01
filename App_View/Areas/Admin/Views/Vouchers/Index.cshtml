@@ -2,42 +2,43 @@
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Voucher</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table id="data-table" class="table" style="text-align:center">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MaVoucher)
+                Mã Voucher
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TenVoucher)
+                Tên
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DieuKien)
+                Điều kiện
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LoaiHinhUuDai)
+               Loại hình
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SoLuong)
+                Số lượng
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MucUuDai)
+                Mức ưu đãi
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NgayBatDau)
+               Ngày bắt đầu
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NgayKetThuc)
+                Ngày kết thúc
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TrangThai)
+                Trạng thái
             </th>
             <th></th>
         </tr>
@@ -73,11 +74,26 @@
                 @Html.DisplayFor(modelItem => item.TrangThai)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdVoucher">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdVoucher">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdVoucher">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i></a> |
+                    <a asp-action="Details" asp-route-id="@item.IdVoucher"><i class="anticon anticon-eye"></i></a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdVoucher"><i class="anticon anticon-delete"></i></a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+ <script>
+    $(document).ready(function () {
+        $('#data-table').DataTable()
+    }
+</script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+}

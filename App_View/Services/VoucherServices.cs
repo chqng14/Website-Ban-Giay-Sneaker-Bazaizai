@@ -19,10 +19,10 @@ namespace App_View.Services
         {
             try
             {
-                var reponse = await _httpClient.PostAsJsonAsync("/api/Voucher/CreateVoucher", voucherDTO);
-                if (reponse.IsSuccessStatusCode)
+                var response = await _httpClient.PostAsJsonAsync("/api/Voucher/CreateVoucher", voucherDTO);
+                if (response.IsSuccessStatusCode)
                 {
-                    return await reponse.Content.ReadAsAsync<bool>();
+                    return await response.Content.ReadAsAsync<bool>();
                 }
                 else
                 {
@@ -38,9 +38,23 @@ namespace App_View.Services
 
         }
 
-        public Task<bool> DeleteVoucher(string id)
+        public async Task<bool> DeleteVoucher(string id)
         {
-            return _httpClient.GetFromJsonAsync<bool>($"/api/Voucher/DeleteVoucher/{id}");
+            try
+            {
+                var response = await _httpClient.PutAsync($"/api/Voucher/DeleteVoucher/{id}", null);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<bool>();
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+
         }
 
         public Task<List<Voucher>> GetAllVoucher()
@@ -48,9 +62,14 @@ namespace App_View.Services
             return _httpClient.GetFromJsonAsync<List<Voucher>>("/api/Voucher/GetVoucher");
         }
 
-        public Task<Voucher> GetVoucherById(string id)
+        public async Task<Voucher> GetVoucherById(string id)
         {
-            throw new NotImplementedException();
+            return await _httpClient.GetFromJsonAsync<Voucher>($"/api/Voucher/GetVoucherByMa/{id}");
+        }
+
+        public async Task<VoucherDTO> GetVoucherDTOById(string id)
+        {
+            return await _httpClient.GetFromJsonAsync<VoucherDTO>($"/api/Voucher/GetVoucherDTOByMa/{id}");
         }
 
         public async Task<bool> UpdateVoucher(VoucherDTO voucherDTO)

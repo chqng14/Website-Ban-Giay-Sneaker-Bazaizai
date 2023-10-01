@@ -64,7 +64,9 @@ namespace App_Data.DbContextt
                     entityType.SetTableName(tableName.Substring(6));
                 }
             }
-
+            //Cấu hình tên bảng tùy chỉnh ở đây
+            //modelBuilder.Entity<NguoiDung>().ToTable("NguoiDung");
+            //modelBuilder.Entity<ChucVu>().ToTable("ChucVu");
             modelBuilder.
                ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
