@@ -102,5 +102,25 @@ namespace App_Api.Controllers
             }
             return false;
         }
+        [HttpPut("DeleteVoucherWithList")]
+        public bool DeleteVoucherWithList(List<string> voucherIds)
+        {
+            if (voucherIds != null)
+            {
+                foreach (var id in voucherIds)
+                {
+                    var voucher = GetVoucher(id);
+                    if (voucher != null)
+                    {
+                        voucher.TrangThai = 1; // Hoặc giá trị tương ứng với trạng thái huỷ voucher.
+                        allRepo.EditItem(voucher);
+                    }
+                }
+                return true; // Trả về true nếu việc xoá thành công danh sách voucher.
+            }
+            else return false;
+
+        }
+
     }
 }

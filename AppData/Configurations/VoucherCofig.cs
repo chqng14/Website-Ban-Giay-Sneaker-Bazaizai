@@ -18,6 +18,7 @@ namespace App_Data.Configurations
             builder.HasKey(c => c.IdVoucher);
             builder.Property(c => c.MaVoucher).HasColumnType("nvarchar(100)");
             builder.Property(c => c.TenVoucher).HasColumnType("nvarchar(300)");
+            builder.Property(c => c.PhamViSanPham).HasColumnType("nvarchar(300)");
             builder.Property(c => c.DieuKien).HasColumnType("nvarchar(300)");
             builder.Property(c => c.LoaiHinhUuDai).HasColumnType("nvarchar(300)");
             builder.Property(c => c.SoLuong).HasColumnType("int");

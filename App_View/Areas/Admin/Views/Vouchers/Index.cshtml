@@ -11,6 +11,7 @@
     <a asp-action="Create">Create New</a>
 </p>
 <table id="data-table" class="table" style="text-align:center">
+   
     <thead>
         <tr>
             <th>
@@ -21,6 +22,9 @@
             </th>
             <th>
                 Điều kiện
+            </th>
+            <th>
+                Phạm vi
             </th>
             <th>
                Loại hình
@@ -40,6 +44,10 @@
             <th>
                 Trạng thái
             </th>
+            <th>
+                Chọn <input type="checkbox" id="select-all-checkbox" />
+            </th>
+
             <th></th>
         </tr>
     </thead>
@@ -55,6 +63,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.DieuKien)
             </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhamViSanPham)
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.LoaiHinhUuDai)
             </td>
@@ -73,6 +84,10 @@
             <td>
                 @Html.DisplayFor(modelItem => item.TrangThai)
             </td>
+                <td>
+                    <input type="checkbox" class="voucher-checkbox" data-value="@item.IdVoucher" />
+                </td>
+
             <td>
                     <a asp-action="Edit" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i></a> |
                     <a asp-action="Details" asp-route-id="@item.IdVoucher"><i class="anticon anticon-eye"></i></a> |
@@ -82,12 +97,43 @@
 }
     </tbody>
 </table>
-
- <script>
+<button class="btn btn-warning mr-2"  id="delete-button">Huỷ hoạt động của voucher đã chọn</button>
+<script>
     $(document).ready(function () {
-        $('#data-table').DataTable()
-    }
+        $('#data-table').DataTable();
+
+        $('#select-all-checkbox').click(function () {
+            $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
+        });
+    
+        $('#delete-button').click(function () {
+            var idVoucher = $(this).data('value');
+            console.log(idVoucher);
+            var selectedIds = [];
+            $('.voucher-checkbox:checked').each(function () {
+                selectedIds.push($(this).val());
+            });
+
+            // Truyền danh sách selectedIds vào hàm DeleteVoucherWithList
+            $.ajax({
+                url: '/Admin/Vouchers/DeleteVoucherWithList', // Điều chỉnh đường dẫn tới hàm DeleteVoucherWithList của controller của bạn
+                type: 'POST',
+                data: { voucherIds: selectedIds },
+                success: function (response) {
+                    if (response === true) {
+                        // Xoá thành công, có thể làm điều gì đó ở đây nếu cần
+                    } else {
+                        alert("Có lỗi khi huỷ hoạt động của voucher")
+                    }
+                },
+                error: function () {
+                    // Xử lý lỗi nếu gửi yêu cầu thất bại
+                }
+            });
+        });
+    });
 </script>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

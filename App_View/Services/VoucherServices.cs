@@ -56,6 +56,23 @@ namespace App_View.Services
             }
 
         }
+        public async Task<bool> DeleteVoucherWithList(List<VoucherDTO> voucherDTO)
+        {
+            try
+            {
+                var response = await _httpClient.PutAsync($"api/Voucher/DeleteVoucherWithList", null);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<bool>();
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
 
         public Task<List<Voucher>> GetAllVoucher()
         {
