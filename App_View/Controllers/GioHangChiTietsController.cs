@@ -11,6 +11,8 @@ using App_Data.Models;
 using App_Data.ViewModels.GioHangChiTiet;
 using App_View.Services;
 using App_View.IServices;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace App_View.Controllers
 {
@@ -18,18 +20,21 @@ namespace App_View.Controllers
     {
         private readonly HttpClient httpClient;
         IGioHangChiTietServices GioHangChiTietServices;
-        public GioHangChiTietsController()
+        private readonly SignInManager<NguoiDung> _signInManager;
+        private readonly UserManager<NguoiDung> _userManager;
+        public GioHangChiTietsController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
         {
             httpClient = new HttpClient();
             GioHangChiTietServices = new GioHangChiTietServices();
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         // GET: GioHangChiTiets
         public async Task<IActionResult> ShowCartUser()
         {
-            //var acc = SessionServices.GetObjFromSession(HttpContext.Session, "acc").TaiKhoan;
-            //var idCart = (await userServices.GetAllUser()).FirstOrDefault(c => c.TaiKhoan == acc).Id;
-            var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == "43037").ToList();
+            var idNguoiDung = _userManager.GetUserId(User);
+            var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
             return View(giohang);
         }
 
@@ -78,25 +83,21 @@ namespace App_View.Controllers
         }
 
         // GET: GioHangChiTiets/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> DeleteCart(string id)
         {
-
-
-            return View();
+            var jsondelete = await GioHangChiTietServices.DeleteGioHang(id);
+            return RedirectToAction("ShowCartUser");
         }
 
-        // POST: GioHangChiTiets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteAllCart()
         {
-
-            return RedirectToAction(nameof(Index));
+            var idNguoiDung = _userManager.GetUserId(User);
+            List<GioHangChiTietDTO> giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+            foreach (var item in giohang)
+            {
+                var jsondelete = await GioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
+            }
+            return RedirectToAction("ShowCartUser");
         }
-
-        //private bool GioHangChiTietExists(string id)
-        //{
-        //    return View();
-        //}
     }
 }

@@ -82,8 +82,8 @@ namespace App_Api.Controllers
         [HttpDelete("Delete")]
         public bool Delete(string id)
         {
-            var ghct = allRepo.GetAll().FirstOrDefault(c => c.IdGioHangChiTiet == id);
-            return allRepo.RemoveItem(ghct);
+            var ghct = _gioHangChiTiet.GetAll().FirstOrDefault(c => c.IdGioHangChiTiet == id);
+            return _gioHangChiTiet.RemoveCartDetail(ghct);
         }
     }
 }
