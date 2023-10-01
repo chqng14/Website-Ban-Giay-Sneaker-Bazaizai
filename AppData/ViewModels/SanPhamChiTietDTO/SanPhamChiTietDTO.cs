@@ -9,8 +9,9 @@ namespace App_Data.ViewModels.SanPhamChiTietDTO
     public class SanPhamChiTietDTO
     {
         public string? IdChiTietSp { get; set; }
+        public string? FullName { get; set; }
 
-        public string? Day { get; set; }
+        public bool? Day { get; set; }
 
         public string? MoTa { get; set; }
 

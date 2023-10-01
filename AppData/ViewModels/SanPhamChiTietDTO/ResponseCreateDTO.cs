@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace App_Data.ViewModels.SanPhamChiTietDTO
 {
-    public class ResponseCreataDTO
+    public class ResponseCreateDTO
     {
         public bool Success { get; set; }
         public string? IdChiTietSp { get; set; }

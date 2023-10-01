@@ -78,7 +78,7 @@
             </div>
         </div>
     </div>
-    <div id="confirm" class="mt-2 mb-2">
+    <div id="confirm-ds" class="mt-2 mb-2">
         <div class="d-flex justify-content-end">
             <button class="btn btn-warning mr-2">Ngừng kinh doanh</button>
             <button class="btn btn-warning thaotac">Cập nhật</button>
@@ -87,7 +87,15 @@
 </div>
 
 <script>
-
+    $(() => checkToshowConfirm())
+    const checkToshowConfirm = () => {
+        const sumCheck = $('input[type="checkbox"]:checked');
+        if (sumCheck.length>0) {
+            $('#confirm-ds').show()
+        } else {
+            $('#confirm-ds').hide()
+        }
+    }
     $(document).on('click', '.cursor-image', function () {
         const id = $(this).data('data');
         $.ajax({
@@ -256,6 +264,7 @@
                     } else {
                         delete selectedCheckboxes[id];
                     }
+                    checkToshowConfirm();
                 });
             });
 
@@ -270,6 +279,7 @@
                 const totalCheckboxes = $('input[type="checkbox"]').length;
                 const totalChecked = $('input[type="checkbox"]:checked').length;
                 $('#check-all').prop('checked', totalChecked === totalCheckboxes);
+                checkToshowConfirm();
             });
         },
 
@@ -279,9 +289,9 @@
        $(document).on("click", ".delete-item", function () {
            $('#confirm').modal('show');
            var item = $(this).closest('tr')
+           $('#confirm').off('click', '.btn-primary');
            $('#confirm').one('click', '.btn-primary', function () {
-               const id = item.find('.checkbox').attr('data-id')
-                   ;
+               const id = item.find('.checkbox').attr('data-id');
                $.ajax({
                    url: '/Admin/SanPhamChiTiet/Delete/' + id,
                    type: 'GET',
@@ -303,17 +313,19 @@
                });
            });
        })
+
        $(document).on("click", '.thaotac', function () {
            const keys = Object.keys(selectedCheckboxes);
            const data = { "listGuild": keys };
+           $('#preloader').show();
            $.ajax({
                url: 'GetPartialViewListUpdate',
                type: 'POST',
                data: JSON.stringify(data),
                contentType: 'application/json',
                success: function (result) {
-                   console.log(result);
                    $('#body-danhsach').html(result)
+                   $('#preloader').hide();
                },
                error: function (xhr, status, error) {
                    console.log(xhr.responseText);

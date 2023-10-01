@@ -17,7 +17,7 @@ namespace App_View.IServices
  
     public interface ISanPhamChiTietService
     {
-        Task<ResponseCreataDTO> AddAysnc(SanPhamChiTietDTO sanPhamChiTietDTO);
+        Task<ResponseCreateDTO> AddAysnc(SanPhamChiTietDTO sanPhamChiTietDTO);
         Task<bool> DeleteAysnc(string id);
         Task<bool> UpdateAynsc(SanPhamChiTietDTO sanPhamChiTietDTO);
         Task<SanPhamChiTiet?> GetByKeyAsync(string id);

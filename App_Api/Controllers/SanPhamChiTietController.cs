@@ -107,7 +107,7 @@ namespace App_Api.Controllers
         }
 
         [HttpPost("Creat-SanPhamChiTiet")]
-        public async Task<ResponseCreataDTO> CreateSanPhamChiTiet(SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<ResponseCreateDTO> CreateSanPhamChiTiet(SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietDTO);
             sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
@@ -118,7 +118,7 @@ namespace App_Api.Controllers
             sanPhamChiTiet.TrangThaiSale = 0;
             sanPhamChiTiet.SoLuongDaBan = 0;
             sanPhamChiTiet.NgayTao = DateTime.Now;
-            return new ResponseCreataDTO()
+            return new ResponseCreateDTO()
             {
                 Success = await _sanPhamChiTietRes.AddAsync(sanPhamChiTiet),
                 IdChiTietSp = sanPhamChiTiet.IdChiTietSp
