@@ -1,5 +1,6 @@
 ﻿using App_Data.Models;
 using App_Data.ViewModels.ChatLieuDTO;
+using App_Data.ViewModels.KhuyenMaiChiTietDTO;
 using App_Data.ViewModels.KichCoDTO;
 using App_Data.ViewModels.KieuDeGiayDTO;
 using App_Data.ViewModels.LoaiGiayDTO;
@@ -65,6 +66,15 @@ namespace App_Api.Helpers.Mapping
             CreateMap<LoaiGiayDTO, LoaiGiay>();
             CreateMap<KieuDeGiayDTO, KieuDeGiay>();
             CreateMap<KichCoDTO, KichCo>();
+            CreateMap<KhuyenMaiChiTiet,KhuyenMaiChiTietDTO>()
+                .ForMember(
+                    dest=> dest.KhuyenMai,
+                    opt => opt.MapFrom(src=>$"{src.KhuyenMai.TenKhuyenMai} ({src.KhuyenMai.NgayBatDau}->{src.KhuyenMai.NgayKetThuc})")
+                )
+                .ForMember(
+                    dest => dest.SanPham,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.SanPham.TenSanPham)
+                );
         }
     }
 }
