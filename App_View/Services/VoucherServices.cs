@@ -56,16 +56,15 @@ namespace App_View.Services
             }
 
         }
-        public async Task<bool> DeleteVoucherWithList(List<VoucherDTO> voucherDTO)
+        public async Task<bool> DeleteVoucherWithList(List<string> Id)
         {
             try
             {
-                var response = await _httpClient.PutAsync($"api/Voucher/DeleteVoucherWithList", null);
-                if (response.IsSuccessStatusCode)
+                foreach (string item in Id)
                 {
-                    return await response.Content.ReadAsAsync<bool>();
+                    var response = await _httpClient.PutAsync($"/api/Voucher/DeleteVoucher/{item}", null);
                 }
-                return false;
+                return true;
             }
             catch (Exception e)
             {

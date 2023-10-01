@@ -9,7 +9,7 @@ namespace App_View.IServices
         Task<bool> CreateVoucher(VoucherDTO voucherDTO);
         Task<bool> UpdateVoucher(VoucherDTO voucherDTO);
         Task<bool> DeleteVoucher(string id);
-        Task<bool> DeleteVoucherWithList(List<VoucherDTO> voucherDTO);
+        Task<bool> DeleteVoucherWithList(List<string> Id);
         Task<Voucher> GetVoucherById(string id);
         Task<VoucherDTO> GetVoucherDTOById(string id);
     }
