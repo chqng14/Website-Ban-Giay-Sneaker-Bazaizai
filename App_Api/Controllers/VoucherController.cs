@@ -11,6 +11,7 @@ using DocumentFormat.OpenXml.VariantTypes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using static App_Data.Repositories.TrangThai;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -68,7 +69,7 @@ namespace App_Api.Controllers
             voucher.MaVoucher = GenerateRandomVoucherCode();
             if (voucher.NgayBatDau > DateTime.Now)
             {
-                voucher.TrangThai = 1;
+                voucher.TrangThai = (int)TrangThaiCoBan.HoatDong;
             }
             else
                 voucher.TrangThai = 0;

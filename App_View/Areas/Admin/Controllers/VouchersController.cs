@@ -46,6 +46,7 @@ namespace App_View.Areas.Admin.Controllers
                 return RedirectToAction("Index");
             }
             return BadRequest();
+
         }
         public async Task<ActionResult> Edit(string id)
         {
