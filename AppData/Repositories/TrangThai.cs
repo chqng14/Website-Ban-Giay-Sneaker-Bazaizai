@@ -17,5 +17,12 @@ namespace App_Data.Repositories
             [Description("Không hoạt động")]
             KhongHoatDong = 1,
         }
+        public enum TrangThaiVoucher
+        {
+            [Description("Hoạt động")]
+            HoatDong = 0,
+            [Description("Không hoạt động")]
+            KhongHoatDong = 1,
+        }
     }
 }

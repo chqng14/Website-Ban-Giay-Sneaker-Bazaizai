@@ -31,6 +31,6 @@ namespace App_Data.ViewModels.SanPhamChiTietDTO
         public string? IdKichCo { get; set; }
         public string? IdLoaiGiay { get; set; }
         public string? IdThuongHieu { get; set; }
-        public List<string>? DanhSachAnh { get; set;}
+        public List<string>? DanhSachAnh { get; set; }
     }
 }

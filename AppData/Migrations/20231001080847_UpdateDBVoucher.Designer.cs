@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App_Data.Migrations
 {
     [DbContext(typeof(BazaizaiContext))]
-    [Migration("20230925164141_chang")]
-    partial class chang
+    [Migration("20231001080847_UpdateDBVoucher")]
+    partial class UpdateDBVoucher
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -613,7 +613,16 @@ namespace App_Data.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("MoTa")
-                        .HasColumnType("Nvarchar(max)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("NgayTao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("NoiBat")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("SoLuongDaBan")
+                        .HasColumnType("int");
 
                     b.Property<int?>("SoLuongTon")
                         .HasColumnType("int");
@@ -744,6 +753,9 @@ namespace App_Data.Migrations
 
                     b.Property<DateTime>("NgayKetThuc")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("PhamViSanPham")
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("SoLuong")
                         .HasColumnType("int");

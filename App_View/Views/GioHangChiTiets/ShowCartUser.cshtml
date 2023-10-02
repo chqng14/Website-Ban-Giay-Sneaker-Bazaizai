@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<App_Data.ViewModels.GioHangChiTiet.GioHangChiTietDTO>
 
 @{
+    ViewData["Title"] = "ShowCartUser";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!--====== End - Section 1 ======-->
 <!--====== Section 2 ======-->
 <div class="u-s-p-b-60">
-
     <!--====== Section Intro ======-->
     <div class="section__intro u-s-m-b-60">
         <div class="container">
@@ -38,7 +38,7 @@
                                             <div class="table-p__box">
                                                 <div class="table-p__img-wrap">
 
-                                                    <img class="u-img-fluid" src="images/product/electronic/product3.jpg" alt="">
+                                                    <img class="u-img-fluid" src="~/assets/images/others/@item.LinkAnh" alt="">
                                                 </div>
                                                 <div class="table-p__info">
 
@@ -49,8 +49,8 @@
 
                                                     @* <span class="table-p__category">
 
-                                                        <a href="shop-side-version-2.html">Electronics</a>
-                                                    </span> *@
+                                                <a href="shop-side-version-2.html">Electronics</a>
+                                                </span> *@
                                                     <ul class="table-p__variant-list">
                                                         <li>
 
@@ -91,7 +91,7 @@
                                         </td>
                                     </tr>
                                 }
-                                
+
                                 <!--====== End - Row ======-->
                             </tbody>
                         </table>

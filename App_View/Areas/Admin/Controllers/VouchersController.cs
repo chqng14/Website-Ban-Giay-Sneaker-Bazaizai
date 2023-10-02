@@ -73,5 +73,16 @@ namespace App_View.Areas.Admin.Controllers
             await _voucherSV.DeleteVoucher(id);
             return RedirectToAction("Index");
         }
+
+        public async Task<ActionResult> DeleteVoucherWithList(List<string> voucherIds)
+        {
+            if (voucherIds != null)
+            {
+                await _voucherSV.DeleteVoucherWithList(voucherIds);
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
+        }
+
     }
 }
