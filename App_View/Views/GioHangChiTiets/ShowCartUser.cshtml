@@ -66,7 +66,7 @@
                                         </td>
                                         <td>
 
-                                            <span class="table-p__price">@item.GiaGoc</span>
+                                            <span class="table-p__price">@string.Format("{0:N0}đ", item.GiaGoc)</span>
                                         </td>
                                         <td>
                                             <div class="table-p__input-counter-wrap">
@@ -77,7 +77,6 @@
                                                     <span class="input-counter__minus fas fa-minus" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" ></span>
 
                                                     <input class="input-counter__text input-counter--text-primary-style" type="text" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" value="@item.SoLuong" data-min="1" data-max="1000" >
-
                                                     <span class="input-counter__plus fas fa-plus" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" ></span>
                                                 </div>
                                                 <!--====== End - Input Counter ======-->
@@ -112,8 +111,6 @@
                                 <i class="fas fa-trash"></i>
                                 <span >CLEAR CART</span>
                             </a>
-
-                            
                         </div>
                     </div>
                 </div>
@@ -187,20 +184,16 @@
                                         <table class="f-cart__table">
                                             <tbody>
                                                 <tr>
-                                                    <td>SHIPPING</td>
+                                                    <td>PHÍ SHIP</td>
                                                     <td>$4.00</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>TAX</td>
-                                                    <td>$0.00</td>
+                                                    <td>TẠM TÍNH</td>
+                                                    <td>@string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaGoc))</td>
                                                 </tr>
                                                 <tr>
-                                                    <td>SUBTOTAL</td>
-                                                    <td>$379.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>GRAND TOTAL</td>
-                                                    <td>$379.00</td>
+                                                    <td>TỔNG TIỀN</td>
+                                                    <td>@string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaGoc))</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -223,7 +216,7 @@
 
 @* <script src="~/lib/jquery/dist/jquery.js"></script> *@
 <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script type="text/javascript" src="~/js/CapNhatGioHang.js"></script>
+@* <script type="text/javascript" src="/js/CapNhatGioHang.js"></script> *@
 @section Scripts{
     <script>
         $(document).on("input", ".input-counter__text", function () {
@@ -231,30 +224,24 @@
         });
 
         $(document).on("click", ".input-counter__plus, .input-counter__minus", function () {
-            var inputElement = $(this).siblings(".input-counter__text")[0];
-            updateCart(inputElement);
+            // var inputElement = $(this).siblings(".input-counter__text")[0];
+            updateCart();
         });
 
-        function updateCart(inputElement) {
+        function updateCart() {
             var soLuong = parseInt($(inputElement).val());
             var idSanPhamChiTiet = $(inputElement).data('product-id');
             var idGioHangChiTiet = $(inputElement).data('cart-id');
-
-            if ($(inputElement).hasClass('input-counter__plus')) {
-                soLuong++;
-            } else if ($(inputElement).hasClass('input-counter__minus') && soLuong > 1) {
-                soLuong--;
-            }
 
             $.ajax({
                 url: '/GioHangChiTiets/CapNhatSoLuongGioHang',
                 method: 'POST',
                 data: { IdSanPhamChiTiet: idSanPhamChiTiet, SoLuong: soLuong, IdGioHangChiTiet: idGioHangChiTiet },
                 success: function (response) {
+
                     var inputs = document.getElementsByClassName('input-counter__text');
                     var sum = 0;
-
-                    for (var i = 0; i < inputs.length; i++) {
+                    for (var i = 0; i < inputs.length - 1; i++) {
                         var inputValue = parseInt(inputs[i].value);
                         if (!isNaN(inputValue)) {
                             sum += inputValue;

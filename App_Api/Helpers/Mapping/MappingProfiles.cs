@@ -27,7 +27,6 @@ namespace App_Api.Helpers.Mapping
 
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
 
-
             CreateMap<GioHangChiTiet, GioHangChiTietDTO>()
                  .ForMember(
                     dest => dest.TenSanPham,

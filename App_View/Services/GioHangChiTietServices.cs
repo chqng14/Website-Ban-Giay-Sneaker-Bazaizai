@@ -13,7 +13,7 @@ namespace App_View.Services
         }
         public Task<bool> CreateGioHang(GioHangChiTietDTO GioHangChiTietDTO)
         {
-            throw new NotImplementedException();
+
         }
 
         public async Task<bool> DeleteGioHang(string id)

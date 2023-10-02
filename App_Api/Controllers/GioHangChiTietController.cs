@@ -7,6 +7,7 @@ using App_Data.ViewModels.SanPhamChiTiet;
 using AutoMapper;
 using DocumentFormat.OpenXml.Office.CustomUI;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,7 +29,9 @@ namespace App_Api.Controllers
         private readonly IAllRepo<Anh> _AnhRes;
         private readonly IAllRepo<NguoiDung> _NguoiDung;
         private readonly IMapper _mapper;
-        public GioHangChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes, IAllRepo<NguoiDung> nguoiDung)
+        private readonly SignInManager<NguoiDung> _signInManager;
+        private readonly UserManager<NguoiDung> _userManager;
+        public GioHangChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes, IAllRepo<NguoiDung> nguoiDung, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
         {
             _gioHangChiTiet = new GioHangChiTietRepos(mapper);
             _kickcoRes = kickcoRes;
@@ -38,6 +41,8 @@ namespace App_Api.Controllers
             _mapper = mapper;
             _AnhRes = anhRes;
             _NguoiDung = nguoiDung;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
         // GET: api/<GioHangChiTietController>
 
@@ -58,10 +63,11 @@ namespace App_Api.Controllers
         [HttpPost("Create")]
         public async Task<bool> TaoGioHangDTO(GioHangChiTietDTOCUD GioHangChiTietDTOCUD)
         {
+            var idNguoiDung = _userManager.GetUserId(User);
             var giohangChiTiet = _mapper.Map<GioHangChiTiet>(GioHangChiTietDTOCUD);
             giohangChiTiet.IdGioHangChiTiet = Guid.NewGuid().ToString();
             giohangChiTiet.IdSanPhamCT = GioHangChiTietDTOCUD.sanPhamChiTietDTO.IdChiTietSp;
-            giohangChiTiet.IdNguoiDung = GioHangChiTietDTOCUD.GioHangDTO.IdNguoiDung;
+            giohangChiTiet.IdNguoiDung = idNguoiDung;
             giohangChiTiet.Soluong = 1;
             giohangChiTiet.GiaGoc = GioHangChiTietDTOCUD.sanPhamChiTietDTO.GiaBan;
             giohangChiTiet.TrangThai = 0;

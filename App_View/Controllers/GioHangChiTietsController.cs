@@ -22,10 +22,12 @@ namespace App_View.Controllers
         IGioHangChiTietServices GioHangChiTietServices;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
+        ISanPhamChiTietService sanPhamChiTietService;
         public GioHangChiTietsController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
         {
             httpClient = new HttpClient();
             GioHangChiTietServices = new GioHangChiTietServices();
+            //sanPhamChiTietService = new SanPhamChiTietService();
             _signInManager = signInManager;
             _userManager = userManager;
         }
