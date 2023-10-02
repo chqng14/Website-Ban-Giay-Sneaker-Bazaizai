@@ -120,5 +120,80 @@ namespace App_Data.Repositories
             }
         }
 
+        public async Task<List<ItemShopViewModel>> GetDanhSachItemShopViewModelAsync()
+        {
+            var listSanPham = ( await _context.sanPhamChiTiets
+                .Include(it => it.SanPham)
+                .Include(it => it.ThuongHieu)
+                .Include(it => it.Anh)
+                .ToArrayAsync()).Where(sp => sp.TrangThai == 0).ToList().GroupBy(
+              gr => new {
+                  gr.IdChatLieu,
+                  gr.IdSanPham,
+                  gr.IdLoaiGiay,
+                  gr.IdKieuDeGiay,
+                  gr.IdThuongHieu,
+                  gr.IdXuatXu,
+              }).Select(gr => gr.First()).ToList();
+            var itemShops = _mapper.Map<List<ItemShopViewModel>>(listSanPham);
+            return itemShops;
+        }
+
+        public async Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id)
+        {
+            var sanPhamChiTiet = (await _context.sanPhamChiTiets.
+                Include(x => x.Anh).
+                Include(x => x.SanPham).
+                Include(x => x.ThuongHieu).
+                Include(x => x.KichCo).
+                Include(x => x.MauSac).
+                ToListAsync()).FirstOrDefault(sp=>sp.IdChiTietSp == id) ;
+            if (sanPhamChiTiet == null) return null;
+            var itemDetailViewModel = _mapper.Map<ItemDetailViewModel>(sanPhamChiTiet);
+            var lstBienThe = (await _context.sanPhamChiTiets
+                .Include(x=>x.MauSac)
+                .Include(x=>x.KichCo)
+                .ToListAsync())
+                .Where(sp =>
+                sp.TrangThai == 0 &&
+                sp.IdKieuDeGiay == sanPhamChiTiet!.IdKieuDeGiay &&
+                sp.IdLoaiGiay == sanPhamChiTiet.IdLoaiGiay &&
+                sp.IdThuongHieu == sanPhamChiTiet.IdThuongHieu &&
+                sp.IdXuatXu == sanPhamChiTiet.IdXuatXu &&
+                sp.IdChatLieu == sanPhamChiTiet.IdChatLieu &&
+                sp.IdSanPham == sanPhamChiTiet.IdSanPham
+                ).ToList();
+            itemDetailViewModel.LstMauSac = lstBienThe.Select(x=>x.MauSac.TenMauSac).Distinct().ToList()!;
+            itemDetailViewModel.LstKichThuoc = lstBienThe.Select(x=>x.KichCo.SoKichCo!.Value).Distinct().OrderBy(item=>item).ToList();
+            return itemDetailViewModel;
+        }
+
+        public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac)
+        {
+            var sanPhamGet = (await _context.sanPhamChiTiets.ToListAsync())
+                .FirstOrDefault(sp => sp.IdChiTietSp == id);
+            var idMauSac = (await _context.mauSacs.ToListAsync()).FirstOrDefault(x=>x.TenMauSac == mauSac)!.IdMauSac;
+            if (sanPhamGet == null) return null;
+            var lstBienThe = (await _context.sanPhamChiTiets
+                .Include(x => x.MauSac)
+                .Include(x => x.KichCo)
+                .ToListAsync())
+                .Where(sp =>
+                sp.TrangThai == 0 &&
+                sp.IdKieuDeGiay == sanPhamGet!.IdKieuDeGiay &&
+                sp.IdLoaiGiay == sanPhamGet.IdLoaiGiay &&
+                sp.IdThuongHieu == sanPhamGet.IdThuongHieu &&
+                sp.IdXuatXu == sanPhamGet.IdXuatXu &&
+                sp.IdChatLieu == sanPhamGet.IdChatLieu &&
+                sp.IdSanPham == sanPhamGet.IdSanPham &&
+                sp.IdMauSac == idMauSac
+                ).ToList();
+            var lstSize = lstBienThe.DistinctBy(sp=>sp.KichCo.SoKichCo).OrderBy(item => item).ToList();
+            var idSizeGet = lstSize.FirstOrDefault()!.KichCo.IdKichCo;
+            var sanPhamChiTiet = lstBienThe.FirstOrDefault(sp => sp.IdKichCo == idSizeGet);
+            var itemDetailViewModel = _mapper.Map<ItemDetailViewModel>(sanPhamChiTiet);
+            itemDetailViewModel.LstKichThuoc = lstBienThe.Select(x => x.KichCo.SoKichCo!.Value).Distinct().OrderBy(item => item).ToList();
+            return itemDetailViewModel;
+        }
     }
 }

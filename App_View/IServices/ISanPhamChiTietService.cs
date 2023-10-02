@@ -35,5 +35,9 @@ namespace App_View.IServices
         Task<KieuDeGiayDTO?> CreateTenKieuDeGiayAynsc(KieuDeGiayDTO kieuDeGiayDTO);
         Task<MauSacDTO?> CreateTenMauSacAynsc(MauSacDTO mauSacDTO);
         Task<KichCoDTO?> CreateTenKichCoAynsc(KichCoDTO kichCoDTO);
+        Task<List<ItemShopViewModel>?> GetListItemShopViewModelAynsc();
+        Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id);
+        Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac);
+
     }
 }

@@ -302,6 +302,21 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<SanPhamChiTiet?>("/api/SanPhamChiTiet/Get-SanPhamChiTiet/{id}");
         }
 
+        public async Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id)
+        {
+            return await _httpClient.GetFromJsonAsync<ItemDetailViewModel?>($"/api/SanPhamChiTiet/Get-ItemDetailViewModel/{id}");
+        }
+
+        public Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac)
+        {
+            return _httpClient.GetFromJsonAsync<ItemDetailViewModel?>($"/api/SanPhamChiTiet/Get-ItemDetailViewModel/{id}/{mauSac}");
+        }
+
+        public Task<List<ItemShopViewModel>?> GetListItemShopViewModelAynsc()
+        {
+            return _httpClient.GetFromJsonAsync<List<ItemShopViewModel>?>("/api/SanPhamChiTiet/Get-List-ItemShopViewModel");
+        }
+
         public async Task<List<SanPhamChiTiet>> GetListSanPhamChiTietAsync()
         {
             return (await _httpClient.GetFromJsonAsync<List<SanPhamChiTiet>>("/api/SanPhamChiTiet/Get-List-SanPhamChiTiet"))!;

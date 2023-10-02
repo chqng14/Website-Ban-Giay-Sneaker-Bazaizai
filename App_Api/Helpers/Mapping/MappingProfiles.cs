@@ -72,6 +72,98 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.ListTenAnh,
                         opt => opt.MapFrom(src => src.Anh.Where(an=>an.TrangThai==0).Select(x => x.Url).ToList())
                     );
+            CreateMap<SanPhamChiTiet, ItemShopViewModel>()
+                .ForMember(
+                        dest => dest.Anh,
+                        opt => opt.MapFrom(src => src.Anh!.FirstOrDefault()!.Url)
+                    )
+                .ForMember(
+                        dest => dest.IdChiTietSp,
+                        opt => opt.MapFrom(src => src.IdChiTietSp)
+                    )
+                .ForMember(
+                        dest => dest.GiaBan,
+                        opt => opt.MapFrom(src => src.GiaBan)
+                    )
+                .ForMember(
+                        dest => dest.GiaKhuyenMai,
+                        opt => opt.MapFrom(src => 0)
+                    )
+                .ForMember(
+                        dest => dest.SoSao,
+                        opt => opt.MapFrom(src => 5)
+                    )
+                .ForMember(
+                        dest => dest.ThuongHieu,
+                        opt => opt.MapFrom(src => src.ThuongHieu.TenThuongHieu)
+                    )
+                .ForMember(
+                        dest => dest.TenSanPham,
+                        opt => opt.MapFrom(src => $"{src.ThuongHieu.TenThuongHieu} {src.SanPham.TenSanPham}")
+                    )
+                .ForMember(
+                        dest => dest.MoTaNgan,
+                        opt => opt.MapFrom(src => "Sản phẩm chính hãng")
+                    )
+                .ForMember(
+                        dest => dest.SoLanDanhGia,
+                        opt => opt.MapFrom(src => 32)
+                    )
+                ;
+            CreateMap<SanPhamChiTiet, ItemDetailViewModel>()
+                .ForMember(
+                        dest => dest.Anh,
+                        opt => opt.MapFrom(src => src.Anh!.FirstOrDefault()!.Url)
+                    )
+                .ForMember(
+                        dest => dest.IdChiTietSp,
+                        opt => opt.MapFrom(src => src.IdChiTietSp)
+                    )
+                .ForMember(
+                        dest => dest.GiaBan,
+                        opt => opt.MapFrom(src => src.GiaBan)
+                    )
+                .ForMember(
+                        dest => dest.GiaKhuyenMai,
+                        opt => opt.MapFrom(src => 0)
+                    )
+                .ForMember(
+                        dest => dest.SoSao,
+                        opt => opt.MapFrom(src => 5)
+                    )
+                .ForMember(
+                        dest => dest.ThuongHieu,
+                        opt => opt.MapFrom(src => src.ThuongHieu.TenThuongHieu)
+                    )
+                .ForMember(
+                        dest => dest.TenSanPham,
+                        opt => opt.MapFrom(src => $"{src.ThuongHieu.TenThuongHieu} {src.SanPham.TenSanPham}")
+                    )
+                .ForMember(
+                        dest => dest.MoTaNgan,
+                        opt => opt.MapFrom(src => "Sản phẩm chính hãng")
+                    )
+                .ForMember(
+                        dest => dest.SoLanDanhGia,
+                        opt => opt.MapFrom(src => 32)
+                    )
+                 .ForMember(
+                        dest => dest.DanhSachAnh,
+                        opt => opt.MapFrom(src => src.Anh.Where(x=>x.TrangThai ==0).Select(a=>a.Url).ToList())
+                    )
+                 .ForMember(
+                        dest => dest.SoLuotYeuThich,
+                        opt => opt.MapFrom(src => 100)
+                    )
+                 .ForMember(
+                        dest => dest.MauSac,
+                        opt => opt.MapFrom(src => src.MauSac.TenMauSac)
+                    )
+                 .ForMember(
+                        dest => dest.Size,
+                        opt => opt.MapFrom(src => src.KichCo.SoKichCo)
+                    )
+                ;
             CreateMap<SanPhamDTO, SanPham>();
             CreateMap<ThuongHieuDTO, ThuongHieu>();
             CreateMap<ChatLieuDTO, ChatLieu>();

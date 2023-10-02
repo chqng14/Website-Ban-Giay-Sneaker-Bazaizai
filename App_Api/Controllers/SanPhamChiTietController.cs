@@ -100,10 +100,28 @@ namespace App_Api.Controllers
             return await _sanPhamChiTietRes.GetDanhSachGiayViewModelAsync(); ;
         }
 
+        [HttpGet("Get-List-ItemShopViewModel")]
+        public async Task<List<ItemShopViewModel>?> GetDanhSachItemShowViewModel()
+        {
+            return await _sanPhamChiTietRes.GetDanhSachItemShopViewModelAsync();
+        }
+
         [HttpGet("Get-SanPhamChiTiet/{id}")]
         public async Task<SanPhamChiTiet?> GetSanPham(string id)
         {
             return await _sanPhamChiTietRes.GetByKeyAsync(id);
+        }
+
+        [HttpGet("Get-ItemDetailViewModel/{id}")]
+        public async Task<ItemDetailViewModel?> GetItemDetailViewModel(string id)
+        {
+            return await _sanPhamChiTietRes.GetItemDetailViewModelAynsc(id);
+        }
+
+        [HttpGet("Get-ItemDetailViewModel/{id}/{mauSac}")]
+        public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColor(string id,string mauSac)
+        {
+            return await _sanPhamChiTietRes.GetItemDetailViewModelWhenSelectColorAynsc(id,mauSac);
         }
 
         [HttpPost("Creat-SanPhamChiTiet")]
