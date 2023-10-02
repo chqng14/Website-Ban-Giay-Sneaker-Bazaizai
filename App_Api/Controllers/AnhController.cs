@@ -35,14 +35,11 @@ namespace App_Api.Controllers
 
                         using var image = SixLabors.ImageSharp.Image.Load(stream);
 
-                        if (image.Width > 400 || image.Height > 300)
+                        image.Mutate(x => x.Resize(new ResizeOptions
                         {
-                            image.Mutate(x => x.Resize(new ResizeOptions
-                            {
-                                Size = new SixLabors.ImageSharp.Size(400, 300),
-                                Mode = ResizeMode.Max
-                            }));
-                        }
+                            Size = new SixLabors.ImageSharp.Size(1600, 1600),
+                            Mode = ResizeMode.Max
+                        }));
 
                         var encoder = new JpegEncoder
                         {

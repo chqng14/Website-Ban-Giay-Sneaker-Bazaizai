@@ -1,6 +1,7 @@
 ﻿using App_Data.Models;
 using App_Data.ViewModels.GioHangChiTiet;
 using App_View.IServices;
+using System.Net.Http;
 
 namespace App_View.Services
 {
@@ -11,9 +12,24 @@ namespace App_View.Services
         {
             _httpClient = new HttpClient();
         }
-        public Task<bool> CreateGioHang(GioHangChiTietDTO GioHangChiTietDTO)
+        public async Task<bool> CreateCartDetailDTO(GioHangChiTietDTOCUD gioHangChiTietDTOCUD)
         {
 
+            try
+            {
+                var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/GioHangChiTiet/Create", gioHangChiTietDTOCUD);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await res.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
         }
 
         public async Task<bool> DeleteGioHang(string id)

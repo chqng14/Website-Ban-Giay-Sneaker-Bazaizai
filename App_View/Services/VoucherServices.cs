@@ -56,6 +56,22 @@ namespace App_View.Services
             }
 
         }
+        public async Task<bool> DeleteVoucherWithList(List<string> Id)
+        {
+            try
+            {
+                foreach (string item in Id)
+                {
+                    var response = await _httpClient.PutAsync($"/api/Voucher/DeleteVoucher/{item}", null);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
 
         public Task<List<Voucher>> GetAllVoucher()
         {

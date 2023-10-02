@@ -28,14 +28,14 @@ namespace App_View.Services
             _httpClient = httpClient;
         }
 
-        public async Task<ResponseCreataDTO> AddAysnc(SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<ResponseCreateDTO> AddAysnc(SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/Creat-SanPhamChiTiet", sanPhamChiTietDTO);
             try
             {
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<ResponseCreataDTO>();
+                    return await response.Content.ReadAsAsync<ResponseCreateDTO>();
                 }
                 Console.WriteLine(await response.Content.ReadAsStringAsync());
                 throw new Exception("Not IsSuccessStatusCode");
@@ -300,6 +300,21 @@ namespace App_View.Services
         public async Task<SanPhamChiTiet?> GetByKeyAsync(string id)
         {
             return await _httpClient.GetFromJsonAsync<SanPhamChiTiet?>("/api/SanPhamChiTiet/Get-SanPhamChiTiet/{id}");
+        }
+
+        public async Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id)
+        {
+            return await _httpClient.GetFromJsonAsync<ItemDetailViewModel?>($"/api/SanPhamChiTiet/Get-ItemDetailViewModel/{id}");
+        }
+
+        public Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac)
+        {
+            return _httpClient.GetFromJsonAsync<ItemDetailViewModel?>($"/api/SanPhamChiTiet/Get-ItemDetailViewModel/{id}/{mauSac}");
+        }
+
+        public Task<List<ItemShopViewModel>?> GetListItemShopViewModelAynsc()
+        {
+            return _httpClient.GetFromJsonAsync<List<ItemShopViewModel>?>("/api/SanPhamChiTiet/Get-List-ItemShopViewModel");
         }
 
         public async Task<List<SanPhamChiTiet>> GetListSanPhamChiTietAsync()

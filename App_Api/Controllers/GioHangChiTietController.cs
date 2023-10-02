@@ -29,9 +29,9 @@ namespace App_Api.Controllers
         private readonly IAllRepo<Anh> _AnhRes;
         private readonly IAllRepo<NguoiDung> _NguoiDung;
         private readonly IMapper _mapper;
-        private readonly SignInManager<NguoiDung> _signInManager;
-        private readonly UserManager<NguoiDung> _userManager;
-        public GioHangChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes, IAllRepo<NguoiDung> nguoiDung, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
+        //private readonly SignInManager<NguoiDung> _signInManager;
+        //private readonly UserManager<NguoiDung> _userManager;
+        public GioHangChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes, IAllRepo<NguoiDung> nguoiDung)
         {
             _gioHangChiTiet = new GioHangChiTietRepos(mapper);
             _kickcoRes = kickcoRes;
@@ -41,8 +41,8 @@ namespace App_Api.Controllers
             _mapper = mapper;
             _AnhRes = anhRes;
             _NguoiDung = nguoiDung;
-            _signInManager = signInManager;
-            _userManager = userManager;
+            //_signInManager = signInManager;
+            //_userManager = userManager;
         }
         // GET: api/<GioHangChiTietController>
 
@@ -63,12 +63,12 @@ namespace App_Api.Controllers
         [HttpPost("Create")]
         public async Task<bool> TaoGioHangDTO(GioHangChiTietDTOCUD GioHangChiTietDTOCUD)
         {
-            var idNguoiDung = _userManager.GetUserId(User);
+            //var idNguoiDung = _userManager.GetUserId(User);
             var giohangChiTiet = _mapper.Map<GioHangChiTiet>(GioHangChiTietDTOCUD);
             giohangChiTiet.IdGioHangChiTiet = Guid.NewGuid().ToString();
             giohangChiTiet.IdSanPhamCT = GioHangChiTietDTOCUD.sanPhamChiTietDTO.IdChiTietSp;
-            giohangChiTiet.IdNguoiDung = idNguoiDung;
-            giohangChiTiet.Soluong = 1;
+            giohangChiTiet.IdNguoiDung = GioHangChiTietDTOCUD.GioHangDTO.IdNguoiDung;
+            giohangChiTiet.Soluong = GioHangChiTietDTOCUD.SoLuong;
             giohangChiTiet.GiaGoc = GioHangChiTietDTOCUD.sanPhamChiTietDTO.GiaBan;
             giohangChiTiet.TrangThai = 0;
             _gioHangChiTiet.AddCartDetail(giohangChiTiet);

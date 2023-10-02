@@ -13,6 +13,8 @@ using App_View.Services;
 using App_View.IServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using DocumentFormat.OpenXml.VariantTypes;
+using App_Data.ViewModels.SanPhamChiTietDTO;
 
 namespace App_View.Controllers
 {
@@ -49,22 +51,19 @@ namespace App_View.Controllers
         }
 
         // GET: GioHangChiTiets/Create
-        public IActionResult Create()
+        public async Task<IActionResult> AddToCart(GioHangChiTietDTOCUD gioHangChiTietDTOCUD)
         {
-
-            return View();
+            var idNguoiDung = _userManager.GetUserId(User);
+            var product = await sanPhamChiTietService.GetByKeyAsync(gioHangChiTietDTOCUD.IdSanPhamCT);
+            var giohang = new GioHangChiTietDTOCUD();
+            giohang.sanPhamChiTietDTO.IdSanPham = gioHangChiTietDTOCUD.IdSanPhamCT;
+            giohang.GioHangDTO.IdNguoiDung = idNguoiDung;
+            giohang.SoLuong = gioHangChiTietDTOCUD.SoLuong;
+            giohang.GiaGoc = product.GiaBan;
+            GioHangChiTietServices.CreateCartDetailDTO(giohang);
+            return RedirectToAction("ShowCartUser");
         }
 
-        // POST: GioHangChiTiets/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdGioHangChiTiet,IdNguoiDung,IdSanPhamCT,Soluong,GiaGoc,TrangThai")] GioHangChiTiet gioHangChiTiet)
-        {
-
-            return View();
-        }
 
         // GET: GioHangChiTiets/Edit/5
         public async Task<IActionResult> CapNhatSoLuongGioHang(string IdGioHangChiTiet, int SoLuong, string IdSanPhamChiTiet)

@@ -17,7 +17,7 @@ namespace App_View.IServices
  
     public interface ISanPhamChiTietService
     {
-        Task<ResponseCreataDTO> AddAysnc(SanPhamChiTietDTO sanPhamChiTietDTO);
+        Task<ResponseCreateDTO> AddAysnc(SanPhamChiTietDTO sanPhamChiTietDTO);
         Task<bool> DeleteAysnc(string id);
         Task<bool> UpdateAynsc(SanPhamChiTietDTO sanPhamChiTietDTO);
         Task<SanPhamChiTiet?> GetByKeyAsync(string id);
@@ -35,5 +35,9 @@ namespace App_View.IServices
         Task<KieuDeGiayDTO?> CreateTenKieuDeGiayAynsc(KieuDeGiayDTO kieuDeGiayDTO);
         Task<MauSacDTO?> CreateTenMauSacAynsc(MauSacDTO mauSacDTO);
         Task<KichCoDTO?> CreateTenKichCoAynsc(KichCoDTO kichCoDTO);
+        Task<List<ItemShopViewModel>?> GetListItemShopViewModelAynsc();
+        Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id);
+        Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac);
+
     }
 }

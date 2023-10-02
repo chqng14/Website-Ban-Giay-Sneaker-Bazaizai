@@ -1015,7 +1015,7 @@
                                 if (response.headers.get("content-length") !== "0") {
                                     return response.json();
                                 } else {
-                                    return null; // Trả về null nếu không có JSON
+                                    return null;
                                 }
                             }
                             throw new Error('Network response was not ok.');
@@ -1027,10 +1027,11 @@
                             console.error(error);
                         });
                 }
+
                 $.ajax({
                     url: URL_UPDATE_PRODUCT_DETAIL,
                     type: 'POST',
-                    data: JSON.stringify({ ...GetDataMain(), ...dataBienThe, ...DataInDataset, ...{ IdChiTietSp: currentItem.attr('data-idproductdetail') }, ...moTa, ...{ Day: currentItem.find('.switch-2-day').prop('checked') ? "true" : "false", NoiBat: currentItem.find('.switch-2-noibat').prop('checked') } }),
+                    data: JSON.stringify({ ...GetDataMain(), ...dataBienThe, ...DataInDataset, ...{ IdChiTietSp: currentItem.attr('data-idproductdetail') }, ...moTa, ...{ Day: currentItem.find('.switch-2-day').prop('checked'), NoiBat: currentItem.find('.switch-2-noibat').prop('checked') } }),
                     contentType: 'application/json',
                     success: function (result) {
                         checkSS++;
@@ -1058,7 +1059,7 @@
                             , ...dataBienThe
                             , ...DataInDataset
                             , ...moTa
-                            , ...{ Day: currentItem.find('.switch-2-day').prop('checked') ? "true" : "false", NoiBat: currentItem.find('.switch-2-noibat').prop('checked') }
+                            , ...{ Day: currentItem.find('.switch-2-day').prop('checked'), NoiBat: currentItem.find('.switch-2-noibat').prop('checked') }
                         }),
                         contentType: 'application/json',
                         success: function (result) {

@@ -13,15 +13,17 @@
     @foreach (var sp in Model)
     {
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between">
                 <h5 class="card-title">
                     <a class="collapsed" data-toggle="collapse" href="#collapseTwoDefault-@sp.IdChiTietSp">
-                        <span>Collapsible Group Item #2</span>
+                        <span>@sp.FullName</span>
                     </a>
                 </h5>
+                <button class="btn btn-tone rounded-circle btn-delete btn-close">X</button>
             </div>
             <div id="collapseTwoDefault-@sp.IdChiTietSp" class="collapse" data-parent="#accordion-default">
                 <div class="card-body">
+                    <input class="d-none" name="IdChiTietSp" value="@sp.IdChiTietSp"/>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home-@sp.IdChiTietSp" role="tab"
@@ -37,11 +39,11 @@
                         </li>
                     </ul>
                     <div class="tab-content m-t-15" id="myTabContent">
-                        <div class="tab-pane fade show active" id="home-@sp.IdChiTietSp" role="tabpanel" aria-labelledby="home-tab" style="height: 450px">
+                        <div class="tab-pane fade show active" id="home-@sp.IdChiTietSp" role="tabpanel" aria-labelledby="home-tab" style="height: 470px">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-4" style="margin-top: 10px" id="sanpham">
+                                        <div class="col-4 sanpham" style="margin-top: 10px">
                                             <label class="font-weight-semibold">Tên sản phẩm</label>
                                             <select class="w-100 select2-active" name="IdSanPham">
                                                 @foreach (var item in (SelectList)ViewData["IdSanPham"])
@@ -59,7 +61,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-4" style="margin-top: 10px" id="thuonghieu">
+                                        <div class="col-4 thuonghieu" style="margin-top: 10px">
                                             <label class="font-weight-semibold">Thương hiệu</label>
                                             <select class="select2-active w-100" name="IdThuongHieu">
                                                 @foreach (var item in (SelectList)ViewData["IdThuongHieu"])
@@ -76,7 +78,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-4" style="margin-top: 10px" id="xuatxu">
+                                        <div class="col-4 xuatxu" style="margin-top: 10px">
                                             <label class="font-weight-semibold">Xuất xứ</label>
                                             <select class="select2-active w-100" name="IdXuatXu">
                                                 @foreach (var item in (SelectList)ViewData["IdXuatXu"])
@@ -93,7 +95,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-4" style="margin-top: 10px" id="chatlieu">
+                                        <div class="col-4 chatlieu" style="margin-top: 10px">
                                             <label class="font-weight-semibold">Chất liệu</label>
                                             <select class="select2-active w-100" name="IdChatLieu">
                                                 @foreach (var item in (SelectList)ViewData["IdChatLieu"])
@@ -110,7 +112,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-4" style="margin-top: 10px" id="loaigiay">
+                                        <div class="col-4 loaigiay" style="margin-top: 10px">
                                             <label class="font-weight-semibold">Loại giầy</label>
                                             <select class="select2-active w-100" name="IdLoaiGiay">
                                                 @foreach (var item in (SelectList)ViewData["IdLoaiGiay"])
@@ -127,7 +129,7 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-4 form-group" style="margin-top: 10px" id="kieudegiay">
+                                        <div class="col-4 kieudegiay" style="margin-top: 10px">
                                             <label class="font-weight-semibold">Kiểu đế giầy</label>
                                             <select class="select2-active w-100" name="IdKieuDeGiay">
                                                 @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"])
@@ -147,9 +149,9 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-6" id="mausac">
+                                        <div class="col-6 mausac">
                                             <label class="font-weight-semibold">Màu Sắc</label>
-                                            <select id="IdColor" class="select2-active w-100">
+                                            <select class="select2-active w-100" name="IdMauSac">
                                                 @foreach (var item in (SelectList)ViewData["IdMauSac"])
                                                 {
                                                     if (item.Value == sp.IdMauSac)
@@ -164,9 +166,9 @@
                                             </select>
                                         </div>
 
-                                        <div class="col-6" id="kichco">
+                                        <div class="col-6 kichco">
                                             <label class="font-weight-semibold">Kích cỡ</label>
-                                            <select id="IdSize" class="select2-active w-100">
+                                            <select class="select2-active w-100" name="IdKichCo">
                                                 @foreach (var item in (SelectList)ViewData["IdKichCo"])
                                                 {
                                                     if (item.Value == sp.IdKichCo)
@@ -185,29 +187,28 @@
                                     <div class="row mt-2">
                                         <div class="form-group col-4">
                                             <label class="font-weight-semibold" for="productBrand">Giá nhập</label>
-                                            <input type="text" class="form-control formatPrice" value="@sp.GiaNhap">
+                                            <input type="text" class="form-control formatPrice" name="GiaNhap" value="@sp.GiaNhap">
                                         </div>
 
                                         <div class="form-group col-4">
                                             <label class="font-weight-semibold" for="productBrand">Giá bán</label>
-                                            <input type="text" class="form-control formatPrice" value="@sp.GiaNhap">
+                                            <input type="text" class="form-control formatPrice" name="GiaBan" value="@sp.GiaBan">
                                         </div>
 
                                         <div class="form-group col-4">
                                             <label class="font-weight-semibold" for="productBrand">Số lượng tồn</label>
-                                            <input type="text" class="form-control formatNumber" value="@sp.SoLuongTon">
+                                            <input type="text" class="form-control formatNumber" name="SoLuongTon" value="@sp.SoLuongTon">
                                         </div>
 
                                         <div class="form-group d-flex align-items-center col-2">
                                             <div class="switch m-r-10">
-                                                @if (sp.Day == "true")
+                                                @if (sp.Day == true)
                                                 {
-                                                    <input type="checkbox" id="switch-day-@sp.IdChiTietSp" class="switch-2-day" checked>
-
+                                                    <input type="checkbox" name="Day" id="switch-day-@sp.IdChiTietSp" class="switch-2-day" checked>
                                                 }
                                                 else
                                                 {
-                                                    <input type="checkbox" id="switch-day-@sp.IdChiTietSp" class="switch-2-day">
+                                                    <input type="checkbox" name="Day" id="switch-day-@sp.IdChiTietSp" class="switch-2-day">
                                                 }
 
                                                 <label class="font-weight-semibold" for="switch-day-@sp.IdChiTietSp"></label>
@@ -218,12 +219,11 @@
                                             <div class="switch m-r-10">
                                                 @if (sp.NoiBat == true)
                                                 {
-                                                    <input type="checkbox" id="switch-noibat-@sp.IdChiTietSp" class="switch-2-noibat" checked>
-
+                                                    <input type="checkbox" name="NoiBat" id="switch-noibat-@sp.IdChiTietSp" class="switch-2-noibat" checked>
                                                 }
                                                 else
                                                 {
-                                                    <input type="checkbox" id="switch-noibat-@sp.IdChiTietSp" class="switch-2-noibat">
+                                                    <input type="checkbox" name="NoiBat" id="switch-noibat-@sp.IdChiTietSp" class="switch-2-noibat">
                                                 }
                                                 <label class="font-weight-semibold" for="switch-noibat-@sp.IdChiTietSp"></label>
                                             </div>
@@ -262,7 +262,7 @@
                                     <label class="font-weight-semibold" style="display: block; margin-bottom: 5px;">
                                         Mô tả sản phẩm
                                     </label>
-                                    <div class="moTa" style="width: 100%; "></div>
+                                    <div class="moTa w-100" style="height: 400px" name="MoTa">@Html.Raw(@sp.MoTa)</div>
                                 </div>
                             </div>
                         </div>
@@ -273,276 +273,320 @@
     }
 </div>
 
+<div id="confirm" class="mt-2 mb-2">
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-tone update-sp" onclick="window.location.reload()">Quay lại danh sách</button>
+        <button class="btn btn-warning update-sp">Cập nhật</button>
+    </div>
+</div>
+
 <script>
     const selectedFiles = {};
     const lstAnhRemove = {};
+    const URL_UPDATE_PRODUCT_DETAIL = 'UpdateSanPham';
+    const URL_DELETE_LIST_IMAGE = 'DeleteAnh';
+    const URL_CREATE_IMAGE = 'CreateAnh';
     $(() => {
+
         $(".select2-active").select2();
-        $('#thuonghieu').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                var inputValue = $(this).val();
-                if (inputValue) {
-                    var data = {
-                        TenThuongHieu: inputValue,
-                    };
-                    $.ajax({
-                        url: 'CreateTenThuongHieu',
-                        type: 'POST',
-                        data: JSON.stringify(data),
-                        contentType: 'application/json',
-                        success: function (result) {
-                            var $select2 = $("[name='IdThuongHieu']");
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
-                            }
-                            var newOption = new Option(result.tenThuongHieu, result.idThuongHieu, true, true);
-                            $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
-                        }
-                    });
+        $('.thuonghieu').each(function () {
+            const $thuonghieu = $(this);
+            var $thuonghieuInput = $(this).find('input.select2-input');
+            $thuonghieuInput.on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    var inputValue = $(this).val();
+                    if (inputValue) {
+                        var data = {
+                            TenThuongHieu: inputValue,
+                        };
+                        var $select2 = $thuonghieu.find("[name='IdThuongHieu']");
+
+                        $.ajax({
+                            url: 'CreateTenThuongHieu',
+                            type: 'POST',
+                            data: JSON.stringify(data),
+                            contentType: 'application/json',
+                            success: function (result) {
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
+                                var newOption = new Option(result.tenThuongHieu, result.idThuongHieu, true, true);
+                                $select2.append(newOption).trigger('change');
+
+                                $thuonghieuInput.val('');
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(xhr.responseText);
+                                console.log(status);
+                                console.log(error);
+                                console.log(xhr);
+                            }
+                        });
+                    }
                 }
-            }
+            });
         });
-        $('#xuatxu').find('input.select2-input').on('keyup', function (e) {
-            console.log('xuatxu');
-            if (e.keyCode === 13) {
-                var inputValue = $(this).val();
-                if (inputValue) {
-                    var data = {
-                        Ten: inputValue,
-                    };
-                    $.ajax({
-                        url: 'CreateTenXuatXu',
-                        type: 'POST',
-                        data: JSON.stringify(data),
-                        contentType: 'application/json',
-                        success: function (result) {
-                            var $select2 = $("[name='IdXuatXu']");
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
-                            }
-                            var newOption = new Option(result.ten, result.idXuatXu, true, true);
-                            $select2.append(newOption).trigger('change');
+        $('.xuatxu').each(function () {
+            const $xuatxu = $(this);
+            var $xuatxuInput = $(this).find('input.select2-input');
+            $xuatxuInput.on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    var inputValue = $(this).val();
+                    if (inputValue) {
+                        var data = {
+                            Ten: inputValue,
+                        };
+                        $.ajax({
+                            url: 'CreateTenXuatXu',
+                            type: 'POST',
+                            data: JSON.stringify(data),
+                            contentType: 'application/json',
+                            success: function (result) {
+                                var $select2 = $xuatxu.find("[name='IdXuatXu']");
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
+                                var newOption = new Option(result.ten, result.idXuatXu, true, true);
+                                $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
-                        }
-                    });
+                                $(this).val('');
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(xhr.responseText);
+                                console.log(status);
+                                console.log(error);
+                                console.log(xhr);
+                            }
+                        });
+                    }
                 }
-            }
+            })
         });
-        $('#sanpham').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                var inputValue = $(this).val();
-                if (inputValue) {
-                    var data = {
-                        TenSanPham: inputValue,
-                    };
-                    $.ajax({
-                        url: 'CreateTenSanPham',
-                        type: 'POST',
-                        data: JSON.stringify(data),
-                        contentType: 'application/json',
-                        success: function (result) {
-                            var $select2 = $("[name='IdSanPham']");
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
-                            }
-                            var newOption = new Option(result.tenSanPham, result.idSanPham, true, true);
-                            $select2.append(newOption).trigger('change');
+        $('.sanpham').each(function () {
+            const $sanpham = $(this);
+            var $sanphamInput = $(this).find('input.select2-input');
+            $sanphamInput.on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    var inputValue = $(this).val();
+                    if (inputValue) {
+                        var data = {
+                            TenSanPham: inputValue,
+                        };
+                        $.ajax({
+                            url: 'CreateTenSanPham',
+                            type: 'POST',
+                            data: JSON.stringify(data),
+                            contentType: 'application/json',
+                            success: function (result) {
+                                var $select2 = $sanpham.find("[name='IdSanPham']");
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
+                                var newOption = new Option(result.tenSanPham, result.idSanPham, true, true);
+                                $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
-                        }
-                    });
+                                $(this).val('');
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(xhr.responseText);
+                                console.log(status);
+                                console.log(error);
+                                console.log(xhr);
+                            }
+                        });
+                    }
                 }
-            }
+            });
         });
-        $('#loaigiay').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                var inputValue = $(this).val();
-                if (inputValue) {
-                    var data = {
-                        TenLoaiGiay: inputValue,
-                    };
-                    $.ajax({
-                        url: 'CreateTenLoaiGiay',
-                        type: 'POST',
-                        data: JSON.stringify(data),
-                        contentType: 'application/json',
-                        success: function (result) {
-                            var $select2 = $("[name='IdLoaiGiay']");
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
-                            }
-                            var newOption = new Option(result.tenLoaiGiay, result.idLoaiGiay, true, true);
-                            $select2.append(newOption).trigger('change');
+        $('.loaigiay').each(function () {
+            const $loaigiay = $(this);
+            var $loaigiayInput = $(this).find('input.select2-input');
+            $loaigiayInput.on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    var inputValue = $(this).val();
+                    if (inputValue) {
+                        var data = {
+                            TenLoaiGiay: inputValue,
+                        };
+                        $.ajax({
+                            url: 'CreateTenLoaiGiay',
+                            type: 'POST',
+                            data: JSON.stringify(data),
+                            contentType: 'application/json',
+                            success: function (result) {
+                                var $select2 = $loaigiay.find("[name='IdLoaiGiay']");
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
+                                var newOption = new Option(result.tenLoaiGiay, result.idLoaiGiay, true, true);
+                                $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
-                        }
-                    });
+                                $(this).val('');
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(xhr.responseText);
+                                console.log(status);
+                                console.log(error);
+                                console.log(xhr);
+                            }
+                        });
+                    }
                 }
-            }
+            });
         });
-        $('#chatlieu').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                var inputValue = $(this).val();
-                if (inputValue) {
-                    var data = {
-                        TenChatLieu: inputValue,
-                    };
-                    $.ajax({
-                        url: 'CreateTenChatLieu',
-                        type: 'POST',
-                        data: JSON.stringify(data),
-                        contentType: 'application/json',
-                        success: function (result) {
-                            var $select2 = $("[name='IdChatLieu']");
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
-                            }
-                            var newOption = new Option(result.tenChatLieu, result.idChatLieu, true, true);
-                            $select2.append(newOption).trigger('change');
+        $('.chatlieu').each(function () {
+            const $chatlieu = $(this);
+            var $chatlieuInput = $(this).find('input.select2-input');
+            $chatlieuInput.on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    var inputValue = $(this).val();
+                    if (inputValue) {
+                        var data = {
+                            TenChatLieu: inputValue,
+                        };
+                        $.ajax({
+                            url: 'CreateTenChatLieu',
+                            type: 'POST',
+                            data: JSON.stringify(data),
+                            contentType: 'application/json',
+                            success: function (result) {
+                                var $select2 = $chatlieu.find("[name='IdChatLieu']");
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
+                                var newOption = new Option(result.tenChatLieu, result.idChatLieu, true, true);
+                                $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
-                        }
-                    });
+                                $(this).val('');
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(xhr.responseText);
+                                console.log(status);
+                                console.log(error);
+                                console.log(xhr);
+                            }
+                        });
+                    }
                 }
-            }
+            });
         });
-        $('#kieudegiay').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                var inputValue = $(this).val();
-                if (inputValue) {
-                    var data = {
-                        TenKieuDeGiay: inputValue,
-                    };
-                    $.ajax({
-                        url: 'CreateTenKieuDeGiay',
-                        type: 'POST',
-                        data: JSON.stringify(data),
-                        contentType: 'application/json',
-                        success: function (result) {
-                            var $select2 = $("[name='IdKieuDeGiay']");
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
-                            }
-                            var newOption = new Option(result.tenKieuDeGiay, result.idKieuDeGiay, true, true);
-                            $select2.append(newOption).trigger('change');
+        $('.kieudegiay').each(function () {
+            const $kieudegiay = $(this);
+            var $kieudegiayInput = $(this).find('input.select2-input');
+            $kieudegiayInput.on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    var inputValue = $(this).val();
+                    if (inputValue) {
+                        var data = {
+                            TenKieuDeGiay: inputValue,
+                        };
+                        $.ajax({
+                            url: 'CreateTenKieuDeGiay',
+                            type: 'POST',
+                            data: JSON.stringify(data),
+                            contentType: 'application/json',
+                            success: function (result) {
+                                var $select2 = $kieudegiay.find("[name='IdKieuDeGiay']");
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
+                                var newOption = new Option(result.tenKieuDeGiay, result.idKieuDeGiay, true, true);
+                                $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
-                        }
-                    });
+                                $(this).val('');
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(xhr.responseText);
+                                console.log(status);
+                                console.log(error);
+                                console.log(xhr);
+                            }
+                        });
+                    }
                 }
-            }
+            });
         });
-        $('#mausac').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                var inputValue = $(this).val();
-                if (inputValue) {
-                    var data = {
-                        TenMauSac: inputValue,
-                    };
-                    $.ajax({
-                        url: 'CreateTenMauSac',
-                        type: 'POST',
-                        data: JSON.stringify(data),
-                        contentType: 'application/json',
-                        success: function (result) {
-                            var $select2 = $("#IdColor");
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
+        $('.mausac').each(function () {
+            const $mausac = $(this);
+            var $mausacInput = $(this).find('input.select2-input');
+            $mausacInput.on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    var inputValue = $(this).val();
+                    if (inputValue) {
+                        var data = {
+                            TenMauSac: inputValue,
+                        };
+                        $.ajax({
+                            url: 'CreateTenMauSac',
+                            type: 'POST',
+                            data: JSON.stringify(data),
+                            contentType: 'application/json',
+                            success: function (result) {
+                                var $select2 = $mausac.find("[name='IdMauSac']");
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
+                                var newOption = new Option(result.tenMauSac, result.idMauSac, true, true);
+                                $select2.append(newOption).trigger('change');
+
+                                $(this).val('');
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(xhr.responseText);
+                                console.log(status);
+                                console.log(error);
+                                console.log(xhr);
                             }
-                            var newOption = new Option(result.tenMauSac, result.idMauSac, true, true);
-                            $select2.append(newOption).trigger('change');
-
-                            $(this).val('');
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
-                        }
-                    });
+                        });
+                    }
                 }
-            }
-        });
-        $('#kichco').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
-                var inputValue = $(this).val();
-                if (inputValue) {
-                    var data = {
-                        soKichCo: inputValue,
-                    };
-                    $.ajax({
-                        url: 'CreateTenKichCo',
-                        type: 'POST',
-                        data: JSON.stringify(data),
-                        contentType: 'application/json',
-                        success: function (result) {
-                            var $select2 = $("#IdSize");
+            });
+        })
+        $('.kichco').each(function () {
+            const $kichco = $(this);
+            var $kichcoInput = $(this).find('input.select2-input');
+            $kichcoInput.on('keyup', function (e) {
+                if (e.keyCode === 13) {
+                    var inputValue = $(this).val();
+                    if (inputValue) {
+                        var data = {
+                            soKichCo: inputValue,
+                        };
+                        $.ajax({
+                            url: 'CreateTenKichCo',
+                            type: 'POST',
+                            data: JSON.stringify(data),
+                            contentType: 'application/json',
+                            success: function (result) {
+                                var $select2 = $kichco.find("[name='IdKichCo']");
 
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
+                                var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
+                                $select2.append(newOption).trigger('change');
+
+                                $(this).val('');
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(xhr.responseText);
+                                console.log(status);
+                                console.log(error);
+                                console.log(xhr);
                             }
-                            var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
-                            $select2.append(newOption).trigger('change');
-
-                            $(this).val('');
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
-                        }
-                    });
+                        });
+                    }
                 }
-            }
+            });
         });
         $('.moTa').summernote();
         $(".formatPrice").each(function () {
@@ -564,6 +608,11 @@
             });
         });
     })
+
+    $(document).on('click', '.btn-delete', function () {
+        $(this).closest('.card').remove();
+    })
+
     $(document).on('click', '[name= "choseFile"]', function () {
         $(this).closest('.upload').find('.fileInput').click()
     })
@@ -571,23 +620,22 @@
     $(document).on("click", ".file-image", function () {
         const key = $(this).closest('.collapse').attr('id').replace("collapseTwoDefault-", "");
         console.log(key);
-        changeImage($(this), $(this).attr('src').replace("/AnhSanPham/",""), key)
+        changeImage($(this), $(this).attr('src').replace("/AnhSanPham/", ""), key)
     })
 
     $(document).on("click", ".close-icon", function () {
         const wrapper = $(this).closest('.wrapper-file');
-        const key =  wrapper.closest('.collapse').attr('id').replace("collapseTwoDefault-", "")
-        const fileInput = wrapper.find('input');
-        const nameFile = wrapper.find('.file-image').attr('src').replace("/AnhSanPham/", "")
-        if (fileInput.length == 0) {
+        const key = wrapper.closest('.collapse').attr('id').replace("collapseTwoDefault-", "")
+        const nameFile = wrapper.find('.file-image').attr('src')
+        if (!nameFile.startsWith("blob:https://localhost")) {
             if (!lstAnhRemove[key]) {
-                lstAnhRemove[key]=[]
+                lstAnhRemove[key] = []
             }
-            lstAnhRemove[key].push(nameFile)
+            lstAnhRemove[key].push(nameFile.replace("/AnhSanPham/", ""))
             console.log(lstAnhRemove[key]);
         } else {
-            const file = fileInput.files[0]
-            const indexDelete = selectedFiles[key].findIndex(item => item.key === file.name);
+            var name = wrapper.find('.image').attr('data-file')
+            const indexDelete = selectedFiles[key].findIndex(item => item.key === name);
             selectedFiles[key].splice(indexDelete, 1);
         }
         wrapper.remove();
@@ -603,15 +651,11 @@
                 const wrapper = $('<div>').addClass('wrapper-file');
                 const image = $('<div>').addClass('image');
                 const imageElement = $('<img>').addClass('file-image').attr('src', URL.createObjectURL(file));
-
+                image.attr('data-file', file.name);
                 if (!selectedFiles[key]) {
                     selectedFiles[key] = []
                 }
-                selectedFiles[key].push({ key: file.name, data: file });
-
-                imageElement.on('click', () =>
-                    changeImage(imageElement, file, key)
-                );
+                selectedFiles[key].push({ key: "them", data: file });
 
                 const closeIcon = $('<i>').addClass('fas fa-times close-icon');
 
@@ -631,20 +675,6 @@
                 wrapper.append(content);
                 wrapper.append(cancelBtn);
                 imageList.append(wrapper);
-
-                closeIcon.on('click', function () {
-                    const fileInput = wrapper.find('input');
-                    if (fileInput.length == 0) {
-                        const indexDelete = selectedFiles[key].findIndex(item => item.data.name === file.name);
-                        selectedFiles[key].splice(indexDelete, 1);
-                    } else {
-                        const indexDelete = selectedFiles[key].findIndex(item => item.data.name === fileInput.name);
-                        selectedFiles[key].splice(indexDelete, 1);
-                    }
-                    console.log(selectedFiles[key]);
-                    wrapper.remove();
-                });
-
                 return;
             }
             this.files = "";
@@ -654,51 +684,156 @@
 
     const changeImage = (imageElement, file, key) => {
         const newInputFile = $('<input>').attr('type', 'file').css('display', 'none');
+        newInputFile.off('change')
         newInputFile.on('change', function () {
+            if (!lstAnhRemove[key]) {
+                lstAnhRemove[key] = []
+            }
             const newFile = this.files[0]
             if (newFile) {
                 const container = imageElement.closest('.wrapper-file')
+                var fileName = container.find('.image').attr('data-file')
+                console.log(fileName);
                 container.append(newInputFile)
-                console.log(file);
+
                 if (newFile && newFile.type.startsWith('image/')) {
-                    //if (typeof file === 'object' && file instanceof File) {
-                    //    const CheckIndex = selectedFiles[key].findIndex(file => file.data.name === newFile.name);
-                    //    if (CheckIndex !== -1) {
-                    //        alert('File này đã tồn tại')
-                    //    } else {
-                    //        const indexChange = selectedFiles[key].findIndex(item => item.key === file.name);
-                    //        imageElement.attr('src', URL.createObjectURL(newFile));
-                    //        selectedFiles[key][indexChange] = { key: file.name, data: newFile };
-                    //    }
-                    //    console.log(selectedFiles[key]);
-                    //} else {
-                    //    if (!selectedFiles[key]) {
-                    //        selectedFiles[key] = []
-                    //        selectedFiles[key].push({ key: file, data: newFile });
-                    //        imageElement.attr('src', URL.createObjectURL(newFile));
-                    //        console.log(imageElement);
-                    //        lstAnhRemove[key].push(file)
-                    //    } else {
-                    //        if (Array.from(selectedFiles[key]).find(item => item.data.name === newFile.name)) {
-                    //            alert('File này đã được chọn trước đó!')
-                    //        } else {
-                    //            const foundItem = selectedFiles[key].find(item => item.key === file);
-                    //            if (foundItem) {
-                    //                selectedFiles[key].find(item => item.key === file).data = newFile;
-                    //                imageElement.attr('src', URL.createObjectURL(newFile))
-                    //            } else {
-                    //                selectedFiles[key].push({ key: file, data: newFile })
-                    //                lstAnhRemove[key].push(file)
-                    //                imageElement.attr('src', URL.createObjectURL(newFile))
-                    //            }
-                    //        }
-                    //    }
-                    //    console.log(selectedFiles[key]);
-                    //}
+
+                    if (file.startsWith('blob:https:')) {
+                        console.log(selectedFiles[key]);
+                        const CheckIndex = selectedFiles[key].findIndex(file => file.data.name === newFile.name);
+                        if (CheckIndex !== -1) {
+                            alert('File này đã tồn tại')
+                        } else {
+                            container.find('.image').attr('data-file', newFile.name)
+                            const indexChange = fileName ? selectedFiles[key].findIndex(item => item.data.name === fileName) : selectedFiles[key].findIndex(item => item.data.name === file.name);
+                            imageElement.attr('src', URL.createObjectURL(newFile));
+                            selectedFiles[key][indexChange] = { key: "them", data: newFile };
+                            console.log(selectedFiles[key]);
+                        }
+                        console.log(selectedFiles[key]);
+                    } else {
+                        if (!selectedFiles[key]) {
+                            selectedFiles[key] = []
+                            selectedFiles[key].push({ key: "them", data: newFile });
+                            imageElement.attr('src', URL.createObjectURL(newFile));
+                            container.find('.image').attr('data-file', newFile.name)
+                            console.log(file);
+                            lstAnhRemove[key].push(file)
+                        } else {
+                            if (Array.from(selectedFiles[key]).find(item => item.data.name === newFile.name)) {
+                                alert('File này đã được chọn trước đó!')
+                            } else {
+                                const foundIndexItem = selectedFiles[key].findIndex(item => item.data.name === file);
+                                console.log(foundIndexItem);
+                                if (foundIndexItem === -1) {
+                                    console.log(file);
+                                    lstAnhRemove[key].push(file)
+                                    selectedFiles[key].push({ key: "them", data: newFile })
+                                    container.find('.image').attr('data-file', newFile.name)
+                                    imageElement.attr('src', URL.createObjectURL(newFile))
+                                    console.log(selectedFiles[key]);
+                                }
+                            }
+                        }
+
+                    }
                     console.log(lstAnhRemove[key]);
+                    console.log(selectedFiles[key]);
                 }
-                
             }
         })
+        newInputFile.click()
     }
+
+    $('.update-sp').click(function () {
+        const cards = $(".accordion > .card");
+        Array.from(cards).forEach(item => {
+            const key = $(item).find('.collapse').attr('id').replace("collapseTwoDefault-", "");
+            var data = {};
+            $(item).find("input, select, textarea").each(function () {
+                var fieldType = $(this).attr("type");
+                var fieldName = $(this).attr("name");
+                var fieldValue;
+                if (fieldName) {
+                    if (fieldType === "checkbox" || fieldType === "radio") {
+                        fieldValue = $(this).is(":checked");
+                    } else {
+                        if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
+                            const value = $(this).val()
+                            fieldValue = value.replace(/₫|,|\s/g, "")
+                        } else {
+                            fieldValue = $(this).val();
+                        }
+                    }
+
+                    data[fieldName] = fieldValue;
+                }
+            });
+
+            $.ajax({
+                url: URL_UPDATE_PRODUCT_DETAIL,
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (result) {
+                    
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    console.log(status);
+                    console.log(error);
+                    console.log(xhr);
+                }
+            });
+
+            if (selectedFiles[key] && Array.from(selectedFiles[key]).length > 0) {
+                var data = new FormData();
+                Array.from(selectedFiles[key]).map(item => data.append('lstIFormFile', item.data))
+                data.append('IdChiTietSp', key);
+                $.ajax({
+                    url: URL_CREATE_IMAGE,
+                    type: 'POST',
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+            }
+
+            if (lstAnhRemove[key] && Array.from(lstAnhRemove[key]).length > 0) {
+                const data = new FormData();
+                lstAnhRemove[key].map(item => data.append('lstImageRemove', item))
+                data.append('idProductDetail', key)
+                fetch(URL_DELETE_LIST_IMAGE, {
+                    method: 'POST',
+                    body: data
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            if (response.headers.get("content-length") !== "0") {
+                                return response.json();
+                            } else {
+                                return null;
+                            }
+                        }
+                        throw new Error('Network response was not ok.');
+                    })
+                    .then(data => {
+
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            }
+        })
+        window.location.reload();
+    })
+
 </script>

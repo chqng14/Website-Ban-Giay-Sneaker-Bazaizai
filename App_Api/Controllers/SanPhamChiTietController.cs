@@ -100,14 +100,32 @@ namespace App_Api.Controllers
             return await _sanPhamChiTietRes.GetDanhSachGiayViewModelAsync(); ;
         }
 
+        [HttpGet("Get-List-ItemShopViewModel")]
+        public async Task<List<ItemShopViewModel>?> GetDanhSachItemShowViewModel()
+        {
+            return await _sanPhamChiTietRes.GetDanhSachItemShopViewModelAsync();
+        }
+
         [HttpGet("Get-SanPhamChiTiet/{id}")]
         public async Task<SanPhamChiTiet?> GetSanPham(string id)
         {
             return await _sanPhamChiTietRes.GetByKeyAsync(id);
         }
 
+        [HttpGet("Get-ItemDetailViewModel/{id}")]
+        public async Task<ItemDetailViewModel?> GetItemDetailViewModel(string id)
+        {
+            return await _sanPhamChiTietRes.GetItemDetailViewModelAynsc(id);
+        }
+
+        [HttpGet("Get-ItemDetailViewModel/{id}/{mauSac}")]
+        public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColor(string id,string mauSac)
+        {
+            return await _sanPhamChiTietRes.GetItemDetailViewModelWhenSelectColorAynsc(id,mauSac);
+        }
+
         [HttpPost("Creat-SanPhamChiTiet")]
-        public async Task<ResponseCreataDTO> CreateSanPhamChiTiet(SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<ResponseCreateDTO> CreateSanPhamChiTiet(SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietDTO);
             sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
@@ -118,7 +136,7 @@ namespace App_Api.Controllers
             sanPhamChiTiet.TrangThaiSale = 0;
             sanPhamChiTiet.SoLuongDaBan = 0;
             sanPhamChiTiet.NgayTao = DateTime.Now;
-            return new ResponseCreataDTO()
+            return new ResponseCreateDTO()
             {
                 Success = await _sanPhamChiTietRes.AddAsync(sanPhamChiTiet),
                 IdChiTietSp = sanPhamChiTiet.IdChiTietSp
