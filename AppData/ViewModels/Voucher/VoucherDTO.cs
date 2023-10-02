@@ -11,9 +11,9 @@ namespace App_Data.ViewModels.Voucher
     {
         public string? IdVoucher { get; set; }
         public string? TenVoucher { get; set; }
-        public string? DieuKien { get; set; }
+        public int? DieuKien { get; set; }
         public string? PhamViSanPham { get; set; }
-        public string? LoaiHinhUuDai { get; set; }
+        public int? LoaiHinhUuDai { get; set; }
         public int? SoLuong { get; set; }
         public double? MucUuDai { get; set; }
         public DateTime NgayBatDau { get; set; }
