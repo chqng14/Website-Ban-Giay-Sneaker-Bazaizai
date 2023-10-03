@@ -59,7 +59,7 @@
                             <h1 class="gl-h1">SIGNIN</h1>
 
                             <span class="gl-text u-s-m-b-30">If you have an account with us, please log in.</span>
-                            <form class="l-f-o__form" id="account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" >
+                            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                                 <div class="gl-s-api">
                                     @foreach (var provider in Model.ExternalLogins!)
                                     {
@@ -85,11 +85,13 @@
                                                 </button>
                                             </div>
                                         }
-                                        
-                                        @*<h1>Log in using your @provider.DisplayName account</h1>
-                                        <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>*@
                                     }
                                 </div>
+                            </form>
+
+
+                            <form class="l-f-o__form" id="account" method="post">
+                                
                                 <div class="u-s-m-b-30">
                                     <label class="gl-label" for="login-email">E-MAIL *</label>
                                     <input asp-for="Input.UserNameOrEmail" class="input-text input-text--primary-style" autocomplete="email" autocomplete="username" aria-required="true" placeholder="Enter E-mail" />

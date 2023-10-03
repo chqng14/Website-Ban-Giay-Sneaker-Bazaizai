@@ -299,7 +299,7 @@ namespace App_View.Services
 
         public async Task<SanPhamChiTiet?> GetByKeyAsync(string id)
         {
-            return await _httpClient.GetFromJsonAsync<SanPhamChiTiet?>("/api/SanPhamChiTiet/Get-SanPhamChiTiet/{id}");
+            return await _httpClient.GetFromJsonAsync<SanPhamChiTiet?>($"/api/SanPhamChiTiet/Get-SanPhamChiTiet/{id}");
         }
 
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id)
