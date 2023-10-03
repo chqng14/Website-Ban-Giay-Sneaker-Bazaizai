@@ -8,8 +8,17 @@ using Microsoft.EntityFrameworkCore;
 using App_Data.DbContextt;
 using App_Data.Models;
 using App_View.IServices;
-using App_Data.ViewModels.SanPhamChiTiet;
 using App_Data.ViewModels.Anh;
+using System.Security.Cryptography;
+using App_Data.ViewModels.SanPhamChiTiet.SanPhamDTO;
+using App_Data.ViewModels.SanPhamChiTiet.ThuongHieuDTO;
+using App_Data.ViewModels.XuatXu;
+using App_Data.ViewModels.ChatLieuDTO;
+using App_Data.ViewModels.LoaiGiayDTO;
+using App_Data.ViewModels.KieuDeGiayDTO;
+using App_Data.ViewModels.MauSac;
+using App_Data.ViewModels.KichCoDTO;
+using App_Data.ViewModels.SanPhamChiTietDTO;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -26,11 +35,28 @@ namespace App_View.Areas.Admin.Controllers
         }
         [HttpGet]
         // GET: Admin/SanPhamChiTiet/DanhSachSanPham
-        public async Task<IActionResult> DanhSachSanPham(int draw, int start, int length, string searchValue)
+        public async Task<IActionResult> DanhSachSanPham()
         {
-            return View(await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync());
+            return View();
         }
-
+        public class ListGuildDTO
+        {
+            public List<string>? listGuild { get; set; }
+        }
+        [HttpPost]
+        public async Task<IActionResult> GetPartialViewListUpdate([FromBody]ListGuildDTO listGuildDTO)
+        {
+            ViewData["IdChatLieu"] = new SelectList(_context.ChatLieus, "IdChatLieu", "TenChatLieu");
+            ViewData["IdKichCo"] = new SelectList(_context.kichCos, "IdKichCo", "SoKichCo");
+            ViewData["IdKieuDeGiay"] = new SelectList(_context.kieuDeGiays, "IdKieuDeGiay", "TenKieuDeGiay");
+            ViewData["IdLoaiGiay"] = new SelectList(_context.LoaiGiays, "IdLoaiGiay", "TenLoaiGiay");
+            ViewData["IdMauSac"] = new SelectList(_context.mauSacs, "IdMauSac", "TenMauSac");
+            ViewData["IdSanPham"] = new SelectList(_context.SanPhams, "IdSanPham", "TenSanPham");
+            ViewData["IdThuongHieu"] = new SelectList(_context.thuongHieus, "IdThuongHieu", "TenThuongHieu");
+            ViewData["IdXuatXu"] = new SelectList(_context.xuatXus, "IdXuatXu", "Ten");
+            var model = await _sanPhamChiTietService.GetListSanPhamChiTietDTOAsync(listGuildDTO);
+            return PartialView("_DanhSachSanPhamUpdate", model);
+        }
         public async Task<IActionResult> GetDanhSachSanPham(int draw, int start, int length, string searchValue)
         {
             var query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync())
@@ -138,6 +164,54 @@ namespace App_View.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> CreateTenSanPham([FromBody]SanPhamDTO sanPhamDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenSanPhamAynsc(sanPhamDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenThuongHieu([FromBody] ThuongHieuDTO thuongHieuDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenThuongHieuAynsc(thuongHieuDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenChatLieu([FromBody] ChatLieuDTO chatLieuDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenChatLieuAynsc(chatLieuDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenLoaiGiay([FromBody] LoaiGiayDTO loaiGiayDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenLoaiGiayAynsc(loaiGiayDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenKieuDeGiay([FromBody] KieuDeGiayDTO kieuDeGiayDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenKieuDeGiayAynsc(kieuDeGiayDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenMauSac([FromBody] MauSacDTO kieuDeGiayDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenMauSacAynsc(kieuDeGiayDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenKichCo([FromBody] KichCoDTO kichCoDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenKichCoAynsc(kichCoDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTenXuatXu([FromBody] XuatXuDTO xuatXuDTO)
+        {
+            return Json(await _sanPhamChiTietService.CreateTenXuatXuAynsc(xuatXuDTO));
+        }
+
+        [HttpPost]
         public async Task DeleteAnh([FromForm]ImageDTO responseImageDeleteVM)
         {
              await _sanPhamChiTietService.DeleteAnhAysnc(responseImageDeleteVM);
@@ -213,27 +287,8 @@ namespace App_View.Areas.Admin.Controllers
         // GET: Admin/SanPhamChiTiet/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.sanPhamChiTiets == null)
-            {
-                return NotFound();
-            }
-
-            var sanPhamChiTiet = await _context.sanPhamChiTiets
-                .Include(s => s.ChatLieu)
-                .Include(s => s.KichCo)
-                .Include(s => s.KieuDeGiay)
-                .Include(s => s.LoaiGiay)
-                .Include(s => s.MauSac)
-                .Include(s => s.SanPham)
-                .Include(s => s.ThuongHieu)
-                .Include(s => s.XuatXu)
-                .FirstOrDefaultAsync(m => m.IdChiTietSp == id);
-            if (sanPhamChiTiet == null)
-            {
-                return NotFound();
-            }
-
-            return View(sanPhamChiTiet);
+            var result = await _sanPhamChiTietService.DeleteAysnc(id);
+            return Ok(result);
         }
 
         // POST: Admin/SanPhamChiTiet/Delete/5

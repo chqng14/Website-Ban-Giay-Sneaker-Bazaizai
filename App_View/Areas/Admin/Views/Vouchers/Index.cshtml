@@ -1,0 +1,151 @@
+﻿@model IEnumerable<App_Data.Models.Voucher>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Voucher</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table id="data-table" class="table" style="text-align:center">
+   
+    <thead>
+        <tr>
+            <th>
+                Mã Voucher
+            </th>
+            <th>
+                Tên
+            </th>
+            <th>
+                Điều kiện
+            </th>
+            <th>
+                Phạm vi
+            </th>
+            <th>
+               Loại hình
+            </th>
+            <th>
+                Số lượng
+            </th>
+            <th>
+                Mức ưu đãi
+            </th>
+            <th>
+               Ngày bắt đầu
+            </th>
+            <th>
+                Ngày kết thúc
+            </th>
+            <th>
+                Trạng thái
+            </th>
+            <th>
+                Chọn <input type="checkbox" id="select-all-checkbox" />
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaVoucher)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TenVoucher)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DieuKien)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhamViSanPham)
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LoaiHinhUuDai)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SoLuong)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MucUuDai)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NgayBatDau)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NgayKetThuc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrangThai)
+            </td>
+                <td>
+                    <input type="checkbox" class="voucher-checkbox" data-value="@item.IdVoucher" />
+                </td>
+
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i></a> |
+                    <a asp-action="Details" asp-route-id="@item.IdVoucher"><i class="anticon anticon-eye"></i></a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdVoucher"><i class="anticon anticon-delete"></i></a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<button class="btn btn-warning mr-2"  id="delete-button">Huỷ hoạt động của voucher đã chọn</button>
+
+<script>
+    $(document).ready(function () {
+        $('#data-table').DataTable();
+
+        $('#select-all-checkbox').click(function () {
+            $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
+        });
+
+        $(document).ready(function () {
+            $('#delete-button').on('click', function () {
+                // Lấy danh sách id voucher đã chọn
+                var selectedIds = [];
+
+                $('.voucher-checkbox:checked').each(function () {
+                    selectedIds.push($(this).data('value'));
+                });
+                // Gọi hàm để huỷ hoạt động voucher
+                huyHoatDongVoucher(selectedIds);
+            });
+        });
+
+        // Hàm để gọi Ajax và chuyển về controller để huỷ hoạt động voucher
+        function huyHoatDongVoucher(selectedIds) {
+            // Thực hiện Ajax request để chuyển selectedIds về controller
+            $.ajax({
+                url: '/Admin/Vouchers/DeleteVoucherWithList', // Thay 'ControllerName' bằng tên thực tế của controller
+                type: 'POST', // Hoặc 'GET' tùy thuộc vào yêu cầu của bạn
+                data: { voucherIds: selectedIds },
+                success: function (response) {
+                    // Xử lý kết quả từ controller nếu cần
+                    alert('Huỷ hoạt động voucher thành công');
+                    window.location.reload();
+                },
+                error: function (error) {
+                    console.error('Lỗi khi huỷ hoạt động voucher', error);
+                }
+            });
+        }
+    });
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+}

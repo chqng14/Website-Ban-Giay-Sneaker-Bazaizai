@@ -611,7 +611,16 @@ namespace App_Data.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("MoTa")
-                        .HasColumnType("Nvarchar(max)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("NgayTao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool?>("NoiBat")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("SoLuongDaBan")
+                        .HasColumnType("int");
 
                     b.Property<int?>("SoLuongTon")
                         .HasColumnType("int");
@@ -725,11 +734,11 @@ namespace App_Data.Migrations
                     b.Property<string>("IdVoucher")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("DieuKien")
-                        .HasColumnType("nvarchar(300)");
+                    b.Property<int?>("DieuKien")
+                        .HasColumnType("int");
 
-                    b.Property<string>("LoaiHinhUuDai")
-                        .HasColumnType("nvarchar(300)");
+                    b.Property<int?>("LoaiHinhUuDai")
+                        .HasColumnType("int");
 
                     b.Property<string>("MaVoucher")
                         .HasColumnType("nvarchar(100)");
@@ -743,11 +752,16 @@ namespace App_Data.Migrations
                     b.Property<DateTime>("NgayKetThuc")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("PhamViSanPham")
+                        .HasColumnType("nvarchar(300)");
+
                     b.Property<int?>("SoLuong")
                         .HasColumnType("int");
 
                     b.Property<string>("TenVoucher")
-                        .HasColumnType("nvarchar(300)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int?>("TrangThai")
                         .HasColumnType("int");

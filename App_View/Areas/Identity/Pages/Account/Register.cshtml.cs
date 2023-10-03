@@ -23,13 +23,14 @@ using Microsoft.Extensions.Logging;
 
 namespace App_View.Areas.Identity.Pages.Account
 {
-    
+
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IUserStore<NguoiDung> _userStore;
         private readonly IUserEmailStore<NguoiDung> _emailStore;
+        private readonly IUserPhoneNumberStore<NguoiDung> _phoneStore;//thêm
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
@@ -38,7 +39,9 @@ namespace App_View.Areas.Identity.Pages.Account
             IUserStore<NguoiDung> userStore,
             SignInManager<NguoiDung> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender
+            )
+
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -46,6 +49,7 @@ namespace App_View.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _phoneStore = GetPhoneStore();
         }
 
         [BindProperty]
@@ -57,7 +61,7 @@ namespace App_View.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-  
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -73,6 +77,20 @@ namespace App_View.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            [DataType(DataType.Text)]
+            [Required]
+            [Display(Name = "Tên tài Khoản")]
+            public string UserName { get; set; }
+
+            [DataType(DataType.PhoneNumber)]
+            //[RegularExpression(@"^\d{10,11}$", ErrorMessage = "Số điện thoại phải có từ 10 đến 11 chữ số.")]
+            [Display(Name = "Số điện thoại")]
+            public string Sdt { get; set; }
+
+            [DataType(DataType.DateTime)]
+            [Display(Name = "Ngày tháng năm sinh")]
+            public string NamSinh { get; set; }
         }
 
 
@@ -89,9 +107,13 @@ namespace App_View.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-              
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+
+                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);//sửa email-> username
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                if (!string.IsNullOrEmpty(Input.Sdt)) //thêm
+                {
+                    await _phoneStore.SetPhoneNumberAsync(user, Input.Sdt, CancellationToken.None);
+                }
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
@@ -99,6 +121,7 @@ namespace App_View.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);
+                    //Phát sinh token để xác thực email
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
@@ -107,8 +130,8 @@ namespace App_View.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _emailSender.SendEmailAsync(Input.Email, "Xác nhận email của bạn",
+                        $"Bạn đã đăng ký tài khoản trên Web bán giày thể thao Bazaizai. Vui lòng xác nhận(kích hoạt) tài khoản của bạn bằng cách <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>nhấn vào đây</a>.");
                     await AddCart(userId, 0);/// them vao ở đây
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -116,7 +139,7 @@ namespace App_View.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        await _signInManager.SignInAsync(user, isPersistent: false);//isPersistent: true thì sẽ thiết lập cooki để nhớ, làn sau vẫn có thể truy cập lại mà k cần đăng nhập
                         return LocalRedirect(returnUrl);
                     }
                 }
@@ -152,14 +175,22 @@ namespace App_View.Areas.Identity.Pages.Account
             }
             return (IUserEmailStore<NguoiDung>)_userStore;
         }
-        public async Task<bool> AddCart(string idUser, int  trangThai)
+
+        private IUserPhoneNumberStore<NguoiDung> GetPhoneStore()
         {
-            var httpClient = new HttpClient();         
+            if (!_userManager.SupportsUserPhoneNumber)
+            {
+                throw new NotSupportedException("The default UI requires a user store with PhoneNumber support.");
+            }
+            return (IUserPhoneNumberStore<NguoiDung>)_userStore;
+        }
+        public async Task<bool> AddCart(string idUser, int trangThai)
+        {
+            var httpClient = new HttpClient();
             var response = await httpClient.PostAsync($"https://localhost:7038/api/GioHang?id={idUser}&trangthai={trangThai}", null);
             return true;
         }
-       
-       // [HttpPost]
-      
+
+
     }
 }

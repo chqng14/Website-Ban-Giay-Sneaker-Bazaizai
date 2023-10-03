@@ -49,10 +49,7 @@ namespace App_Data.Configurations
 
             builder.Property(x => x.Ma).HasColumnType("varchar(50)");
             builder.Property(x => x.Day).HasColumnType("nvarchar(250)");
-            builder.Property(x => x.MoTa).HasColumnType("Nvarchar(max)");
-
-
-           
+            builder.Property(x => x.NoiBat).HasColumnType("bit");
         }
     }
 }

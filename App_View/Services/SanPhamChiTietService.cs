@@ -1,10 +1,21 @@
-﻿using App_Data.ViewModels.SanPhamChiTiet;
-using App_View.IServices;
+﻿using App_View.IServices;
 using App_Data.Models;
 using System.Net.Http.Json;
 using App_Data.ViewModels.Anh;
 using Newtonsoft.Json;
 using System.Text;
+using System.Net.Http;
+using App_Data.ViewModels.SanPhamChiTiet.SanPhamDTO;
+using App_Data.ViewModels.SanPhamChiTiet.ThuongHieuDTO;
+using App_Data.ViewModels.XuatXu;
+using App_Data.ViewModels.ChatLieuDTO;
+using App_Data.ViewModels.LoaiGiayDTO;
+using App_Data.ViewModels.KieuDeGiayDTO;
+using App_Data.ViewModels.KichCoDTO;
+using App_Data.ViewModels.MauSac;
+using App_Data.ViewModels.SanPhamChiTietViewModel;
+using App_Data.ViewModels.SanPhamChiTietDTO;
+using static App_View.Areas.Admin.Controllers.SanPhamChiTietController;
 
 namespace App_View.Services
 {
@@ -17,14 +28,14 @@ namespace App_View.Services
             _httpClient = httpClient;
         }
 
-        public async Task<ResponseCreataDTO> AddAysnc(SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<ResponseCreateDTO> AddAysnc(SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/Creat-SanPhamChiTiet", sanPhamChiTietDTO);
             try
             {
                 if (response.IsSuccessStatusCode)
                 {
-                    return await response.Content.ReadAsAsync<ResponseCreataDTO>();
+                    return await response.Content.ReadAsAsync<ResponseCreateDTO>();
                 }
                 Console.WriteLine(await response.Content.ReadAsStringAsync());
                 throw new Exception("Not IsSuccessStatusCode");
@@ -89,6 +100,157 @@ namespace App_View.Services
             }
         }
 
+        public async Task<ChatLieuDTO?> CreateTenChatLieuAynsc(ChatLieuDTO xuatXuDTO)
+        {
+            var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/Create-ChatLieu", xuatXuDTO);
+            try
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<ChatLieuDTO>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
+        public async Task<KichCoDTO?> CreateTenKichCoAynsc(KichCoDTO kichCoDTO)
+        {
+            var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/Create-KichCo", kichCoDTO);
+            try
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<KichCoDTO>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
+        public async Task<KieuDeGiayDTO?> CreateTenKieuDeGiayAynsc(KieuDeGiayDTO kieuDeGiayDTO)
+        {
+            var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/Create-KieuDeGiay", kieuDeGiayDTO);
+            try
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<KieuDeGiayDTO>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
+        public async Task<LoaiGiayDTO?> CreateTenLoaiGiayAynsc(LoaiGiayDTO loaiGiayDTO)
+        {
+            var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/Create-LoaiGiay", loaiGiayDTO);
+            try
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<LoaiGiayDTO>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
+        public async Task<MauSacDTO?> CreateTenMauSacAynsc(MauSacDTO mauSacDTO)
+        {
+            var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/Create-MauSac", mauSacDTO);
+            try
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<MauSacDTO>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
+        public async Task<SanPhamDTO?> CreateTenSanPhamAynsc(SanPhamDTO sanPhamDTO)
+        {
+            var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/Create-SanPham", sanPhamDTO);
+            try
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<SanPhamDTO>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+        public async Task<ThuongHieuDTO?> CreateTenThuongHieuAynsc(ThuongHieuDTO thuongHieu)
+        {
+            var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/Create-ThuongHieu", thuongHieu);
+            try
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<ThuongHieuDTO>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
+        public async Task<XuatXuDTO?> CreateTenXuatXuAynsc(XuatXuDTO xuatXuDTO)
+        {
+            var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/Create-XuatXu", xuatXuDTO);
+            try
+            {
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<XuatXuDTO>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
         public async Task DeleteAnhAysnc(ImageDTO responseImageDeleteVM)
         {
             try
@@ -120,7 +282,7 @@ namespace App_View.Services
         {
             try
             {
-                var response = await _httpClient.DeleteAsync("/api/SanPhamChiTiet/Creat-SanPhamChiTiet");
+                var response = await _httpClient.DeleteAsync($"/api/SanPhamChiTiet/Delete-SanPhamChiTiet/{id}");
                 if (response.IsSuccessStatusCode)
                 {
                     return await response.Content.ReadAsAsync<bool>();
@@ -140,10 +302,48 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<SanPhamChiTiet?>("/api/SanPhamChiTiet/Get-SanPhamChiTiet/{id}");
         }
 
+        public async Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id)
+        {
+            return await _httpClient.GetFromJsonAsync<ItemDetailViewModel?>($"/api/SanPhamChiTiet/Get-ItemDetailViewModel/{id}");
+        }
+
+        public Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac)
+        {
+            return _httpClient.GetFromJsonAsync<ItemDetailViewModel?>($"/api/SanPhamChiTiet/Get-ItemDetailViewModel/{id}/{mauSac}");
+        }
+
+        public Task<List<ItemShopViewModel>?> GetListItemShopViewModelAynsc()
+        {
+            return _httpClient.GetFromJsonAsync<List<ItemShopViewModel>?>("/api/SanPhamChiTiet/Get-List-ItemShopViewModel");
+        }
+
         public async Task<List<SanPhamChiTiet>> GetListSanPhamChiTietAsync()
         {
             return (await _httpClient.GetFromJsonAsync<List<SanPhamChiTiet>>("/api/SanPhamChiTiet/Get-List-SanPhamChiTiet"))!;
         }
+
+        public async Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(ListGuildDTO listGuildDTO)
+        {
+            try
+            {
+                var content = new StringContent(JsonConvert.SerializeObject(listGuildDTO.listGuild), Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("/api/SanPhamChiTiet/Get-List-SanPhamChiTietDTO", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<List<SanPhamChiTietDTO>>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
 
         public async Task<List<SanPhamChiTietViewModel>> GetListSanPhamChiTietViewModelAsync()
         {
