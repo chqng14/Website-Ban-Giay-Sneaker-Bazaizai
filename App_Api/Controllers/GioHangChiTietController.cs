@@ -65,11 +65,11 @@ namespace App_Api.Controllers
         {
             //var idNguoiDung = _userManager.GetUserId(User);
             var giohangChiTiet = _mapper.Map<GioHangChiTiet>(GioHangChiTietDTOCUD);
-            giohangChiTiet.IdGioHangChiTiet = Guid.NewGuid().ToString();
-            giohangChiTiet.IdSanPhamCT = GioHangChiTietDTOCUD.sanPhamChiTietDTO.IdChiTietSp;
-            giohangChiTiet.IdNguoiDung = GioHangChiTietDTOCUD.GioHangDTO.IdNguoiDung;
+            giohangChiTiet.IdGioHangChiTiet = GioHangChiTietDTOCUD.IdGioHangChiTiet;
+            giohangChiTiet.IdSanPhamCT = GioHangChiTietDTOCUD.IdSanPhamCT;
+            giohangChiTiet.IdNguoiDung = GioHangChiTietDTOCUD.IdNguoiDung;
             giohangChiTiet.Soluong = GioHangChiTietDTOCUD.SoLuong;
-            giohangChiTiet.GiaGoc = GioHangChiTietDTOCUD.sanPhamChiTietDTO.GiaBan;
+            giohangChiTiet.GiaGoc = GioHangChiTietDTOCUD.GiaGoc;
             giohangChiTiet.TrangThai = 0;
             _gioHangChiTiet.AddCartDetail(giohangChiTiet);
             return true;

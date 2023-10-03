@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using DocumentFormat.OpenXml.VariantTypes;
 using App_Data.ViewModels.SanPhamChiTietDTO;
+using Microsoft.CodeAnalysis;
+using System.Globalization;
 
 namespace App_View.Controllers
 {
@@ -24,12 +26,12 @@ namespace App_View.Controllers
         IGioHangChiTietServices GioHangChiTietServices;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
-        ISanPhamChiTietService sanPhamChiTietService;
-        public GioHangChiTietsController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
+        ISanPhamChiTietService _sanPhamChiTietService;
+        public GioHangChiTietsController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService)
         {
             httpClient = new HttpClient();
             GioHangChiTietServices = new GioHangChiTietServices();
-            //sanPhamChiTietService = new SanPhamChiTietService();
+            _sanPhamChiTietService = sanPhamChiTietService;
             _signInManager = signInManager;
             _userManager = userManager;
         }
@@ -54,10 +56,11 @@ namespace App_View.Controllers
         public async Task<IActionResult> AddToCart(GioHangChiTietDTOCUD gioHangChiTietDTOCUD)
         {
             var idNguoiDung = _userManager.GetUserId(User);
-            var product = await sanPhamChiTietService.GetByKeyAsync(gioHangChiTietDTOCUD.IdSanPhamCT);
+            var product = await _sanPhamChiTietService.GetByKeyAsync(gioHangChiTietDTOCUD.IdSanPhamCT);
             var giohang = new GioHangChiTietDTOCUD();
-            giohang.sanPhamChiTietDTO.IdSanPham = gioHangChiTietDTOCUD.IdSanPhamCT;
-            giohang.GioHangDTO.IdNguoiDung = idNguoiDung;
+            giohang.IdGioHangChiTiet = Guid.NewGuid().ToString();
+            giohang.IdSanPhamCT = gioHangChiTietDTOCUD.IdSanPhamCT;
+            giohang.IdNguoiDung = idNguoiDung;
             giohang.SoLuong = gioHangChiTietDTOCUD.SoLuong;
             giohang.GiaGoc = product.GiaBan;
             GioHangChiTietServices.CreateCartDetailDTO(giohang);
@@ -69,7 +72,15 @@ namespace App_View.Controllers
         public async Task<IActionResult> CapNhatSoLuongGioHang(string IdGioHangChiTiet, int SoLuong, string IdSanPhamChiTiet)
         {
             var jsonupdate = await GioHangChiTietServices.UpdateGioHang(IdGioHangChiTiet, SoLuong);
-            return Ok(jsonupdate);
+            //var SumPrice = string.Format(CultureInfo.GetCultureInfo("vi-VN"), "{0:N0}đ", Convert.ToDouble((await _sanPhamChiTietService.GetByKeyAsync(IdSanPhamChiTiet)).GiaBan * SoLuong));
+            var idNguoiDung = _userManager.GetUserId(User);
+            var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+            double TongTien = 0;
+            foreach (var item in giohang)
+            {
+                TongTien += (double)item.GiaGoc * (int)item.SoLuong;
+            }
+            return Json(new { /*SumPrice = SumPrice,*/ TongTien = TongTien });
         }
 
         // POST: GioHangChiTiets/Edit/5

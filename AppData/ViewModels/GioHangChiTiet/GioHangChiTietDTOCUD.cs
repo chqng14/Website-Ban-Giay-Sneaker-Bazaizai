@@ -11,8 +11,8 @@ namespace App_Data.ViewModels.GioHangChiTiet
 {
     public class GioHangChiTietDTOCUD
     {
-        public SanPhamChiTietDTO.SanPhamChiTietDTO sanPhamChiTietDTO { get; set; }
-        public GioHangDTO GioHangDTO { get; set; }
+        //public SanPhamChiTietDTO.SanPhamChiTietDTO sanPhamChiTietDTO { get; set; }
+        //public GioHangDTO GioHangDTO { get; set; }
         public string IdGioHangChiTiet { get; set; }
         public string IdNguoiDung { get; set; }
         public string IdSanPhamCT { get; set; }
