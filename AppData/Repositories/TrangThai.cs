@@ -24,5 +24,21 @@ namespace App_Data.Repositories
             [Description("Không hoạt động")]
             KhongHoatDong = 1,
         }
+        public enum TrangThaiHoaDon
+        {
+            [Description("Chưa thanh toán")]
+            ChuaThanhToan = 0,
+            [Description("Đã thanh toán")]
+            DaThanhToan = 1,
+            [Description("Hủy")]
+            Huy = 2,
+        }
+        public enum TrangThaiGiaHang
+        {
+            [Description("Tại quầy")]
+            TaiQuay = 0,
+            
+        }
+
     }
 }

@@ -1,75 +1,48 @@
 ﻿using App_Data.DbContextt;
 using App_Data.IRepositories;
 using App_Data.Models;
+using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Identity;
 using OpenXmlPowerTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_Data.Repositories
 {
     public class HoaDonRepos : IHoaDonRepos
     {
         BazaizaiContext context;
+
         public HoaDonRepos()
         {
             context = new BazaizaiContext();
         }
-        
-        public bool AddBill(HoaDon item)
-        {
-            try
-            {
-                context.HoaDons.Add(item);
-                context.SaveChanges();
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
 
-        public bool EditBill(HoaDon item)
+        public bool TaoHoaDonTaiQuay(string id)
         {
-            try
-            {
-                var idhoadon = context.HoaDons.Find(item.IdHoaDon);
-                context.HoaDons.Update(idhoadon);
-                context.SaveChanges();
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            var hoaDon = new HoaDon();  
+            hoaDon.IdHoaDon  = Guid.NewGuid().ToString();
+            hoaDon.IdNguoiDung = id;
+            hoaDon.MaHoaDon = MaHoaDonTuSinh();
+            hoaDon.TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan;
+            hoaDon.TrangThai = (int)TrangThaiGiaHang.TaiQuay;
+            hoaDon.NgayTao = DateTime.Now;
+            context.HoaDons.Add(hoaDon);
+            context.SaveChanges();
+            return true;
         }
-
-        public List<HoaDon> FindBillByCode(string ma)
+        public string MaHoaDonTuSinh()
         {
-            return context.HoaDons.Where(c=>c.MaHoaDon.Contains(ma)).ToList();
-        }
-
-        public IEnumerable<HoaDon> GetAll()
-        {
-            return context.HoaDons.ToList();
-        }
-
-        public bool RemoveBill(HoaDon item)
-        {
-            try
+            if (context.HoaDons.Any())
             {
-                var idhoadon = context.HoaDons.Find(item.IdHoaDon);
-                context.HoaDons.Remove(idhoadon);
-                context.SaveChanges();
-                return true;
+                return "HD1";
             }
-            catch (Exception)
-            {
-                return false;
-            }
+            return "HD"+ (context.HoaDons.Max(c => c.MaHoaDon.Substring(2, c.MaHoaDon.Length - 2))+1);
         }
     }
 }

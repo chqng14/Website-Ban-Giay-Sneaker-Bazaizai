@@ -9,10 +9,6 @@ namespace App_Data.IRepositories
 {
     public interface IHoaDonRepos
     {
-        public IEnumerable<HoaDon> GetAll();
-        public bool AddBill(HoaDon item);
-        public bool RemoveBill(HoaDon item);
-        public bool EditBill(HoaDon item);
-        public List<HoaDon> FindBillByCode(string ma);
+        public bool TaoHoaDonTaiQuay(string id);
     }
 }
