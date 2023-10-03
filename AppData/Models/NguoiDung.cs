@@ -20,7 +20,7 @@ namespace App_Data.Models
         public virtual List<VoucherNguoiDung> VoucherNguoiDungs { get; set; }
         public virtual List<ThongTinGiaoHang> ThongTinGiaoHangs { get; set; }
         public virtual List<KhachHang> KhachHangs { get; set; }
-
+        public virtual List<HoaDon> HoaDons { get; set; }
         public virtual List<SanPhamYeuThich> SanPhamYeuThich { get; set; }
     }
 }
