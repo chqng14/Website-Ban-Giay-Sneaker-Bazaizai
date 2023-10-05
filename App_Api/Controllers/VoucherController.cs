@@ -69,10 +69,16 @@ namespace App_Api.Controllers
             voucher.MaVoucher = GenerateRandomVoucherCode();
             if (voucher.NgayBatDau > DateTime.Now)
             {
-                voucher.TrangThai = (int)TrangThaiCoBan.HoatDong;
+                voucher.TrangThai = (int)TrangThaiVoucher.ChuaBatDau;
             }
-            else
-                voucher.TrangThai = 0;
+            if (voucher.NgayBatDau <= DateTime.Now)
+            {
+                voucher.TrangThai = (int)TrangThaiVoucher.HoatDong;
+            }
+            if (voucher.SoLuong == 0)
+            {
+                voucher.TrangThai = (int)TrangThaiVoucher.KhongHoatDong;
+            }
             return allRepo.AddItem(voucher);
         }
         [HttpPut("DeleteVoucher/{id}")]
@@ -99,6 +105,18 @@ namespace App_Api.Controllers
                 }
                 else
                     voucherGet.TrangThai = 0;
+                if (voucherGet.NgayBatDau > DateTime.Now)
+                {
+                    voucherGet.TrangThai = (int)TrangThaiVoucher.ChuaBatDau;
+                }
+                if (voucherGet.NgayBatDau <= DateTime.Now)
+                {
+                    voucherGet.TrangThai = (int)TrangThaiVoucher.HoatDong;
+                }
+                if (voucherGet.SoLuong == 0)
+                {
+                    voucherGet.TrangThai = (int)TrangThaiVoucher.KhongHoatDong;
+                }
                 return allRepo.EditItem(voucherGet);
             }
             return false;

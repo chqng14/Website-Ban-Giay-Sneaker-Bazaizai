@@ -15,6 +15,21 @@
 <table id="data-table" class="table" style="text-align:center">
    
     <thead>
+        <div class="d-md-flex">
+            <form asp-action="Index" method="post">
+                <div class="form-group">
+                    <label for="trangThai">Chọn trạng thái:</label>
+                    <select id="trangThai" name="trangThai" class="custom-select">
+                        <option value="tatCa">Tất cả</option>
+                        <option value="hoatDong">Hoạt động</option>
+                        <option value="khongHoatDong">Không hoạt động</option>
+                        <option value="chuaBatDau">Chưa bắt đầu</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Lọc</button>
+                </div>
+
+            </form>
+        </div>
         <tr>
             <th>
                 Mã Voucher
@@ -51,13 +66,14 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in ViewBag.TatCa)
+        {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MaVoucher)
+                @item.MaVoucher
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TenVoucher)
+                @item.TenVoucher
             </td>
                 <td>
                     @if (item.LoaiHinhUuDai == 1)
@@ -72,7 +88,7 @@
                     }
                 </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DieuKien)
+                @item.DieuKien
             </td>         
             <td>
                     @if (item.LoaiHinhUuDai == 0)
@@ -89,14 +105,14 @@
                     }            
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SoLuong)
+                @item.SoLuong
             </td>
      
             <td>
-                @Html.DisplayFor(modelItem => item.NgayBatDau)
+                @item.NgayBatDau
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NgayKetThuc)
+                @item.NgayKetThuc
             </td>
             <td>
                     @if (item.TrangThai == 0)
@@ -132,9 +148,12 @@
 <button class="btn btn-warning mr-2"  id="delete-button">Huỷ hoạt động của voucher đã chọn</button>
 
 <script>
+    $(document).ready(function () {
+        $('#data-table').DataTable()
+    }
 
     $(document).ready(function () {
-        $('#data-table').DataTable();
+      
 
         $('#select-all-checkbox').click(function () {
             $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
