@@ -44,6 +44,13 @@ namespace App_View.Controllers
             return View(giohang);
         }
 
+        public async Task<IActionResult> CheckOut()
+        {
+            var idNguoiDung = _userManager.GetUserId(User);
+            var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+            return View(giohang);
+        }
+
         // GET: GioHangChiTiets/Details/5
         public async Task<IActionResult> Details(string id)
         {
