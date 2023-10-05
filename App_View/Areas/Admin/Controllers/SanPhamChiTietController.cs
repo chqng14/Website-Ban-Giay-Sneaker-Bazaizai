@@ -35,7 +35,7 @@ namespace App_View.Areas.Admin.Controllers
         }
         [HttpGet]
         // GET: Admin/SanPhamChiTiet/DanhSachSanPham
-        public async Task<IActionResult> DanhSachSanPham()
+        public IActionResult DanhSachSanPham()
         {
             return View();
         }
@@ -64,15 +64,15 @@ namespace App_View.Areas.Admin.Controllers
                 .Take(length)
                 .ToList();
 
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                string searchValueLower = searchValue.ToLower();
-                query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x => x.SanPham!.ToLower().Contains(searchValueLower) || x.LoaiGiay!.ToLower().Contains(searchValueLower) || x.ChatLieu!.ToLower().Contains(searchValueLower) || x.MauSac!.ToLower().Contains(searchValueLower))
-                .Skip(start)
-                .Take(length)
-                .ToList();
+            //if (!string.IsNullOrEmpty(searchValue))
+            //{
+            //    string searchValueLower = searchValue.ToLower();
+            //    query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x => x.SanPham!.ToLower().Contains(searchValueLower) || x.LoaiGiay!.ToLower().Contains(searchValueLower) || x.ChatLieu!.ToLower().Contains(searchValueLower) || x.MauSac!.ToLower().Contains(searchValueLower))
+            //    .Skip(start)
+            //    .Take(length)
+            //    .ToList();
 
-            }
+            //}
 
             var totalRecords = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Count;
 
@@ -128,7 +128,7 @@ namespace App_View.Areas.Admin.Controllers
 
         public async Task<IActionResult> LoadPartialView(string idSanPhamChiTiet)
         {
-            var model = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).FirstOrDefault(x => x.IdChiTietSp == idSanPhamChiTiet);
+            var model = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(idSanPhamChiTiet);
             return PartialView("_DetailPartialView", model);
         }
 

@@ -213,6 +213,7 @@ namespace App_View.Services
                 throw new Exception("Not IsSuccessStatusCode");
             }
         }
+
         public async Task<ThuongHieuDTO?> CreateTenThuongHieuAynsc(ThuongHieuDTO thuongHieu)
         {
             var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/Create-ThuongHieu", thuongHieu);
@@ -299,7 +300,12 @@ namespace App_View.Services
 
         public async Task<SanPhamChiTiet?> GetByKeyAsync(string id)
         {
-            return await _httpClient.GetFromJsonAsync<SanPhamChiTiet?>("/api/SanPhamChiTiet/Get-SanPhamChiTiet/{id}");
+            return await _httpClient.GetFromJsonAsync<SanPhamChiTiet?>($"/api/SanPhamChiTiet/Get-SanPhamChiTiet/{id}");
+        }
+
+        public Task<DanhSachGiayViewModel?> GetDanhSachGiayViewModelAynsc()
+        {
+            return _httpClient.GetFromJsonAsync<DanhSachGiayViewModel?>("/api/SanPhamChiTiet/Get-DanhSachGiayViewModel");
         }
 
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id)
@@ -312,9 +318,22 @@ namespace App_View.Services
             return _httpClient.GetFromJsonAsync<ItemDetailViewModel?>($"/api/SanPhamChiTiet/Get-ItemDetailViewModel/{id}/{mauSac}");
         }
 
-        public Task<List<ItemShopViewModel>?> GetListItemShopViewModelAynsc()
+        public Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSizeAynsc(string id, int size)
         {
-            return _httpClient.GetFromJsonAsync<List<ItemShopViewModel>?>("/api/SanPhamChiTiet/Get-List-ItemShopViewModel");
+            return _httpClient.GetFromJsonAsync<ItemDetailViewModel?>($"/api/SanPhamChiTiet/Get-ItemDetailViewModel/idsanpham/{id}/size/{size}");
+        }
+
+        public async Task<List<ItemShopViewModel>?> GetListItemShopViewModelAynsc()
+        {
+            try
+            {
+                return await _httpClient.GetFromJsonAsync<List<ItemShopViewModel>?>("/api/SanPhamChiTiet/Get-List-ItemShopViewModel");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return new List<ItemShopViewModel>();
+            }
         }
 
         public async Task<List<SanPhamChiTiet>> GetListSanPhamChiTietAsync()
@@ -345,9 +364,14 @@ namespace App_View.Services
         }
 
 
-        public async Task<List<SanPhamChiTietViewModel>> GetListSanPhamChiTietViewModelAsync()
+        public async Task<List<SanPhamDanhSachViewModel>> GetListSanPhamChiTietViewModelAsync()
         {
-            return (await _httpClient.GetFromJsonAsync<List<SanPhamChiTietViewModel>>("/api/SanPhamChiTiet/Get-List-SanPhamChiTietViewModel"))!;
+            return (await _httpClient.GetFromJsonAsync<List<SanPhamDanhSachViewModel>>("/api/SanPhamChiTiet/Get-List-SanPhamChiTietViewModel"))!;
+        }
+
+        public async Task<SanPhamChiTietViewModel?> GetSanPhamChiTietViewModelByKeyAsync(string id)
+        {
+            return await _httpClient.GetFromJsonAsync<SanPhamChiTietViewModel?>($"/api/SanPhamChiTiet/Get-SanPhamChiTietViewModel/{id}");
         }
 
         public async Task<bool> UpdateAynsc(SanPhamChiTietDTO sanPhamChiTietDTO)
@@ -368,5 +392,7 @@ namespace App_View.Services
                 throw new Exception("Not IsSuccessStatusCode");
             }
         }
+
+
     }
 }
