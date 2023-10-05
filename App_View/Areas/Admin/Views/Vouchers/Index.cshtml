@@ -23,6 +23,9 @@
                 Tên
             </th>
             <th>
+                Mức ưu đãi
+            </th>
+            <th>
                 Điều kiện
             </th>
             <th>
@@ -30,9 +33,6 @@
             </th>
             <th>
                 Số lượng
-            </th>
-            <th>
-                Mức ưu đãi
             </th>
             <th>
                Ngày bắt đầu
@@ -59,6 +59,18 @@
             <td>
                 @Html.DisplayFor(modelItem => item.TenVoucher)
             </td>
+                <td>
+                    @if (item.LoaiHinhUuDai == 1)
+                    {
+                        int mucUuDai = int.Parse(item.MucUuDai.ToString());
+                        string mucUuDaiPhanTram = mucUuDai.ToString() + "%";
+                        @mucUuDaiPhanTram
+                    }
+                    else
+                    {
+                        @string.Format("{0:N0}đ", item.MucUuDai)
+                    }
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DieuKien)
             </td>         
@@ -79,18 +91,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.SoLuong)
             </td>
-            <td>
-                    @if (item.LoaiHinhUuDai == 1)
-                    {
-                        int mucUuDai = int.Parse(item.MucUuDai.ToString());
-                        string mucUuDaiPhanTram = mucUuDai.ToString() + "%";
-                        @mucUuDaiPhanTram
-                    }
-                    else
-                    {
-                        @string.Format("{0:N0}đ", item.MucUuDai)
-                    }
-            </td>
+     
             <td>
                 @Html.DisplayFor(modelItem => item.NgayBatDau)
             </td>
