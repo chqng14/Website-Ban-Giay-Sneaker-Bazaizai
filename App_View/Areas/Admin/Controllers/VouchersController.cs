@@ -41,11 +41,14 @@ namespace App_View.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(VoucherDTO voucherDTO)
         {
-            if (await _voucherSV.CreateVoucher(voucherDTO))
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                if (await _voucherSV.CreateVoucher(voucherDTO))
+                {
+                    return RedirectToAction("Index");
+                }
             }
-            return BadRequest();
+            return View();
 
         }
         public async Task<ActionResult> Edit(string id)

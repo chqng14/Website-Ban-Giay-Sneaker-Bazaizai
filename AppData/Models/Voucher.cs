@@ -47,14 +47,14 @@ namespace App_Data.Models
             {
                 if (value is double mucUuDai && mucUuDai <= 0)
                 {
-                    return new ValidationResult("Mức ưu đãi phải lớn hơn 0 khi LoaiHinhUuDai là 0.");
+                    return new ValidationResult("Số tiền giảm phải lớn hơn 0.");
                 }
             }
             else if (model.LoaiHinhUuDai == 1)
             {
                 if (value is double mucUuDai && (mucUuDai <= 0 || mucUuDai > 100))
                 {
-                    return new ValidationResult("Mức ưu đãi phải nằm trong khoảng từ 0 đến 100 khi LoaiHinhUuDai là 1.");
+                    return new ValidationResult("% giảm phải nằm trong khoảng từ 0 đến 100.");
                 }
             }
             else if (model.LoaiHinhUuDai == 2)
@@ -63,7 +63,7 @@ namespace App_Data.Models
                 // Điều kiện này tương tự với khi LoaiHinhUuDai là 0
                 if (value is double mucUuDai && mucUuDai <= 0)
                 {
-                    return new ValidationResult("Mức ưu đãi phải lớn hơn 0 khi LoaiHinhUuDai là 2.");
+                    return new ValidationResult("Số tiền giảm đãi phải lớn hơn 0.");
                 }
             }
 
