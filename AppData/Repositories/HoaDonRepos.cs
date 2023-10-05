@@ -40,9 +40,9 @@ namespace App_Data.Repositories
         {
             if (context.HoaDons.Any())
             {
-                return "HD1";
+                return "HD" + (context.HoaDons.Count()+1);
             }
-            return "HD"+ (context.HoaDons.Max(c => c.MaHoaDon.Substring(2, c.MaHoaDon.Length - 2))+1);
+            return "HD1";
         }
     }
 }

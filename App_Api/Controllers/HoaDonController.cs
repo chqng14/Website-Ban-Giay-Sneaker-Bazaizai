@@ -25,7 +25,7 @@ namespace App_Api.Controllers
         [HttpPost("TaoHoaDonTaiQuay")]
         public void TaoHoaDonTaiQuay()
         {
-            hoaDonRepos.TaoHoaDonTaiQuay("A56B6AA9-5476-4A72-89F2-6F258619E0E9");
+            hoaDonRepos.TaoHoaDonTaiQuay("181F5D92-FF82-4FDB-B90D-1F82A5E534EE");
         }
     }
 }
