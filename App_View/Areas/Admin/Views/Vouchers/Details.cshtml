@@ -72,26 +72,6 @@
                             </div>
                         </li>
                         <li class="m-b-20">
-                            <div class="d-flex justify-content-between">
-                                <span class="text-dark font-weight-semibold">
-                                    @if (Model.PhamViSanPham == "Áp dụng mọi thể loại")
-                                    {
-
-                                        <span>
-                                            @Model.PhamViSanPham
-
-                                        </span>
-                                    }
-                                    @if (Model.PhamViSanPham != "Áp dụng mọi thể loại")
-                                    {
-                                        var idTpProduct = Model.PhamViSanPham.ToString();                              
-                                        var namePhamVi = context.LoaiGiays.FirstOrDefault(c => c.IdLoaiGiay == idTpProduct).TenLoaiGiay;
-                                        <span>
-                                            @namePhamVi
-                                        </span>
-                                    }
-                                </span>
-                            </div>
                         </li>
                         <li class="m-b-20">
                             <div class="d-flex justify-content-between">

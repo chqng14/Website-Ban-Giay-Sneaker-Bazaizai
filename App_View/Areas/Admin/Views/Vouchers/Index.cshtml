@@ -26,9 +26,6 @@
                 Điều kiện
             </th>
             <th>
-                Phạm vi
-            </th>
-            <th>
                Loại hình
             </th>
             <th>
@@ -64,26 +61,7 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DieuKien)
-            </td>
-           @*      <td>
-                    @if (item.PhamViSanPham == "Áp dụng mọi thể loại")
-                    {
-
-                        <span>
-                            @item.PhamViSanPham
-
-                        </span>
-                    }
-                    @if (item.PhamViSanPham != "Áp dụng mọi thể loại")
-                    {
-                        var idTpProduct = @item.PhamViSanPham.ToString();
-
-                        var namePhamVi = context.LoaiGiays.FirstOrDefault(c => c.IdLoaiGiay == idTpProduct).TenLoaiGiay;
-                        <span>
-                            @namePhamVi
-                        </span>
-                    }
-                </td> *@
+            </td>         
             <td>
                     @if (item.LoaiHinhUuDai == 0)
                     {
