@@ -1,4 +1,5 @@
-﻿@model App_Data.ViewModels.Voucher.VoucherDTO;
+﻿@using static App_Data.Repositories.TrangThai;
+@model App_Data.ViewModels.Voucher.VoucherDTO;
 
 @{
     ViewData["Title"] = "Create";
@@ -30,9 +31,9 @@
                                 data-placeholder="Vui lòng chọn!"
                                 onchange="toggleInput()">
                             <option label="Chọn loại hình khuyến mãi"></option>
-                            <option value="0">Giảm giá tiền mặt</option>
-                            <option value="1">Giảm giá theo %</option>
-                            <option value="2">Miễn phí ship</option>
+                            <option value="@((int)TrangThaiLoaiKhuyenMai.TienMat)">Giảm giá tiền mặt</option>
+                            <option value="@((int)TrangThaiLoaiKhuyenMai.PhanTram)">Giảm giá theo %</option>
+                            <option value="@((int)TrangThaiLoaiKhuyenMai.Freeship)">Miễn phí ship</option>
                         </select>
                     </div>                 
                 </div>
