@@ -139,7 +139,7 @@
 
                                         <!--====== Select Box ======-->
                                         <!--====== Thành phố ======-->
-                                        <label class="gl-label" for="city">THÀNH PHỐ *</label><select class="select-box select-box--primary-style" id="city" required">
+                                        <label class="gl-label" for="city">THÀNH PHỐ *</label><select class="select-box select-box--primary-style" id="city" required>
                                             <option selected>Chọn thành phố</option>
                                         </select>
                                         <!--====== End - Select Box ======-->
@@ -185,7 +185,7 @@
                                             <tbody>
                                                 <tr>
                                                     <td>PHÍ SHIP</td>
-                                                    <td id="phiship">0 đ</td>
+                                                    <td id="phiship">0đ</td>
                                                 </tr>
                                                 <tr>
                                                     <td>TẠM TÍNH</td>
@@ -199,8 +199,8 @@
                                         </table>
                                     </div>
                                     <div>
-                                        <a href ="/GioHangChiTiets/CheckOut">
-                                            <button class="btn btn--e-brand-b-2" type="submit"> PROCEED TO CHECKOUT</button>
+                                        <a class="btn btn--e-brand-b-2" href="/GioHangChiTiets/CheckOut">
+                                            PROCEED TO CHECKOUT
                                         </a>
                                         
                                     </div>
@@ -254,6 +254,7 @@
                     var TongTien = response.tongTien;
                     $('#tamtinh').text(TongTien.toLocaleString("vi-VN") + "đ");
                     $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
+
                 }
             });
         }
@@ -395,9 +396,11 @@
                         }
                     })
                         .then(response => {
-                            console.log(response.data.data.service_fee);
+                            
+                            //lưu tiền ship vào localstorage
+                            localStorage.setItem('phiship', response.data.data.service_fee);
                             //gán tiền ship vào id phiship
-                            $('#phiship').text(response.data.data.service_fee.toLocaleString("vi-VN") + "đ");
+                            $('#phiship').text(parseInt(response.data.data.service_fee).toLocaleString("vi-VN").replace(/\./g, ',') + "đ");
                             // $('#divShippingFee1').val(response.data.data.service_fee);
 
                             // lấy ra tổng tiền của sản phẩm có trong giỏ hàng
@@ -407,9 +410,8 @@
 
                             var tongTien = tongtienSanPham + response.data.data.service_fee;
 
-                            
                             // Hiển thị tổng tiền
-                            totalAmountElement.innerText = tongTien.toLocaleString("vi-VN") + "đ";
+                            totalAmountElement.innerText = tongTien.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
                             totalAmountElement.value = tongTien.toString();
                         })
                         .catch(error => {

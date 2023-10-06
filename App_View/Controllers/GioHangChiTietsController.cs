@@ -59,6 +59,7 @@ namespace App_View.Controllers
             return View();
         }
 
+
         // GET: GioHangChiTiets/Create
         public async Task<IActionResult> AddToCart(GioHangChiTietDTOCUD gioHangChiTietDTOCUD)
         {
@@ -106,6 +107,11 @@ namespace App_View.Controllers
         {
             var jsondelete = await GioHangChiTietServices.DeleteGioHang(id);
             return RedirectToAction("ShowCartUser");
+        }
+        public async Task<IActionResult> DeleteCartCheckOut(string id)
+        {
+            var jsondelete = await GioHangChiTietServices.DeleteGioHang(id);
+            return RedirectToAction("CheckOut");
         }
 
         public async Task<IActionResult> DeleteAllCart()
