@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link href="images/favicon.png" rel="shortcut icon">
+    <link href="~/images/favicon.png" rel="shortcut icon">
     <title>Ludus - Electronics, Apparel, Computers, Books, DVDs & more</title>
 
     <!--====== Google Font ======-->
@@ -86,7 +86,7 @@
 
                         <a class="main-logo" href="index.html">
 
-                            <img src="images/logo/logo-1.png" alt="">
+                            <img src="/images/logo/logo-1.png" alt="">
                         </a>
                         <!--====== End - Main Logo ======-->
                         <!--====== Search Form ======-->
@@ -129,7 +129,7 @@
                                             </li>
                                             <li>
 
-                                                <a href="signup.html">
+                                                <a asp-area="Identity" asp-page="/Account/Register">
                                                     <i class="fas fa-user-plus u-s-m-r-6"></i>
 
                                                     <span>Signup</span>
@@ -137,7 +137,7 @@
                                             </li>
                                             <li>
 
-                                                <a href="signin.html">
+                                                <a asp-area="Identity" asp-page="/Account/Login">
                                                     <i class="fas fa-lock u-s-m-r-6"></i>
 
                                                     <span>Signin</span>
@@ -1321,7 +1321,7 @@
 
                                                     <a class="mini-link btn--e-brand-b-2" href="checkout.html">PROCEED TO CHECKOUT</a>
 
-                                                    <a class="mini-link btn--e-transparent-secondary-b-2" href="cart.html">VIEW CART</a>
+                                                    <a class="mini-link btn--e-transparent-secondary-b-2" href="/GioHangChiTiets/ShowCartUser">VIEW CART</a>
                                                 </div>
                                             </div>
                                             <!--====== End - Mini Product Statistics ======-->
@@ -2941,16 +2941,15 @@
             </div>
         </div>
     </noscript>
-    @await RenderSectionAsync("Scripts", required: false)
+    @* @await RenderSectionAsync("Scripts", required: false) *@
 </body>
 </html>
-
-@*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+@* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/App_View.styles.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/App_View.styles.css" asp-append-version="true" /> *@
 
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)*@
+@* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
+@* <script src="~/js/site.js" asp-append-version="true"></script> *@
+@await RenderSectionAsync("Scripts", required: false)

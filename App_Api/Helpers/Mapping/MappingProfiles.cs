@@ -3,6 +3,7 @@
 using App_Data.ViewModels.GioHangChiTiet;
 
 using App_Data.ViewModels.ChatLieuDTO;
+using App_Data.ViewModels.GioHangChiTiet;
 using App_Data.ViewModels.KichCoDTO;
 using App_Data.ViewModels.KieuDeGiayDTO;
 using App_Data.ViewModels.LoaiGiayDTO;
@@ -48,7 +49,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<SanPhamChiTiet, SanPhamChiTietDTO>()
                 .ForMember(
                         dest => dest.DanhSachAnh,
-                        opt => opt.MapFrom(src => src.Anh.Select(x=>x.Url))
+                        opt => opt.MapFrom(src => src.Anh.Where(a => a.TrangThai == 0).Select(x => x.Url))
                 )
                 .ForMember(
                         dest => dest.FullName,
@@ -96,7 +97,7 @@ namespace App_Api.Helpers.Mapping
                     )
                 .ForMember(
                         dest => dest.ListTenAnh,
-                        opt => opt.MapFrom(src => src.Anh.Where(an=>an.TrangThai==0).Select(x => x.Url).ToList())
+                        opt => opt.MapFrom(src => src.Anh.Where(an => an.TrangThai == 0).Select(x => x.Url).ToList())
                     );
 
             CreateMap<SanPhamChiTiet, ItemShopViewModel>()
@@ -180,7 +181,7 @@ namespace App_Api.Helpers.Mapping
                     )
                  .ForMember(
                         dest => dest.DanhSachAnh,
-                        opt => opt.MapFrom(src => src.Anh.Where(x=>x.TrangThai ==0).Select(a=>a.Url).ToList())
+                        opt => opt.MapFrom(src => src.Anh.Where(x => x.TrangThai == 0).Select(a => a.Url).ToList())
                     )
                  .ForMember(
                         dest => dest.SoLuotYeuThich,

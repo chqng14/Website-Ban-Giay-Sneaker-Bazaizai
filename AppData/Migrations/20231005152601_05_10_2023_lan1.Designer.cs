@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App_Data.Migrations
 {
     [DbContext(typeof(BazaizaiContext))]
-    [Migration("20231002151812_Update_ThuocTinhVoucher")]
-    partial class Update_ThuocTinhVoucher
+    [Migration("20231005152601_05_10_2023_lan1")]
+    partial class _05_10_2023_lan1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -155,7 +155,7 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IdKhachHang")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IdNguoiDung")
                         .HasColumnType("nvarchar(450)");
@@ -200,6 +200,8 @@ namespace App_Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("IdHoaDon");
+
+                    b.HasIndex("IdKhachHang");
 
                     b.HasIndex("IdNguoiDung");
 
@@ -585,6 +587,9 @@ namespace App_Data.Migrations
                     b.Property<double?>("GiaNhap")
                         .HasColumnType("float");
 
+                    b.Property<double?>("GiaThucTe")
+                        .HasColumnType("float");
+
                     b.Property<string>("IdChatLieu")
                         .HasColumnType("nvarchar(450)");
 
@@ -958,6 +963,10 @@ namespace App_Data.Migrations
                 {
                     b.HasOne("App_Data.Models.KhachHang", "KhachHang")
                         .WithMany("HoaDons")
+                        .HasForeignKey("IdKhachHang");
+
+                    b.HasOne("App_Data.Models.NguoiDung", "NguoiDung")
+                        .WithMany("HoaDons")
                         .HasForeignKey("IdNguoiDung");
 
                     b.HasOne("App_Data.Models.ThongTinGiaoHang", "ThongTinGiaoHang")
@@ -969,6 +978,8 @@ namespace App_Data.Migrations
                         .HasForeignKey("IdVoucher");
 
                     b.Navigation("KhachHang");
+
+                    b.Navigation("NguoiDung");
 
                     b.Navigation("ThongTinGiaoHang");
 
@@ -1219,6 +1230,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.NguoiDung", b =>
                 {
+                    b.Navigation("HoaDons");
+
                     b.Navigation("KhachHangs");
 
                     b.Navigation("SanPhamYeuThich");

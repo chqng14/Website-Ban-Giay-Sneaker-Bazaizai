@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace App_Data.Migrations
 {
-    public partial class _25_9_lan1 : Migration
+    public partial class capNhapLaiBangSPCT : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -194,9 +194,10 @@ namespace App_Data.Migrations
                 {
                     IdVoucher = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     MaVoucher = table.Column<string>(type: "nvarchar(100)", nullable: true),
-                    TenVoucher = table.Column<string>(type: "nvarchar(300)", nullable: true),
-                    DieuKien = table.Column<string>(type: "nvarchar(300)", nullable: true),
-                    LoaiHinhUuDai = table.Column<string>(type: "nvarchar(300)", nullable: true),
+                    TenVoucher = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
+                    DieuKien = table.Column<int>(type: "int", nullable: true),
+                    PhamViSanPham = table.Column<string>(type: "nvarchar(300)", nullable: true),
+                    LoaiHinhUuDai = table.Column<int>(type: "int", nullable: true),
                     SoLuong = table.Column<int>(type: "int", nullable: true),
                     MucUuDai = table.Column<double>(type: "float", nullable: true),
                     NgayBatDau = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -419,8 +420,11 @@ namespace App_Data.Migrations
                     IdChiTietSp = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Ma = table.Column<string>(type: "varchar(50)", nullable: true),
                     Day = table.Column<string>(type: "nvarchar(250)", nullable: true),
-                    MoTa = table.Column<string>(type: "Nvarchar(max)", nullable: true),
+                    MoTa = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SoLuongTon = table.Column<int>(type: "int", nullable: true),
+                    SoLuongDaBan = table.Column<int>(type: "int", nullable: true),
+                    NgayTao = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    NoiBat = table.Column<bool>(type: "bit", nullable: true),
                     GiaBan = table.Column<double>(type: "float", nullable: true),
                     GiaNhap = table.Column<double>(type: "float", nullable: true),
                     TrangThai = table.Column<int>(type: "int", nullable: true),

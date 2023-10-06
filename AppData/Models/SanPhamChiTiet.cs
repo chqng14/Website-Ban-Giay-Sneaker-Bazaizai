@@ -20,6 +20,7 @@ namespace App_Data.Models
         public bool? NoiBat { get; set; }
         public double? GiaBan { get; set; }
         public double? GiaNhap { get; set; }
+        public double? GiaThucTe { get; set; }
         public int? TrangThai { get; set; }
         public int? TrangThaiSale { get; set; }
         public string? IdSanPham { get; set; }

@@ -4,22 +4,22 @@
 
 namespace App_Data.Migrations
 {
-    public partial class UpdateDBVoucher : Migration
+    public partial class _05_10_2023_lan2 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "PhamViSanPham",
-                table: "vouchers",
-                type: "nvarchar(300)",
+            migrationBuilder.AddColumn<double>(
+                name: "GiaBan",
+                table: "gioHangChiTiets",
+                type: "float",
                 nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PhamViSanPham",
-                table: "vouchers");
+                name: "GiaBan",
+                table: "gioHangChiTiets");
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using App_Data.Models;
 using App_Data.ViewModels.GioHangChiTiet;
 using App_View.IServices;
+using System.Net.Http;
 
 namespace App_View.Services
 {
@@ -11,24 +12,54 @@ namespace App_View.Services
         {
             _httpClient = new HttpClient();
         }
-        public Task<bool> CreateGioHang(GioHangChiTietDTO GioHangChiTietDTO)
+        public async Task<bool> CreateCartDetailDTO(GioHangChiTietDTOCUD gioHangChiTietDTOCUD)
         {
-            throw new NotImplementedException();
+
+            try
+            {
+                var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/GioHangChiTiet/Create", gioHangChiTietDTOCUD);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await res.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
         }
 
-        public Task<bool> DeleteGioHang(string id)
+        public async Task<bool> DeleteGioHang(string id)
         {
-            throw new NotImplementedException();
+            var httpResponse = await _httpClient.DeleteAsync($"https://localhost:7038/api/GioHangChiTiet/Delete?id={id}");
+            return httpResponse.IsSuccessStatusCode;
         }
 
-        public Task<List<GioHangChiTietDTO>> GetAllGioHang()
+        public async Task<List<GioHangChiTietDTO>> GetAllGioHang()
         {
-            return _httpClient.GetFromJsonAsync<List<GioHangChiTietDTO>>("https://localhost:7038/api/GioHangChiTiet/Get-List-GioHangChiTietDTO");
+            return await _httpClient.GetFromJsonAsync<List<GioHangChiTietDTO>>("https://localhost:7038/api/GioHangChiTiet/Get-List-GioHangChiTietDTO");
+
         }
 
-        public Task<bool> UpdateGioHang(GioHangChiTietDTO GioHangChiTietDTO)
+        public async Task<bool> UpdateGioHang(string IdGioHangChiTiet, int SoLuong)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var httpResponse = await _httpClient.PutAsync($"https://localhost:7038/api/GioHangChiTiet/Edit?IdGioHangChiTiet={IdGioHangChiTiet}&SoLuong={SoLuong}", null);
+                if (httpResponse.IsSuccessStatusCode)
+                {
+                    return await httpResponse.Content.ReadAsAsync<bool>();
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+
+                return false;
+            }
         }
     }
 }
