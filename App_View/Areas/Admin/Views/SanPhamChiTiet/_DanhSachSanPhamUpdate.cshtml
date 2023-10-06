@@ -769,6 +769,7 @@
                     data[fieldName] = fieldValue;
                 }
             });
+            data.MoTa = $(item).find('[name="MoTa"]').summernote('code');
 
             $.ajax({
                 url: URL_UPDATE_PRODUCT_DETAIL,

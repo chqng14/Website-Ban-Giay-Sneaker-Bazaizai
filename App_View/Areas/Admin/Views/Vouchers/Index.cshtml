@@ -1,8 +1,10 @@
-﻿@model IEnumerable<App_Data.Models.Voucher>
+﻿@using App_Data.DbContextt;
+@model IEnumerable<App_Data.Models.Voucher>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    BazaizaiContext context = new BazaizaiContext();
 }
 
 <h1>Voucher</h1>
@@ -22,9 +24,6 @@
             </th>
             <th>
                 Điều kiện
-            </th>
-            <th>
-                Phạm vi
             </th>
             <th>
                Loại hình
@@ -62,18 +61,35 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.DieuKien)
-            </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhamViSanPham)
-                </td>
+            </td>         
             <td>
-                @Html.DisplayFor(modelItem => item.LoaiHinhUuDai)
+                    @if (item.LoaiHinhUuDai == 0)
+                    {
+                        <span>Giảm giá theo tiền mặt</span>
+                    }
+                    @if (item.LoaiHinhUuDai == 1)
+                    {
+                        <span>Giảm giá %</span>
+                    }
+                    @if (item.LoaiHinhUuDai == 2)
+                    {
+                        <span>Miễn phí vận chuyển</span>
+                    }            
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SoLuong)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MucUuDai)
+                    @if (item.LoaiHinhUuDai == 1)
+                    {
+                        int mucUuDai = int.Parse(item.MucUuDai.ToString());
+                        string mucUuDaiPhanTram = mucUuDai.ToString() + "%";
+                        @mucUuDaiPhanTram
+                    }
+                    else
+                    {
+                        @string.Format("{0:N0}đ", item.MucUuDai)
+                    }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.NgayBatDau)
@@ -82,7 +98,22 @@
                 @Html.DisplayFor(modelItem => item.NgayKetThuc)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TrangThai)
+                    @if (item.TrangThai == 0)
+                    {
+                        <span>Hoạt động</span>
+                    }
+                    else if (item.TrangThai == 1)
+                    {
+                        <span>Không hoạt động</span>
+                    }
+                    else if (item.TrangThai == 2)
+                    {
+                        <span>Chưa bắt đầu</span>
+                    }
+                    else
+                    {
+                        <span>Trạng thái lỗi</span>
+                    }
             </td>
                 <td>
                     <input type="checkbox" class="voucher-checkbox" data-value="@item.IdVoucher" />
@@ -100,6 +131,7 @@
 <button class="btn btn-warning mr-2"  id="delete-button">Huỷ hoạt động của voucher đã chọn</button>
 
 <script>
+
     $(document).ready(function () {
         $('#data-table').DataTable();
 
@@ -149,3 +181,4 @@
     <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
     <script src="~/Admin/js/pages/datatables.js" defer></script>
 }
+   

@@ -1,6 +1,6 @@
 ﻿using App_Data.Models;
-using App_Data.ViewModels.ChatLieuDTO;
 using App_Data.ViewModels.GioHangChiTiet;
+using App_Data.ViewModels.ChatLieuDTO;
 using App_Data.ViewModels.KichCoDTO;
 using App_Data.ViewModels.KieuDeGiayDTO;
 using App_Data.ViewModels.LoaiGiayDTO;
@@ -23,7 +23,6 @@ namespace App_Api.Helpers.Mapping
             CreateMap<XuatXuDTO, XuatXu>();
             CreateMap<VoucherDTO, Voucher>().ReverseMap();
 
-
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
 
             CreateMap<GioHangChiTiet, GioHangChiTietDTO>()
@@ -43,21 +42,20 @@ namespace App_Api.Helpers.Mapping
             CreateMap<GioHangChiTietDTOCUD, GioHangChiTiet>().ReverseMap();
 
 
-            CreateMap<SanPhamChiTiet, SanPhamChiTietDTO>();
-
             CreateMap<SanPhamChiTiet, SanPhamChiTietDTO>()
-
                 .ForMember(
                         dest => dest.DanhSachAnh,
-                        opt => opt.MapFrom(src => src.Anh.Where(a => a.TrangThai == 0).Select(x => x.Url))
+                        opt => opt.MapFrom(src => src.Anh.Where(a=>a.TrangThai==0).Select(x=>x.Url))
                 )
                 .ForMember(
                         dest => dest.FullName,
                         opt => opt.MapFrom(src => $"{src.ThuongHieu.TenThuongHieu} {src.SanPham.TenSanPham} {src.MauSac.TenMauSac}-{src.KichCo.SoKichCo}")
                 )
                 .ReverseMap();
+
             CreateMap<List<SanPhamChiTiet>, DanhSachGiayViewModel>()
                 .ConvertUsing<SanPhamChiTietToListItemViewModelConverter>();
+
 
 
             CreateMap<SanPhamChiTiet, SanPhamChiTietViewModel>()
@@ -97,6 +95,7 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.ListTenAnh,
                         opt => opt.MapFrom(src => src.Anh.Where(an => an.TrangThai == 0).Select(x => x.Url).ToList())
                     );
+
             CreateMap<SanPhamChiTiet, ItemShopViewModel>()
                 .ForMember(
                         dest => dest.Anh,
@@ -139,6 +138,10 @@ namespace App_Api.Helpers.Mapping
                 .ForMember(
                         dest => dest.Anh,
                         opt => opt.MapFrom(src => src.Anh!.FirstOrDefault()!.Url)
+                    )
+                .ForMember(
+                        dest => dest.MoTaSanPham,
+                        opt => opt.MapFrom(src => src.MoTa)
                     )
                 .ForMember(
                         dest => dest.IdChiTietSp,
@@ -195,6 +198,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<LoaiGiayDTO, LoaiGiay>();
             CreateMap<KieuDeGiayDTO, KieuDeGiay>();
             CreateMap<KichCoDTO, KichCo>();
+
         }
     }
 }

@@ -4,6 +4,7 @@ using App_Data.DbContextt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App_Data.Migrations
 {
     [DbContext(typeof(BazaizaiContext))]
-    partial class BazaizaiContextModelSnapshot : ModelSnapshot
+    [Migration("20231005154633_05_10_2023_lan2")]
+    partial class _05_10_2023_lan2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -743,11 +745,9 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("DieuKien")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("LoaiHinhUuDai")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("MaVoucher")
@@ -762,8 +762,10 @@ namespace App_Data.Migrations
                     b.Property<DateTime>("NgayKetThuc")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("PhamViSanPham")
+                        .HasColumnType("nvarchar(300)");
+
                     b.Property<int?>("SoLuong")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("TenVoucher")

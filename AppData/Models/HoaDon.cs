@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,6 +28,7 @@ namespace App_Data.Models
         public virtual List<HoaDonChiTiet> HoaDonChiTiet { get; set; }
         public virtual ThongTinGiaoHang ThongTinGiaoHang { get; set; }
         public virtual KhachHang KhachHang { get; set; }
+        public virtual NguoiDung NguoiDung { get; set; }
         public virtual Voucher Voucher { get; set; }
         public virtual List<PhuongThucThanhToanChiTiet> PhuongThucThanhToanChiTiet { get; set; }
     }

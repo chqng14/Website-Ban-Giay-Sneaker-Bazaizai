@@ -16,11 +16,14 @@ namespace App_Data.IRepositories
         Task<bool> DeleteAsync(string id);
         Task<bool> UpdateAsync(SanPhamChiTiet entity);
         Task<bool> AddAsync(SanPhamChiTiet entity);
-        Task<IEnumerable<SanPhamChiTietViewModel>> GetListViewModelAsync();
+        Task<IEnumerable<SanPhamDanhSachViewModel>> GetListViewModelAsync();
         Task<DanhSachGiayViewModel> GetDanhSachGiayViewModelAsync();
         Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(List<string> listGuid);
         Task<List<ItemShopViewModel>> GetDanhSachItemShopViewModelAsync();
         Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id);
         Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac);
+        Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSizeAynsc(string id, int size);
+        Task<SanPhamChiTietViewModel?> GetSanPhamChiTietViewModelAynsc(string id);
+
     }
 }

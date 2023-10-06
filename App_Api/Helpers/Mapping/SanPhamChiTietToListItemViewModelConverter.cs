@@ -42,8 +42,9 @@ namespace App_Api.Helpers.Mapping
                     KhuyenMai = false,
                     TenSanPham = item?.ThuongHieu?.TenThuongHieu + " " + item?.SanPham?.TenSanPham,
                     ThuongHieu = item?.ThuongHieu?.TenThuongHieu,
-                    Anh = item?.Anh?.First().Url
-
+                    Anh = item?.Anh?.First().Url,
+                    SoLanDanhGia = 32,
+                    SoSao = 4
                 })
                 .ToList();
         }
