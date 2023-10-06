@@ -87,7 +87,7 @@
                     </div>
                 </div>
                 <div class="col-lg-4 text-right">
-                    <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("ManageSanPham", "SanPhamChiTiet")'">
+                    <button class="btn btn-tone" onclick="window.location.href = '@Url.Action("ManageSanPham", "SanPhamChiTiet")'">
                         <i class="anticon anticon-plus-circle m-r-5"></i>
                         <span>Quản lý sản phẩm</span>
                     </button>
@@ -245,7 +245,9 @@
                 data: null,
                 title: '#',
                 render: function (data, type, row, meta) {
-                    return `<button class="btn btn-icon btn-primary btn-rounded btn-tone delete-item"><i class="far fa-trash-alt"></i></button>
+                    return `
+                    <button class="btn btn-icon btn-primary btn-rounded btn-tone delete-item"><i class="far fa-trash-alt"></i></button>
+                    <button class="btn btn-icon btn-primary btn-rounded btn-tone delete-item"><i class="fas fa-copy"></i></button>
                     `;
                 },
                 orderable: false

@@ -1,9 +1,6 @@
 ﻿using App_Data.Models;
-
 using App_Data.ViewModels.GioHangChiTiet;
-
 using App_Data.ViewModels.ChatLieuDTO;
-using App_Data.ViewModels.GioHangChiTiet;
 using App_Data.ViewModels.KichCoDTO;
 using App_Data.ViewModels.KieuDeGiayDTO;
 using App_Data.ViewModels.LoaiGiayDTO;
@@ -28,7 +25,6 @@ namespace App_Api.Helpers.Mapping
 
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
 
-
             CreateMap<GioHangChiTiet, GioHangChiTietDTO>()
                  .ForMember(
                     dest => dest.TenSanPham,
@@ -49,7 +45,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<SanPhamChiTiet, SanPhamChiTietDTO>()
                 .ForMember(
                         dest => dest.DanhSachAnh,
-                        opt => opt.MapFrom(src => src.Anh.Where(a => a.TrangThai == 0).Select(x => x.Url))
+                        opt => opt.MapFrom(src => src.Anh.Where(a=>a.TrangThai==0).Select(x=>x.Url))
                 )
                 .ForMember(
                         dest => dest.FullName,

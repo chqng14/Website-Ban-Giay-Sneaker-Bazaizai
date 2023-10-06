@@ -64,15 +64,19 @@ namespace App_View.Areas.Admin.Controllers
                 .Take(length)
                 .ToList();
 
-            //if (!string.IsNullOrEmpty(searchValue))
-            //{
-            //    string searchValueLower = searchValue.ToLower();
-            //    query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x => x.SanPham!.ToLower().Contains(searchValueLower) || x.LoaiGiay!.ToLower().Contains(searchValueLower) || x.ChatLieu!.ToLower().Contains(searchValueLower) || x.MauSac!.ToLower().Contains(searchValueLower))
-            //    .Skip(start)
-            //    .Take(length)
-            //    .ToList();
-
-            //}
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                string searchValueLower = searchValue.ToLower();
+                query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x =>
+                x.SanPham!.ToLower().Contains(searchValueLower) || 
+                x.LoaiGiay!.ToLower().Contains(searchValueLower) || 
+                x.ChatLieu!.ToLower().Contains(searchValueLower) ||
+                x.KieuDeGiay!.ToLower().Contains(searchValueLower)
+                )
+                .Skip(start)
+                .Take(length)
+                .ToList();
+            }
 
             var totalRecords = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Count;
 
