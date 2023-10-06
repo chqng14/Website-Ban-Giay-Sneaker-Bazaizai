@@ -1,5 +1,4 @@
-﻿@model List<App_Data.ViewModels.SanPhamChiTietViewModel.SanPhamChiTietViewModel>
-@{
+﻿@{
     ViewData["Title"] = "Danh Sách sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
@@ -46,7 +45,7 @@
             <div class="row m-b-30">
                 <div class="col-lg-8">
                     <div class="d-md-flex">
-                        <div class="m-b-10 m-r-15">
+                        <div class="m-b-10">
                             <select class="custom-select" style="min-width: 180px;">
                                 <option selected="">Catergory</option>
                                 <option value="all">All</option>
@@ -55,7 +54,7 @@
                                 <option value="jewellery">Jewellery</option>
                             </select>
                         </div>
-                        <div class="m-b-10">
+                        <div class="m-b-10 ml-1">
                             <select class="custom-select" style="min-width: 180px;">
                                 <option selected="">Status</option>
                                 <option value="all">All</option>
@@ -63,10 +62,32 @@
                                 <option value="outOfStock">Out of Stock</option>
                             </select>
                         </div>
+                        <div class="m-b-10 ml-1">
+                            <button class="btn btn-tone">
+                                <i class="anticon anticon-file-excel m-r-5"></i>
+                                <span>
+                                    Import Excel
+                                </span>
+                            </button>
+                        </div>
+                        <div class="m-b-10 ml-1">
+                            <button class="btn btn-tone">
+                                <i class="anticon anticon-file-excel m-r-5"></i>
+                                <span>
+                                    Export Excel
+                                </span>
+                            </button>
+                        </div>
+                        <div class="m-b-10 ml-1">
+                            <button class="btn btn-tone">
+                                <i class="far fa-trash-alt"></i>
+                                <span>Thùng rác</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-4 text-right">
-                    <button class="btn btn-primary" onclick="window.location.href = '@Url.Action("ManageSanPham", "SanPhamChiTiet")'">
+                    <button class="btn btn-tone" onclick="window.location.href = '@Url.Action("ManageSanPham", "SanPhamChiTiet")'">
                         <i class="anticon anticon-plus-circle m-r-5"></i>
                         <span>Quản lý sản phẩm</span>
                     </button>
@@ -167,14 +188,9 @@
                 title: 'Sản phẩm',
                 render: function (data, type, row, meta) {
                     return `
-                    <div class="d-flex align-items-center"><img data-data="${data.idChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sán phẩm" class="img-fluid cursor-image rounded" src="/AnhSanPham/${data.listTenAnh[0]}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.sanPham}</h6></div>
+                    <div class="d-flex align-items-center"><img data-data="${data.idChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sán phẩm" class="img-fluid cursor-image rounded" src="/AnhSanPham/${data.anh}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.sanPham}</h6></div>
                     `;
                 },
-                orderable: false
-            },
-            {
-                data: 'mauSac',
-                title: 'Màu Sắc',
                 orderable: false
             },
             {
@@ -188,14 +204,8 @@
                 orderable: false
             },
             {
-                data: 'giaBan',
-                title: 'Giá bán',
-                render: function (data, type, row, meta) {
-                    return new Intl.NumberFormat('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND'
-                    }).format(data).replace(",00", "");
-                },
+                data: 'chatLieu',
+                title: 'Chất liệu',
                 orderable: false
             },
             {
@@ -210,13 +220,14 @@
                 orderable: false
             },
             {
-                data: 'thuongHieu',
-                title: 'Thương Hiệu',
-                orderable: false
-            },
-            {
-                data: 'xuatXu',
-                title: 'Xuất xứ',
+                data: 'giaBan',
+                title: 'Giá bán',
+                render: function (data, type, row, meta) {
+                    return new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    }).format(data).replace(",00", "");
+                },
                 orderable: false
             },
             {
@@ -234,7 +245,9 @@
                 data: null,
                 title: '#',
                 render: function (data, type, row, meta) {
-                    return `<button class="btn btn-icon btn-primary btn-rounded btn-tone delete-item"><i class="far fa-trash-alt"></i></button>
+                    return `
+                    <button class="btn btn-icon btn-primary btn-rounded btn-tone delete-item"><i class="far fa-trash-alt"></i></button>
+                    <button class="btn btn-icon btn-primary btn-rounded btn-tone delete-item"><i class="fas fa-copy"></i></button>
                     `;
                 },
                 orderable: false
@@ -316,7 +329,9 @@
 
        $(document).on("click", '.thaotac', function () {
            const keys = Object.keys(selectedCheckboxes);
+           console.log(keys);
            const data = { "listGuild": keys };
+           console.log(JSON.stringify(data));
            $('#preloader').show();
            $.ajax({
                url: 'GetPartialViewListUpdate',

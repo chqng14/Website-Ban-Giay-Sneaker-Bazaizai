@@ -77,7 +77,7 @@ namespace App_Api.Controllers
         }
 
         [HttpGet("Get-List-SanPhamChiTietViewModel")]
-        public async Task<List<SanPhamChiTietViewModel>> GetListSanPham()
+        public async Task<List<SanPhamDanhSachViewModel>> GetListSanPham()
         {
             return (await _sanPhamChiTietRes.GetListViewModelAsync()).ToList();
         }
@@ -112,6 +112,12 @@ namespace App_Api.Controllers
             return await _sanPhamChiTietRes.GetByKeyAsync(id);
         }
 
+        [HttpGet("Get-SanPhamChiTietViewModel/{id}")]
+        public async Task<SanPhamChiTietViewModel?> GetSanPhamViewModel(string id)
+        {
+            return await _sanPhamChiTietRes.GetSanPhamChiTietViewModelAynsc(id);
+        }
+
         [HttpGet("Get-ItemDetailViewModel/{id}")]
         public async Task<ItemDetailViewModel?> GetItemDetailViewModel(string id)
         {
@@ -122,6 +128,12 @@ namespace App_Api.Controllers
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColor(string id,string mauSac)
         {
             return await _sanPhamChiTietRes.GetItemDetailViewModelWhenSelectColorAynsc(id,mauSac);
+        }
+
+        [HttpGet("Get-ItemDetailViewModel/idsanpham/{id}/size/{size}")]
+        public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSize(string id, int size)
+        {
+            return await _sanPhamChiTietRes.GetItemDetailViewModelWhenSelectSizeAynsc(id, size);
         }
 
         [HttpPost("Creat-SanPhamChiTiet")]
