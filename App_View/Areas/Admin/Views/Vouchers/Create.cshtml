@@ -6,20 +6,18 @@
 }
 <!-- Css -->
 <div class="container">
-
     <div class="card">
         <div class="card-header">
             <h4 class="card-title ">  Create Voucher <i class="anticon anticon-gift"></i> </h4>
         </div>
         <div class="card-body">
-            <h4><a asp-action="ShowAllVoucher"> <i class="anticon anticon-fast-backward"></i>Back to List </a></h4>
+            <h4><a asp-action="Index"> <i class="anticon anticon-fast-backward"></i>Back to List </a></h4>
             <form asp-action="Create">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-row">
                     <div class="form-group col-md-6">
                         <label class="font-weight-semibold" asp-for="TenVoucher">
-                            Tên
-                            Voucher:
+                            Tên Voucher: 
                         </label>
                         <input asp-for="TenVoucher" id="Ten" placeholder="Nhập tên..."
                                class="form-control" />
@@ -67,7 +65,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label class="font-weight-semibold">Điều kiện:</label>
-                        <input class="form-control" asp-for="DieuKien" />
+                        <input class="form-control" type="number" asp-for="DieuKien" />
                         <span asp-validation-for="DieuKien" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
