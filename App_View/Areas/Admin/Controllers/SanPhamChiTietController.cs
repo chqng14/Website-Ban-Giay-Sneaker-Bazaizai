@@ -46,10 +46,30 @@ namespace App_View.Areas.Admin.Controllers
         {
             return View();
         }
+
         public class ListGuildDTO
         {
             public List<string>? listGuild { get; set; }
         }
+
+        [HttpPost]
+        public async Task<IActionResult> NgungKinhDoanhListSanPham([FromBody]ListGuildDTO listGuildDTO)
+        {
+            return Ok(await _sanPhamChiTietService.NgungKinhDoanhSanPhamAynsc(listGuildDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> KinhDoanhLaiListSanPham([FromBody] ListGuildDTO listGuildDTO)
+        {
+            return Ok(await _sanPhamChiTietService.KinhDoanhLaiSanPhamAynsc(listGuildDTO));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> KhoiPhucKinhDoanh(string id)
+        {
+            return Ok(await _sanPhamChiTietService.KhoiPhucKinhDoanhAynsc(id));
+        }
+
         [HttpPost]
         public async Task<IActionResult> GetPartialViewListUpdate([FromBody]ListGuildDTO listGuildDTO)
         {
@@ -64,6 +84,7 @@ namespace App_View.Areas.Admin.Controllers
             var model = await _sanPhamChiTietService.GetListSanPhamChiTietDTOAsync(listGuildDTO);
             return PartialView("_DanhSachSanPhamUpdate", model);
         }
+
         public async Task<IActionResult> GetDanhSachSanPham(int draw, int start, int length, string searchValue)
         {
             var query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync())

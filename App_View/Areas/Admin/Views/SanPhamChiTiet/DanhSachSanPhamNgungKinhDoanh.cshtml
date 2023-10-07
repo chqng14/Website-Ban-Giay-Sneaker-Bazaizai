@@ -40,7 +40,7 @@
                     </button>
                 </div>
                 <div class="modal-body" style="background: #d3f6ff;">
-                    <span>Bạn có chắn chắn muốn ngừng kinh doanh mặt hàng này?</span>
+                    <span id="thongBao"></span>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary">Yes</button>
@@ -56,7 +56,7 @@
         <div class="header-sub-title">
             <nav class="breadcrumb breadcrumb-dash">
                 <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>QUẢN LÝ SẢN PHẨM</a>
-                <a class="breadcrumb-item" href="#">DANH SÁCH SẢN PHẨM</a>
+                <a class="breadcrumb-item" href="#">DANH SÁCH SẢN PHẨM NGỪNG KINH DOANH</a>
             </nav>
         </div>
     </div>
@@ -101,7 +101,7 @@
     </div>
     <div id="confirm-ds" class="mt-2 mb-2">
         <div class="d-flex justify-content-end">
-            <button class="btn btn-warning mr-2">
+            <button class="btn btn-warning mr-2 kinh_doanh_lai">
                 <i class="fas fa-shopping-basket"></i>
                 <span>Sử dụng để kinh doanh</span>
             </button>
@@ -252,7 +252,7 @@
                 title: '#',
                 render: function (data, type, row, meta) {
                     return `
-                    <button class="btn btn-icon btn-primary btn-rounded btn-tone delete-item"><i class="fas fa-undo"></i></button>
+                    <button class="btn btn-icon btn-primary btn-rounded btn-tone khoi-phuc"><i class="fas fa-undo"></i></button>
                     `;
                 },
                 orderable: false
@@ -304,14 +304,16 @@
     });
 
 
-       $(document).on("click", ".delete-item", function () {
+        $(document).on("click", ".khoi-phuc", function () {
+           $('#confirm').find('#thongBao').text(`Bạn có muốn kinh doanh lại mặt hàng này?`);
            $('#confirm').modal('show');
            var item = $(this).closest('tr')
            $('#confirm').off('click', '.btn-primary');
            $('#confirm').one('click', '.btn-primary', function () {
                const id = item.find('.checkbox').attr('data-id');
+               console.log(id);
                $.ajax({
-                   url: '/Admin/SanPhamChiTiet/Delete/' + id,
+                   url: '/Admin/SanPhamChiTiet/KhoiPhucKinhDoanh/' + id,
                    type: 'GET',
                    success: function (result) {
                        if (result) {
@@ -354,9 +356,36 @@
                    console.log(xhr);
                }
            });
-
-
        })
+
+        $(document).on("click", '.kinh_doanh_lai', function () {
+            const keys = Object.keys(selectedCheckboxes);
+            $('#confirm').find('#thongBao').text(`Bạn có muốn kinh doanh lại ${keys.length} mặt hàng này?`);
+            $('#confirm').modal('show');
+            console.log(keys);
+            const data = { listGuild: keys };
+            console.log(JSON.stringify(data));
+            $('#confirm').off('click', '.btn-primary');
+            $('#confirm').one('click', '.btn-primary', function () {
+                $.ajax({
+                    url: '/Admin/SanPhamChiTiet/KinhDoanhLaiListSanPham',
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function (result) {
+                        if (result) {
+                            window.location.href = "/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh"
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+            })
+        })
    });
 
 
@@ -379,7 +408,7 @@
             </button>
         </div>
         <div class="toast-body">
-            <span>Đã ngừng kinh doanh!</span>
+            <span>Mặt hàng này đã được kinh doanh lại!</span>
         </div>
     </div>`
 

@@ -4,7 +4,7 @@
 }
 
 <style>
-    
+
     .cursor-image {
         cursor: pointer;
     }
@@ -41,7 +41,7 @@
                     </button>
                 </div>
                 <div class="modal-body" style="background: #d3f6ff;">
-                    <span>Bạn có chắn chắn muốn ngừng kinh doanh mặt hàng này?</span>
+                    <span id="thongBao"></span>
                 </div>
                 <div class="modal-footer" style="background: #d0dae3">
                     <button type="button" class="btn btn-primary">Đồng ý</button>
@@ -122,7 +122,7 @@
     </div>
     <div id="confirm-ds" class="mt-2 mb-2">
         <div class="d-flex justify-content-end">
-            <button class="btn btn-warning mr-2">
+            <button class="btn btn-warning mr-2 ngung_kinh_doanh">
                 <i class="fas fa-ban"></i>
                 <span>Ngừng kinh doanh</span>
             </button>
@@ -325,7 +325,8 @@
     });
 
 
-       $(document).on("click", ".delete-item", function () {
+        $(document).on("click", ".delete-item", function () {
+            $('#confirm').find('#thongBao').text("Bạn có muốn ngừng kinh doanh mặt hàng này?");
            $('#confirm').modal('show');
            var item = $(this).closest('tr')
            $('#confirm').off('click', '.btn-primary');
@@ -350,12 +351,41 @@
                        console.log(xhr);
                    }
                });
+               confirmModal.modal('hide');
            });
        })
 
-       $(document).on("click", '.thaotac', function () {
+        $(document).on("click", '.ngung_kinh_doanh', function () {
+            const keys = Object.keys(selectedCheckboxes);
+            $('#confirm').find('#thongBao').text(`Bạn có muốn ngừng kinh doanh ${keys.length} mặt hàng này?`);
+            $('#confirm').modal('show');
+            console.log(keys);
+            const data = { listGuild: keys };
+            console.log(JSON.stringify(data));
+            $('#confirm').off('click', '.btn-primary');
+            $('#confirm').one('click', '.btn-primary', function () {
+                $.ajax({
+                    url: '/Admin/SanPhamChiTiet/NgungKinhDoanhListSanPham',
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function (result) {
+                        if (result) {
+                            window.location.href = "/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh"
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+            })
+        })
+
+        $(document).on("click", '.thaotac', function () {
            const keys = Object.keys(selectedCheckboxes);
-           console.log(keys);
            const data = { "listGuild": keys };
            console.log(JSON.stringify(data));
            $('#preloader').show();
@@ -375,8 +405,6 @@
                    console.log(xhr);
                }
            });
-
-
        })
    });
 

@@ -25,6 +25,8 @@ namespace App_Data.IRepositories
         Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac);
         Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSizeAynsc(string id, int size);
         Task<SanPhamChiTietViewModel?> GetSanPhamChiTietViewModelAynsc(string id);
-
+        Task<bool> NgungKinhDoanhSanPhamAynsc(List<string> lstguid);
+        Task<bool> KinhDoanhLaiSanPhamAynsc(List<string> lstguid);
+        Task<bool> KhoiPhucKinhDoanhAynsc(string id);
     }
 }
