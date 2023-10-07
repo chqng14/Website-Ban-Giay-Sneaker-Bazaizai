@@ -4,30 +4,59 @@
     ViewData["Title"] = "Quản lý sản phẩm";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+<style>
+    .tab-content {
+        background: #d3f6ff;
+        width: 100%;
+    }
 
+    .nav-tabs {
+        background: #efefef;
+    }
+
+    .note-editing-area{
+        height: 400px;
+    }
+</style>
 <div class="modal fade" id="cauHinh">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Cấu hình mặc định</h5>
+            <div class="modal-header" style="background: #129dc1; ">
+                <h5 class="modal-title" id="exampleModalLabel">CẤU HÌNH MẶC ĐỊNH CHO CÁC BIẾN THỂ</h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <i class="anticon anticon-close"></i>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="background: #d3f6ff;">
                 <div class="card-body">
                     <div class="row">
-                        <div class="form-group col-4">
+                        <div class="form-group col-3">
                             <label class="font-weight-semibold">Giá Nhập</label>
-                            <input id="giaNhap" class="form-control formatPrice" name="GiaNhap" placeholder="">
+                            <div class="d-flex align-items-center">
+                                <i class="far fa-money-bill-alt mr-1"></i>
+                                <input id="giaNhap" class="form-control formatPrice" name="GiaNhap" placeholder="">
+                            </div>
                         </div>
-                        <div class="form-group col-4">
+                        <div class="form-group col-3">
                             <label class="font-weight-semibold">Giá Bán</label>
-                            <input min="1" id="giaBan" class="form-control formatPrice" name="GiaBan" placeholder="">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-money-bill-wave mr-1"></i>
+                                <input min="1" id="giaBan" class="form-control formatPrice" name="GiaBan" placeholder="">
+                            </div>
                         </div>
-                        <div class="form-group col-4">
+                        <div class="form-group col-3">
                             <label class="font-weight-semibold">Số lượng</label>
-                            <input id="soLuongTon" class="form-control formatNumber" name="SoLuongTon">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-database mr-1"></i>
+                                <input id="soLuongTon" class="form-control formatNumber" name="SoLuongTon">
+                            </div>
+                        </div>
+                        <div class="form-group col-3">
+                            <label class="font-weight-semibold">Khối lượng</label>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-weight mr-1"></i>
+                                <input id="khoiLuong" class="form-control formatNumber" name="KhoiLuong">(g)
+                            </div>
                         </div>
                         <div class="form-group d-flex align-items-center col-2">
                             <div class="switch m-r-10">
@@ -55,8 +84,11 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <div class="modal-footer" style="background: #d0dae3">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                    <span> Close</span>
+                </button>
             </div>
         </div>
     </div>
@@ -73,100 +105,129 @@
 </div>
 
 <div class="card">
-    <div class="card-body" id="formGen">
+    <div class="card-body" id="formGen" style="background: #b1d3d1;">
         <div style="display: flex; align-items: center; justify-content: space-between;">
             <h5 style="margin: 0;">QUẢN LÝ SẢN PHẨM</h5>
             <div class="d-flex">
                 <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#cauHinh">
                     <i class="fab fa-whmcs"></i>
                 </button>
-                <button onclick="generate()" class="btn btn-warning">Tạo thực thể</button>
+                <button onclick="generate()" class="btn btn-tone">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Tạo các biến thể</span>
+                </button>
             </div>
         </div>
         <div class="m-b-15" style="margin-bottom: 30px">
             <div class="row">
                 <div class="col-4" style="margin-top: 10px" id="sanpham">
                     <label class="font-weight-semibold">Tên sản phẩm</label>
-                    <select class="w-100 select2-active" asp-for="IdSanPham">
-                        @foreach (var item in (SelectList)ViewData["IdSanPham"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-cube mr-1"></i>
+                        <select class="w-100 select2-active" asp-for="IdSanPham">
+                            @foreach (var item in (SelectList)ViewData["IdSanPham"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
                 </div>
 
                 <div class="col-4" style="margin-top: 10px" id="thuonghieu">
-                    <label class="font-weight-semibold">Thương hiệu</label>
-                    <select class="select2-active w-100" asp-for="IdThuongHieu">
-                        @foreach (var item in (SelectList)ViewData["IdThuongHieu"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                    <label class="font-weight-semibold">
+                        <span> Thương hiệu</span>
+                    </label>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-trademark mr-1"></i>
+                        <select class="select2-active w-100" asp-for="IdThuongHieu">
+                            @foreach (var item in (SelectList)ViewData["IdThuongHieu"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
                 </div>
 
                 <div class="col-4" style="margin-top: 10px" id="xuatxu">
                     <label class="font-weight-semibold">Xuất xứ</label>
-                    <select class="select2-active w-100" asp-for="IdXuatXu">
-                        @foreach (var item in (SelectList)ViewData["IdXuatXu"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                    <div class="d-flex align-items-center">
+                        <i class="fab fa-connectdevelop mr-1"></i>
+                        <select class="select2-active w-100" asp-for="IdXuatXu">
+                            @foreach (var item in (SelectList)ViewData["IdXuatXu"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
                 </div>
 
                 <div class="col-4" style="margin-top: 10px" id="chatlieu">
                     <label class="font-weight-semibold">Chất liệu</label>
-                    <select class="select2-active w-100" asp-for="IdChatLieu">
-                        @foreach (var item in (SelectList)ViewData["IdChatLieu"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                    <div class="d-flex align-items-center">
+                        <i class="fab fa-centercode mr-1"></i>
+                        <select class="select2-active w-100" asp-for="IdChatLieu">
+                            @foreach (var item in (SelectList)ViewData["IdChatLieu"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
                 </div>
 
                 <div class="col-4" style="margin-top: 10px" id="loaigiay">
                     <label class="font-weight-semibold">Loại giầy</label>
-                    <select class="select2-active w-100" asp-for="IdLoaiGiay">
-                        @foreach (var item in (SelectList)ViewData["IdLoaiGiay"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                    <div class="d-flex align-items-center">
+                        <i class="fab fa-magento mr-1"></i>
+                        <select class="select2-active w-100" asp-for="IdLoaiGiay">
+                            @foreach (var item in (SelectList)ViewData["IdLoaiGiay"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
                 </div>
 
                 <div class="col-4" style="margin-top: 10px" id="kieudegiay">
                     <label class="font-weight-semibold">Kiểu đế giầy</label>
-                    <select class="select2-active w-100" asp-for="IdKieuDeGiay">
-                        @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                    <div class="d-flex align-items-center mr-1">
+                        <i class="fas fa-podcast mr-1"></i>
+                        <select class="select2-active w-100" asp-for="IdKieuDeGiay">
+                            @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-6" style="margin-top: 10px" id="mausac">
                     <label class="font-weight-semibold">Màu Sắc</label>
-                    <select id="IdColor" class="select2-active w-100"
-                            multiple="multiple">
-                        @foreach (var item in (SelectList)ViewData["IdMauSac"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-palette mr-1"></i>
+                        <select id="IdColor" class="select2-active w-100"
+                                multiple="multiple">
+                            @foreach (var item in (SelectList)ViewData["IdMauSac"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
                 </div>
 
                 <div class="col-6" style="margin-top: 10px" id="kichco">
                     <label class="font-weight-semibold">Kích cỡ</label>
-                    <select id="IdSize" class="select2-active w-100"
-                            multiple="multiple">
-                        @foreach (var item in (SelectList)ViewData["IdKichCo"])
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-bowling-ball mr-1"></i>
+                        <select id="IdSize" class="select2-active w-100"
+                                multiple="multiple">
+                            @foreach (var item in (SelectList)ViewData["IdKichCo"])
+                            {
+                                <option value="@item.Value">@item.Text</option>
+                            }
+                        </select>
+                    </div>
                 </div>
             </div>
         </div>
@@ -175,8 +236,8 @@
 
 <div id="confirm" class="mt-2 mb-2" style="display: none">
     <div class="d-flex justify-content-end">
-        <button onclick="Huy()" class="btn btn-warning mr-2">Hủy</button>
-        <button onclick="CapNhat()" class="btn btn-warning">Cập nhật</button>
+        <button onclick="Huy()" class="btn btn-tone mr-2">Hủy</button>
+        <button onclick="CapNhat()" class="btn btn-tone">Cập nhật</button>
     </div>
 </div>
 
@@ -505,52 +566,68 @@
     }
 
     //itemTemplate
-    const ItemTemplate = (index, isUpdate, idProduct, idcolor, idsize, Title, giaNhap, giaBan, soLuong, moTa) => {
+    const ItemTemplate = (index, isUpdate, idProduct, idcolor, idsize, Title, giaNhap, giaBan, soLuong, moTa, khoiLuong) => {
         return `
 <div class="card item-accordion" data-update="${isUpdate}" data-idproductdetail="${idProduct}">
-        <div class="card-header d-flex">
-            <h5 class="card-title">
-                <a data-toggle="collapse" data-IdMauSac="${idcolor}" data-IdKichCo="${idsize}"
+        <div class="card-header">
+            <h5 class="card-title d-flex">
+                <a data-toggle="collapse" class="w-100" style="background: #2aebeb;" data-IdMauSac="${idcolor}" data-IdKichCo="${idsize}"
                    href="#collapseOneBorderless${index}">
                     <span>${Title}</span>
                 </a>
+                <button class="btn btn-tone btnn-close" style="background: #2aebeb;">
+                    <i class="anticon anticon-close"></i>
+                </button>
             </h5>
-            <button class="btn btn-icon btn-primary btn-rounded btn-tone btnn-close">
-                <i class="anticon anticon-close"></i>
-            </button>
         </div>
         <div id="collapseOneBorderless${index}" class="collapse" data-parent="#accordion-borderless">
 
             <div class="d-flex">
                 <ul class="nav nav-tabs flex-column" id="myTabVertical" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="home-tab-vertical" data-toggle="tab" href="#home-vertical${index}"
-                           role="tab" aria-controls="home-vertical${index}" aria-selected="true">Information</a>
+                        <a class="nav-link d-flex align-items-center active" id="home-tab-vertical" data-toggle="tab" href="#home-vertical${index}"
+                           role="tab" aria-controls="home-vertical${index}" aria-selected="true"><i class="fas fa-info-circle mr-1"></i><span>Information</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="profile-tab-vertical" data-toggle="tab" href="#profile-vertical${index}"
-                           role="tab" aria-controls="profile-${index}" aria-selected="false">Image</a>
+                        <a class="nav-link d-flex align-items-center" id="profile-tab-vertical" data-toggle="tab" href="#profile-vertical${index}"
+                           role="tab" aria-controls="profile-${index}" aria-selected="false"><i class="far fa-file-image mr-1"></i><span>Image</span></a>
                     </li>
                 </ul>
 
-                <div class="tab-content m-l-15" id="myTabContentVertical">
+                <div class="tab-content" id="myTabContentVertical">
                     <div class="tab-pane fade show active" id="home-vertical${index}" role="tabpanel"
                          aria-labelledby="home-tab-vertical${index}">
-                        <div class="card-body">
+                        <div class="card-body mt-2">
                             <div class="row">
-                                <div class="form-group col-4">
+                                <div class="form-group col-3">
                                     <label class="font-weight-semibold">Giá Nhập(*)</label>
-                                    <input min="1" class="form-control formatPrice" name="GiaNhap" value="${giaNhap}"
-                                           placeholder="">
+                                    <div class="d-flex align-items-center">
+                                        <i class="far fa-money-bill-alt mr-1"></i>
+                                        <input min="1" class="form-control formatPrice" name="GiaNhap" value="${giaNhap}"
+                                        placeholder="">
+                                    </div>
                                 </div>
-                                <div class="form-group col-4">
+                                <div class="form-group col-3">
                                     <label class="font-weight-semibold">Giá Bán(*)</label>
-                                    <input min="1" class="form-control formatPrice" name="GiaBan" value="${giaBan}"
-                                           placeholder="">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-money-bill-wave mr-1"></i>
+                                        <input min="1" class="form-control formatPrice" name="GiaBan" value="${giaBan}"
+                                        placeholder="">
+                                    </div>
                                 </div>
-                                <div class="form-group col-4">
+                                <div class="form-group col-3">
                                     <label class="font-weight-semibold">Số lượng(*)</label>
-                                    <input class="form-control formatNumber" name="SoLuongTon" value="${soLuong}">
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-database mr-1"></i>
+                                        <input class="form-control formatNumber" name="SoLuongTon" value="${soLuong}">
+                                    </div>
+                                </div>
+                                <div class="form-group col-3">
+                                    <label class="font-weight-semibold">Khối lượng(*)</label>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-weight mr-1"></i>
+                                        <input class="form-control formatNumber" name="KhoiLuong" value="${khoiLuong}">(g)
+                                    </div>
                                 </div>
                                 <div class="form-group d-flex align-items-center col-2">
                                     <div class="switch m-r-10">
@@ -579,9 +656,9 @@
                     </div>
                     <div class="tab-pane fade" id="profile-vertical${index}" role="tabpanel"
                          aria-labelledby="profile-tab-vertical${index}">
-                        <div class="card-body">
+                        <div class="card-body mt-2">
                             <div class="upload">
-                                <button name="choseFile" class="custom-btn mb-2">
+                                <button name="choseFile" class="custom-btn btn-tone mb-2">
                                     Choose file
                                 </button>
                                 <input type="file" class="fileInput default-btn 1" multiple hidden>
@@ -669,7 +746,7 @@
                 promise.then((respose) => {
                     console.log(respose);
                     if (respose.success) {
-                        const itemAppend = $(ItemTemplate(index, true, respose.data.idChswitchiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa))
+                        const itemAppend = $(ItemTemplate(index, true, respose.data.idChswitchiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa, respose.data.khoiLuong))
                         container.append(itemAppend)
                         if (respose.data.day = "true") {
                             itemAppend.find('.switch-2-day').prop('checked', true);
@@ -724,7 +801,7 @@
                         });
 
                     } else {
-                        container.append(ItemTemplate(index, false, "", lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, $('#giaNhap').val().replace(/₫|,|\s/g, ''), $('#giaBan').val().replace(/₫|,|\s/g, ''), $('#soLuongTon').val().replace(/₫|,|\s/g, ''), $('#MoTaCauHinh').summernote('code')))
+                        container.append(ItemTemplate(index, false, "", lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, $('#giaNhap').val().replace(/₫|,|\s/g, ''), $('#giaBan').val().replace(/₫|,|\s/g, ''), $('#soLuongTon').val().replace(/₫|,|\s/g, ''), $('#MoTaCauHinh').summernote('code'), $('#khoiLuong').val().replace(/₫|,|\s/g, '')))
                     }
                 }).catch((er) => console.log(er))
 
@@ -894,18 +971,18 @@
                 $('#preloader').hide();
                 if (checkSS > 0) {
                     var toastHTML = `<div class="toast fade hide" data-delay="3000">
-        <div class="toast-header">
-            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-            <strong class="mr-auto">Bootstrap</strong>
-            <small>1 second ago</small>
-            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="toast-body">
-            ${checkSS} thực thể được cập nhật thành công
-        </div>
-</div>`
+                                            <div class="toast-header">
+                                                <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                <strong class="mr-auto">Bootstrap</strong>
+                                                <small>1 second ago</small>
+                                                <button type="button" class="ml-2 btn btn-tone close" data-dismiss="toast" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="toast-body">
+                                                ${checkSS} thực thể được cập nhật thành công
+                                            </div>
+                                    </div>`
 
                     $('#notification-toast').append(toastHTML)
                     $('#notification-toast .toast').toast('show');
@@ -917,20 +994,19 @@
 
                 if (checkErr > 0) {
                     var toastHTML = `<div class="toast fade hide" data-delay="3000">
-            <div class="toast-header">
-                <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                <strong class="mr-auto">Bootstrap</strong>
-                <small>1 second ago</small>
-                <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="toast-body">
-                Một vài thực thể dữ liệu chưa được nhập.
-                Vui lòng nhập để tiếp tục
-            </div>
-        </div>`
-
+                                        <div class="toast-header">
+                                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                            <strong class="mr-auto">Bootstrap</strong>
+                                            <small>1 second ago</small>
+                                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="toast-body">
+                                            Một vài thực thể dữ liệu chưa được nhập.
+                                            Vui lòng nhập để tiếp tục
+                                        </div>
+                                    </div>`
                     $('#notification-toast').append(toastHTML)
                     $('#notification-toast .toast').toast('show');
                     setTimeout(function () {
@@ -1015,7 +1091,7 @@
                                 if (response.headers.get("content-length") !== "0") {
                                     return response.json();
                                 } else {
-                                    return null; // Trả về null nếu không có JSON
+                                    return null;
                                 }
                             }
                             throw new Error('Network response was not ok.');
@@ -1027,10 +1103,11 @@
                             console.error(error);
                         });
                 }
+
                 $.ajax({
                     url: URL_UPDATE_PRODUCT_DETAIL,
                     type: 'POST',
-                    data: JSON.stringify({ ...GetDataMain(), ...dataBienThe, ...DataInDataset, ...{ IdChiTietSp: currentItem.attr('data-idproductdetail') }, ...moTa, ...{ Day: currentItem.find('.switch-2-day').prop('checked') ? "true" : "false", NoiBat: currentItem.find('.switch-2-noibat').prop('checked') } }),
+                    data: JSON.stringify({ ...GetDataMain(), ...dataBienThe, ...DataInDataset, ...{ IdChiTietSp: currentItem.attr('data-idproductdetail') }, ...moTa, ...{ Day: currentItem.find('.switch-2-day').prop('checked'), NoiBat: currentItem.find('.switch-2-noibat').prop('checked') } }),
                     contentType: 'application/json',
                     success: function (result) {
                         checkSS++;
@@ -1058,7 +1135,7 @@
                             , ...dataBienThe
                             , ...DataInDataset
                             , ...moTa
-                            , ...{ Day: currentItem.find('.switch-2-day').prop('checked') ? "true" : "false", NoiBat: currentItem.find('.switch-2-noibat').prop('checked') }
+                            , ...{ Day: currentItem.find('.switch-2-day').prop('checked'), NoiBat: currentItem.find('.switch-2-noibat').prop('checked') }
                         }),
                         contentType: 'application/json',
                         success: function (result) {

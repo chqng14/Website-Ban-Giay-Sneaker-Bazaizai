@@ -1,7 +1,5 @@
 ﻿using App_Data.Models;
-
 using App_Data.ViewModels.GioHangChiTiet;
-
 using App_Data.ViewModels.ChatLieuDTO;
 using App_Data.ViewModels.KichCoDTO;
 using App_Data.ViewModels.KieuDeGiayDTO;
@@ -27,7 +25,6 @@ namespace App_Api.Helpers.Mapping
 
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
 
-
             CreateMap<GioHangChiTiet, GioHangChiTietDTO>()
                  .ForMember(
                     dest => dest.TenSanPham,
@@ -48,7 +45,11 @@ namespace App_Api.Helpers.Mapping
             CreateMap<SanPhamChiTiet, SanPhamChiTietDTO>()
                 .ForMember(
                         dest => dest.DanhSachAnh,
-                        opt => opt.MapFrom(src => src.Anh.Select(x => x.Url))
+                        opt => opt.MapFrom(src => src.Anh.Where(a=>a.TrangThai==0).Select(x=>x.Url))
+                )
+                .ForMember(
+                        dest => dest.FullName,
+                        opt => opt.MapFrom(src => $"{src.ThuongHieu.TenThuongHieu} {src.SanPham.TenSanPham} {src.MauSac.TenMauSac}-{src.KichCo.SoKichCo}")
                 )
                 .ReverseMap();
 
@@ -92,8 +93,105 @@ namespace App_Api.Helpers.Mapping
                     )
                 .ForMember(
                         dest => dest.ListTenAnh,
-                        opt => opt.MapFrom(src => src.Anh.Select(x => x.Url).ToList())
+                        opt => opt.MapFrom(src => src.Anh.Where(an => an.TrangThai == 0).Select(x => x.Url).ToList())
                     );
+
+            CreateMap<SanPhamChiTiet, ItemShopViewModel>()
+                .ForMember(
+                        dest => dest.Anh,
+                        opt => opt.MapFrom(src => src.Anh!.Where(a=>a.TrangThai == 0).FirstOrDefault()!.Url)
+                    )
+                .ForMember(
+                        dest => dest.IdChiTietSp,
+                        opt => opt.MapFrom(src => src.IdChiTietSp)
+                    )
+                .ForMember(
+                        dest => dest.GiaBan,
+                        opt => opt.MapFrom(src => src.GiaBan)
+                    )
+                .ForMember(
+                        dest => dest.GiaKhuyenMai,
+                        opt => opt.MapFrom(src => 0)
+                    )
+                .ForMember(
+                        dest => dest.SoSao,
+                        opt => opt.MapFrom(src => 5)
+                    )
+                .ForMember(
+                        dest => dest.ThuongHieu,
+                        opt => opt.MapFrom(src => src.ThuongHieu.TenThuongHieu)
+                    )
+                .ForMember(
+                        dest => dest.TenSanPham,
+                        opt => opt.MapFrom(src => $"{src.ThuongHieu.TenThuongHieu} {src.SanPham.TenSanPham}")
+                    )
+                .ForMember(
+                        dest => dest.MoTaNgan,
+                        opt => opt.MapFrom(src => "Sản phẩm chính hãng")
+                    )
+                .ForMember(
+                        dest => dest.SoLanDanhGia,
+                        opt => opt.MapFrom(src => 32)
+                    )
+                ;
+            CreateMap<SanPhamChiTiet, ItemDetailViewModel>()
+                .ForMember(
+                        dest => dest.Anh,
+                        opt => opt.MapFrom(src => src.Anh.Where(x=>x.TrangThai==0)!.FirstOrDefault()!.Url)
+                    )
+                .ForMember(
+                        dest => dest.MoTaSanPham,
+                        opt => opt.MapFrom(src => src.MoTa)
+                    )
+                .ForMember(
+                        dest => dest.IdChiTietSp,
+                        opt => opt.MapFrom(src => src.IdChiTietSp)
+                    )
+                .ForMember(
+                        dest => dest.GiaBan,
+                        opt => opt.MapFrom(src => src.GiaBan)
+                    )
+                .ForMember(
+                        dest => dest.GiaKhuyenMai,
+                        opt => opt.MapFrom(src => 0)
+                    )
+                .ForMember(
+                        dest => dest.SoSao,
+                        opt => opt.MapFrom(src => 5)
+                    )
+                .ForMember(
+                        dest => dest.ThuongHieu,
+                        opt => opt.MapFrom(src => src.ThuongHieu.TenThuongHieu)
+                    )
+                .ForMember(
+                        dest => dest.TenSanPham,
+                        opt => opt.MapFrom(src => $"{src.ThuongHieu.TenThuongHieu} {src.SanPham.TenSanPham}")
+                    )
+                .ForMember(
+                        dest => dest.MoTaNgan,
+                        opt => opt.MapFrom(src => "Sản phẩm chính hãng")
+                    )
+                .ForMember(
+                        dest => dest.SoLanDanhGia,
+                        opt => opt.MapFrom(src => 32)
+                    )
+                 .ForMember(
+                        dest => dest.DanhSachAnh,
+                        opt => opt.MapFrom(src => src.Anh.Where(x => x.TrangThai == 0).Select(a => a.Url).ToList())
+                    )
+                 .ForMember(
+                        dest => dest.SoLuotYeuThich,
+                        opt => opt.MapFrom(src => 100)
+                    )
+                 .ForMember(
+                        dest => dest.MauSac,
+                        opt => opt.MapFrom(src => src.MauSac.TenMauSac)
+                    )
+                 .ForMember(
+                        dest => dest.Size,
+                        opt => opt.MapFrom(src => src.KichCo.SoKichCo)
+                    )
+                ;
             CreateMap<SanPhamDTO, SanPham>();
             CreateMap<ThuongHieuDTO, ThuongHieu>();
             CreateMap<ChatLieuDTO, ChatLieu>();

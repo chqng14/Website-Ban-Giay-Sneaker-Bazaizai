@@ -40,7 +40,6 @@ namespace App_Api.Controllers
         [HttpPost]
         public bool AddGioHang(string id, int trangthai)
         {
-         
             var GioHang = new GioHang()
             {
                 IdNguoiDung = id,
@@ -52,7 +51,7 @@ namespace App_Api.Controllers
 
         // PUT api/<GioHangController>/5
         [HttpPut("SuaGioHang {id}")]
-        public bool EditGioHang( int trangthai)
+        public bool EditGioHang(int trangthai)
         {
             var GioHang = new GioHang()
             {

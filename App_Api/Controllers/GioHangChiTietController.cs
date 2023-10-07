@@ -7,6 +7,7 @@ using App_Data.ViewModels.SanPhamChiTiet;
 using AutoMapper;
 using DocumentFormat.OpenXml.Office.CustomUI;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -28,6 +29,8 @@ namespace App_Api.Controllers
         private readonly IAllRepo<Anh> _AnhRes;
         private readonly IAllRepo<NguoiDung> _NguoiDung;
         private readonly IMapper _mapper;
+        //private readonly SignInManager<NguoiDung> _signInManager;
+        //private readonly UserManager<NguoiDung> _userManager;
         public GioHangChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes, IAllRepo<NguoiDung> nguoiDung)
         {
             _gioHangChiTiet = new GioHangChiTietRepos(mapper);
@@ -38,6 +41,8 @@ namespace App_Api.Controllers
             _mapper = mapper;
             _AnhRes = anhRes;
             _NguoiDung = nguoiDung;
+            //_signInManager = signInManager;
+            //_userManager = userManager;
         }
         // GET: api/<GioHangChiTietController>
 
@@ -58,12 +63,13 @@ namespace App_Api.Controllers
         [HttpPost("Create")]
         public async Task<bool> TaoGioHangDTO(GioHangChiTietDTOCUD GioHangChiTietDTOCUD)
         {
+            //var idNguoiDung = _userManager.GetUserId(User);
             var giohangChiTiet = _mapper.Map<GioHangChiTiet>(GioHangChiTietDTOCUD);
-            giohangChiTiet.IdGioHangChiTiet = Guid.NewGuid().ToString();
-            giohangChiTiet.IdSanPhamCT = GioHangChiTietDTOCUD.sanPhamChiTietDTO.IdChiTietSp;
-            giohangChiTiet.IdNguoiDung = GioHangChiTietDTOCUD.GioHangDTO.IdNguoiDung;
-            giohangChiTiet.Soluong = 1;
-            giohangChiTiet.GiaGoc = GioHangChiTietDTOCUD.sanPhamChiTietDTO.GiaBan;
+            giohangChiTiet.IdGioHangChiTiet = GioHangChiTietDTOCUD.IdGioHangChiTiet;
+            giohangChiTiet.IdSanPhamCT = GioHangChiTietDTOCUD.IdSanPhamCT;
+            giohangChiTiet.IdNguoiDung = GioHangChiTietDTOCUD.IdNguoiDung;
+            giohangChiTiet.Soluong = GioHangChiTietDTOCUD.SoLuong;
+            giohangChiTiet.GiaGoc = GioHangChiTietDTOCUD.GiaGoc;
             giohangChiTiet.TrangThai = 0;
             _gioHangChiTiet.AddCartDetail(giohangChiTiet);
             return true;
@@ -71,23 +77,19 @@ namespace App_Api.Controllers
 
         // PUT api/<GioHangChiTietController>/5
         [HttpPut("Edit")]
-        public bool Put(string IdGioHangChiTiet, string IdNguoiDung, string IdSanPhamChiTiet, int SoLuong, double GiaGoc, int TrangThai)
+        public bool UpdateCart(string IdGioHangChiTiet, int SoLuong)
         {
-            var ghct = allRepo.GetAll().FirstOrDefault(c => c.IdGioHangChiTiet == IdGioHangChiTiet);
-            ghct.IdNguoiDung = IdNguoiDung;
-            ghct.IdSanPhamCT = IdSanPhamChiTiet;
+            var ghct = _gioHangChiTiet.GetAll().FirstOrDefault(c => c.IdGioHangChiTiet == IdGioHangChiTiet);
             ghct.Soluong = SoLuong;
-            ghct.GiaGoc = GiaGoc;
-            ghct.TrangThai = TrangThai;
-            return allRepo.EditItem(ghct);
+            return _gioHangChiTiet.EditCartDetail(ghct);
         }
 
         // DELETE api/<GioHangChiTietController>/5
         [HttpDelete("Delete")]
         public bool Delete(string id)
         {
-            var ghct = allRepo.GetAll().FirstOrDefault(c => c.IdGioHangChiTiet == id);
-            return allRepo.RemoveItem(ghct);
+            var ghct = _gioHangChiTiet.GetAll().FirstOrDefault(c => c.IdGioHangChiTiet == id);
+            return _gioHangChiTiet.RemoveCartDetail(ghct);
         }
     }
 }
