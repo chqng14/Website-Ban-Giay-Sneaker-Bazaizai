@@ -173,7 +173,7 @@ namespace App_View.Areas.Identity.Pages.Account
                 if (externalEmailUser == null && externalEmail == Input.Email)
                 {
                     var user = CreateUser();
-
+                 
                     await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                     await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
@@ -186,6 +186,7 @@ namespace App_View.Areas.Identity.Pages.Account
                             _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
 
                             var userId = await _userManager.GetUserIdAsync(user);
+                            await AddCart(userId, 0);/// them vao ở đây
                             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                             //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                             //var callbackUrl = Url.Page(
@@ -242,5 +243,12 @@ namespace App_View.Areas.Identity.Pages.Account
             return (IUserEmailStore<NguoiDung>)_userStore;
         }
         //mặc định 
+
+        public async Task<bool> AddCart(string idUser, int trangThai)
+        {
+            var httpClient = new HttpClient();
+            var response = await httpClient.PostAsync($"https://localhost:7038/api/GioHang?id={idUser}&trangthai={trangThai}", null);
+            return true;
+        }
     }
 }

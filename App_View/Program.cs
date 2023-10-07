@@ -17,14 +17,16 @@ builder.Services.AddDbContext<BazaizaiContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddOptions();
 builder.Services.AddRazorPages();
-builder.Services.AddIdentity<NguoiDung, ChucVu>(options =>
-{
-    // Cấu hình tên bảng tùy chỉnh cho IdentityRole và IdentityUser
-    options.Stores.MaxLengthForKeys = 128;
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-})
-    .AddEntityFrameworkStores<BazaizaiContext>()
-    .AddDefaultTokenProviders();
+//builder.Services.AddIdentity<NguoiDung, ChucVu>(options =>
+//{
+//    // Cấu hình tên bảng tùy chỉnh cho IdentityRole và IdentityUser
+//    options.Stores.MaxLengthForKeys = 128;
+//    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+//})
+builder.Services.AddIdentity<NguoiDung, ChucVu>()
+    //.AddRoles<ChucVu>()
+.AddEntityFrameworkStores<BazaizaiContext>()
+.AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IVoucherServices, VoucherServices>();
 //builder.Services.AddDefaultIdentity<NguoiDung>()
@@ -80,8 +82,6 @@ builder.Services.AddAuthentication()
         // Thiết lập ClientID và ClientSecret để truy cập API google
         googleOptions.ClientId = googleAuthNSection["ClientId"];
         googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
-        // Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
-        //googleOptions.CallbackPath = "/dang-nhap-tu-google";
 
     })
     .AddFacebook(facebookOptions =>
@@ -90,10 +90,14 @@ builder.Services.AddAuthentication()
         IConfigurationSection facebookAuthNSection = builder.Configuration.GetSection("Authentication:Facebook");
         facebookOptions.AppId = facebookAuthNSection["AppId"];
         facebookOptions.AppSecret = facebookAuthNSection["AppSecret"];
-        // Thiết lập đường dẫn Facebook chuyển hướng đến
-        //facebookOptions.CallbackPath = "/dang-nhap-tu-facebook";
-    });
 
+    });
+builder.Services.AddSingleton<IdentityErrorDescriber,AppIdentityErrorDescriber>();
+builder.Services.Configure<SecurityStampValidatorOptions>(option =>
+{
+    option.ValidationInterval=TimeSpan.FromSeconds(1);
+
+});
 //thêm
 var app = builder.Build();
 
