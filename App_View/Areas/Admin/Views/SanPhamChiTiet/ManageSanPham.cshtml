@@ -30,25 +30,32 @@
             <div class="modal-body" style="background: #d3f6ff;">
                 <div class="card-body">
                     <div class="row">
-                        <div class="form-group col-4">
+                        <div class="form-group col-3">
                             <label class="font-weight-semibold">Giá Nhập</label>
                             <div class="d-flex align-items-center">
                                 <i class="far fa-money-bill-alt mr-1"></i>
                                 <input id="giaNhap" class="form-control formatPrice" name="GiaNhap" placeholder="">
                             </div>
                         </div>
-                        <div class="form-group col-4">
+                        <div class="form-group col-3">
                             <label class="font-weight-semibold">Giá Bán</label>
                             <div class="d-flex align-items-center">
                                 <i class="fas fa-money-bill-wave mr-1"></i>
                                 <input min="1" id="giaBan" class="form-control formatPrice" name="GiaBan" placeholder="">
                             </div>
                         </div>
-                        <div class="form-group col-4">
+                        <div class="form-group col-3">
                             <label class="font-weight-semibold">Số lượng</label>
                             <div class="d-flex align-items-center">
                                 <i class="fas fa-database mr-1"></i>
                                 <input id="soLuongTon" class="form-control formatNumber" name="SoLuongTon">
+                            </div>
+                        </div>
+                        <div class="form-group col-3">
+                            <label class="font-weight-semibold">Khối lượng</label>
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-weight mr-1"></i>
+                                <input id="khoiLuong" class="form-control formatNumber" name="KhoiLuong">(g)
                             </div>
                         </div>
                         <div class="form-group d-flex align-items-center col-2">
@@ -77,8 +84,11 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <div class="modal-footer" style="background: #d0dae3">
+                <button type="button" class="btn btn-warning" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                    <span> Close</span>
+                </button>
             </div>
         </div>
     </div>
@@ -556,7 +566,7 @@
     }
 
     //itemTemplate
-    const ItemTemplate = (index, isUpdate, idProduct, idcolor, idsize, Title, giaNhap, giaBan, soLuong, moTa) => {
+    const ItemTemplate = (index, isUpdate, idProduct, idcolor, idsize, Title, giaNhap, giaBan, soLuong, moTa, khoiLuong) => {
         return `
 <div class="card item-accordion" data-update="${isUpdate}" data-idproductdetail="${idProduct}">
         <div class="card-header">
@@ -589,7 +599,7 @@
                          aria-labelledby="home-tab-vertical${index}">
                         <div class="card-body mt-2">
                             <div class="row">
-                                <div class="form-group col-4">
+                                <div class="form-group col-3">
                                     <label class="font-weight-semibold">Giá Nhập(*)</label>
                                     <div class="d-flex align-items-center">
                                         <i class="far fa-money-bill-alt mr-1"></i>
@@ -597,7 +607,7 @@
                                         placeholder="">
                                     </div>
                                 </div>
-                                <div class="form-group col-4">
+                                <div class="form-group col-3">
                                     <label class="font-weight-semibold">Giá Bán(*)</label>
                                     <div class="d-flex align-items-center">
                                         <i class="fas fa-money-bill-wave mr-1"></i>
@@ -605,11 +615,18 @@
                                         placeholder="">
                                     </div>
                                 </div>
-                                <div class="form-group col-4">
+                                <div class="form-group col-3">
                                     <label class="font-weight-semibold">Số lượng(*)</label>
                                     <div class="d-flex align-items-center">
                                         <i class="fas fa-database mr-1"></i>
                                         <input class="form-control formatNumber" name="SoLuongTon" value="${soLuong}">
+                                    </div>
+                                </div>
+                                <div class="form-group col-3">
+                                    <label class="font-weight-semibold">Khối lượng(*)</label>
+                                    <div class="d-flex align-items-center">
+                                        <i class="fas fa-weight mr-1"></i>
+                                        <input class="form-control formatNumber" name="KhoiLuong" value="${khoiLuong}">(g)
                                     </div>
                                 </div>
                                 <div class="form-group d-flex align-items-center col-2">
@@ -729,7 +746,7 @@
                 promise.then((respose) => {
                     console.log(respose);
                     if (respose.success) {
-                        const itemAppend = $(ItemTemplate(index, true, respose.data.idChswitchiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa))
+                        const itemAppend = $(ItemTemplate(index, true, respose.data.idChswitchiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa, respose.data.khoiLuong))
                         container.append(itemAppend)
                         if (respose.data.day = "true") {
                             itemAppend.find('.switch-2-day').prop('checked', true);
@@ -784,7 +801,7 @@
                         });
 
                     } else {
-                        container.append(ItemTemplate(index, false, "", lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, $('#giaNhap').val().replace(/₫|,|\s/g, ''), $('#giaBan').val().replace(/₫|,|\s/g, ''), $('#soLuongTon').val().replace(/₫|,|\s/g, ''), $('#MoTaCauHinh').summernote('code')))
+                        container.append(ItemTemplate(index, false, "", lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, $('#giaNhap').val().replace(/₫|,|\s/g, ''), $('#giaBan').val().replace(/₫|,|\s/g, ''), $('#soLuongTon').val().replace(/₫|,|\s/g, ''), $('#MoTaCauHinh').summernote('code'), $('#khoiLuong').val().replace(/₫|,|\s/g, '')))
                     }
                 }).catch((er) => console.log(er))
 
