@@ -99,7 +99,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<SanPhamChiTiet, ItemShopViewModel>()
                 .ForMember(
                         dest => dest.Anh,
-                        opt => opt.MapFrom(src => src.Anh!.FirstOrDefault()!.Url)
+                        opt => opt.MapFrom(src => src.Anh!.Where(a=>a.TrangThai == 0).FirstOrDefault()!.Url)
                     )
                 .ForMember(
                         dest => dest.IdChiTietSp,
@@ -137,7 +137,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<SanPhamChiTiet, ItemDetailViewModel>()
                 .ForMember(
                         dest => dest.Anh,
-                        opt => opt.MapFrom(src => src.Anh!.FirstOrDefault()!.Url)
+                        opt => opt.MapFrom(src => src.Anh.Where(x=>x.TrangThai==0)!.FirstOrDefault()!.Url)
                     )
                 .ForMember(
                         dest => dest.MoTaSanPham,

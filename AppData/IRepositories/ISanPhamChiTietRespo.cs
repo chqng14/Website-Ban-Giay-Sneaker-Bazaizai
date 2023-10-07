@@ -17,6 +17,7 @@ namespace App_Data.IRepositories
         Task<bool> UpdateAsync(SanPhamChiTiet entity);
         Task<bool> AddAsync(SanPhamChiTiet entity);
         Task<IEnumerable<SanPhamDanhSachViewModel>> GetListViewModelAsync();
+        Task<IEnumerable<SanPhamDanhSachViewModel>> GetListSanPhamNgungKinhDoanhViewModelAsync();
         Task<DanhSachGiayViewModel> GetDanhSachGiayViewModelAsync();
         Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(List<string> listGuid);
         Task<List<ItemShopViewModel>> GetDanhSachItemShopViewModelAsync();
@@ -24,6 +25,8 @@ namespace App_Data.IRepositories
         Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac);
         Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSizeAynsc(string id, int size);
         Task<SanPhamChiTietViewModel?> GetSanPhamChiTietViewModelAynsc(string id);
-
+        Task<bool> NgungKinhDoanhSanPhamAynsc(List<string> lstguid);
+        Task<bool> KinhDoanhLaiSanPhamAynsc(List<string> lstguid);
+        Task<bool> KhoiPhucKinhDoanhAynsc(string id);
     }
 }
