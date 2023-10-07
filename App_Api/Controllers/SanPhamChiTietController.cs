@@ -11,6 +11,7 @@ using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using App_Data.ViewModels.XuatXu;
 using AutoMapper;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 
@@ -100,6 +101,12 @@ namespace App_Api.Controllers
             return await _sanPhamChiTietRes.GetDanhSachGiayViewModelAsync(); ;
         }
 
+        [HttpGet("khoi-phuc-kinh-doanh/{id}")]
+        public async Task<bool> KhoiPhucKinhDoanh(string id)
+        {
+            return await _sanPhamChiTietRes.KhoiPhucKinhDoanhAynsc(id);
+        }
+
         [HttpGet("Get-List-SanPhamNgungKinhDoanhViewModel")]
         public async Task<List<SanPhamDanhSachViewModel>> GetDanhSachGiayNgungKinhDoanh()
         {
@@ -160,6 +167,18 @@ namespace App_Api.Controllers
                 IdChiTietSp = sanPhamChiTiet.IdChiTietSp
             };
 
+        }
+
+        [HttpPut("Ngung_Kinh_Doanh_List_SanPham")]
+        public async Task<bool> NgungKinhDoanhSanPham(List<string> lstGuild)
+        {
+            return await _sanPhamChiTietRes.NgungKinhDoanhSanPhamAynsc(lstGuild); 
+        }
+
+        [HttpPut("Update-Kinh_Doanh_List_SanPham")]
+        public async Task<bool> KinhDoanhLaiSanPham(List<string> lstGuild)
+        {
+            return await _sanPhamChiTietRes.KinhDoanhLaiSanPhamAynsc(lstGuild);
         }
 
         [HttpDelete("Delete-SanPhamChiTiet/{id}")]
