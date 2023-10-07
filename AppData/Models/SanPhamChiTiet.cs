@@ -21,6 +21,7 @@ namespace App_Data.Models
         public double? GiaBan { get; set; }
         public double? GiaNhap { get; set; }
         public double? GiaThucTe { get; set; }
+        public double? KhoiLuong { get; set; }
         public int? TrangThai { get; set; }
         public int? TrangThaiSale { get; set; }
         public string? IdSanPham { get; set; }

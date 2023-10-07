@@ -303,6 +303,11 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<SanPhamChiTiet?>($"/api/SanPhamChiTiet/Get-SanPhamChiTiet/{id}");
         }
 
+        public async Task<List<SanPhamDanhSachViewModel>> GetDanhSachGiayNgungKinhDoanhAynsc()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<SanPhamDanhSachViewModel>>("/api/SanPhamChiTiet/Get-List-SanPhamNgungKinhDoanhViewModel"))!;
+        }
+
         public Task<DanhSachGiayViewModel?> GetDanhSachGiayViewModelAynsc()
         {
             return _httpClient.GetFromJsonAsync<DanhSachGiayViewModel?>("/api/SanPhamChiTiet/Get-DanhSachGiayViewModel");
@@ -372,6 +377,51 @@ namespace App_View.Services
         public async Task<SanPhamChiTietViewModel?> GetSanPhamChiTietViewModelByKeyAsync(string id)
         {
             return await _httpClient.GetFromJsonAsync<SanPhamChiTietViewModel?>($"/api/SanPhamChiTiet/Get-SanPhamChiTietViewModel/{id}");
+        }
+
+        public Task<bool> KhoiPhucKinhDoanhAynsc(string id)
+        {
+            return _httpClient.GetFromJsonAsync<bool>($"/api/SanPhamChiTiet/khoi-phuc-kinh-doanh/{id}");
+        }
+
+        public async Task<bool> KinhDoanhLaiSanPhamAynsc(ListGuildDTO lstGuid)
+        {
+            try
+            {
+                var content = new StringContent(JsonConvert.SerializeObject(lstGuid.listGuild), Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync("/api/SanPhamChiTiet/Update-Kinh_Doanh_List_SanPham", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
+        public async Task<bool> NgungKinhDoanhSanPhamAynsc(ListGuildDTO lstGuid)
+        {
+            try
+            {
+                var content = new StringContent(JsonConvert.SerializeObject(lstGuid.listGuild), Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync("/api/SanPhamChiTiet/Ngung_Kinh_Doanh_List_SanPham", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
         }
 
         public async Task<bool> UpdateAynsc(SanPhamChiTietDTO sanPhamChiTietDTO)
