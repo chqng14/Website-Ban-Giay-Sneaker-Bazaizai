@@ -42,23 +42,52 @@ namespace App_View.Controllers
         public async Task<IActionResult> ShowCartUser()
         {
             var idNguoiDung = _userManager.GetUserId(User);
-            var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
-            return View(giohang);
+            if (idNguoiDung == null)
+            {
+                return RedirectToAction("ShowCartNoLogin");
+            }
+            else
+            {
+                var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+                return View(giohang);
+            }
+        }
+
+        public async Task<IActionResult> ShowCartNoLogin()
+        {
+            //var idNguoiDung = _userManager.GetUserId(User);
+            //var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+            return View();
         }
 
         public async Task<IActionResult> CheckOut()
         {
             var idNguoiDung = _userManager.GetUserId(User);
-            var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
-            var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
-            ViewData["ThongTinGH"] = thongTinGH;
-            return View(giohang);
+            if (idNguoiDung == null)
+            {
+                return RedirectToAction("CheckOutNoLogin");
+            }
+            else
+            {
+                var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+                var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
+                ViewData["ThongTinGH"] = thongTinGH;
+                return View(giohang);
+            }
+        }
+
+        public async Task<IActionResult> CheckOutNoLogin()
+        {
+            //var idNguoiDung = _userManager.GetUserId(User);
+            //var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+            //var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
+            //ViewData["ThongTinGH"] = thongTinGH;
+            return View();
         }
 
         // GET: GioHangChiTiets/Details/5
         public async Task<IActionResult> Details(string id)
         {
-
 
             return View();
         }

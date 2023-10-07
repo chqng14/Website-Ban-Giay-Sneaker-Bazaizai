@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<App_Data.ViewModels.GioHangChiTiet.GioHangChiTietDTO>
+
 @{
-    ViewData["Title"] = "CheckOut";
+    ViewData["Title"] = "CheckOutNoLogin";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var thongTinGH = ViewData["ThongTinGH"] as List<App_Data.Models.ThongTinGiaoHang>; 
 }
 
 <div class="u-s-p-b-60" style="margin-top:20px">
@@ -116,14 +116,9 @@
 
                                     <!--====== Check Box ======-->
                                     <div class="check-box">
-                                        @if (thongTinGH==null)
-                                        {
+                                        
                                             <input type="checkbox" id="get-address">
-                                        }
-                                        else
-                                        {
-                                            <input type="checkbox" id="get-address" checked="">
-                                        }
+                                        
                                         <div class="check-box__state check-box__state--primary">
 
                                             <label class="check-box__label" for="get-address">Use default shipping and billing address from account</label>
@@ -273,22 +268,22 @@
                                             <div class="o-card__flex">
                                                 <div class="o-card__img-wrap">
 
-                                                    <img class="u-img-fluid" src="/AnhSanPham/@item.LinkAnh[0]" alt="">
+                                                    <img class="u-img-fluid" src="~/assets/images/others/@item.LinkAnh" alt="">
                                                 </div>
                                                 <div class="o-card__info-wrap">
 
                                                     <span class="o-card__name">
 
-                                                        <a href="product-detail.html">@item.TenSanPham</a>
+                                                        <a href="product-detail.html">@* @item.TenSanPham *@</a>
                                                     </span>
 
-                                                    <span class="o-card__quantity">Số lượng x @item.SoLuong</span>
+                                                    <span class="o-card__quantity">Số lượng x @* @item.SoLuong *@ 1</span>
 
-                                                    <span class="o-card__price">@string.Format("{0:N0}đ", item.GiaGoc)</span>
+                                                    <span class="o-card__price">@* @string.Format("{0:N0}đ", item.GiaGoc) *@ 0đ</span>
                                                 </div>
                                             </div>
 
-                                            <a class="o-card__del far fa-trash-alt" href="@Url.Action("DeleteCartCheckOut", "GioHangChiTiets", new { id = item.IdGioHangChiTiet })"></a>
+                                            <a class="o-card__del far fa-trash-alt" @* href="@Url.Action("DeleteCartCheckOut", "GioHangChiTiets", new { id = item.IdGioHangChiTiet })" *@></a>
                                         </div>
                                     }
                                     
@@ -306,12 +301,6 @@
 
                                             <a class="ship-b__edit btn--e-transparent-platinum-b-2" data-modal="modal" data-modal-id="#edit-ship-address">Edit</a>
                                         </div>
-                                        @* <div class="ship-b__box">
-
-                                            <span class="ship-b__text">Bill to default billing address</span>
-
-                                            <a class="ship-b__edit btn--e-transparent-platinum-b-2" data-modal="modal" data-modal-id="#edit-ship-address">Edit</a>
-                                        </div> *@
                                     </div>
                                 </div>
                             </div>
@@ -325,11 +314,11 @@
                                             </tr>
                                             <tr>
                                                 <td>TẠM TÍNH</td>
-                                                <td>@string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaGoc))</td>
+                                                <td>@* @string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaGoc)) *@ 0đ</td>
                                             </tr>
                                             <tr>
                                                 <td>TỔNG TIỀN</td>
-                                                <td>@string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaGoc))</td>
+                                                <td>@* @string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaGoc)) *@ 0đ</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -471,8 +460,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if (thongTinGH==null)
-                                        {
+                                        
                                             <tr>
                                                 <td>
 
@@ -492,37 +480,8 @@
                                                     <div class="gl-text">Default Billing Address</div>
                                                 </td>
                                             </tr>
-                                        }
-                                        else
-                                        {
-                                            foreach (var item in thongTinGH)
-                                            {
-                                                <tr>
-                                                    <td>
-
-                                                        <!--====== Radio Box ======-->
-                                                        <div class="radio-box">
-
-                                                            <input type="radio" id="@item.IdThongTinGH" name="default-address" @(item == thongTinGH.First() ? "checked" : "")>
-                                                            <div class="radio-box__state radio-box__state--primary">
-
-                                                                <label class="radio-box__label" for="address-1"></label>
-                                                            </div>
-                                                        </div>
-                                                        <!--====== End - Radio Box ======-->
-                                                    </td>
-                                                    <td id="ten">@item.TenNguoiNhan</td>
-                                                    <td id="sdt">@item.SDT</td>
-                                                    <td id="diachi">@item.DiaChi</td>
-                                                    <td>
-                                                        @if (item == thongTinGH.First())
-                                                        {
-                                                            <div class="gl-text">Địa chỉ giao hàng mặc định</div>
-                                                        }
-                                                    </td>
-                                                </tr>
-                                            }
-                                        }
+                                        
+                                        
                                     </tbody>
                                 </table>
                             </div>
@@ -629,76 +588,3 @@
     </div>
     <!--====== End - Shipping Address Add Modal ======-->
 </div>
-
-@section Scripts{
-    <script>
-        var ship = localStorage.getItem('phiship');
-        console.log(ship);
-        if (ship) {
-            $('#phiship').text(parseInt(ship).toLocaleString("vi-VN").replace(/\./g, ',') + "đ");
-        }else   {
-            $('#phiship').text('0đ');
-        }
-        var tenNguoiNhan = selectedRow.querySelector('#ten').innerText;
-        var sdt = selectedRow.querySelector('#sdt').innerText;
-        var diaChi = selectedRow.querySelector('#diachi').innerText;
-
-        // Tạo chuỗi thông tin
-        var thongtin = tenNguoiNhan + ' ' + sdt + ' ' + diaChi;
-
-        // Cập nhật nội dung của phần tử có id "thongtin"
-        $('#thongtin').text(thongtin);
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var radioButtons = document.querySelectorAll('input[name="default-address"]');
-            var form = document.querySelector('.checkout-modal2__form');
-            var thongtinElement = document.getElementById('thongtin');
-            var editShipAddressModal = $('#edit-ship-address');
-
-            // Kiểm tra xem có thông tin địa chỉ được lưu trong localStorage không
-            var savedAddressId = localStorage.getItem('selectedAddressId');
-            if (savedAddressId) {
-                // Nếu có, chọn lại địa chỉ đó
-                var savedRadioButton = document.getElementById(savedAddressId);
-                if (savedRadioButton) {
-                    savedRadioButton.checked = true;
-                    updateThongTin(savedRadioButton);
-                }
-            }
-
-            form.addEventListener('submit', function (event) {
-                event.preventDefault(); // Ngăn chặn form tự động submit
-
-                var selectedAddress = document.querySelector('input[name="default-address"]:checked');
-
-                if (selectedAddress) {
-                    // Lưu id của địa chỉ được chọn vào localStorage
-                    localStorage.setItem('selectedAddressId', selectedAddress.id);
-
-                    // Cập nhật thông tin và nội dung của phần tử có id "thongtin"
-                    updateThongTin(selectedAddress);
-
-                } else {
-                    alert("Vui lòng chọn một địa chỉ trước khi lưu.");
-                }
-            });
-
-            // Hàm cập nhật thông tin và nội dung của phần tử có id "thongtin"
-            function updateThongTin(selectedAddress) {
-                var selectedRow = selectedAddress.closest('tr');
-                var tenNguoiNhan = selectedRow.querySelector('#ten').innerText;
-                var sdt = selectedRow.querySelector('#sdt').innerText;
-                var diaChi = selectedRow.querySelector('#diachi').innerText;
-
-                // Tạo chuỗi thông tin
-                var thongtin = tenNguoiNhan + ' ' + sdt + ' ' + diaChi;
-
-                // Cập nhật nội dung của phần tử có id "thongtin"
-                $('#thongtin').text(thongtin);
-            }
-
-        });
-
-    </script>
-}

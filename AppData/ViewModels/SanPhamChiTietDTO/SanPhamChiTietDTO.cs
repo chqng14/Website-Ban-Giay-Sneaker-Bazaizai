@@ -8,7 +8,9 @@ namespace App_Data.ViewModels.SanPhamChiTietDTO
 {
     public class SanPhamChiTietDTO
     {
+        private double? giaThucTe;
         public string? IdChiTietSp { get; set; }
+
         public string? FullName { get; set; }
 
         public bool? Day { get; set; }
@@ -18,6 +20,20 @@ namespace App_Data.ViewModels.SanPhamChiTietDTO
         public int? SoLuongTon { get; set; }
 
         public double? GiaBan { get; set; }
+
+        public double? KhoiLuong { get; set; }
+
+        public double? GiaThucTe
+        {
+            get
+            {
+                return giaThucTe ?? GiaBan;
+            }
+            set
+            {
+                giaThucTe = value;
+            }
+        }
 
         public bool? NoiBat { get; set; }
 

@@ -12,6 +12,7 @@ using App_View.Services;
 using App_Data.ViewModels.Voucher;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using AutoMapper;
+using App_Data.Repositories;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -27,10 +28,30 @@ namespace App_View.Areas.Admin.Controllers
         }
 
         // GET: Admin/Vouchers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string trangThai)
         {
             var lstVoucher = await _voucherSV.GetAllVoucher();
+
+            switch (trangThai)
+            {
+                case "hoatDong":
+                    lstVoucher = lstVoucher.Where(v => v.TrangThai == 0).ToList();
+                    break;
+                case "khongHoatDong":
+                    lstVoucher = lstVoucher.Where(v => v.TrangThai == 1).ToList();
+                    break;
+                case "chuaBatDau":
+                    lstVoucher = lstVoucher.Where(v => v.TrangThai == 2).ToList();
+                    break;
+                default:
+                    break;
+            }
+
+            ViewBag.TatCa = lstVoucher; // Gán danh sách lọc được vào ViewBag.TatCa
+
             return View(lstVoucher);
+            //var lstVoucher = await _voucherSV.GetAllVoucher();
+            //return View(lstVoucher);
         }
 
         public IActionResult Create()
