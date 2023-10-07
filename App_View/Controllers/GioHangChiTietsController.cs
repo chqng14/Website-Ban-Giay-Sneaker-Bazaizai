@@ -27,11 +27,13 @@ namespace App_View.Controllers
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         ISanPhamChiTietService _sanPhamChiTietService;
+        IThongTinGHServices thongTinGHServices;
         public GioHangChiTietsController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService)
         {
             httpClient = new HttpClient();
             GioHangChiTietServices = new GioHangChiTietServices();
             _sanPhamChiTietService = sanPhamChiTietService;
+            thongTinGHServices = new ThongTinGHServices();
             _signInManager = signInManager;
             _userManager = userManager;
         }
@@ -48,6 +50,8 @@ namespace App_View.Controllers
         {
             var idNguoiDung = _userManager.GetUserId(User);
             var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+            var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
+            ViewData["ThongTinGH"] = thongTinGH;
             return View(giohang);
         }
 
