@@ -1,5 +1,5 @@
 ﻿@model  App_Data.ViewModels.SanPhamChiTietViewModel.SanPhamChiTietViewModel
-<div class="modal-dialog modal-dialog-scrollable modal-xl">
+<div class="modal-dialog  modal-xl">
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Thông tin sản phẩm</h5>
@@ -124,8 +124,23 @@
                 </div>
             </form>
         </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <div class="modal-footer d-flex justify-content-between">
+            <div>
+                <button class="btn btn-primary">
+                    <i class="far fa-copy"></i>
+                    <span>Coppy</span>
+                </button>
+                <button class="btn btn-outline-primary">
+                    <i class="fas fa-barcode"></i>
+                    <span>In mã vạch</span>
+                </button>
+            </div>
+            <div>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="anticon anticon-close-circle"></i>
+                    <span>Close</span>
+                </button>
+            </div>
         </div>
     </div>
 </div>

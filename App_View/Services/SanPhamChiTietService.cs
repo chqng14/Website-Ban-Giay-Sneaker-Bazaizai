@@ -303,6 +303,11 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<SanPhamChiTiet?>($"/api/SanPhamChiTiet/Get-SanPhamChiTiet/{id}");
         }
 
+        public async Task<List<SanPhamDanhSachViewModel>> GetDanhSachGiayNgungKinhDoanhAynsc()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<SanPhamDanhSachViewModel>>("/api/SanPhamChiTiet/Get-List-SanPhamNgungKinhDoanhViewModel"))!;
+        }
+
         public Task<DanhSachGiayViewModel?> GetDanhSachGiayViewModelAynsc()
         {
             return _httpClient.GetFromJsonAsync<DanhSachGiayViewModel?>("/api/SanPhamChiTiet/Get-DanhSachGiayViewModel");

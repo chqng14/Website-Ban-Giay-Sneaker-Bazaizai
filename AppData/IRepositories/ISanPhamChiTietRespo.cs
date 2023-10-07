@@ -17,6 +17,7 @@ namespace App_Data.IRepositories
         Task<bool> UpdateAsync(SanPhamChiTiet entity);
         Task<bool> AddAsync(SanPhamChiTiet entity);
         Task<IEnumerable<SanPhamDanhSachViewModel>> GetListViewModelAsync();
+        Task<IEnumerable<SanPhamDanhSachViewModel>> GetListSanPhamNgungKinhDoanhViewModelAsync();
         Task<DanhSachGiayViewModel> GetDanhSachGiayViewModelAsync();
         Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(List<string> listGuid);
         Task<List<ItemShopViewModel>> GetDanhSachItemShopViewModelAsync();

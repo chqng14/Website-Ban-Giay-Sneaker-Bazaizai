@@ -39,6 +39,13 @@ namespace App_View.Areas.Admin.Controllers
         {
             return View();
         }
+
+
+        // GET: Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh
+        public IActionResult DanhSachSanPhamNgungKinhDoanh()
+        {
+            return View();
+        }
         public class ListGuildDTO
         {
             public List<string>? listGuild { get; set; }
@@ -70,6 +77,38 @@ namespace App_View.Areas.Admin.Controllers
                 query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x =>
                 x.SanPham!.ToLower().Contains(searchValueLower) || 
                 x.LoaiGiay!.ToLower().Contains(searchValueLower) || 
+                x.ChatLieu!.ToLower().Contains(searchValueLower) ||
+                x.KieuDeGiay!.ToLower().Contains(searchValueLower)
+                )
+                .Skip(start)
+                .Take(length)
+                .ToList();
+            }
+
+            var totalRecords = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Count;
+
+            return Json(new
+            {
+                draw = draw,
+                recordsTotal = totalRecords,
+                recordsFiltered = totalRecords,
+                data = query
+            });
+        }
+
+        public async Task<IActionResult> GetDanhSachSanPhamNgungKinhDoanh(int draw, int start, int length, string searchValue)
+        {
+            var query = (await _sanPhamChiTietService.GetDanhSachGiayNgungKinhDoanhAynsc())
+                .Skip(start)
+                .Take(length)
+                .ToList();
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                string searchValueLower = searchValue.ToLower();
+                query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x =>
+                x.SanPham!.ToLower().Contains(searchValueLower) ||
+                x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
                 x.ChatLieu!.ToLower().Contains(searchValueLower) ||
                 x.KieuDeGiay!.ToLower().Contains(searchValueLower)
                 )

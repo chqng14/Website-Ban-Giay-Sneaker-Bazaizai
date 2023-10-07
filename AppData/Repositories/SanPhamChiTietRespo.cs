@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_Data.Repositories
 {
@@ -99,7 +100,7 @@ namespace App_Data.Repositories
                 GiaBan = sanPham.GiaBan,
                 GiaNhap = sanPham.GiaNhap,
                 KichCo = _context.kichCos.ToList().FirstOrDefault(x=>x.IdKichCo == sanPham.IdKichCo)!.SoKichCo,
-                Anh = _context.Anh.ToList().Where(x=>x.IdSanPhamChiTiet == sanPham.IdChiTietSp).FirstOrDefault()!.Url,
+                Anh = _context.Anh.ToList().Where(x=>x.IdSanPhamChiTiet == sanPham.IdChiTietSp && x.TrangThai == 0).FirstOrDefault()!.Url,
                 KieuDeGiay = _context.kieuDeGiays.ToList().FirstOrDefault(x => x.IdKieuDeGiay == sanPham.IdKieuDeGiay)!.TenKieuDeGiay,
                 LoaiGiay = _context.LoaiGiays.ToList().FirstOrDefault(x => x.IdLoaiGiay == sanPham.IdLoaiGiay)!.TenLoaiGiay,
                 SoLuongTon = sanPham.SoLuongTon
@@ -246,6 +247,12 @@ namespace App_Data.Repositories
                 .Include(x=>x.ThuongHieu)
                 .FirstOrDefaultAsync(x => x.IdChiTietSp == id);
             return _mapper.Map<SanPhamChiTietViewModel>(sanPhamChiTiet);
+        }
+
+        public async Task<IEnumerable<SanPhamDanhSachViewModel>> GetListSanPhamNgungKinhDoanhViewModelAsync()
+        {
+            var sanPhamChiTietViewModels = (await _context.sanPhamChiTiets.ToListAsync()).Where(it => it.TrangThai == (int)TrangThaiCoBan.KhongHoatDong).Select(item => CreateSanPhamDanhSachViewModel(item)).ToList();
+            return sanPhamChiTietViewModels;
         }
     }
 }
