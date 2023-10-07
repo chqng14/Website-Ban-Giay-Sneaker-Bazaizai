@@ -38,16 +38,16 @@ namespace App_Api.Controllers
 
         // POST api/<ThongTinGiaoHangController>
         [HttpPost("Create")]
-        public bool Create(string idNguoiDung, string TenNguoiNhan, string SĐT, string DiaChi, int TrangThai)
+        public bool Create(string idNguoiDung, string TenNguoiNhan, string SDT, string DiaChi)
         {
             var thongTinGiaoHang = new ThongTinGiaoHang()
             {
                 IdThongTinGH = Guid.NewGuid().ToString(),
                 IdNguoiDung = idNguoiDung,
                 TenNguoiNhan = TenNguoiNhan,
-                SDT = SĐT,
+                SDT = SDT,
                 DiaChi = DiaChi,
-                TrangThai = TrangThai
+                TrangThai = 0
             };
             return allRepo.AddItem(thongTinGiaoHang);
 

@@ -15,7 +15,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PostAsync($"https://localhost:7038/api/ThongTinGiaoHang/Create?idNguoiDung={thongTinGiaoHang.IdNguoiDung}&TenNguoiNhan={thongTinGiaoHang.TenNguoiNhan}&S%C4%90T={thongTinGiaoHang.SDT}&DiaChi={thongTinGiaoHang.DiaChi}&TrangThai={thongTinGiaoHang.TrangThai}", null);
+                var res = await _httpClient.PostAsync($"https://localhost:7038/api/ThongTinGiaoHang/Create?idNguoiDung={thongTinGiaoHang.IdNguoiDung}&TenNguoiNhan={thongTinGiaoHang.TenNguoiNhan}&SDT={thongTinGiaoHang.SDT}&DiaChi={thongTinGiaoHang.DiaChi}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();

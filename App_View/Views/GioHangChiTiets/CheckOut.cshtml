@@ -3,6 +3,7 @@
     ViewData["Title"] = "CheckOut";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var thongTinGH = ViewData["ThongTinGH"] as List<App_Data.Models.ThongTinGiaoHang>; 
+    var idnguoidung = ViewBag.idNguoiDung;
 }
 
 <div class="u-s-p-b-60" style="margin-top:20px">
@@ -543,60 +544,48 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="checkout-modal1">
-                        <form class="checkout-modal1__form">
+                        <form class="checkout-modal1__form" method="post" asp-action="CreateThongTin" asp-controller="ThongTinGH">
                             <div class="u-s-m-b-30">
-                                <h1 class="gl-modal-h1">Add new Shipping Address</h1>
+                                <h1 class="gl-modal-h1">Tạo địa chỉ mới</h1>
                             </div>
                             <div class="gl-inline">
                                 <div class="u-s-m-b-30">
 
-                                    <label class="gl-label" for="address-fname">FIRST NAME *</label>
+                                    <label class="gl-label" for="address-fname">TÊN NGƯỜI NHẬN *</label>
 
-                                    <input class="input-text input-text--primary-style" type="text" id="address-fname" placeholder="First Name">
+                                    <input class="input-text input-text--primary-style" type="text" id="address-fname" placeholder="Tên người nhận" name="TenNguoiNhan">
                                 </div>
                                 <div class="u-s-m-b-30">
 
-                                    <label class="gl-label" for="address-lname">LAST NAME *</label>
+                                    <label class="gl-label" for="address-phone">SĐT *</label>
 
-                                    <input class="input-text input-text--primary-style" type="text" id="address-lname" placeholder="Last Name">
+                                    <input class="input-text input-text--primary-style" type="text" id="address-phone" name="SDT" placeholder="Số điện thoại">
                                 </div>
                             </div>
                             <div class="gl-inline">
                                 <div class="u-s-m-b-30">
 
-                                    <label class="gl-label" for="address-phone">PHONE *</label>
+                                    <label class="gl-label" for="address-street">ĐỊA CHỈ *</label>
 
-                                    <input class="input-text input-text--primary-style" type="text" id="address-phone">
-                                </div>
-                                <div class="u-s-m-b-30">
-
-                                    <label class="gl-label" for="address-street">STREET ADDRESS *</label>
-
-                                    <input class="input-text input-text--primary-style" type="text" id="address-street" placeholder="House Name and Street">
+                                    <input class="input-text input-text--primary-style" type="text" id="address-street" placeholder="Địa chỉ" name="DiaChi">
                                 </div>
                             </div>
                             <div class="gl-inline">
                                 <div class="u-s-m-b-30">
 
                                     <!--====== Select Box ======-->
-
-                                    <label class="gl-label" for="address-country">COUNTRY *</label><select class="select-box select-box--primary-style" id="address-country">
-                                        <option selected value="">Choose Country</option>
-                                        <option value="uae">United Arab Emirate (UAE)</option>
-                                        <option value="uk">United Kingdom (UK)</option>
-                                        <option value="us">United States (US)</option>
+                                    <!--====== Thành phố ======-->
+                                    <label class="gl-label" for="city">THÀNH PHỐ *</label><select class="select-box select-box--primary-style" id="city" required>
+                                        <option selected>Chọn thành phố</option>
                                     </select>
                                     <!--====== End - Select Box ======-->
                                 </div>
                                 <div class="u-s-m-b-30">
 
                                     <!--====== Select Box ======-->
-
-                                    <label class="gl-label" for="address-state">STATE/PROVINCE *</label><select class="select-box select-box--primary-style" id="address-state">
-                                        <option selected value="">Choose State/Province</option>
-                                        <option value="al">Alabama</option>
-                                        <option value="al">Alaska</option>
-                                        <option value="ny">New York</option>
+                                    <!--====== Huyện ======-->
+                                    <label class="gl-label" for="district">HUYỆN *</label><select class="select-box select-box--primary-style" id="district" required>
+                                        <option selected>Chọn huyện</option>
                                     </select>
                                     <!--====== End - Select Box ======-->
                                 </div>
@@ -604,22 +593,16 @@
                             <div class="gl-inline">
                                 <div class="u-s-m-b-30">
 
-                                    <label class="gl-label" for="address-city">TOWN/CITY *</label>
-
-                                    <input class="input-text input-text--primary-style" type="text" id="address-city">
-                                </div>
-                                <div class="u-s-m-b-30">
-
-                                    <label class="gl-label" for="address-street">ZIP/POSTAL CODE *</label>
-
-                                    <input class="input-text input-text--primary-style" type="text" id="address-postal" placeholder="Zip/Postal Code">
+                                    <!--====== Phường/Xã ======-->
+                                    <label class="gl-label" for="wards">PHƯỜNG/XÃ *</label><select class="select-box select-box--primary-style" id="wards" required>
+                                        <option selected>Chọn phường/xã</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="gl-modal-btn-group">
-
-                                <button class="btn btn--e-brand-b-2" type="submit">SAVE</button>
-
-                                <button class="btn btn--e-grey-b-2" type="button" data-dismiss="modal">CANCEL</button>
+                                <input type="hidden" name="idNguoiDung" id="idNguoiDung" value="@idnguoidung"/>
+                                <button id="save-button" class="btn btn--e-brand-b-2" type="submit">LƯU</button>
+                                <button class="btn btn--e-grey-b-2" type="button" data-dismiss="modal">HUỶ</button>
                             </div>
                         </form>
                     </div>
@@ -698,6 +681,26 @@
                 $('#thongtin').text(thongtin);
             }
 
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#save-button').on('click', function (e) {
+                // Ngăn chặn sự kiện mặc định của form để tránh submit trang
+                e.preventDefault();
+
+                // Các dòng code xử lý dữ liệu và gửi Ajax ở đây
+                var selectedCity = $('#city option:selected').text();
+                var selectedDistrict = $('#district option:selected').text();
+                var selectedWard = $('#wards option:selected').text();
+                var inputAddress = $('#address-street').val();
+                var idNguoiDung = $('#idNguoiDung').val();
+
+                var DiaChiFull = inputAddress + ',' + selectedWard + ',' + selectedDistrict + ',' + selectedCity;
+                $('#address-street').val(DiaChiFull);
+                $('form.checkout-modal1__form').submit();
+            });
         });
 
     </script>

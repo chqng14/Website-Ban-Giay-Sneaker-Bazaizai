@@ -72,6 +72,7 @@ namespace App_View.Controllers
                 var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
                 var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
                 ViewData["ThongTinGH"] = thongTinGH;
+                ViewBag.idNguoiDung = idNguoiDung;
                 return View(giohang);
             }
         }

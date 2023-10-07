@@ -42,16 +42,10 @@ namespace App_View.Controllers
         // POST: ThongTinGHController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> CreateThongTin(ThongTinGiaoHang thongTinGiaoHang)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await thongTinGHServices.CreateThongTin(thongTinGiaoHang);
+            return RedirectToAction("CheckOut", "GioHangChiTiets");
         }
 
         // GET: ThongTinGHController/Edit/5
