@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using App_Data.Models;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -112,46 +116,61 @@
                                 <!--====== List ======-->
                                 <ul class="ah-list ah-list--design1 ah-list--link-color-secondary">
                                     <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Account">
+                                        @if (SignInManager.IsSignedIn(User))
+                                        {
+                                            <a><i class="far fa-user-circle"></i></a>
 
-                                        <a><i class="far fa-user-circle"></i></a>
+                                            <!--====== Dropdown ======-->
 
-                                        <!--====== Dropdown ======-->
+                                            <span class="js-menu-toggle"></span>
+                                            <ul style="width:120px">
+                                                <li>
+                                                    <a href="dashboard.html">
+                                                        <i class="fas fa-user-circle u-s-m-r-6"></i>
+                                                        <span>Account</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    
+                                                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                                        <button type="submit" class="nav-link btn btn-link text-dark">
+                                                            <a >
+                                                                <i class="fas fa-lock-open u-s-m-r-6"></i>
+                                                                <span>Signout</span>
+                                                            </a>
+                                                        </button>
+                                                    </form>
+                                                    <a href="signup.html">
+                                                        <i class="fas fa-lock-open u-s-m-r-6"></i>
+                                                        <span>Signout</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        }
+                                        else
+                                        {
+                                            <a><i class="far fa-user-circle"></i></a>
 
-                                        <span class="js-menu-toggle"></span>
-                                        <ul style="width:120px">
-                                            <li>
+                                            <!--====== Dropdown ======-->
 
-                                                <a href="dashboard.html">
-                                                    <i class="fas fa-user-circle u-s-m-r-6"></i>
+                                            <span class="js-menu-toggle"></span>
+                                            <ul style="width:120px">
 
-                                                    <span>Account</span>
-                                                </a>
-                                            </li>
-                                            <li>
+                                                <li>
+                                                    <a asp-area="Identity" asp-page="/Account/Register">
+                                                        <i class="fas fa-user-plus u-s-m-r-6"></i>
+                                                        <span>Signup</span>
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a asp-area="Identity" asp-page="/Account/Login">
+                                                        <i class="fas fa-lock u-s-m-r-6"></i>
+                                                        <span>Signin</span>
+                                                    </a>
+                                                </li>
 
-                                                <a asp-area="Identity" asp-page="/Account/Register">
-                                                    <i class="fas fa-user-plus u-s-m-r-6"></i>
-
-                                                    <span>Signup</span>
-                                                </a>
-                                            </li>
-                                            <li>
-
-                                                <a asp-area="Identity" asp-page="/Account/Login">
-                                                    <i class="fas fa-lock u-s-m-r-6"></i>
-
-                                                    <span>Signin</span>
-                                                </a>
-                                            </li>
-                                            <li>
-
-                                                <a href="signup.html">
-                                                    <i class="fas fa-lock-open u-s-m-r-6"></i>
-
-                                                    <span>Signout</span>
-                                                </a>
-                                            </li>
-                                        </ul>
+                                            </ul>
+                                        }
                                         <!--====== End - Dropdown ======-->
                                     </li>
                                     <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Settings">
