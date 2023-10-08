@@ -81,11 +81,14 @@ namespace App_View.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(VoucherDTO voucherDTO)
         {
-            if (await _voucherSV.UpdateVoucher(voucherDTO))
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
-            }
-            return View(); ;
+                if (await _voucherSV.UpdateVoucher(voucherDTO))
+                {
+                    return RedirectToAction("Index");
+                }
+            }                
+            return View();
         }
         public async Task<ActionResult> Details(string id)
         {
