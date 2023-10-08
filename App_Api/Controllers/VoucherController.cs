@@ -38,10 +38,10 @@ namespace App_Api.Controllers
         {
             return allRepo.GetAll().ToList();
         }
-        [HttpGet("GetVoucherByMa/{id}")]
-        public Voucher? GetVoucher(string id)
+        [HttpGet("GetVoucherByMa/{ma}")]
+        public Voucher? GetVoucher(string ma)
         {
-            return allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == id);
+            return allRepo.GetAll().FirstOrDefault(c => c.MaVoucher == ma);
         }
         [HttpGet("GetVoucherDTOByMa/{id}")]
         public VoucherDTO? GetVoucherDTO(string id)

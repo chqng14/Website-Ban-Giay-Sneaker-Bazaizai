@@ -29,5 +29,15 @@ namespace App_Data.Repositories
             HetVoucher = 3,
 
         }
+        public enum TrangThaiLoaiKhuyenMai
+        {
+            [Description("Giảm giá tiền mặt")]
+            TienMat = 0,
+            [Description("Giảm giá theo %")]
+            PhanTram = 1,
+            [Description("Miễn phí ship")]
+            Freeship = 2,
+
+        }
     }
 }
