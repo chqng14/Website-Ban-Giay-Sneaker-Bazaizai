@@ -27,11 +27,13 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly BazaizaiContext _context;
         private readonly ISanPhamChiTietService _sanPhamChiTietService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public SanPhamChiTietController(ISanPhamChiTietService sanPhamChiTietService)
+        public SanPhamChiTietController(ISanPhamChiTietService sanPhamChiTietService, IWebHostEnvironment webHostEnvironment)
         {
             _context = new BazaizaiContext();
             _sanPhamChiTietService = sanPhamChiTietService;
+            _webHostEnvironment = webHostEnvironment;
         }
         [HttpGet]
         // GET: Admin/SanPhamChiTiet/DanhSachSanPham
@@ -53,7 +55,7 @@ namespace App_View.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> NgungKinhDoanhListSanPham([FromBody]ListGuildDTO listGuildDTO)
+        public async Task<IActionResult> NgungKinhDoanhListSanPham([FromBody] ListGuildDTO listGuildDTO)
         {
             return Ok(await _sanPhamChiTietService.NgungKinhDoanhSanPhamAynsc(listGuildDTO));
         }
@@ -70,8 +72,29 @@ namespace App_View.Areas.Admin.Controllers
             return Ok(await _sanPhamChiTietService.KhoiPhucKinhDoanhAynsc(id));
         }
 
+
+        #region DownLoadFile
+        public IActionResult DownloadFile()
+        {
+            string relativePath = "excel/template.xlsx"; 
+            string filePath = Path.Combine(_webHostEnvironment.WebRootPath, relativePath);
+            string fileName = "template.xlsx";
+
+            if (System.IO.File.Exists(filePath))
+            {
+                var fileBytes = System.IO.File.ReadAllBytes(filePath);
+                return File(fileBytes, "application/octet-stream", fileName);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        #endregion
+
         [HttpPost]
-        public async Task<IActionResult> GetPartialViewListUpdate([FromBody]ListGuildDTO listGuildDTO)
+        public async Task<IActionResult> GetPartialViewListUpdate([FromBody] ListGuildDTO listGuildDTO)
         {
             ViewData["IdChatLieu"] = new SelectList(_context.ChatLieus, "IdChatLieu", "TenChatLieu");
             ViewData["IdKichCo"] = new SelectList(_context.kichCos, "IdKichCo", "SoKichCo");
@@ -96,8 +119,8 @@ namespace App_View.Areas.Admin.Controllers
             {
                 string searchValueLower = searchValue.ToLower();
                 query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x =>
-                x.SanPham!.ToLower().Contains(searchValueLower) || 
-                x.LoaiGiay!.ToLower().Contains(searchValueLower) || 
+                x.SanPham!.ToLower().Contains(searchValueLower) ||
+                x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
                 x.ChatLieu!.ToLower().Contains(searchValueLower) ||
                 x.KieuDeGiay!.ToLower().Contains(searchValueLower)
                 )
@@ -197,7 +220,7 @@ namespace App_View.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CheckSanPhamAddOrUpdate([FromBody]SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<IActionResult> CheckSanPhamAddOrUpdate([FromBody] SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             return Json(await _sanPhamChiTietService.CheckSanPhamAddOrUpdate(sanPhamChiTietDTO));
         }
@@ -206,7 +229,7 @@ namespace App_View.Areas.Admin.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<IActionResult> Create([FromBody] SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             if (ModelState.IsValid)
             {
@@ -216,19 +239,19 @@ namespace App_View.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task CreateAnh([FromForm]string IdChiTietSp, [FromForm] List<IFormFile> lstIFormFile)
+        public async Task CreateAnh([FromForm] string IdChiTietSp, [FromForm] List<IFormFile> lstIFormFile)
         {
             await _sanPhamChiTietService.CreateAnhAysnc(IdChiTietSp, lstIFormFile);
         }
 
         [HttpPost]
-        public async Task<bool> UpdateSanPham([FromBody]SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<bool> UpdateSanPham([FromBody] SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             return await _sanPhamChiTietService.UpdateAynsc(sanPhamChiTietDTO);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTenSanPham([FromBody]SanPhamDTO sanPhamDTO)
+        public async Task<IActionResult> CreateTenSanPham([FromBody] SanPhamDTO sanPhamDTO)
         {
             return Json(await _sanPhamChiTietService.CreateTenSanPhamAynsc(sanPhamDTO));
         }
@@ -276,9 +299,9 @@ namespace App_View.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task DeleteAnh([FromForm]ImageDTO responseImageDeleteVM)
+        public async Task DeleteAnh([FromForm] ImageDTO responseImageDeleteVM)
         {
-             await _sanPhamChiTietService.DeleteAnhAysnc(responseImageDeleteVM);
+            await _sanPhamChiTietService.DeleteAnhAysnc(responseImageDeleteVM);
         }
 
         // GET: Admin/SanPhamChiTiet/Edit/5
@@ -369,14 +392,14 @@ namespace App_View.Areas.Admin.Controllers
             {
                 _context.sanPhamChiTiets.Remove(sanPhamChiTiet);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool SanPhamChiTietExists(string id)
         {
-          return (_context.sanPhamChiTiets?.Any(e => e.IdChiTietSp == id)).GetValueOrDefault();
+            return (_context.sanPhamChiTiets?.Any(e => e.IdChiTietSp == id)).GetValueOrDefault();
         }
     }
 }

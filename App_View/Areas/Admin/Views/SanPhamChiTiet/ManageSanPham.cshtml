@@ -14,10 +14,11 @@
         background: #efefef;
     }
 
-    .note-editing-area{
+    .note-editing-area {
         height: 400px;
     }
 </style>
+
 <div class="modal fade" id="cauHinh">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -803,7 +804,7 @@
 
                     } else {
                         const item = $(ItemTemplate(index, false, "", lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, $('#giaNhap').val().replace(/₫|,|\s/g, ''), $('#giaBan').val().replace(/₫|,|\s/g, ''), $('#soLuongTon').val().replace(/₫|,|\s/g, ''), $('#MoTaCauHinh').summernote('code'), $('#khoiLuong').val().replace(/₫|,|\s/g, '')))
-                        
+
                         item.find('.switch-2-day').prop('checked', $('#switch-1-day').prop('checked'))
                         item.find('.switch-2-noibat').prop('checked', $('#switch-1-noibat').prop('checked'))
                         container.append(item)

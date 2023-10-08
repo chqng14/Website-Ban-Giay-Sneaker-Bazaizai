@@ -95,21 +95,21 @@ namespace App_Data.Repositories
             return new SanPhamDanhSachViewModel()
             {
                 IdChiTietSp = sanPham.IdChiTietSp,
-                ChatLieu = _context.ChatLieus.ToList().FirstOrDefault(x => x.IdChatLieu == sanPham.IdChatLieu)!.TenChatLieu,
-                SanPham = _context.thuongHieus.ToList().FirstOrDefault(x => x.IdThuongHieu == sanPham.IdThuongHieu)!.TenThuongHieu + " " + _context.SanPhams.ToList().FirstOrDefault(x => x.IdSanPham == sanPham.IdSanPham)!.TenSanPham,
+                ChatLieu = _context.ChatLieus.ToList().FirstOrDefault(x => x.IdChatLieu == sanPham.IdChatLieu)?.TenChatLieu,
+                SanPham = _context.thuongHieus.ToList().FirstOrDefault(x => x.IdThuongHieu == sanPham.IdThuongHieu)?.TenThuongHieu + " " + _context.SanPhams.ToList().FirstOrDefault(x => x.IdSanPham == sanPham.IdSanPham)?.TenSanPham,
                 GiaBan = sanPham.GiaBan,
                 GiaNhap = sanPham.GiaNhap,
-                KichCo = _context.kichCos.ToList().FirstOrDefault(x => x.IdKichCo == sanPham.IdKichCo)!.SoKichCo,
-                Anh = _context.Anh.ToList().Where(x => x.IdSanPhamChiTiet == sanPham.IdChiTietSp && x.TrangThai == 0).FirstOrDefault()!.Url,
-                KieuDeGiay = _context.kieuDeGiays.ToList().FirstOrDefault(x => x.IdKieuDeGiay == sanPham.IdKieuDeGiay)!.TenKieuDeGiay,
-                LoaiGiay = _context.LoaiGiays.ToList().FirstOrDefault(x => x.IdLoaiGiay == sanPham.IdLoaiGiay)!.TenLoaiGiay,
+                KichCo = _context.kichCos.ToList().FirstOrDefault(x => x.IdKichCo == sanPham.IdKichCo)?.SoKichCo,
+                Anh = _context.Anh.ToList().Where(x => x.IdSanPhamChiTiet == sanPham.IdChiTietSp && x.TrangThai == 0).FirstOrDefault()?.Url,
+                KieuDeGiay = _context.kieuDeGiays.ToList().FirstOrDefault(x => x.IdKieuDeGiay == sanPham.IdKieuDeGiay)?.TenKieuDeGiay,
+                LoaiGiay = _context.LoaiGiays.ToList().FirstOrDefault(x => x.IdLoaiGiay == sanPham.IdLoaiGiay)?.TenLoaiGiay,
                 SoLuongTon = sanPham.SoLuongTon
             };
         }
 
         public async Task<IEnumerable<SanPhamDanhSachViewModel>> GetListViewModelAsync()
         {
-            var sanPhamChiTietViewModels = (await _context.sanPhamChiTiets.ToListAsync()).Where(it => it.TrangThai == 0).Select(item => CreateSanPhamDanhSachViewModel(item)).ToList();
+            var sanPhamChiTietViewModels = (await _context.sanPhamChiTiets.ToListAsync()).Where(it => it.TrangThai == 0).OrderByDescending(x=>x.NgayTao).Select(item => CreateSanPhamDanhSachViewModel(item)).ToList();
             return sanPhamChiTietViewModels;
         }
 
