@@ -91,6 +91,7 @@ namespace App_View.Areas.Identity.Pages.Account
 
             // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            string picture = info.Principal.FindFirstValue("picture");/// thêm ở đây
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
@@ -112,6 +113,8 @@ namespace App_View.Areas.Identity.Pages.Account
                         Email = info.Principal.FindFirstValue(ClaimTypes.Email)
                     };
                 }
+
+
                 return Page();
             }
         }
@@ -172,11 +175,18 @@ namespace App_View.Areas.Identity.Pages.Account
                 }
                 if (externalEmailUser == null && externalEmail == Input.Email)
                 {
+                    
                     var user = CreateUser();
                  
                     await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                     await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-
+                    var email = Input.Email;
+                    var atIndex = email.IndexOf('@');
+                    if (atIndex != -1)
+                    {
+                        var userName = email.Substring(0, atIndex);
+                        user.UserName = userName;
+                    }
                     var result = await _userManager.CreateAsync(user);
                     if (result.Succeeded)
                     {
