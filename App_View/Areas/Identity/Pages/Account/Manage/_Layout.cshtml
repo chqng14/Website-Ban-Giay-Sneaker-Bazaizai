@@ -6,13 +6,14 @@
     else
     {
         //Layout = "/Areas/Identity/Pages/_Layout.cshtml";
-        Layout = "/Views/Shared/_Layout.cshtml"; ;
+        Layout = "/Views/Shared/_Layout.cshtml"; // cai này
+        //Layout = "/Views/Shared/Admin/_Layout.cshtml";
     }
 }
 
-<h1>Quản lý tài khoản của bạn</h1>
-
-<div>
+@*<h1>Quản lý tài khoản của bạn</h1>
+*@
+@*<div>
     <h2>Thay đổi cài đặt tài khoản của bạn</h2>
     <hr />
     <div class="row">
@@ -24,7 +25,8 @@
         </div>
     </div>
 </div>
-
+*@
+@RenderBody()
 @section Scripts {
     @RenderSection("Scripts", required: false)
 }
