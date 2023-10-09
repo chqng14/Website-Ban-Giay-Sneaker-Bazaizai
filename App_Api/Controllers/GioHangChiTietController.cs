@@ -70,6 +70,7 @@ namespace App_Api.Controllers
             giohangChiTiet.IdNguoiDung = GioHangChiTietDTOCUD.IdNguoiDung;
             giohangChiTiet.Soluong = GioHangChiTietDTOCUD.SoLuong;
             giohangChiTiet.GiaGoc = GioHangChiTietDTOCUD.GiaGoc;
+            giohangChiTiet.GiaBan = GioHangChiTietDTOCUD.GiaBan;
             giohangChiTiet.TrangThai = 0;
             _gioHangChiTiet.AddCartDetail(giohangChiTiet);
             return true;
