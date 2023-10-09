@@ -285,7 +285,7 @@
 
                                                     <span class="o-card__quantity">Số lượng x @item.SoLuong</span>
 
-                                                    <span class="o-card__price">@string.Format("{0:N0}đ", item.GiaGoc)</span>
+                                                    <span class="o-card__price">@string.Format("{0:N0}đ", item.GiaBan)</span>
                                                 </div>
                                             </div>
 
@@ -326,11 +326,11 @@
                                             </tr>
                                             <tr>
                                                 <td>TẠM TÍNH</td>
-                                                <td>@string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaGoc))</td>
+                                                <td>@string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaBan))</td>
                                             </tr>
                                             <tr>
                                                 <td>TỔNG TIỀN</td>
-                                                <td>@string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaGoc))</td>
+                                                <td>@string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaBan))</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -529,7 +529,7 @@
                             </div>
                             <div class="gl-modal-btn-group">
                                 <button class="btn btn--e-brand-b-2" type="submit">LƯU</button>
-                                <button class="btn btn--e-grey-b-2" type="button" data-dismiss="modal">TẮT</button>
+                                <button class="btn btn--e-grey-b-2" type="button" data-dismiss="modal">ĐÓNG</button>
                             </div>
                         </form>
                     </div>

@@ -105,6 +105,7 @@ namespace App_View.Controllers
             giohang.IdNguoiDung = idNguoiDung;
             giohang.SoLuong = gioHangChiTietDTOCUD.SoLuong;
             giohang.GiaGoc = product.GiaBan;
+            giohang.GiaBan = product.GiaBan;
             GioHangChiTietServices.CreateCartDetailDTO(giohang);
             return RedirectToAction("ShowCartUser");
         }
@@ -120,7 +121,7 @@ namespace App_View.Controllers
             double TongTien = 0;
             foreach (var item in giohang)
             {
-                TongTien += (double)item.GiaGoc * (int)item.SoLuong;
+                TongTien += (double)item.GiaBan * (int)item.SoLuong;
             }
             return Json(new { /*SumPrice = SumPrice,*/ TongTien = TongTien });
         }

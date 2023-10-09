@@ -12,6 +12,7 @@ using App_Data.ViewModels.SanPhamChiTietViewModel;
 using App_Data.ViewModels.Voucher;
 using App_Data.ViewModels.XuatXu;
 using AutoMapper;
+using App_Data.ViewModels.HoaDonChiTietDTO;
 
 namespace App_Api.Helpers.Mapping
 {
@@ -41,11 +42,29 @@ namespace App_Api.Helpers.Mapping
                 );
             CreateMap<GioHangChiTietDTOCUD, GioHangChiTiet>().ReverseMap();
 
+            CreateMap<HoaDonChiTietDTO, HoaDonChiTiet>();
+            CreateMap<HoaDonChiTiet, HoaDonChiTietViewModel>()
+                .ForMember(
+                dest => dest.TenSanPham,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.SanPham.TenSanPham)
+                ).ForMember(
+                    dest => dest.TenMauSac,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.MauSac.TenMauSac)
+                ).ForMember(
+                    dest => dest.TenKichCo,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.KichCo.SoKichCo)
+                ).ForMember(
+                dest => dest.TenNguoiNhan,
+                opt => opt.MapFrom(src => src.HoaDon.ThongTinGiaoHang.TenNguoiNhan)
+                ).ForMember(
+                dest => dest.MaVoucher,
+                opt => opt.MapFrom(src => src.HoaDon.Voucher.MaVoucher)
+                );
 
             CreateMap<SanPhamChiTiet, SanPhamChiTietDTO>()
                 .ForMember(
                         dest => dest.DanhSachAnh,
-                        opt => opt.MapFrom(src => src.Anh.Where(a=>a.TrangThai==0).Select(x=>x.Url))
+                        opt => opt.MapFrom(src => src.Anh.Where(a => a.TrangThai == 0).Select(x => x.Url))
                 )
                 .ForMember(
                         dest => dest.FullName,
@@ -99,7 +118,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<SanPhamChiTiet, ItemShopViewModel>()
                 .ForMember(
                         dest => dest.Anh,
-                        opt => opt.MapFrom(src => src.Anh!.Where(a=>a.TrangThai == 0).FirstOrDefault()!.Url)
+                        opt => opt.MapFrom(src => src.Anh!.Where(a => a.TrangThai == 0).FirstOrDefault()!.Url)
                     )
                 .ForMember(
                         dest => dest.IdChiTietSp,
@@ -137,7 +156,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<SanPhamChiTiet, ItemDetailViewModel>()
                 .ForMember(
                         dest => dest.Anh,
-                        opt => opt.MapFrom(src => src.Anh.Where(x=>x.TrangThai==0)!.FirstOrDefault()!.Url)
+                        opt => opt.MapFrom(src => src.Anh.Where(x => x.TrangThai == 0)!.FirstOrDefault()!.Url)
                     )
                 .ForMember(
                         dest => dest.MoTaSanPham,

@@ -1,6 +1,10 @@
 ﻿using App_Data.DbContextt;
 using App_Data.IRepositories;
 using App_Data.Models;
+using App_Data.ViewModels.GioHangChiTiet;
+using App_Data.ViewModels.HoaDonChiTietDTO;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +16,11 @@ namespace App_Data.Repositories
     public class HoaDonChiTietRepos : IHoaDonChiTietRepos
     {
         BazaizaiContext context;
-        public HoaDonChiTietRepos()
+        private readonly IMapper _mapper;
+        public HoaDonChiTietRepos(IMapper mapper)
         {
             context = new BazaizaiContext();
+            _mapper = mapper;
         }
         public bool AddBillDetail(HoaDonChiTiet item)
         {
@@ -48,6 +54,18 @@ namespace App_Data.Repositories
         public IEnumerable<HoaDonChiTiet> GetAll()
         {
             return context.hoaDonChiTiets.ToList();
+        }
+
+        public IEnumerable<HoaDonChiTietViewModel> GetAllHoaDonDTO()
+        {
+            var hoadon = context.hoaDonChiTiets
+                .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.SanPham)
+                .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.MauSac)
+                .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.KichCo)
+                .Include(x => x.HoaDon).ThenInclude(hd => hd.NguoiDung)
+                .Include(x => x.HoaDon).ThenInclude(hd => hd.Voucher)
+                .ToList();
+            return _mapper.Map<List<HoaDonChiTietViewModel>>(hoadon);
         }
 
         public bool RemoveBillDetail(HoaDonChiTiet item)
