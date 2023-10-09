@@ -41,6 +41,40 @@ namespace App_Api.Helpers.Mapping
                 );
             CreateMap<GioHangChiTietDTOCUD, GioHangChiTiet>().ReverseMap();
 
+            CreateMap<SanPhamChiTiet, SanPhamChiTietExcelViewModel>()
+                .ForMember(
+                        dest => dest.SanPham,
+                        opt => opt.MapFrom(src => src.SanPham.TenSanPham)
+                )
+                .ForMember(
+                        dest => dest.XuatXu,
+                        opt => opt.MapFrom(src => src.XuatXu.Ten)
+                    )
+                .ForMember(
+                        dest => dest.ThuongHieu,
+                        opt => opt.MapFrom(src => src.ThuongHieu.TenThuongHieu)
+                    )
+                .ForMember(
+                        dest => dest.MauSac,
+                        opt => opt.MapFrom(src => src.MauSac.TenMauSac)
+                    )
+                .ForMember(
+                        dest => dest.KichCo,
+                        opt => opt.MapFrom(src => src.KichCo.SoKichCo)
+                    )
+                .ForMember(
+                        dest => dest.ChatLieu,
+                        opt => opt.MapFrom(src => src.ChatLieu.TenChatLieu)
+                    )
+                .ForMember(
+                        dest => dest.KieuDeGiay,
+                        opt => opt.MapFrom(src => src.KieuDeGiay.TenKieuDeGiay)
+                    )
+                .ForMember(
+                        dest => dest.LoaiGiay,
+                        opt => opt.MapFrom(src => src.LoaiGiay.TenLoaiGiay)
+                    );
+
 
             CreateMap<SanPhamChiTiet, SanPhamChiTietDTO>()
                 .ForMember(

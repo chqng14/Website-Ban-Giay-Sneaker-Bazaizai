@@ -45,5 +45,7 @@ namespace App_View.IServices
         Task<bool> NgungKinhDoanhSanPhamAynsc(ListGuildDTO lstGuid);
         Task<bool> KinhDoanhLaiSanPhamAynsc(ListGuildDTO lstGuid);
         Task<bool> KhoiPhucKinhDoanhAynsc(string id);
+        Task<List<SanPhamChiTietExcelViewModel>> GetListSanPhamExcelAynsc();
+        Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO);
     }
 }

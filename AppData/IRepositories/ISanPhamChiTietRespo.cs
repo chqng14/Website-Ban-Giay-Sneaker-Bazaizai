@@ -28,5 +28,7 @@ namespace App_Data.IRepositories
         Task<bool> NgungKinhDoanhSanPhamAynsc(List<string> lstguid);
         Task<bool> KinhDoanhLaiSanPhamAynsc(List<string> lstguid);
         Task<bool> KhoiPhucKinhDoanhAynsc(string id);
+        Task<List<SanPhamChiTietExcelViewModel>> GetListSanPhamExcelAynsc();
+        Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO);
     }
 }

@@ -205,6 +205,18 @@ namespace App_Api.Controllers
             return false;
         }
 
+        [HttpGet("get_list_SanPhamExcel")]
+        public async Task<List<SanPhamChiTietExcelViewModel>> GetLstSanPhamExcel()
+        {
+            return await _sanPhamChiTietRes.GetListSanPhamExcelAynsc();
+        }
+
+        [HttpPost("get-ItemExcel")]
+        public async Task<SanPhamChiTietDTO> GetItemExcel(BienTheDTO bienTheDTO)
+        {
+            return await _sanPhamChiTietRes.GetItemExcelAynsc(bienTheDTO);
+        }
+
         //SanPham
         [HttpPost("Create-SanPham")]
         public SanPhamDTO? CreateSanPham(SanPhamDTO sanPhamDTO)

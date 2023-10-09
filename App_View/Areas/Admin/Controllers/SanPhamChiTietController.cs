@@ -19,6 +19,8 @@ using App_Data.ViewModels.KieuDeGiayDTO;
 using App_Data.ViewModels.MauSac;
 using App_Data.ViewModels.KichCoDTO;
 using App_Data.ViewModels.SanPhamChiTietDTO;
+using OfficeOpenXml;
+using System.Diagnostics;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -34,6 +36,7 @@ namespace App_View.Areas.Admin.Controllers
             _context = new BazaizaiContext();
             _sanPhamChiTietService = sanPhamChiTietService;
             _webHostEnvironment = webHostEnvironment;
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
         [HttpGet]
         // GET: Admin/SanPhamChiTiet/DanhSachSanPham
@@ -72,11 +75,100 @@ namespace App_View.Areas.Admin.Controllers
             return Ok(await _sanPhamChiTietService.KhoiPhucKinhDoanhAynsc(id));
         }
 
+        #region ImportExcel
+        [HttpPost]
+        public async Task<ActionResult> ImportProducts(IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                try
+                {
+                    int slSuccess = 0;
+                    using (var stream = file.OpenReadStream())
+                    using (var package = new ExcelPackage(stream))
+                    {
+                        var worksheet = package.Workbook.Worksheets[0];
+
+                        int rowCount = worksheet.Dimension.Rows;
+                        int colCount = worksheet.Dimension.Columns;
+
+                        //List<MyDataModel> dataList = new List<MyDataModel>();
+
+                        for (int row = 2; row <= rowCount; row++)
+                        {
+                            var sanpham = worksheet.Cells[row, 1].Text;
+                            var thuongHieu = worksheet.Cells[row, 2].Text;
+                            var xuatXu = worksheet.Cells[row, 3].Text;
+                            var chatLieu = worksheet.Cells[row, 4].Text;
+                            var loaiGiay = worksheet.Cells[row, 5].Text;
+                            var kieuDeGiay = worksheet.Cells[row, 6].Text;
+                            var mauSac = worksheet.Cells[row, 7].Text;
+                            var kichCo = worksheet.Cells[row, 8].Text;
+                            var giaNhap = worksheet.Cells[row, 9].Text;
+                            var giaBan = worksheet.Cells[row, 10].Text;
+                            var soLuong = worksheet.Cells[row, 11].Text;
+                            var khoiLuong = worksheet.Cells[row, 12].Text;
+                            var day = worksheet.Cells[row, 13].Text;
+                            var noiBat = worksheet.Cells[row, 14].Text;
+                            var listTenAnh = worksheet.Cells[row, 15].Text.Split(',');
+                            
+                            var sanPhamDTO = await _sanPhamChiTietService.GetItemExcelAynsc(new BienTheDTO
+                            {
+                                ChatLieu = chatLieu,
+                                KichCo = kichCo,
+                                KieuDeGiay = kieuDeGiay,
+                                LoaiGiay = loaiGiay,
+                                MauSac = mauSac,
+                                SanPham = sanpham,
+                                ThuongHieu = thuongHieu,
+                                XuatXu = xuatXu,
+                            });
+                            sanPhamDTO.GiaNhap = Convert.ToDouble(giaNhap);
+                            sanPhamDTO.SoLuongTon = Convert.ToInt32(soLuong);
+                            sanPhamDTO.GiaBan = Convert.ToDouble(giaBan);
+                            sanPhamDTO.KhoiLuong = Convert.ToDouble(khoiLuong);
+                            sanPhamDTO.Day = day == "1" ? true : false;
+                            sanPhamDTO.NoiBat = noiBat == "1" ? true : false;
+                            var response = (await _sanPhamChiTietService.AddAysnc(sanPhamDTO));
+
+                            if (response.Success)
+                            {
+                                slSuccess++;
+                                foreach (var item in listTenAnh)
+                                {
+                                    await _context.Anh.AddAsync(new Anh()
+                                    {
+                                        IdAnh = Guid.NewGuid().ToString(),
+                                        TrangThai = 0,
+                                        Url = item,
+                                        IdSanPhamChiTiet = response.IdChiTietSp,
+                                    });
+                                    await _context.SaveChangesAsync();
+                                }
+                            }
+
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+            
+
+            return Ok();
+
+        }
+
+        #endregion
+
 
         #region DownLoadFile
         public IActionResult DownloadFile()
         {
-            string relativePath = "excel/template.xlsx"; 
+            string relativePath = "excel/template.xlsx";
             string filePath = Path.Combine(_webHostEnvironment.WebRootPath, relativePath);
             string fileName = "template.xlsx";
 
@@ -91,6 +183,68 @@ namespace App_View.Areas.Admin.Controllers
             }
         }
 
+        #endregion
+
+        #region ExportToExcel
+        public async Task<IActionResult> ExportToExcel()
+        {
+            var lstProduct = await _sanPhamChiTietService.GetListSanPhamExcelAynsc();
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("ProductList");
+
+                using (var range = worksheet.Cells[1, 1, 1, 15])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    range.Style.Font.Size = 12;
+                }
+
+                // Đặt tiêu đề cho các cột
+                worksheet.Cells[1, 1].Value = "Id";
+                worksheet.Cells[1, 2].Value = "Tên Sản Phẩm";
+                worksheet.Cells[1, 3].Value = "Thương hiệu";
+                worksheet.Cells[1, 4].Value = "Xuất xứ";
+                worksheet.Cells[1, 5].Value = "Chất liệu";
+                worksheet.Cells[1, 6].Value = "Loại giầy";
+                worksheet.Cells[1, 7].Value = "Kiểu để giầy";
+                worksheet.Cells[1, 8].Value = "Màu sắc";
+                worksheet.Cells[1, 9].Value = "Kích cỡ";
+                worksheet.Cells[1, 10].Value = "Giá nhập";
+                worksheet.Cells[1, 11].Value = "Giá bán";
+                worksheet.Cells[1, 12].Value = "Số lượng";
+                worksheet.Cells[1, 13].Value = "Khối lượng";
+                worksheet.Cells[1, 14].Value = "Dây";
+                worksheet.Cells[1, 15].Value = "Nổi bật";
+
+                // Đổ dữ liệu vào worksheet
+                for (int i = 0; i < lstProduct.Count(); i++)
+                {
+                    worksheet.Cells[i + 2, 1].Value = lstProduct[i].IdChiTietSp;
+                    worksheet.Cells[i + 2, 2].Value = lstProduct[i].SanPham;
+                    worksheet.Cells[i + 2, 3].Value = lstProduct[i].ThuongHieu;
+                    worksheet.Cells[i + 2, 4].Value = lstProduct[i].XuatXu;
+                    worksheet.Cells[i + 2, 5].Value = lstProduct[i].ChatLieu;
+                    worksheet.Cells[i + 2, 6].Value = lstProduct[i].LoaiGiay;
+                    worksheet.Cells[i + 2, 7].Value = lstProduct[i].KieuDeGiay;
+                    worksheet.Cells[i + 2, 8].Value = lstProduct[i].MauSac;
+                    worksheet.Cells[i + 2, 9].Value = lstProduct[i].KichCo;
+                    worksheet.Cells[i + 2, 10].Value = lstProduct[i].GiaNhap;
+                    worksheet.Cells[i + 2, 11].Value = lstProduct[i].GiaBan;
+                    worksheet.Cells[i + 2, 12].Value = lstProduct[i].SoLuongTon;
+                    worksheet.Cells[i + 2, 13].Value = lstProduct[i].KhoiLuong;
+                    worksheet.Cells[i + 2, 14].Value = lstProduct[i].Day;
+                    worksheet.Cells[i + 2, 15].Value = lstProduct[i].NoiBat;
+                }
+
+                byte[] excelBytes = package.GetAsByteArray();
+
+                string fileName = $"ProductList_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+
+                return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+
+        }
         #endregion
 
         [HttpPost]
