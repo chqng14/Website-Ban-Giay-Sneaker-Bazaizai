@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
+using App_View.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,7 +24,8 @@ builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamC
 builder.Services.AddScoped<IVoucherServices, VoucherServices>();
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
-
+builder.Services.AddScoped<ThongTinGHController>();  // Sử dụng AddScoped nếu bạn muốn một instance cho mỗi phạm vi của yêu cầu HTTP
+builder.Services.AddScoped<GioHangChiTietsController,GioHangChiTietsController>();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
@@ -93,10 +95,10 @@ builder.Services.AddAuthentication()
         facebookOptions.AppSecret = facebookAuthNSection["AppSecret"];
 
     });
-builder.Services.AddSingleton<IdentityErrorDescriber,AppIdentityErrorDescriber>();
+builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
 builder.Services.Configure<SecurityStampValidatorOptions>(option =>
 {
-    option.ValidationInterval=TimeSpan.FromSeconds(1);
+    option.ValidationInterval = TimeSpan.FromSeconds(1);
 
 });
 //thêm

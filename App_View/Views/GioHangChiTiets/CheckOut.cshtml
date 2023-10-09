@@ -110,24 +110,16 @@
             <div class="checkout-f">
                 <div class="row">
                     <div class="col-lg-6">
-                        <h1 class="checkout-f__h1">DELIVERY INFORMATION</h1>
-                        <form class="checkout-f__delivery">
+                        <h1 class="checkout-f__h1">THÔNG TIN GIAO HÀNG</h1>
+                        <form class="checkout-f__delivery" id="deliveryForm" asp-action="DataBill" asp-controller="HoaDon">
                             <div class="u-s-m-b-30">
                                 <div class="u-s-m-b-15">
-
                                     <!--====== Check Box ======-->
                                     <div class="check-box">
-                                        @if (thongTinGH==null)
-                                        {
                                             <input type="checkbox" id="get-address">
-                                        }
-                                        else
-                                        {
-                                            <input type="checkbox" id="get-address" checked="">
-                                        }
                                         <div class="check-box__state check-box__state--primary">
 
-                                            <label class="check-box__label" for="get-address">Use default shipping and billing address from account</label>
+                                            <label class="check-box__label" for="get-address">Sử dụng địa chỉ mặc định theo tài khoản</label>
                                         </div>
                                     </div>
                                     <!--====== End - Check Box ======-->
@@ -137,58 +129,44 @@
                                 <div class="gl-inline">
                                     <div class="u-s-m-b-15">
 
-                                        <label class="gl-label" for="billing-fname">FIRST NAME *</label>
+                                        <label class="gl-label" for="billing-fname">TÊN NGƯỜI NHẬN *</label>
 
-                                        <input class="input-text input-text--primary-style" type="text" id="billing-fname" data-bill="">
-                                    </div>
-                                    <div class="u-s-m-b-15">
-
-                                        <label class="gl-label" for="billing-lname">LAST NAME *</label>
-
-                                        <input class="input-text input-text--primary-style" type="text" id="billing-lname" data-bill="">
+                                        <input class="input-text input-text--primary-style" type="text" id="billing-fname" data-bill="" name="TenNguoiNhan">
                                     </div>
                                 </div>
                                 <!--====== End - First Name, Last Name ======-->
                                 <!--====== E-MAIL ======-->
                                 <div class="u-s-m-b-15">
 
-                                    <label class="gl-label" for="billing-email">E-MAIL *</label>
+                                    <label class="gl-label" for="billing-email">EMAIL *</label>
 
-                                    <input class="input-text input-text--primary-style" type="text" id="billing-email" data-bill="">
+                                    <input class="input-text input-text--primary-style" type="text" id="billing-email" data-bill="" >
                                 </div>
                                 <!--====== End - E-MAIL ======-->
                                 <!--====== PHONE ======-->
                                 <div class="u-s-m-b-15">
 
-                                    <label class="gl-label" for="billing-phone">PHONE *</label>
+                                    <label class="gl-label" for="billing-phone">SỐ ĐIỆN THOẠI *</label>
 
-                                    <input class="input-text input-text--primary-style" type="text" id="billing-phone" data-bill="">
+                                    <input class="input-text input-text--primary-style" type="text" id="billing-phone" data-bill="" name="SDT">
                                 </div>
                                 <!--====== End - PHONE ======-->
                                 <!--====== Street Address ======-->
                                 <div class="u-s-m-b-15">
 
-                                    <label class="gl-label" for="billing-street">STREET ADDRESS *</label>
+                                    <label class="gl-label" for="billing-street">ĐỊA CHỈ *</label>
 
-                                    <input class="input-text input-text--primary-style" type="text" id="billing-street" placeholder="House name and street name" data-bill="">
+                                    <input class="input-text input-text--primary-style" type="text" id="billing-street" placeholder="Số nhà,số đường" data-bill="" name="DiaChi">
                                 </div>
-                                <div class="u-s-m-b-15">
-
-                                    <label for="billing-street-optional"></label>
-
-                                    <input class="input-text input-text--primary-style" type="text" id="billing-street-optional" placeholder="Apartment, suite unit etc. (optional)" data-bill="">
-                                </div>
+                                
                                 <!--====== End - Street Address ======-->
                                 <!--====== Country ======-->
                                 <div class="u-s-m-b-15">
 
                                     <!--====== Select Box ======-->
 
-                                    <label class="gl-label" for="billing-country">COUNTRY *</label><select class="select-box select-box--primary-style" id="billing-country" data-bill="">
-                                        <option selected value="">Choose Country</option>
-                                        <option value="uae">United Arab Emirate (UAE)</option>
-                                        <option value="uk">United Kingdom (UK)</option>
-                                        <option value="us">United States (US)</option>
+                                    <label class="gl-label" for="city">THÀNH PHỐ *</label><select class="select-box select-box--primary-style" id="city" required>
+                                        <option selected >Chọn thành phố</option>
                                     </select>
                                     <!--====== End - Select Box ======-->
                                 </div>
@@ -196,9 +174,9 @@
                                 <!--====== Town / City ======-->
                                 <div class="u-s-m-b-15">
 
-                                    <label class="gl-label" for="billing-town-city">TOWN/CITY *</label>
-
-                                    <input class="input-text input-text--primary-style" type="text" id="billing-town-city" data-bill="">
+                                    <label class="gl-label" for="district">HUYỆN *</label><select class="select-box select-box--primary-style" id="district" required>
+                                        <option selected >Chọn huyện</option>
+                                    </select>
                                 </div>
                                 <!--====== End - Town / City ======-->
                                 <!--====== STATE/PROVINCE ======-->
@@ -206,23 +184,12 @@
 
                                     <!--====== Select Box ======-->
 
-                                    <label class="gl-label" for="billing-state">STATE/PROVINCE *</label><select class="select-box select-box--primary-style" id="billing-state" data-bill="">
-                                        <option selected value="">Choose State/Province</option>
-                                        <option value="al">Alabama</option>
-                                        <option value="al">Alaska</option>
-                                        <option value="ny">New York</option>
+                                    <label class="gl-label" for="wards">PHƯỜNG/XÃ *</label><select class="select-box select-box--primary-style" id="wards" required>
+                                        <option selected >Chọn phường/xã</option>
                                     </select>
                                     <!--====== End - Select Box ======-->
                                 </div>
                                 <!--====== End - STATE/PROVINCE ======-->
-                                <!--====== ZIP/POSTAL ======-->
-                                <div class="u-s-m-b-15">
-
-                                    <label class="gl-label" for="billing-zip">ZIP/POSTAL CODE *</label>
-
-                                    <input class="input-text input-text--primary-style" type="text" id="billing-zip" placeholder="Zip/Postal Code" data-bill="">
-                                </div>
-                                <!--====== End - ZIP/POSTAL ======-->
                                 <div class="u-s-m-b-10">
 
                                     <!--====== Check Box ======-->
@@ -231,32 +198,32 @@
                                         <input type="checkbox" id="make-default-address" data-bill="">
                                         <div class="check-box__state check-box__state--primary">
 
-                                            <label class="check-box__label" for="make-default-address">Make default shipping and billing address</label>
+                                            <label class="check-box__label" for="make-default-address">Chọn làm địa chỉ mặc định</label>
                                         </div>
                                     </div>
                                     <!--====== End - Check Box ======-->
                                 </div>
                                 <div class="u-s-m-b-10">
 
-                                    <a class="gl-link" href="#create-account" data-toggle="collapse">Want to create a new account?</a>
+                                    <a class="gl-link" href="#create-account" data-toggle="collapse">Tạo tài khoản mới?</a>
                                 </div>
                                 <div class="collapse u-s-m-b-15" id="create-account">
 
-                                    <span class="gl-text u-s-m-b-15">Create an account by entering the information below. If you are a returning customer please login at the top of the page.</span>
+                                    <span class="gl-text u-s-m-b-15">Tạo tài khoản mới vui lòng nhập thông tin bên dưới. Nếu bạn đã có tài khoản vui lòng đăng nhập ở góc trên.</span>
                                     <div>
 
-                                        <label class="gl-label" for="reg-password">Account Password *</label>
+                                        <label class="gl-label" for="reg-password">Mật khẩu *</label>
 
                                         <input class="input-text input-text--primary-style" type="text" data-bill id="reg-password">
                                     </div>
                                 </div>
                                 <div class="u-s-m-b-10">
 
-                                    <label class="gl-label" for="order-note">ORDER NOTE</label><textarea class="text-area text-area--primary-style" id="order-note"></textarea>
+                                    <label class="gl-label" for="order-note">GHI CHÚ</label><textarea class="text-area text-area--primary-style" id="order-note"></textarea>
                                 </div>
                                 <div>
 
-                                    <button class="btn btn--e-transparent-brand-b-2" type="submit">SAVE</button>
+                                    <button class="btn btn--e-transparent-brand-b-2" type="submit">LƯU</button>
                                 </div>
                             </div>
                         </form>
@@ -338,8 +305,8 @@
                             </div>
                             <div class="o-summary__section u-s-m-b-30">
                                 <div class="o-summary__box">
-                                    <h1 class="checkout-f__h1">PAYMENT INFORMATION</h1>
-                                    <form class="checkout-f__payment">
+                                    <h1 class="checkout-f__h1">PHƯƠNG THỨC THANH TOÁN</h1>
+                                    <form class="checkout-f__payment" id="paymentForm" asp-action="ThanhToan" asp-controller="HoaDon">
                                         <div class="u-s-m-b-10">
 
                                             <!--====== Radio Box ======-->
@@ -348,7 +315,7 @@
                                                 <input type="radio" id="cash-on-delivery" name="payment">
                                                 <div class="radio-box__state radio-box__state--primary">
 
-                                                    <label class="radio-box__label" for="cash-on-delivery">Cash on Delivery</label>
+                                                    <label class="radio-box__label" for="cash-on-delivery">COD</label>
                                                 </div>
                                             </div>
                                             <!--====== End - Radio Box ======-->
@@ -432,7 +399,7 @@
                                         </div>
                                         <div>
 
-                                            <button class="btn btn--e-brand-b-2" type="submit">PLACE ORDER</button>
+                                            <button id="placeOrderButton" class="btn btn--e-brand-b-2" type="submit">PLACE ORDER</button>
                                         </div>
                                     </form>
                                 </div>
@@ -701,7 +668,50 @@
                 $('#address-street').val(DiaChiFull);
                 $('form.checkout-modal1__form').submit();
             });
+
         });
 
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#placeOrderButton').click(function (e) {
+                e.preventDefault();
+                var selectedCity = $('#city option:selected').text();
+                var selectedDistrict = $('#district option:selected').text();
+                var selectedWard = $('#wards option:selected').text();
+                var inputAddressBill = $('#billing-street').val();
+                var DiaChiFull = inputAddressBill + ',' + selectedWard + ',' + selectedDistrict + ',' + selectedCity;
+                $('#billing-street').val(DiaChiFull);
+                // Lấy dữ liệu từ form delivery
+                var deliveryFormData = $('#deliveryForm').serialize();
+
+                // Lấy dữ liệu từ form payment
+                var paymentFormData = $('#paymentForm').serialize();
+
+                // Thực hiện Ajax để gửi dữ liệu đến action DataBill trong controller HoaDon
+                $.ajax({
+                    type: 'POST',
+                    url: '/HoaDon/DataBill',
+                    data: deliveryFormData,
+                    success: function (deliveryResponse) {
+                        // Thực hiện Ajax để gửi dữ liệu đến action ThanhToan trong controller TenControllerKhac
+                        $.ajax({
+                            type: 'POST',
+                            url: '/HoaDon/ThanhToan',
+                            data: paymentFormData,
+                            success: function (paymentResponse) {
+                                // Xử lý kết quả nếu cần
+                            },
+                            error: function (paymentError) {
+                                // Xử lý lỗi nếu cần
+                            }
+                        });
+                    },
+                    error: function (deliveryError) {
+                        // Xử lý lỗi nếu cần
+                    }
+                });
+            });
+        });
     </script>
 }

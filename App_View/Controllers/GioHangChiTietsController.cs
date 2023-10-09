@@ -37,18 +37,23 @@ namespace App_View.Controllers
             _signInManager = signInManager;
             _userManager = userManager;
         }
-
+        public string GetIdNguoiDung()
+        {
+            var idNguoiDung = _userManager.GetUserId(User);
+            Console.WriteLine("GioHangChiTietsController" + idNguoiDung);
+            ViewBag.idNguoiDung = idNguoiDung;
+            return idNguoiDung;
+        }
         // GET: GioHangChiTiets
         public async Task<IActionResult> ShowCartUser()
         {
-            var idNguoiDung = _userManager.GetUserId(User);
-            if (idNguoiDung == null)
+            if (GetIdNguoiDung() == null)
             {
                 return RedirectToAction("ShowCartNoLogin");
             }
             else
             {
-                var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+                var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
                 return View(giohang);
             }
         }
@@ -62,17 +67,15 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> CheckOut()
         {
-            var idNguoiDung = _userManager.GetUserId(User);
-            if (idNguoiDung == null)
+            if (GetIdNguoiDung() == null)
             {
                 return RedirectToAction("CheckOutNoLogin");
             }
             else
             {
-                var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
-                var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
+                var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
+                var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(GetIdNguoiDung());
                 ViewData["ThongTinGH"] = thongTinGH;
-                ViewBag.idNguoiDung = idNguoiDung;
                 return View(giohang);
             }
         }
@@ -97,14 +100,13 @@ namespace App_View.Controllers
         // GET: GioHangChiTiets/Create
         public async Task<IActionResult> AddToCart(GioHangChiTietDTOCUD gioHangChiTietDTOCUD)
         {
-            var idNguoiDung = _userManager.GetUserId(User);
             var product = await _sanPhamChiTietService.GetByKeyAsync(gioHangChiTietDTOCUD.IdSanPhamCT);
             var giohang = new GioHangChiTietDTOCUD();
             giohang.IdGioHangChiTiet = Guid.NewGuid().ToString();
             giohang.IdSanPhamCT = gioHangChiTietDTOCUD.IdSanPhamCT;
-            giohang.IdNguoiDung = idNguoiDung;
+            giohang.IdNguoiDung = GetIdNguoiDung();
             giohang.SoLuong = gioHangChiTietDTOCUD.SoLuong;
-            giohang.GiaGoc = product.GiaBan;
+            giohang.GiaGoc = product.GiaThucTe;
             giohang.GiaBan = product.GiaBan;
             GioHangChiTietServices.CreateCartDetailDTO(giohang);
             return RedirectToAction("ShowCartUser");
@@ -116,8 +118,7 @@ namespace App_View.Controllers
         {
             var jsonupdate = await GioHangChiTietServices.UpdateGioHang(IdGioHangChiTiet, SoLuong);
             //var SumPrice = string.Format(CultureInfo.GetCultureInfo("vi-VN"), "{0:N0}đ", Convert.ToDouble((await _sanPhamChiTietService.GetByKeyAsync(IdSanPhamChiTiet)).GiaBan * SoLuong));
-            var idNguoiDung = _userManager.GetUserId(User);
-            var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+            var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
             double TongTien = 0;
             foreach (var item in giohang)
             {
@@ -151,8 +152,7 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> DeleteAllCart()
         {
-            var idNguoiDung = _userManager.GetUserId(User);
-            List<GioHangChiTietDTO> giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+            List<GioHangChiTietDTO> giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
             foreach (var item in giohang)
             {
                 var jsondelete = await GioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
