@@ -56,16 +56,16 @@ namespace App_Data.Repositories
             return context.hoaDonChiTiets.ToList();
         }
 
-        public IEnumerable<HoaDonChiTietViewModel> GetAllHoaDonDTO()
+        public HoaDonChiTietViewModel GetHoaDonDTO(string idHoaDon)
         {
             var hoadon = context.hoaDonChiTiets
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.SanPham)
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.MauSac)
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.KichCo)
-                .Include(x => x.HoaDon).ThenInclude(hd => hd.NguoiDung)
+                .Include(x => x.HoaDon).ThenInclude(hd => hd.ThongTinGiaoHang)
                 .Include(x => x.HoaDon).ThenInclude(hd => hd.Voucher)
-                .ToList();
-            return _mapper.Map<List<HoaDonChiTietViewModel>>(hoadon);
+                .FirstOrDefault(x => x.IdHoaDon == idHoaDon);
+            return _mapper.Map<HoaDonChiTietViewModel>(hoadon);
         }
 
         public bool RemoveBillDetail(HoaDonChiTiet item)
