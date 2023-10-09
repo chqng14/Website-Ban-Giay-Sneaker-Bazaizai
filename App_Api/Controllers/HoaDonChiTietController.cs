@@ -27,9 +27,9 @@ namespace App_Api.Controllers
         }
         // GET: api/<HoaDonChiTietController>
         [HttpGet("GetHoaDonDTO")]
-        public async Task<IEnumerable<HoaDonChiTietViewModel>> GetAll()
+        public async Task<HoaDonChiTietViewModel> GetAll(string idHoaDon)
         {
-            return _hoaDonChiTiet.GetAllHoaDonDTO();
+            return _hoaDonChiTiet.GetHoaDonDTO(idHoaDon);
         }
 
         // GET api/<HoaDonChiTietController>/5
