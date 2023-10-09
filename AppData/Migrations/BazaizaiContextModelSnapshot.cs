@@ -123,6 +123,9 @@ namespace App_Data.Migrations
                     b.Property<string>("IdGioHangChiTiet")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<double?>("GiaBan")
+                        .HasColumnType("float");
+
                     b.Property<double?>("GiaGoc")
                         .HasColumnType("float");
 
@@ -585,6 +588,9 @@ namespace App_Data.Migrations
                     b.Property<double?>("GiaNhap")
                         .HasColumnType("float");
 
+                    b.Property<double?>("GiaThucTe")
+                        .HasColumnType("float");
+
                     b.Property<string>("IdChatLieu")
                         .HasColumnType("nvarchar(450)");
 
@@ -608,6 +614,9 @@ namespace App_Data.Migrations
 
                     b.Property<string>("IdXuatXu")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<double?>("KhoiLuong")
+                        .HasColumnType("float");
 
                     b.Property<string>("Ma")
                         .HasColumnType("varchar(50)");
@@ -737,9 +746,11 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("DieuKien")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("LoaiHinhUuDai")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("MaVoucher")
@@ -754,10 +765,8 @@ namespace App_Data.Migrations
                     b.Property<DateTime>("NgayKetThuc")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PhamViSanPham")
-                        .HasColumnType("nvarchar(300)");
-
                     b.Property<int?>("SoLuong")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("TenVoucher")

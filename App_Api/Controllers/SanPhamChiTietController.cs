@@ -11,6 +11,7 @@ using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using App_Data.ViewModels.XuatXu;
 using AutoMapper;
+using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 
@@ -77,7 +78,7 @@ namespace App_Api.Controllers
         }
 
         [HttpGet("Get-List-SanPhamChiTietViewModel")]
-        public async Task<List<SanPhamChiTietViewModel>> GetListSanPham()
+        public async Task<List<SanPhamDanhSachViewModel>> GetListSanPham()
         {
             return (await _sanPhamChiTietRes.GetListViewModelAsync()).ToList();
         }
@@ -100,6 +101,18 @@ namespace App_Api.Controllers
             return await _sanPhamChiTietRes.GetDanhSachGiayViewModelAsync(); ;
         }
 
+        [HttpGet("khoi-phuc-kinh-doanh/{id}")]
+        public async Task<bool> KhoiPhucKinhDoanh(string id)
+        {
+            return await _sanPhamChiTietRes.KhoiPhucKinhDoanhAynsc(id);
+        }
+
+        [HttpGet("Get-List-SanPhamNgungKinhDoanhViewModel")]
+        public async Task<List<SanPhamDanhSachViewModel>> GetDanhSachGiayNgungKinhDoanh()
+        {
+            return (await _sanPhamChiTietRes.GetListSanPhamNgungKinhDoanhViewModelAsync()).ToList(); 
+        }
+
         [HttpGet("Get-List-ItemShopViewModel")]
         public async Task<List<ItemShopViewModel>?> GetDanhSachItemShowViewModel()
         {
@@ -112,6 +125,12 @@ namespace App_Api.Controllers
             return await _sanPhamChiTietRes.GetByKeyAsync(id);
         }
 
+        [HttpGet("Get-SanPhamChiTietViewModel/{id}")]
+        public async Task<SanPhamChiTietViewModel?> GetSanPhamViewModel(string id)
+        {
+            return await _sanPhamChiTietRes.GetSanPhamChiTietViewModelAynsc(id);
+        }
+
         [HttpGet("Get-ItemDetailViewModel/{id}")]
         public async Task<ItemDetailViewModel?> GetItemDetailViewModel(string id)
         {
@@ -122,6 +141,12 @@ namespace App_Api.Controllers
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColor(string id,string mauSac)
         {
             return await _sanPhamChiTietRes.GetItemDetailViewModelWhenSelectColorAynsc(id,mauSac);
+        }
+
+        [HttpGet("Get-ItemDetailViewModel/idsanpham/{id}/size/{size}")]
+        public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSize(string id, int size)
+        {
+            return await _sanPhamChiTietRes.GetItemDetailViewModelWhenSelectSizeAynsc(id, size);
         }
 
         [HttpPost("Creat-SanPhamChiTiet")]
@@ -142,6 +167,18 @@ namespace App_Api.Controllers
                 IdChiTietSp = sanPhamChiTiet.IdChiTietSp
             };
 
+        }
+
+        [HttpPut("Ngung_Kinh_Doanh_List_SanPham")]
+        public async Task<bool> NgungKinhDoanhSanPham(List<string> lstGuild)
+        {
+            return await _sanPhamChiTietRes.NgungKinhDoanhSanPhamAynsc(lstGuild); 
+        }
+
+        [HttpPut("Update-Kinh_Doanh_List_SanPham")]
+        public async Task<bool> KinhDoanhLaiSanPham(List<string> lstGuild)
+        {
+            return await _sanPhamChiTietRes.KinhDoanhLaiSanPhamAynsc(lstGuild);
         }
 
         [HttpDelete("Delete-SanPhamChiTiet/{id}")]
@@ -166,6 +203,18 @@ namespace App_Api.Controllers
                 return await _sanPhamChiTietRes.UpdateAsync(spChiTiet);
             }
             return false;
+        }
+
+        [HttpGet("get_list_SanPhamExcel")]
+        public async Task<List<SanPhamChiTietExcelViewModel>> GetLstSanPhamExcel()
+        {
+            return await _sanPhamChiTietRes.GetListSanPhamExcelAynsc();
+        }
+
+        [HttpPost("get-ItemExcel")]
+        public async Task<SanPhamChiTietDTO> GetItemExcel(BienTheDTO bienTheDTO)
+        {
+            return await _sanPhamChiTietRes.GetItemExcelAynsc(bienTheDTO);
         }
 
         //SanPham

@@ -1,4 +1,5 @@
-﻿<div class="u-s-p-y-60" id="electronic-01">
+﻿@model List<App_Data.Models.ThuongHieu>
+<div class="u-s-p-y-60" id="electronic-01">
 
     <!--====== Section Intro ======-->
     <div class="section__intro u-s-m-b-46">
@@ -17,54 +18,21 @@
     <div class="section__content">
         <div class="container">
             <div class="row">
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
-                    <div class="category-o">
-                        <div class="aspect aspect--bg-grey aspect--square category-o__img-wrap">
+                @foreach (var item in Model)
+                {
+                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
+                        <div class="category-o">
+                            <div class="aspect aspect--bg-grey aspect--square category-o__img-wrap">
 
-                            <img class="aspect__img category-o__img" src="images/product/electronic/product23.jpg" alt="">
-                        </div>
-                        <div class="category-o__info">
+                                <img class="aspect__img category-o__img" src="/images/product/electronic/product23.jpg" alt="">
+                            </div>
+                            <div class="category-o__info">
 
-                            <a class="category-o__shop-now btn--e-white-brand" href="shop-side-version-2.html">Laptops</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
-                    <div class="category-o">
-                        <div class="aspect aspect--bg-grey aspect--square category-o__img-wrap">
-
-                            <img class="aspect__img category-o__img" src="images/product/electronic/product35.jpg" alt="">
-                        </div>
-                        <div class="category-o__info">
-
-                            <a class="category-o__shop-now btn--e-white-brand" href="shop-side-version-2.html">Smartphones</a>
+                                <a class="category-o__shop-now btn--e-white-brand" href="">@item.TenThuongHieu</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
-                    <div class="category-o">
-                        <div class="aspect aspect--bg-grey aspect--square category-o__img-wrap">
-
-                            <img class="aspect__img category-o__img" src="images/product/electronic/product3.jpg" alt="">
-                        </div>
-                        <div class="category-o__info">
-
-                            <a class="category-o__shop-now btn--e-white-brand" href="shop-side-version-2.html">Headphones</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
-                    <div class="category-o">
-                        <div class="aspect aspect--bg-grey aspect--square category-o__img-wrap">
-
-                            <img class="aspect__img category-o__img" src="images/product/electronic/product32.jpg" alt="">
-                        </div>
-                        <div class="category-o__info">
-
-                            <a class="category-o__shop-now btn--e-white-brand" href="shop-side-version-2.html">TV's</a>
-                        </div>
-                    </div>
-                </div>
+                }
             </div>
         </div>
     </div>

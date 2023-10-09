@@ -1,0 +1,433 @@
+﻿@{
+    ViewData["Title"] = "Danh Sách sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+
+    .cursor-image {
+        cursor: pointer;
+    }
+
+    .collapse > .card-body {
+        background: #73f7d2;
+    }
+
+    .card > .main {
+        background: #b1deeb;
+    }
+
+
+    .page-item.disabled .page-link,
+    .card > .main_danh_sach {
+        background: #b1d3d1;
+    }
+
+    .note-editing-area {
+        height: 400px;
+    }
+</style>
+
+<div id="body-danhsach">
+    <div class="notification-toast top-right" id="notification-toast"></div>
+    <div class="modal fade" id="confirm">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #129dc1;">
+                    <h5 class="modal-title" id="exampleModalLabel">Xác nhận</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="background: #d3f6ff;">
+                    <span id="thongBao"></span>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalSanPham"></div>
+
+    <div class="page-header">
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>QUẢN LÝ SẢN PHẨM</a>
+                <a class="breadcrumb-item" href="#">DANH SÁCH SẢN PHẨM NGỪNG KINH DOANH</a>
+            </nav>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-body main_danh_sach">
+            <div class="row m-b-30">
+                <div class="col-lg-8">
+                    <div class="d-md-flex">
+                        <div class="m-b-10">
+                            <select class="custom-select" style="min-width: 180px;">
+                                <option selected="">Catergory</option>
+                                <option value="all">All</option>
+                                <option value="homeDeco">Home Decoration</option>
+                                <option value="eletronic">Eletronic</option>
+                                <option value="jewellery">Jewellery</option>
+                            </select>
+                        </div>
+                        <div class="m-b-10 ml-1">
+                            <select class="custom-select" style="min-width: 180px;">
+                                <option selected="">Status</option>
+                                <option value="all">All</option>
+                                <option value="inStock">In Stock </option>
+                                <option value="outOfStock">Out of Stock</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <a class="btn btn-tone" href="/Admin/SanPhamChiTiet/DanhSachSanPham">
+                        <i class="fas fa-undo-alt"></i>
+                        <span>
+                            Quay lại
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <table class="table table-hover no-footer w-100" id="table-sanpham">
+                </table>
+            </div>
+        </div>
+    </div>
+    <div id="confirm-ds" class="mt-2 mb-2">
+        <div style="position: fixed; top: 90px; right: 26px">
+            <button class="btn btn-warning mr-2 kinh_doanh_lai">
+                <i class="fas fa-shopping-basket"></i>
+                <span>Sử dụng để kinh doanh</span>
+            </button>
+            <button class="btn btn-primary thaotac">
+                <i class="far fa-edit"></i>
+                <span>Cập nhật</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(() => checkToshowConfirm())
+    const checkToshowConfirm = () => {
+        const sumCheck = $('input[type="checkbox"]:checked');
+        if (sumCheck.length>0) {
+            $('#confirm-ds').show()
+        } else {
+            $('#confirm-ds').hide()
+        }
+    }
+    $(document).on('click', '.cursor-image', function () {
+        const id = $(this).data('data');
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/LoadPartialView?idSanPhamChiTiet='+id,
+            type: 'GET',
+            success: function (result) {
+                const modal = $('#modalSanPham');
+                modal.empty();
+                modal.html(result);
+                modal.modal("show")
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    })
+    $(() => {
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    })
+
+    $(document).ready(function () {
+        let selectedCheckboxes = {};
+        var table = $('#table-sanpham').DataTable({
+        ajax: {
+            url: '@Url.Action("GetDanhSachSanPhamNgungKinhDoanh", "SanPhamChiTiet", new { area= "Admin" })',
+            type: 'GET',
+            dataType: 'json',
+            data: function (e) {
+                return {
+                    draw: e.draw,
+                    start: e.start,
+                    length: e.length,
+                    searchValue: e.search.value
+                };
+            },
+            cache: true
+        },
+        serverSide: true,
+        paging: true,
+        scrollX: true,
+        columns: [
+            {
+                data: 'idChiTietSp',
+                title: '<div class="checkbox"><input id="check-all" type="checkbox"><label for="check-all" class="m-b-0"></label></div>',
+                render: function (data, type, row, meta) {
+                    const isChecked = selectedCheckboxes[data.idChiTietSp];
+                    const checkedAttribute = isChecked ? 'checked' : '';
+                    return `
+                    <div class="checkbox" data-id="${data}"><input id="check-item-${data}" type="checkbox" class="item"><label for="check-item-${data}" "${checkedAttribute}" class="m-b-0"></label></div>
+                    `;
+                },
+                orderable: false
+            },
+            {
+                data: null,
+                title: 'STT',
+                render: function (data, type, row, meta) {
+                    return meta.row + 1;
+                },
+                orderable: false
+            },
+            {
+                data: null,
+                title: 'Sản phẩm',
+                render: function (data, type, row, meta) {
+                    return `
+                    <div class="d-flex align-items-center"><img data-data="${data.idChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sán phẩm" class="img-fluid cursor-image rounded" src="/AnhSanPham/${data.anh}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.sanPham}</h6></div>
+                    `;
+                },
+                orderable: false
+            },
+            {
+                data: 'kichCo',
+                title: 'Size',
+                orderable: false
+            },
+            {
+                data: 'kieuDeGiay',
+                title: 'Kiểu đế giầy',
+                orderable: false
+            },
+            {
+                data: 'chatLieu',
+                title: 'Chất liệu',
+                orderable: false
+            },
+            {
+                data: 'giaNhap',
+                title: 'Giá nhập',
+                render: function (data, type, row, meta) {
+                    return new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    }).format(data).replace(",00", "");
+                },
+                orderable: false
+            },
+            {
+                data: 'giaBan',
+                title: 'Giá bán',
+                render: function (data, type, row, meta) {
+                    return new Intl.NumberFormat('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    }).format(data).replace(",00", "");
+                },
+                orderable: false
+            },
+            {
+                data: 'soLuongTon',
+                title: 'Số lượng',
+                orderable: false,
+                render: function (data, type, row) {
+                    if (type === 'display' || type === 'filter') {
+                        return formatNumber(data);
+                    }
+                    return data;
+                }
+            },
+            {
+                data: null,
+                title: '#',
+                render: function (data, type, row, meta) {
+                    return `
+                    <button class="btn btn-icon btn-primary btn-rounded btn-tone khoi-phuc"><i class="fas fa-undo"></i></button>
+                    `;
+                },
+                orderable: false
+            },
+        ],
+        initComplete: function (settings, json) {
+
+            $('#table-sanpham').on('draw.dt', function () {
+                $('input[type="checkbox"]').each(function () {
+                    const id = $(this).attr('id').replace('check-item-', '');
+                    if (selectedCheckboxes[id]) {
+                        $(this).prop('checked', true);
+                    } else {
+                        $(this).prop('checked', false);
+                    }
+                });
+            });
+
+            $('#check-all').on('change', function () {
+                const isCheckedAll = $(this).prop('checked');
+                $('input[type="checkbox"].item').each(function () {
+                    const id = $(this).attr('id').replace('check-item-', '');;
+                    $(this).prop('checked', isCheckedAll);
+
+                    if (isCheckedAll) {
+                        selectedCheckboxes[id] = true;
+                    } else {
+                        delete selectedCheckboxes[id];
+                    }
+                    checkToshowConfirm();
+                });
+            });
+
+            $('#table-sanpham').on('change', 'input[type="checkbox"]', function () {
+                const id = $(this).attr('id').replace('check-item-', '');
+                if ($(this).prop('checked')) {
+                    selectedCheckboxes[id] = true;
+                } else {
+                    delete selectedCheckboxes[id];
+                }
+
+                const totalCheckboxes = $('input[type="checkbox"]').length;
+                const totalChecked = $('input[type="checkbox"]:checked').length;
+                $('#check-all').prop('checked', totalChecked === totalCheckboxes);
+                checkToshowConfirm();
+            });
+        },
+
+    });
+
+
+        $(document).on("click", ".khoi-phuc", function () {
+           $('#confirm').find('#thongBao').text(`Bạn có muốn kinh doanh lại mặt hàng này?`);
+           $('#confirm').modal('show');
+           var item = $(this).closest('tr')
+           $('#confirm').off('click', '.btn-primary');
+           $('#confirm').one('click', '.btn-primary', function () {
+               const id = item.find('.checkbox').attr('data-id');
+               console.log(id);
+               $.ajax({
+                   url: '/Admin/SanPhamChiTiet/KhoiPhucKinhDoanh/' + id,
+                   type: 'GET',
+                   success: function (result) {
+                       if (result) {
+                           delete selectedCheckboxes[id];
+                           item.remove();
+                           $('#confirm').modal('hide');
+                           showToastDeleteSucsess();
+                           table.draw();
+                       }
+                   },
+                   error: function (xhr, status, error) {
+                       console.log(xhr.responseText);
+                       console.log(status);
+                       console.log(error);
+                       console.log(xhr);
+                   }
+               });
+           });
+       })
+
+       $(document).on("click", '.thaotac', function () {
+           const keys = Object.keys(selectedCheckboxes);
+           console.log(keys);
+           const data = { "listGuild": keys };
+           console.log(JSON.stringify(data));
+           $('#preloader').show();
+           $.ajax({
+               url: 'GetPartialViewListUpdate',
+               type: 'POST',
+               data: JSON.stringify(data),
+               contentType: 'application/json',
+               success: function (result) {
+                   $('#body-danhsach').html(result)
+                   $('#preloader').hide();
+               },
+               error: function (xhr, status, error) {
+                   console.log(xhr.responseText);
+                   console.log(status);
+                   console.log(error);
+                   console.log(xhr);
+               }
+           });
+       })
+
+        $(document).on("click", '.kinh_doanh_lai', function () {
+            const keys = Object.keys(selectedCheckboxes);
+            $('#confirm').find('#thongBao').text(`Bạn có muốn kinh doanh lại ${keys.length} mặt hàng này?`);
+            $('#confirm').modal('show');
+            console.log(keys);
+            const data = { listGuild: keys };
+            console.log(JSON.stringify(data));
+            $('#confirm').off('click', '.btn-primary');
+            $('#confirm').one('click', '.btn-primary', function () {
+                $.ajax({
+                    url: '/Admin/SanPhamChiTiet/KinhDoanhLaiListSanPham',
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function (result) {
+                        if (result) {
+                            window.location.href = "/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh"
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+            })
+        })
+   });
+
+
+
+    function formatNumber(number) {
+        if (number >= 1000) {
+            const formattedNumber = (number / 1000).toFixed(1) + 'k';
+            return formattedNumber.replace('.0', '');
+        }
+        return number.toString();
+    }
+    function showToastDeleteSucsess() {
+        var toastHTML = `<div class="toast fade hide" data-delay="3000">
+        <div class="toast-header">
+            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+            <strong class="mr-auto">Thông báo</strong>
+            <small>1 seconds ago</small>
+            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            <span>Mặt hàng này đã được kinh doanh lại!</span>
+        </div>
+    </div>`
+
+        $('#notification-toast').append(toastHTML)
+        $('#notification-toast .toast').toast('show');
+        setTimeout(function () {
+            $('#notification-toast .toast:first-child').remove();
+        }, 3000);
+    }
+</script>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+    <script src="~/Admin/vendors/select2/select2.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.8.1/autoNumeric.min.js"></script>
+}

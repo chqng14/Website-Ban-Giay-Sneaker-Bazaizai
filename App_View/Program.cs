@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
+using System.Security.Claims;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,24 +19,17 @@ builder.Services.AddDbContext<BazaizaiContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddOptions();
 builder.Services.AddRazorPages();
-builder.Services.AddIdentity<NguoiDung, ChucVu>(options =>
-{
-    // Cấu hình tên bảng tùy chỉnh cho IdentityRole và IdentityUser
-    options.Stores.MaxLengthForKeys = 128;
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-})
-    .AddEntityFrameworkStores<BazaizaiContext>()
-    .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IVoucherServices, VoucherServices>();
-//builder.Services.AddDefaultIdentity<NguoiDung>()
-//    .AddEntityFrameworkStores<BazaizaiContext>()
-//    .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
+builder.Services.AddIdentity<NguoiDung, ChucVu>()
+.AddEntityFrameworkStores<BazaizaiContext>()
+.AddDefaultTokenProviders();
+
 var mailsetting = builder.Configuration.GetSection("MailSettings");
 builder.Services.Configure<MailSettings>(mailsetting);
 builder.Services.AddSingleton<IEmailSender, SendMailService>();
@@ -50,7 +45,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1; // Số ký tự riêng biệt
 
     // Cấu hình Lockout - khóa user
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1); // Khóa 5 phút
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1); // Khóa 1 phút
     options.Lockout.MaxFailedAccessAttempts = 5; // Thất bại 5 lầ thì khóa
     options.Lockout.AllowedForNewUsers = true;
 
@@ -72,6 +67,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/KhongDuocTruyCap.html";
 });
 builder.Services.AddAuthentication()
+     .AddCookie()
     .AddGoogle(googleOptions =>
     {
         // Đọc thông tin Authentication:Google từ appsettings.json
@@ -80,8 +76,13 @@ builder.Services.AddAuthentication()
         // Thiết lập ClientID và ClientSecret để truy cập API google
         googleOptions.ClientId = googleAuthNSection["ClientId"];
         googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
-        // Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
-        //googleOptions.CallbackPath = "/dang-nhap-tu-google";
+        googleOptions.Scope.Add("profile");
+        googleOptions.Events.OnCreatingTicket = (context) =>
+        {
+            var picture = context.User.GetProperty("picture").GetString();
+            context.Identity.AddClaim(new Claim("picture", picture));
+            return Task.CompletedTask;
+        };
 
     })
     .AddFacebook(facebookOptions =>
@@ -90,10 +91,14 @@ builder.Services.AddAuthentication()
         IConfigurationSection facebookAuthNSection = builder.Configuration.GetSection("Authentication:Facebook");
         facebookOptions.AppId = facebookAuthNSection["AppId"];
         facebookOptions.AppSecret = facebookAuthNSection["AppSecret"];
-        // Thiết lập đường dẫn Facebook chuyển hướng đến
-        //facebookOptions.CallbackPath = "/dang-nhap-tu-facebook";
-    });
 
+    });
+builder.Services.AddSingleton<IdentityErrorDescriber,AppIdentityErrorDescriber>();
+builder.Services.Configure<SecurityStampValidatorOptions>(option =>
+{
+    option.ValidationInterval=TimeSpan.FromSeconds(1);
+
+});
 //thêm
 var app = builder.Build();
 

@@ -2,6 +2,9 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.GioHangChiTiet;
+using App_Data.ViewModels.HoaDonChiTietDTO;
+using AutoMapper;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,65 +17,50 @@ namespace App_Api.Controllers
     [ApiController]
     public class HoaDonChiTietController : ControllerBase
     {
-        private readonly IAllRepo<HoaDonChiTiet> allRepo;
         BazaizaiContext DbContextModel = new BazaizaiContext();
-        DbSet<HoaDonChiTiet> hoaDonChiTiets;
-        public HoaDonChiTietController()
+        private readonly IHoaDonChiTietRepos _hoaDonChiTiet;
+        private readonly IMapper _mapper;
+        public HoaDonChiTietController(IMapper mapper)
         {
-            hoaDonChiTiets = DbContextModel.hoaDonChiTiets;
-            allRepo = new AllRepo<HoaDonChiTiet>(DbContextModel, hoaDonChiTiets);
+            _hoaDonChiTiet = new HoaDonChiTietRepos(mapper);
+            _mapper = mapper;
         }
         // GET: api/<HoaDonChiTietController>
-        [HttpGet]
-        public IEnumerable<HoaDonChiTiet> Get()
+        [HttpGet("GetHoaDonDTO")]
+        public async Task<IEnumerable<HoaDonChiTietViewModel>> GetAll()
         {
-            return allRepo.GetAll();
+            return _hoaDonChiTiet.GetAllHoaDonDTO();
         }
 
         // GET api/<HoaDonChiTietController>/5
         [HttpGet("GetHoaDonCTById")]
         public HoaDonChiTiet GetHoaDonCTById(string id)
         {
-            return allRepo.GetAll().FirstOrDefault(c => c.IdHoaDonChiTiet == id);
+            return _hoaDonChiTiet.GetAll().FirstOrDefault(c => c.IdHoaDonChiTiet == id);
         }
 
         // POST api/<HoaDonChiTietController>
         [HttpPost("Create")]
-        public bool Post(string IdHoaDon, string IdSanPhamChiTiet, int SoLuong, double GiaGoc, double GiaBan, int TrangThai)
+        public async Task<bool> TaoHoaDonDTO(HoaDonChiTietDTO hoaDonChiTietDTO)
         {
-            HoaDonChiTiet hdct = new HoaDonChiTiet()
-            {
-                IdHoaDonChiTiet = Guid.NewGuid().ToString(),
-                IdHoaDon = IdHoaDon,
-                IdSanPhamChiTiet = IdSanPhamChiTiet,
-                SoLuong = SoLuong,
-                GiaGoc = GiaGoc,
-                GiaBan = GiaBan,
-                TrangThai = TrangThai,
-            };
-            return allRepo.AddItem(hdct);
+            var hoadonChiTiet = _mapper.Map<HoaDonChiTiet>(hoaDonChiTietDTO);
+            return _hoaDonChiTiet.AddBillDetail(hoadonChiTiet);
         }
 
         // PUT api/<HoaDonChiTietController>/5
         [HttpPut("Edit")]
-        public bool Put(string IdHoaDonChiTiet, string IdHoaDon, string IdSanPhamChiTiet, int SoLuong, double GiaGoc, double GiaBan, int TrangThai)
+        public async Task<bool> SuaHoaDonDTO(HoaDonChiTietDTO hoaDonChiTietDTO)
         {
-            var hdct = allRepo.GetAll().First(p => p.IdHoaDonChiTiet == IdHoaDonChiTiet);
-            hdct.IdHoaDon = IdHoaDon;
-            hdct.IdSanPhamChiTiet = IdSanPhamChiTiet;
-            hdct.SoLuong = SoLuong;
-            hdct.GiaGoc = GiaGoc;
-            hdct.GiaBan = GiaBan;
-            hdct.TrangThai = TrangThai;
-            return allRepo.EditItem(hdct);
+            var hoadonChiTiet = _mapper.Map<HoaDonChiTiet>(hoaDonChiTietDTO);
+            return _hoaDonChiTiet.EditBillDetail(hoadonChiTiet);
         }
 
         // DELETE api/<HoaDonChiTietController>/5
         [HttpDelete("Delete")]
-        public bool Delete(string id)
+        public async Task<bool> Delete(string id)
         {
-            var hdct = allRepo.GetAll().First(p => p.IdHoaDonChiTiet == id);
-            return allRepo.RemoveItem(hdct);
+            var hoadonChiTiet = _hoaDonChiTiet.GetAll().FirstOrDefault(c => c.IdHoaDonChiTiet == id);
+            return _hoaDonChiTiet.RemoveBillDetail(hoadonChiTiet);
         }
     }
 }

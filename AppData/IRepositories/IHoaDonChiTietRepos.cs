@@ -1,4 +1,5 @@
 ﻿using App_Data.Models;
+using App_Data.ViewModels.HoaDonChiTietDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace App_Data.IRepositories
         public bool AddBillDetail(HoaDonChiTiet item);
         public bool RemoveBillDetail(HoaDonChiTiet item);
         public bool EditBillDetail(HoaDonChiTiet item);
+        public IEnumerable<HoaDonChiTietViewModel> GetAllHoaDonDTO();
         //public List<HoaDonChiTiet> FindBillByCode(string ma);
     }
 }

@@ -1,18 +1,46 @@
-﻿@model IEnumerable<App_Data.Models.Voucher>
+﻿@using App_Data.DbContextt;
+@model IEnumerable<App_Data.Models.Voucher>
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    BazaizaiContext context = new BazaizaiContext();
 }
 
 <h1>Voucher</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+
 </p>
-<table id="data-table" class="table" style="text-align:center">
-   
-    <thead>
+<div class="d-md-flex">
+    <div class="row w-100 m-b-30">       
+        <div class="col-lg-8">
+            <form asp-action="Index" method="post">
+            <div class="d-md-flex">
+                <div class="m-b-10">
+                    <select id="trangThai" name="trangThai" class="custom-select">
+                        <option value="tatCa">Tất cả</option>
+                        <option value="hoatDong">Hoạt động</option>
+                        <option value="khongHoatDong">Không hoạt động</option>
+                        <option value="chuaBatDau">Chưa bắt đầu</option>
+                    </select>                 
+                </div>
+                <div class="m-b-10 ml-1">
+                    <button type="submit" class="btn btn-primary">Lọc</button>
+                </div>                                          
+            </div>
+        </form>
+        </div>
+        <div class="col-lg-4 text-right">
+            <h1>  <a class="btn btn-primary" asp-action="Create"><i class="anticon anticon-plus-circle"></i> Tạo mới</a></h1>
+          
+        </div>
+
+    </div>
+</div>
+<table id="data-table" class="table" style="text-align:center">  
+
+    <thead> 
         <tr>
             <th>
                 Mã Voucher
@@ -21,19 +49,16 @@
                 Tên
             </th>
             <th>
-                Điều kiện
+                Mức ưu đãi
             </th>
             <th>
-                Phạm vi
+                Điều kiện
             </th>
             <th>
                Loại hình
             </th>
             <th>
                 Số lượng
-            </th>
-            <th>
-                Mức ưu đãi
             </th>
             <th>
                Ngày bắt đầu
@@ -50,39 +75,74 @@
 
             <th></th>
         </tr>
+ 
     </thead>
     <tbody>
-@foreach (var item in Model) {
+        @foreach (var item in ViewBag.TatCa)
+        {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MaVoucher)
+                @item.MaVoucher
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TenVoucher)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DieuKien)
+                @item.TenVoucher
             </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PhamViSanPham)
+                    @if (item.LoaiHinhUuDai == 1)
+                    {
+                        int mucUuDai = int.Parse(item.MucUuDai.ToString());
+                        string mucUuDaiPhanTram = mucUuDai.ToString() + "%";
+                        @mucUuDaiPhanTram
+                    }
+                    else
+                    {
+                        @string.Format("{0:N0}đ", item.MucUuDai)
+                    }
                 </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LoaiHinhUuDai)
+                    @string.Format("{0:N0}đ", item.DieuKien)
+            </td>         
+            <td>
+                    @if (item.LoaiHinhUuDai == 0)
+                    {
+                        <span>Giảm giá theo tiền mặt</span>
+                    }
+                    @if (item.LoaiHinhUuDai == 1)
+                    {
+                        <span>Giảm giá %</span>
+                    }
+                    @if (item.LoaiHinhUuDai == 2)
+                    {
+                        <span>Miễn phí vận chuyển</span>
+                    }            
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SoLuong)
+                @item.SoLuong
+            </td>
+     
+            <td>
+                @item.NgayBatDau
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MucUuDai)
+                @item.NgayKetThuc
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.NgayBatDau)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayKetThuc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TrangThai)
+                    @if (item.TrangThai == 0)
+                    {
+                        <span>Hoạt động</span>
+                    }
+                    else if (item.TrangThai == 1)
+                    {
+                        <span>Không hoạt động</span>
+                    }
+                    else if (item.TrangThai == 2)
+                    {
+                        <span>Chưa bắt đầu</span>
+                    }
+                    else
+                    {
+                        <span>Trạng thái lỗi</span>
+                    }
             </td>
                 <td>
                     <input type="checkbox" class="voucher-checkbox" data-value="@item.IdVoucher" />
@@ -101,7 +161,11 @@
 
 <script>
     $(document).ready(function () {
-        $('#data-table').DataTable();
+        $('#data-table').DataTable()
+    });
+
+    $(document).ready(function () {
+      
 
         $('#select-all-checkbox').click(function () {
             $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
@@ -149,3 +213,4 @@
     <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
     <script src="~/Admin/js/pages/datatables.js" defer></script>
 }
+   

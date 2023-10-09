@@ -1,6 +1,6 @@
 ﻿using App_Data.Models;
-using App_Data.ViewModels.ChatLieuDTO;
 using App_Data.ViewModels.GioHangChiTiet;
+using App_Data.ViewModels.ChatLieuDTO;
 using App_Data.ViewModels.KichCoDTO;
 using App_Data.ViewModels.KieuDeGiayDTO;
 using App_Data.ViewModels.LoaiGiayDTO;
@@ -12,6 +12,7 @@ using App_Data.ViewModels.SanPhamChiTietViewModel;
 using App_Data.ViewModels.Voucher;
 using App_Data.ViewModels.XuatXu;
 using AutoMapper;
+using App_Data.ViewModels.HoaDonChiTietDTO;
 
 namespace App_Api.Helpers.Mapping
 {
@@ -22,7 +23,6 @@ namespace App_Api.Helpers.Mapping
             CreateMap<MauSacDTO, MauSac>();
             CreateMap<XuatXuDTO, XuatXu>();
             CreateMap<VoucherDTO, Voucher>().ReverseMap();
-
 
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
 
@@ -42,11 +42,62 @@ namespace App_Api.Helpers.Mapping
                 );
             CreateMap<GioHangChiTietDTOCUD, GioHangChiTiet>().ReverseMap();
 
+            CreateMap<SanPhamChiTiet, SanPhamChiTietExcelViewModel>()
+                .ForMember(
+                        dest => dest.SanPham,
+                        opt => opt.MapFrom(src => src.SanPham.TenSanPham)
+                )
+                .ForMember(
+                        dest => dest.XuatXu,
+                        opt => opt.MapFrom(src => src.XuatXu.Ten)
+                    )
+                .ForMember(
+                        dest => dest.ThuongHieu,
+                        opt => opt.MapFrom(src => src.ThuongHieu.TenThuongHieu)
+                    )
+                .ForMember(
+                        dest => dest.MauSac,
+                        opt => opt.MapFrom(src => src.MauSac.TenMauSac)
+                    )
+                .ForMember(
+                        dest => dest.KichCo,
+                        opt => opt.MapFrom(src => src.KichCo.SoKichCo)
+                    )
+                .ForMember(
+                        dest => dest.ChatLieu,
+                        opt => opt.MapFrom(src => src.ChatLieu.TenChatLieu)
+                    )
+                .ForMember(
+                        dest => dest.KieuDeGiay,
+                        opt => opt.MapFrom(src => src.KieuDeGiay.TenKieuDeGiay)
+                    )
+                .ForMember(
+                        dest => dest.LoaiGiay,
+                        opt => opt.MapFrom(src => src.LoaiGiay.TenLoaiGiay)
+                    );
 
-            CreateMap<SanPhamChiTiet, SanPhamChiTietDTO>();
+
+            CreateMap<HoaDonChiTietDTO, HoaDonChiTiet>();
+            CreateMap<HoaDonChiTiet, HoaDonChiTietViewModel>()
+                .ForMember(
+                dest => dest.TenSanPham,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.SanPham.TenSanPham)
+                ).ForMember(
+                    dest => dest.TenMauSac,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.MauSac.TenMauSac)
+                ).ForMember(
+                    dest => dest.TenKichCo,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.KichCo.SoKichCo)
+                ).ForMember(
+                dest => dest.TenNguoiNhan,
+                opt => opt.MapFrom(src => src.HoaDon.ThongTinGiaoHang.TenNguoiNhan)
+                ).ForMember(
+                dest => dest.MaVoucher,
+                opt => opt.MapFrom(src => src.HoaDon.Voucher.MaVoucher)
+                );
+
 
             CreateMap<SanPhamChiTiet, SanPhamChiTietDTO>()
-
                 .ForMember(
                         dest => dest.DanhSachAnh,
                         opt => opt.MapFrom(src => src.Anh.Where(a => a.TrangThai == 0).Select(x => x.Url))
@@ -56,8 +107,10 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => $"{src.ThuongHieu.TenThuongHieu} {src.SanPham.TenSanPham} {src.MauSac.TenMauSac}-{src.KichCo.SoKichCo}")
                 )
                 .ReverseMap();
+
             CreateMap<List<SanPhamChiTiet>, DanhSachGiayViewModel>()
                 .ConvertUsing<SanPhamChiTietToListItemViewModelConverter>();
+
 
 
             CreateMap<SanPhamChiTiet, SanPhamChiTietViewModel>()
@@ -97,10 +150,11 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.ListTenAnh,
                         opt => opt.MapFrom(src => src.Anh.Where(an => an.TrangThai == 0).Select(x => x.Url).ToList())
                     );
+
             CreateMap<SanPhamChiTiet, ItemShopViewModel>()
                 .ForMember(
                         dest => dest.Anh,
-                        opt => opt.MapFrom(src => src.Anh!.FirstOrDefault()!.Url)
+                        opt => opt.MapFrom(src => src.Anh!.Where(a => a.TrangThai == 0).FirstOrDefault()!.Url)
                     )
                 .ForMember(
                         dest => dest.IdChiTietSp,
@@ -138,7 +192,11 @@ namespace App_Api.Helpers.Mapping
             CreateMap<SanPhamChiTiet, ItemDetailViewModel>()
                 .ForMember(
                         dest => dest.Anh,
-                        opt => opt.MapFrom(src => src.Anh!.FirstOrDefault()!.Url)
+                        opt => opt.MapFrom(src => src.Anh.Where(x => x.TrangThai == 0)!.FirstOrDefault()!.Url)
+                    )
+                .ForMember(
+                        dest => dest.MoTaSanPham,
+                        opt => opt.MapFrom(src => src.MoTa)
                     )
                 .ForMember(
                         dest => dest.IdChiTietSp,
@@ -195,6 +253,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<LoaiGiayDTO, LoaiGiay>();
             CreateMap<KieuDeGiayDTO, KieuDeGiay>();
             CreateMap<KichCoDTO, KichCo>();
+
         }
     }
 }

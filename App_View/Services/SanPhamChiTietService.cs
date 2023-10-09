@@ -213,6 +213,7 @@ namespace App_View.Services
                 throw new Exception("Not IsSuccessStatusCode");
             }
         }
+
         public async Task<ThuongHieuDTO?> CreateTenThuongHieuAynsc(ThuongHieuDTO thuongHieu)
         {
             var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/Create-ThuongHieu", thuongHieu);
@@ -302,6 +303,16 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<SanPhamChiTiet?>($"/api/SanPhamChiTiet/Get-SanPhamChiTiet/{id}");
         }
 
+        public async Task<List<SanPhamDanhSachViewModel>> GetDanhSachGiayNgungKinhDoanhAynsc()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<SanPhamDanhSachViewModel>>("/api/SanPhamChiTiet/Get-List-SanPhamNgungKinhDoanhViewModel"))!;
+        }
+
+        public Task<DanhSachGiayViewModel?> GetDanhSachGiayViewModelAynsc()
+        {
+            return _httpClient.GetFromJsonAsync<DanhSachGiayViewModel?>("/api/SanPhamChiTiet/Get-DanhSachGiayViewModel");
+        }
+
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id)
         {
             return await _httpClient.GetFromJsonAsync<ItemDetailViewModel?>($"/api/SanPhamChiTiet/Get-ItemDetailViewModel/{id}");
@@ -312,9 +323,22 @@ namespace App_View.Services
             return _httpClient.GetFromJsonAsync<ItemDetailViewModel?>($"/api/SanPhamChiTiet/Get-ItemDetailViewModel/{id}/{mauSac}");
         }
 
-        public Task<List<ItemShopViewModel>?> GetListItemShopViewModelAynsc()
+        public Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSizeAynsc(string id, int size)
         {
-            return _httpClient.GetFromJsonAsync<List<ItemShopViewModel>?>("/api/SanPhamChiTiet/Get-List-ItemShopViewModel");
+            return _httpClient.GetFromJsonAsync<ItemDetailViewModel?>($"/api/SanPhamChiTiet/Get-ItemDetailViewModel/idsanpham/{id}/size/{size}");
+        }
+
+        public async Task<List<ItemShopViewModel>?> GetListItemShopViewModelAynsc()
+        {
+            try
+            {
+                return await _httpClient.GetFromJsonAsync<List<ItemShopViewModel>?>("/api/SanPhamChiTiet/Get-List-ItemShopViewModel");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return new List<ItemShopViewModel>();
+            }
         }
 
         public async Task<List<SanPhamChiTiet>> GetListSanPhamChiTietAsync()
@@ -345,9 +369,59 @@ namespace App_View.Services
         }
 
 
-        public async Task<List<SanPhamChiTietViewModel>> GetListSanPhamChiTietViewModelAsync()
+        public async Task<List<SanPhamDanhSachViewModel>> GetListSanPhamChiTietViewModelAsync()
         {
-            return (await _httpClient.GetFromJsonAsync<List<SanPhamChiTietViewModel>>("/api/SanPhamChiTiet/Get-List-SanPhamChiTietViewModel"))!;
+            return (await _httpClient.GetFromJsonAsync<List<SanPhamDanhSachViewModel>>("/api/SanPhamChiTiet/Get-List-SanPhamChiTietViewModel"))!;
+        }
+
+        public async Task<SanPhamChiTietViewModel?> GetSanPhamChiTietViewModelByKeyAsync(string id)
+        {
+            return await _httpClient.GetFromJsonAsync<SanPhamChiTietViewModel?>($"/api/SanPhamChiTiet/Get-SanPhamChiTietViewModel/{id}");
+        }
+
+        public Task<bool> KhoiPhucKinhDoanhAynsc(string id)
+        {
+            return _httpClient.GetFromJsonAsync<bool>($"/api/SanPhamChiTiet/khoi-phuc-kinh-doanh/{id}");
+        }
+
+        public async Task<bool> KinhDoanhLaiSanPhamAynsc(ListGuildDTO lstGuid)
+        {
+            try
+            {
+                var content = new StringContent(JsonConvert.SerializeObject(lstGuid.listGuild), Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync("/api/SanPhamChiTiet/Update-Kinh_Doanh_List_SanPham", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
+        public async Task<bool> NgungKinhDoanhSanPhamAynsc(ListGuildDTO lstGuid)
+        {
+            try
+            {
+                var content = new StringContent(JsonConvert.SerializeObject(lstGuid.listGuild), Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync("/api/SanPhamChiTiet/Ngung_Kinh_Doanh_List_SanPham", content);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
         }
 
         public async Task<bool> UpdateAynsc(SanPhamChiTietDTO sanPhamChiTietDTO)
@@ -367,6 +441,31 @@ namespace App_View.Services
                 Console.WriteLine(ex.Message);
                 throw new Exception("Not IsSuccessStatusCode");
             }
+        }
+
+        public async Task<List<SanPhamChiTietExcelViewModel>> GetListSanPhamExcelAynsc()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<SanPhamChiTietExcelViewModel>>("/api/SanPhamChiTiet/get_list_SanPhamExcel"))!;
+        }
+
+        public async Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO)
+        {
+            try
+            {
+                var response = (await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/get-ItemExcel", bienTheDTO))!;
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<SanPhamChiTietDTO>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            
         }
     }
 }

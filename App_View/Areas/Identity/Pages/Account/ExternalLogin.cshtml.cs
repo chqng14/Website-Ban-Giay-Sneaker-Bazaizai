@@ -91,6 +91,7 @@ namespace App_View.Areas.Identity.Pages.Account
 
             // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            string picture = info.Principal.FindFirstValue("picture");/// thêm ở đây
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
@@ -112,6 +113,8 @@ namespace App_View.Areas.Identity.Pages.Account
                         Email = info.Principal.FindFirstValue(ClaimTypes.Email)
                     };
                 }
+
+
                 return Page();
             }
         }
@@ -172,11 +175,18 @@ namespace App_View.Areas.Identity.Pages.Account
                 }
                 if (externalEmailUser == null && externalEmail == Input.Email)
                 {
+                    
                     var user = CreateUser();
-
+                 
                     await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                     await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-
+                    var email = Input.Email;
+                    var atIndex = email.IndexOf('@');
+                    if (atIndex != -1)
+                    {
+                        var userName = email.Substring(0, atIndex);
+                        user.UserName = userName;
+                    }
                     var result = await _userManager.CreateAsync(user);
                     if (result.Succeeded)
                     {
@@ -186,6 +196,7 @@ namespace App_View.Areas.Identity.Pages.Account
                             _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
 
                             var userId = await _userManager.GetUserIdAsync(user);
+                            await AddCart(userId, 0);/// them vao ở đây
                             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                             //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                             //var callbackUrl = Url.Page(
@@ -242,5 +253,12 @@ namespace App_View.Areas.Identity.Pages.Account
             return (IUserEmailStore<NguoiDung>)_userStore;
         }
         //mặc định 
+
+        public async Task<bool> AddCart(string idUser, int trangThai)
+        {
+            var httpClient = new HttpClient();
+            var response = await httpClient.PostAsync($"https://localhost:7038/api/GioHang?id={idUser}&trangthai={trangThai}", null);
+            return true;
+        }
     }
 }

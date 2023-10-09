@@ -13,9 +13,9 @@
     @foreach (var sp in Model)
     {
         <div class="card">
-            <div class="card-header d-flex justify-content-between">
+            <div class="card-header d-flex justify-content-between" style="background: #4bc9c9">
                 <h5 class="card-title">
-                    <a class="collapsed" data-toggle="collapse" href="#collapseTwoDefault-@sp.IdChiTietSp">
+                    <a style="background: #4bc9c9" class="collapsed" data-toggle="collapse" href="#collapseTwoDefault-@sp.IdChiTietSp">
                         <span>@sp.FullName</span>
                     </a>
                 </h5>
@@ -23,7 +23,7 @@
             </div>
             <div id="collapseTwoDefault-@sp.IdChiTietSp" class="collapse" data-parent="#accordion-default">
                 <div class="card-body">
-                    <input class="d-none" name="IdChiTietSp" value="@sp.IdChiTietSp"/>
+                    <input class="d-none" name="IdChiTietSp" value="@sp.IdChiTietSp" />
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item">
                             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home-@sp.IdChiTietSp" role="tab"
@@ -41,109 +41,127 @@
                     <div class="tab-content m-t-15" id="myTabContent">
                         <div class="tab-pane fade show active" id="home-@sp.IdChiTietSp" role="tabpanel" aria-labelledby="home-tab" style="height: 470px">
                             <div class="card">
-                                <div class="card-body">
+                                <div class="card-body main">
                                     <div class="row">
                                         <div class="col-4 sanpham" style="margin-top: 10px">
                                             <label class="font-weight-semibold">Tên sản phẩm</label>
-                                            <select class="w-100 select2-active" name="IdSanPham">
-                                                @foreach (var item in (SelectList)ViewData["IdSanPham"])
-                                                {
-                                                    if (item.Value == sp.IdSanPham)
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-cube mr-1"></i>
+                                                <select class="w-100 select2-active" name="IdSanPham">
+                                                    @foreach (var item in (SelectList)ViewData["IdSanPham"])
                                                     {
-                                                        <option value="@item.Value" selected>@item.Text</option>
-                                                    }
-                                                    else
-                                                    {
-                                                        <option value="@item.Value">@item.Text</option>
-                                                    }
+                                                        if (item.Value == sp.IdSanPham)
+                                                        {
+                                                            <option value="@item.Value" selected>@item.Text</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
 
-                                                }
-                                            </select>
+                                                    }
+                                                </select>
+                                            </div>
                                         </div>
 
                                         <div class="col-4 thuonghieu" style="margin-top: 10px">
                                             <label class="font-weight-semibold">Thương hiệu</label>
-                                            <select class="select2-active w-100" name="IdThuongHieu">
-                                                @foreach (var item in (SelectList)ViewData["IdThuongHieu"])
-                                                {
-                                                    if (item.Value == sp.IdThuongHieu)
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-trademark mr-1"></i>
+                                                <select class="select2-active w-100" name="IdThuongHieu">
+                                                    @foreach (var item in (SelectList)ViewData["IdThuongHieu"])
                                                     {
-                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                        if (item.Value == sp.IdThuongHieu)
+                                                        {
+                                                            <option value="@item.Value" selected>@item.Text</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
                                                     }
-                                                    else
-                                                    {
-                                                        <option value="@item.Value">@item.Text</option>
-                                                    }
-                                                }
-                                            </select>
+                                                </select>
+                                            </div>
                                         </div>
 
                                         <div class="col-4 xuatxu" style="margin-top: 10px">
                                             <label class="font-weight-semibold">Xuất xứ</label>
-                                            <select class="select2-active w-100" name="IdXuatXu">
-                                                @foreach (var item in (SelectList)ViewData["IdXuatXu"])
-                                                {
-                                                    if (item.Value == sp.IdXuatXu)
+                                            <div class="d-flex align-items-center">
+                                                <i class="fab fa-connectdevelop mr-1"></i>
+                                                <select class="select2-active w-100" name="IdXuatXu">
+                                                    @foreach (var item in (SelectList)ViewData["IdXuatXu"])
                                                     {
-                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                        if (item.Value == sp.IdXuatXu)
+                                                        {
+                                                            <option value="@item.Value" selected>@item.Text</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
                                                     }
-                                                    else
-                                                    {
-                                                        <option value="@item.Value">@item.Text</option>
-                                                    }
-                                                }
-                                            </select>
+                                                </select>
+                                            </div>
                                         </div>
 
                                         <div class="col-4 chatlieu" style="margin-top: 10px">
                                             <label class="font-weight-semibold">Chất liệu</label>
-                                            <select class="select2-active w-100" name="IdChatLieu">
-                                                @foreach (var item in (SelectList)ViewData["IdChatLieu"])
-                                                {
-                                                    if (item.Value == sp.IdChatLieu)
+                                            <div class="d-flex align-items-center">
+                                                <i class="fab fa-centercode mr-1"></i>
+                                                <select class="select2-active w-100" name="IdChatLieu">
+                                                    @foreach (var item in (SelectList)ViewData["IdChatLieu"])
                                                     {
-                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                        if (item.Value == sp.IdChatLieu)
+                                                        {
+                                                            <option value="@item.Value" selected>@item.Text</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
                                                     }
-                                                    else
-                                                    {
-                                                        <option value="@item.Value">@item.Text</option>
-                                                    }
-                                                }
-                                            </select>
+                                                </select>
+                                            </div>
                                         </div>
 
                                         <div class="col-4 loaigiay" style="margin-top: 10px">
                                             <label class="font-weight-semibold">Loại giầy</label>
-                                            <select class="select2-active w-100" name="IdLoaiGiay">
-                                                @foreach (var item in (SelectList)ViewData["IdLoaiGiay"])
-                                                {
-                                                    if (item.Value == sp.IdLoaiGiay)
+                                            <div class="d-flex align-items-center">
+                                                <i class="fab fa-magento mr-1"></i>
+                                                <select class="select2-active w-100" name="IdLoaiGiay">
+                                                    @foreach (var item in (SelectList)ViewData["IdLoaiGiay"])
                                                     {
-                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                        if (item.Value == sp.IdLoaiGiay)
+                                                        {
+                                                            <option value="@item.Value" selected>@item.Text</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
                                                     }
-                                                    else
-                                                    {
-                                                        <option value="@item.Value">@item.Text</option>
-                                                    }
-                                                }
-                                            </select>
+                                                </select>
+                                            </div>
                                         </div>
 
                                         <div class="col-4 kieudegiay" style="margin-top: 10px">
                                             <label class="font-weight-semibold">Kiểu đế giầy</label>
-                                            <select class="select2-active w-100" name="IdKieuDeGiay">
-                                                @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"])
-                                                {
-                                                    if (item.Value == sp.IdKieuDeGiay)
+                                            <div class="d-flex align-items-center mr-1">
+                                                <i class="fas fa-podcast mr-1"></i>
+                                                <select class="select2-active w-100" name="IdKieuDeGiay">
+                                                    @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"])
                                                     {
-                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                        if (item.Value == sp.IdKieuDeGiay)
+                                                        {
+                                                            <option value="@item.Value" selected>@item.Text</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
                                                     }
-                                                    else
-                                                    {
-                                                        <option value="@item.Value">@item.Text</option>
-                                                    }
-                                                }
-                                            </select>
+                                                </select>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -151,53 +169,76 @@
                                     <div class="row">
                                         <div class="col-6 mausac">
                                             <label class="font-weight-semibold">Màu Sắc</label>
-                                            <select class="select2-active w-100" name="IdMauSac">
-                                                @foreach (var item in (SelectList)ViewData["IdMauSac"])
-                                                {
-                                                    if (item.Value == sp.IdMauSac)
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-palette mr-1"></i>
+                                                <select class="select2-active w-100" name="IdMauSac">
+                                                    @foreach (var item in (SelectList)ViewData["IdMauSac"])
                                                     {
-                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                        if (item.Value == sp.IdMauSac)
+                                                        {
+                                                            <option value="@item.Value" selected>@item.Text</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
                                                     }
-                                                    else
-                                                    {
-                                                        <option value="@item.Value">@item.Text</option>
-                                                    }
-                                                }
-                                            </select>
+                                                </select>
+                                            </div>
                                         </div>
 
                                         <div class="col-6 kichco">
                                             <label class="font-weight-semibold">Kích cỡ</label>
-                                            <select class="select2-active w-100" name="IdKichCo">
-                                                @foreach (var item in (SelectList)ViewData["IdKichCo"])
-                                                {
-                                                    if (item.Value == sp.IdKichCo)
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-bowling-ball mr-1"></i>
+                                                <select class="select2-active w-100" name="IdKichCo">
+                                                    @foreach (var item in (SelectList)ViewData["IdKichCo"])
                                                     {
-                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                        if (item.Value == sp.IdKichCo)
+                                                        {
+                                                            <option value="@item.Value" selected>@item.Text</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@item.Value">@item.Text</option>
+                                                        }
                                                     }
-                                                    else
-                                                    {
-                                                        <option value="@item.Value">@item.Text</option>
-                                                    }
-                                                }
-                                            </select>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div class="row mt-2">
-                                        <div class="form-group col-4">
+                                        <div class="form-group col-3">
                                             <label class="font-weight-semibold" for="productBrand">Giá nhập</label>
-                                            <input type="text" class="form-control formatPrice" name="GiaNhap" value="@sp.GiaNhap">
+                                            <div class="d-flex align-items-center">
+                                                <i class="far fa-money-bill-alt mr-1"></i>
+                                                <input type="text" class="form-control formatPrice" name="GiaNhap" value="@sp.GiaNhap">
+                                            </div>
                                         </div>
 
-                                        <div class="form-group col-4">
+                                        <div class="form-group col-3">
                                             <label class="font-weight-semibold" for="productBrand">Giá bán</label>
-                                            <input type="text" class="form-control formatPrice" name="GiaBan" value="@sp.GiaBan">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-money-bill-wave mr-1"></i>
+                                                <input type="text" class="form-control formatPrice" name="GiaBan" value="@sp.GiaBan">
+                                            </div>
                                         </div>
 
-                                        <div class="form-group col-4">
+                                        <div class="form-group col-3">
                                             <label class="font-weight-semibold" for="productBrand">Số lượng tồn</label>
-                                            <input type="text" class="form-control formatNumber" name="SoLuongTon" value="@sp.SoLuongTon">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-database mr-1"></i>
+                                                <input type="text" class="form-control formatNumber" name="SoLuongTon" value="@sp.SoLuongTon">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group col-3">
+                                            <label class="font-weight-semibold" for="productBrand">Khối lượng</label>
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-weight mr-1"></i>
+                                                <input type="text" class="form-control formatNumber" name="KhoiLuong" value="@sp.KhoiLuong">
+                                            </div>
                                         </div>
 
                                         <div class="form-group d-flex align-items-center col-2">
@@ -769,6 +810,7 @@
                     data[fieldName] = fieldValue;
                 }
             });
+            data.MoTa = $(item).find('[name="MoTa"]').summernote('code');
 
             $.ajax({
                 url: URL_UPDATE_PRODUCT_DETAIL,
@@ -776,7 +818,7 @@
                 data: JSON.stringify(data),
                 contentType: 'application/json',
                 success: function (result) {
-                    
+
                 },
                 error: function (xhr, status, error) {
                     console.log(xhr.responseText);

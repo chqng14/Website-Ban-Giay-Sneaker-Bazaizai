@@ -78,9 +78,9 @@ namespace App_View.Services
             return _httpClient.GetFromJsonAsync<List<Voucher>>("/api/Voucher/GetVoucher");
         }
 
-        public async Task<Voucher> GetVoucherById(string id)
+        public async Task<Voucher> GetVoucherByMa(string ma)
         {
-            return await _httpClient.GetFromJsonAsync<Voucher>($"/api/Voucher/GetVoucherByMa/{id}");
+            return await _httpClient.GetFromJsonAsync<Voucher>($"/api/Voucher/GetVoucherByMa/{ma}");
         }
 
         public async Task<VoucherDTO> GetVoucherDTOById(string id)

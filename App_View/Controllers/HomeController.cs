@@ -13,13 +13,15 @@ namespace App_View.Controllers
         {
             _logger = logger;
         }
+        
 
         public IActionResult Index()
         {
             return View();
         }
-     //   [AllowAnonymous]
-        [Authorize]
+           //[AllowAnonymous]
+        [Authorize(Roles = "Madara")]
+
         public IActionResult Privacy()
         {
             return View();
