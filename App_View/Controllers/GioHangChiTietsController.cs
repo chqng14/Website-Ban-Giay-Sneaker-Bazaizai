@@ -100,16 +100,34 @@ namespace App_View.Controllers
         // GET: GioHangChiTiets/Create
         public async Task<IActionResult> AddToCart(GioHangChiTietDTOCUD gioHangChiTietDTOCUD)
         {
+            var IdCart = GetIdNguoiDung();
             var product = await _sanPhamChiTietService.GetByKeyAsync(gioHangChiTietDTOCUD.IdSanPhamCT);
-            var giohang = new GioHangChiTietDTOCUD();
-            giohang.IdGioHangChiTiet = Guid.NewGuid().ToString();
-            giohang.IdSanPhamCT = gioHangChiTietDTOCUD.IdSanPhamCT;
-            giohang.IdNguoiDung = GetIdNguoiDung();
-            giohang.SoLuong = gioHangChiTietDTOCUD.SoLuong;
-            giohang.GiaGoc = product.GiaThucTe;
-            giohang.GiaBan = product.GiaBan;
-            GioHangChiTietServices.CreateCartDetailDTO(giohang);
-            return RedirectToAction("ShowCartUser");
+            var existing = (await GioHangChiTietServices.GetAllGioHang()).FirstOrDefault(x => x.IdSanPhamCT == product.IdChiTietSp && x.IdNguoiDung == IdCart);
+            if (existing != null)
+            {
+                if (existing.SoLuong + gioHangChiTietDTOCUD.SoLuong <= product.SoLuongTon)
+                {
+                    existing.SoLuong += gioHangChiTietDTOCUD.SoLuong;
+                }
+                else
+                {
+                    TempData["quantityCartUser"] = "Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này";
+                    existing.SoLuong = Convert.ToInt32(product.SoLuongTon);
+                }
+                //GioHangChiTietServices.UpdateCartDetailDTO(existing);
+            }
+            else
+            {
+                var giohang = new GioHangChiTietDTOCUD();
+                giohang.IdGioHangChiTiet = Guid.NewGuid().ToString();
+                giohang.IdSanPhamCT = gioHangChiTietDTOCUD.IdSanPhamCT;
+                giohang.IdNguoiDung = GetIdNguoiDung();
+                giohang.SoLuong = gioHangChiTietDTOCUD.SoLuong;
+                giohang.GiaGoc = product.GiaThucTe;
+                giohang.GiaBan = product.GiaBan;
+                GioHangChiTietServices.CreateCartDetailDTO(giohang);
+            }
+            return RedirectToAction("Details", "SanPhamChiTiets", new { id = product.IdChiTietSp });
         }
 
 
