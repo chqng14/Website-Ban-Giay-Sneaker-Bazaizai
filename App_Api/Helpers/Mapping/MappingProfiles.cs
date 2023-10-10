@@ -12,6 +12,7 @@ using App_Data.ViewModels.SanPhamChiTietViewModel;
 using App_Data.ViewModels.Voucher;
 using App_Data.ViewModels.XuatXu;
 using AutoMapper;
+using App_Data.ViewModels.VoucherNguoiDung;
 
 namespace App_Api.Helpers.Mapping
 {
@@ -22,6 +23,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<MauSacDTO, MauSac>();
             CreateMap<XuatXuDTO, XuatXu>();
             CreateMap<VoucherDTO, Voucher>().ReverseMap();
+            CreateMap<VoucherNguoiDungDTO, VoucherNguoiDung>().ReverseMap();
 
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
 

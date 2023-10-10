@@ -27,6 +27,7 @@ builder.Services.AddIdentity<NguoiDung, ChucVu>(options =>
     .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IVoucherServices, VoucherServices>();
+builder.Services.AddScoped<IVoucherNguoiDungServices, VoucherNguoiDungServices>();
 //builder.Services.AddDefaultIdentity<NguoiDung>()
 //    .AddEntityFrameworkStores<BazaizaiContext>()
 //    .AddDefaultTokenProviders();

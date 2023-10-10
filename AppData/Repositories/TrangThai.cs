@@ -29,6 +29,9 @@ namespace App_Data.Repositories
             HetVoucher = 3,
 
         }
+        /// <summary>
+        /// ở đây là voucher
+        /// </summary>
         public enum TrangThaiLoaiKhuyenMai
         {
             [Description("Giảm giá tiền mặt")]
@@ -38,6 +41,17 @@ namespace App_Data.Repositories
             [Description("Miễn phí ship")]
             Freeship = 2,
 
+        }
+        public enum TrangThaiVoucherNguoiDung
+        {
+            [Description("Khả dụng")]
+            KhaDung = 0,
+            [Description("Đã sử dụng")]
+            DaSuDung = 1,
+            [Description("Hết hiệu lực")]
+            HetHieuLuc = 2,
+            [Description("Số lượng voucher đã hết")]
+            HetVoucher = 3,
         }
     }
 }

@@ -21,6 +21,7 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly BazaizaiContext _context;
         private readonly IVoucherServices _voucherSV;
+
         public VouchersController(IVoucherServices voucherServices)
         {
             _voucherSV = voucherServices;
@@ -87,7 +88,7 @@ namespace App_View.Areas.Admin.Controllers
                 {
                     return RedirectToAction("Index");
                 }
-            }                
+            }
             return View();
         }
         public async Task<ActionResult> Details(string id)
