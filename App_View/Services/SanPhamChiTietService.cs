@@ -443,6 +443,29 @@ namespace App_View.Services
             }
         }
 
+        public async Task<List<SanPhamChiTietExcelViewModel>> GetListSanPhamExcelAynsc()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<SanPhamChiTietExcelViewModel>>("/api/SanPhamChiTiet/get_list_SanPhamExcel"))!;
+        }
 
+        public async Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO)
+        {
+            try
+            {
+                var response = (await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/get-ItemExcel", bienTheDTO))!;
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<SanPhamChiTietDTO>();
+                }
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            
+        }
     }
 }

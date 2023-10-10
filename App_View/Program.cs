@@ -7,8 +7,15 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
+using System.Security.Claims;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Authentication;
+using Google;
+using App_View.Models;
+using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -17,31 +24,26 @@ builder.Services.AddDbContext<BazaizaiContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddOptions();
 builder.Services.AddRazorPages();
-builder.Services.AddIdentity<NguoiDung, ChucVu>(options =>
-{
-    // Cấu hình tên bảng tùy chỉnh cho IdentityRole và IdentityUser
-    options.Stores.MaxLengthForKeys = 128;
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-})
-    .AddEntityFrameworkStores<BazaizaiContext>()
-    .AddDefaultTokenProviders();
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IVoucherServices, VoucherServices>();
 builder.Services.AddScoped<IVoucherNguoiDungServices, VoucherNguoiDungServices>();
-//builder.Services.AddDefaultIdentity<NguoiDung>()
-//    .AddEntityFrameworkStores<BazaizaiContext>()
-//    .AddDefaultTokenProviders();
+
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
+builder.Services.AddIdentity<NguoiDung, ChucVu>()
+.AddEntityFrameworkStores<BazaizaiContext>()
+.AddDefaultTokenProviders();
+
 var mailsetting = builder.Configuration.GetSection("MailSettings");
 builder.Services.Configure<MailSettings>(mailsetting);
 builder.Services.AddSingleton<IEmailSender, SendMailService>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
+
     // Thiết lập về Password
     options.Password.RequireDigit = false; // Không bắt phải có số
     options.Password.RequireLowercase = false; // Không bắt phải có chữ thường
@@ -51,7 +53,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1; // Số ký tự riêng biệt
 
     // Cấu hình Lockout - khóa user
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1); // Khóa 5 phút
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1); // Khóa 1 phút
     options.Lockout.MaxFailedAccessAttempts = 5; // Thất bại 5 lầ thì khóa
     options.Lockout.AllowedForNewUsers = true;
 
@@ -73,6 +75,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/KhongDuocTruyCap.html";
 });
 builder.Services.AddAuthentication()
+     .AddCookie()
     .AddGoogle(googleOptions =>
     {
         // Đọc thông tin Authentication:Google từ appsettings.json
@@ -81,9 +84,11 @@ builder.Services.AddAuthentication()
         // Thiết lập ClientID và ClientSecret để truy cập API google
         googleOptions.ClientId = googleAuthNSection["ClientId"];
         googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
-        // Cấu hình Url callback lại từ Google (không thiết lập thì mặc định là /signin-google)
-        //googleOptions.CallbackPath = "/dang-nhap-tu-google";
-
+        //googleOptions.AccessDeniedPath = "/login/";
+        //googleOptions.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");
+        googleOptions.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
+        googleOptions.ClaimActions.MapJsonKey("urn:google:locale", "locale", "string");
+        googleOptions.SaveTokens = true;
     })
     .AddFacebook(facebookOptions =>
     {
@@ -91,12 +96,37 @@ builder.Services.AddAuthentication()
         IConfigurationSection facebookAuthNSection = builder.Configuration.GetSection("Authentication:Facebook");
         facebookOptions.AppId = facebookAuthNSection["AppId"];
         facebookOptions.AppSecret = facebookAuthNSection["AppSecret"];
-        // Thiết lập đường dẫn Facebook chuyển hướng đến
-        //facebookOptions.CallbackPath = "/dang-nhap-tu-facebook";
-    });
 
+    });
+builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
+builder.Services.Configure<SecurityStampValidatorOptions>(option =>
+{
+    option.ValidationInterval = TimeSpan.FromSeconds(1);
+
+});
 //thêm
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+    try
+    {
+        var context = services.GetRequiredService<BazaizaiContext>();
+        var userManager = services.GetRequiredService<UserManager<NguoiDung>>();
+        var roleManager = services.GetRequiredService<RoleManager<ChucVu>>();
+        await ContextdDefault.SeedRolesAsync(userManager, roleManager);
+    }
+    catch (Exception ex)
+    {
+        var logger = loggerFactory.CreateLogger<Program>();
+        logger.LogError(ex, "An error occurred seeding the DB.");
+    }
+}
+
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

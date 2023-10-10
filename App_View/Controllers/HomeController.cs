@@ -1,4 +1,7 @@
 ﻿using App_View.Models;
+using Google.Apis.Auth.AspNetCore3;
+using Google.Apis.PeopleService.v1;
+using Google.Apis.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -13,17 +16,20 @@ namespace App_View.Controllers
         {
             _logger = logger;
         }
+        
 
         public IActionResult Index()
         {
             return View();
         }
-     //   [AllowAnonymous]
-        [Authorize]
+           //[AllowAnonymous]
+        [Authorize(Roles = "Madara")]
+
         public IActionResult Privacy()
         {
             return View();
         }
+       
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

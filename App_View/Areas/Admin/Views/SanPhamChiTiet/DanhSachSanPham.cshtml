@@ -9,27 +9,63 @@
         cursor: pointer;
     }
 
-    .collapse > .card-body {
-        background: #73f7d2;
-    }
-
-    .card > .main {
-        background: #b1deeb;
-    }
-
-
-    .page-item.disabled .page-link,
-    .card > .main_danh_sach {
-        background: #b1d3d1;
-    }
-
     .note-editing-area {
         height: 400px;
     }
 </style>
 
-
 <div id="body-danhsach">
+    <div class="modal fade" id="modal-import">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #129dc1;">
+                    <h5 class="modal-title" id="exampleModalLabel">IMPORT FILE</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="background: #d3f6ff;">
+                    <span style="color: red">Sử dụng template mẫu để import: </span><a href="/Admin/SanPhamChiTiet/DownloadFile">Download</a>
+                    <br />
+                    <input hidden type="file" id="import" onchange="displaySelectedFile(this)" name="file" />
+                    <button class="btn btn-tone mt-3" id="btn-import">
+                        <i class="anticon anticon-file-excel m-r-5"></i>
+                        <span>Import</span>
+                    </button>
+                    <p class="mt-3" id="selected-file-name" style="padding-top: 10px;color: #1c0497;"></p>
+                </div>
+                <div class="modal-footer" style="background: #d0dae3">
+                    <button class="btn btn-primary submit_file">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+       $(() => {
+                $('.submit_file').click(() => {
+                    var data = new FormData();
+                    data.append('file', $('#import')[0].files[0]);
+                    $.ajax({
+                        url: "@Url.Action("ImportProducts", "SanPhamChiTiet")",
+                        type: 'POST',
+                        data: data,
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                            alert("import thanh cong");
+                            window.location.href = "/admin/sanphamchitiet/danhsachsanpham";
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                });
+            });
+
+    </script>
     <div class="notification-toast top-right" id="notification-toast"></div>
     <div class="modal fade" id="confirm">
         <div class="modal-dialog">
@@ -84,7 +120,7 @@
                             </select>
                         </div>
                         <div class="m-b-10 ml-1">
-                            <button class="btn btn-tone">
+                            <button class="btn btn-tone btn-import" data-toggle="modal" data-target="#modal-import">
                                 <i class="anticon anticon-file-excel m-r-5"></i>
                                 <span>
                                     Import Excel
@@ -92,7 +128,7 @@
                             </button>
                         </div>
                         <div class="m-b-10 ml-1">
-                            <button class="btn btn-tone">
+                            <button class="btn btn-tone" onclick="window.location.href='/admin/sanphamchitiet/ExportToExcel'">
                                 <i class="anticon anticon-file-excel m-r-5"></i>
                                 <span>
                                     Export Excel
@@ -121,8 +157,8 @@
         </div>
     </div>
     <div id="confirm-ds" class="mt-2 mb-2">
-        <div class="d-flex justify-content-end">
-            <button class="btn btn-warning mr-2 ngung_kinh_doanh">
+        <div style=" position: fixed; top: 90px; right: 26px">
+            <button class="btn btn-warning ngung_kinh_doanh">
                 <i class="fas fa-ban"></i>
                 <span>Ngừng kinh doanh</span>
             </button>
@@ -132,9 +168,25 @@
             </button>
         </div>
     </div>
+
 </div>
 
 <script>
+    $(() => {
+        $('#btn-import').click((event) => {
+            event.preventDefault();
+            $('#import').trigger('click');
+        });
+    });
+
+    function displaySelectedFile(input) {
+        const selectedFile = input.files[0];
+        if (selectedFile) {
+            const fileName = selectedFile.name;
+            document.getElementById('selected-file-name').textContent = fileName;
+        }
+    }
+
     $(() => checkToshowConfirm())
     const checkToshowConfirm = () => {
         const sumCheck = $('input[type="checkbox"]:checked');
@@ -214,9 +266,16 @@
                 data: null,
                 title: 'Sản phẩm',
                 render: function (data, type, row, meta) {
-                    return `
-                    <div class="d-flex align-items-center"><img data-data="${data.idChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sán phẩm" class="img-fluid cursor-image rounded" src="/AnhSanPham/${data.anh}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.sanPham}</h6></div>
-                    `;
+                    if (data.anh === null) {
+                        var defaultImageUrl = '/images/NoImage.png';
+                        return `
+                                <div class="d-flex align-items-center"><img data-data="${data.idChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sản phẩm" class="img-fluid cursor-image rounded" src="${defaultImageUrl}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.sanPham}</h6></div>
+                            `;
+                    } else {
+                        return `
+                                <div class="d-flex align-items-center"><img data-data="${data.idChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sản phẩm" class="img-fluid cursor-image rounded" src="/AnhSanPham/${data.anh}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.sanPham}</h6></div>
+                            `;
+                    }
                 },
                 orderable: false
             },
@@ -326,7 +385,7 @@
 
 
         $(document).on("click", ".delete-item", function () {
-            $('#confirm').find('#thongBao').text("Bạn có muốn ngừng kinh doanh mặt hàng này?");
+           $('#confirm').find('#thongBao').text("Bạn có muốn ngừng kinh doanh mặt hàng này?");
            $('#confirm').modal('show');
            var item = $(this).closest('tr')
            $('#confirm').off('click', '.btn-primary');
@@ -371,6 +430,26 @@
                     contentType: 'application/json',
                     success: function (result) {
                         if (result) {
+                            //var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                            //    <div class="toast-header">
+                            //        <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                            //        <strong class="mr-auto">Thông báo</strong>
+                            //        <small>1 seconds ago</small>
+                            //        <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                            //            <span aria-hidden="true">&times;</span>
+                            //        </button>
+                            //    </div>
+                            //    <div class="toast-body">
+                            //        <span>Đã ngừng kinh doanh!</span>
+                            //    </div>
+                            //</div>`
+
+                            //$('#notification-toast').append(toastHTML)
+                            //$('#notification-toast .toast').toast('show');
+                            //setTimeout(function () {
+                            //    $('#notification-toast .toast:first-child').remove();
+                            //    window.location.reload()
+                            //}, 3000);
                             window.location.href = "/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh"
                         }
                     },

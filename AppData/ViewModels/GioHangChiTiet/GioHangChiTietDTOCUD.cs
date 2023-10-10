@@ -18,5 +18,6 @@ namespace App_Data.ViewModels.GioHangChiTiet
         public string IdSanPhamCT { get; set; }
         public int? SoLuong { get; set; }
         public double? GiaGoc { get; set; }
+        public double? GiaBan { get; set; }
     }
 }

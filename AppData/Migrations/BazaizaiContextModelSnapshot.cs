@@ -276,9 +276,9 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasDefaultValueSql("(newid())");
 
-                    b.Property<string>("LoaiHinhKM")
+                    b.Property<int?>("LoaiHinhKM")
                         .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("int");
 
                     b.Property<string>("MaKhuyenMai")
                         .HasColumnType("nvarchar(20)");

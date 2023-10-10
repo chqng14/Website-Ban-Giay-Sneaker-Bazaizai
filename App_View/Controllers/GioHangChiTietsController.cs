@@ -27,11 +27,13 @@ namespace App_View.Controllers
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         ISanPhamChiTietService _sanPhamChiTietService;
+        IThongTinGHServices thongTinGHServices;
         public GioHangChiTietsController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService)
         {
             httpClient = new HttpClient();
             GioHangChiTietServices = new GioHangChiTietServices();
             _sanPhamChiTietService = sanPhamChiTietService;
+            thongTinGHServices = new ThongTinGHServices();
             _signInManager = signInManager;
             _userManager = userManager;
         }
@@ -40,17 +42,57 @@ namespace App_View.Controllers
         public async Task<IActionResult> ShowCartUser()
         {
             var idNguoiDung = _userManager.GetUserId(User);
-            var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
-            return View(giohang);
+            if (idNguoiDung == null)
+            {
+                return RedirectToAction("ShowCartNoLogin");
+            }
+            else
+            {
+                var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+                return View(giohang);
+            }
+        }
+
+        public async Task<IActionResult> ShowCartNoLogin()
+        {
+            //var idNguoiDung = _userManager.GetUserId(User);
+            //var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+            return View();
+        }
+
+        public async Task<IActionResult> CheckOut()
+        {
+            var idNguoiDung = _userManager.GetUserId(User);
+            if (idNguoiDung == null)
+            {
+                return RedirectToAction("CheckOutNoLogin");
+            }
+            else
+            {
+                var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+                var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
+                ViewData["ThongTinGH"] = thongTinGH;
+                ViewBag.idNguoiDung = idNguoiDung;
+                return View(giohang);
+            }
+        }
+
+        public async Task<IActionResult> CheckOutNoLogin()
+        {
+            //var idNguoiDung = _userManager.GetUserId(User);
+            //var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
+            //var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
+            //ViewData["ThongTinGH"] = thongTinGH;
+            return View();
         }
 
         // GET: GioHangChiTiets/Details/5
         public async Task<IActionResult> Details(string id)
         {
 
-
             return View();
         }
+
 
         // GET: GioHangChiTiets/Create
         public async Task<IActionResult> AddToCart(GioHangChiTietDTOCUD gioHangChiTietDTOCUD)
@@ -63,6 +105,7 @@ namespace App_View.Controllers
             giohang.IdNguoiDung = idNguoiDung;
             giohang.SoLuong = gioHangChiTietDTOCUD.SoLuong;
             giohang.GiaGoc = product.GiaBan;
+            giohang.GiaBan = product.GiaBan;
             GioHangChiTietServices.CreateCartDetailDTO(giohang);
             return RedirectToAction("ShowCartUser");
         }
@@ -78,7 +121,7 @@ namespace App_View.Controllers
             double TongTien = 0;
             foreach (var item in giohang)
             {
-                TongTien += (double)item.GiaGoc * (int)item.SoLuong;
+                TongTien += (double)item.GiaBan * (int)item.SoLuong;
             }
             return Json(new { /*SumPrice = SumPrice,*/ TongTien = TongTien });
         }
@@ -99,6 +142,11 @@ namespace App_View.Controllers
         {
             var jsondelete = await GioHangChiTietServices.DeleteGioHang(id);
             return RedirectToAction("ShowCartUser");
+        }
+        public async Task<IActionResult> DeleteCartCheckOut(string id)
+        {
+            var jsondelete = await GioHangChiTietServices.DeleteGioHang(id);
+            return RedirectToAction("CheckOut");
         }
 
         public async Task<IActionResult> DeleteAllCart()

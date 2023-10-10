@@ -6,18 +6,14 @@
 }
 <style>
     .tab-content {
-        background: #d3f6ff;
         width: 100%;
     }
 
-    .nav-tabs {
-        background: #efefef;
-    }
-
-    .note-editing-area{
+    .note-editing-area {
         height: 400px;
     }
 </style>
+
 <div class="modal fade" id="cauHinh">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -105,7 +101,7 @@
 </div>
 
 <div class="card">
-    <div class="card-body" id="formGen" style="background: #b1d3d1;">
+    <div class="card-body" id="formGen">
         <div style="display: flex; align-items: center; justify-content: space-between;">
             <h5 style="margin: 0;">QUẢN LÝ SẢN PHẨM</h5>
             <div class="d-flex">
@@ -572,11 +568,11 @@
 <div class="card item-accordion" data-update="${isUpdate}" data-idproductdetail="${idProduct}">
         <div class="card-header">
             <h5 class="card-title d-flex">
-                <a data-toggle="collapse" class="w-100" style="background: #2aebeb;" data-IdMauSac="${idcolor}" data-IdKichCo="${idsize}"
+                <a data-toggle="collapse" class="w-100" data-IdMauSac="${idcolor}" data-IdKichCo="${idsize}"
                    href="#collapseOneBorderless${index}">
                     <span>${Title}</span>
                 </a>
-                <button class="btn btn-tone btnn-close" style="background: #2aebeb;">
+                <button class="btn btn-tone btnn-close">
                     <i class="anticon anticon-close"></i>
                 </button>
             </h5>
@@ -803,7 +799,7 @@
 
                     } else {
                         const item = $(ItemTemplate(index, false, "", lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, $('#giaNhap').val().replace(/₫|,|\s/g, ''), $('#giaBan').val().replace(/₫|,|\s/g, ''), $('#soLuongTon').val().replace(/₫|,|\s/g, ''), $('#MoTaCauHinh').summernote('code'), $('#khoiLuong').val().replace(/₫|,|\s/g, '')))
-                        
+
                         item.find('.switch-2-day').prop('checked', $('#switch-1-day').prop('checked'))
                         item.find('.switch-2-noibat').prop('checked', $('#switch-1-noibat').prop('checked'))
                         container.append(item)
