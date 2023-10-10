@@ -92,7 +92,6 @@ namespace App_View.Areas.Admin.Controllers
                         int rowCount = worksheet.Dimension.Rows;
                         int colCount = worksheet.Dimension.Columns;
 
-                        //List<MyDataModel> dataList = new List<MyDataModel>();
 
                         for (int row = 2; row <= rowCount; row++)
                         {
@@ -136,15 +135,17 @@ namespace App_View.Areas.Admin.Controllers
                                 slSuccess++;
                                 foreach (var item in listTenAnh)
                                 {
-                                    await _context.Anh.AddAsync(new Anh()
+                                     _context.Anh.Add(new Anh()
                                     {
                                         IdAnh = Guid.NewGuid().ToString(),
                                         TrangThai = 0,
                                         Url = item,
                                         IdSanPhamChiTiet = response.IdChiTietSp,
                                     });
-                                    await _context.SaveChangesAsync();
+                                    _context.SaveChanges();
+
                                 }
+                               
                             }
 
                         }
@@ -200,7 +201,6 @@ namespace App_View.Areas.Admin.Controllers
                     range.Style.Font.Size = 12;
                 }
 
-                // Đặt tiêu đề cho các cột
                 worksheet.Cells[1, 1].Value = "Id";
                 worksheet.Cells[1, 2].Value = "Tên Sản Phẩm";
                 worksheet.Cells[1, 3].Value = "Thương hiệu";
@@ -217,7 +217,6 @@ namespace App_View.Areas.Admin.Controllers
                 worksheet.Cells[1, 14].Value = "Dây";
                 worksheet.Cells[1, 15].Value = "Nổi bật";
 
-                // Đổ dữ liệu vào worksheet
                 for (int i = 0; i < lstProduct.Count(); i++)
                 {
                     worksheet.Cells[i + 2, 1].Value = lstProduct[i].IdChiTietSp;
@@ -300,22 +299,27 @@ namespace App_View.Areas.Admin.Controllers
                 .Skip(start)
                 .Take(length)
                 .ToList();
+            var totalRecords = 0;
 
             if (!string.IsNullOrEmpty(searchValue))
             {
                 string searchValueLower = searchValue.ToLower();
-                query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x =>
+                var danhSach = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x =>
                 x.SanPham!.ToLower().Contains(searchValueLower) ||
                 x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
                 x.ChatLieu!.ToLower().Contains(searchValueLower) ||
-                x.KieuDeGiay!.ToLower().Contains(searchValueLower)
-                )
+                x.KieuDeGiay!.ToLower().Contains(searchValueLower)).ToList();
+                totalRecords = danhSach.Count;
+                query = danhSach
                 .Skip(start)
                 .Take(length)
                 .ToList();
             }
+            else
+            {
+                totalRecords = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Count;
+            }
 
-            var totalRecords = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Count;
 
             return Json(new
             {

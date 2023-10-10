@@ -30,7 +30,7 @@ namespace App_Api.Controllers
 
         [HttpPost]
 
-        public bool CreateKhuyenMai( string Ten, DateTime ngayBD, DateTime ngayKT,int trangThai,decimal mucGiam, string PhamVi, string loaiHinh)
+        public bool CreateKhuyenMai( string Ten, DateTime ngayBD, DateTime ngayKT,int trangThai,decimal mucGiam, string PhamVi, int loaiHinh)
         {
             string MaTS;
             if (repos.GetAll().Count() == null)
@@ -57,7 +57,7 @@ namespace App_Api.Controllers
 
 
         [HttpPut("{id}")]
-        public bool EditKhuyenMai(string id, string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, string PhamVi, string loaiHinh)
+        public bool EditKhuyenMai(string id, string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, string PhamVi, int loaiHinh)
         {
             var KhuyenMai = repos.GetAll().First(p => p.IdKhuyenMai == id);
             KhuyenMai.TenKhuyenMai = Ten;
