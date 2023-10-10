@@ -3,6 +3,7 @@ using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.ViewModels.GioHangChiTiet;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,8 @@ namespace App_Data.Repositories
     {
         BazaizaiContext context;
         private readonly IMapper _mapper;
+        private readonly SignInManager<NguoiDung> _signInManager;
+        private readonly UserManager<NguoiDung> _userManager;
         public GioHangChiTietRepos(IMapper mapper)
         {
             _mapper = mapper;

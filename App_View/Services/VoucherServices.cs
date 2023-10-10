@@ -56,15 +56,31 @@ namespace App_View.Services
             }
 
         }
+        public async Task<bool> DeleteVoucherWithList(List<string> Id)
+        {
+            try
+            {
+                foreach (string item in Id)
+                {
+                    var response = await _httpClient.PutAsync($"/api/Voucher/DeleteVoucher/{item}", null);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
 
         public Task<List<Voucher>> GetAllVoucher()
         {
             return _httpClient.GetFromJsonAsync<List<Voucher>>("/api/Voucher/GetVoucher");
         }
 
-        public async Task<Voucher> GetVoucherById(string id)
+        public async Task<Voucher> GetVoucherByMa(string ma)
         {
-            return await _httpClient.GetFromJsonAsync<Voucher>($"/api/Voucher/GetVoucherByMa/{id}");
+            return await _httpClient.GetFromJsonAsync<Voucher>($"/api/Voucher/GetVoucherByMa/{ma}");
         }
 
         public async Task<VoucherDTO> GetVoucherDTOById(string id)

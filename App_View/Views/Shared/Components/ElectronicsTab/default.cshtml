@@ -1,4 +1,5 @@
-﻿<div class="u-s-p-b-60">
+﻿@model App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel
+<div class="u-s-p-b-60">
 
     <!--====== Section Intro ======-->
     <div class="section__intro u-s-m-b-46">
@@ -41,318 +42,60 @@
                 <div class="tab-pane" id="e-l-p">
                     <div class="slider-fouc">
                         <div class="owl-carousel tab-slider" data-item="4">
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
+                            @foreach (var item in Model.LstSanPhamMoi!)
+                            {
+                                <div class="u-s-m-b-30">
+                                    <div class="product-o product-o--hover-on">
+                                        <div class="product-o__wrap">
 
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
+                                            <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
 
-                                            <img class="aspect__img" src="images/product/electronic/product2.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
+                                                <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
+                                            </a>
+                                            <div class="product-o__action-wrap">
+                                                <ul class="product-o__action-list">
+                                                    <li>
 
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
+                                                        <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
+                                                    </li>
+                                                    <li>
 
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
+                                                        <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
+                                                    </li>
+                                                    <li>
 
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
+                                                        <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
+                                                    </li>
+                                                    <li>
 
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
+                                                        <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <span class="product-o__category">
+                                        <span class="product-o__category">
 
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
+                                            <a href="shop-side-version-2.html">@item.ThuongHieu</a>
+                                        </span>
 
-                                    <span class="product-o__name">
+                                        <span class="product-o__name">
 
-                                        <a href="product-detail.html">Red Wireless Headphone</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                            <a href="product-detail.html">@item.TenSanPham</a>
+                                        </span>
+                                        <div class="product-o__rating gl-rating-style">
+                                            <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
 
-                                        <span class="product-o__review">(0)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product1.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
+                                            <span class="product-o__review">(@item.SoLanDanhGia)</span>
                                         </div>
+
+                                        <span class="product-o__price">
+                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)
+                                            <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai )</span>
+                                        </span>
                                     </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Beats Bomb Wireless Headphone</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-
-                                        <span class="product-o__review">(0)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
                                 </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product33.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Samsung 4k LED Oplex</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-
-                                        <span class="product-o__review">(0)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product34.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Samsung 4k OLED</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-
-                                        <span class="product-o__review">(0)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product6.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Canon DSLR Camera 4k</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-
-                                        <span class="product-o__review">(0)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product7.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Nikon DSLR Camera 4k</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-
-                                        <span class="product-o__review">(0)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -361,318 +104,61 @@
                 <div class="tab-pane fade show active" id="e-b-s">
                     <div class="slider-fouc">
                         <div class="owl-carousel tab-slider" data-item="4">
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
+                            @foreach (var item in Model.LstBanChay!)
+                            {
+                                <div class="u-s-m-b-30">
+                                    <div class="product-o product-o--hover-on">
+                                        <div class="product-o__wrap">
 
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
+                                            <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
 
-                                            <img class="aspect__img" src="images/product/electronic/product2.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
+                                                <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
+                                            </a>
+                                            <div class="product-o__action-wrap">
+                                                <ul class="product-o__action-list">
+                                                    <li>
 
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
+                                                        <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
+                                                    </li>
+                                                    <li>
 
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
+                                                        <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
+                                                    </li>
+                                                    <li>
 
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
+                                                        <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
+                                                    </li>
+                                                    <li>
 
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
+                                                        <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <span class="product-o__category">
+                                        <span class="product-o__category">
 
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
+                                            <a href="shop-side-version-2.html">@item.ThuongHieu</a>
+                                        </span>
 
-                                    <span class="product-o__name">
+                                        <span class="product-o__name">
 
-                                        <a href="product-detail.html">Red Wireless Headphone</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                            <a href="product-detail.html">@item.TenSanPham</a>
+                                        </span>
+                                        <div class="product-o__rating gl-rating-style">
+                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
 
-                                        <span class="product-o__review">(23)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product1.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
+                                            <span class="product-o__review">(@item.SoLanDanhGia)</span>
                                         </div>
+
+                                        <span class="product-o__price">
+                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc )
+
+                                            <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai )</span>
+                                        </span>
                                     </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Beats Bomb Wireless Headphone</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                        <span class="product-o__review">(23)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
                                 </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product33.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Samsung 4k LED Oplex</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                        <span class="product-o__review">(23)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product34.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Samsung 4k OLED</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                        <span class="product-o__review">(23)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product6.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Canon DSLR Camera 4k</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                        <span class="product-o__review">(23)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product7.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Nikon DSLR Camera 4k</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                        <span class="product-o__review">(23)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -1001,318 +487,61 @@
                 <div class="tab-pane" id="e-f-p">
                     <div class="slider-fouc">
                         <div class="owl-carousel tab-slider" data-item="4">
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
+                            @foreach (var item in Model.LstSanPhamNoiBat!)
+                            {
+                                <div class="u-s-m-b-30">
+                                    <div class="product-o product-o--hover-on">
+                                        <div class="product-o__wrap">
 
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
+                                            <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
 
-                                            <img class="aspect__img" src="images/product/electronic/product2.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
+                                                <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
+                                            </a>
+                                            <div class="product-o__action-wrap">
+                                                <ul class="product-o__action-list">
+                                                    <li>
 
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
+                                                        <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
+                                                    </li>
+                                                    <li>
 
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
+                                                        <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
+                                                    </li>
+                                                    <li>
 
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
+                                                        <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
+                                                    </li>
+                                                    <li>
 
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
+                                                        <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <span class="product-o__category">
+                                        <span class="product-o__category">
 
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
+                                            <a href="shop-side-version-2.html">@item.ThuongHieu</a>
+                                        </span>
 
-                                    <span class="product-o__name">
+                                        <span class="product-o__name">
 
-                                        <a href="product-detail.html">Red Wireless Headphone</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                            <a href="product-detail.html">@item.TenSanPham</a>
+                                        </span>
+                                        <div class="product-o__rating gl-rating-style">
+                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
 
-                                        <span class="product-o__review">(23)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product1.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
+                                            <span class="product-o__review">(@item.SoLanDanhGia)</span>
                                         </div>
+
+                                        <span class="product-o__price">
+                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc )
+
+                                            <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai )</span>
+                                        </span>
                                     </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Beats Bomb Wireless Headphone</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                        <span class="product-o__review">(23)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
                                 </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product33.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Samsung 4k LED Oplex</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                        <span class="product-o__review">(23)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product34.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Samsung 4k OLED</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                        <span class="product-o__review">(23)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product6.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Canon DSLR Camera 4k</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                        <span class="product-o__review">(23)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img" src="images/product/electronic/product7.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="shop-side-version-2.html">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="product-detail.html">Nikon DSLR Camera 4k</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                        <span class="product-o__review">(23)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>

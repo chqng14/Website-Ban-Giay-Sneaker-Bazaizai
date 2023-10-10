@@ -11,26 +11,19 @@ namespace App_Data.Models
     {
         [Key]
         public string? IdChiTietSp { get; set; }
-
         public string? Ma { get; set; }
-
-        public string? Day { get; set; }
-
+        public bool? Day { get; set; }
         public string? MoTa { get; set; }
-
         public int? SoLuongTon { get; set; }
         public int? SoLuongDaBan { get; set; }
         public DateTime? NgayTao { get; set; }
         public bool? NoiBat { get; set; }
-
         public double? GiaBan { get; set; }
-
         public double? GiaNhap { get; set; }
-
+        public double? GiaThucTe { get; set; }
+        public double? KhoiLuong { get; set; }
         public int? TrangThai { get; set; }
-
         public int? TrangThaiSale { get; set; }
-
         public string? IdSanPham { get; set; }
         public string? IdKieuDeGiay { get; set; }
         public string? IdXuatXu { get; set; }

@@ -17,13 +17,14 @@ namespace App_View.IServices
  
     public interface ISanPhamChiTietService
     {
-        Task<ResponseCreataDTO> AddAysnc(SanPhamChiTietDTO sanPhamChiTietDTO);
+        Task<ResponseCreateDTO> AddAysnc(SanPhamChiTietDTO sanPhamChiTietDTO);
         Task<bool> DeleteAysnc(string id);
         Task<bool> UpdateAynsc(SanPhamChiTietDTO sanPhamChiTietDTO);
         Task<SanPhamChiTiet?> GetByKeyAsync(string id);
+        Task<SanPhamChiTietViewModel?> GetSanPhamChiTietViewModelByKeyAsync(string id);
         Task<List<SanPhamChiTiet>> GetListSanPhamChiTietAsync();
         Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(ListGuildDTO listGuildDTO);
-        Task<List<SanPhamChiTietViewModel>> GetListSanPhamChiTietViewModelAsync();
+        Task<List<SanPhamDanhSachViewModel>> GetListSanPhamChiTietViewModelAsync();
         Task<ResponseCheckAddOrUpdate> CheckSanPhamAddOrUpdate(SanPhamChiTietDTO sanPhamChiTietDTO);
         Task CreateAnhAysnc(string IdChiTietSp, List<IFormFile> lstIFormFile);
         Task DeleteAnhAysnc(ImageDTO responseImageDeleteVM);
@@ -35,5 +36,16 @@ namespace App_View.IServices
         Task<KieuDeGiayDTO?> CreateTenKieuDeGiayAynsc(KieuDeGiayDTO kieuDeGiayDTO);
         Task<MauSacDTO?> CreateTenMauSacAynsc(MauSacDTO mauSacDTO);
         Task<KichCoDTO?> CreateTenKichCoAynsc(KichCoDTO kichCoDTO);
+        Task<List<ItemShopViewModel>?> GetListItemShopViewModelAynsc();
+        Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id);
+        Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac);
+        Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSizeAynsc(string id, int size);
+        Task<DanhSachGiayViewModel?> GetDanhSachGiayViewModelAynsc();
+        Task<List<SanPhamDanhSachViewModel>> GetDanhSachGiayNgungKinhDoanhAynsc();
+        Task<bool> NgungKinhDoanhSanPhamAynsc(ListGuildDTO lstGuid);
+        Task<bool> KinhDoanhLaiSanPhamAynsc(ListGuildDTO lstGuid);
+        Task<bool> KhoiPhucKinhDoanhAynsc(string id);
+        Task<List<SanPhamChiTietExcelViewModel>> GetListSanPhamExcelAynsc();
+        Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO);
     }
 }

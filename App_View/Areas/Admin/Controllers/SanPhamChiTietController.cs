@@ -19,6 +19,8 @@ using App_Data.ViewModels.KieuDeGiayDTO;
 using App_Data.ViewModels.MauSac;
 using App_Data.ViewModels.KichCoDTO;
 using App_Data.ViewModels.SanPhamChiTietDTO;
+using OfficeOpenXml;
+using System.Diagnostics;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -27,24 +29,226 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly BazaizaiContext _context;
         private readonly ISanPhamChiTietService _sanPhamChiTietService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public SanPhamChiTietController(ISanPhamChiTietService sanPhamChiTietService)
+        public SanPhamChiTietController(ISanPhamChiTietService sanPhamChiTietService, IWebHostEnvironment webHostEnvironment)
         {
             _context = new BazaizaiContext();
             _sanPhamChiTietService = sanPhamChiTietService;
+            _webHostEnvironment = webHostEnvironment;
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
         [HttpGet]
         // GET: Admin/SanPhamChiTiet/DanhSachSanPham
-        public async Task<IActionResult> DanhSachSanPham()
+        public IActionResult DanhSachSanPham()
         {
             return View();
         }
+
+
+        // GET: Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh
+        public IActionResult DanhSachSanPhamNgungKinhDoanh()
+        {
+            return View();
+        }
+
         public class ListGuildDTO
         {
             public List<string>? listGuild { get; set; }
         }
+
         [HttpPost]
-        public async Task<IActionResult> GetPartialViewListUpdate([FromBody]ListGuildDTO listGuildDTO)
+        public async Task<IActionResult> NgungKinhDoanhListSanPham([FromBody] ListGuildDTO listGuildDTO)
+        {
+            return Ok(await _sanPhamChiTietService.NgungKinhDoanhSanPhamAynsc(listGuildDTO));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> KinhDoanhLaiListSanPham([FromBody] ListGuildDTO listGuildDTO)
+        {
+            return Ok(await _sanPhamChiTietService.KinhDoanhLaiSanPhamAynsc(listGuildDTO));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> KhoiPhucKinhDoanh(string id)
+        {
+            return Ok(await _sanPhamChiTietService.KhoiPhucKinhDoanhAynsc(id));
+        }
+
+        #region ImportExcel
+        [HttpPost]
+        public async Task<ActionResult> ImportProducts(IFormFile file)
+        {
+            if (file != null && file.Length > 0)
+            {
+                try
+                {
+                    int slSuccess = 0;
+                    using (var stream = file.OpenReadStream())
+                    using (var package = new ExcelPackage(stream))
+                    {
+                        var worksheet = package.Workbook.Worksheets[0];
+
+                        int rowCount = worksheet.Dimension.Rows;
+                        int colCount = worksheet.Dimension.Columns;
+
+                        //List<MyDataModel> dataList = new List<MyDataModel>();
+
+                        for (int row = 2; row <= rowCount; row++)
+                        {
+                            var sanpham = worksheet.Cells[row, 1].Text;
+                            var thuongHieu = worksheet.Cells[row, 2].Text;
+                            var xuatXu = worksheet.Cells[row, 3].Text;
+                            var chatLieu = worksheet.Cells[row, 4].Text;
+                            var loaiGiay = worksheet.Cells[row, 5].Text;
+                            var kieuDeGiay = worksheet.Cells[row, 6].Text;
+                            var mauSac = worksheet.Cells[row, 7].Text;
+                            var kichCo = worksheet.Cells[row, 8].Text;
+                            var giaNhap = worksheet.Cells[row, 9].Text;
+                            var giaBan = worksheet.Cells[row, 10].Text;
+                            var soLuong = worksheet.Cells[row, 11].Text;
+                            var khoiLuong = worksheet.Cells[row, 12].Text;
+                            var day = worksheet.Cells[row, 13].Text;
+                            var noiBat = worksheet.Cells[row, 14].Text;
+                            var listTenAnh = worksheet.Cells[row, 15].Text.Split(',');
+                            
+                            var sanPhamDTO = await _sanPhamChiTietService.GetItemExcelAynsc(new BienTheDTO
+                            {
+                                ChatLieu = chatLieu,
+                                KichCo = kichCo,
+                                KieuDeGiay = kieuDeGiay,
+                                LoaiGiay = loaiGiay,
+                                MauSac = mauSac,
+                                SanPham = sanpham,
+                                ThuongHieu = thuongHieu,
+                                XuatXu = xuatXu,
+                            });
+                            sanPhamDTO.GiaNhap = Convert.ToDouble(giaNhap);
+                            sanPhamDTO.SoLuongTon = Convert.ToInt32(soLuong);
+                            sanPhamDTO.GiaBan = Convert.ToDouble(giaBan);
+                            sanPhamDTO.KhoiLuong = Convert.ToDouble(khoiLuong);
+                            sanPhamDTO.Day = day == "1" ? true : false;
+                            sanPhamDTO.NoiBat = noiBat == "1" ? true : false;
+                            var response = (await _sanPhamChiTietService.AddAysnc(sanPhamDTO));
+
+                            if (response.Success)
+                            {
+                                slSuccess++;
+                                foreach (var item in listTenAnh)
+                                {
+                                    await _context.Anh.AddAsync(new Anh()
+                                    {
+                                        IdAnh = Guid.NewGuid().ToString(),
+                                        TrangThai = 0,
+                                        Url = item,
+                                        IdSanPhamChiTiet = response.IdChiTietSp,
+                                    });
+                                    await _context.SaveChangesAsync();
+                                }
+                            }
+
+                        }
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+            }
+            
+
+            return Ok();
+
+        }
+
+        #endregion
+
+
+        #region DownLoadFile
+        public IActionResult DownloadFile()
+        {
+            string relativePath = "excel/template.xlsx";
+            string filePath = Path.Combine(_webHostEnvironment.WebRootPath, relativePath);
+            string fileName = "template.xlsx";
+
+            if (System.IO.File.Exists(filePath))
+            {
+                var fileBytes = System.IO.File.ReadAllBytes(filePath);
+                return File(fileBytes, "application/octet-stream", fileName);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        #endregion
+
+        #region ExportToExcel
+        public async Task<IActionResult> ExportToExcel()
+        {
+            var lstProduct = await _sanPhamChiTietService.GetListSanPhamExcelAynsc();
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("ProductList");
+
+                using (var range = worksheet.Cells[1, 1, 1, 15])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    range.Style.Font.Size = 12;
+                }
+
+                // Đặt tiêu đề cho các cột
+                worksheet.Cells[1, 1].Value = "Id";
+                worksheet.Cells[1, 2].Value = "Tên Sản Phẩm";
+                worksheet.Cells[1, 3].Value = "Thương hiệu";
+                worksheet.Cells[1, 4].Value = "Xuất xứ";
+                worksheet.Cells[1, 5].Value = "Chất liệu";
+                worksheet.Cells[1, 6].Value = "Loại giầy";
+                worksheet.Cells[1, 7].Value = "Kiểu để giầy";
+                worksheet.Cells[1, 8].Value = "Màu sắc";
+                worksheet.Cells[1, 9].Value = "Kích cỡ";
+                worksheet.Cells[1, 10].Value = "Giá nhập";
+                worksheet.Cells[1, 11].Value = "Giá bán";
+                worksheet.Cells[1, 12].Value = "Số lượng";
+                worksheet.Cells[1, 13].Value = "Khối lượng";
+                worksheet.Cells[1, 14].Value = "Dây";
+                worksheet.Cells[1, 15].Value = "Nổi bật";
+
+                // Đổ dữ liệu vào worksheet
+                for (int i = 0; i < lstProduct.Count(); i++)
+                {
+                    worksheet.Cells[i + 2, 1].Value = lstProduct[i].IdChiTietSp;
+                    worksheet.Cells[i + 2, 2].Value = lstProduct[i].SanPham;
+                    worksheet.Cells[i + 2, 3].Value = lstProduct[i].ThuongHieu;
+                    worksheet.Cells[i + 2, 4].Value = lstProduct[i].XuatXu;
+                    worksheet.Cells[i + 2, 5].Value = lstProduct[i].ChatLieu;
+                    worksheet.Cells[i + 2, 6].Value = lstProduct[i].LoaiGiay;
+                    worksheet.Cells[i + 2, 7].Value = lstProduct[i].KieuDeGiay;
+                    worksheet.Cells[i + 2, 8].Value = lstProduct[i].MauSac;
+                    worksheet.Cells[i + 2, 9].Value = lstProduct[i].KichCo;
+                    worksheet.Cells[i + 2, 10].Value = lstProduct[i].GiaNhap;
+                    worksheet.Cells[i + 2, 11].Value = lstProduct[i].GiaBan;
+                    worksheet.Cells[i + 2, 12].Value = lstProduct[i].SoLuongTon;
+                    worksheet.Cells[i + 2, 13].Value = lstProduct[i].KhoiLuong;
+                    worksheet.Cells[i + 2, 14].Value = lstProduct[i].Day;
+                    worksheet.Cells[i + 2, 15].Value = lstProduct[i].NoiBat;
+                }
+
+                byte[] excelBytes = package.GetAsByteArray();
+
+                string fileName = $"ProductList_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+
+                return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+
+        }
+        #endregion
+
+        [HttpPost]
+        public async Task<IActionResult> GetPartialViewListUpdate([FromBody] ListGuildDTO listGuildDTO)
         {
             ViewData["IdChatLieu"] = new SelectList(_context.ChatLieus, "IdChatLieu", "TenChatLieu");
             ViewData["IdKichCo"] = new SelectList(_context.kichCos, "IdKichCo", "SoKichCo");
@@ -57,6 +261,7 @@ namespace App_View.Areas.Admin.Controllers
             var model = await _sanPhamChiTietService.GetListSanPhamChiTietDTOAsync(listGuildDTO);
             return PartialView("_DanhSachSanPhamUpdate", model);
         }
+
         public async Task<IActionResult> GetDanhSachSanPham(int draw, int start, int length, string searchValue)
         {
             var query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync())
@@ -67,11 +272,47 @@ namespace App_View.Areas.Admin.Controllers
             if (!string.IsNullOrEmpty(searchValue))
             {
                 string searchValueLower = searchValue.ToLower();
-                query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x => x.SanPham!.ToLower().Contains(searchValueLower) || x.LoaiGiay!.ToLower().Contains(searchValueLower) || x.ChatLieu!.ToLower().Contains(searchValueLower) || x.MauSac!.ToLower().Contains(searchValueLower))
+                query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x =>
+                x.SanPham!.ToLower().Contains(searchValueLower) ||
+                x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
+                x.ChatLieu!.ToLower().Contains(searchValueLower) ||
+                x.KieuDeGiay!.ToLower().Contains(searchValueLower)
+                )
+                .Skip(start)
+                .Take(length)
+                .ToList();
+            }
+
+            var totalRecords = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Count;
+
+            return Json(new
+            {
+                draw = draw,
+                recordsTotal = totalRecords,
+                recordsFiltered = totalRecords,
+                data = query
+            });
+        }
+
+        public async Task<IActionResult> GetDanhSachSanPhamNgungKinhDoanh(int draw, int start, int length, string searchValue)
+        {
+            var query = (await _sanPhamChiTietService.GetDanhSachGiayNgungKinhDoanhAynsc())
                 .Skip(start)
                 .Take(length)
                 .ToList();
 
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                string searchValueLower = searchValue.ToLower();
+                query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x =>
+                x.SanPham!.ToLower().Contains(searchValueLower) ||
+                x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
+                x.ChatLieu!.ToLower().Contains(searchValueLower) ||
+                x.KieuDeGiay!.ToLower().Contains(searchValueLower)
+                )
+                .Skip(start)
+                .Take(length)
+                .ToList();
             }
 
             var totalRecords = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Count;
@@ -128,12 +369,12 @@ namespace App_View.Areas.Admin.Controllers
 
         public async Task<IActionResult> LoadPartialView(string idSanPhamChiTiet)
         {
-            var model = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).FirstOrDefault(x => x.IdChiTietSp == idSanPhamChiTiet);
+            var model = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(idSanPhamChiTiet);
             return PartialView("_DetailPartialView", model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CheckSanPhamAddOrUpdate([FromBody]SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<IActionResult> CheckSanPhamAddOrUpdate([FromBody] SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             return Json(await _sanPhamChiTietService.CheckSanPhamAddOrUpdate(sanPhamChiTietDTO));
         }
@@ -142,7 +383,7 @@ namespace App_View.Areas.Admin.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<IActionResult> Create([FromBody] SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             if (ModelState.IsValid)
             {
@@ -152,19 +393,19 @@ namespace App_View.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task CreateAnh([FromForm]string IdChiTietSp, [FromForm] List<IFormFile> lstIFormFile)
+        public async Task CreateAnh([FromForm] string IdChiTietSp, [FromForm] List<IFormFile> lstIFormFile)
         {
             await _sanPhamChiTietService.CreateAnhAysnc(IdChiTietSp, lstIFormFile);
         }
 
         [HttpPost]
-        public async Task<bool> UpdateSanPham([FromBody]SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<bool> UpdateSanPham([FromBody] SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             return await _sanPhamChiTietService.UpdateAynsc(sanPhamChiTietDTO);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTenSanPham([FromBody]SanPhamDTO sanPhamDTO)
+        public async Task<IActionResult> CreateTenSanPham([FromBody] SanPhamDTO sanPhamDTO)
         {
             return Json(await _sanPhamChiTietService.CreateTenSanPhamAynsc(sanPhamDTO));
         }
@@ -212,9 +453,9 @@ namespace App_View.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task DeleteAnh([FromForm]ImageDTO responseImageDeleteVM)
+        public async Task DeleteAnh([FromForm] ImageDTO responseImageDeleteVM)
         {
-             await _sanPhamChiTietService.DeleteAnhAysnc(responseImageDeleteVM);
+            await _sanPhamChiTietService.DeleteAnhAysnc(responseImageDeleteVM);
         }
 
         // GET: Admin/SanPhamChiTiet/Edit/5
@@ -305,14 +546,14 @@ namespace App_View.Areas.Admin.Controllers
             {
                 _context.sanPhamChiTiets.Remove(sanPhamChiTiet);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool SanPhamChiTietExists(string id)
         {
-          return (_context.sanPhamChiTiets?.Any(e => e.IdChiTietSp == id)).GetValueOrDefault();
+            return (_context.sanPhamChiTiets?.Any(e => e.IdChiTietSp == id)).GetValueOrDefault();
         }
     }
 }

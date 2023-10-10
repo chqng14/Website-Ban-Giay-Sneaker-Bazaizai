@@ -34,14 +34,14 @@
                             <label class="form-control-label">Loại hình: <span class="tx-danger">*</span></label>
                             <select asp-for="LoaiHinhUuDai" class="form-control select2" data-placeholder="Vui lòng chọn!">
                                 <option label="Chọn loại hình khuyến mãi"></option>
-                                <option value="Giamtheo%">Giảm giá theo %</option>
-                                <option value="Giamtheotien">Giảm giá tiền mặt</option>
-                                <option value="FreeShip">Miễn phí ship</option>
+                                <option value="0%">Giảm giá theo %</option>
+                                <option value="1">Giảm giá tiền mặt</option>
+                                <option value="2">Miễn phí ship</option>
                             </select>
                         </div>
-                        <!-- CBB Chọn lại hình khuyến mãi-->
+                        <!-- CBB Chọn Mức ưu đãi-->
                         <div class="form-group mg-b-10-force">
-                            <label class="form-control-label">Giảm giá:</label>
+                            <label class="form-control-label">Mức ưu đãi:</label>
                             <input asp-for="MucUuDai" id="MucGiam" class="form-control" />
                             <span asp-validation-for="MucUuDai" class="text-danger"></span>
                         </div>
@@ -55,6 +55,8 @@
                                 <span asp-validation-for="DieuKien" class="text-danger"></span>
                             </div>
                         </div>
+                        <!-- Nhập phạm vi-->
+                      
                         <!-- Nhập số lượng voucher-->
                         <div class="col-lg-4">
                             <div class="form-group">

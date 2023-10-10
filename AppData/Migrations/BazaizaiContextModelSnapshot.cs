@@ -123,6 +123,9 @@ namespace App_Data.Migrations
                     b.Property<string>("IdGioHangChiTiet")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<double?>("GiaBan")
+                        .HasColumnType("float");
+
                     b.Property<double?>("GiaGoc")
                         .HasColumnType("float");
 
@@ -153,7 +156,7 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IdKhachHang")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IdNguoiDung")
                         .HasColumnType("nvarchar(450)");
@@ -198,6 +201,8 @@ namespace App_Data.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("IdHoaDon");
+
+                    b.HasIndex("IdKhachHang");
 
                     b.HasIndex("IdNguoiDung");
 
@@ -583,6 +588,9 @@ namespace App_Data.Migrations
                     b.Property<double?>("GiaNhap")
                         .HasColumnType("float");
 
+                    b.Property<double?>("GiaThucTe")
+                        .HasColumnType("float");
+
                     b.Property<string>("IdChatLieu")
                         .HasColumnType("nvarchar(450)");
 
@@ -606,6 +614,9 @@ namespace App_Data.Migrations
 
                     b.Property<string>("IdXuatXu")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<double?>("KhoiLuong")
+                        .HasColumnType("float");
 
                     b.Property<string>("Ma")
                         .HasColumnType("varchar(50)");
@@ -734,11 +745,13 @@ namespace App_Data.Migrations
                     b.Property<string>("IdVoucher")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("DieuKien")
-                        .HasColumnType("nvarchar(300)");
+                    b.Property<int?>("DieuKien")
+                        .IsRequired()
+                        .HasColumnType("int");
 
-                    b.Property<string>("LoaiHinhUuDai")
-                        .HasColumnType("nvarchar(300)");
+                    b.Property<int?>("LoaiHinhUuDai")
+                        .IsRequired()
+                        .HasColumnType("int");
 
                     b.Property<string>("MaVoucher")
                         .HasColumnType("nvarchar(100)");
@@ -753,10 +766,13 @@ namespace App_Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("SoLuong")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("TenVoucher")
-                        .HasColumnType("nvarchar(300)");
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
                     b.Property<int?>("TrangThai")
                         .HasColumnType("int");
@@ -951,6 +967,10 @@ namespace App_Data.Migrations
                 {
                     b.HasOne("App_Data.Models.KhachHang", "KhachHang")
                         .WithMany("HoaDons")
+                        .HasForeignKey("IdKhachHang");
+
+                    b.HasOne("App_Data.Models.NguoiDung", "NguoiDung")
+                        .WithMany("HoaDons")
                         .HasForeignKey("IdNguoiDung");
 
                     b.HasOne("App_Data.Models.ThongTinGiaoHang", "ThongTinGiaoHang")
@@ -962,6 +982,8 @@ namespace App_Data.Migrations
                         .HasForeignKey("IdVoucher");
 
                     b.Navigation("KhachHang");
+
+                    b.Navigation("NguoiDung");
 
                     b.Navigation("ThongTinGiaoHang");
 
@@ -1212,6 +1234,8 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.NguoiDung", b =>
                 {
+                    b.Navigation("HoaDons");
+
                     b.Navigation("KhachHangs");
 
                     b.Navigation("SanPhamYeuThich");
