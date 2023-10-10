@@ -114,7 +114,7 @@ namespace App_View.Controllers
                     TempData["quantityCartUser"] = "Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này";
                     existing.SoLuong = Convert.ToInt32(product.SoLuongTon);
                 }
-                //GioHangChiTietServices.UpdateCartDetailDTO(existing);
+                await GioHangChiTietServices.UpdateGioHang(existing.IdGioHangChiTiet, Convert.ToInt32(existing.SoLuong));
             }
             else
             {
