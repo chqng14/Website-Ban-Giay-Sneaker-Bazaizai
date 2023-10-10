@@ -1,6 +1,8 @@
 ﻿using App_Data.DbContextt;
+using App_Data.Models;
 using App_View.IServices;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App_View.Controllers
@@ -10,17 +12,31 @@ namespace App_View.Controllers
 
         private readonly BazaizaiContext _context;
         private readonly IVoucherNguoiDungServices _voucherND;
-        public VoucherNguoiDungController(IVoucherNguoiDungServices voucherNDServices)
+        private readonly SignInManager<NguoiDung> _signInManager;
+        private readonly UserManager<NguoiDung> _userManager;
+        public VoucherNguoiDungController(IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
         {
             _voucherND = voucherNDServices;
             _context = new BazaizaiContext();
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
         // GET: VoucherNguoiDungController
+
+
+        public void LayIDUser()
+        {
+            var idNguoiDung = _userManager.GetUserId(User);
+        }
         public ActionResult Voucher_wallet()
         {
             return View();
         }
-
+        // GET: VoucherNguoiDungController
+        public ActionResult Test()
+        {
+            return View();
+        }
         // GET: VoucherNguoiDungController/Details/5
         public ActionResult Details(int id)
         {
