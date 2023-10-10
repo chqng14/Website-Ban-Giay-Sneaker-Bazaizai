@@ -26,6 +26,7 @@ namespace App_View.Areas.Identity.Pages.Account
 
     public class RegisterModel : PageModel
     {
+      
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IUserStore<NguoiDung> _userStore;
@@ -92,7 +93,6 @@ namespace App_View.Areas.Identity.Pages.Account
             [Display(Name = "Ngày tháng năm sinh")]
             public string NamSinh { get; set; }
         }
-
 
         public async Task OnGetAsync(string returnUrl = null)
         {
