@@ -64,15 +64,12 @@ namespace App_Data.DbContextt
                     entityType.SetTableName(tableName.Substring(6));
                 }
             }
-            //Cấu hình tên bảng tùy chỉnh ở đây
-            //modelBuilder.Entity<NguoiDung>().ToTable("NguoiDung");
-            //modelBuilder.Entity<ChucVu>().ToTable("ChucVu");
             modelBuilder.
                ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-GEBT4IE\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
+            optionsBuilder.UseSqlServer(@"Data Source=Mi\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
         }
 
 

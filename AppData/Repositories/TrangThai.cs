@@ -37,7 +37,12 @@ namespace App_Data.Repositories
             PhanTram = 1,
             [Description("Miễn phí ship")]
             Freeship = 2,
-
+        }
+        public enum ChucVuMacDinh
+        {
+            Admin,
+            KhachHang, 
+            NhanVien
         }
     }
 }
