@@ -6,12 +6,7 @@
 }
 <style>
     .tab-content {
-        background: #d3f6ff;
         width: 100%;
-    }
-
-    .nav-tabs {
-        background: #efefef;
     }
 
     .note-editing-area {
@@ -106,7 +101,7 @@
 </div>
 
 <div class="card">
-    <div class="card-body" id="formGen" style="background: #b1d3d1;">
+    <div class="card-body" id="formGen">
         <div style="display: flex; align-items: center; justify-content: space-between;">
             <h5 style="margin: 0;">QUẢN LÝ SẢN PHẨM</h5>
             <div class="d-flex">
@@ -573,11 +568,11 @@
 <div class="card item-accordion" data-update="${isUpdate}" data-idproductdetail="${idProduct}">
         <div class="card-header">
             <h5 class="card-title d-flex">
-                <a data-toggle="collapse" class="w-100" style="background: #2aebeb;" data-IdMauSac="${idcolor}" data-IdKichCo="${idsize}"
+                <a data-toggle="collapse" class="w-100" data-IdMauSac="${idcolor}" data-IdKichCo="${idsize}"
                    href="#collapseOneBorderless${index}">
                     <span>${Title}</span>
                 </a>
-                <button class="btn btn-tone btnn-close" style="background: #2aebeb;">
+                <button class="btn btn-tone btnn-close">
                     <i class="anticon anticon-close"></i>
                 </button>
             </h5>
