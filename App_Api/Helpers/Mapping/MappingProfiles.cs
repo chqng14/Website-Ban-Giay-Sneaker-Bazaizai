@@ -14,6 +14,7 @@ using App_Data.ViewModels.SanPhamChiTietViewModel;
 using App_Data.ViewModels.Voucher;
 using App_Data.ViewModels.XuatXu;
 using AutoMapper;
+using App_Data.ViewModels.KhuyenMaiChiTietDTO;
 
 namespace App_Api.Helpers.Mapping
 {
@@ -100,7 +101,16 @@ namespace App_Api.Helpers.Mapping
             CreateMap<LoaiGiayDTO, LoaiGiay>();
             CreateMap<KieuDeGiayDTO, KieuDeGiay>();
             CreateMap<KichCoDTO, KichCo>();
-
+            CreateMap<KhuyenMaiChiTiet, KhuyenMaiChiTietDTO>()
+                .ForMember(
+                        dest => dest.KhuyenMai,
+                        opt => opt.MapFrom(src => src.KhuyenMai.TenKhuyenMai)
+                )
+                .ForMember(
+                        dest => dest.SanPham,
+                        opt => opt.MapFrom(src => src.SanPhamChiTiet.SanPham.TenSanPham)
+                )
+                .ReverseMap();
         }
     }
 }
