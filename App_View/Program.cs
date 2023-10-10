@@ -23,7 +23,7 @@ builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamC
 builder.Services.AddScoped<IVoucherServices, VoucherServices>();
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
-
+builder.Services.AddScoped<IKhuyenMaiChiTietServices, KhuyenMaiChiTietServices>();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
