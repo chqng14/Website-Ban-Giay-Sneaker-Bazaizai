@@ -39,5 +39,12 @@ namespace App_Data.Repositories
             Freeship = 2,
 
         }
+        public enum TrangThaiSale 
+        {
+            [Description("Không thể áp dụng sale")]
+            KhongApDungSale = 0,
+            [Description("Được áp dụng sale")]
+            DuocApDungSale = 1
+        }
     }
 }

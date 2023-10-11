@@ -15,6 +15,7 @@ using AutoMapper;
 using App_Data.ViewModels.KhuyenMaiChiTietDTO;
 
 using App_Data.ViewModels.HoaDonChiTietDTO;
+using static Peg.Base.PegBaseParser;
 
 
 namespace App_Api.Helpers.Mapping
@@ -114,7 +115,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<List<SanPhamChiTiet>, DanhSachGiayViewModel>()
                 .ConvertUsing<SanPhamChiTietToListItemViewModelConverter>();
 
-
+            CreateMap<SanPhamChiTiet, SanPhamDanhSachViewModel>();
 
             CreateMap<SanPhamChiTiet, SanPhamChiTietViewModel>()
                 .ForMember(

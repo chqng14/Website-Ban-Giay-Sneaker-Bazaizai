@@ -56,8 +56,23 @@
                 @Html.DisplayFor(modelItem => item.NgayKetThuc)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LoaiHinhKM)
-            </td>
+                    @if (item.LoaiHinhKM == 0)
+                    {
+                        <text>Thương hiệu</text>
+                    }
+                    else if (item.LoaiHinhKM == 1)
+                    {
+                        <text>Màu sắc</text>
+                    }
+                    else if (item.LoaiHinhKM == 2)
+                    {
+                        <text>Định kỳ</text>
+                    }
+                    else if (item.LoaiHinhKM == 3)
+                    {
+                        <text>Mức giá</text>
+                    }
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.MucGiam)
             </td>

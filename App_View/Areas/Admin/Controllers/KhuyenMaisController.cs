@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System.Net.Http;
 using DocumentFormat.OpenXml.Drawing;
 using Org.BouncyCastle.Ocsp;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -55,10 +56,10 @@ namespace App_View.Areas.Admin.Controllers
         {
             ViewBag.ListLoaiHinh = new List<SelectListItem>
             {
-                new SelectListItem { Text = "Thương hiệu", Value = "Thương hiệu" },
-                new SelectListItem { Text = "Màu săc", Value = "Màu săc" },
-                new SelectListItem { Text = "Định kỳ", Value = "Định kỳ" },
-                new SelectListItem { Text = "Mức giá", Value = "Mức giá" }
+                new SelectListItem { Text = "Thương hiệu", Value = "0" },
+                new SelectListItem { Text = "Màu săc", Value = "1" },
+                new SelectListItem { Text = "Định kỳ", Value = "2" },
+                new SelectListItem { Text = "Mức giá", Value = "3" }
             };
             ViewBag.ListGiamGia = new List<SelectListItem>
             {
@@ -91,14 +92,47 @@ namespace App_View.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdKhuyenMai,MaKhuyenMai,TenKhuyenMai,NgayBatDau,NgayKetThuc,LoaiHinhKM,MucGiam,PhamVi,TrangThai")] KhuyenMai khuyenMai)
+        public async Task<IActionResult> Create(KhuyenMai khuyenMai)
         {
             khuyenMai.IdKhuyenMai = Guid.NewGuid().ToString();
             khuyenMai.TrangThai = 0;
             ViewData["IdKhuyenMai"] = new SelectList(_context.khuyenMais, "IdKhuyenMai", "IdKhuyenMai");
-
-            await _httpClient.PostAsync($"https://localhost:7038/api/KhuyenMai?Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&PhamVi={khuyenMai.PhamVi}&loaiHinh={khuyenMai.LoaiHinhKM}", null);
-            return RedirectToAction("Index");
+            ViewBag.ListLoaiHinh = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Thương hiệu", Value = "0" },
+                new SelectListItem { Text = "Màu săc", Value = "1" },
+                new SelectListItem { Text = "Định kỳ", Value = "2" },
+                new SelectListItem { Text = "Mức giá", Value = "3" }
+            };
+            ViewBag.ListGiamGia = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "5%", Value = "5" },
+                new SelectListItem { Text = "10%", Value = "10" },
+                new SelectListItem { Text = "15%", Value = "15" },
+                new SelectListItem { Text = "20%", Value = "20" },
+                new SelectListItem { Text = "25%", Value = "25" },
+                new SelectListItem { Text = "30%", Value = "30" },
+                new SelectListItem { Text = "35%", Value = "35" },
+                new SelectListItem { Text = "40%", Value = "40" },
+                new SelectListItem { Text = "45%", Value = "45" },
+                new SelectListItem { Text = "50%", Value = "50" },
+                new SelectListItem { Text = "55%", Value = "55" },
+                new SelectListItem { Text = "60%", Value = "60" },
+                new SelectListItem { Text = "65%", Value = "65" },
+                new SelectListItem { Text = "70%", Value = "70" },
+                new SelectListItem { Text = "75%", Value = "75" },
+                new SelectListItem { Text = "80%", Value = "80" },
+                new SelectListItem { Text = "85%", Value = "85" },
+                new SelectListItem { Text = "90%", Value = "90" },
+                new SelectListItem { Text = "95%", Value = "95" },
+                new SelectListItem { Text = "100%", Value = "100" }
+            };
+            if (khuyenMai!=null)
+            {
+                await _httpClient.PostAsync($"https://localhost:7038/api/KhuyenMai?Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&PhamVi={khuyenMai.PhamVi}&loaiHinh={khuyenMai.LoaiHinhKM}", null);
+                return RedirectToAction("Index");
+            }
+            return View();
         }
 
         // GET: Admin/KhuyenMais/Edit/5
@@ -129,7 +163,7 @@ namespace App_View.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (khuyenMai != null)
             {
                 try
                 {

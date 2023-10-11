@@ -33,7 +33,7 @@ builder.Services.AddIdentity<NguoiDung, ChucVu>()
 var mailsetting = builder.Configuration.GetSection("MailSettings");
 builder.Services.Configure<MailSettings>(mailsetting);
 builder.Services.AddSingleton<IEmailSender, SendMailService>();
-
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Thiết lập về Password
@@ -134,5 +134,5 @@ app.UseEndpoints(endpoints =>
 });
 
 app.MapRazorPages();
-
+app.MapControllers();
 app.Run();

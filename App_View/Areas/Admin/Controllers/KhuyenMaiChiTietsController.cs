@@ -15,6 +15,10 @@ using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.InkML;
 using App_Data.IRepositories;
 using App_Data.Repositories;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
+using AutoMapper;
+using App_Data.ViewModels.SanPhamChiTiet.SanPhamDTO;
+using App_Data.ViewModels.SanPhamChiTietViewModel;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -25,9 +29,10 @@ namespace App_View.Areas.Admin.Controllers
         private readonly IKhuyenMaiChiTietServices khuyenMaiChiTietServices;
         private readonly ISanPhamChiTietService sanPhamChiTietService;
         private readonly IAllRepo<KhuyenMaiChiTiet> allRepo;
+        private readonly IMapper _mapper;
         HttpClient httpClient;
 
-        public KhuyenMaiChiTietsController(IKhuyenMaiChiTietServices khuyenMaiChiTietServices, ISanPhamChiTietService sanPhamChiTietService)
+        public KhuyenMaiChiTietsController(IKhuyenMaiChiTietServices khuyenMaiChiTietServices, ISanPhamChiTietService sanPhamChiTietService, IMapper mapper)
         {
             _context = new BazaizaiContext();
 
@@ -35,6 +40,7 @@ namespace App_View.Areas.Admin.Controllers
             allRepo = new AllRepo<KhuyenMaiChiTiet>();
             this.khuyenMaiChiTietServices = khuyenMaiChiTietServices;
             this.sanPhamChiTietService = sanPhamChiTietService;
+            _mapper = mapper;
         }
 
         // GET: Admin/KhuyenMaiChiTiets
@@ -185,13 +191,29 @@ namespace App_View.Areas.Admin.Controllers
         {
           return (_context.khuyenMaiChiTiets?.Any(e => e.IdKhuyenMaiChiTiet == id)).GetValueOrDefault();
         }
+
+        public SanPhamDanhSachViewModel CreateSanPhamDanhSachViewModel(SanPhamChiTiet sanPham)
+        {
+            return new SanPhamDanhSachViewModel()
+            {
+                IdChiTietSp = sanPham.IdChiTietSp,
+                ChatLieu = _context.ChatLieus.ToList().FirstOrDefault(x => x.IdChatLieu == sanPham.IdChatLieu)?.TenChatLieu,
+                SanPham = _context.thuongHieus.ToList().FirstOrDefault(x => x.IdThuongHieu == sanPham.IdThuongHieu)?.TenThuongHieu + " " + _context.SanPhams.ToList().FirstOrDefault(x => x.IdSanPham == sanPham.IdSanPham)?.TenSanPham,
+                GiaBan = sanPham.GiaBan,
+                GiaNhap = sanPham.GiaNhap,
+                KichCo = _context.kichCos.ToList().FirstOrDefault(x => x.IdKichCo == sanPham.IdKichCo)?.SoKichCo,
+                Anh = _context.Anh.ToList().Where(x => x.IdSanPhamChiTiet == sanPham.IdChiTietSp && x.TrangThai == 0).FirstOrDefault()?.Url,
+                KieuDeGiay = _context.kieuDeGiays.ToList().FirstOrDefault(x => x.IdKieuDeGiay == sanPham.IdKieuDeGiay)?.TenKieuDeGiay,
+                LoaiGiay = _context.LoaiGiays.ToList().FirstOrDefault(x => x.IdLoaiGiay == sanPham.IdLoaiGiay)?.TenLoaiGiay,
+                SoLuongTon = sanPham.SoLuongTon
+            };
+        }
         [HttpGet]
         public async Task<IActionResult> ApllySale()
         {
-            var saledetail = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
             ViewData["IdSale"] = new SelectList(_context.khuyenMais, "IdKhuyenMai", "TenKhuyenMai");
-
-            return View(saledetail);
+            var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Where(x => x.TrangThaiSale == 0).Select(item => CreateSanPhamDanhSachViewModel(item));
+            return View(getallProductDT);
         }
         [HttpPost]
         public async Task<IActionResult> ApllySale(string idSale, List<string> selectedProducts)

@@ -71,12 +71,12 @@
         <div class="col-sm-12">
             <table id="data-table1" class="table dataTable">
                 <select id="selectSale" class="select2">
-            @foreach (var item in (SelectList)ViewData["IdSale"])
-            {
-                        <option value="@item.Value">@item.Text</option>
-            }
-                </select>
-                <tbody>
+                @foreach (var item in (SelectList)ViewData["IdSale"])
+                {
+                            <option value="@item.Value">@item.Text</option>
+                }
+                    </select>
+                    <tbody>
             @foreach (var product in Model)
             {
                 BazaizaiContext bazaizaiContext = new BazaizaiContext();
