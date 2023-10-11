@@ -29,7 +29,24 @@ namespace App_Api.Helpers.Mapping
             CreateMap<MauSacDTO, MauSac>();
             CreateMap<XuatXuDTO, XuatXu>();
             CreateMap<VoucherDTO, Voucher>().ReverseMap();
-            CreateMap<VoucherNguoiDungDTO, VoucherNguoiDung>().ReverseMap();
+
+            CreateMap<VoucherNguoiDungDTO, VoucherNguoiDung>().ReverseMap()
+                .ForMember(
+                dest => dest.TenVoucher, opt => opt.MapFrom(x => x.Vouchers.TenVoucher))
+                .ForMember(
+                dest => dest.DieuKien, opt => opt.MapFrom(x => x.Vouchers.DieuKien))
+                .ForMember(
+                dest => dest.LoaiHinhUuDai, opt => opt.MapFrom(x => x.Vouchers.LoaiHinhUuDai))
+                .ForMember(
+                dest => dest.SoLuong, opt => opt.MapFrom(x => x.Vouchers.SoLuong))
+                   .ForMember(
+                dest => dest.MucUuDai, opt => opt.MapFrom(x => x.Vouchers.MucUuDai))
+                      .ForMember(
+                dest => dest.NgayBatDau, opt => opt.MapFrom(x => x.Vouchers.NgayKetThuc))
+                         .ForMember(
+                dest => dest.SoLuong, opt => opt.MapFrom(x => x.Vouchers.SoLuong))
+            .ForMember(
+                dest => dest.MaVoucher, opt => opt.MapFrom(x => x.Vouchers.MaVoucher));
 
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
 

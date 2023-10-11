@@ -1,5 +1,4 @@
-﻿@using System.Globalization;
-@using static App_Data.Repositories.TrangThai;
+﻿@using static App_Data.Repositories.TrangThai;
 
 @{
     Layout = "/Views/Shared/_LayoutUser.cshtml";
@@ -7,6 +6,22 @@
     //Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
+<style>
+    .m-order__list {
+        display: flex;
+        flex-wrap: wrap; /* Cho phép các cột wrap (được xuống dòng) khi không đủ chỗ */
+    }
+
+    .m-order__get {
+        width: 45%; /* Đặt chiều rộng của mỗi cột là 50% để chúng hiển thị trong cùng một cột */
+        padding: 10px;
+        margin-left: 20px;
+        box-sizing: border-box;
+    }
+</style>
+
+
+<!--Chang-->
 <div class="col-lg-9 col-md-12">
     <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
 

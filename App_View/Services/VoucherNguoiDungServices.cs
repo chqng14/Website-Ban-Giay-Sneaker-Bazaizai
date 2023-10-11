@@ -38,16 +38,16 @@ namespace App_View.Services
             }
         }
 
-        public Task<List<VoucherNguoiDung>> GetAllVouCherNguoiDung()
+        public Task<List<VoucherNguoiDungDTO>> GetAllVouCherNguoiDung()
         {
             ///api/VoucherNguoiDung/GetAllVoucherNguoiDung
-            return _httpClient.GetFromJsonAsync<List<VoucherNguoiDung>>("/api/VoucherNguoiDung/GetAllVoucherNguoiDung");
+            return _httpClient.GetFromJsonAsync<List<VoucherNguoiDungDTO>>("/api/VoucherNguoiDung/GetAllVoucherNguoiDung");
         }
 
-        public async Task<List<VoucherNguoiDung>> GetAllVoucherNguoiDungByID(string id)
+        public async Task<List<VoucherNguoiDungDTO>> GetAllVoucherNguoiDungByID(string id)
         {
 
-            return await _httpClient.GetFromJsonAsync<List<VoucherNguoiDung>>($"/api/VoucherNguoiDung/GetAllVoucherNguoiDungByID{id}");
+            return await _httpClient.GetFromJsonAsync<List<VoucherNguoiDungDTO>>($"/api/VoucherNguoiDung/GetAllVoucherNguoiDungByID{id}");
         }
 
         public async Task<VoucherNguoiDung> GetVoucherNguoiDungById(string id)

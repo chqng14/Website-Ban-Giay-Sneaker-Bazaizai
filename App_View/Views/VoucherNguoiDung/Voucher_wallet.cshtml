@@ -1,4 +1,5 @@
 ﻿@using static App_Data.Repositories.TrangThai;
+@model IEnumerable<App_Data.ViewModels.VoucherNguoiDung.VoucherNguoiDungDTO>
 
 @{
     Layout = "/Views/Shared/_LayoutUser.cshtml";
@@ -20,256 +21,126 @@
     }
 </style>
 
-
-<!--Chang-->
 <div class="col-lg-9 col-md-12">
-    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
 
-        <div class="dash__pad-2">
-            <div>
-                <h1 class="dash__h1 u-s-m-b-14" style="display: inline-block;">My Voucher</h1>
-                <a style="color:#FF4500;margin-left:32%;display: inline-block;">Tìm thêm voucher</a> |
-                <a style="color:#FF4500" style="display: inline-block;">Xem lịch sử voucher</a> |
-                <a style="color:#FF4500" style="display: inline-block;">Tìm hiểu</a>
-            </div>
-            <span class="dash__text u-s-m-b-30">Bạn sẽ thấy tất cả voucher đã lưu của bạn ở đây.</span>
-            <!--Lưu mã voucher-->
-            <div class="row">
-                <div class="col-lg-10 u-s-m-b-30" style="text-align:center">
-                    <input b-xzovs66yy5="" class="input-text input-text--border-radius input-text--style-1" type="text" id="main-search" placeholder="Nhập mã voucher">
+        <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+
+            <div class="dash__pad-2">
+                <div>
+                    <h1 class="dash__h1 u-s-m-b-14" style="display: inline-block;">My Voucher</h1>
+                    <a style="color:#FF4500;margin-left:32%;display: inline-block;">Tìm thêm voucher</a> |
+                    <a style="color:#FF4500" style="display: inline-block;">Xem lịch sử voucher</a> |
+                    <a style="color:#FF4500" style="display: inline-block;">Tìm hiểu</a>
                 </div>
-                <div class="col-lg-2" style="text-align:center">
-                    <button class="btn btn--e-brand newsletter__btn" style="margin-top: -15px; border-radius: 40px;margin-right:50px" type="submit">
-                        Lưu
-                    </button>
+                <span class="dash__text u-s-m-b-30">Bạn sẽ thấy tất cả voucher đã lưu của bạn ở đây.</span>
+                <!--Lưu mã voucher-->
+                <div class="row">
+                    <div class="col-lg-10 u-s-m-b-30" style="text-align:center">
+                        <input b-xzovs66yy5="" class="input-text input-text--border-radius input-text--style-1" type="text" id="main-search" placeholder="Nhập mã voucher">
+                    </div>
+                    <div class="col-lg-2" style="text-align:center">
+                        <button class="btn btn--e-brand newsletter__btn" style="margin-top: -15px; border-radius: 40px;margin-right:50px" type="submit">
+                            Lưu
+                        </button>
+                    </div>
                 </div>
-            </div>
-            <!--Show mã voucher-->
-            <form class="m-order u-s-m-b-30">
-                <div class="m-order__select-wrapper">
-                    <label class="u-s-m-r-8" for="my-order-sort">Lọc voucher theo:</label><select class="select-box select-box--primary-style" id="my-order-sort">
-                        <option label="Vui lòng chọn"></option>
-                        <option value="@((int)TrangThaiLoaiKhuyenMai.TienMat)">Giảm giá tiền mặt</option>
-                        <option value="@((int)TrangThaiLoaiKhuyenMai.PhanTram)">Giảm giá theo %</option>
-                        <option value="@((int)TrangThaiLoaiKhuyenMai.Freeship)">Miễn phí ship</option>
-                    </select>
+                <!--Show mã voucher-->
+                <form class="m-order u-s-m-b-30">
+                    <div class="m-order__select-wrapper">
+                        <label class="u-s-m-r-8" for="my-order-sort">Lọc voucher theo:</label><select class="select-box select-box--primary-style" id="my-order-sort">
+                            <option label="Vui lòng chọn"></option>
+                            <option value="@((int)TrangThaiLoaiKhuyenMai.TienMat)">Giảm giá tiền mặt</option>
+                            <option value="@((int)TrangThaiLoaiKhuyenMai.PhanTram)">Giảm giá theo %</option>
+                            <option value="@((int)TrangThaiLoaiKhuyenMai.Freeship)">Miễn phí ship</option>
+                        </select>
+                    </div>
+                </form>
+                <div class="row">
                 </div>
-            </form>
-            <div class="row">
-            </div>
-            <div class="m-order__list">
-                <div class="m-order__get">
-                    <div class="manage-o__header u-s-m-b-30">
-                        <div class="dash-l-r">
-                            <div>
-                                <div class="manage-o__text-2 u-c-secondary">Tên voucher ghi ở đây</div>
-                                <div class="manage-o__text u-c-silver">Hạn sử dụng: 14-02-03</div>
+                <div class="m-order__list">
+                @foreach (var item in Model)
+                {
+                    <div class="m-order__get">
+                        <div class="manage-o__header u-s-m-b-30">
+                            <div class="dash-l-r">
+                                <div>
+                                    <div class="manage-o__text-2 u-c-secondary">@item.TenVoucher</div>
+                                    <div class="manage-o__text u-c-silver">@item.NgayKetThuc</div>
+                                </div>
+                                <div>
+                                    <div class="dash__link dash__link--brand">
+
+                                        <a href="dash-manage-order.html">Chi tiết</a>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <div class="dash__link dash__link--brand">
+                        </div>
+                        <div class="manage-o__description">
+                            <div class="description__container">
+                                <div class="description__img-wrap">
 
-                                    <a href="dash-manage-order.html">Chi tiết</a>
+                                    <img class="u-img-fluid" src="/images/VoucherIMG/MyLeader.png" alt="">
+                                </div>
+                                <div class="description-title">
+                                    <p> Giảm: @item.MucUuDai</p>
+                                    <p width:40px>Đơn tối thiểu: @item.DieuKien</p>
+                                </div>
+
+                            </div>
+                            <div class="description__info-wrap">
+                                <div class="body_copy">
+                                    <a class="manage-o__badge badge--delivered copyButton" >Copy mã</a>
+                                    <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="manage-o__description">
-                        <div class="description__container">
-                            <div class="description__img-wrap">
-
-                                <img class="u-img-fluid" src="/images/VoucherIMG/MyLeader.png" alt="">
-                            </div>
-                            <div class="description-title">
-                                <p> Giảm: 100K</p>
-                                <p width:40px>Đơn tối thiểu: 100K</p>
-                            </div>
-
-                        </div>
-                        <div class="description__info-wrap">
-                            <div>
-
-                                <span class="manage-o__badge badge--delivered">Copy mã</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-order__get">
-                    <div class="manage-o__header u-s-m-b-30">
-                        <div class="dash-l-r">
-                            <div>
-                                <div class="manage-o__text-2 u-c-secondary">Tên voucher ghi ở đây</div>
-                                <div class="manage-o__text u-c-silver">Hạn sử dụng: 14-02-03</div>
-                            </div>
-                            <div>
-                                <div class="dash__link dash__link--brand">
-
-                                    <a href="dash-manage-order.html">Chi tiết</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="manage-o__description">
-                        <div class="description__container">
-                            <div class="description__img-wrap">
-
-                                <img class="u-img-fluid" src="/images/VoucherIMG/MyLeader.png" alt="">
-                            </div>
-                            <div class="description-title">
-                                <p> Giảm: 100K</p>
-                                <p width:40px>Đơn tối thiểu: 100K</p>
-                            </div>
-
-                        </div>
-                        <div class="description__info-wrap">
-                            <div>
-
-                                <span class="manage-o__badge badge--delivered">Copy mã</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-order__get">
-                    <div class="manage-o__header u-s-m-b-30">
-                        <div class="dash-l-r">
-                            <div>
-                                <div class="manage-o__text-2 u-c-secondary">Tên voucher ghi ở đây</div>
-                                <div class="manage-o__text u-c-silver">Hạn sử dụng: 14-02-03</div>
-                            </div>
-                            <div>
-                                <div class="dash__link dash__link--brand">
-
-                                    <a href="dash-manage-order.html">Chi tiết</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="manage-o__description">
-                        <div class="description__container">
-                            <div class="description__img-wrap">
-
-                                <img class="u-img-fluid" src="/images/VoucherIMG/MyLeader.png" alt="">
-                            </div>
-                            <div class="description-title">
-                                <p> Giảm: 100K</p>
-                                <p width:40px>Đơn tối thiểu: 100K</p>
-                            </div>
-
-                        </div>
-                        <div class="description__info-wrap">
-                            <div>
-
-                                <span class="manage-o__badge badge--delivered">Copy mã</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-order__get">
-                    <div class="manage-o__header u-s-m-b-30">
-                        <div class="dash-l-r">
-                            <div>
-                                <div class="manage-o__text-2 u-c-secondary">Tên voucher ghi ở đây</div>
-                                <div class="manage-o__text u-c-silver">Hạn sử dụng: 14-02-03</div>
-                            </div>
-                            <div>
-                                <div class="dash__link dash__link--brand">
-
-                                    <a href="dash-manage-order.html">Chi tiết</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="manage-o__description">
-                        <div class="description__container">
-                            <div class="description__img-wrap">
-
-                                <img class="u-img-fluid" src="/images/VoucherIMG/MyLeader.png" alt="">
-                            </div>
-                            <div class="description-title">
-                                <p> Giảm: 100K</p>
-                                <p width:40px>Đơn tối thiểu: 100K</p>
-                            </div>
-
-                        </div>
-                        <div class="description__info-wrap">
-                            <div>
-
-                                <span class="manage-o__badge badge--delivered">Copy mã</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-order__get">
-                    <div class="manage-o__header u-s-m-b-30">
-                        <div class="dash-l-r">
-                            <div>
-                                <div class="manage-o__text-2 u-c-secondary">Tên voucher ghi ở đây</div>
-                                <div class="manage-o__text u-c-silver">Hạn sử dụng: 14-02-03</div>
-                            </div>
-                            <div>
-                                <div class="dash__link dash__link--brand">
-
-                                    <a href="dash-manage-order.html">Chi tiết</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="manage-o__description">
-                        <div class="description__container">
-                            <div class="description__img-wrap">
-
-                                <img class="u-img-fluid" src="/images/VoucherIMG/MyLeader.png" alt="">
-                            </div>
-                            <div class="description-title">
-                                <p> Giảm: 100K</p>
-                                <p width:40px>Đơn tối thiểu: 100K</p>
-                            </div>
-
-                        </div>
-                        <div class="description__info-wrap">
-                            <div>
-
-                                <span class="manage-o__badge badge--delivered">Copy mã</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-order__get">
-                    <div class="manage-o__header u-s-m-b-30">
-                        <div class="dash-l-r">
-                            <div>
-                                <div class="manage-o__text-2 u-c-secondary">Tên voucher ghi ở đây</div>
-                                <div class="manage-o__text u-c-silver">Hạn sử dụng: 14-02-03</div>
-                            </div>
-                            <div>
-                                <div class="dash__link dash__link--brand">
-
-                                    <a href="dash-manage-order.html">Chi tiết</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="manage-o__description">
-                        <div class="description__container">
-                            <div class="description__img-wrap">
-
-                                <img class="u-img-fluid" src="/images/VoucherIMG/MyLeader.png" alt="">
-                            </div>
-                            <div class="description-title">
-                                <p> Giảm: 100K</p>
-                                <p width:40px>Đơn tối thiểu: 100K</p>
-                            </div>
-
-                        </div>
-                        <div class="description__info-wrap">
-                            <div>
-
-                                <span class="manage-o__badge badge--delivered">Copy mã</span>
-                            </div>
-                        </div>
-                    </div>
+                }
                 </div>
             </div>
         </div>
-    </div>
+
 </div>
-</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).on('click', '.copyButton', function () {
+        var maVoucher = $(this).closest('.body_copy').find('.textToCopy').val()
+        var tempInput = document.createElement("input");
+        tempInput.value = maVoucher;
+        document.body.appendChild(tempInput);
+
+        // Chọn văn bản trong phần tử input tạm thời
+        tempInput.select();
+        document.execCommand("copy");
+
+        // Xóa phần tử input tạm thời
+        document.body.removeChild(tempInput);
+
+        alert("Đã sao chép mã vào clipboard: " + maVoucher);
+    })
+
+    // // Lấy tham chiếu đến phần tử nút "Copy mã" và văn bản cần sao chép
+    // var copyButton = document.getElementById("copyButton");
+    // var textToCopy = document.getElementById("textToCopy");
+
+    // // Gắn sự kiện click cho nút "Copy mã"
+    // copyButton.addEventListener("click", function () {
+    //     // Lấy văn bản từ textarea
+    //     var maVoucher = textToCopy.value;
+
+    //     // Tạo một phần tử input tạm thời để sao chép văn bản
+    //     var tempInput = document.createElement("input");
+    //     tempInput.value = maVoucher;
+    //     document.body.appendChild(tempInput);
+
+    //     // Chọn văn bản trong phần tử input tạm thời
+    //     tempInput.select();
+    //     document.execCommand("copy");
+
+    //     // Xóa phần tử input tạm thời
+    //     document.body.removeChild(tempInput);
+
+    //     alert("Đã sao chép mã vào clipboard: " + maVoucher);
+    // });
+
+</script>

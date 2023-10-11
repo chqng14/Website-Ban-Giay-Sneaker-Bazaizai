@@ -23,14 +23,17 @@ namespace App_View.Controllers
         }
         // GET: VoucherNguoiDungController
 
-
-        public void LayIDUser()
+        //public async Task<IActionResult> Voucher_wallet()
+        //{
+        //    //var idNguoiDung = _userManager.GetUserId(User);
+        //    //var voucherNguoiDung = await _voucherND.GetAllVoucherNguoiDungByID(idNguoiDung);
+        //    return View();
+        //}
+        public async Task<IActionResult> Voucher_wallet(string id)
         {
             var idNguoiDung = _userManager.GetUserId(User);
-        }
-        public ActionResult Voucher_wallet()
-        {
-            return View();
+            var voucherNguoiDung = await _voucherND.GetAllVoucherNguoiDungByID(idNguoiDung);
+            return View(voucherNguoiDung);
         }
         // GET: VoucherNguoiDungController
         public ActionResult Test()

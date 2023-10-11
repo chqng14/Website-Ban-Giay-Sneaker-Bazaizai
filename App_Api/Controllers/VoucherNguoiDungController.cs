@@ -37,15 +37,20 @@ namespace App_Api.Controllers
         }
         // GET: api/<ChatLieuController>
         [HttpGet("GetAllVoucherNguoiDung")]
-        public IEnumerable<VoucherNguoiDung> GetAllVouCherNguoiDung()
+        public async Task<IEnumerable<VoucherNguoiDungDTO>> GetAllVouCherNguoiDung()
         {
-            return VcNguoiDungRepos.GetAll();
+            var lstVoucherNguoiDung = voucherNguoiDung.Include(x => x.Vouchers).ToList();
+            var lstVoucherNguoiDungDTO = _mapper.Map<IEnumerable<VoucherNguoiDungDTO>>(lstVoucherNguoiDung);
+
+            return lstVoucherNguoiDungDTO;
         }
 
         [HttpGet("GetAllVoucherNguoiDungByID{id}")]
-        public IEnumerable<VoucherNguoiDung> GetAllVoucherNguoiDungByID(string Id)
+        public IEnumerable<VoucherNguoiDungDTO> GetAllVoucherNguoiDungByID(string id)
         {
-            return VcNguoiDungRepos.GetAll().Where(c => c.IdNguoiDung == Id);
+            var lstVoucherNguoiDung = voucherNguoiDung.Include(x => x.Vouchers).ToList();
+            var lstVoucherNguoiDungDTO = _mapper.Map<IEnumerable<VoucherNguoiDungDTO>>(lstVoucherNguoiDung).Where(c => c.IdNguoiDung == id);
+            return lstVoucherNguoiDungDTO;
         }
 
         // GET api/<ChatLieuController>/5
@@ -54,7 +59,6 @@ namespace App_Api.Controllers
         {
             return VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCherNguoiDung == id);
         }
-
         // POST api/<ChatLieuController>
         [HttpPost("AddVoucherNguoiDung")]
         public bool AddVoucherNguoiDung(VoucherNguoiDungDTO VcDTO)
