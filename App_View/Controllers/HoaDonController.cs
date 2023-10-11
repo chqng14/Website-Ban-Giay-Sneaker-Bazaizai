@@ -1,5 +1,7 @@
 ﻿using App_Data.Models;
+using App_Data.ViewModels.HoaDon;
 using App_Data.ViewModels.HoaDonChiTietDTO;
+using App_Data.ViewModels.ThongTinGHDTO;
 using App_View.IServices;
 using App_View.Services;
 using Microsoft.AspNetCore.Http;
@@ -108,33 +110,32 @@ namespace App_View.Controllers
                 return View();
             }
         }
-        public async Task<IActionResult> DataBill(ThongTinGiaoHang thongTinGiaoHang)
+        public async Task<IActionResult> DataBill(ThongTinGHDTO thongTinGHDTO)
         {
-            thongTinGiaoHang.IdNguoiDung = _userManager.GetUserId(User);
-            await ThongTinGHController.CreateThongTin(thongTinGiaoHang);
-            TempData["ThongTinGiaoHang"] = thongTinGiaoHang;
-            return RedirectToAction("CheckOut", "GioHangChiTiets");
+            thongTinGHDTO.IdThongTinGH = Guid.NewGuid().ToString();
+            thongTinGHDTO.IdNguoiDung = _userManager.GetUserId(User);
+            await ThongTinGHController.CreateThongTin(thongTinGHDTO);
+            return Ok(new { idThongTinGH = thongTinGHDTO.IdThongTinGH });
         }
         public async Task<IActionResult> ThanhToan(HoaDonChiTietDTO hoaDonChiTietDTO)
         {
             var UserID = _userManager.GetUserId(User);
             var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == UserID);
-            var idthongtinGH = TempData["ThongTinGiaoHang"] as ThongTinGiaoHang;
-            var hoadon = new HoaDon()
+            var hoadon = new HoaDonDTO()
             {
                 IdNguoiDung = UserID,
                 IdKhachHang = null,
-                IdThongTinGH = idthongtinGH.IdThongTinGH,
+                IdThongTinGH = hoaDonChiTietDTO.IdThongTinGH,
                 IdVoucher = null,
                 MaHoaDon = "HD" + DateTime.Now.ToString("ddMMyyyyhhmmss"),
                 NgayTao = DateTime.Now,
                 NgayShip = DateTime.Now.AddDays(2),
                 NgayNhan = DateTime.Now.AddDays(4),
                 NgayThanhToan = DateTime.Now.AddDays(4),
-                TienGiam = 0,
-                TongTien = 2000000,
-                TienShip = 30000,
-                MoTa = "0",
+                TienGiam = hoaDonChiTietDTO.TienGiam,
+                TongTien = hoaDonChiTietDTO.TongTien,
+                TienShip = hoaDonChiTietDTO.TienShip,
+                MoTa = hoaDonChiTietDTO.MoTa,
                 TrangThai = 0,
                 TrangThaiThanhToan = 0
             };
@@ -155,7 +156,7 @@ namespace App_View.Controllers
                 //var product = await ProductDetailServices.GetById(item.IdProduct);
                 //await ProductDetailServices.UpdateSoLuong(product.Id, item.SoLuongCart);
             }
-            return RedirectToAction("ShowCartUser", "GioHangChiTiets");
+            return Ok();
         }
     }
 }

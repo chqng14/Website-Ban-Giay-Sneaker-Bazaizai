@@ -221,10 +221,10 @@
 
                                     <label class="gl-label" for="order-note">GHI CHÚ</label><textarea class="text-area text-area--primary-style" id="order-note"></textarea>
                                 </div>
-                                <div>
+                                @* <div>
 
-                                    <button class="btn btn--e-transparent-brand-b-2" type="submit">LƯU</button>
-                                </div>
+                                    <button class="btn btn--e-transparent-brand-b-2" id="luu" type="submit">LƯU</button>
+                                </div> *@
                             </div>
                         </form>
                     </div>
@@ -233,80 +233,91 @@
 
                         <!--====== Order Summary ======-->
                         <div class="o-summary">
-                            <div class="o-summary__section u-s-m-b-30">
-                                <div class="o-summary__item-wrap gl-scroll">
-                                    @foreach (var item in Model)
-                                    {
-                                        <div class="o-card">
-                                            <div class="o-card__flex">
-                                                <div class="o-card__img-wrap">
+                            <form class="checkout-f__payment" id="paymentForm" asp-action="ThanhToan" asp-controller="HoaDon">
+                                <div class="o-summary__section u-s-m-b-30">
+                                    <div class="o-summary__item-wrap gl-scroll">
+                                        @foreach (var item in Model)
+                                        {
+                                            <div class="o-card">
+                                                <div class="o-card__flex">
+                                                    <div class="o-card__img-wrap">
 
-                                                    <img class="u-img-fluid" src="/AnhSanPham/@item.LinkAnh[0]" alt="">
+                                                        <img class="u-img-fluid" src="/AnhSanPham/@item.LinkAnh[0]" alt="">
+                                                    </div>
+                                                    <div class="o-card__info-wrap">
+
+                                                        <span class="o-card__name">
+
+                                                            <a href="product-detail.html">@item.TenSanPham</a>
+                                                        </span>
+
+                                                        <span class="o-card__quantity">Số lượng x @item.SoLuong</span>
+
+                                                        <span class="o-card__price">@string.Format("{0:N0}đ", item.GiaBan)</span>
+                                                    </div>
                                                 </div>
-                                                <div class="o-card__info-wrap">
 
-                                                    <span class="o-card__name">
-
-                                                        <a href="product-detail.html">@item.TenSanPham</a>
-                                                    </span>
-
-                                                    <span class="o-card__quantity">Số lượng x @item.SoLuong</span>
-
-                                                    <span class="o-card__price">@string.Format("{0:N0}đ", item.GiaBan)</span>
-                                                </div>
+                                                <a class="o-card__del far fa-trash-alt" href="@Url.Action("DeleteCartCheckOut", "GioHangChiTiets", new { id = item.IdGioHangChiTiet })"></a>
                                             </div>
+                                        }
 
-                                            <a class="o-card__del far fa-trash-alt" href="@Url.Action("DeleteCartCheckOut", "GioHangChiTiets", new { id = item.IdGioHangChiTiet })"></a>
-                                        </div>
-                                    }
-                                    
-                                    
+
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="o-summary__section u-s-m-b-30">
-                                <div class="o-summary__box">
-                                    <h1 class="checkout-f__h1">ĐỊA CHỈ GIAO HÀNG</h1>
-                                    <div class="ship-b">
+                                <div class="o-summary__section u-s-m-b-30">
+                                    <div class="o-summary__box">
+                                        <h1 class="checkout-f__h1">ĐỊA CHỈ GIAO HÀNG</h1>
+                                        <div class="ship-b">
 
-                                        <span class="ship-b__text">Giao tới:</span>
-                                        <div class="ship-b__box u-s-m-b-10">
-                                            <p class="ship-b__p" id="thongtin"></p>
+                                            <span class="ship-b__text">Giao tới:</span>
+                                            <div class="ship-b__box u-s-m-b-10">
+                                                <p class="ship-b__p" id="thongtin"></p>
 
-                                            <a class="ship-b__edit btn--e-transparent-platinum-b-2" data-modal="modal" data-modal-id="#edit-ship-address">Sửa</a>
-                                        </div>
-                                        @* <div class="ship-b__box">
+                                                <a class="ship-b__edit btn--e-transparent-platinum-b-2" data-modal="modal" data-modal-id="#edit-ship-address">Sửa</a>
+                                            </div>
+                                            @* <div class="ship-b__box">
 
                                             <span class="ship-b__text">Bill to default billing address</span>
 
                                             <a class="ship-b__edit btn--e-transparent-platinum-b-2" data-modal="modal" data-modal-id="#edit-ship-address">Edit</a>
-                                        </div> *@
+                                            </div> *@
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="o-summary__section u-s-m-b-30">
-                                <div class="o-summary__box">
-                                    <table class="o-summary__table">
-                                        <tbody>
-                                            <tr>
-                                                <td>PHÍ SHIP</td>
-                                                <td id="phiship">0đ</td>
-                                            </tr>
-                                            <tr>
-                                                <td>TẠM TÍNH</td>
-                                                <td>@string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaBan))</td>
-                                            </tr>
-                                            <tr>
-                                                <td>TỔNG TIỀN</td>
-                                                <td>@string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaBan))</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <div class="o-summary__section u-s-m-b-30">
+                                    <div class="o-summary__box">
+                                        <table class="o-summary__table">
+                                            <tbody>
+                                                <tr>
+                                                    <td>PHÍ SHIP</td>
+                                                    <td id="phiship">0đ</td>
+                                                    <input hidden name="TienShip" />
+                                                </tr>
+                                                <tr>
+                                                    <td>TIỀN GIẢM</td>
+                                                    <td id="TienGiam">0đ</td>
+                                                    <input hidden name="TienGiam"/>
+                                                </tr>
+                                                <tr>
+                                                    <td>TẠM TÍNH</td>
+                                                    <td id="tamtinh">@string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaBan))</td>
+                                                    
+                                                </tr>
+                                                <tr>
+                                                    <td>TỔNG TIỀN</td>
+                                                    <td id="tongtien">@string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaBan))</td>
+                                                    <input hidden name="TongTien"/>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <input hidden name="MoTa" />
+                                        <input hidden name="IdThongTinGH" />
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="o-summary__section u-s-m-b-30">
+                                <div class="o-summary__section u-s-m-b-30">
                                 <div class="o-summary__box">
                                     <h1 class="checkout-f__h1">PHƯƠNG THỨC THANH TOÁN</h1>
-                                    <form class="checkout-f__payment" id="paymentForm" asp-action="ThanhToan" asp-controller="HoaDon">
+                                    
                                         <div class="u-s-m-b-10">
 
                                             <!--====== Radio Box ======-->
@@ -337,51 +348,7 @@
 
                                             <span class="gl-text u-s-m-t-6">Khi bạn nhấp vào "Đặt hàng" bên dưới, chúng tôi sẽ chuyển hướng bạn đến trang web của Momo để thiết lập thông tin thanh toán của bạn.</span>
                                         </div>
-                                        @* <div class="u-s-m-b-10">
-
-                                            <!--====== Radio Box ======-->
-                                            <div class="radio-box">
-
-                                                <input type="radio" id="pay-with-check" name="payment">
-                                                <div class="radio-box__state radio-box__state--primary">
-
-                                                    <label class="radio-box__label" for="pay-with-check">Pay With Check</label>
-                                                </div>
-                                            </div>
-                                            <!--====== End - Radio Box ======-->
-
-                                            <span class="gl-text u-s-m-t-6">Please send a check to Store Name, Store Street, Store Town, Store State / County, Store Postcode.</span>
-                                        </div>
-                                        <div class="u-s-m-b-10">
-
-                                            <!--====== Radio Box ======-->
-                                            <div class="radio-box">
-
-                                                <input type="radio" id="pay-with-card" name="payment">
-                                                <div class="radio-box__state radio-box__state--primary">
-
-                                                    <label class="radio-box__label" for="pay-with-card">Pay With Credit / Debit Card</label>
-                                                </div>
-                                            </div>
-                                            <!--====== End - Radio Box ======-->
-
-                                            <span class="gl-text u-s-m-t-6">International Credit Cards must be eligible for use within the United States.</span>
-                                        </div>
-                                        <div class="u-s-m-b-10">
-
-                                            <!--====== Radio Box ======-->
-                                            <div class="radio-box">
-
-                                                <input type="radio" id="pay-pal" name="payment">
-                                                <div class="radio-box__state radio-box__state--primary">
-
-                                                    <label class="radio-box__label" for="pay-pal">Pay Pal</label>
-                                                </div>
-                                            </div>
-                                            <!--====== End - Radio Box ======-->
-
-                                            <span class="gl-text u-s-m-t-6">When you click "Place Order" below we'll take you to Paypal's site to set up your billing information.</span>
-                                        </div> *@
+                                       
                                         <div class="u-s-m-b-15">
 
                                             <!--====== Check Box ======-->
@@ -398,12 +365,12 @@
                                             <a class="gl-link">Terms of Service.</a>
                                         </div>
                                         <div>
-
                                             <button id="placeOrderButton" class="btn btn--e-brand-b-2" type="submit">ĐẶT HÀNG</button>
                                         </div>
-                                    </form>
+                                    
                                 </div>
                             </div>
+                            </form>
                         </div>
                         <!--====== End - Order Summary ======-->
                     </div>
@@ -579,23 +546,169 @@
 
 @section Scripts{
     <script>
-        var ship = localStorage.getItem('phiship');
-        console.log(ship);
-        if (ship) {
-            $('#phiship').text(parseInt(ship).toLocaleString("vi-VN").replace(/\./g, ',') + "đ");
-        }else   {
-            $('#phiship').text('0đ');
-        }
-        var tenNguoiNhan = selectedRow.querySelector('#ten').innerText;
-        var sdt = selectedRow.querySelector('#sdt').innerText;
-        var diaChi = selectedRow.querySelector('#diachi').innerText;
+        $(document).ready(function () {
+            const apiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/province';
+            const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
 
-        // Tạo chuỗi thông tin
-        var thongtin = tenNguoiNhan + ' ' + sdt + ' ' + diaChi;
+            axios.get(apiUrl, {
+                headers: {
+                    'Token': token
+                }
+            })
+                .then(response => {
+                    var selectElement = $('#city');
+                    selectElement.empty();
 
-        // Cập nhật nội dung của phần tử có id "thongtin"
-        $('#thongtin').text(thongtin);
+                    selectElement.append($('<option>').val('').text('Chọn thành phố'));
+
+                    $.each(response.data.data, function (index, item) {
+                        selectElement.append($('<option>').val(item.ProvinceID).text(item.ProvinceName));
+                    });
+
+                    selectElement.val(selectElement.val()).trigger('change');
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
+
+        $(document).ready(function () {
+            $('#city').on('change', function () {
+                if ($('#city').val() === null) {
+                    var selectElement = $('#district');
+                    selectElement.empty();
+                    selectElement.val('').trigger('change');
+                    selectElement.append($('<option>').val('').text('Chọn huyện'));
+                }
+                const apiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/district';
+                const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
+                axios.get(apiUrl, {
+                    headers: {
+                        'Token': token
+                    },
+                    params: {
+                        province_id: $('#city').val()
+                    }
+                })
+                    .then(response => {
+                        console.log(response.data.data);
+                        var selectElement = $('#district');
+                        selectElement.empty();
+                        selectElement.val('').trigger('change');
+                        selectElement.append($('<option>').val('').text('Chọn huyện'));
+                        $.each(response.data.data, function (index, item) {
+                            selectElement.append($('<option>').val(item.DistrictID).text(item.DistrictName));
+                        });
+                        selectElement.val(selectElement.val()).trigger('change');
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#district').on('change', function () {
+                if ($('#district').val() === null) {
+                    var selectElement = $('#wards');
+                    selectElement.empty();
+                    selectElement.val('').trigger('change');
+                    selectElement.append($('<option>').val('').text('Chọn phường/xã'));
+                }
+                const apiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/ward';
+                const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
+                axios.get(apiUrl, {
+                    headers: {
+                        'Token': token
+                    },
+                    params: {
+                        district_id: $('#district').val()
+                    }
+                })
+                    .then(response => {
+                        console.log(response.data.data);
+                        var selectElement = $('#wards');
+                        selectElement.empty();
+                        selectElement.val('').trigger('change');
+                        selectElement.append($('<option>').val('').text('Chọn phường/xã'));
+                        $.each(response.data.data, function (index, item) {
+                            selectElement.append($('<option>').val(item.WardCode).text(item.WardName));
+                        });
+                        selectElement.val(selectElement.val()).trigger('change');
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#wards').on('change', function () {
+                var inputs = document.getElementsByClassName('input-counter__text');
+                var sum = 0;
+                for (var i = 0; i < inputs.length - 1; i++) {
+                    var inputValue = parseInt(inputs[i].value);
+                    if (!isNaN(inputValue)) {
+                        sum += inputValue;
+                    }
+                }
+
+                var soLuongDonHang = sum;
+                var length = 20; // Giá trị mặc định cho chiều dài
+                var width = 15; // Giá trị mặc định cho chiều rộng
+                var height = 20;
+                var weight = parseInt((length * width * height) / 5000);
+                if ($('#wards').val() != null) {
+                    const apiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee';
+                    const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
+                    const shop_id = 705899;
+                    axios.get(apiUrl, {
+                        headers: {
+                            'Token': token,
+                            'shop_id': shop_id
+                        },
+                        params: {
+                            service_type_id: 2,
+                            insurance_value: $('#tamtinh').text().replace(/\D/g, ''),
+                            coupon: null,
+                            to_ward_code: $('#wards').val(),
+                            to_district_id: $('#district').val(),
+                            from_district_id: 3440,
+                            weight: weight,
+                            length: length,
+                            width: width,
+                            height: height
+                        }
+                    })
+                        .then(response => {
+
+                            //lưu tiền ship vào localstorage
+                            localStorage.setItem('phiship', response.data.data.service_fee);
+                            //gán tiền ship vào id phiship
+                            $('#phiship').text(parseInt(response.data.data.service_fee).toLocaleString("vi-VN").replace(/\./g, ',') + "đ");
+                            // $('#divShippingFee1').val(response.data.data.service_fee);
+
+                            // lấy ra tổng tiền của sản phẩm có trong giỏ hàng
+                            var tongtienSanPham = parseInt(document.getElementById("tamtinh").innerText.replace("đ", "").replace(/\,/g, "").replace(/\./g, "").trim());
+
+                            var totalAmountElement = document.getElementById("tongtien");
+
+                            var tongTien = tongtienSanPham + response.data.data.service_fee;
+
+                            // Hiển thị tổng tiền
+                            totalAmountElement.innerText = tongTien.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
+                            totalAmountElement.value = tongTien.toString();
+                            document.querySelector('input[name="TongTien"]').value = tongtienSanPham;
+                            document.querySelector('input[name="TienShip"]').value = response.data.data.service_fee;
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                }
+            });
+        });
     </script>
+    
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var radioButtons = document.querySelectorAll('input[name="default-address"]');
@@ -612,6 +725,16 @@
                     savedRadioButton.checked = true;
                     updateThongTin(savedRadioButton);
                 }
+            } else {
+                var tenNguoiNhan = selectedRow.querySelector('#ten').innerText;
+                var sdt = selectedRow.querySelector('#sdt').innerText;
+                var diaChi = selectedRow.querySelector('#diachi').innerText;
+
+                // Tạo chuỗi thông tin
+                var thongtin = tenNguoiNhan + ' ' + sdt + ' ' + diaChi;
+
+                // Cập nhật nội dung của phần tử có id "thongtin"
+                $('#thongtin').text(thongtin);
             }
 
             form.addEventListener('submit', function (event) {
@@ -648,31 +771,10 @@
         });
 
     </script>
-    @* <script>
-        $(document).ready(function () {
-            $('#save-button').on('click', function (e) {
-                // Ngăn chặn sự kiện mặc định của form để tránh submit trang
-                e.preventDefault();
-
-                // Các dòng code xử lý dữ liệu và gửi Ajax ở đây
-                var selectedCity = $('#city option:selected').text();
-                var selectedDistrict = $('#district option:selected').text();
-                var selectedWard = $('#wards option:selected').text();
-                var inputAddress = $('#address-street').val();
-                var idNguoiDung = $('#idNguoiDung').val();
-
-                var DiaChiFull = inputAddress + ',' + selectedWard + ',' + selectedDistrict + ',' + selectedCity;
-                $('#address-street').val(DiaChiFull);
-                $('form.checkout-modal1__form').submit();
-            });
-
-        });
-
-    </script> *@
     <script>
         $(document).ready(function () {
             $('#placeOrderButton').click(function (e) {
-                // e.preventDefault();
+                e.preventDefault();
                 var selectedCity = $('#city option:selected').text();
                 var selectedDistrict = $('#district option:selected').text();
                 var selectedWard = $('#wards option:selected').text();
@@ -683,7 +785,7 @@
                 var deliveryFormData = $('#deliveryForm').serialize();
 
                 // Lấy dữ liệu từ form payment
-                var paymentFormData = $('#paymentForm').serialize();
+                
 
                 // Thực hiện Ajax để gửi dữ liệu đến action DataBill trong controller HoaDon
                 $.ajax({
@@ -692,12 +794,25 @@
                     data: deliveryFormData,
                     success: function (deliveryResponse) {
                         // Thực hiện Ajax để gửi dữ liệu đến action ThanhToan trong controller TenControllerKhac
+                        var moTaValue = $("#order-note").val();
+                        $('input[name="MoTa"]').val(moTaValue);
+
+                        $("[name='IdThongTinGH']").val(deliveryResponse.idThongTinGH)
+
+                        var tiengiam = document.getElementById("TienGiam").innerText.replace("đ", "").replace(/\,/g, "").replace(/\./g, "").trim();
+
+                        document.querySelector('input[name="TienGiam"]').value = tiengiam;
+
+                        var paymentFormData = $('#paymentForm').serialize();
+
+                        
                         $.ajax({
                             type: 'POST',
                             url: '/HoaDon/ThanhToan',
                             data: paymentFormData,
                             success: function (paymentResponse) {
                                 // Xử lý kết quả nếu cần
+                                window.location.href = "/GioHangChiTiets/ShowCartUser"
                             },
                             error: function (paymentError) {
                                 // Xử lý lỗi nếu cần

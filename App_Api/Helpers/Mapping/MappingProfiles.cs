@@ -15,7 +15,8 @@ using AutoMapper;
 using App_Data.ViewModels.KhuyenMaiChiTietDTO;
 
 using App_Data.ViewModels.HoaDonChiTietDTO;
-
+using App_Data.ViewModels.ThongTinGHDTO;
+using App_Data.ViewModels.HoaDon;
 
 namespace App_Api.Helpers.Mapping
 {
@@ -78,9 +79,9 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.LoaiGiay,
                         opt => opt.MapFrom(src => src.LoaiGiay.TenLoaiGiay)
                     );
-
-
-            CreateMap<HoaDonChiTietDTO, HoaDonChiTiet>();
+            CreateMap<HoaDonDTO, HoaDon>().ReverseMap();
+            CreateMap<ThongTinGHDTO, ThongTinGiaoHang>().ReverseMap();
+            CreateMap<HoaDonChiTietDTO, HoaDonChiTiet>().ReverseMap();
             CreateMap<HoaDonChiTiet, HoaDonChiTietViewModel>()
                 .ForMember(
                 dest => dest.TenSanPham,

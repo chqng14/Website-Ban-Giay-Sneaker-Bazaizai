@@ -1,5 +1,6 @@
 ﻿using App_Data.Models;
 using App_Data.ViewModels.GioHangChiTiet;
+using App_Data.ViewModels.HoaDon;
 using App_View.IServices;
 using System.Net.Http;
 
@@ -12,11 +13,11 @@ namespace App_View.Services
         {
             _httpClient = new HttpClient();
         }
-        public async Task<bool> CreateHoaDon(HoaDon HoaDon)
+        public async Task<bool> CreateHoaDon(HoaDonDTO hoaDonDTO)
         {
             try
             {
-                var res = await _httpClient.PostAsync($"https://localhost:7038/api/HoaDon/Create?IdVoucher={HoaDon.IdVoucher}&IdNguoiDung={HoaDon.IdNguoiDung}&IdKhachHang={HoaDon.IdKhachHang}&IdThongTinGH={HoaDon.IdThongTinGH}&NgayTao={HoaDon.NgayTao}&NgayThanhToan={HoaDon.NgayThanhToan}&NgayShip={HoaDon.NgayShip}&NgayNhan={HoaDon.NgayNhan}&TienShip={HoaDon.TienShip}&TienGiam={HoaDon.TienGiam}&TongTien={HoaDon.TongTien}&MoTa={HoaDon.MoTa}&TrangThai={HoaDon.TrangThai}&TrangThaiThanhToan={HoaDon.TrangThaiThanhToan}", null);
+                var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/HoaDon/Create", hoaDonDTO);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
