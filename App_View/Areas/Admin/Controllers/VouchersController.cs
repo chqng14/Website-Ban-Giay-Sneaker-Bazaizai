@@ -21,6 +21,7 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly BazaizaiContext _context;
         private readonly IVoucherServices _voucherSV;
+
         public VouchersController(IVoucherServices voucherServices)
         {
             _voucherSV = voucherServices;
@@ -81,11 +82,14 @@ namespace App_View.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(VoucherDTO voucherDTO)
         {
-            if (await _voucherSV.UpdateVoucher(voucherDTO))
+            if (ModelState.IsValid)
             {
-                return RedirectToAction("Index");
+                if (await _voucherSV.UpdateVoucher(voucherDTO))
+                {
+                    return RedirectToAction("Index");
+                }
             }
-            return View(); ;
+            return View();
         }
         public async Task<ActionResult> Details(string id)
         {

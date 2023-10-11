@@ -12,6 +12,9 @@ using App_Data.ViewModels.SanPhamChiTietViewModel;
 using App_Data.ViewModels.Voucher;
 using App_Data.ViewModels.XuatXu;
 using AutoMapper;
+
+using App_Data.ViewModels.VoucherNguoiDung;
+
 using App_Data.ViewModels.KhuyenMaiChiTietDTO;
 
 using App_Data.ViewModels.HoaDonChiTietDTO;
@@ -27,6 +30,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<MauSacDTO, MauSac>();
             CreateMap<XuatXuDTO, XuatXu>();
             CreateMap<VoucherDTO, Voucher>().ReverseMap();
+            CreateMap<VoucherNguoiDungDTO, VoucherNguoiDung>().ReverseMap();
 
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
 
@@ -152,13 +156,13 @@ namespace App_Api.Helpers.Mapping
                     )
                 .ForMember(
                         dest => dest.ListTenAnh,
-                        opt => opt.MapFrom(src => src.Anh.Where(an => an.TrangThai == 0).Select(x => x.Url).ToList())
+                        opt => opt.MapFrom(src => src.Anh.Where(an => an.TrangThai == 0).OrderBy(x=>x.Url).Select(x => x.Url).ToList())
                     );
 
             CreateMap<SanPhamChiTiet, ItemShopViewModel>()
                 .ForMember(
                         dest => dest.Anh,
-                        opt => opt.MapFrom(src => src.Anh!.Where(a => a.TrangThai == 0).FirstOrDefault()!.Url)
+                        opt => opt.MapFrom(src => src.Anh!.Where(a => a.TrangThai == 0).OrderBy(x => x.Url).FirstOrDefault()!.Url)
                     )
                 .ForMember(
                         dest => dest.IdChiTietSp,
@@ -196,7 +200,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<SanPhamChiTiet, ItemDetailViewModel>()
                 .ForMember(
                         dest => dest.Anh,
-                        opt => opt.MapFrom(src => src.Anh.Where(x => x.TrangThai == 0)!.FirstOrDefault()!.Url)
+                        opt => opt.MapFrom(src => src.Anh.Where(x => x.TrangThai == 0).OrderBy(a=>a.Url)!.FirstOrDefault()!.Url)
                     )
                 .ForMember(
                         dest => dest.MoTaSanPham,
@@ -236,7 +240,7 @@ namespace App_Api.Helpers.Mapping
                     )
                  .ForMember(
                         dest => dest.DanhSachAnh,
-                        opt => opt.MapFrom(src => src.Anh.Where(x => x.TrangThai == 0).Select(a => a.Url).ToList())
+                        opt => opt.MapFrom(src => src.Anh.Where(x => x.TrangThai == 0).OrderBy(x => x.Url).Select(a => a.Url).ToList())
                     )
                  .ForMember(
                         dest => dest.SoLuotYeuThich,
