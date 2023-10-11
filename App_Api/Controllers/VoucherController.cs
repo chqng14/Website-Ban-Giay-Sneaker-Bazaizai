@@ -99,7 +99,7 @@ namespace App_Api.Controllers
         [HttpPut("UpdateVoucher")]
         public bool Update(VoucherDTO voucherDTO)
         {
-            var voucherGet = GetVoucher(voucherDTO.IdVoucher);
+            var voucherGet = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == voucherDTO.IdVoucher);
             if (voucherGet != null)
             {
                 _mapper.Map(voucherDTO, voucherGet);

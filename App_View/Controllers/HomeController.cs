@@ -1,4 +1,7 @@
 ﻿using App_View.Models;
+using Google.Apis.Auth.AspNetCore3;
+using Google.Apis.PeopleService.v1;
+using Google.Apis.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -26,6 +29,7 @@ namespace App_View.Controllers
         {
             return View();
         }
+       
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

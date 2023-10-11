@@ -1,4 +1,4 @@
-using App_Data.Models;
+﻿using App_Data.Models;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,10 +22,15 @@ namespace App_View.Areas.Identity.Pages.Account
         }
 
         public string Username { get; set; }
+        public string LastName { get; set; }
+        public string FullName { get; set; }
+        public string FirstName { get; set; }
+
+        
         public string Email { get; set; }
         public string Phone { get; set; }
-        public string Name { get; set; }
-        public int? Gender { get; set; }
+        public string Tame { get; set; }
+        public string? Gender { get; set; }
         public DateTime? NgaySinh { get; set; }
         public string Picture { get; set; }
 
@@ -39,7 +44,22 @@ namespace App_View.Areas.Identity.Pages.Account
             var userO = await _userManager.GetUserAsync(User);
             var userName = await _userManager.GetUserNameAsync(user);
             var userClaims = await _userManager.GetClaimsAsync(userO);
-            var pictureClaim = userClaims.FirstOrDefault(c => c.Type == "picture");
+            var nameClaim = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
+            var givenNameClaim = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName);
+            var genderClaim = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.Gender);
+            var phoneClaim = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.MobilePhone);
+            var firstName = givenNameClaim?.Value;
+            var gender=genderClaim?.Value;
+            
+            Gender = gender;
+            FirstName = firstName;
+            if (nameClaim != null)
+            {
+                var fullName = nameClaim.Value;
+                FullName=fullName;
+                var parts = fullName.Split(' '); 
+                var lastName = parts.Length > 1 ? string.Join(' ', parts.Skip(1)) : "";
+            }
             //if (pictureClaim != null)
             //{
             //    var pictureUrl = pictureClaim.Value;
@@ -48,7 +68,7 @@ namespace App_View.Areas.Identity.Pages.Account
             if (!string.IsNullOrEmpty(userO.TenNguoiDung))
             {
                 var name = userO.TenNguoiDung.ToString();
-                Name = name;
+                Tame = name;
 
             }
             if (!string.IsNullOrEmpty(userO.NgaySinh.ToString()))
@@ -57,12 +77,12 @@ namespace App_View.Areas.Identity.Pages.Account
                 NgaySinh = ngaySinh;
 
             }
-            if (!string.IsNullOrEmpty(userO.GioiTinh.ToString()))
-            {
-                var gender = userO.GioiTinh;
-                Gender = gender;
+            //if (!string.IsNullOrEmpty(userO.GioiTinh.ToString()))
+            //{
+            //    var gender = userO.GioiTinh;
+            //    Gender = gender;
 
-            }
+            //}
 
             var email = await _userManager.GetEmailAsync(user);
             var phone = await _userManager.GetPhoneNumberAsync(user);
