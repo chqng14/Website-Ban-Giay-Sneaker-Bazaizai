@@ -41,7 +41,7 @@ namespace App_Api.Controllers
 
         // POST api/<HoaDonChiTietController>
         [HttpPost("Create")]
-        public async Task<bool> TaoHoaDonDTO(HoaDonChiTietDTO hoaDonChiTietDTO)
+        public async Task<bool> TaoHoaDonChiTietDTO(HoaDonChiTietDTO hoaDonChiTietDTO)
         {
             var hoadonChiTiet = _mapper.Map<HoaDonChiTiet>(hoaDonChiTietDTO);
             return _hoaDonChiTiet.AddBillDetail(hoadonChiTiet);

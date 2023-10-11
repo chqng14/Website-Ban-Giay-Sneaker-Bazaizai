@@ -1,4 +1,5 @@
 ﻿using App_Data.Models;
+using App_Data.ViewModels.ThongTinGHDTO;
 using App_View.IServices;
 using App_View.Services;
 using Microsoft.AspNetCore.Http;
@@ -19,10 +20,10 @@ namespace App_View.Controllers
             _userManager = userManager;
         }
         // GET: ThongTinGHController
-        public ActionResult ShowByIdUser()
+        public async Task<ActionResult> ShowByIdUser()
         {
             var idNguoiDung = _userManager.GetUserId(User);
-            var thongTinGH = thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
+            var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
             ViewData["ThongTinGH"] = thongTinGH;
             return Ok();
         }
@@ -42,9 +43,9 @@ namespace App_View.Controllers
         // POST: ThongTinGHController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateThongTin(ThongTinGiaoHang thongTinGiaoHang)
+        public async Task<IActionResult> CreateThongTin(ThongTinGHDTO thongTinGHDTO)
         {
-            await thongTinGHServices.CreateThongTin(thongTinGiaoHang);
+            await thongTinGHServices.CreateThongTin(thongTinGHDTO);
             return RedirectToAction("CheckOut", "GioHangChiTiets");
         }
 

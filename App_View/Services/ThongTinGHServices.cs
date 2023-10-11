@@ -1,5 +1,6 @@
 ﻿using App_Data.Models;
 using App_Data.ViewModels.GioHangChiTiet;
+using App_Data.ViewModels.ThongTinGHDTO;
 using App_View.IServices;
 
 namespace App_View.Services
@@ -11,11 +12,11 @@ namespace App_View.Services
         {
             _httpClient = new HttpClient();
         }
-        public async Task<bool> CreateThongTin(ThongTinGiaoHang thongTinGiaoHang)
+        public async Task<bool> CreateThongTin(ThongTinGHDTO thongTinGHDTO)
         {
             try
             {
-                var res = await _httpClient.PostAsync($"https://localhost:7038/api/ThongTinGiaoHang/Create?idNguoiDung={thongTinGiaoHang.IdNguoiDung}&TenNguoiNhan={thongTinGiaoHang.TenNguoiNhan}&SDT={thongTinGiaoHang.SDT}&DiaChi={thongTinGiaoHang.DiaChi}", null);
+                var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/ThongTinGiaoHang/Create", thongTinGHDTO);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -47,11 +48,11 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<List<ThongTinGiaoHang>>($"https://localhost:7038/api/ThongTinGiaoHang/GetByIdUser?idNguoiDung={idNguoiDung}");
         }
 
-        public async Task<bool> UpdateThongTin(ThongTinGiaoHang thongTinGiaoHang)
+        public async Task<bool> UpdateThongTin(ThongTinGHDTO thongTinGHDTO)
         {
             try
             {
-                var res = await _httpClient.PostAsync($"https://localhost:7038/api/ThongTinGiaoHang/Edit?idThongTinGH={thongTinGiaoHang.IdThongTinGH}&idNguoiDung={thongTinGiaoHang.IdNguoiDung}&TenNguoiNhan={thongTinGiaoHang.TenNguoiNhan}&S%C4%90T={thongTinGiaoHang.SDT}&DiaChi={thongTinGiaoHang.DiaChi}&TrangThai={thongTinGiaoHang.TrangThai}", null);
+                var res = await _httpClient.PutAsJsonAsync("https://localhost:7038/api/ThongTinGiaoHang/Edit", thongTinGHDTO);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
