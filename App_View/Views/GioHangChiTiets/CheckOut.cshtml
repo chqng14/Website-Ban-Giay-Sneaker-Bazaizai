@@ -545,6 +545,7 @@
 </div>
 
 @section Scripts{
+    <!--====== tính phí ship ======-->
     <script>
         $(document).ready(function () {
             const apiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/province';
@@ -708,7 +709,7 @@
             });
         });
     </script>
-    
+    <!--====== lấy địa chỉ từ modal địa chỉ ======-->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var radioButtons = document.querySelectorAll('input[name="default-address"]');
@@ -771,6 +772,7 @@
         });
 
     </script>
+    <!--====== thanh toán ======-->
     <script>
         $(document).ready(function () {
             $('#placeOrderButton').click(function (e) {
@@ -784,10 +786,6 @@
                 // Lấy dữ liệu từ form delivery
                 var deliveryFormData = $('#deliveryForm').serialize();
 
-                // Lấy dữ liệu từ form payment
-                
-
-                // Thực hiện Ajax để gửi dữ liệu đến action DataBill trong controller HoaDon
                 $.ajax({
                     type: 'POST',
                     url: '/HoaDon/DataBill',
@@ -825,5 +823,23 @@
                 });
             });
         });
+    </script>
+
+    <script>
+        // Hàm được gọi khi trang được tải lên
+        $(document).ready(function () {
+            // Tự động tách địa chỉ khi trang được tải lên
+            tachDiaChi();
+        });
+
+        function tachDiaChi() {
+            var diaChiDuocChon = $('input[name="default-address"]:checked').closest('tr').find('#diachi').text();
+
+            // Tách thông tin chi tiết từ chuỗi địa chỉ
+            var mangDiaChi = diaChiDuocChon.split(', ');
+
+            // Hiển thị thông tin chi tiết
+            alert('Địa chỉ người dùng nhập: ' + mangDiaChi[0].trim() + '\nXã: ' + mangDiaChi[1].trim() + '\nHuyện: ' + mangDiaChi[2].trim() + '\nThành phố: ' + mangDiaChi[3].trim());
+        }
     </script>
 }
