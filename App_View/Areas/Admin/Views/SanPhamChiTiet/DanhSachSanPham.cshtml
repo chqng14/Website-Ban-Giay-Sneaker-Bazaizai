@@ -42,7 +42,8 @@
     </div>
     <script>
        $(() => {
-                $('.submit_file').click(() => {
+           $('.submit_file').click(() => {
+               $('#preloader').show();
                     var data = new FormData();
                     data.append('file', $('#import')[0].files[0]);
                     $.ajax({
@@ -52,6 +53,7 @@
                         contentType: false,
                         processData: false,
                         success: function (result) {
+                            $('#preloader').hide();
                             alert("import thanh cong");
                             window.location.href = "/admin/sanphamchitiet/danhsachsanpham";
                         },

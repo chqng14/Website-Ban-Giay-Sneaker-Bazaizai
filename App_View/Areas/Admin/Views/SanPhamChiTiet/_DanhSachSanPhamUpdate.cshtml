@@ -48,7 +48,7 @@
                                             <div class="d-flex align-items-center">
                                                 <i class="fas fa-cube mr-1"></i>
                                                 <select class="w-100 select2-active" name="IdSanPham">
-                                                    @foreach (var item in (SelectList)ViewData["IdSanPham"])
+                                                    @foreach (var item in (SelectList)ViewData["IdSanPham"]!)
                                                     {
                                                         if (item.Value == sp.IdSanPham)
                                                         {
@@ -69,7 +69,7 @@
                                             <div class="d-flex align-items-center">
                                                 <i class="fas fa-trademark mr-1"></i>
                                                 <select class="select2-active w-100" name="IdThuongHieu">
-                                                    @foreach (var item in (SelectList)ViewData["IdThuongHieu"])
+                                                    @foreach (var item in (SelectList)ViewData["IdThuongHieu"]!)
                                                     {
                                                         if (item.Value == sp.IdThuongHieu)
                                                         {
@@ -89,7 +89,7 @@
                                             <div class="d-flex align-items-center">
                                                 <i class="fab fa-connectdevelop mr-1"></i>
                                                 <select class="select2-active w-100" name="IdXuatXu">
-                                                    @foreach (var item in (SelectList)ViewData["IdXuatXu"])
+                                                    @foreach (var item in (SelectList)ViewData["IdXuatXu"]!)
                                                     {
                                                         if (item.Value == sp.IdXuatXu)
                                                         {
@@ -109,7 +109,7 @@
                                             <div class="d-flex align-items-center">
                                                 <i class="fab fa-centercode mr-1"></i>
                                                 <select class="select2-active w-100" name="IdChatLieu">
-                                                    @foreach (var item in (SelectList)ViewData["IdChatLieu"])
+                                                    @foreach (var item in (SelectList)ViewData["IdChatLieu"]!)
                                                     {
                                                         if (item.Value == sp.IdChatLieu)
                                                         {
@@ -129,7 +129,7 @@
                                             <div class="d-flex align-items-center">
                                                 <i class="fab fa-magento mr-1"></i>
                                                 <select class="select2-active w-100" name="IdLoaiGiay">
-                                                    @foreach (var item in (SelectList)ViewData["IdLoaiGiay"])
+                                                    @foreach (var item in (SelectList)ViewData["IdLoaiGiay"]!)
                                                     {
                                                         if (item.Value == sp.IdLoaiGiay)
                                                         {
@@ -149,7 +149,7 @@
                                             <div class="d-flex align-items-center mr-1">
                                                 <i class="fas fa-podcast mr-1"></i>
                                                 <select class="select2-active w-100" name="IdKieuDeGiay">
-                                                    @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"])
+                                                    @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"]!)
                                                     {
                                                         if (item.Value == sp.IdKieuDeGiay)
                                                         {
@@ -172,7 +172,7 @@
                                             <div class="d-flex align-items-center">
                                                 <i class="fas fa-palette mr-1"></i>
                                                 <select class="select2-active w-100" name="IdMauSac">
-                                                    @foreach (var item in (SelectList)ViewData["IdMauSac"])
+                                                    @foreach (var item in (SelectList)ViewData["IdMauSac"]!)
                                                     {
                                                         if (item.Value == sp.IdMauSac)
                                                         {
@@ -192,7 +192,7 @@
                                             <div class="d-flex align-items-center">
                                                 <i class="fas fa-bowling-ball mr-1"></i>
                                                 <select class="select2-active w-100" name="IdKichCo">
-                                                    @foreach (var item in (SelectList)ViewData["IdKichCo"])
+                                                    @foreach (var item in (SelectList)ViewData["IdKichCo"]!)
                                                     {
                                                         if (item.Value == sp.IdKichCo)
                                                         {
