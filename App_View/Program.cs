@@ -9,10 +9,14 @@ using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
+
 using Microsoft.AspNetCore.Authentication;
 using Google;
 using App_View.Models;
 using Microsoft.Extensions.Hosting;
+
+using App_View.Controllers;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +35,9 @@ builder.Services.AddScoped<IVoucherNguoiDungServices, VoucherNguoiDungServices>(
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
 builder.Services.AddScoped<IKhuyenMaiChiTietServices, KhuyenMaiChiTietServices>();
+builder.Services.AddScoped<ThongTinGHController>();  // Sử dụng AddScoped nếu bạn muốn một instance cho mỗi phạm vi của yêu cầu HTTP
+builder.Services.AddScoped<GioHangChiTietsController,GioHangChiTietsController>();
+
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
