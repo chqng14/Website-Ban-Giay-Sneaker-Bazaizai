@@ -16,12 +16,14 @@ using App_View.Models;
 using Microsoft.Extensions.Hosting;
 
 using App_View.Controllers;
-
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=LAPTOP-OF-KHAI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
+builder.Services.AddHangfireServer();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BazaizaiContext>(options =>
     options.UseSqlServer(connectionString));
@@ -152,7 +154,9 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseHangfireDashboard();
+var capNhatTime = new CapNhatThoiGianService();
+RecurringJob.AddOrUpdate("CheckPromotions", () => capNhatTime.CheckNgayKetThuc(), "*/5 * * * * *");
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
