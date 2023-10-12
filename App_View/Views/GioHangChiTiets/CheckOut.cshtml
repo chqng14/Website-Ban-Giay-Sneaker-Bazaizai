@@ -545,8 +545,88 @@
 </div>
 
 @section Scripts{
-    <!--====== tính phí ship ======-->
+    <!--====== lấy địa chỉ từ modal địa chỉ ======-->
     <script>
+        var citydb ="";
+        var districtdb ="";
+        var wardsdb ="";
+        document.addEventListener("DOMContentLoaded", function () {
+            var radioButtons = document.querySelectorAll('input[name="default-address"]');
+            var form = document.querySelector('.checkout-modal2__form');
+            var thongtinElement = document.getElementById('thongtin');
+            var editShipAddressModal = $('#edit-ship-address');
+
+            // Kiểm tra xem có thông tin địa chỉ được lưu trong localStorage không
+            var savedAddressId = localStorage.getItem('selectedAddressId');
+            if (savedAddressId) {
+                // Nếu có, chọn lại địa chỉ đó
+                var savedRadioButton = document.getElementById(savedAddressId);
+                if (savedRadioButton) {
+                    savedRadioButton.checked = true;
+                    updateThongTin(savedRadioButton);
+                }
+            } else {
+                var tenNguoiNhan = selectedRow.querySelector('#ten').innerText;
+                var sdt = selectedRow.querySelector('#sdt').innerText;
+                var diaChi = selectedRow.querySelector('#diachi').innerText;
+
+                // Tạo chuỗi thông tin
+                var thongtin = tenNguoiNhan + ' ' + sdt + ' ' + diaChi;
+
+                // Cập nhật nội dung của phần tử có id "thongtin"
+                $('#thongtin').text(thongtin);
+            }
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault(); // Ngăn chặn form tự động submit
+
+                var selectedAddress = document.querySelector('input[name="default-address"]:checked');
+
+                if (selectedAddress) {
+                    // Lưu id của địa chỉ được chọn vào localStorage
+                    localStorage.setItem('selectedAddressId', selectedAddress.id);
+
+                    // Cập nhật thông tin và nội dung của phần tử có id "thongtin"
+                    updateThongTin(selectedAddress);
+
+                } else {
+                    alert("Vui lòng chọn một địa chỉ trước khi lưu.");
+                }
+            });
+
+            // Hàm cập nhật thông tin và nội dung của phần tử có id "thongtin"
+            function updateThongTin(selectedAddress) {
+                var selectedRow = selectedAddress.closest('tr');
+                var tenNguoiNhan = selectedRow.querySelector('#ten').innerText;
+                var sdt = selectedRow.querySelector('#sdt').innerText;
+                var diaChi = selectedRow.querySelector('#diachi').innerText;
+
+                // Tạo chuỗi thông tin
+                var thongtin = tenNguoiNhan + ' ' + sdt + ' ' + diaChi;
+
+                // Cập nhật nội dung của phần tử có id "thongtin"
+                $('#thongtin').text(thongtin);
+                tachDiaChi()
+            }
+            function tachDiaChi() {
+                var diaChiDuocChon = $('input[name="default-address"]:checked').closest('tr').find('#diachi').text();
+                var mangDiaChi = diaChiDuocChon.split(',');
+                // Kiểm tra xem có đủ phần tử trong mảng hay không
+                if (mangDiaChi.length >= 4) {
+                    alert('Địa chỉ người dùng nhập: ' + mangDiaChi[0].trim() + '\nXã: ' + mangDiaChi[1].trim() + '\nHuyện: ' + mangDiaChi[2].trim() + '\nThành phố: ' + mangDiaChi[3].trim());
+                   citydb = mangDiaChi[3].trim();
+                   districtdb = mangDiaChi[2].trim();
+                   wardsdb = mangDiaChi[1].trim();
+                } else {
+                    // Xử lý khi mảng không có đủ phần tử
+                    alert('Địa chỉ không hợp lệ.');
+                }
+            }
+        });
+
+    </script>
+    <!--====== tính phí ship ======-->
+   @*  <script>
         $(document).ready(function () {
             const apiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/province';
             const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
@@ -708,70 +788,152 @@
                 }
             });
         });
-    </script>
-    <!--====== lấy địa chỉ từ modal địa chỉ ======-->
+    </script> *@
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var radioButtons = document.querySelectorAll('input[name="default-address"]');
-            var form = document.querySelector('.checkout-modal2__form');
-            var thongtinElement = document.getElementById('thongtin');
-            var editShipAddressModal = $('#edit-ship-address');
+        var idDistric1;
+        $(document).ready(function () {
+            const apiUrlCity = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/province';
+            const apiUrlDistrict = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/district';
+            const apiUrlWard = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/ward';
+            const apiUrlShippingFee = 'https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee';
+            const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
+            const shop_id = 705899;
 
-            // Kiểm tra xem có thông tin địa chỉ được lưu trong localStorage không
-            var savedAddressId = localStorage.getItem('selectedAddressId');
-            if (savedAddressId) {
-                // Nếu có, chọn lại địa chỉ đó
-                var savedRadioButton = document.getElementById(savedAddressId);
-                if (savedRadioButton) {
-                    savedRadioButton.checked = true;
-                    updateThongTin(savedRadioButton);
+            // Load danh sách thành phố
+            axios.get(apiUrlCity, {
+                headers: {
+                    'Token': token
                 }
-            } else {
-                var tenNguoiNhan = selectedRow.querySelector('#ten').innerText;
-                var sdt = selectedRow.querySelector('#sdt').innerText;
-                var diaChi = selectedRow.querySelector('#diachi').innerText;
+            }).then(response => {
+                var selectedCityID = null;
+                $.each(response.data.data, function (index, item) {
+                    if (citydb === item.ProvinceName) {
+                        selectedCityID = item.ProvinceID;
+                        return false;
+                    }
+                });
 
-                // Tạo chuỗi thông tin
-                var thongtin = tenNguoiNhan + ' ' + sdt + ' ' + diaChi;
-
-                // Cập nhật nội dung của phần tử có id "thongtin"
-                $('#thongtin').text(thongtin);
-            }
-
-            form.addEventListener('submit', function (event) {
-                event.preventDefault(); // Ngăn chặn form tự động submit
-
-                var selectedAddress = document.querySelector('input[name="default-address"]:checked');
-
-                if (selectedAddress) {
-                    // Lưu id của địa chỉ được chọn vào localStorage
-                    localStorage.setItem('selectedAddressId', selectedAddress.id);
-
-                    // Cập nhật thông tin và nội dung của phần tử có id "thongtin"
-                    updateThongTin(selectedAddress);
-
+                if (selectedCityID !== null) {
+                    $('#city').val(selectedCityID).trigger('change');
                 } else {
-                    alert("Vui lòng chọn một địa chỉ trước khi lưu.");
+                    console.error('Không tìm thấy ID của thành phố.');
                 }
+            }).catch(error => {
+                console.error(error);
             });
 
-            // Hàm cập nhật thông tin và nội dung của phần tử có id "thongtin"
-            function updateThongTin(selectedAddress) {
-                var selectedRow = selectedAddress.closest('tr');
-                var tenNguoiNhan = selectedRow.querySelector('#ten').innerText;
-                var sdt = selectedRow.querySelector('#sdt').innerText;
-                var diaChi = selectedRow.querySelector('#diachi').innerText;
+            // Sự kiện khi chọn thành phố
+            $('#city').on('change', function () {
 
-                // Tạo chuỗi thông tin
-                var thongtin = tenNguoiNhan + ' ' + sdt + ' ' + diaChi;
+                
+                // Load danh sách huyện
+                axios.get(apiUrlDistrict, {
+                    headers: {
+                        'Token': token
+                    },
+                    params: {
+                        province_id: $('#city').val()
+                    }
+                }).then(response => {
+                    var selectedDistrictID = null;
+                    $.each(response.data.data, function (index, item) {
+                        if (districtdb === item.DistrictName) {
+                            selectedDistrictID = item.DistrictID;
+                            return false;
+                        }
+                    });
 
-                // Cập nhật nội dung của phần tử có id "thongtin"
-                $('#thongtin').text(thongtin);
-            }
+                    if (selectedDistrictID !== null) {
+                        idDistric1 = selectedDistrictID;
+                        $('#district').val(selectedDistrictID).trigger('change');
 
-        });
+                    } else {
+                        console.error('Không tìm thấy ID của huyện.');
+                    }
+                }).catch(error => {
+                    console.error('lỗi.');
+                });
+            });
 
+            $('#district').on('change', function () {
+                // Load danh sách xã/phường
+                axios.get(apiUrlWard, {
+                    headers: {
+                        'Token': token
+                    },
+                    params: {
+                        district_id: idDistric1
+                    }
+                }).then(response => {
+                    var selectedWardCode = null;
+                    alert(wardsdb);
+                    $.each(response.data.data, function (index, item) {
+                        if (wardsdb === item.WardName) {
+                            selectedWardCode = item.WardCode;
+                            alert(selectedWardCode);
+                            return false;
+                        }
+                    });
+
+                    if (selectedWardCode !== null) {
+                        $('#wards').val(selectedWardCode).trigger('change');
+                    } else {
+                        console.error('Không tìm thấy Mã phường/xã.');
+                    }
+                }).catch(error => {
+                    console.error(error);
+                });
+            })
+                
+            
+
+            // Khi chọn phường/xã
+            $('#wards').on('change', function () {
+                var inputs = document.getElementsByClassName('input-counter__text');
+                // ...
+                axios.get(apiUrlShippingFee, {
+                    headers: {
+                        'Token': token,
+                        'shop_id': shop_id
+                    },
+                    params: {
+                        service_type_id: 2,
+                        insurance_value: $('#tamtinh').text().replace(/\D/g, ''),
+                        coupon: null,
+                        to_ward_code: $('#wards').val(),
+                        to_district_id: idDistric1,
+                        from_district_id: 3440,
+                        weight: 200,
+                        length: 20,
+                        width: 15,
+                        height: 20
+                    }
+                }).then(response => {
+                    $('#phiship').text(parseInt(response.data.data.service_fee).toLocaleString("vi-VN").replace(/\./g, ',') + "đ");
+
+                    // Lấy ra tổng tiền của sản phẩm có trong giỏ hàng
+                    var tongtienSanPham = parseInt(document.getElementById("tamtinh").innerText.replace("đ", "").replace(/\,/g, "").replace(/\./g, "").trim());
+
+                    var totalAmountElement = document.getElementById("tongtien");
+
+                    var tongTien = tongtienSanPham + response.data.data.service_fee;
+
+                    // Hiển thị tổng tiền
+                    totalAmountElement.innerText = tongTien.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
+                    totalAmountElement.value = tongTien.toString();
+
+                    // Gán giá trị vào input
+                    document.querySelector('input[name="TongTien"]').value = tongtienSanPham;
+                    document.querySelector('input[name="TienShip"]').value = response.data.data.service_fee;
+
+                }).catch(error => {
+                    console.error(error);
+                });
+            });
+        })
     </script>
+
+
     <!--====== thanh toán ======-->
     <script>
         $(document).ready(function () {
@@ -823,23 +985,5 @@
                 });
             });
         });
-    </script>
-
-    <script>
-        // Hàm được gọi khi trang được tải lên
-        $(document).ready(function () {
-            // Tự động tách địa chỉ khi trang được tải lên
-            tachDiaChi();
-        });
-
-        function tachDiaChi() {
-            var diaChiDuocChon = $('input[name="default-address"]:checked').closest('tr').find('#diachi').text();
-
-            // Tách thông tin chi tiết từ chuỗi địa chỉ
-            var mangDiaChi = diaChiDuocChon.split(', ');
-
-            // Hiển thị thông tin chi tiết
-            alert('Địa chỉ người dùng nhập: ' + mangDiaChi[0].trim() + '\nXã: ' + mangDiaChi[1].trim() + '\nHuyện: ' + mangDiaChi[2].trim() + '\nThành phố: ' + mangDiaChi[3].trim());
-        }
     </script>
 }
