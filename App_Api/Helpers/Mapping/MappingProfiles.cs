@@ -42,7 +42,9 @@ namespace App_Api.Helpers.Mapping
                    .ForMember(
                 dest => dest.MucUuDai, opt => opt.MapFrom(x => x.Vouchers.MucUuDai))
                       .ForMember(
-                dest => dest.NgayBatDau, opt => opt.MapFrom(x => x.Vouchers.NgayKetThuc))
+                dest => dest.NgayBatDau, opt => opt.MapFrom(x => x.Vouchers.NgayBatDau))
+                       .ForMember(
+                dest => dest.NgayKetThuc, opt => opt.MapFrom(x => x.Vouchers.NgayKetThuc))
                          .ForMember(
                 dest => dest.SoLuong, opt => opt.MapFrom(x => x.Vouchers.SoLuong))
             .ForMember(

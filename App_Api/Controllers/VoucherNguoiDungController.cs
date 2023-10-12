@@ -5,6 +5,9 @@ using App_Data.Repositories;
 using App_Data.ViewModels.Voucher;
 using App_Data.ViewModels.VoucherNguoiDung;
 using AutoMapper;
+using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Office2010.PowerPoint;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static App_Data.Repositories.TrangThai;
@@ -26,7 +29,7 @@ namespace App_Api.Controllers
         public VoucherNguoiDungController(IMapper mapper)
         {
             voucherNguoiDung = DbContextModel.voucherNguoiDungs;
-
+            voucher = DbContextModel.vouchers;
             AllRepo<VoucherNguoiDung> VcNd = new AllRepo<VoucherNguoiDung>(DbContextModel, voucherNguoiDung);
             VcNguoiDungRepos = VcNd;
 
@@ -61,20 +64,36 @@ namespace App_Api.Controllers
         }
         // POST api/<ChatLieuController>
         [HttpPost("AddVoucherNguoiDung")]
-        public bool AddVoucherNguoiDung(VoucherNguoiDungDTO VcDTO)
+        public bool AddVoucherNguoiDung(string MaVoucher, string idNguoiDung)
         {
-            var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.IdVoucher == VcDTO.IdVouCher);
+            var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.MaVoucher == MaVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDong)?.IdVoucher;
+
             if (VoucherKhaDung != null)
             {
-                if (VoucherKhaDung.TrangThai == (int)TrangThai.TrangThaiVoucher.HoatDong)
+                var existsInVoucherNguoiDung = VcNguoiDungRepos.GetAll().Any(vnd => vnd.IdVouCher == VoucherKhaDung);
+
+                if (existsInVoucherNguoiDung)
                 {
-                    VcDTO.IdVouCherNguoiDung = Guid.NewGuid().ToString();
-                    var voucherND = _mapper.Map<VoucherNguoiDung>(VcDTO);
-                    return VcNguoiDungRepos.AddItem(voucherND);
+                    // IdVoucher đã tồn tại trong bảng VoucherNguoiDung
+                    return false;
+                }
+                else
+                {
+                    VoucherNguoiDung VCNguoiDung = new VoucherNguoiDung()
+                    {
+                        IdVouCherNguoiDung = Guid.NewGuid().ToString(),
+                        IdNguoiDung = idNguoiDung,
+                        IdVouCher = VoucherKhaDung,
+                        TrangThai = (int)TrangThaiVoucherNguoiDung.KhaDung
+                    };
+                    VcNguoiDungRepos.AddItem(VCNguoiDung);
+                    return true; // Trả về true nếu thành công
                 }
             }
+
             return false;
         }
+
         // PUT api/<ChatLieuController>/5
         [HttpPut("UpdateVoucherNguoiDung{id}")]
         public bool UpdateVoucherNguoiDungSauKhiDung(VoucherNguoiDungDTO VcDTO)
