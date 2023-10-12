@@ -18,8 +18,13 @@ using App_Data.ViewModels.VoucherNguoiDung;
 using App_Data.ViewModels.KhuyenMaiChiTietDTO;
 
 using App_Data.ViewModels.HoaDonChiTietDTO;
+
+using static Peg.Base.PegBaseParser;
+
+
 using App_Data.ViewModels.ThongTinGHDTO;
 using App_Data.ViewModels.HoaDon;
+
 
 namespace App_Api.Helpers.Mapping
 {
@@ -119,7 +124,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<List<SanPhamChiTiet>, DanhSachGiayViewModel>()
                 .ConvertUsing<SanPhamChiTietToListItemViewModelConverter>();
 
-
+            CreateMap<SanPhamChiTiet, SanPhamDanhSachViewModel>();
 
             CreateMap<SanPhamChiTiet, SanPhamChiTietViewModel>()
                 .ForMember(

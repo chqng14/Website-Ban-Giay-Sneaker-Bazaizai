@@ -36,8 +36,10 @@ builder.Services.AddScoped<IVoucherNguoiDungServices, VoucherNguoiDungServices>(
 
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
+builder.Services.AddScoped<IKhuyenMaiChiTietServices, KhuyenMaiChiTietServices>();
 builder.Services.AddScoped<ThongTinGHController>();  // Sử dụng AddScoped nếu bạn muốn một instance cho mỗi phạm vi của yêu cầu HTTP
 builder.Services.AddScoped<GioHangChiTietsController,GioHangChiTietsController>();
+
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
@@ -47,7 +49,7 @@ builder.Services.AddIdentity<NguoiDung, ChucVu>()
 var mailsetting = builder.Configuration.GetSection("MailSettings");
 builder.Services.Configure<MailSettings>(mailsetting);
 builder.Services.AddSingleton<IEmailSender, SendMailService>();
-
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.Configure<IdentityOptions>(options =>
 {
 
@@ -169,5 +171,5 @@ app.UseEndpoints(endpoints =>
 });
 
 app.MapRazorPages();
-
+app.MapControllers();
 app.Run();
