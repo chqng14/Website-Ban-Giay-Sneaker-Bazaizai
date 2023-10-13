@@ -158,38 +158,60 @@
 
                                     <input class="input-text input-text--primary-style" type="text" id="billing-street" placeholder="Số nhà,số đường" data-bill="" name="DiaChi">
                                 </div>
-                                
-                                <!--====== End - Street Address ======-->
-                                <!--====== Country ======-->
-                                <div class="u-s-m-b-15">
 
-                                    <!--====== Select Box ======-->
+                                <div id="DefaultDropdown" style="display: none;">
+                                    <div class="u-s-m-b-15">
 
-                                    <label class="gl-label" for="city">THÀNH PHỐ *</label><select class="select-box select-box--primary-style" id="city" required>
-                                        <option selected >Chọn thành phố</option>
-                                    </select>
-                                    <!--====== End - Select Box ======-->
+                                        <!--====== Select Box ======-->
+
+                                        <label class="gl-label" for="city">THÀNH PHỐ *</label><select class="select-box select-box--primary-style" id="city1" required>
+                                            <option selected>Chọn thành phố</option>
+                                        </select>
+                                        <!--====== End - Select Box ======-->
+                                    </div>
+                                    <div class="u-s-m-b-15">
+
+                                        <label class="gl-label" for="district">HUYỆN *</label><select class="select-box select-box--primary-style" id="district1" required>
+                                            <option selected>Chọn huyện</option>
+                                        </select>
+                                    </div>
+                                    <div class="u-s-m-b-15">
+
+                                        <!--====== Select Box ======-->
+
+                                        <label class="gl-label" for="wards">PHƯỜNG/XÃ *</label><select class="select-box select-box--primary-style" id="wards1" required>
+                                            <option selected>Chọn phường/xã</option>
+                                        </select>
+                                        <!--====== End - Select Box ======-->
+                                    </div>
                                 </div>
-                                <!--====== End - Country ======-->
-                                <!--====== Town / City ======-->
-                                <div class="u-s-m-b-15">
 
-                                    <label class="gl-label" for="district">HUYỆN *</label><select class="select-box select-box--primary-style" id="district" required>
-                                        <option selected >Chọn huyện</option>
-                                    </select>
+                                <div id="InputDropdown">
+                                    <div class="u-s-m-b-15">
+
+                                        <!--====== Select Box ======-->
+
+                                        <label class="gl-label" for="city">THÀNH PHỐ *</label><select class="select-box select-box--primary-style" id="city" required>
+                                            <option selected>Chọn thành phố</option>
+                                        </select>
+                                        <!--====== End - Select Box ======-->
+                                    </div>
+                                    <div class="u-s-m-b-15">
+
+                                        <label class="gl-label" for="district">HUYỆN *</label><select class="select-box select-box--primary-style" id="district" required>
+                                            <option selected>Chọn huyện</option>
+                                        </select>
+                                    </div>
+                                    <div class="u-s-m-b-15">
+
+                                        <!--====== Select Box ======-->
+
+                                        <label class="gl-label" for="wards">PHƯỜNG/XÃ *</label><select class="select-box select-box--primary-style" id="wards" required>
+                                            <option selected>Chọn phường/xã</option>
+                                        </select>
+                                        <!--====== End - Select Box ======-->
+                                    </div>
                                 </div>
-                                <!--====== End - Town / City ======-->
-                                <!--====== STATE/PROVINCE ======-->
-                                <div class="u-s-m-b-15">
-
-                                    <!--====== Select Box ======-->
-
-                                    <label class="gl-label" for="wards">PHƯỜNG/XÃ *</label><select class="select-box select-box--primary-style" id="wards" required>
-                                        <option selected >Chọn phường/xã</option>
-                                    </select>
-                                    <!--====== End - Select Box ======-->
-                                </div>
-                                <!--====== End - STATE/PROVINCE ======-->
                                 <div class="u-s-m-b-10">
 
                                     <!--====== Check Box ======-->
@@ -272,7 +294,6 @@
                                             <span class="ship-b__text">Giao tới:</span>
                                             <div class="ship-b__box u-s-m-b-10">
                                                 <p class="ship-b__p" id="thongtin"></p>
-
                                                 <a class="ship-b__edit btn--e-transparent-platinum-b-2" data-modal="modal" data-modal-id="#edit-ship-address">Sửa</a>
                                             </div>
                                             @* <div class="ship-b__box">
@@ -547,22 +568,22 @@
 @section Scripts{
     <!--====== lấy địa chỉ từ modal địa chỉ ======-->
     <script>
-        var citydb ="";
-        var districtdb ="";
-        var wardsdb ="";
+        var citydb = "";
+        var districtdb = "";
+        var wardsdb = "";
+        var selectedId = "";
         document.addEventListener("DOMContentLoaded", function () {
             var radioButtons = document.querySelectorAll('input[name="default-address"]');
             var form = document.querySelector('.checkout-modal2__form');
             var thongtinElement = document.getElementById('thongtin');
             var editShipAddressModal = $('#edit-ship-address');
 
-            // Kiểm tra xem có thông tin địa chỉ được lưu trong localStorage không
             var savedAddressId = localStorage.getItem('selectedAddressId');
             if (savedAddressId) {
-                // Nếu có, chọn lại địa chỉ đó
                 var savedRadioButton = document.getElementById(savedAddressId);
                 if (savedRadioButton) {
                     savedRadioButton.checked = true;
+                    selectedId = localStorage.getItem('selectedAddressId');
                     updateThongTin(savedRadioButton);
                 }
             } else {
@@ -570,41 +591,30 @@
                 var sdt = selectedRow.querySelector('#sdt').innerText;
                 var diaChi = selectedRow.querySelector('#diachi').innerText;
 
-                // Tạo chuỗi thông tin
-                var thongtin = tenNguoiNhan + ' ' + sdt + ' ' + diaChi;
-
-                // Cập nhật nội dung của phần tử có id "thongtin"
+                var thongtin = `${tenNguoiNhan} ${sdt} ${diaChi}`;
                 $('#thongtin').text(thongtin);
             }
 
             form.addEventListener('submit', function (event) {
-                event.preventDefault(); // Ngăn chặn form tự động submit
-
+                event.preventDefault();
                 var selectedAddress = document.querySelector('input[name="default-address"]:checked');
 
                 if (selectedAddress) {
-                    // Lưu id của địa chỉ được chọn vào localStorage
                     localStorage.setItem('selectedAddressId', selectedAddress.id);
-
-                    // Cập nhật thông tin và nội dung của phần tử có id "thongtin"
+                    selectedId = selectedAddress.id;
                     updateThongTin(selectedAddress);
-
                 } else {
                     alert("Vui lòng chọn một địa chỉ trước khi lưu.");
                 }
             });
 
-            // Hàm cập nhật thông tin và nội dung của phần tử có id "thongtin"
             function updateThongTin(selectedAddress) {
                 var selectedRow = selectedAddress.closest('tr');
                 var tenNguoiNhan = selectedRow.querySelector('#ten').innerText;
                 var sdt = selectedRow.querySelector('#sdt').innerText;
                 var diaChi = selectedRow.querySelector('#diachi').innerText;
 
-                // Tạo chuỗi thông tin
-                var thongtin = tenNguoiNhan + ' ' + sdt + ' ' + diaChi;
-
-                // Cập nhật nội dung của phần tử có id "thongtin"
+                var thongtin = `${tenNguoiNhan} ${sdt} ${diaChi}`;
                 $('#thongtin').text(thongtin);
 
                 citydb = diaChi.split(',')[3].trim();
@@ -617,23 +627,23 @@
 
                 tachDiaChi()
             }
+
             function tachDiaChi() {
-                var diaChiDuocChon = $('input[name="default-address"]:checked').closest('tr').find('#diachi').text();
+                var diaChiDuocChon = $('input[name="default-address"]:checked').closest('tr').find('#diachi').text().trim();
                 var mangDiaChi = diaChiDuocChon.split(',');
-                // Kiểm tra xem có đủ phần tử trong mảng hay không
+
                 if (mangDiaChi.length >= 4) {
-                    // alert('Địa chỉ người dùng nhập: ' + mangDiaChi[0].trim() + '\nXã: ' + mangDiaChi[1].trim() + '\nHuyện: ' + mangDiaChi[2].trim() + '\nThành phố: ' + mangDiaChi[3].trim());
-                   citydb = mangDiaChi[3].trim();
-                   districtdb = mangDiaChi[2].trim();
-                   wardsdb = mangDiaChi[1].trim();
+                    citydb = mangDiaChi[3].trim();
+                    districtdb = mangDiaChi[2].trim();
+                    wardsdb = mangDiaChi[1].trim();
                 } else {
-                    // Xử lý khi mảng không có đủ phần tử
                     alert('Địa chỉ không hợp lệ.');
                 }
             }
         });
 
     </script>
+
     <!--====== tính phí ship ======-->
     <script>
         $(document).ready(function () {
@@ -642,25 +652,19 @@
             var totalAmountElement = document.getElementById("tongtien");
             $('#get-address').on('change', function () {
                 var useDefaultAddress = $(this).prop('checked');
-                
+                $('#phiship').text('0đ');
+                totalAmountElement.innerText = tongtienSanPham.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
+                totalAmountElement.value = tongtienSanPham.toString();
                 if (useDefaultAddress) {
-                    $('#phiship').text('0đ');
-                    totalAmountElement.innerText = tongtienSanPham.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
-                    totalAmountElement.value = tongtienSanPham.toString();
-                    // Sử dụng phí ship theo địa chỉ người dùng
-                    // Gọi đoạn mã script tương ứng với phí ship theo địa chỉ người dùng
                     useDefaultAddressScript();
                 } else {
-                    $('#phiship').text('0đ');
-                    totalAmountElement.innerText = tongtienSanPham.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
-                    totalAmountElement.value = tongtienSanPham.toString();
-                    // Sử dụng phí ship theo nhập
-                    // Gọi đoạn mã script tương ứng với phí ship theo nhập
                     useInputAddressScript();
                 }
             });
 
             function useDefaultAddressScript() {
+                $('#DefaultDropdown').show();
+                $('#InputDropdown').hide();
                     const apiUrlCity = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/province';
                     const apiUrlDistrict = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/district';
                     const apiUrlWard = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/ward';
@@ -683,8 +687,8 @@
                         });
 
                         if (selectedCityID !== null) {
-                        $('#city').append($('<option>').val(selectedCityID).text(citydb));
-                            $('#city').val(selectedCityID).trigger('change');
+                        $('#city1').append($('<option>').val(selectedCityID).text(citydb).attr('hidden', 'hidden'));
+                        $('#city1').val(selectedCityID).trigger('change');
                         } else {
                             console.error('Không tìm thấy ID của thành phố.');
                         }
@@ -693,7 +697,7 @@
                     });
 
                     // Sự kiện khi chọn thành phố
-                    $('#city').on('change', function () {
+                    $('#city1').on('change', function () {
 
 
                         // Load danh sách huyện
@@ -702,7 +706,7 @@
                                 'Token': token
                             },
                             params: {
-                                province_id: $('#city').val()
+                                province_id: $('#city1').val()
                             }
                         }).then(response => {
                             var selectedDistrictID = null;
@@ -715,8 +719,8 @@
 
                             if (selectedDistrictID !== null) {
                                 // idDistric1 = selectedDistrictID;
-                            $('#district').append($('<option>').val(selectedDistrictID).text(districtdb));
-                                $('#district').val(selectedDistrictID).trigger('change');
+                            $('#district1').append($('<option>').val(selectedDistrictID).text(districtdb).attr('hidden', 'hidden'));
+                            $('#district1').val(selectedDistrictID).trigger('change');
 
                             } else {
                                 console.error('Không tìm thấy ID của huyện.');
@@ -726,14 +730,14 @@
                         });
                     });
 
-                    $('#district').on('change', function () {
+                    $('#district1').on('change', function () {
                         // Load danh sách xã/phường
                         axios.get(apiUrlWard, {
                             headers: {
                                 'Token': token
                             },
                             params: {
-                                district_id: $('#district').val()
+                                district_id: $('#district1').val()
                             }
                         }).then(response => {
                             var selectedWardCode = null;
@@ -745,8 +749,8 @@
                             });
 
                             if (selectedWardCode !== null) {
-                            $('#wards').append($('<option>').val(selectedWardCode).text(wardsdb));
-                                $('#wards').val(selectedWardCode).trigger('change');
+                            $('#wards1').append($('<option>').val(selectedWardCode).text(wardsdb).attr('hidden', 'hidden'));
+                            $('#wards1').val(selectedWardCode).trigger('change');
                             } else {
                                 console.error('Không tìm thấy Mã phường/xã.');
                             }
@@ -758,7 +762,7 @@
 
 
                     // Khi chọn phường/xã
-                    $('#wards').on('change', function () {
+                    $('#wards1').on('change', function () {
                         var inputs = document.getElementsByClassName('input-counter__text');
                         // ...
                         axios.get(apiUrlShippingFee, {
@@ -770,8 +774,8 @@
                                 service_type_id: 2,
                                 insurance_value: $('#tamtinh').text().replace(/\D/g, ''),
                                 coupon: null,
-                                to_ward_code: $('#wards').val(),
-                                to_district_id: $('#district').val(),
+                                to_ward_code: $('#wards1').val(),
+                                to_district_id: $('#district1').val(),
                                 from_district_id: 3440,
                                 weight: 200,
                                 length: 20,
@@ -801,6 +805,8 @@
             }
 
             function useInputAddressScript() {
+                $('#DefaultDropdown').hide();
+                $('#InputDropdown').show();
                 $(document).ready(function () {
                     const apiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/province';
                     const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
@@ -969,50 +975,81 @@
         $(document).ready(function () {
             $('#placeOrderButton').click(function (e) {
                 e.preventDefault();
-                var selectedCity = $('#city option:selected').text();
-                var selectedDistrict = $('#district option:selected').text();
-                var selectedWard = $('#wards option:selected').text();
-                var inputAddressBill = $('#billing-street').val();
-                var DiaChiFull = inputAddressBill + ',' + selectedWard + ',' + selectedDistrict + ',' + selectedCity;
-                $('#billing-street').val(DiaChiFull);
-                // Lấy dữ liệu từ form delivery
-                var deliveryFormData = $('#deliveryForm').serialize();
+                var selectedCity, selectedDistrict, selectedWard, inputAddressBill, DiaChiFull;
 
-                $.ajax({
-                    type: 'POST',
-                    url: '/HoaDon/DataBill',
-                    data: deliveryFormData,
-                    success: function (deliveryResponse) {
-                        // Thực hiện Ajax để gửi dữ liệu đến action ThanhToan trong controller TenControllerKhac
-                        var moTaValue = $("#order-note").val();
-                        $('input[name="MoTa"]').val(moTaValue);
+                if ($('#DefaultDropdown').is(':visible')) {
+                    // Sử dụng useDefaultAddressScript
+                    selectedCity = $('#city1 option:selected').text();
+                    selectedDistrict = $('#district1 option:selected').text();
+                    selectedWard = $('#wards1 option:selected').text();
+                } else {
+                    // Sử dụng useInputAddressScript
+                    selectedCity = $('#city option:selected').text();
+                    selectedDistrict = $('#district option:selected').text();
+                    selectedWard = $('#wards option:selected').text();
+                }
 
-                        $("[name='IdThongTinGH']").val(deliveryResponse.idThongTinGH)
 
-                        var tiengiam = document.getElementById("TienGiam").innerText.replace("đ", "").replace(/\,/g, "").replace(/\./g, "").trim();
+                if ($('#DefaultDropdown').is(':visible')) {
+                    var moTaValue = $("#order-note").val();
+                    $('input[name="MoTa"]').val(moTaValue);
+                    $("[name='IdThongTinGH']").val(selectedId)
+                    // Thực hiện các chức năng liên quan đến useDefaultAddressScript
+                    var paymentFormData = $('#paymentForm').serialize();
 
-                        document.querySelector('input[name="TienGiam"]').value = tiengiam;
+                    // Gửi dữ liệu thanh toán
+                    $.ajax({
+                        type: 'POST',
+                        url: '/HoaDon/ThanhToan',
+                        data: paymentFormData,
+                        success: function (paymentResponse) {
+                            // Xử lý kết quả nếu cần
+                            window.location.href = "/GioHangChiTiets/ShowCartUser"
+                        },
+                        error: function (paymentError) {
+                            // Xử lý lỗi nếu cần
+                        }
+                    });
+                } else {
 
-                        var paymentFormData = $('#paymentForm').serialize();
+                    inputAddressBill = $('#billing-street').val();
+                    DiaChiFull = inputAddressBill + ',' + selectedWard + ',' + selectedDistrict + ',' + selectedCity;
+                    $('#billing-street').val(DiaChiFull);
 
-                        
-                        $.ajax({
-                            type: 'POST',
-                            url: '/HoaDon/ThanhToan',
-                            data: paymentFormData,
-                            success: function (paymentResponse) {
-                                // Xử lý kết quả nếu cần
-                                window.location.href = "/GioHangChiTiets/ShowCartUser"
-                            },
-                            error: function (paymentError) {
-                                // Xử lý lỗi nếu cần
-                            }
-                        });
-                    },
-                    error: function (deliveryError) {
-                        // Xử lý lỗi nếu cần
-                    }
-                });
+                    // Thực hiện các chức năng liên quan đến useInputAddressScript
+                    var deliveryFormData = $('#deliveryForm').serialize();
+
+                    // Gửi dữ liệu DataBill
+                    $.ajax({
+                        type: 'POST',
+                        url: '/HoaDon/DataBill',
+                        data: deliveryFormData,
+                        success: function (deliveryResponse) {
+                            // Thực hiện Ajax để gửi dữ liệu đến action ThanhToan trong controller TenControllerKhac
+                            var moTaValue = $("#order-note").val();
+                            $('input[name="MoTa"]').val(moTaValue);
+                            $("[name='IdThongTinGH']").val(deliveryResponse.idThongTinGH)
+
+                            var paymentFormData = $('#paymentForm').serialize();
+                            // Gửi dữ liệu thanh toán
+                            $.ajax({
+                                type: 'POST',
+                                url: '/HoaDon/ThanhToan',
+                                data: paymentFormData,
+                                success: function (paymentResponse) {
+                                    // Xử lý kết quả nếu cần
+                                    window.location.href = "/GioHangChiTiets/ShowCartUser"
+                                },
+                                error: function (paymentError) {
+                                    // Xử lý lỗi nếu cần
+                                }
+                            });
+                        },
+                        error: function (deliveryError) {
+                            // Xử lý lỗi nếu cần
+                        }
+                    });
+                }
             });
         });
     </script>

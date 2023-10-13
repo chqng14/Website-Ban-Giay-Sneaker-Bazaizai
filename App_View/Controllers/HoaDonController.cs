@@ -123,6 +123,7 @@ namespace App_View.Controllers
             var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == UserID);
             var hoadon = new HoaDonDTO()
             {
+                IdHoaDon = Guid.NewGuid().ToString(),
                 IdNguoiDung = UserID,
                 IdKhachHang = null,
                 IdThongTinGH = hoaDonChiTietDTO.IdThongTinGH,
@@ -152,9 +153,9 @@ namespace App_View.Controllers
                     GiaBan = item.GiaBan,
                     TrangThai = 0
                 });
-                //await CartDetailServices.RemoveItem(item.Id);
-                //var product = await ProductDetailServices.GetById(item.IdProduct);
-                //await ProductDetailServices.UpdateSoLuong(product.Id, item.SoLuongCart);
+                await gioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
+                var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
+                //await _sanPhamChiTietService.UpdateAynsc(product.Id, item.SoLuongCart);
             }
             return Ok();
         }

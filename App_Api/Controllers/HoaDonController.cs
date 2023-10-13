@@ -43,7 +43,6 @@ namespace App_Api.Controllers
         public async Task<bool> TaoHoaDonOnlineDTO(HoaDonDTO HoaDonDTO)
         {
             var hoadon = _mapper.Map<HoaDon>(HoaDonDTO);
-            hoadon.IdHoaDon = Guid.NewGuid().ToString();
             return _hoaDon.AddBill(hoadon);
         }
 
