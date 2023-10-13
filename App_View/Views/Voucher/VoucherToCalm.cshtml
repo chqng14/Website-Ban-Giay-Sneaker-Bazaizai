@@ -1,12 +1,17 @@
 ﻿@using App_Data.DbContextt;
 @using System.Globalization;
+@using App_View.IServices;
+@using App_View.Services;
 @model IEnumerable<App_Data.Models.Voucher>
 
    
 @{
+
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
     BazaizaiContext context = new BazaizaiContext();
+ 
+    
 }
 <style>
     .m-order__list {
@@ -21,9 +26,15 @@
         box-sizing: border-box;
     }
 </style>
+@{
+    var httpClient = new HttpClient(); // Tạo đối tượng HttpClient
+    var _voucherND = new VoucherNguoiDungServices(httpClient); // Truyền đối tượng HttpClient vào constructor của VoucherNguoiDungServices
+}
 
 @functions {
     // Hàm trợ giúp để định dạng số nguyên thành tiền tệ Việt Nam
+
+ // Thay thế 'YourVoucherNguoiDungServices' bằng tên thực của dịch vụ của bạn
     public string FormatCurrency(int? value)
     {
         return string.Format(new CultureInfo("vi-VN"), "{0:C0}", value);
@@ -142,13 +153,38 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="description__info-wrap">
-                                                    <div class="body_copy">
-                                                        <a class="manage-o__badge badge--delivered copyButton">Copy mã</a>
-                                                        <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                                                @if (ViewBag.NguoiDung == null)
+                                                {
+                                                    <div class="description__info-wrap">
+                                                        <div class="body_copy">
+                                                            <a class="manage-o__badge badge--delivered copyButton">Chưa đăng nhập</a>
+                                                            <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                                                        </div>
                                                     </div>
+                                                }
+                                                else
+                                                {
+                                                    @if ( _voucherND.CheckVoucherInUser(item.MaVoucher)==true)
+                                                    {
+                                                        <div class="description__info-wrap">
+                                                            <div class="body_copy">
+                                                                <a class="manage-o__badge badge--delivered copyButton">Lưu Voucher</a>
+                                                                <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="description__info-wrap">
+                                                            <div class="body_copy">
+                                                                <a class="manage-o__badge badge--delivered copyButton">Đã sở hữu</a>
+                                                                <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
 
-                                                </div>
+                                               
                                             </div>
                                         </div>
                                     }
@@ -224,13 +260,36 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="description__info-wrap">
-                                                    <div class="body_copy">
-                                                        <a class="manage-o__badge badge--delivered copyButton">Copy mã</a>
-                                                        <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                                                @if (ViewBag.NguoiDung == null)
+                                                {
+                                                    <div class="description__info-wrap">
+                                                        <div class="body_copy">
+                                                            <a class="manage-o__badge badge--delivered copyButton">Chưa đăng nhập</a>
+                                                            <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                                                        </div>
                                                     </div>
-
-                                                </div>
+                                                }
+                                                else
+                                                {
+                                                    @if (_voucherND.CheckVoucherInUser(item.MaVoucher) == true)
+                                                    {
+                                                        <div class="description__info-wrap">
+                                                            <div class="body_copy">
+                                                                <a class="manage-o__badge badge--delivered copyButton">Lưu Voucher</a>
+                                                                <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="description__info-wrap">
+                                                            <div class="body_copy">
+                                                                <a class="manage-o__badge badge--delivered copyButton">Đã sở hữu</a>
+                                                                <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
                                             </div>
                                         </div>
                                     }
@@ -248,7 +307,6 @@
                                         <div class="row is-grid-active">
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="m-order__list">
                                     @foreach (var item in ViewBag.FreeShip)
@@ -305,13 +363,36 @@
                                                     </div>
 
                                                 </div>
-                                                <div class="description__info-wrap">
-                                                    <div class="body_copy">
-                                                        <a class="manage-o__badge badge--delivered copyButton">Copy mã</a>
-                                                        <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                                                @if (ViewBag.NguoiDung == null)
+                                                {
+                                                    <div class="description__info-wrap">
+                                                        <div class="body_copy">
+                                                            <a class="manage-o__badge badge--delivered copyButton">Chưa đăng nhập</a>
+                                                            <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                                                        </div>
                                                     </div>
-
-                                                </div>
+                                                }
+                                                else
+                                                {
+                                                    @if (_voucherND.CheckVoucherInUser(item.MaVoucher) == true)
+                                                    {
+                                                        <div class="description__info-wrap">
+                                                            <div class="body_copy">
+                                                                <a class="manage-o__badge badge--delivered copyButton">Lưu Voucher</a>
+                                                                <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="description__info-wrap">
+                                                            <div class="body_copy">
+                                                                <a class="manage-o__badge badge--delivered copyButton">Đã sở hữu</a>
+                                                                <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
                                             </div>
                                         </div>
                                     }
