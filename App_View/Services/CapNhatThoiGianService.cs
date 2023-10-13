@@ -40,7 +40,7 @@ namespace App_View.Services
                 {
                     if(b.IdKhuyenMai==a.IdKhuyenMai)
                     {
-                        b.TrangThai= (int)TrangThaiSaleDetail.NgungKhuyenMai;
+                        b.TrangThai= (int)TrangThaiSaleDetail.DangKhuyenMai;
                     }
                 }
             }

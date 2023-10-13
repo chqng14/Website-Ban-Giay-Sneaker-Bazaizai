@@ -1,7 +1,8 @@
-﻿@page "/admin/roles"
-@model App_View.Areas.Identity.Pages.Role.IndexModel
+﻿@page "/Admin/Roles"
+@model App_View.Areas.Admin.Pages.IndexModel
 @{
     ViewData["Title"] = "Danh sách chức vụ";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <h2>@ViewData["Title"]</h2>
 <partial name="_StatusMessage" model="@Model.StatusMessage" />

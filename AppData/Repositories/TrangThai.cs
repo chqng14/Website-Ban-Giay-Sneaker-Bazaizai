@@ -70,5 +70,13 @@ namespace App_Data.Repositories
             [Description("Đang khuyến mãi")]
             DangKhuyenMai = 1
         }
+        public enum GioiTinhMacDinh
+        {
+            KhongMuonTraLoi=0,
+            Nam = 1,
+            Nu = 2,
+            Khac=3
+        }
+     
     }
 }

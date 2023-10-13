@@ -37,6 +37,8 @@ namespace App_View.Areas.Identity.Pages.Account
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
         public string ReturnUrl { get; set; }
+        [TempData]
+        public string StatusMessage { get; set; }
 
         [TempData]
         public string ErrorMessage { get; set; }
@@ -114,6 +116,8 @@ namespace App_View.Areas.Identity.Pages.Account
                 }
                 else
                 {
+                    //result.
+                    
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }

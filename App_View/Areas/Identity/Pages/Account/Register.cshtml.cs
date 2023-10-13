@@ -19,14 +19,16 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Areas.Identity.Pages.Account
 {
 
     public class RegisterModel : PageModel
     {
-      
+
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IUserStore<NguoiDung> _userStore;
@@ -60,19 +62,38 @@ namespace App_View.Areas.Identity.Pages.Account
 
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
 
+
         public class InputModel
         {
+            [DataType(DataType.DateTime)]
+            [Display(Name = "NgaySinh")]
+            public DateTime? NgaySinh { get; set; }
 
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            //[Required]
+            //[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            //[DataType(DataType.Password)]
+            //[Display(Name = "Password")]
+            //public string Password { get; set; }
+
+            //[DataType(DataType.Password)]
+            //[Display(Name = "Confirm password")]
+            //[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            //public string ConfirmPassword { get; set; }
+
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
             public string Password { get; set; }
+
+
+
+
 
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
@@ -89,9 +110,16 @@ namespace App_View.Areas.Identity.Pages.Account
             [Display(Name = "Số điện thoại")]
             public string Sdt { get; set; }
 
-            [DataType(DataType.DateTime)]
-            [Display(Name = "Ngày tháng năm sinh")]
-            public string NamSinh { get; set; }
+            [DataType(DataType.Text)]
+            [Required]
+            [Display(Name = "Tên của bạn")]
+            public string FullName { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "Giới tính")]
+            public int? GioiTinh { get; set; }
+
+
         }
 
         public async Task OnGetAsync(string returnUrl = null)
@@ -107,18 +135,24 @@ namespace App_View.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-
-                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);//sửa email-> username
+                string MaTS = "ND" + (await _userManager.Users.CountAsync() + 1);
+                user.MaNguoiDung = MaTS;
+                user.TrangThai = (int?)TrangThaiCoBan.HoatDong;
+                user.GioiTinh = Input.GioiTinh;
+                user.NgaySinh = Input.NgaySinh;
+                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                if (!string.IsNullOrEmpty(Input.Sdt)) //thêm
+                if (!string.IsNullOrEmpty(Input.Sdt))
                 {
                     await _phoneStore.SetPhoneNumberAsync(user, Input.Sdt, CancellationToken.None);
                 }
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    await _userManager.AddToRoleAsync(user, ChucVuMacDinh.KhachHang.ToString());
 
                     var userId = await _userManager.GetUserIdAsync(user);
                     //Phát sinh token để xác thực email

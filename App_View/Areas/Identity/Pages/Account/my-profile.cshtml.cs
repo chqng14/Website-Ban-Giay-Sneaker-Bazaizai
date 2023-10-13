@@ -22,16 +22,20 @@ namespace App_View.Areas.Identity.Pages.Account
         }
 
         public string Username { get; set; }
-        public string LastName { get; set; }
+     
         public string FullName { get; set; }
-        public string FirstName { get; set; }
-
-        
         public string Email { get; set; }
         public string Phone { get; set; }
-        public string Tame { get; set; }
         public string? Gender { get; set; }
         public DateTime? NgaySinh { get; set; }
+
+
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+
+        public string Tame { get; set; }
+      
         public string Picture { get; set; }
 
         [TempData]
