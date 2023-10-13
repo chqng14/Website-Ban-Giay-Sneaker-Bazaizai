@@ -35,8 +35,19 @@
                 @Html.DisplayFor(modelItem => item.MoTa)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TrangThai)
-            </td>
+                    @if (item.TrangThai == 0)
+                    {
+                        <text>Ngưng khuyến mãi</text>
+                    }
+                    else if (item.TrangThai == 1)
+                    {
+                        <text>Đang khuyến mãi</text>
+                    }
+                    else
+                    {
+                        <text>Trạng thái lỗi</text>
+                    }
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.KhuyenMai)
             </td>

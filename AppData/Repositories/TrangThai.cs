@@ -65,5 +65,12 @@ namespace App_Data.Repositories
             [Description("Được áp dụng sale")]
             DuocApDungSale = 1
         }
+        public enum TrangThaiSaleDetail
+        {
+            [Description("Ngưng khuyến mãi")]
+            NgungKhuyenMai = 0,
+            [Description("Đang khuyến mãi")]
+            DangKhuyenMai = 1
+        }
     }
 }
