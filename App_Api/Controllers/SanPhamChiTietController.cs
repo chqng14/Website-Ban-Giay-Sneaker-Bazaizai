@@ -113,6 +113,13 @@ namespace App_Api.Controllers
             return (await _sanPhamChiTietRes.GetListSanPhamNgungKinhDoanhViewModelAsync()).ToList(); 
         }
 
+
+        [HttpGet("UpdateSoLuong")]
+        public async Task UpDateSoLuong(SanPhamSoLuongDTO sanPhamSoLuongDTO)
+        {
+            await _sanPhamChiTietRes.UpdateSoLuongSanPhamChiTietAynsc(sanPhamSoLuongDTO.IdChiTietSanPham,sanPhamSoLuongDTO.SoLuong);
+        }
+
         [HttpGet("Get-List-ItemShopViewModel")]
         public async Task<List<ItemShopViewModel>?> GetDanhSachItemShowViewModel()
         {

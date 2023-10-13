@@ -18,8 +18,13 @@ using App_Data.ViewModels.VoucherNguoiDung;
 using App_Data.ViewModels.KhuyenMaiChiTietDTO;
 
 using App_Data.ViewModels.HoaDonChiTietDTO;
+
+using static Peg.Base.PegBaseParser;
+
+
 using App_Data.ViewModels.ThongTinGHDTO;
 using App_Data.ViewModels.HoaDon;
+
 
 namespace App_Api.Helpers.Mapping
 {
@@ -30,7 +35,26 @@ namespace App_Api.Helpers.Mapping
             CreateMap<MauSacDTO, MauSac>();
             CreateMap<XuatXuDTO, XuatXu>();
             CreateMap<VoucherDTO, Voucher>().ReverseMap();
-            CreateMap<VoucherNguoiDungDTO, VoucherNguoiDung>().ReverseMap();
+
+            CreateMap<VoucherNguoiDungDTO, VoucherNguoiDung>().ReverseMap()
+                .ForMember(
+                dest => dest.TenVoucher, opt => opt.MapFrom(x => x.Vouchers.TenVoucher))
+                .ForMember(
+                dest => dest.DieuKien, opt => opt.MapFrom(x => x.Vouchers.DieuKien))
+                .ForMember(
+                dest => dest.LoaiHinhUuDai, opt => opt.MapFrom(x => x.Vouchers.LoaiHinhUuDai))
+                .ForMember(
+                dest => dest.SoLuong, opt => opt.MapFrom(x => x.Vouchers.SoLuong))
+                   .ForMember(
+                dest => dest.MucUuDai, opt => opt.MapFrom(x => x.Vouchers.MucUuDai))
+                      .ForMember(
+                dest => dest.NgayBatDau, opt => opt.MapFrom(x => x.Vouchers.NgayBatDau))
+                       .ForMember(
+                dest => dest.NgayKetThuc, opt => opt.MapFrom(x => x.Vouchers.NgayKetThuc))
+                         .ForMember(
+                dest => dest.SoLuong, opt => opt.MapFrom(x => x.Vouchers.SoLuong))
+            .ForMember(
+                dest => dest.MaVoucher, opt => opt.MapFrom(x => x.Vouchers.MaVoucher));
 
             CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
 
@@ -119,7 +143,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<List<SanPhamChiTiet>, DanhSachGiayViewModel>()
                 .ConvertUsing<SanPhamChiTietToListItemViewModelConverter>();
 
-
+            CreateMap<SanPhamChiTiet, SanPhamDanhSachViewModel>();
 
             CreateMap<SanPhamChiTiet, SanPhamChiTietViewModel>()
                 .ForMember(

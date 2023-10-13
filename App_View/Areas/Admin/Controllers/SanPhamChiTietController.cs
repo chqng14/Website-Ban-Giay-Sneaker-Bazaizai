@@ -21,6 +21,7 @@ using App_Data.ViewModels.KichCoDTO;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using OfficeOpenXml;
 using System.Diagnostics;
+using App_View.Models.DTO;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -42,6 +43,10 @@ namespace App_View.Areas.Admin.Controllers
         // GET: Admin/SanPhamChiTiet/DanhSachSanPham
         public IActionResult DanhSachSanPham()
         {
+            ViewData["ThuongHieu"] = new SelectList(_context.thuongHieus, "IdThuongHieu", "TenThuongHieu");
+            ViewData["KichCo"] = new SelectList(_context.kichCos.OrderBy(x=>x.SoKichCo).ToList(), "IdKichCo", "SoKichCo");
+            ViewData["MauSac"] = new SelectList(_context.mauSacs, "IdMauSac", "TenMauSac");
+            ViewData["SanPham"] = new SelectList(_context.SanPhams, "IdSanPham", "TenSanPham");
             return View();
         }
 
@@ -261,32 +266,80 @@ namespace App_View.Areas.Admin.Controllers
             return PartialView("_DanhSachSanPhamUpdate", model);
         }
 
-        public async Task<IActionResult> GetDanhSachSanPham(int draw, int start, int length, string searchValue)
+        public async Task<IActionResult> GetDanhSachSanPham([FromBody]FilterAdminDTO filterAdminDTO)
         {
-            var query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync())
-                .Skip(start)
-                .Take(length)
-                .ToList();
+            
+            var query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync());
+                
 
-            if (!string.IsNullOrEmpty(searchValue))
+            if (!string.IsNullOrEmpty(filterAdminDTO.searchValue))
             {
-                string searchValueLower = searchValue.ToLower();
-                query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x =>
+                string searchValueLower = filterAdminDTO.searchValue.ToLower();
+                query = query.Where(x =>
                 x.SanPham!.ToLower().Contains(searchValueLower) ||
                 x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
                 x.ChatLieu!.ToLower().Contains(searchValueLower) ||
                 x.KieuDeGiay!.ToLower().Contains(searchValueLower)
                 )
-                .Skip(start)
-                .Take(length)
                 .ToList();
             }
 
-            var totalRecords = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Count;
+            if (!string.IsNullOrEmpty(filterAdminDTO.SanPham))
+            {
+                query = query.Where(x =>x.SanPham!.ToLower().Contains(filterAdminDTO.SanPham.ToLower()))
+                .ToList();
+            }
 
+            if (!string.IsNullOrEmpty(filterAdminDTO.MauSac))
+            {
+                Console.WriteLine(filterAdminDTO.MauSac);
+                query = query.Where(x => x.MauSac!.ToLower().Contains(filterAdminDTO.MauSac.ToLower()))
+                .ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.ThuongHieu))
+            {
+                query = query.Where(x => x.SanPham!.ToLower().Contains(filterAdminDTO.ThuongHieu.ToLower()))
+                .ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.KichCo))
+            {
+                query = query.Where(x => x.KichCo == Convert.ToInt16(filterAdminDTO.KichCo))
+                .ToList();
+            }
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.Sort))
+            {
+                if (filterAdminDTO.Sort == "ascending_quantity")
+                {
+                    query = query.OrderBy(x => x.SoLuongTon!).ToList();
+                }
+
+                if (filterAdminDTO.Sort == "descending_quantity")
+                {
+                    query = query.OrderByDescending(x => x.SoLuongTon!).ToList();
+                }
+
+                if (filterAdminDTO.Sort == "ascending_price")
+                {
+                    query = query.OrderBy(x => x.GiaBan!).ToList();
+                }
+
+                if (filterAdminDTO.Sort == "descending_price")
+                {
+                    query = query.OrderByDescending(x => x.GiaBan!).ToList();
+                }
+            }
+
+            var totalRecords = query.Count;
+            query = query
+                .Skip(filterAdminDTO.start)
+                .Take(filterAdminDTO.length)
+                .ToList();
             return Json(new
             {
-                draw = draw,
+                draw = filterAdminDTO.draw,
                 recordsTotal = totalRecords,
                 recordsFiltered = totalRecords,
                 data = query
@@ -299,27 +352,22 @@ namespace App_View.Areas.Admin.Controllers
                 .Skip(start)
                 .Take(length)
                 .ToList();
-            var totalRecords = 0;
 
             if (!string.IsNullOrEmpty(searchValue))
             {
                 string searchValueLower = searchValue.ToLower();
-                var danhSach = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Where(x =>
+                query = (await _sanPhamChiTietService.GetDanhSachGiayNgungKinhDoanhAynsc()).Where(x =>
                 x.SanPham!.ToLower().Contains(searchValueLower) ||
                 x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
                 x.ChatLieu!.ToLower().Contains(searchValueLower) ||
-                x.KieuDeGiay!.ToLower().Contains(searchValueLower)).ToList();
-                totalRecords = danhSach.Count;
-                query = danhSach
+                x.KieuDeGiay!.ToLower().Contains(searchValueLower)
+                )
                 .Skip(start)
                 .Take(length)
                 .ToList();
             }
-            else
-            {
-                totalRecords = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync()).Count;
-            }
 
+            var totalRecords = (await _sanPhamChiTietService.GetDanhSachGiayNgungKinhDoanhAynsc()).Count;
 
             return Json(new
             {

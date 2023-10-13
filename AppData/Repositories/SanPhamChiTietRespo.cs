@@ -99,6 +99,7 @@ namespace App_Data.Repositories
                 SanPham = _context.thuongHieus.ToList().FirstOrDefault(x => x.IdThuongHieu == sanPham.IdThuongHieu)?.TenThuongHieu + " " + _context.SanPhams.ToList().FirstOrDefault(x => x.IdSanPham == sanPham.IdSanPham)?.TenSanPham,
                 GiaBan = sanPham.GiaBan,
                 GiaNhap = sanPham.GiaNhap,
+                MauSac = _context.mauSacs.ToList().FirstOrDefault(ms => ms.IdMauSac == sanPham.IdMauSac)?.TenMauSac,
                 KichCo = _context.kichCos.ToList().FirstOrDefault(x => x.IdKichCo == sanPham.IdKichCo)?.SoKichCo,
                 Anh = _context.Anh.ToList().Where(x => x.IdSanPhamChiTiet == sanPham.IdChiTietSp && x.TrangThai == 0).OrderBy(x => x.Url).FirstOrDefault()?.Url,
                 KieuDeGiay = _context.kieuDeGiays.ToList().FirstOrDefault(x => x.IdKieuDeGiay == sanPham.IdKieuDeGiay)?.TenKieuDeGiay,
@@ -467,6 +468,13 @@ namespace App_Data.Repositories
                 IdXuatXu = xuatXu.IdXuatXu,
             };
             return spDTO;
+        }
+
+        public async Task UpdateSoLuongSanPhamChiTietAynsc(string IdSanPhamChiTiet, int soLuong)
+        {
+            var sanPhamChiTiet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == IdSanPhamChiTiet);
+            sanPhamChiTiet!.SoLuongTon = sanPhamChiTiet.SoLuongTon - soLuong;
+            await _context.SaveChangesAsync();
         }
     }
 }
