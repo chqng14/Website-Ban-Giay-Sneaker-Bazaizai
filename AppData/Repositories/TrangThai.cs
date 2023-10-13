@@ -44,5 +44,13 @@ namespace App_Data.Repositories
             KhachHang, 
             NhanVien
         }
+        public enum GioiTinhMacDinh
+        {
+            KhongMuonTraLoi=0,
+            Nam = 1,
+            Nu = 2,
+            Khac=3
+        }
+     
     }
 }

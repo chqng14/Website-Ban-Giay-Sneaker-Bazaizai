@@ -1,21 +1,20 @@
 ﻿using App_Data.Models;
 using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 
-namespace App_View.Areas.Identity.Pages.Role
+namespace App_View.Areas.Admin.Pages
 {
-    [Authorize(Roles = "Madara")]
-
-    public class EditModel : PageModel
+    [Area("Admin")]
+    public class CreateModel : PageModel
     {
         private readonly RoleManager<ChucVu> _roleManager;
-        public EditModel(RoleManager<ChucVu> roleManager)
+        public CreateModel(RoleManager<ChucVu> roleManager)
         {
             _roleManager = roleManager;
         }
@@ -26,7 +25,6 @@ namespace App_View.Areas.Identity.Pages.Role
         public class InputModel
         {
 
-            //public string ID { set; get; }
 
             [Required(ErrorMessage = "Phải nhập tên role")]
             [Display(Name = "Tên chức vụ")]
@@ -36,41 +34,26 @@ namespace App_View.Areas.Identity.Pages.Role
 
         [BindProperty]
         public InputModel Input { set; get; }
-        public ChucVu role { get; set; }
 
-        //[BindProperty]
-        //public bool IsUpdate { set; get; }
+        [BindProperty]
+        public bool IsUpdate { set; get; }
 
-        public async Task<IActionResult> OnGet(string roleid)
+        public async Task<IActionResult> OnPostAsync()
         {
-            if (roleid == null) return NotFound("Không tìm thấy chức vụ");
-            var role = await _roleManager.FindByIdAsync(roleid);
-            if (role != null)
-            {
-                Input = new InputModel
-                {
-                    Name = role.Name,
-                };
-                return Page();
-            }
-             return NotFound("Không tìm thấy chức vụ");
-        }
-
-        public async Task<IActionResult> OnPostAsync(string roleid)
-        {
-            if (roleid == null) return NotFound("Không tìm thấy chức vụ");
-             role = await _roleManager.FindByIdAsync(roleid);
-            if(role == null)  return NotFound("Không tìm thấy chức vụ"); 
             if (!ModelState.IsValid)
             {
+                StatusMessage = null;
                 return Page();
             }
 
-           role.Name= Input.Name;
-            var result = await _roleManager.UpdateAsync(role);
+            var newRole = new ChucVu();
+            newRole.Name = Input.Name;
+            newRole.Id = Guid.NewGuid().ToString();
+            string MaTS = "CV" + (await _roleManager.Roles.CountAsync() + 1);
+            var result = await _roleManager.CreateAsync(newRole);
             if (result.Succeeded)
             {
-                StatusMessage = $"Bạn vừa sửa chức vụ : {Input.Name}";
+                StatusMessage = $"Tạo thành công chức vụ mới : {newRole.Name}";
                 return RedirectToPage("./Index");
             }
             else
