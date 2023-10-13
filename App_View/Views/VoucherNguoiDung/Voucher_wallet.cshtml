@@ -93,7 +93,7 @@
                         <div class="manage-o__header u-s-m-b-30">
                             <div class="dash-l-r">
                                 <div>
-                                    <div class="manage-o__text-2 u-c-secondary">@item.TenVoucher</div>
+                                    <div class="manage-o__text-2 u-c-secondary"> @item.TenVoucher</div>
                                     <div style="color:#FF4500" class="manage-o__text u-c-silver"> 🕛 @FormatDate(item.NgayKetThuc)</div>
                                 </div>
                                 <div>
@@ -123,10 +123,12 @@
                                     <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
                                 </div>
                                 <div class="description-title">
+                                    Mã: <u style="color:red">@item.MaVoucher </u>
                                     <p>
-                                        Giảm:       @if (item.LoaiHinhUuDai == 1)
+                                        Giảm
+                                             @if (item.LoaiHinhUuDai == 1)
                                         {
-                                            <span>Giảm @item.MucUuDai %</span>
+                                            <span> @item.MucUuDai %</span>
                                         }
                                         else
                                         {
