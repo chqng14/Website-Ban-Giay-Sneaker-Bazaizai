@@ -467,5 +467,10 @@ namespace App_View.Services
             }
             
         }
+
+        public async Task UpDatSoLuongAynsc(SanPhamSoLuongDTO sanPhamSoLuongDTO)
+        {
+            await _httpClient.PutAsJsonAsync("/api/SanPhamChiTiet/UpdateSoLuong", sanPhamSoLuongDTO);
+        }
     }
 }

@@ -469,5 +469,12 @@ namespace App_Data.Repositories
             };
             return spDTO;
         }
+
+        public async Task UpdateSoLuongSanPhamChiTietAynsc(string IdSanPhamChiTiet, int soLuong)
+        {
+            var sanPhamChiTiet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == IdSanPhamChiTiet);
+            sanPhamChiTiet!.SoLuongTon = sanPhamChiTiet.SoLuongTon - soLuong;
+            await _context.SaveChangesAsync();
+        }
     }
 }
