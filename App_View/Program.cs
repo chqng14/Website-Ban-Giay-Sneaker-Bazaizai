@@ -16,12 +16,14 @@ using App_View.Models;
 using Microsoft.Extensions.Hosting;
 
 using App_View.Controllers;
-
+using Hangfire;
 
 var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=LAPTOP-OF-KHAI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
+builder.Services.AddHangfireServer();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BazaizaiContext>(options =>
     options.UseSqlServer(connectionString));
@@ -34,8 +36,11 @@ builder.Services.AddScoped<IVoucherNguoiDungServices, VoucherNguoiDungServices>(
 
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
+builder.Services.AddScoped<IKhuyenMaiChiTietServices, KhuyenMaiChiTietServices>();
+builder.Services.AddScoped<IKhuyenMaiServices, KhuyenMaiServices>();
 builder.Services.AddScoped<ThongTinGHController>();  // Sử dụng AddScoped nếu bạn muốn một instance cho mỗi phạm vi của yêu cầu HTTP
 builder.Services.AddScoped<GioHangChiTietsController,GioHangChiTietsController>();
+
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
@@ -46,6 +51,7 @@ var mailsetting = builder.Configuration.GetSection("MailSettings");
 builder.Services.Configure<MailSettings>(mailsetting);
 builder.Services.AddSingleton<IEmailSender, SendMailService>();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.Configure<IdentityOptions>(options =>
 {
 
@@ -152,7 +158,11 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-
+app.UseHangfireDashboard();
+var capNhatTime = new CapNhatThoiGianService();
+RecurringJob.AddOrUpdate("CheckPromotions", () => capNhatTime.CheckNgayKetThuc(), "*/5 * * * * *");
+RecurringJob.AddOrUpdate("CapNhatTrangThaiSaleDetail", () => capNhatTime.CapNhatTrangThaiSaleDetail(), "*/5 * * * * *");
+RecurringJob.AddOrUpdate("CapNhatGiaBanThucTe", () => capNhatTime.CapNhatGiaBanThucTe(), "*/5 * * * * *");
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapControllerRoute(
@@ -165,5 +175,5 @@ app.UseEndpoints(endpoints =>
 });
 
 app.MapRazorPages();
-
+app.MapControllers();
 app.Run();

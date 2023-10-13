@@ -58,5 +58,19 @@ namespace App_Data.Repositories
             [Description("Số lượng voucher đã hết")]
             HetVoucher = 3,
         }
+        public enum TrangThaiSale 
+        {
+            [Description("Không thể áp dụng sale")]
+            KhongApDungSale = 0,
+            [Description("Được áp dụng sale")]
+            DuocApDungSale = 1
+        }
+        public enum TrangThaiSaleDetail
+        {
+            [Description("Ngưng khuyến mãi")]
+            NgungKhuyenMai = 0,
+            [Description("Đang khuyến mãi")]
+            DangKhuyenMai = 1
+        }
     }
 }
