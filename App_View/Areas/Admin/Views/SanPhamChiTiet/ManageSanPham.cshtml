@@ -623,7 +623,7 @@
                                     <label class="font-weight-semibold">Khối lượng(*)</label>
                                     <div class="d-flex align-items-center">
                                         <i class="fas fa-weight mr-1"></i>
-                                        <input class="form-control formatNumber" name="KhoiLuong" value="${khoiLuong}">(g)
+                                        <input class="form-control formatKhoiLuong" name="KhoiLuong" value="${khoiLuong}">(g)
                                     </div>
                                 </div>
                                 <div class="form-group d-flex align-items-center col-2">
@@ -743,7 +743,7 @@
                 promise.then((respose) => {
                     console.log(respose);
                     if (respose.success) {
-                        const itemAppend = $(ItemTemplate(index, true, respose.data.idChswitchiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa, respose.data.khoiLuong))
+                        const itemAppend = $(ItemTemplate(index, true, respose.data.idChiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa, respose.data.khoiLuong))
                         container.append(itemAppend)
                         if (respose.data.day = "true") {
                             itemAppend.find('.switch-2-day').prop('checked', true);
@@ -834,6 +834,15 @@
                 decimalCharacter: ".",
                 digitGroupSeparator: ",",
                 decimalPlaces: 0,
+                minimumValue: 0
+            });
+        }); 
+
+        $(".formatKhoiLuong").each(function () {
+            var autoNumeric = new AutoNumeric(this, {
+                decimalCharacter: ".",
+                digitGroupSeparator: ",",
+                decimalPlaces: 2, // Số thập phân
                 minimumValue: 0
             });
         });
@@ -997,7 +1006,7 @@
                     var toastHTML = `<div class="toast fade hide" data-delay="3000">
                                         <div class="toast-header">
                                             <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                            <strong class="mr-auto">Bootstrap</strong>
+                                            <strong class="mr-auto">Thông báo</strong>
                                             <small>1 second ago</small>
                                             <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
@@ -1005,7 +1014,7 @@
                                         </div>
                                         <div class="toast-body">
                                             Một vài thực thể dữ liệu chưa được nhập.
-                                            Vui lòng nhập để tiếp tục
+                                            Vui lòng nhập các trường cần thiết và chọn ảnh để tiếp tục!
                                         </div>
                                     </div>`
                     $('#notification-toast').append(toastHTML)
@@ -1054,80 +1063,89 @@
             });
 
             const moTa = { MoTa: currentItem.find('.moTa').summernote('code') }
+            
+            var slImage = currentItem.find('.wrapper-file').length;
+
             if (isUpdate === 'true') {
-                const key = currentItem.find('.collapse').attr('id');
+                var opject = { ...GetDataMain(), ...dataBienThe, ...DataInDataset, ...{ IdChiTietSp: currentItem.attr('data-idproductdetail') }, ...moTa, ...{ Day: currentItem.find('.switch-2-day').prop('checked'), NoiBat: currentItem.find('.switch-2-noibat').prop('checked') } }
+
+                if (opject.GiaBan !== "0" && opject.GiaNhap !== "0" && opject.SoLuongTon !== "0" && opject.KhoiLuong !== "0" && slImage >= 1) {
+                    const key = currentItem.find('.collapse').attr('id');
 
 
-                if (selectedFiles[key] && Array.from(selectedFiles[key]).length > 0) {
-                    var data = new FormData();
-                    Array.from(selectedFiles[key]).map(item => data.append('lstIFormFile', item.data))
-                    data.append('IdChiTietSp', currentItem.attr('data-idproductdetail'));
+                    if (selectedFiles[key] && Array.from(selectedFiles[key]).length > 0) {
+                        var data = new FormData();
+                        Array.from(selectedFiles[key]).map(item => data.append('lstIFormFile', item.data))
+                        data.append('IdChiTietSp', currentItem.attr('data-idproductdetail'));
+                        $.ajax({
+                            url: URL_CREATE_IMAGE,
+                            type: 'POST',
+                            data: data,
+                            contentType: false,
+                            processData: false,
+                            success: function (result) {
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(xhr.responseText);
+                                console.log(status);
+                                console.log(error);
+                                console.log(xhr);
+                            }
+                        });
+                    }
+
+                    if (lstAnhRemove[key] && Array.from(lstAnhRemove[key]).length > 0) {
+                        const data = new FormData();
+                        lstAnhRemove[key].map(item => data.append('lstImageRemove', item))
+                        data.append('idProductDetail', currentItem.attr('data-idproductdetail'))
+                        fetch(URL_DELETE_LIST_IMAGE, {
+                            method: 'POST',
+                            body: data
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    if (response.headers.get("content-length") !== "0") {
+                                        return response.json();
+                                    } else {
+                                        return null;
+                                    }
+                                }
+                                throw new Error('Network response was not ok.');
+                            })
+                            .then(data => {
+
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    }
+
                     $.ajax({
-                        url: URL_CREATE_IMAGE,
+                        url: URL_UPDATE_PRODUCT_DETAIL,
                         type: 'POST',
-                        data: data,
-                        contentType: false,
-                        processData: false,
+                        data: JSON.stringify(opject),
+                        contentType: 'application/json',
                         success: function (result) {
+                            checkSS++;
+                            currentItem.remove();
+                            currentIndex++;
+                            processNextItem();
                         },
                         error: function (xhr, status, error) {
+                            checkErr++;
                             console.log(xhr.responseText);
                             console.log(status);
                             console.log(error);
                             console.log(xhr);
                         }
                     });
+                } else {
+                    checkErr++;
+                    currentIndex++;
+                    processNextItem();
                 }
-
-                if (lstAnhRemove[key] && Array.from(lstAnhRemove[key]).length > 0) {
-                    const data = new FormData();
-                    lstAnhRemove[key].map(item => data.append('lstImageRemove', item))
-                    data.append('idProductDetail', currentItem.attr('data-idproductdetail'))
-                    fetch(URL_DELETE_LIST_IMAGE, {
-                        method: 'POST',
-                        body: data
-                    })
-                        .then(response => {
-                            if (response.ok) {
-                                if (response.headers.get("content-length") !== "0") {
-                                    return response.json();
-                                } else {
-                                    return null;
-                                }
-                            }
-                            throw new Error('Network response was not ok.');
-                        })
-                        .then(data => {
-
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        });
-                }
-
-                $.ajax({
-                    url: URL_UPDATE_PRODUCT_DETAIL,
-                    type: 'POST',
-                    data: JSON.stringify({ ...GetDataMain(), ...dataBienThe, ...DataInDataset, ...{ IdChiTietSp: currentItem.attr('data-idproductdetail') }, ...moTa, ...{ Day: currentItem.find('.switch-2-day').prop('checked'), NoiBat: currentItem.find('.switch-2-noibat').prop('checked') } }),
-                    contentType: 'application/json',
-                    success: function (result) {
-                        checkSS++;
-                        currentItem.remove();
-                        currentIndex++;
-                        processNextItem();
-                    },
-                    error: function (xhr, status, error) {
-                        checkErr++;
-                        console.log(xhr.responseText);
-                        console.log(status);
-                        console.log(error);
-                        console.log(xhr);
-                    }
-                });
-
-
             } else {
-                if (dataBienThe.GiaBan != 0 && dataBienThe.GiaNhap != 0 && dataBienThe.SoLuongTon != 0) {
+                if (dataBienThe.GiaBan && dataBienThe.GiaNhap && dataBienThe.SoLuongTon && dataBienThe.KhoiLuong && slImage >= 1) {
                     $.ajax({
                         url: URL_CREATE_PRODUCT,
                         type: 'POST',
