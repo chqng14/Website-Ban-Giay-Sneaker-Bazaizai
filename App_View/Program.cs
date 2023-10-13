@@ -161,9 +161,16 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseHangfireDashboard();
 var capNhatTime = new CapNhatThoiGianService();
-RecurringJob.AddOrUpdate("CheckPromotions", () => capNhatTime.CheckNgayKetThuc(), "*/5 * * * * *");
-RecurringJob.AddOrUpdate("CapNhatTrangThaiSaleDetail", () => capNhatTime.CapNhatTrangThaiSaleDetail(), "*/5 * * * * *");
-RecurringJob.AddOrUpdate("CapNhatGiaBanThucTe", () => capNhatTime.CapNhatGiaBanThucTe(), "*/5 * * * * *");
+Task.Run(() =>
+{
+    while (true)
+    {
+        capNhatTime.CheckNgayKetThuc();
+        capNhatTime.CapNhatTrangThaiSaleDetail();
+        capNhatTime.CapNhatGiaBanThucTe();
+        Thread.Sleep(TimeSpan.FromSeconds(5));
+    }
+});
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapRazorPages();
