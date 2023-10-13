@@ -60,7 +60,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireLowercase = false; // Không bắt phải có chữ thường
     options.Password.RequireNonAlphanumeric = false; // Không bắt ký tự đặc biệt
     options.Password.RequireUppercase = false; // Không bắt buộc chữ in
-    options.Password.RequiredLength = 3; // Số ký tự tối thiểu của password
+    options.Password.RequiredLength = 6; // Số ký tự tối thiểu của password
     options.Password.RequiredUniqueChars = 1; // Số ký tự riêng biệt
 
     // Cấu hình Lockout - khóa user
@@ -127,6 +127,8 @@ using (var scope = app.Services.CreateScope())
         var userManager = services.GetRequiredService<UserManager<NguoiDung>>();
         var roleManager = services.GetRequiredService<RoleManager<ChucVu>>();
         await ContextdDefault.SeedRolesAsync(userManager, roleManager);
+        await ContextdDefault.SeeAdminAsync(userManager, roleManager);
+
     }
     catch (Exception ex)
     {
@@ -134,7 +136,6 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred seeding the DB.");
     }
 }
-
 
 
 
@@ -165,6 +166,7 @@ RecurringJob.AddOrUpdate("CapNhatTrangThaiSaleDetail", () => capNhatTime.CapNhat
 RecurringJob.AddOrUpdate("CapNhatGiaBanThucTe", () => capNhatTime.CapNhatGiaBanThucTe(), "*/5 * * * * *");
 app.UseEndpoints(endpoints =>
 {
+    endpoints.MapRazorPages();
     endpoints.MapControllerRoute(
       name: "Admin",
       pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");

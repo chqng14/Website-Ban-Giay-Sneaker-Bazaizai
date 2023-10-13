@@ -21,6 +21,7 @@ using App_Data.Models;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Areas.Identity.Pages.Account
 {
@@ -182,12 +183,7 @@ namespace App_View.Areas.Identity.Pages.Account
                 }
                 if (externalEmailUser == null && externalEmail == Input.Email)
                 {
-                    
-                    var user = CreateUser();
-                    //if (info.Principal.HasClaim(c => c.Type == "image"))// thêm````````````````
-                    //{
-                    //    await _userManager.AddClaimAsync(user, info.Principal.FindFirst("image"));
-                    //}
+                    var user = CreateUser();                  
                     await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                     await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                     var email = Input.Email;
@@ -200,6 +196,8 @@ namespace App_View.Areas.Identity.Pages.Account
                     var result = await _userManager.CreateAsync(user);
                     if (result.Succeeded)
                     {
+                        await _userManager.AddToRoleAsync(user, ChucVuMacDinh.KhachHang.ToString());//them rolr cho user 
+
                         result = await _userManager.AddLoginAsync(user, info);
                         if (result.Succeeded)
                         {
