@@ -23,7 +23,6 @@ namespace App_Api.Helpers.Mapping
             {
                 LstSanPhamMoi = MapToItemViewModelList(source, x => x.TrangThai == 0 && (DateTime.Now - x.NgayTao) < TimeSpan.FromDays(7)),
                 LstBanChay = MapToItemViewModelList(sortedSanPhamChiTiet, _ => true),
-
                 LstSanPhamNoiBat = MapToItemViewModelList(source, x => x.TrangThai == 0 && x.NoiBat == true),
             };
 
@@ -42,7 +41,7 @@ namespace App_Api.Helpers.Mapping
                     KhuyenMai = false,
                     TenSanPham = item?.ThuongHieu?.TenThuongHieu + " " + item?.SanPham?.TenSanPham,
                     ThuongHieu = item?.ThuongHieu?.TenThuongHieu,
-                    Anh = item?.Anh?.FirstOrDefault()?.Url,
+                    Anh = item?.Anh.OrderBy(a=>a.Url)?.FirstOrDefault()?.Url,
                     SoLanDanhGia = 32,
                     SoSao = 4
                 })

@@ -2,6 +2,9 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.HoaDon;
+using App_Data.ViewModels.HoaDonChiTietDTO;
+using AutoMapper;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,68 +17,41 @@ namespace App_Api.Controllers
     [ApiController]
     public class HoaDonController : ControllerBase
     {
-        private readonly IAllRepo<HoaDon> allRepo;
-        BazaizaiContext DbContextModel = new BazaizaiContext();
-        DbSet<HoaDon> hoaDons;
-        public HoaDonController()
+        private readonly IHoaDonRepos _hoaDon;
+        private readonly IMapper _mapper;
+        public HoaDonController(IMapper mapper)
         {
-            hoaDons = DbContextModel.HoaDons;
-            allRepo = new AllRepo<HoaDon>(DbContextModel, hoaDons);
+            _hoaDon = new HoaDonRepos();
+            _mapper = mapper;
         }
         // GET: api/<HoaDonController>
         [HttpGet]
         public IEnumerable<HoaDon> Get()
         {
-            return allRepo.GetAll();
+            return _hoaDon.GetAll();
         }
 
         // GET api/<HoaDonController>/5
         [HttpGet("GetHoaDonById")]
         public HoaDon GetHoaDonById(string id)
         {
-            return allRepo.GetAll().FirstOrDefault(c => c.IdHoaDon == id);
+            return _hoaDon.GetAll().FirstOrDefault(c => c.IdHoaDon == id);
         }
 
         // POST api/<HoaDonController>
         [HttpPost("Create")]
-        public bool Post(string IdVoucher, string IdNguoiDung, string IdKhachHang, string IdThongTinGH, DateTime NgayTao, DateTime NgayThanhToan, DateTime NgayShip, DateTime NgayNhan, double TienShip, double TienGiam, double TongTien, string MoTa, int TrangThai, int TrangThaiThanhToan)
+        public async Task<bool> TaoHoaDonOnlineDTO(HoaDonDTO HoaDonDTO)
         {
-            string ma;
-            if (allRepo.GetAll().Count() == null)
-            {
-                ma = "HD1";
-            }
-            else
-            {
-                ma = "HD" + (allRepo.GetAll().Count() + 1);
-            }
-            HoaDon hd = new HoaDon()
-            {
-                IdHoaDon = Guid.NewGuid().ToString(),
-                IdVoucher = IdVoucher,
-                IdKhachHang = IdKhachHang,
-                IdNguoiDung = IdNguoiDung,
-                IdThongTinGH = IdThongTinGH,
-                MaHoaDon = ma,
-                NgayTao = NgayTao,
-                NgayThanhToan = NgayThanhToan,
-                NgayShip = NgayShip,
-                NgayNhan = NgayNhan,
-                TienShip = TienShip,
-                TienGiam = TienGiam,
-                TongTien = TongTien,
-                MoTa = MoTa,
-                TrangThai = TrangThai,
-                TrangThaiThanhToan = TrangThaiThanhToan,
-            };
-            return allRepo.AddItem(hd);
+            var hoadon = _mapper.Map<HoaDon>(HoaDonDTO);
+            hoadon.IdHoaDon = Guid.NewGuid().ToString();
+            return _hoaDon.AddBill(hoadon);
         }
 
         // PUT api/<HoaDonController>/5
         [HttpPut("Edit")]
         public bool Put(string idHoaDon, string IdVoucher, string IdNguoiDung, string IdKhachHang, string IdThongTinGH, string MaHoaDon, DateTime NgayTao, DateTime NgayThanhToan, DateTime NgayShip, DateTime NgayNhan, double TienShip, double TienGiam, double TongTien, string MoTa, int TrangThai, int TrangThaiThanhToan)
         {
-            var hd = allRepo.GetAll().First(p => p.IdHoaDon == idHoaDon);
+            var hd = _hoaDon.GetAll().First(p => p.IdHoaDon == idHoaDon);
             hd.IdVoucher = IdVoucher;
             hd.IdThongTinGH = IdThongTinGH;
             hd.IdVoucher = IdVoucher;
@@ -93,15 +69,15 @@ namespace App_Api.Controllers
             hd.MoTa = MoTa;
             hd.TrangThai = TrangThai;
             hd.TrangThaiThanhToan = TrangThaiThanhToan;
-            return allRepo.EditItem(hd);
+            return _hoaDon.EditBill(hd);
         }
 
         // DELETE api/<HoaDonController>/5
         [HttpDelete("Delete")]
         public bool Delete(string idHoaDon)
         {
-            var hd = allRepo.GetAll().First(p => p.IdHoaDon == idHoaDon);
-            return allRepo.RemoveItem(hd);
+            var hd = _hoaDon.GetAll().First(p => p.IdHoaDon == idHoaDon);
+            return _hoaDon.RemoveBill(hd);
         }
     }
 }

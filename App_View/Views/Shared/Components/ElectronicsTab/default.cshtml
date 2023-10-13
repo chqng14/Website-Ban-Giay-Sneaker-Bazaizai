@@ -12,11 +12,11 @@
                         <ul class="nav tab-list">
                             <li class="nav-item">
 
-                                <a class="nav-link btn--e-white-brand-shadow" data-toggle="tab" href="#e-l-p">SẢN PHẨM MỚI</a>
+                                <a class="nav-link btn--e-white-brand-shadow active" data-toggle="tab" href="#e-l-p">SẢN PHẨM MỚI</a>
                             </li>
                             <li class="nav-item">
 
-                                <a class="nav-link btn--e-white-brand-shadow active" data-toggle="tab" href="#e-b-s">BÁN CHẠY NHẤT</a>
+                                <a class="nav-link btn--e-white-brand-shadow" data-toggle="tab" href="#e-b-s">BÁN CHẠY NHẤT</a>
                             </li>
                             <li class="nav-item">
 
@@ -39,7 +39,7 @@
             <div class="tab-content">
 
                 <!--====== Tab 1 ======-->
-                <div class="tab-pane" id="e-l-p">
+                <div class="tab-pane fade show active" id="e-l-p">
                     <div class="slider-fouc">
                         <div class="owl-carousel tab-slider" data-item="4">
                             @foreach (var item in Model.LstSanPhamMoi!)
@@ -101,7 +101,7 @@
                 </div>
                 <!--====== End - Tab 1 ======-->
                 <!--====== Tab 2 ======-->
-                <div class="tab-pane fade show active" id="e-b-s">
+                <div class="tab-pane" id="e-b-s">
                     <div class="slider-fouc">
                         <div class="owl-carousel tab-slider" data-item="4">
                             @foreach (var item in Model.LstBanChay!)
