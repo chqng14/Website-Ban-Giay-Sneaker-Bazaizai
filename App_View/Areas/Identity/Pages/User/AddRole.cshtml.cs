@@ -35,6 +35,7 @@ namespace App_View.Areas.Identity.Pages.User
 
         [TempData]
         public string StatusMessage { get; set; }
+
         public NguoiDung user { get; set; }
 
         [BindProperty]

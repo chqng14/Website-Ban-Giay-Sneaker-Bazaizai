@@ -22,7 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=LAPTOP-OF-KHAI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=MSI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
 builder.Services.AddHangfireServer();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BazaizaiContext>(options =>
@@ -39,7 +39,7 @@ builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
 builder.Services.AddScoped<IKhuyenMaiChiTietServices, KhuyenMaiChiTietServices>();
 builder.Services.AddScoped<IKhuyenMaiServices, KhuyenMaiServices>();
 builder.Services.AddScoped<ThongTinGHController>();  // Sử dụng AddScoped nếu bạn muốn một instance cho mỗi phạm vi của yêu cầu HTTP
-builder.Services.AddScoped<GioHangChiTietsController,GioHangChiTietsController>();
+builder.Services.AddScoped<GioHangChiTietsController, GioHangChiTietsController>();
 
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
@@ -60,7 +60,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequireLowercase = false; // Không bắt phải có chữ thường
     options.Password.RequireNonAlphanumeric = false; // Không bắt ký tự đặc biệt
     options.Password.RequireUppercase = false; // Không bắt buộc chữ in
-    options.Password.RequiredLength = 3; // Số ký tự tối thiểu của password
+    options.Password.RequiredLength = 6; // Số ký tự tối thiểu của password
     options.Password.RequiredUniqueChars = 1; // Số ký tự riêng biệt
 
     // Cấu hình Lockout - khóa user
@@ -127,6 +127,8 @@ using (var scope = app.Services.CreateScope())
         var userManager = services.GetRequiredService<UserManager<NguoiDung>>();
         var roleManager = services.GetRequiredService<RoleManager<ChucVu>>();
         await ContextdDefault.SeedRolesAsync(userManager, roleManager);
+        await ContextdDefault.SeeAdminAsync(userManager, roleManager);
+
     }
     catch (Exception ex)
     {
@@ -134,7 +136,6 @@ using (var scope = app.Services.CreateScope())
         logger.LogError(ex, "An error occurred seeding the DB.");
     }
 }
-
 
 
 
@@ -160,11 +161,19 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseHangfireDashboard();
 var capNhatTime = new CapNhatThoiGianService();
-RecurringJob.AddOrUpdate("CheckPromotions", () => capNhatTime.CheckNgayKetThuc(), "*/5 * * * * *");
-RecurringJob.AddOrUpdate("CapNhatTrangThaiSaleDetail", () => capNhatTime.CapNhatTrangThaiSaleDetail(), "*/5 * * * * *");
-RecurringJob.AddOrUpdate("CapNhatGiaBanThucTe", () => capNhatTime.CapNhatGiaBanThucTe(), "*/5 * * * * *");
+Task.Run(() =>
+{
+    while (true)
+    {
+        capNhatTime.CheckNgayKetThuc();
+        capNhatTime.CapNhatTrangThaiSaleDetail();
+        capNhatTime.CapNhatGiaBanThucTe();
+        Thread.Sleep(TimeSpan.FromSeconds(5));
+    }
+});
 app.UseEndpoints(endpoints =>
 {
+    endpoints.MapRazorPages();
     endpoints.MapControllerRoute(
       name: "Admin",
       pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
