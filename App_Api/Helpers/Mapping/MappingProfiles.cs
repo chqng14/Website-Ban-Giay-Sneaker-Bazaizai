@@ -56,7 +56,11 @@ namespace App_Api.Helpers.Mapping
             .ForMember(
                 dest => dest.MaVoucher, opt => opt.MapFrom(x => x.Vouchers.MaVoucher));
 
-            CreateMap<SanPhamChiTietDTO, SanPhamChiTiet>().ReverseMap();
+            CreateMap<SanPhamChiTiet, SanPhamChiTietDTO>().ReverseMap()
+                .ForMember(
+                        dest => dest.TrangThai,
+                        opt => opt.MapFrom(src => src.TrangThaiKhuyenMai ? 1 : 0)
+                    );
 
             CreateMap<GioHangChiTiet, GioHangChiTietDTO>()
                  .ForMember(
@@ -180,7 +184,7 @@ namespace App_Api.Helpers.Mapping
                     )
                 .ForMember(
                         dest => dest.ListTenAnh,
-                        opt => opt.MapFrom(src => src.Anh.Where(an => an.TrangThai == 0).OrderBy(x=>x.Url).Select(x => x.Url).ToList())
+                        opt => opt.MapFrom(src => src.Anh.Where(an => an.TrangThai == 0).OrderBy(x => x.Url).Select(x => x.Url).ToList())
                     );
 
             CreateMap<SanPhamChiTiet, ItemShopViewModel>()
@@ -224,7 +228,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<SanPhamChiTiet, ItemDetailViewModel>()
                 .ForMember(
                         dest => dest.Anh,
-                        opt => opt.MapFrom(src => src.Anh.Where(x => x.TrangThai == 0).OrderBy(a=>a.Url)!.FirstOrDefault()!.Url)
+                        opt => opt.MapFrom(src => src.Anh.Where(x => x.TrangThai == 0).OrderBy(a => a.Url)!.FirstOrDefault()!.Url)
                     )
                 .ForMember(
                         dest => dest.MoTaSanPham,
