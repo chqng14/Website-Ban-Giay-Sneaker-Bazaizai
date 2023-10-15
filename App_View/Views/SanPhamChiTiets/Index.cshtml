@@ -178,33 +178,4 @@
             }
         });
     })
-
-
-    $(document).on('click', 'a[data-modal-id="#add-to-cart"]', function () {
-        var modalId = $(this).data('modal-id');
-        var idSPCT = $(this).closest('.product-m__add-cart').data('id');
-        var data1 = {
-            IdSanPhamCT: idSPCT,
-            SoLuong: 1
-        };
-
-        $.ajax({
-            url: '/GioHangChiTiets/AddToCart',
-            type: 'POST',
-            data: data1,
-            success: function (result) {
-            },
-            error: function (xhr, status, error) {
-                console.log(xhr.responseText);
-                console.log(status);
-                console.log(error);
-                console.log(xhr);
-            }
-        });
-    });
-    $(() => {
-        $('.miss-add-to-cart').on('click', function () {
-            $(modalId).css('display', 'none');
-        });  
-    })
 </script>

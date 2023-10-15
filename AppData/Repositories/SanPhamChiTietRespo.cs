@@ -187,10 +187,6 @@ namespace App_Data.Repositories
             var idMauSac = (await _context.mauSacs.ToListAsync()).FirstOrDefault(x => x.TenMauSac == mauSac)!.IdMauSac;
             if (sanPhamGet == null) return null;
             var lstBienThe = (await _context.sanPhamChiTiets
-                .Include(x => x.MauSac)
-                .Include(x => x.KichCo)
-                .Include(x => x.Anh)
-                .ToListAsync())
                 .Where(sp =>
                 sp.TrangThai == 0 &&
                 sp.IdKieuDeGiay == sanPhamGet!.IdKieuDeGiay &&
@@ -200,7 +196,12 @@ namespace App_Data.Repositories
                 sp.IdChatLieu == sanPhamGet.IdChatLieu &&
                 sp.IdSanPham == sanPhamGet.IdSanPham &&
                 sp.IdMauSac == idMauSac
-                ).ToList();
+                )
+                .Include(x => x.MauSac)
+                .Include(x => x.KichCo)
+                .Include(x => x.Anh)
+                .ToListAsync())
+                .ToList();
             var lstSize = lstBienThe.DistinctBy(sp => sp.KichCo.SoKichCo).OrderBy(item => item.KichCo.SoKichCo).ToList();
             var idSizeGet = lstSize.FirstOrDefault()!.KichCo.IdKichCo;
             var sanPhamChiTiet = lstBienThe.FirstOrDefault(sp => sp.IdKichCo == idSizeGet);
@@ -214,13 +215,7 @@ namespace App_Data.Repositories
             var sanPhamGet = (await _context.sanPhamChiTiets.ToListAsync())
                 .FirstOrDefault(sp => sp.IdChiTietSp == id);
             var idsSize = (await _context.kichCos.ToListAsync()).FirstOrDefault(x => x.SoKichCo == size)!.IdKichCo;
-            var sanPhamChiTiet = (await _context.sanPhamChiTiets.
-                Include(x => x.Anh).
-                Include(x => x.SanPham).
-                Include(x => x.ThuongHieu).
-                Include(x => x.KichCo).
-                Include(x => x.MauSac).
-                ToListAsync()).FirstOrDefault(sp =>
+            var sanPhamChiTiet = (await _context.sanPhamChiTiets.Where(sp =>
                 sp.IdXuatXu == sanPhamGet!.IdXuatXu &&
                 sp.IdMauSac == sanPhamGet.IdMauSac &&
                 sp.IdLoaiGiay == sanPhamGet.IdLoaiGiay &&
@@ -228,8 +223,12 @@ namespace App_Data.Repositories
                 sp.IdChatLieu == sanPhamGet.IdChatLieu &&
                 sp.IdSanPham == sanPhamGet.IdSanPham &&
                 sp.IdThuongHieu == sanPhamGet.IdThuongHieu &&
-                sp.IdKichCo == idsSize
-                );
+                sp.IdKichCo == idsSize).
+                Include(x => x.Anh).
+                Include(x => x.SanPham).
+                Include(x => x.ThuongHieu).
+                Include(x => x.KichCo).
+                Include(x => x.MauSac).FirstOrDefaultAsync());
             if (sanPhamChiTiet == null) return null;
             var itemDetailViewModel = _mapper.Map<ItemDetailViewModel>(sanPhamChiTiet);
             return itemDetailViewModel;
