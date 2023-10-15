@@ -1,4 +1,5 @@
 ﻿@model App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel
+
 <div class="u-s-p-b-60">
 
     <!--====== Section Intro ======-->
@@ -12,11 +13,11 @@
                         <ul class="nav tab-list">
                             <li class="nav-item">
 
-                                <a class="nav-link btn--e-white-brand-shadow" data-toggle="tab" href="#e-l-p">SẢN PHẨM MỚI</a>
+                                <a class="nav-link btn--e-white-brand-shadow active" data-toggle="tab" href="#e-l-p">SẢN PHẨM MỚI</a>
                             </li>
                             <li class="nav-item">
 
-                                <a class="nav-link btn--e-white-brand-shadow active" data-toggle="tab" href="#e-b-s">BÁN CHẠY NHẤT</a>
+                                <a class="nav-link btn--e-white-brand-shadow" data-toggle="tab" href="#e-b-s">BÁN CHẠY NHẤT</a>
                             </li>
                             <li class="nav-item">
 
@@ -39,13 +40,13 @@
             <div class="tab-content">
 
                 <!--====== Tab 1 ======-->
-                <div class="tab-pane" id="e-l-p">
+                <div class="tab-pane fade show active" id="e-l-p">
                     <div class="slider-fouc">
                         <div class="owl-carousel tab-slider" data-item="4">
                             @foreach (var item in Model.LstSanPhamMoi!)
                             {
                                 <div class="u-s-m-b-30">
-                                    <div class="product-o product-o--hover-on">
+                                    <div class="product-o product-o--hover-on" data-id="@item.IdChiTietSp">
                                         <div class="product-o__wrap">
 
                                             <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
@@ -91,7 +92,7 @@
 
                                         <span class="product-o__price">
                                             @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)
-                                            <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai )</span>
+                                            <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)</span>
                                         </span>
                                     </div>
                                 </div>
@@ -101,7 +102,7 @@
                 </div>
                 <!--====== End - Tab 1 ======-->
                 <!--====== Tab 2 ======-->
-                <div class="tab-pane fade show active" id="e-b-s">
+                <div class="tab-pane" id="e-b-s">
                     <div class="slider-fouc">
                         <div class="owl-carousel tab-slider" data-item="4">
                             @foreach (var item in Model.LstBanChay!)
@@ -152,9 +153,9 @@
                                         </div>
 
                                         <span class="product-o__price">
-                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc )
+                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)
 
-                                            <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai )</span>
+                                            <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)</span>
                                         </span>
                                     </div>
                                 </div>
@@ -535,9 +536,9 @@
                                         </div>
 
                                         <span class="product-o__price">
-                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc )
+                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)
 
-                                            <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai )</span>
+                                            <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)</span>
                                         </span>
                                     </div>
                                 </div>
@@ -550,8 +551,45 @@
         </div>
     </div>
     <!--====== End - Section Content ======-->
-</div>@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+</div>
+@*
+    <script src="~/js/vendor.js"></script>
+    <script src="~/js/jquery.shopnav.js"></script>
+    <script src="~/js/app.js"></script>*@
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(() => {
+        $('a[data-modal-id="#quick-look"]').on('click', function () {
+            var modalId = $(this).data('modal-id');
+
+            var data = {
+                idSanPhamChiTiet: $(this).closest('.product-o').data('id'),
+            };
+            $.ajax({
+                url: '/SanPhamChiTiets/LoadPartialViewSanPhamChiTiet',
+                type: 'GET',
+                data: data,
+                success: function (result) {
+                    $(modalId).html(result);
+                    RESHOP.initInputCounter();
+                    RESHOP.modalProductDetailInit();
+                    $('.modal-backdrop').show();
+
+                    $(modalId).show()
+                    $('.dismiss-button').on('click', function () {
+                        $(modalId).hide();
+                        $('.modal-backdrop').hide();
+                        $('body').css('overflow-y', 'auto');
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    console.log(status);
+                    console.log(error);
+                    console.log(xhr);
+                }
+            });
+
+        });
+    })
+</script>

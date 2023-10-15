@@ -11,9 +11,9 @@ namespace App_View.Models
         public static async Task SeedRolesAsync(UserManager<NguoiDung> userManager, RoleManager<ChucVu> roleManager)
         {
             var rolesToSeed = new[]{
-                new ChucVu { Name = ChucVuMacDinh.KhachHang.ToString(), Id = Guid.NewGuid().ToString() },
-                new ChucVu { Name = ChucVuMacDinh.Admin.ToString(), Id = Guid.NewGuid().ToString() },
-                new ChucVu { Name = ChucVuMacDinh.NhanVien.ToString(), Id = Guid.NewGuid().ToString() }
+                new ChucVu { Name = ChucVuMacDinh.KhachHang.ToString(), Id = Guid.NewGuid().ToString(),TrangThai=(int?)TrangThaiCoBan.HoatDong,MaChucVu="CV1" },
+                new ChucVu { Name = ChucVuMacDinh.Admin.ToString(), Id = Guid.NewGuid().ToString(),TrangThai=(int?)TrangThaiCoBan.HoatDong,MaChucVu="CV2" },
+                new ChucVu { Name = ChucVuMacDinh.NhanVien.ToString(), Id = Guid.NewGuid().ToString(),TrangThai=(int?)TrangThaiCoBan.HoatDong,MaChucVu="CV3" }
 
             };
 
@@ -22,31 +22,31 @@ namespace App_View.Models
                 await roleManager.CreateAsync(role);
             }
         }
-        public static async Task SeedSuperAdminAsync(UserManager<NguoiDung> userManager, RoleManager<ChucVu> roleManager)
+        public static async Task SeeAdminAsync(UserManager<NguoiDung> userManager, RoleManager<ChucVu> roleManager)
         {
             ////Seed Default User
-            //var defaultUser = new NguoiDung
-            //{
-            //    UserName = "superadmin",
-            //    Email = "superadmin@gmail.com",
-            //    FirstName = "Mukesh",
-            //    LastName = "Murugan",
-            //    EmailConfirmed = true,
-            //    PhoneNumberConfirmed = true
-            //};
-            //if (userManager.Users.All(u => u.Id != defaultUser.Id))
-            //{
-            //    var user = await userManager.FindByEmailAsync(defaultUser.Email);
-            //    if (user == null)
-            //    {
-            //        await userManager.CreateAsync(defaultUser, "123Pa$$word.");
-            //        await userManager.AddToRoleAsync(defaultUser, Enums.Roles.Basic.ToString());
-            //        await userManager.AddToRoleAsync(defaultUser, Enums.Roles.Moderator.ToString());
-            //        await userManager.AddToRoleAsync(defaultUser, Enums.Roles.Admin.ToString());
-            //        await userManager.AddToRoleAsync(defaultUser, Enums.Roles.SuperAdmin.ToString());
-            //    }
+            var defaultUser = new NguoiDung
+            {
+                Id= Guid.NewGuid().ToString(),  
+                UserName = "Admin",
+                Email = "adminhehehe@gmail.com",
+                TenNguoiDung = "Mi Mi",
+                PhoneNumber = "0369426223",
+                EmailConfirmed = true,
+                NgaySinh= DateTime.ParseExact("10-10-2010", "MM-dd-yyyy", null),
+                //AnhDaiDien=
+                PhoneNumberConfirmed = true
+            };
+            if (userManager.Users.All(u => u.Id != defaultUser.Id))
+            {
+                var user = await userManager.FindByEmailAsync(defaultUser.Email);
+                if (user == null)
+                {
+                    await userManager.CreateAsync(defaultUser, "uchihahaha123");
+                    await userManager.AddToRoleAsync(defaultUser, ChucVuMacDinh.Admin.ToString());
+                }
 
-            //}
+            }
         }
     }
 }

@@ -68,7 +68,7 @@
                                 {
                                     <div class="col-lg-3 col-md-4 col-sm-6">
                                         <div class="product-m">
-                                            <div class="product-m__thumb">
+                                            <div class="product-m__thumb" data-id="@item.IdChiTietSp">
 
                                                 <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/@item.IdChiTietSp">
 
@@ -76,28 +76,24 @@
                                                 </a>
                                                 <div class="product-m__quick-look">
 
-                                                    <a class="fas fa-search" data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick Look"></a>
-                                                </div>
-                                                <div class="product-m__add-cart">
-
-                                                    <a class="btn--e-brand" data-modal="modal" data-modal-id="#add-to-cart">Add to Cart</a>
+                                                    <a class="fas fa-search" data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"></a>
                                                 </div>
                                             </div>
                                             <div class="product-m__content">
                                                 <div class="product-m__category">
 
-                                                    <a href="shop-side-version-2.html">@item.ThuongHieu</a>
+                                                    <a>@item.ThuongHieu</a>
                                                 </div>
                                                 <div class="product-m__name">
 
-                                                    <a href="product-detail.html">@item.TenSanPham</a>
+                                                    <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
                                                 </div>
                                                 <div class="product-m__rating gl-rating-style">
                                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
 
                                                     <span class="product-m__review">(@item.SoLanDanhGia)</span>
                                                 </div>
-                                                <div class="product-m__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaBan )</div>
+                                                <div class="product-m__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaBan)</div>
                                                 <div class="product-m__hover">
                                                     <div class="product-m__preview-description">
 
@@ -150,3 +146,65 @@
     <!--====== End - Section 1 ======-->
 </div>
 <!--====== End - App Content ======-->
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    $(document).on('click', 'a[data-modal-id="#quick-look"]', function () {
+        var modalId = $(this).data('modal-id');
+        var data = {
+            idSanPhamChiTiet: $(this).closest('.product-m__thumb').data('id'),
+        };
+        $.ajax({
+            url: '/SanPhamChiTiets/LoadPartialViewSanPhamChiTiet',
+            type: 'GET',
+            data: data,
+            success: function (result) {
+                $(modalId).html(result);
+                RESHOP.initInputCounter();
+                RESHOP.modalProductDetailInit();
+                $('.modal-backdrop').show();
+
+                $(modalId).show()
+                $('.dismiss-button').on('click', function () {
+                    $(modalId).hide();
+                    $('.modal-backdrop').hide();
+                    $('body').css('overflow-y', 'auto');
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    })
+
+
+    $(document).on('click', 'a[data-modal-id="#add-to-cart"]', function () {
+        var modalId = $(this).data('modal-id');
+        var idSPCT = $(this).closest('.product-m__add-cart').data('id');
+        var data1 = {
+            IdSanPhamCT: idSPCT,
+            SoLuong: 1
+        };
+
+        $.ajax({
+            url: '/GioHangChiTiets/AddToCart',
+            type: 'POST',
+            data: data1,
+            success: function (result) {
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    });
+    $(() => {
+        $('.miss-add-to-cart').on('click', function () {
+            $(modalId).css('display', 'none');
+        });  
+    })
+</script>

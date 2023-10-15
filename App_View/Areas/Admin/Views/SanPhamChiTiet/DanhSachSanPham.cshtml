@@ -12,6 +12,15 @@
     .note-editing-area {
         height: 400px;
     }
+
+    .main-content{
+        background: #eeeeee
+    }
+
+    .main_danh_sach, .page-link {
+        background-color: #A0C5E8 !important;
+    }
+
 </style>
 
 <div id="body-danhsach">
@@ -100,56 +109,124 @@
         </div>
     </div>
     <div class="card">
+        <button class="btn btn-kio" style="position: absolute;right: 24px;top: 21px;z-index:1" onclick="window.location.href = '@Url.Action("ManageSanPham", "SanPhamChiTiet")'">
+            <i class="fas fa-cog"></i>
+            <span>Quản lý sản phẩm</span>
+        </button>
         <div class="card-body main_danh_sach">
-            <div class="row m-b-30">
-                <div class="col-lg-8">
-                    <div class="d-md-flex">
-                        <div class="m-b-10">
-                            <select class="custom-select" style="min-width: 180px;">
-                                <option selected="">Catergory</option>
-                                <option value="all">All</option>
-                                <option value="homeDeco">Home Decoration</option>
-                                <option value="eletronic">Eletronic</option>
-                                <option value="jewellery">Jewellery</option>
-                            </select>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="excel-tab" data-toggle="tab" href="#excel" role="tab" aria-controls="excel" aria-selected="true">Thao tác Excel</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="sanPhamNgungKinhDoanh-tab" data-toggle="tab" href="#sanPhamNgungKinhDoanh" role="tab" aria-controls="sanPhamNgungKinhDoanh" aria-selected="false">Sản phẩm ngừng kinh doanh</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="timKiemNangCao-tab" data-toggle="tab" href="#timKiemNangCao" role="tab" aria-controls="timKiemNangCao" aria-selected="false">Tìm kiếm nâng cao</a>
+                </li>
+            </ul>
+            <div class="tab-content m-t-15" id="myTabContent">
+                <div class="tab-pane fade show active" id="excel" style="height: auto" role="tabpanel" aria-labelledby="excel-tab">
+                    <div class="row w-100">
+                        <div class="col-lg-8">
+                            <div class="d-md-flex">
+                                <div class="m-b-10 ml-1">
+                                    <button class="btn btn-kio btn-import" data-toggle="modal" data-target="#modal-import">
+                                        <i class="anticon anticon-file-excel m-r-5"></i>
+                                        <span>
+                                            Import Excel
+                                        </span>
+                                    </button>
+                                </div>
+                                <div class="m-b-10 ml-1">
+                                    <button class="btn btn-kio" onclick="window.location.href='/admin/sanphamchitiet/ExportToExcel'">
+                                        <i class="anticon anticon-file-excel m-r-5"></i>
+                                        <span>
+                                            Export Excel
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <div class="m-b-10 ml-1">
-                            <select class="custom-select" style="min-width: 180px;">
-                                <option selected="">Status</option>
-                                <option value="all">All</option>
-                                <option value="inStock">In Stock </option>
-                                <option value="outOfStock">Out of Stock</option>
-                            </select>
-                        </div>
-                        <div class="m-b-10 ml-1">
-                            <button class="btn btn-tone btn-import" data-toggle="modal" data-target="#modal-import">
-                                <i class="anticon anticon-file-excel m-r-5"></i>
-                                <span>
-                                    Import Excel
-                                </span>
-                            </button>
-                        </div>
-                        <div class="m-b-10 ml-1">
-                            <button class="btn btn-tone" onclick="window.location.href='/admin/sanphamchitiet/ExportToExcel'">
-                                <i class="anticon anticon-file-excel m-r-5"></i>
-                                <span>
-                                    Export Excel
-                                </span>
-                            </button>
-                        </div>
-                        <div class="m-b-10 ml-1">
-                            <a class="btn btn-tone" href="/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh">
-                                <i class="far fa-trash-alt"></i>
-                                <span>Lịch sử xóa</span>
-                            </a>
+                        <div class="col-lg-4 text-right">
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 text-right">
-                    <button class="btn btn-tone" onclick="window.location.href = '@Url.Action("ManageSanPham", "SanPhamChiTiet")'">
-                        <i class="fas fa-cog"></i>
-                        <span>Quản lý sản phẩm</span>
-                    </button>
+                <div class="tab-pane fade" id="sanPhamNgungKinhDoanh" style="height: auto" role="tabpanel" aria-labelledby="sanPhamNgungKinhDoanh-tab">
+                    <div class="row w-100">
+                        <div class="col-lg-8">
+                            <div class="d-md-flex">
+                                <div class="m-b-10">
+                                    <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh">
+                                        <i class="anticon anticon-arrow-right"></i>
+                                        <span>Đi đến danh sách sản phẩm ngừng kinh doanh</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 text-right">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="timKiemNangCao" role="tabpanel" style="height: auto" aria-labelledby="timKiemNangCao-tab">
+                    <div class="row w-100">
+                        <div class="col-lg-8">
+                            <div class="d-md-flex">
+                                <div class="m-b-10">
+                                    <select class="select2_active" style="min-width: 180px;" data-column="1" id="filterSanPham">
+                                        <option value="" selected="">Sản phẩm</option>
+                                        @foreach (var item in (SelectList)ViewData["SanPham"]!)
+                                        {
+                                            <option value="@item.Text">@item.Text</option>
+                                        }
+
+                                    </select>
+                                </div>
+                                <div class="m-b-10 ml-1">
+                                    <select class="select2_active" style="min-width: 180px;" id="filterThuongHieu">
+                                        <option value="" selected="">Thương hiệu</option>
+                                        @foreach (var item in (SelectList)ViewData["ThuongHieu"]!)
+                                        {
+                                            <option value="@item.Text">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="m-b-10 ml-1">
+                                    <select class="select2_active" style="min-width: 180px;" id="filterMauSac">
+                                        <option value="" selected="">Màu sắc</option>
+                                        @foreach (var item in (SelectList)ViewData["MauSac"]!)
+                                        {
+                                            <option value="@item.Text">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="m-b-10 ml-1">
+                                    <select class="select2_active" style="min-width: 180px;" id="filterKichCo">
+                                        <option value="" selected="">Kích cỡ</option>
+                                        @foreach (var item in (SelectList)ViewData["KichCo"]!)
+                                        {
+                                            <option value="@item.Text">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="m-b-10 ml-1">
+                                    <select class="custom-select" style="min-width: 180px;" id="filterSort">
+                                        <option value="" selected="">Xắp xếp</option>
+                                        <option value="ascending_quantity">Số lượng tăng dần</option>
+                                        <option value="descending_quantity">Số lượng giảm dần</option>
+                                        <option value="ascending_price">Giá bán tăng dần</option>
+                                        <option value="descending_price">Giá bán giảm dần</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 text-right">
+                            <button class="btn btn-tone" onclick="window.location.href='/Admin/SanPhamChiTiet/DanhSachSanPham'">
+                                <i class="fas fa-bullseye m-r-5"></i>
+                                <span>Khôi phục mặc định</span>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-12">
@@ -159,7 +236,7 @@
         </div>
     </div>
     <div id="confirm-ds" class="mt-2 mb-2">
-        <div style=" position: fixed; top: 90px; right: 26px">
+        <div style=" position: fixed; top: 90px; right: 26px; z-index: 2">
             <button class="btn btn-warning ngung_kinh_doanh">
                 <i class="fas fa-ban"></i>
                 <span>Ngừng kinh doanh</span>
@@ -174,7 +251,14 @@
 </div>
 
 <script>
+    var table;
+    var sanpham;
+    var thuongHieu;
+    var mauSac;
+    var kichCo;
+    var sort;
     $(() => {
+        $('.select2_active').select2();
         $('#btn-import').click((event) => {
             event.preventDefault();
             $('#import').trigger('click');
@@ -225,19 +309,25 @@
 
     $(document).ready(function () {
         let selectedCheckboxes = {};
-        var table = $('#table-sanpham').DataTable({
+        table = $('#table-sanpham').DataTable({
         ajax: {
             url: '@Url.Action("GetDanhSachSanPham", "SanPhamChiTiet", new { area= "Admin" })',
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             data: function (e) {
-                return {
+                return JSON.stringify({
                     draw: e.draw,
                     start: e.start,
                     length: e.length,
-                    searchValue: e.search.value
-                };
-            },
+                    searchValue: e.search.value,
+                    SanPham: sanpham,
+                    MauSac: mauSac,
+                    KichCo: kichCo,
+                    ThuongHieu: thuongHieu,
+                    Sort: sort
+                });
+                },
+            contentType:'application/json',
             cache: true
         },
         serverSide: true,
@@ -381,6 +471,31 @@
                 $('#check-all').prop('checked', totalChecked === totalCheckboxes);
                 checkToshowConfirm();
             });
+
+            $('#filterSanPham').on('change', function () {
+                sanpham = $(this).val();
+                table.draw();
+            });
+
+            $('#filterThuongHieu').on('change', function () {
+                thuongHieu = $(this).val();
+                table.draw();
+            });
+
+            $('#filterMauSac').on('change', function () {
+                mauSac = $(this).val();
+                table.draw();
+            });
+
+            $('#filterKichCo').on('change', function () {
+                kichCo = $(this).val();
+                table.draw();
+            });
+
+            $('#filterSort').on('change', function () {
+                sort = $(this).val();
+                table.draw();
+            });
         },
 
     });
@@ -402,6 +517,7 @@
                            item.remove();
                            $('#confirm').modal('hide');
                            showToastDeleteSucsess();
+                           checkToshowConfirm();
                            table.draw();
                        }
                    },
@@ -420,7 +536,7 @@
             const keys = Object.keys(selectedCheckboxes);
             $('#confirm').find('#thongBao').text(`Bạn có muốn ngừng kinh doanh ${keys.length} mặt hàng này?`);
             $('#confirm').modal('show');
-            console.log(keys);
+            const soLuong = keys.length;
             const data = { listGuild: keys };
             console.log(JSON.stringify(data));
             $('#confirm').off('click', '.btn-primary');
@@ -432,27 +548,28 @@
                     contentType: 'application/json',
                     success: function (result) {
                         if (result) {
-                            //var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                            //    <div class="toast-header">
-                            //        <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                            //        <strong class="mr-auto">Thông báo</strong>
-                            //        <small>1 seconds ago</small>
-                            //        <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                            //            <span aria-hidden="true">&times;</span>
-                            //        </button>
-                            //    </div>
-                            //    <div class="toast-body">
-                            //        <span>Đã ngừng kinh doanh!</span>
-                            //    </div>
-                            //</div>`
-
-                            //$('#notification-toast').append(toastHTML)
-                            //$('#notification-toast .toast').toast('show');
-                            //setTimeout(function () {
-                            //    $('#notification-toast .toast:first-child').remove();
-                            //    window.location.reload()
-                            //}, 3000);
-                            window.location.href = "/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh"
+                            var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                <div class="toast-header">
+                                    <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                    <strong class="mr-auto">Thông báo</strong>
+                                    <small>1 seconds ago</small>
+                                    <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="toast-body">
+                                    <span>Đã ngừng kinh doanh ${soLuong} mặt hàng!</span>
+                                </div>
+                            </div>`
+                            $('#confirm').modal('hide');
+                            $('#notification-toast').append(toastHTML)
+                            $('#notification-toast .toast').toast('show');
+                            setTimeout(function () {
+                                $('#notification-toast .toast:first-child').remove();
+                            }, 3000);
+                            $('#confirm-ds').hide();
+                            selectedCheckboxes = {};
+                            table.draw();
                         }
                     },
                     error: function (xhr, status, error) {
@@ -487,9 +604,7 @@
                }
            });
        })
-   });
-
-
+    });
 
     function formatNumber(number) {
         if (number >= 1000) {

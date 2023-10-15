@@ -47,5 +47,7 @@ namespace App_View.IServices
         Task<bool> KhoiPhucKinhDoanhAynsc(string id);
         Task<List<SanPhamChiTietExcelViewModel>> GetListSanPhamExcelAynsc();
         Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO);
+
+        Task UpDatSoLuongAynsc(SanPhamSoLuongDTO sanPhamSoLuongDTO);
     }
 }

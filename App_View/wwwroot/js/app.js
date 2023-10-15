@@ -3,7 +3,7 @@
  */
 (function ($) {
     // Main Object
-    var RESHOP = {};
+     RESHOP = {};
 
     // Predefined variables
     var
@@ -35,7 +35,14 @@
         $shopFilterBtn = $('.js-shop-filter-target');
 
 
+    function upDateInput() {
+        $collectionInputCounter = $('.input-counter');
+    }
 
+    function upDateSlickModal() {
+        $modalProductDetailElement = $('#js-product-detail-modal');
+        $modalProductDetailElementThumbnail = $('#js-product-detail-modal-thumbnail');
+    }
     // Bind Scroll Up to all pages
     RESHOP.initScrollUp = function () {
         $.scrollUp({
@@ -340,6 +347,7 @@
 
     // Input Counter
     RESHOP.initInputCounter = function () {
+        upDateInput();
         // Check if Input Counters on the page
         if ($collectionInputCounter.length) {
             // Attach Click event to plus button
@@ -538,6 +546,7 @@
 
     // Modal Product Detail Init
     RESHOP.modalProductDetailInit = function () {
+        upDateSlickModal();
         if ($modalProductDetailElement.length && $modalProductDetailElementThumbnail.length) {
             $modalProductDetailElement.slick({
                 slidesToShow: 1,

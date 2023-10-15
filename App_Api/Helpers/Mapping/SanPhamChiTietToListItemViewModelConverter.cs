@@ -23,7 +23,6 @@ namespace App_Api.Helpers.Mapping
             {
                 LstSanPhamMoi = MapToItemViewModelList(source, x => x.TrangThai == 0 && (DateTime.Now - x.NgayTao) < TimeSpan.FromDays(7)),
                 LstBanChay = MapToItemViewModelList(sortedSanPhamChiTiet, _ => true),
-
                 LstSanPhamNoiBat = MapToItemViewModelList(source, x => x.TrangThai == 0 && x.NoiBat == true),
             };
 
@@ -37,7 +36,7 @@ namespace App_Api.Helpers.Mapping
                 .Select(item => new ItemViewModel
                 {
                     GiaGoc = item.GiaBan,
-                    GiaKhuyenMai = 10000,
+                    GiaKhuyenMai = item.GiaThucTe,
                     IdChiTietSp = item?.IdChiTietSp,
                     KhuyenMai = false,
                     TenSanPham = item?.ThuongHieu?.TenThuongHieu + " " + item?.SanPham?.TenSanPham,
