@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 using App_Data.Models;
+using Google.Apis.PeopleService.v1.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -38,19 +39,21 @@ namespace App_View.Areas.Identity.Pages.Account
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
-            [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            public string ConfirmPassword { get; set; }
-
+            //[DataType(DataType.Password)]
+            //[Display(Name = "Confirm password")]
+            //[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            //public string ConfirmPassword { get; set; }
+            [Required]
+            [EmailAddress]
+            public string emailConf { get; set; }
             [Required]
             public string Code { get; set; }
 
         }
 
-        public IActionResult OnGet(string code = null)
+        public IActionResult OnGet(string code = null, string email=null)
         {
-            if (code == null)
+            if (code == null||email==null)
             {
                 return BadRequest("Phải cung cấp mã để đặt lại mật khẩu.");
             }
@@ -58,7 +61,8 @@ namespace App_View.Areas.Identity.Pages.Account
             {
                 Input = new InputModel
                 {
-                    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code))
+                    Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code)),
+                    emailConf = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(email)).ToString()
                 };
                 return Page();
             }

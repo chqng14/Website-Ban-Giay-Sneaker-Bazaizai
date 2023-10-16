@@ -4,6 +4,7 @@ using App_Data.DbContextt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App_Data.Migrations
 {
     [DbContext(typeof(BazaizaiContext))]
-    partial class BazaizaiContextModelSnapshot : ModelSnapshot
+    [Migration("20231014120517_Add_DanhGia")]
+    partial class Add_DanhGia
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -320,42 +322,33 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasDefaultValueSql("(newid())");
 
-                    b.Property<int?>("LoaiHinhKM")
-                        .IsRequired()
+                    b.Property<string>("LoaiHinhKM")
                         .HasMaxLength(1000)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("MaKhuyenMai")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<decimal?>("MucGiam")
-                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(18,0)")
                         .HasDefaultValueSql("((0))");
 
                     b.Property<DateTime?>("NgayBatDau")
-                        .IsRequired()
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("NgayKetThuc")
-                        .IsRequired()
                         .HasColumnType("datetime");
 
                     b.Property<string>("PhamVi")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenKhuyenMai")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<int?>("TrangThai")
-                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValueSql("((0))");
