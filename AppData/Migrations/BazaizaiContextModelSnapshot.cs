@@ -277,32 +277,41 @@ namespace App_Data.Migrations
                         .HasDefaultValueSql("(newid())");
 
                     b.Property<int?>("LoaiHinhKM")
+                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("int");
 
                     b.Property<string>("MaKhuyenMai")
-                        .HasColumnType("nvarchar(20)");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal?>("MucGiam")
+                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(18,0)")
                         .HasDefaultValueSql("((0))");
 
                     b.Property<DateTime?>("NgayBatDau")
+                        .IsRequired()
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("NgayKetThuc")
+                        .IsRequired()
                         .HasColumnType("datetime");
 
                     b.Property<string>("PhamVi")
+                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenKhuyenMai")
+                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<int?>("TrangThai")
+                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValueSql("((0))");

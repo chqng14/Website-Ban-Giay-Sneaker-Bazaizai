@@ -12,6 +12,14 @@
     .note-editing-area {
         height: 400px;
     }
+
+    .main-content {
+        background: #eeeeee
+    }
+
+    .main_danh_sach, .page-link {
+        background-color: #A0C5E8 !important;
+    }
 </style>
 
 <div id="body-danhsach">
@@ -51,30 +59,13 @@
             <div class="row m-b-30">
                 <div class="col-lg-8">
                     <div class="d-md-flex">
-                        <div class="m-b-10">
-                            <select class="custom-select" style="min-width: 180px;">
-                                <option selected="">Catergory</option>
-                                <option value="all">All</option>
-                                <option value="homeDeco">Home Decoration</option>
-                                <option value="eletronic">Eletronic</option>
-                                <option value="jewellery">Jewellery</option>
-                            </select>
-                        </div>
-                        <div class="m-b-10 ml-1">
-                            <select class="custom-select" style="min-width: 180px;">
-                                <option selected="">Status</option>
-                                <option value="all">All</option>
-                                <option value="inStock">In Stock </option>
-                                <option value="outOfStock">Out of Stock</option>
-                            </select>
-                        </div>
                     </div>
                 </div>
                 <div class="col-lg-4 text-right">
                     <a class="btn btn-tone" href="/Admin/SanPhamChiTiet/DanhSachSanPham">
-                        <i class="fas fa-undo-alt"></i>
+                        <i class="anticon anticon-arrow-left m-r-5"></i>
                         <span>
-                            Quay lại
+                            Quay lại danh sách
                         </span>
                     </a>
                 </div>
@@ -394,7 +385,7 @@
             </button>
         </div>
         <div class="toast-body">
-            <span>Mặt hàng này đã được kinh doanh lại!</span>
+            <span>Một mặt hàng đã được kinh doanh lại!</span>
         </div>
     </div>`
 

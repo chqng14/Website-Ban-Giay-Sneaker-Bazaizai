@@ -1,4 +1,9 @@
-﻿#preloader {
+﻿.btn-kio {
+    background: #1294C1;
+    color: white;
+}
+
+#preloader {
     background: #000 url('../images/load/loader.gif') no-repeat center center;
     background-size: 15%;
     height: 100%;

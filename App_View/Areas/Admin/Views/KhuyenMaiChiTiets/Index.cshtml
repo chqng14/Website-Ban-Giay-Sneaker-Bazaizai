@@ -1,0 +1,80 @@
+﻿@model IEnumerable<App_Data.ViewModels.KhuyenMaiChiTietDTO.KhuyenMaiChiTietDTO>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table id="tbSaleDT" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MoTa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TrangThai)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KhuyenMai)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SanPham)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MoTa)
+            </td>
+            <td>
+                    @if (item.TrangThai == 0)
+                    {
+                        <text>Ngưng khuyến mãi</text>
+                    }
+                    else if (item.TrangThai == 1)
+                    {
+                        <text>Đang khuyến mãi</text>
+                    }
+                    else
+                    {
+                        <text>Trạng thái lỗi</text>
+                    }
+                </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KhuyenMai)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.SanPham)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdKhuyenMaiChiTiet">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdKhuyenMaiChiTiet">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdKhuyenMaiChiTiet">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+<script>
+    $(() => $("#tbSaleDT").DataTable())
+</script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+    <script src="~/Admin/vendors/select2/select2.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.8.1/autoNumeric.min.js"></script>
+}

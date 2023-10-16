@@ -5,10 +5,10 @@ namespace App_View.IServices
 {
     public interface IVoucherNguoiDungServices
     {
-        Task<List<VoucherNguoiDung>> GetAllVouCherNguoiDung();
-        Task<List<VoucherNguoiDung>> GetAllVoucherNguoiDungByID(string id);
+        Task<List<VoucherNguoiDungDTO>> GetAllVouCherNguoiDung();
+        Task<List<VoucherNguoiDungDTO>> GetAllVoucherNguoiDungByID(string id);
         Task<VoucherNguoiDung> GetVoucherNguoiDungById(string id);
-        Task<bool> AddVoucherNguoiDung(VoucherNguoiDungDTO VcDTO);
+        Task<bool> AddVoucherNguoiDung(string MaVoucher, string idNguoiDung);
         Task<bool> UpdateVoucherNguoiDungSauKhiDung(VoucherNguoiDungDTO VcDTO);
 
     }

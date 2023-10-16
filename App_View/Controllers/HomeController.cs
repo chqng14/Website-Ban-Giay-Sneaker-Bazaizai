@@ -22,7 +22,22 @@ namespace App_View.Controllers
         {
             return View();
         }
-           //[AllowAnonymous]
+
+        public IActionResult Blog()
+        {
+            return View();
+        }
+
+        public IActionResult FAQ()
+        {
+            return View();
+        }
+
+        public IActionResult AboutUs()
+        {
+            return View();
+        }
+        //[AllowAnonymous]
         [Authorize(Roles = "Madara")]
 
         public IActionResult Privacy()

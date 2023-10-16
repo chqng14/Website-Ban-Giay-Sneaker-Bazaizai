@@ -1,4 +1,5 @@
 ﻿using App_Data.Models;
+using App_Data.Repositories;
 using App_Data.ViewModels.Voucher;
 using App_Data.ViewModels.VoucherNguoiDung;
 using App_View.IServices;
@@ -16,38 +17,24 @@ namespace App_View.Services
             _httpClient = httpClient;
         }
 
-        public async Task<bool> AddVoucherNguoiDung(VoucherNguoiDungDTO VcDTO)
+        public async Task<bool> AddVoucherNguoiDung(string MaVoucher, string idNguoiDung)
         {
-            ///api/VoucherNguoiDung/AddVoucherNguoiDung
-            try
-            {
-                var response = await _httpClient.PostAsJsonAsync("/api/VoucherNguoiDung/AddVoucherNguoiDung", VcDTO);
-                if (response.IsSuccessStatusCode)
-                {
-                    return await response.Content.ReadAsAsync<bool>();
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"Lỗi xảy ra: {e}");
-                return false;
-            }
+            var httpClient = new HttpClient();
+            string apiUrl = $"https://localhost:7038/api/VoucherNguoiDung/AddVoucherNguoiDung?MaVoucher={MaVoucher}&idNguoiDung={idNguoiDung}";
+            var response = await httpClient.PostAsync(apiUrl, null);
+            return true;
         }
 
-        public Task<List<VoucherNguoiDung>> GetAllVouCherNguoiDung()
+        public Task<List<VoucherNguoiDungDTO>> GetAllVouCherNguoiDung()
         {
             ///api/VoucherNguoiDung/GetAllVoucherNguoiDung
-            return _httpClient.GetFromJsonAsync<List<VoucherNguoiDung>>("/api/VoucherNguoiDung/GetAllVoucherNguoiDung");
+            return _httpClient.GetFromJsonAsync<List<VoucherNguoiDungDTO>>("/api/VoucherNguoiDung/GetAllVoucherNguoiDung");
         }
 
-        public async Task<List<VoucherNguoiDung>> GetAllVoucherNguoiDungByID(string id)
+        public async Task<List<VoucherNguoiDungDTO>> GetAllVoucherNguoiDungByID(string id)
         {
 
-            return await _httpClient.GetFromJsonAsync<List<VoucherNguoiDung>>($"/api/VoucherNguoiDung/GetAllVoucherNguoiDungByID{id}");
+            return await _httpClient.GetFromJsonAsync<List<VoucherNguoiDungDTO>>($"/api/VoucherNguoiDung/GetAllVoucherNguoiDungByID{id}");
         }
 
         public async Task<VoucherNguoiDung> GetVoucherNguoiDungById(string id)
