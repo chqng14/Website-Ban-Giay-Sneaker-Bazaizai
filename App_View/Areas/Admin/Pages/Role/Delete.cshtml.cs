@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
-namespace App_View.Areas.Admin.Pages
+namespace App_View.Areas.Admin.Pages.Role
 {
     [Area("Admin")]
 
@@ -43,7 +43,7 @@ namespace App_View.Areas.Admin.Pages
             var result = await _roleManager.DeleteAsync(role);
             if (result.Succeeded)
             {
-                StatusMessage = $"Bạn vừa xóa chức vụ : {role.Name}";
+                StatusMessage = $"Xóa thành công chức vụ : {role.Name}";
                 return RedirectToPage("./Index");
             }
             else

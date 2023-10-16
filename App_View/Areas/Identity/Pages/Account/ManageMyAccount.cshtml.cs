@@ -21,7 +21,7 @@ namespace App_View.Areas.Identity.Pages.Account
             _userManager = userManager;
             _signInManager = signInManager;
         }
-
+        public string FirstName { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
@@ -33,8 +33,10 @@ namespace App_View.Areas.Identity.Pages.Account
         private async Task LoadAsync(NguoiDung user)
         {
             var userO = await _userManager.GetUserAsync(User);
-          
-          
+            var userClaims = await _userManager.GetClaimsAsync(userO);
+            var givenNameClaim = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName);
+            var firstName = givenNameClaim?.Value;
+            FirstName = firstName;
             var userName = await _userManager.GetUserNameAsync(user);
             if (!string.IsNullOrEmpty(userO.TenNguoiDung))
             {
@@ -42,7 +44,6 @@ namespace App_View.Areas.Identity.Pages.Account
                 Name = name;
 
             }
-            
             var email = await _userManager.GetEmailAsync(user);
             var phone = await _userManager.GetPhoneNumberAsync(user);
 

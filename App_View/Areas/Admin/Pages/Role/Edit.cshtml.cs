@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
-namespace App_View.Areas.Admin.Pages
+namespace App_View.Areas.Admin.Pages.Role
 {
     //[Authorize(Roles = "Madara")]
     [Area("Admin")]

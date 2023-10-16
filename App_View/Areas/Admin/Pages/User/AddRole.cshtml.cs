@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
-namespace App_View.Areas.Identity.Pages.User
+namespace App_View.Areas.Admin.Pages.User
 {
     public class AddRoleModel : PageModel
     {

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace App_View.Areas.Admin.Pages
+namespace App_View.Areas.Admin.Pages.Role
 {
     [Area("Admin")]
     public class IndexModel : PageModel
