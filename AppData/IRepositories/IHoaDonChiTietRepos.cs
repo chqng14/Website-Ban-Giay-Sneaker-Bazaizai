@@ -14,7 +14,7 @@ namespace App_Data.IRepositories
         public bool AddBillDetail(HoaDonChiTiet item);
         public bool RemoveBillDetail(HoaDonChiTiet item);
         public bool EditBillDetail(HoaDonChiTiet item);
-        public IEnumerable<HoaDonChiTietViewModel> GetAllHoaDonDTO();
+        public HoaDonChiTietViewModel GetHoaDonDTO(string idHoaDon);
         //public List<HoaDonChiTiet> FindBillByCode(string ma);
     }
 }

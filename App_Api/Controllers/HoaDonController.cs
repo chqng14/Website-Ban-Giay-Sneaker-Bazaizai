@@ -2,6 +2,9 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.HoaDon;
+using App_Data.ViewModels.HoaDonChiTietDTO;
+using AutoMapper;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,21 +14,35 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App_Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class HoaDonController : ControllerBase
     {
-        private readonly IHoaDonRepos hoaDonRepos;
-      
-        public HoaDonController()
+
+        private readonly IHoaDonRepos _hoaDon;
+        private readonly IMapper _mapper;
+        public HoaDonController(IMapper mapper)
         {
-            hoaDonRepos = new HoaDonRepos();
-           
+            _hoaDon = new HoaDonRepos();
+            _mapper = mapper;
         }
-        [HttpPost("TaoHoaDonTaiQuay")]
-        public void TaoHoaDonTaiQuay()
+        [HttpPost]
+        public async Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon)
         {
-            hoaDonRepos.TaoHoaDonTaiQuay("181F5D92-FF82-4FDB-B90D-1F82A5E534EE");
+           return _hoaDon.TaoHoaDonTaiQuay(hoaDon);
+        }
+        // POST api/<HoaDonController>
+        [HttpPost]
+        public async Task<bool> TaoHoaDonOnlineDTO(HoaDonDTO HoaDonDTO)
+        {
+            var hoadon = _mapper.Map<HoaDon>(HoaDonDTO);
+            hoadon.IdHoaDon = Guid.NewGuid().ToString();
+            return _hoaDon.AddBill(hoadon);
+        }
+        [HttpGet]
+        public async Task<List<HoaDonChoDTO>> GetAllHoaDonCho()
+        {
+            return _hoaDon.GetAllHoaDonCho();
         }
     }
 }

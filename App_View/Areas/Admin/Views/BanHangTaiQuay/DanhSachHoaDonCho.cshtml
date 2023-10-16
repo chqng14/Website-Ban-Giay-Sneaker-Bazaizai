@@ -1,125 +1,92 @@
-﻿@model IEnumerable<App_Data.Models.HoaDon>
-
+﻿@using App_Data.DbContextt;
+@using App_Data.Models;
+@using App_View.IServices;
+@using App_View.Services;
+@using Microsoft.AspNetCore.Identity;
+@using static App_Data.Repositories.TrangThai;
+@model IEnumerable<App_Data.ViewModels.HoaDon.HoaDonChoDTO>
+@{
+    BazaizaiContext context = new BazaizaiContext();
+    IHoaDonServices hoaDonServices = new HoaDonServices();
+}
 @{
     ViewData["Title"] = "DanhSachHoaDonCho";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="card">
+    <div class="row" style="height:800px">
+        <div class="col-9">
+            <div class="row" style="height: 400px;background-color:red">
+                <div class="card w-100 h-100">
+                    <button class="btn btn-primary" id="create-tab" style="width: 140px">Tạo tab mới</button>
+                    <div id="tabs">
+                            <ul>
+                                @{foreach (var item in Model)
+                                {
+                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a><span class="ui-icon ui-icon-close" role="presentation">Close</span></li>
+                                }}
+                            </ul>
+                            @{
+                            foreach (var item in Model)
+                            {
+                                <div id="tab-@item.MaHoaDon" style="height:100%">@item.MaHoaDon <div style="background-color:red;height:200px"></div></div>
+                            }}
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="height: 400px"><div class="p-3">Row column</div></div>
+
+        </div>
+        <div class="col-3" style="height: 100%">
+            <div class="p-3">Row column</div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#tabs").tabs({
+            beforeActivate: function (event, ui) {
+                if (ui.newTab.hasClass("ui-state-disabled")) {
+                    event.preventDefault();
+                }
+            }
+        });
+
+        $("#create-tab").on("click", function () {
+            if ($("#tabs ul li").length < 10) {
+                var tabIndex = "";
+                var tabTitle = "";
+                $.ajax({
+                    url: "@Url.Action("TaoHoaDonTaiQuay", "BanHangTaiQuay")",
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (response) {
+                        tabIndex = response;
+                        tabTitle = response;
+                        var tabContent = tabIndex 
+                        $("<li><a href='#tab-" + tabIndex + "'>" + tabTitle + "</a><span class='ui-icon ui-icon-close' role='presentation'>Close</span></li>").appendTo("#tabs ul");
+                        $("<div id='tab-" + tabIndex + "'>" + tabContent + "</div>").appendTo("#tabs");
+                        $("#tabs").tabs("refresh");
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    },
+                });
+            }
+        });
+
+        $("#tabs").on("click", ".ui-icon-close", function () {
+            var panelId = $(this).closest("li").remove().attr("aria-controls");
+            $("#" + panelId).remove();
+            $("#tabs").tabs("refresh");
+        });
+    });
+</script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 }
 
-<h1>DanhSachHoaDonCho</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdHoaDon)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdNguoiDung)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdKhachHang)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdVoucher)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdThongTinGH)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaHoaDon)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayTao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayThanhToan)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayShip)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayNhan)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TienShip)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TienGiam)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TongTien)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MoTa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TrangThai)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TrangThaiThanhToan)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdHoaDon)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdNguoiDung)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdKhachHang)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdVoucher)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdThongTinGH)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaHoaDon)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayTao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayThanhToan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayShip)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayNhan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TienShip)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TienGiam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TongTien)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MoTa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TrangThai)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TrangThaiThanhToan)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>

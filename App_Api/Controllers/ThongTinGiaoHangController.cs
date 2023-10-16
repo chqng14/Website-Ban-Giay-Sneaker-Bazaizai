@@ -2,6 +2,9 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.HoaDonChiTietDTO;
+using App_Data.ViewModels.ThongTinGHDTO;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,65 +16,53 @@ namespace App_Api.Controllers
     [ApiController]
     public class ThongTinGiaoHangController : ControllerBase
     {
-        private readonly IAllRepo<ThongTinGiaoHang> allRepo;
-        BazaizaiContext dbContext = new BazaizaiContext();
-        DbSet<ThongTinGiaoHang> thongTinGiaoHang;
-        public ThongTinGiaoHangController()
+        private readonly IAllRepo<GioHangChiTiet> allRepo;
+        BazaizaiContext DbContextModel = new BazaizaiContext();
+        private readonly IThongTinGHRepos thongTinGHRepos;
+        private readonly IMapper _mapper;
+        public ThongTinGiaoHangController(IMapper mapper)
         {
-            thongTinGiaoHang = dbContext.thongTinGiaoHangs;
-            AllRepo<ThongTinGiaoHang> all = new AllRepo<ThongTinGiaoHang>(dbContext, thongTinGiaoHang);
-            allRepo = all;
+            thongTinGHRepos = new ThongTinGHRepos(mapper);
+            _mapper = mapper;
         }
         // GET: api/<ThongTinGiaoHangController>
         [HttpGet("GetAll")]
         public IEnumerable<ThongTinGiaoHang> GetAll()
         {
-            return allRepo.GetAll();
+            return thongTinGHRepos.GetAll();
         }
 
         // GET api/<ThongTinGiaoHangController>/5
         [HttpGet("GetByIdUser")]
         public IEnumerable<ThongTinGiaoHang> GetByIdUser(string idNguoiDung)
         {
-            return allRepo.GetAll().Where(c => c.IdNguoiDung == idNguoiDung);
+            return thongTinGHRepos.GetAll().Where(c => c.IdNguoiDung == idNguoiDung);
         }
 
         // POST api/<ThongTinGiaoHangController>
         [HttpPost("Create")]
-        public bool Create(string idNguoiDung, string TenNguoiNhan, string SDT, string DiaChi)
+        public async Task<bool> Create(ThongTinGHDTO thongTinGHDTO)
         {
-            var thongTinGiaoHang = new ThongTinGiaoHang()
-            {
-                IdThongTinGH = Guid.NewGuid().ToString(),
-                IdNguoiDung = idNguoiDung,
-                TenNguoiNhan = TenNguoiNhan,
-                SDT = SDT,
-                DiaChi = DiaChi,
-                TrangThai = 0
-            };
-            return allRepo.AddItem(thongTinGiaoHang);
+            var thongTinGiaoHang = _mapper.Map<ThongTinGiaoHang>(thongTinGHDTO);
+            return thongTinGHRepos.AddThongTinGH(thongTinGiaoHang);
 
         }
 
         // PUT api/<ThongTinGiaoHangController>/5
         [HttpPut("Edit")]
-        public bool Edit(string idThongTinGH, string idNguoiDung, string TenNguoiNhan, string SĐT, string DiaChi, int TrangThai)
+        public async Task<bool> Edit(ThongTinGHDTO thongTinGHDTO)
         {
-            var ttgh = allRepo.GetAll().FirstOrDefault(c => c.IdThongTinGH == idThongTinGH);
-            ttgh.IdNguoiDung = idNguoiDung;
-            ttgh.TenNguoiNhan = TenNguoiNhan;
-            ttgh.SDT = SĐT;
-            ttgh.DiaChi = DiaChi;
-            ttgh.TrangThai = TrangThai;
-            return allRepo.EditItem(ttgh);
+            var thongTinGiaoHang = _mapper.Map<ThongTinGiaoHang>(thongTinGHDTO);
+            return thongTinGHRepos.EditThongTinGH(thongTinGiaoHang);
+
         }
 
         // DELETE api/<ThongTinGiaoHangController>/5
         [HttpDelete("Delete")]
-        public bool Delete(string id)
+        public async Task<bool> Delete(string id)
         {
-            var ttgh = allRepo.GetAll().FirstOrDefault(c => c.IdThongTinGH == id);
-            return allRepo.RemoveItem(ttgh);
+            var ttgh = thongTinGHRepos.GetAll().FirstOrDefault(c => c.IdThongTinGH == id);
+            return thongTinGHRepos.RemoveThongTinGH(ttgh);
         }
     }
 }

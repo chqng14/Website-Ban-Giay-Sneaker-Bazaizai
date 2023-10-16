@@ -2,8 +2,12 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.Voucher;
+using App_Data.ViewModels.VoucherNguoiDung;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static App_Data.Repositories.TrangThai;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -13,62 +17,79 @@ namespace App_Api.Controllers
     [ApiController]
     public class VoucherNguoiDungController : ControllerBase
     {
-        private readonly IAllRepo<VoucherNguoiDung> allRepo;
-        BazaizaiContext dbContext = new BazaizaiContext();
+        private readonly IAllRepo<VoucherNguoiDung> VcNguoiDungRepos;
+        private readonly IAllRepo<Voucher> VcRepos;
+        private readonly IMapper _mapper;
+        BazaizaiContext DbContextModel = new BazaizaiContext();
         DbSet<VoucherNguoiDung> voucherNguoiDung;
-        public VoucherNguoiDungController()
+        DbSet<Voucher> voucher;
+        public VoucherNguoiDungController(IMapper mapper)
         {
-            voucherNguoiDung = dbContext.voucherNguoiDungs;
-            AllRepo<VoucherNguoiDung> all = new AllRepo<VoucherNguoiDung>(dbContext, voucherNguoiDung);
-            allRepo = all;
+            voucherNguoiDung = DbContextModel.voucherNguoiDungs;
+
+            AllRepo<VoucherNguoiDung> VcNd = new AllRepo<VoucherNguoiDung>(DbContextModel, voucherNguoiDung);
+            VcNguoiDungRepos = VcNd;
+
+            AllRepo<Voucher> Vc = new AllRepo<Voucher>(DbContextModel, voucher);
+            VcRepos = Vc;
+
+            _mapper = mapper;
         }
         // GET: api/<ChatLieuController>
-        [HttpGet]
-        public IEnumerable<VoucherNguoiDung> GetAllVouCherNguoiDung(){
-            return allRepo.GetAll();
+        [HttpGet("GetAllVoucherNguoiDung")]
+        public IEnumerable<VoucherNguoiDung> GetAllVouCherNguoiDung()
+        {
+            return VcNguoiDungRepos.GetAll();
+        }
+
+        [HttpGet("GetAllVoucherNguoiDungByID{id}")]
+        public IEnumerable<VoucherNguoiDung> GetAllVoucherNguoiDungByID(string Id)
+        {
+            return VcNguoiDungRepos.GetAll().Where(c => c.IdNguoiDung == Id);
         }
 
         // GET api/<ChatLieuController>/5
-        [HttpGet("{id}")]
+        [HttpGet("GetChiTietVoucherNguoiDungByID{id}")]
         public VoucherNguoiDung GetVoucherNguoiDungById(string id)
         {
-            return allRepo.GetAll().FirstOrDefault(c => c.IdVouCherNguoiDung == id);
+            return VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCherNguoiDung == id);
         }
 
         // POST api/<ChatLieuController>
-        [HttpPost]
-        public bool AddVoucherNguoiDung(string IdNguoiDung,string IdVoucher,int trangthai)
+        [HttpPost("AddVoucherNguoiDung")]
+        public bool AddVoucherNguoiDung(VoucherNguoiDungDTO VcDTO)
         {
-
-            var voucher = new VoucherNguoiDung()
+            var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.IdVoucher == VcDTO.IdVouCher);
+            if (VoucherKhaDung != null)
             {
-                IdVouCherNguoiDung = Guid.NewGuid().ToString(),
-                IdNguoiDung = IdNguoiDung,
-                IdVouCher = IdVoucher,
-                TrangThai = trangthai
-            };
-            return allRepo.AddItem(voucher);
+                if (VoucherKhaDung.TrangThai == (int)TrangThai.TrangThaiVoucher.HoatDong)
+                {
+                    VcDTO.IdVouCherNguoiDung = Guid.NewGuid().ToString();
+                    var voucherND = _mapper.Map<VoucherNguoiDung>(VcDTO);
+                    return VcNguoiDungRepos.AddItem(voucherND);
+                }
+            }
+            return false;
         }
-
         // PUT api/<ChatLieuController>/5
         [HttpPut("UpdateVoucherNguoiDung{id}")]
-        public bool UpdateVoucherNguoiDung(string id, string IdNguoiDung, string IdVoucher, int trangthai)
+        public bool UpdateVoucherNguoiDungSauKhiDung(VoucherNguoiDungDTO VcDTO)
         {
-            var voucher = new VoucherNguoiDung()
+            var voucherGet = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCher == VcDTO.IdVouCher);
+            if (voucherGet != null)
             {
-                IdVouCherNguoiDung = id,
-                IdNguoiDung = IdNguoiDung,
-                IdVouCher = IdVoucher,
-                TrangThai = trangthai
-            };
-            return allRepo.EditItem(voucher);
+                _mapper.Map(VcDTO, voucherGet);
+                voucherGet.TrangThai = (int)TrangThai.TrangThaiVoucherNguoiDung.DaSuDung;
+                return VcNguoiDungRepos.EditItem(voucherGet);
+            }
+            return false;
         }
         // DELETE api/<ChatLieuController>/5
         [HttpDelete("XoaVoucherNguoiDung{id}")]
         public bool Delete(string id)
         {
-            var cl = allRepo.GetAll().FirstOrDefault(c => c.IdVouCherNguoiDung == id);
-            return allRepo.RemoveItem(cl);
+            var cl = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCherNguoiDung == id);
+            return VcNguoiDungRepos.RemoveItem(cl);
         }
     }
 }

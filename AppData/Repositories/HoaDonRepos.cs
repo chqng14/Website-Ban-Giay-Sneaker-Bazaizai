@@ -1,6 +1,7 @@
 ﻿using App_Data.DbContextt;
 using App_Data.IRepositories;
 using App_Data.Models;
+using App_Data.ViewModels.HoaDon;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Identity;
 using OpenXmlPowerTools;
@@ -16,33 +17,63 @@ namespace App_Data.Repositories
 {
     public class HoaDonRepos : IHoaDonRepos
     {
-        BazaizaiContext context;
+        private readonly BazaizaiContext context;
 
         public HoaDonRepos()
         {
             context = new BazaizaiContext();
         }
 
-        public bool TaoHoaDonTaiQuay(string id)
+        public HoaDon TaoHoaDonTaiQuay(HoaDon hoaDon)
         {
-            var hoaDon = new HoaDon();  
-            hoaDon.IdHoaDon  = Guid.NewGuid().ToString();
-            hoaDon.IdNguoiDung = id;
             hoaDon.MaHoaDon = MaHoaDonTuSinh();
+            hoaDon.TrangThai = (int)TrangThaiGiaoHang.TaiQuay;
             hoaDon.TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan;
-            hoaDon.TrangThai = (int)TrangThaiGiaHang.TaiQuay;
-            hoaDon.NgayTao = DateTime.Now;
             context.HoaDons.Add(hoaDon);
             context.SaveChanges();
-            return true;
+            return hoaDon;
         }
         public string MaHoaDonTuSinh()
         {
             if (context.HoaDons.Any())
             {
-                return "HD" + (context.HoaDons.Count()+1);
+                return "HD" + (context.HoaDons.Count() + 1);
             }
             return "HD1";
+        }
+        public bool AddBill(HoaDon item)
+        {
+            try
+            {
+                context.HoaDons.Add(item);
+                context.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public List<HoaDonChoDTO> GetAllHoaDonCho()
+        {
+            var listHoaDonCho = new List<HoaDonChoDTO>();
+            var listHoaDon = context.HoaDons.Where(c => c.TrangThai == (int)TrangThaiGiaoHang.TaiQuay && c.TrangThaiThanhToan == (int)TrangThaiHoaDon.ChuaThanhToan).ToList();
+
+            foreach (var item in listHoaDon)
+            {
+                var hoaDonCho = new HoaDonChoDTO()
+                {
+                    Id = item.IdHoaDon,
+                    IdNguoiDung = item.IdNguoiDung,
+                    MaHoaDon = item.MaHoaDon,
+                    TrangThai = item.TrangThai,
+                    TrangThaiThanhToan = item.TrangThaiThanhToan,
+                    hoaDonChiTietDTOs = context.hoaDonChiTiets.Where(c => c.IdHoaDon == item.IdHoaDon).ToList(),
+                };
+                listHoaDonCho.Add(hoaDonCho);
+            }
+            return listHoaDonCho;
         }
     }
 }

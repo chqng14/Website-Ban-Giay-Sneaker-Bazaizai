@@ -1,5 +1,6 @@
 ﻿using App_Data.Models;
 using App_Data.ViewModels.GioHangChiTiet;
+using App_Data.ViewModels.ThongTinGHDTO;
 
 namespace App_View.IServices
 {
@@ -7,8 +8,8 @@ namespace App_View.IServices
     {
         Task<List<ThongTinGiaoHang>> GetAllThongTin();
         Task<List<ThongTinGiaoHang>> GetThongTinByIdUser(string idNguoiDung);
-        Task<bool> CreateThongTin(ThongTinGiaoHang thongTinGiaoHang);
-        Task<bool> UpdateThongTin(ThongTinGiaoHang thongTinGiaoHang);
+        Task<bool> CreateThongTin(ThongTinGHDTO thongTinGHDTO);
+        Task<bool> UpdateThongTin(ThongTinGHDTO thongTinGHDTO);
         Task<bool> DeleteThongTin(string id);
     }
 }

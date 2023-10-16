@@ -2,6 +2,8 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.KhuyenMaiChiTietDTO;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,16 +18,20 @@ namespace App_Api.Controllers
         private readonly IAllRepo<KhuyenMaiChiTiet> repos;
         BazaizaiContext context = new BazaizaiContext();
         DbSet<KhuyenMaiChiTiet> khuyenMaiChiTiets;
-        public KhuyenMaiChiTietController()
+        private readonly IMapper _mapper;
+        public KhuyenMaiChiTietController(IMapper mapper)
         {
             khuyenMaiChiTiets = context.khuyenMaiChiTiets;
             AllRepo<KhuyenMaiChiTiet> all = new AllRepo<KhuyenMaiChiTiet>(context, khuyenMaiChiTiets);
             repos = all;
+            _mapper=mapper;
         }
         [HttpGet]
-        public IEnumerable<KhuyenMaiChiTiet> GetAllKhuyenMai()
+        public async Task<IEnumerable<KhuyenMaiChiTietDTO>> GetAllKhuyenMai()
         {
-            return repos.GetAll();
+            var allSale = (await khuyenMaiChiTiets.Include(c=>c.KhuyenMai).Include(c=>c.SanPhamChiTiet).ThenInclude(c=>c.SanPham).ToListAsync()).ToList();
+            var allSaleDTO = _mapper.Map<List<KhuyenMaiChiTietDTO>>(allSale);
+            return allSaleDTO;
         }
 
         [HttpPost]

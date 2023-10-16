@@ -10,7 +10,16 @@ using System.Configuration;
 using System.Security.Claims;
 using Microsoft.Extensions.Options;
 
+using Microsoft.AspNetCore.Authentication;
+using Google;
+using App_View.Models;
+using Microsoft.Extensions.Hosting;
+
+using App_View.Controllers;
+
+
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -21,9 +30,12 @@ builder.Services.AddOptions();
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IVoucherServices, VoucherServices>();
+builder.Services.AddScoped<IVoucherNguoiDungServices, VoucherNguoiDungServices>();
+
 builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
 builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
-
+builder.Services.AddScoped<ThongTinGHController>();  // Sử dụng AddScoped nếu bạn muốn một instance cho mỗi phạm vi của yêu cầu HTTP
+builder.Services.AddScoped<GioHangChiTietsController,GioHangChiTietsController>();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
@@ -36,6 +48,7 @@ builder.Services.AddSingleton<IEmailSender, SendMailService>();
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
+
     // Thiết lập về Password
     options.Password.RequireDigit = false; // Không bắt phải có số
     options.Password.RequireLowercase = false; // Không bắt phải có chữ thường
@@ -76,14 +89,11 @@ builder.Services.AddAuthentication()
         // Thiết lập ClientID và ClientSecret để truy cập API google
         googleOptions.ClientId = googleAuthNSection["ClientId"];
         googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
-        googleOptions.Scope.Add("profile");
-        googleOptions.Events.OnCreatingTicket = (context) =>
-        {
-            var picture = context.User.GetProperty("picture").GetString();
-            context.Identity.AddClaim(new Claim("picture", picture));
-            return Task.CompletedTask;
-        };
-
+        //googleOptions.AccessDeniedPath = "/login/";
+        //googleOptions.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");
+        googleOptions.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
+        googleOptions.ClaimActions.MapJsonKey("urn:google:locale", "locale", "string");
+        googleOptions.SaveTokens = true;
     })
     .AddFacebook(facebookOptions =>
     {
@@ -93,14 +103,35 @@ builder.Services.AddAuthentication()
         facebookOptions.AppSecret = facebookAuthNSection["AppSecret"];
 
     });
-builder.Services.AddSingleton<IdentityErrorDescriber,AppIdentityErrorDescriber>();
+builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
 builder.Services.Configure<SecurityStampValidatorOptions>(option =>
 {
-    option.ValidationInterval=TimeSpan.FromSeconds(1);
+    option.ValidationInterval = TimeSpan.FromSeconds(1);
 
 });
 //thêm
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var loggerFactory = services.GetRequiredService<ILoggerFactory>();
+    try
+    {
+        var context = services.GetRequiredService<BazaizaiContext>();
+        var userManager = services.GetRequiredService<UserManager<NguoiDung>>();
+        var roleManager = services.GetRequiredService<RoleManager<ChucVu>>();
+        await ContextdDefault.SeedRolesAsync(userManager, roleManager);
+    }
+    catch (Exception ex)
+    {
+        var logger = loggerFactory.CreateLogger<Program>();
+        logger.LogError(ex, "An error occurred seeding the DB.");
+    }
+}
+
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -27,9 +27,9 @@ namespace App_Api.Controllers
         }
         // GET: api/<HoaDonChiTietController>
         [HttpGet("GetHoaDonDTO")]
-        public async Task<IEnumerable<HoaDonChiTietViewModel>> GetAll()
+        public async Task<HoaDonChiTietViewModel> GetAll(string idHoaDon)
         {
-            return _hoaDonChiTiet.GetAllHoaDonDTO();
+            return _hoaDonChiTiet.GetHoaDonDTO(idHoaDon);
         }
 
         // GET api/<HoaDonChiTietController>/5
@@ -41,7 +41,7 @@ namespace App_Api.Controllers
 
         // POST api/<HoaDonChiTietController>
         [HttpPost("Create")]
-        public async Task<bool> TaoHoaDonDTO(HoaDonChiTietDTO hoaDonChiTietDTO)
+        public async Task<bool> TaoHoaDonChiTietDTO(HoaDonChiTietDTO hoaDonChiTietDTO)
         {
             var hoadonChiTiet = _mapper.Map<HoaDonChiTiet>(hoaDonChiTietDTO);
             return _hoaDonChiTiet.AddBillDetail(hoadonChiTiet);
