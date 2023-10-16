@@ -997,8 +997,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).on('change', '[name="color"]', function () {
-        console.log($('[name="IdChiTietSp"]').val());
-        console.log($('[name="color"]:checked').val());
+        $('.preloader').addClass('is-active');
         var data = new FormData();
         data.append('id', $('[name="IdChiTietSp"]').val());
         data.append('mauSac', $('[name="color"]:checked').val());
@@ -1060,6 +1059,7 @@
         });
     })
     $(document).on('change', '.pd-detail__size', function () {
+        $('.preloader').addClass('is-active');
         const idSpct = $('[name="IdChiTietSp"]').val();
         const size = $(this).find('input:checked').val();
 

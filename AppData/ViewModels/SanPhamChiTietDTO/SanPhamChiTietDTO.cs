@@ -35,6 +35,8 @@ namespace App_Data.ViewModels.SanPhamChiTietDTO
             }
         }
 
+        public bool TrangThaiKhuyenMai { get; set; }
+
         public bool? NoiBat { get; set; }
 
         public double? GiaNhap { get; set; }

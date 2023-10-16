@@ -12,6 +12,15 @@
     .note-editing-area {
         height: 400px;
     }
+
+    .main-content{
+        background: #eeeeee
+    }
+
+    .main_danh_sach, .page-link {
+        background-color: #A0C5E8 !important;
+    }
+
 </style>
 
 <div id="body-danhsach">
@@ -100,7 +109,7 @@
         </div>
     </div>
     <div class="card">
-        <button class="btn btn-tone" style="position: absolute;right: 24px;top: 21px;z-index:1" onclick="window.location.href = '@Url.Action("ManageSanPham", "SanPhamChiTiet")'">
+        <button class="btn btn-kio" style="position: absolute;right: 24px;top: 21px;z-index:1" onclick="window.location.href = '@Url.Action("ManageSanPham", "SanPhamChiTiet")'">
             <i class="fas fa-cog"></i>
             <span>Quản lý sản phẩm</span>
         </button>
@@ -122,7 +131,7 @@
                         <div class="col-lg-8">
                             <div class="d-md-flex">
                                 <div class="m-b-10 ml-1">
-                                    <button class="btn btn-tone btn-import" data-toggle="modal" data-target="#modal-import">
+                                    <button class="btn btn-kio btn-import" data-toggle="modal" data-target="#modal-import">
                                         <i class="anticon anticon-file-excel m-r-5"></i>
                                         <span>
                                             Import Excel
@@ -130,7 +139,7 @@
                                     </button>
                                 </div>
                                 <div class="m-b-10 ml-1">
-                                    <button class="btn btn-tone" onclick="window.location.href='/admin/sanphamchitiet/ExportToExcel'">
+                                    <button class="btn btn-kio" onclick="window.location.href='/admin/sanphamchitiet/ExportToExcel'">
                                         <i class="anticon anticon-file-excel m-r-5"></i>
                                         <span>
                                             Export Excel
@@ -148,7 +157,7 @@
                         <div class="col-lg-8">
                             <div class="d-md-flex">
                                 <div class="m-b-10">
-                                    <a class="btn btn-tone" href="/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh">
+                                    <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh">
                                         <i class="anticon anticon-arrow-right"></i>
                                         <span>Đi đến danh sách sản phẩm ngừng kinh doanh</span>
                                     </a>

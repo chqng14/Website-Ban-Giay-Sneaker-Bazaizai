@@ -68,28 +68,28 @@
                         <div class="msg">
 
                             <span class="msg__text">
-                                Have a coupon?
+                                Bạn có Voucher?
 
-                                <a class="gl-link" href="#have-coupon" data-toggle="collapse">Click Here to enter your code</a>
+                                <a class="gl-link" href="#have-coupon" data-toggle="collapse">Ấn vào đây để sử dụng Voucher</a>
                             </span>
                             <div class="collapse" id="have-coupon" data-parent="#checkout-msg-group">
                                 <div class="c-f u-s-m-b-16">
 
-                                    <span class="gl-text u-s-m-b-16">Enter your coupon code if you have one.</span>
-                                    <form class="c-f__form">
+                                    @* <form class="c-f__form"> *@
                                         <div class="u-s-m-b-16">
                                             <div class="u-s-m-b-15">
 
                                                 <label for="coupon"></label>
 
-                                                <input class="input-text input-text--primary-style" type="text" id="coupon" placeholder="Coupon Code">
+                                            <input class="input-text input-text--primary-style" type="text" id="voucherinput" placeholder="Nhập phiếu giảm giá của bạn ở đây" name="voucher" oninput="voucher(this.value)">
+                                            <label id="textvoucher" style="color:red"></label>
                                             </div>
                                             <div class="u-s-m-b-15">
 
-                                                <button class="btn btn--e-transparent-brand-b-2" type="submit">APPLY</button>
+                                            <button class="btn btn--e-transparent-brand-b-2" type="submit" id="button-coupon">SỬ DỤNG</button>
                                             </div>
                                         </div>
-                                    </form>
+                                    @* </form> *@
                                 </div>
                             </div>
                         </div>
@@ -1053,4 +1053,69 @@
             });
         });
     </script>
+
+    @* <script>
+        var uudai = "";
+        var tongtienSanPham = parseInt(document.getElementById("tamtinh").innerText.replace("đ", "").replace(/\,/g, "").replace(/\./g, "").trim());
+        var tongtien = document.getElementById("tongtien");
+        function voucher(value) {
+            if (value != null && value.trim() != "") {
+                var formData = new FormData();
+                formData.append('Ma', value);
+                $.ajax({
+                    url: 'https://localhost:7038/api/Voucher/GetVoucherByMa/' + value,
+                    type: 'GET',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (result) {
+                        console.log(result);
+                        if (result) {
+                            $('#giamgia').text("-" + result.MucUuDai.toLocaleString("vi-VN") + "đ");
+                            $('#textvoucher').text("");
+                            uudai = result.MucUuDai;
+                            console.log(uudai);
+                            console.log(tongtienSanPham);
+                            var tong = tongtienSanPham - uudai;
+                            tongtien.innerText = tong.toLocaleString("vi-VN") + "đ";
+                            tongtien.value = tong.toString();
+                            // var totalAmountElement1 = document.getElementById("totalAmount1");
+                            // totalAmountElement1.innerText = tongtien1.toLocaleString("vi-VN") + "đ";
+                            // var paymentAmountElement = document.getElementById("paymentAmount");
+                            // paymentAmountElement.innerText = tongtien1.toLocaleString("vi-VN") + "đ";
+
+                            // var voucherValue = document.getElementById("voucherinput").value;
+                            // document.getElementById("voucher1").value = voucherValue;
+                        }
+                        else {
+                            $('#textvoucher').text("mã không hợp lệ");
+                            $('#giamgia').text("0".toLocaleString("vi-VN") + "đ");
+                            tongtien.innerText = tamtinhelement.toLocaleString("vi-VN") + "đ";
+                            tongtien.value = tamtinhelement.toString();
+                            // var totalAmountElement1 = document.getElementById("totalAmount1");
+                            // totalAmountElement1.innerText = tongtien.toLocaleString("vi-VN") + "đ";
+                            // var paymentAmountElement = document.getElementById("paymentAmount");
+                            // paymentAmountElement.innerText = tongtien.toLocaleString("vi-VN") + "đ";
+
+                            // var voucherValue = document.getElementById("voucherinput").value;
+                            // document.getElementById("voucher1").value = "Vouc11";
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+            } else {
+                tongtien.innerText = tamtinhelement.toLocaleString("vi-VN") + "đ";
+                tongtien.value = tamtinhelement.toString();
+                $('#giamgia').text("0".toLocaleString("vi-VN") + "đ");
+                $('#textvoucher').text("");
+            }
+
+
+        }
+    </script> *@
 }

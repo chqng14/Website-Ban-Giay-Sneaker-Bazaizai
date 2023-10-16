@@ -115,6 +115,10 @@ builder.Services.Configure<SecurityStampValidatorOptions>(option =>
     option.ValidationInterval = TimeSpan.FromSeconds(1);
 
 });
+builder.Services.AddSession(Options =>
+{
+    Options.IdleTimeout = TimeSpan.FromDays(20);
+});
 //thêm
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
@@ -154,7 +158,7 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthentication();
