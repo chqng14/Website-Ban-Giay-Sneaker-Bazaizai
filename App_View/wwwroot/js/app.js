@@ -691,3 +691,4 @@
     RESHOP.shopPerspectiveChange();
     RESHOP.shopSideFilter();
 })(jQuery);
+

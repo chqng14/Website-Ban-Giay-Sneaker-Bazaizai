@@ -74,10 +74,6 @@
 
                                                     <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
                                                 </a>
-                                                <div class="product-m__quick-look">
-
-                                                    <a class="fas fa-search" data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"></a>
-                                                </div>
                                             </div>
                                             <div class="product-m__content">
                                                 <div class="product-m__category">
@@ -146,36 +142,3 @@
     <!--====== End - Section 1 ======-->
 </div>
 <!--====== End - App Content ======-->
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script>
-    $(document).on('click', 'a[data-modal-id="#quick-look"]', function () {
-        var modalId = $(this).data('modal-id');
-        var data = {
-            idSanPhamChiTiet: $(this).closest('.product-m__thumb').data('id'),
-        };
-        $.ajax({
-            url: '/SanPhamChiTiets/LoadPartialViewSanPhamChiTiet',
-            type: 'GET',
-            data: data,
-            success: function (result) {
-                $(modalId).html(result);
-                RESHOP.initInputCounter();
-                RESHOP.modalProductDetailInit();
-                $('.modal-backdrop').show();
-
-                $(modalId).show()
-                $('.dismiss-button').on('click', function () {
-                    $(modalId).hide();
-                    $('.modal-backdrop').hide();
-                    $('body').css('overflow-y', 'auto');
-                });
-            },
-            error: function (xhr, status, error) {
-                console.log(xhr.responseText);
-                console.log(status);
-                console.log(error);
-                console.log(xhr);
-            }
-        });
-    })
-</script>

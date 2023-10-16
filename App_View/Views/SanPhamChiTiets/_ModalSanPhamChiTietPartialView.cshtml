@@ -210,7 +210,13 @@
             type: 'POST',
             data: data,
             success: function (result) {
-                alert("Thêm vào giỏ hàng thành công!")
+                $('.dismiss-button').trigger('click');
+                toast({
+                    title: "Thành công!",
+                    message: "Bạn đã thêm thành công sản phẩm vào giỏ hàng!",
+                    type: "success",
+                    duration: 5000
+                });
             },
             error: function (xhr, status, error) {
                 console.log(xhr.responseText);
