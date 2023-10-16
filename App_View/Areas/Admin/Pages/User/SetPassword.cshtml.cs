@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace App_View.Areas.Identity.Pages.User
+namespace App_View.Areas.Admin.Pages.User
 {
     public class SetPasswordModel : PageModel
     {

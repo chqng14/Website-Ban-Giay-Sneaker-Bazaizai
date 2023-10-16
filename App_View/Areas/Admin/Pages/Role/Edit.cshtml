@@ -1,10 +1,9 @@
-﻿@page "/Admin/AddRole"
+﻿@page "/Admin/edit-role/{roleid}"
 
-@model App_View.Areas.Admin.Pages.CreateModel
-
+@model App_View.Areas.Admin.Pages.Role.EditModel
 @{
-    ViewData["Title"] = "Tạo chức vụ mới";
-    Layout = "~/ Areas / Admin / Views / Shared / _AdminLayout.cshtml";
+    ViewData["Title"] = "Cập nhật chức vụ";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <h2>@ViewData["Title"]</h2>
 <partial name="_StatusMessage" model="@Model.StatusMessage" />
@@ -21,8 +20,8 @@
             </div>
             <br />
             <div class="form-group">
-                <input type="submit" value="Tạo mới" class="btn btn-primary" />
-                <a class="btn btn-primary" asp-page="./Index" >Danh sách chức vụ</a>
+                <input type="submit" value="Cập nhật" class="btn btn-primary" />
+                <a class="btn btn-primary" asp-page="./Index">Danh sách chức vụ</a>
             </div>
         </form>
     </div>

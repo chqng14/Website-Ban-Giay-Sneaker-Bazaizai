@@ -4,6 +4,7 @@ using App_Data.DbContextt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App_Data.Migrations
 {
     [DbContext(typeof(BazaizaiContext))]
-    partial class BazaizaiContextModelSnapshot : ModelSnapshot
+    [Migration("20231014120517_Add_DanhGia")]
+    partial class Add_DanhGia
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +42,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdSanPhamChiTiet");
 
-                    b.ToTable("Anh", (string)null);
+                    b.ToTable("Anh");
                 });
 
             modelBuilder.Entity("App_Data.Models.ChatLieu", b =>
@@ -59,7 +61,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdChatLieu");
 
-                    b.ToTable("ChatLieus", (string)null);
+                    b.ToTable("ChatLieus");
                 });
 
             modelBuilder.Entity("App_Data.Models.ChucVu", b =>
@@ -159,7 +161,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("NguoiDungId");
 
-                    b.ToTable("gioHangs", (string)null);
+                    b.ToTable("gioHangs");
                 });
 
             modelBuilder.Entity("App_Data.Models.GioHangChiTiet", b =>
@@ -191,7 +193,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdSanPhamCT");
 
-                    b.ToTable("gioHangChiTiets", (string)null);
+                    b.ToTable("gioHangChiTiets");
                 });
 
             modelBuilder.Entity("App_Data.Models.HoaDon", b =>
@@ -254,7 +256,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdVoucher");
 
-                    b.ToTable("HoaDons", (string)null);
+                    b.ToTable("HoaDons");
                 });
 
             modelBuilder.Entity("App_Data.Models.HoaDonChiTiet", b =>
@@ -286,7 +288,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdSanPhamChiTiet");
 
-                    b.ToTable("hoaDonChiTiets", (string)null);
+                    b.ToTable("hoaDonChiTiets");
                 });
 
             modelBuilder.Entity("App_Data.Models.KhachHang", b =>
@@ -310,7 +312,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdNguoiDung");
 
-                    b.ToTable("KhachHang", (string)null);
+                    b.ToTable("KhachHang");
                 });
 
             modelBuilder.Entity("App_Data.Models.KhuyenMai", b =>
@@ -320,42 +322,33 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)")
                         .HasDefaultValueSql("(newid())");
 
-                    b.Property<int?>("LoaiHinhKM")
-                        .IsRequired()
+                    b.Property<string>("LoaiHinhKM")
                         .HasMaxLength(1000)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("MaKhuyenMai")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<decimal?>("MucGiam")
-                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("decimal(18,0)")
                         .HasDefaultValueSql("((0))");
 
                     b.Property<DateTime?>("NgayBatDau")
-                        .IsRequired()
                         .HasColumnType("datetime");
 
                     b.Property<DateTime?>("NgayKetThuc")
-                        .IsRequired()
                         .HasColumnType("datetime");
 
                     b.Property<string>("PhamVi")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenKhuyenMai")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
 
                     b.Property<int?>("TrangThai")
-                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValueSql("((0))");
@@ -418,7 +411,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdKichCo");
 
-                    b.ToTable("kichCos", (string)null);
+                    b.ToTable("kichCos");
                 });
 
             modelBuilder.Entity("App_Data.Models.KieuDeGiay", b =>
@@ -437,7 +430,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdKieuDeGiay");
 
-                    b.ToTable("kieuDeGiays", (string)null);
+                    b.ToTable("kieuDeGiays");
                 });
 
             modelBuilder.Entity("App_Data.Models.LoaiGiay", b =>
@@ -456,7 +449,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdLoaiGiay");
 
-                    b.ToTable("LoaiGiays", (string)null);
+                    b.ToTable("LoaiGiays");
                 });
 
             modelBuilder.Entity("App_Data.Models.MauSac", b =>
@@ -475,7 +468,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdMauSac");
 
-                    b.ToTable("mauSacs", (string)null);
+                    b.ToTable("mauSacs");
                 });
 
             modelBuilder.Entity("App_Data.Models.NguoiDung", b =>
@@ -585,7 +578,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdPhuongThucThanhToan");
 
-                    b.ToTable("PhuongThucThanhToans", (string)null);
+                    b.ToTable("PhuongThucThanhToans");
                 });
 
             modelBuilder.Entity("App_Data.Models.PhuongThucThanhToanChiTiet", b =>
@@ -608,7 +601,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdThanhToan");
 
-                    b.ToTable("phuongThucThanhToanChiTiets", (string)null);
+                    b.ToTable("phuongThucThanhToanChiTiets");
                 });
 
             modelBuilder.Entity("App_Data.Models.SanPham", b =>
@@ -627,7 +620,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdSanPham");
 
-                    b.ToTable("SanPhams", (string)null);
+                    b.ToTable("SanPhams");
                 });
 
             modelBuilder.Entity("App_Data.Models.SanPhamChiTiet", b =>
@@ -716,7 +709,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdXuatXu");
 
-                    b.ToTable("sanPhamChiTiets", (string)null);
+                    b.ToTable("sanPhamChiTiets");
                 });
 
             modelBuilder.Entity("App_Data.Models.SanPhamYeuThich", b =>
@@ -743,7 +736,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdSanPhamChiTiet");
 
-                    b.ToTable("sanPhamYeuThiches", (string)null);
+                    b.ToTable("sanPhamYeuThiches");
                 });
 
             modelBuilder.Entity("App_Data.Models.ThongTinGiaoHang", b =>
@@ -770,7 +763,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdNguoiDung");
 
-                    b.ToTable("thongTinGiaoHangs", (string)null);
+                    b.ToTable("thongTinGiaoHangs");
                 });
 
             modelBuilder.Entity("App_Data.Models.ThuongHieu", b =>
@@ -793,7 +786,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdThuongHieu");
 
-                    b.ToTable("thuongHieus", (string)null);
+                    b.ToTable("thuongHieus");
                 });
 
             modelBuilder.Entity("App_Data.Models.Voucher", b =>
@@ -835,7 +828,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdVoucher");
 
-                    b.ToTable("vouchers", (string)null);
+                    b.ToTable("vouchers");
                 });
 
             modelBuilder.Entity("App_Data.Models.VoucherNguoiDung", b =>
@@ -858,7 +851,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdVouCher");
 
-                    b.ToTable("voucherNguoiDungs", (string)null);
+                    b.ToTable("voucherNguoiDungs");
                 });
 
             modelBuilder.Entity("App_Data.Models.XuatXu", b =>
@@ -877,7 +870,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdXuatXu");
 
-                    b.ToTable("xuatXus", (string)null);
+                    b.ToTable("xuatXus");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

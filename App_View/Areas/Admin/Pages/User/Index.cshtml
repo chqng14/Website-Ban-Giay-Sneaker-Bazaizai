@@ -1,14 +1,18 @@
 ﻿@page "/admin/members"
-@model App_View.Areas.Identity.Pages.User.IndexModel
+@model App_View.Areas.Admin.Pages.User.IndexModel
 @{
     ViewData["Title"] = "Danh sách thành viên";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
 }
 <h2>@ViewData["Title"]</h2>
 <partial name="_StatusMessage" model="@Model.StatusMessage" />
 <form method="post">
     <button type="submit" name="addButton">Thêm 100 người dùng</button>
 </form>
+
 <p><h2>Tổng số thành viên: @Model.totalUsers</h2></p>
+
 <table class="table">
     <tr>
         <th>Người dùng</th>
@@ -31,7 +35,7 @@
                
             </td>    
             <td>
-               @* <a class="btn btn-success btn-sm" asp-page="./AddRole" asp asp-route-id="@user.Id">Cập nhật</a>*@
+                <a class="btn btn-success btn-sm" asp-page="./AddRole" asp asp-route-id="@user.Id">Cập nhật</a>
                 <a class="btn btn-success btn-sm" asp-page="./SetPassword" asp asp-route-id="@user.Id">Đặt mật khẩu</a>
             </td>
         </tr>

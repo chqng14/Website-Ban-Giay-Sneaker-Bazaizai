@@ -1,9 +1,9 @@
 ﻿@page "/Admin/delete-role/{roleid}"
 
-@model App_View.Areas.Admin.Pages.DeleteModel
+@model App_View.Areas.Admin.Pages.Role.DeleteModel
 @{
     ViewData["Title"] = "Xóa chức vụ";
-    Layout = "~/ Areas / Admin / Views / Shared / _AdminLayout.cshtml";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <h2>@ViewData["Title"]</h2>
 <partial name="_StatusMessage" model="@Model.StatusMessage" />
