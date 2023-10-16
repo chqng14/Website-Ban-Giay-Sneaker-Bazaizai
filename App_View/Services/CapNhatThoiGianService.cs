@@ -49,7 +49,7 @@ namespace App_View.Services
         public void CapNhatGiaBanThucTe()
         {
             var lstKhuyenMaiDangHoatDong = _dbContext.khuyenMaiChiTiets.Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai).ToList();
-            var lstCTSP = _dbContext.sanPhamChiTiets.ToList();
+            var lstCTSP = _dbContext.sanPhamChiTiets.Where(x=>x.TrangThaiSale== (int)TrangThaiSale.DuocApDungSale).ToList();
             foreach (var ctsp in lstCTSP)
             {
                 bool check = false;  
@@ -69,6 +69,7 @@ namespace App_View.Services
                         }
                         ctsp.GiaThucTe = ctsp.GiaBan - (ctsp.GiaBan * mangKhuyenMai.Max()/100);
                         _dbContext.sanPhamChiTiets.Update(ctsp);
+                        _dbContext.SaveChanges();
                         check = true;  
                         break;
                     }
@@ -79,9 +80,10 @@ namespace App_View.Services
                 {
                     ctsp.GiaThucTe = ctsp.GiaBan;
                     _dbContext.sanPhamChiTiets.Update(ctsp);
+                    _dbContext.SaveChanges();
                 }
             }
-            _dbContext.SaveChanges();
+            //_dbContext.SaveChanges();
         }
     }
 }
