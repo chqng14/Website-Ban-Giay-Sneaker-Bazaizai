@@ -44,6 +44,8 @@
     <PackageReference Include="X.PagedList" Version="8.4.7" />
 
     <PackageReference Include="X.PagedList.Mvc.Core" Version="8.4.7" />
+
+    <PackageReference Include="ZXing.Net" Version="0.16.9" />
   </ItemGroup>
 
   <ItemGroup>
