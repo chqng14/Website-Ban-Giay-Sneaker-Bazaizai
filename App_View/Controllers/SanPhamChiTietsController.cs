@@ -29,6 +29,12 @@ namespace App_View.Controllers
             return View(await _sanPhamChiTietService.GetListItemShopViewModelAynsc());
         }
 
+        public async Task<IActionResult> LoadPartialViewSanPhamChiTiet(string idSanPhamChiTiet)
+        {
+            var model = await _sanPhamChiTietService.GetItemDetailViewModelAynsc(idSanPhamChiTiet);
+            return PartialView("_ModalSanPhamChiTietPartialView", model);
+        }
+
         public async Task<IActionResult> Details(string id)
         {
             return View(await _sanPhamChiTietService.GetItemDetailViewModelAynsc(id));
@@ -36,7 +42,7 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> GetItemDetailViewModelWhenSelectColor([FromQuery]string id,[FromQuery]string mauSac)
         {
-                return Ok(await _sanPhamChiTietService.GetItemDetailViewModelWhenSelectColorAynsc(id, mauSac));
+            return Ok(await _sanPhamChiTietService.GetItemDetailViewModelWhenSelectColorAynsc(id, mauSac));
         }
 
         public async Task<IActionResult> GetItemDetailViewModelWhenSelectSize([FromQuery] string id, [FromQuery] int size)

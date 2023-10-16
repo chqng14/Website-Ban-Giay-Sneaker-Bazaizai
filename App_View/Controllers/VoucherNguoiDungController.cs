@@ -1,7 +1,11 @@
 ﻿using App_Data.DbContextt;
+using App_Data.Models;
+using App_Data.ViewModels.Voucher;
 using App_View.IServices;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Controllers
 {
@@ -10,84 +14,97 @@ namespace App_View.Controllers
 
         private readonly BazaizaiContext _context;
         private readonly IVoucherNguoiDungServices _voucherND;
-        public VoucherNguoiDungController(IVoucherNguoiDungServices voucherNDServices)
+        private readonly SignInManager<NguoiDung> _signInManager;
+        private readonly UserManager<NguoiDung> _userManager;
+        public VoucherNguoiDungController(IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
         {
             _voucherND = voucherNDServices;
             _context = new BazaizaiContext();
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
-        // GET: VoucherNguoiDungController
-        public ActionResult Voucher_wallet()
+        public async Task<IActionResult> Voucher_wallet(int? loaiHinh)
         {
-            return View();
-        }
-
-        // GET: VoucherNguoiDungController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: VoucherNguoiDungController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: VoucherNguoiDungController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
+            var idNguoiDung = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(idNguoiDung))
             {
                 return View();
             }
-        }
 
-        // GET: VoucherNguoiDungController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+            var voucherNguoiDung = (await _voucherND.GetAllVoucherNguoiDungByID(idNguoiDung)).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung);
 
-        // POST: VoucherNguoiDungController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
+            if (loaiHinh.HasValue)
             {
-                return RedirectToAction(nameof(Index));
+                switch (loaiHinh)
+                {
+                    case (int)TrangThaiLoaiKhuyenMai.TienMat:
+                        voucherNguoiDung = voucherNguoiDung.Where(v => v.LoaiHinhUuDai == 0).ToList();
+                        break;
+                    case (int)TrangThaiLoaiKhuyenMai.PhanTram:
+                        voucherNguoiDung = voucherNguoiDung.Where(v => v.LoaiHinhUuDai == 1).ToList();
+                        break;
+                    case (int)TrangThaiLoaiKhuyenMai.Freeship:
+                        voucherNguoiDung = voucherNguoiDung.Where(v => v.LoaiHinhUuDai == 2).ToList();
+                        break;
+                    default:
+                        break;
+                }
             }
-            catch
+
+            ViewBag.TatCa = voucherNguoiDung; // Gán danh sách lọc được vào ViewBag.TatCa
+
+            return View(voucherNguoiDung);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveVoucher(string MaVoucher)
+        {
+            // Lấy ID của người dùng hiện tại từ UserManager
+            var idNguoiDung = _userManager.GetUserId(User);
+
+            // Kiểm tra nếu ID người dùng không tồn tại hoặc là chuỗi rỗng, thì trả về một View
+            if (string.IsNullOrEmpty(idNguoiDung))
+            {
+                return RedirectToAction("Voucher_wallet");
+            }
+            if (MaVoucher != null)
+            {
+                // Nếu ID người dùng tồn tại, thì gọi phương thức AddVoucherNguoiDung để thêm Mã Voucher cho người dùng
+                _voucherND.AddVoucherNguoiDung(MaVoucher, idNguoiDung);
+
+                // Trả về một ActionResult khác nếu cần
+                return RedirectToAction("Voucher_wallet", "VoucherNguoiDung");
+            }
+            return RedirectToAction("Voucher_wallet");
+        }
+        public async Task<IActionResult> Voucher_wallet_history(int? TrangThai)
+        {
+            var idNguoiDung = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(idNguoiDung))
             {
                 return View();
             }
-        }
 
-        // GET: VoucherNguoiDungController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+            var voucherNguoiDung = (await _voucherND.GetAllVoucherNguoiDungByID(idNguoiDung)).Where(c => c.TrangThai != (int)TrangThaiVoucherNguoiDung.KhaDung);
 
-        // POST: VoucherNguoiDungController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+            if (TrangThai.HasValue)
             {
-                return RedirectToAction(nameof(Index));
+                switch (TrangThai)
+                {
+                    case (int)TrangThaiVoucherNguoiDung.DaSuDung:
+                        voucherNguoiDung = voucherNguoiDung.Where(v => v.TrangThai == 1).ToList();
+                        break;
+                    case (int)TrangThaiVoucherNguoiDung.HetHieuLuc:
+                        voucherNguoiDung = voucherNguoiDung.Where(v => v.TrangThai == 2).ToList();
+                        break;
+                    default:
+                        break;
+                }
             }
-            catch
-            {
-                return View();
-            }
+
+            ViewBag.TatCa = voucherNguoiDung; // Gán danh sách lọc được vào ViewBag.TatCa
+
+            return View(voucherNguoiDung);
         }
     }
 }

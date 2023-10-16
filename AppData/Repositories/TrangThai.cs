@@ -44,7 +44,7 @@ namespace App_Data.Repositories
         public enum ChucVuMacDinh
         {
             Admin,
-            KhachHang, 
+            KhachHang,
             NhanVien
         }
         public enum TrangThaiVoucherNguoiDung
@@ -54,9 +54,7 @@ namespace App_Data.Repositories
             [Description("Đã sử dụng")]
             DaSuDung = 1,
             [Description("Hết hiệu lực")]
-            HetHieuLuc = 2,
-            [Description("Số lượng voucher đã hết")]
-            HetVoucher = 3,
+            HetHieuLuc = 2
         }
         public enum TrangThaiSale 
         {
@@ -72,5 +70,13 @@ namespace App_Data.Repositories
             [Description("Đang khuyến mãi")]
             DangKhuyenMai = 1
         }
+        public enum GioiTinhMacDinh
+        {
+            KhongMuonTraLoi=0,
+            Nam = 1,
+            Nu = 2,
+            Khac=3
+        }
+     
     }
 }

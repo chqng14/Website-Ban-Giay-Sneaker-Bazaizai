@@ -20,6 +20,8 @@
         margin-left: 20px;
         box-sizing: border-box;
     }
+
+
 </style>
 
 
@@ -42,51 +44,40 @@
 
 <div class="col-lg-9 col-md-12">
 
-        <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
 
-            <div class="dash__pad-2">
-                <div>
-                    <h1 class="dash__h1 u-s-m-b-14" style="display: inline-block;">My Voucher</h1>
-                    <a style="color:#FF4500;margin-left:32%;display: inline-block;">Tìm thêm voucher</a> |
-                    <a asp-action="Voucher_wallet_history" style="color:#FF4500" style="display: inline-block;">Xem lịch sử voucher</a> |
-                    <a style="color:#FF4500" style="display: inline-block;">Tìm hiểu</a>
-                </div>
-                <span class="dash__text u-s-m-b-30">Bạn sẽ thấy tất cả voucher đã lưu của bạn ở đây.</span>
-                <!--Lưu mã voucher-->
-                <div class="row">
-                       <form class="m-order u-s-m-b-30" asp-action="SaveVoucher" method="post">
-                    <div class="col-lg-10 u-s-m-b-30" style="text-align:center">
-                        <input b-xzovs66yy5="" class="input-text input-text--border-radius input-text--style-1" type="text" name="MaVoucher" id="main-search" placeholder="Nhập mã voucher">
-                    </div>
-                    <div class="col-lg-2" style="text-align:center;float:right" >
-                        <button class="btn btn--e-brand newsletter__btn" style="border-radius: 40px;margin-right:50px;margin-top:-50px" type="submit">
-                            Lưu
-                        </button>
-                    </div>
-                </form>
-                </div>
-                <!--Show mã voucher-->
-                <form class="m-order u-s-m-b-30" asp-action="Voucher_wallet" method="post">
-                    <div class="m-order__select-wrapper">
-                        <label class="u-s-m-r-8" for="my-order-sort">Lọc voucher theo:</label>
-                        <select class="select-box select-box--primary-style" id="my-order-sort" name="loaiHinh">
-                            <option value="">Tất cả</option>
-                        <option value="@((int)TrangThaiLoaiKhuyenMai.TienMat)">Giảm giá tiền mặt</option>
-                        <option value="@((int)TrangThaiLoaiKhuyenMai.PhanTram)">Giảm giá theo %</option>
-                        <option value="@((int)TrangThaiLoaiKhuyenMai.Freeship)">Miễn phí ship</option>
-                        </select>
+        <div class="dash__pad-2">
+            <div>
+                <h1 class="dash__h1 u-s-m-b-14" style="display: inline-block;">Lịch sử voucher</h1>
+                <a style="color:#FF4500;margin-left:32%;display: inline-block;">Tìm thêm voucher</a> |
+                <a asp-action="Voucher_wallet" style="color:#FF4500" style="display: inline-block;">My Voucher</a> |
+                <a style="color:#FF4500" style="display: inline-block;">Tìm hiểu</a>
+            </div>
+            <span class="dash__text u-s-m-b-30">Bạn sẽ thấy tất cả lịch sử voucher của bạn ở đây.</span>
+            <!--Lưu mã voucher-->
+            <!--Show mã voucher-->
+            <form class="m-order u-s-m-b-30" asp-action="Voucher_wallet_history" method="post">
+                <div class="m-order__select-wrapper">
+                    <label class="u-s-m-r-8" for="my-order-sort">Lọc voucher theo:</label>
+                    <select class="select-box select-box--primary-style" id="my-order-sort" name="TrangThai">
+                        <option value="">Tất cả</option>
+                        <option value="@((int)TrangThaiVoucherNguoiDung.DaSuDung)">Đã sử dụng</option>
+                        <option value="@((int)TrangThaiVoucherNguoiDung.HetHieuLuc)">Hết hiệu lực</option>
+                    </select>
                     <div class="m-order__select-wrapper">
 
                         <button type="submit" style="border-radius: 40px;margin-left:10px;color:white;border:none;background-color:#FF4500"
-                        class="btn btn-primary">Lọc</button>
+                                class="btn btn-primary">
+                            Lọc
+                        </button>
                     </div>
                 </div>
 
-                </form>
+            </form>
 
-                <div class="row">
-                </div>
-                <div class="m-order__list">
+            <div class="row">
+            </div>
+            <div class="m-order__list">
                 @foreach (var item in ViewBag.TatCa)
                 {
                     <div class="m-order__get">
@@ -111,7 +102,7 @@
                                     }
                                     <div class="dash__link dash__link--brand">
 
-                                        <a  style="float:right" href="dash-manage-order.html">Chi tiết</a>
+                                        <a style="float:right" href="dash-manage-order.html">Chi tiết</a>
                                     </div>
                                 </div>
                             </div>
@@ -141,17 +132,27 @@
                             </div>
                             <div class="description__info-wrap">
                                 <div class="body_copy">
-                                    <a class="manage-o__badge badge--delivered copyButton" >Copy mã</a>
-                                    <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                                    <a class="manage-o__badge badge--delivered ">
+                                        @if (item.TrangThai == (int)TrangThaiVoucherNguoiDung.DaSuDung)
+                                        {
+                                            <u>Đã sử dụng</u>
+                                        }
+                                        @if (item.TrangThai == (int)TrangThaiVoucherNguoiDung.HetHieuLuc)
+                                        {
+                                            <u>Hết hiệu lực</u>
+                                        }
+                                    </a>
                                 </div>
-                      
+
                             </div>
+
                         </div>
+                      
                     </div>
                 }
-                </div>
             </div>
         </div>
+    </div>
 
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -171,6 +172,6 @@
 
         alert("Đã sao chép mã vào clipboard: " + maVoucher);
     })
-    // Sau khi nhận phản hồi thành công từ server
-  
+        // Sau khi nhận phản hồi thành công từ server
+
 </script>

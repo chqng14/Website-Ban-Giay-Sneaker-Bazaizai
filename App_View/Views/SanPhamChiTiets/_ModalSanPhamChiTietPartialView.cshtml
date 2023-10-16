@@ -1,0 +1,229 @@
+﻿@model App_Data.ViewModels.SanPhamChiTietViewModel.ItemDetailViewModel
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal--shadow">
+
+        <button class="btn dismiss-button fas fa-times" type="button" data-dismiss="modal"></button>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-5">
+
+                    <!--====== Product Breadcrumb ======-->
+                    <div class="pd-breadcrumb u-s-m-b-30">
+                        <ul class="pd-breadcrumb__list">
+                            <li class="has-separator">
+
+                                <a href="/">Home</a>
+                            </li>
+                            <li class="is-marked">
+
+                                <a href="/sanphamchitiets">Danh sách giày</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--====== End - Product Breadcrumb ======-->
+                    <!--====== Product Detail ======-->
+                    <div class="pd u-s-m-b-30">
+                        <div class="pd-wrap">
+                            <div id="js-product-detail-modal">
+                                @foreach (var item in Model.DanhSachAnh!)
+                                {
+                                    <div>
+
+                                        <img class="u-img-fluid" src="/AnhSanPham/@item" alt="">
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                        <div class="u-s-m-t-15">
+                            <div id="js-product-detail-modal-thumbnail">
+                                @foreach (var item in Model.DanhSachAnh!)
+                                {
+                                    <div>
+
+                                        <img class="u-img-fluid" src="/AnhSanPham/@item" alt="">
+                                    </div>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                    <!--====== End - Product Detail ======-->
+                </div>
+                <div class="col-lg-7">
+
+                    <!--====== Product Right Side Details ======-->
+                    <div class="pd-detail">
+                        <div>
+
+                            <span class="pd-detail__name">@Model.TenSanPham</span>
+                        </div>
+                        <div>
+                            <div class="pd-detail__inline">
+
+                                <span class="pd-detail__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaBan)</span>
+
+                                <span class="pd-detail__discount">(76% OFF)</span><del class="pd-detail__del">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaKhuyenMai)</del>
+                            </div>
+                        </div>
+                        <div class="u-s-m-b-15">
+                            <div class="pd-detail__rating gl-rating-style">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+
+                                <span class="pd-detail__review u-s-m-l-4">
+
+                                    <a href="product-detail.html">@Model.SoLanDanhGia Đánh giá</a>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="u-s-m-b-15">
+                            <div class="pd-detail__inline">
+
+                                <span class="pd-detail__stock">@Model.SoLuongTon trong kho</span>
+
+                                <span class="pd-detail__left">Only 2 left</span>
+                            </div>
+                        </div>
+                        <div class="u-s-m-b-15">
+
+                            <span class="pd-detail__preview-desc">@Model.MoTaNgan</span>
+                        </div>
+                        <div class="u-s-m-b-15">
+                            <div class="pd-detail__inline">
+
+                                <span class="pd-detail__click-wrap">
+                                    <i class="far fa-heart u-s-m-r-6"></i>
+
+                                    <a href="signin.html">Thêm vào danh sách yêu thích</a>
+
+                                    <span class="pd-detail__click-count">(222)</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="u-s-m-b-15">
+                            <div class="pd-detail__inline">
+
+                                <span class="pd-detail__click-wrap">
+                                    <i class="far fa-envelope u-s-m-r-6"></i>
+
+                                    <a href="signin.html">Gửi mail cho tôi khi bạn muốn giảm giá.</a>
+
+                                    <span class="pd-detail__click-count">(20)</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="u-s-m-b-15">
+                            <ul class="pd-social-list">
+                                <li>
+
+                                    <a class="s-fb--color-hover" href="#"><i class="fab fa-facebook-f"></i></a>
+                                </li>
+                                <li>
+
+                                    <a class="s-tw--color-hover" href="#"><i class="fab fa-twitter"></i></a>
+                                </li>
+                                <li>
+
+                                    <a class="s-insta--color-hover" href="#"><i class="fab fa-instagram"></i></a>
+                                </li>
+                                <li>
+
+                                    <a class="s-wa--color-hover" href="#"><i class="fab fa-whatsapp"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="u-s-m-b-15">
+                            <div class="pd-detail__form">
+                                <div class="pd-detail-inline-2">
+                                    <div class="u-s-m-b-15">
+
+                                        <!--====== Input Counter ======-->
+                                        <div class="input-counter">
+
+                                            <span class="input-counter__minus fas fa-minus"></span>
+
+                                            <input class="input-counter__text input-counter--text-primary-style" type="text" value="1" name="SoLuong" data-min="1" data-max="1000">
+
+                                            <span class="input-counter__plus fas fa-plus"></span>
+                                        </div>
+                                        <!--====== End - Input Counter ======-->
+
+                                        <!---== Input - Id Sản phẩm-->
+                                        <input value="@Model.IdChiTietSp" name="IdSanPhamCT" hidden/>
+                                    </div>
+                                    <div class="u-s-m-b-15">
+
+                                        <button class="btn btn--e-brand-b-2 add-product">Thêm vào giỏ hàng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="u-s-m-b-15">
+
+                            <span class="pd-detail__label u-s-m-b-8">Chính sách sản phẩm:</span>
+                            <ul class="pd-detail__policy-list">
+                                <li>
+                                    <i class="fas fa-check-circle u-s-m-r-8"></i>
+
+                                    <span>Bảo vệ quyền lợi người dùng.</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check-circle u-s-m-r-8"></i>
+
+                                    <span>Hoàn trả đầy đủ nếu bạn không nhận được đơn đặt hàng của mình.</span>
+                                </li>
+                                <li>
+                                    <i class="fas fa-check-circle u-s-m-r-8"></i>
+
+                                    <span>Chấp nhận đổi trả nếu sản phẩm không như mô tả.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <!--====== End - Product Right Side Details ======-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+
+    $('.add-product').click(() => {
+        var data = {};
+        $('.pd-detail__form').find("input, select, textarea").each(function () {
+            var fieldType = $(this).attr("type");
+            var fieldName = $(this).attr("name");
+            var fieldValue;
+
+            if (fieldType === "checkbox" || fieldType === "radio") {
+                fieldValue = $(this).is(":checked");
+            } else {
+                fieldValue = $(this).val();
+            }
+
+            data[fieldName] = fieldValue;
+        });
+
+
+        $.ajax({
+            url: '/GioHangChiTiets/AddToCart',
+            type: 'POST',
+            data: data,
+            success: function (result) {
+                $('.dismiss-button').trigger('click');
+                toast({
+                    title: "Thành công!",
+                    message: "Bạn đã thêm thành công sản phẩm vào giỏ hàng!",
+                    type: "success",
+                    duration: 5000
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    })
+</script>

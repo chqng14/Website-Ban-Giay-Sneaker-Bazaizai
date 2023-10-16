@@ -33,15 +33,16 @@ namespace App_Api.Helpers.Mapping
         {
             return source
                 .Where(filter)
+                .Take(20)
                 .Select(item => new ItemViewModel
                 {
                     GiaGoc = item.GiaBan,
-                    GiaKhuyenMai = 10000,
+                    GiaKhuyenMai = item.GiaThucTe,
                     IdChiTietSp = item?.IdChiTietSp,
-                    KhuyenMai = false,
-                    TenSanPham = item?.ThuongHieu?.TenThuongHieu + " " + item?.SanPham?.TenSanPham,
+                    KhuyenMai = item?.TrangThaiSale == 2 ? true : false,
+                    TenSanPham = item?.ThuongHieu?.TenThuongHieu + " " + item?.SanPham?.TenSanPham + "-" + item?.KichCo?.SoKichCo,
                     ThuongHieu = item?.ThuongHieu?.TenThuongHieu,
-                    Anh = item?.Anh.OrderBy(a=>a.Url)?.FirstOrDefault()?.Url,
+                    Anh = item?.Anh.OrderBy(a => a.Url)?.FirstOrDefault()?.Url,
                     SoLanDanhGia = 32,
                     SoSao = 4
                 })

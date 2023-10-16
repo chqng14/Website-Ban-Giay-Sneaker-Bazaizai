@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
-namespace App_View.Areas.Identity.Pages.Role
+namespace App_View.Areas.Admin.Pages
 {
+    [Area("Admin")]
+
     public class DeleteModel : PageModel
     {
         private readonly RoleManager<ChucVu> _roleManager;
@@ -25,19 +27,19 @@ namespace App_View.Areas.Identity.Pages.Role
         public async Task<IActionResult> OnGet(string roleid)
         {
             if (roleid == null) return NotFound("Không tìm thấy chức vụ");
-             role = await _roleManager.FindByIdAsync(roleid);
-            if (role == null) return NotFound("Không tìm thấy chức vụ");              
+            role = await _roleManager.FindByIdAsync(roleid);
+            if (role == null) return NotFound("Không tìm thấy chức vụ");
             return Page();
-            
-             
+
+
         }
 
         public async Task<IActionResult> OnPostAsync(string roleid)
         {
             if (roleid == null) return NotFound("Không tìm thấy chức vụ");
-             role = await _roleManager.FindByIdAsync(roleid);
-            if(role == null)  return NotFound("Không tìm thấy chức vụ"); 
-           
+            role = await _roleManager.FindByIdAsync(roleid);
+            if (role == null) return NotFound("Không tìm thấy chức vụ");
+
             var result = await _roleManager.DeleteAsync(role);
             if (result.Succeeded)
             {
