@@ -1,6 +1,7 @@
 ﻿using App_Data.Models;
 using App_Data.ViewModels.HoaDon;
 using App_Data.ViewModels.HoaDonChiTietDTO;
+using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.ThongTinGHDTO;
 using App_View.IServices;
 using App_View.Services;
@@ -153,9 +154,14 @@ namespace App_View.Controllers
                     GiaBan = item.GiaBan,
                     TrangThai = 0
                 });
+                var sanphamupdate = new SanPhamSoLuongDTO()
+                {
+                    IdChiTietSanPham = item.IdSanPhamCT,
+                    SoLuong = (int)item.SoLuong
+                };
                 await gioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
                 var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
-                //await _sanPhamChiTietService.UpdateAynsc(product.Id, item.SoLuongCart);
+                //await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
             }
             return Ok();
         }
