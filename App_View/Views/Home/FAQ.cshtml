@@ -1,4 +1,52 @@
-﻿<div class="app-content">
+﻿<script src="https://cdn.jsdelivr.net/npm/quagga"></script>
+<div id="interactive" class="viewport"></div>
+<button id="toggleQuagga">Bật/Tắt Quagga</button>
+<div id="qrCodeData"></div>
+
+<script>
+    let isQuaggaRunning = false; // Biến để theo dõi trạng thái của Quagga
+
+    function toggleQuagga() {
+        if (isQuaggaRunning) {
+            Quagga.stop(); // Tắt Quagga nếu đang chạy
+        } else {
+            Quagga.init({
+                inputStream: {
+                    name: "Live",
+                    type: "LiveStream",
+                    target: document.querySelector("#interactive")
+                },
+                decoder: {
+                    readers: ["qrcode"]
+                }
+            }, function (err) {
+                if (err) {
+                    console.error(err);
+                    return;
+                }
+                Quagga.start(); // Bật Quagga
+            });
+        }
+        isQuaggaRunning = !isQuaggaRunning; // Đảo ngược trạng thái
+    }
+
+    Quagga.onDetected(function (result) {
+        // Lấy dữ liệu từ mã QR
+        var qrCodeData = result.codeResult.code;
+        alert(qrCodeData)
+
+        // Hiển thị dữ liệu từ mã QR trong một phần tử HTML
+        document.querySelector("#qrCodeData").textContent = "QR Code Data: " + qrCodeData;
+    });
+
+    // Sử dụng sự kiện click để gọi hàm toggleQuagga khi nút được nhấn
+    document.querySelector("#toggleQuagga").addEventListener("click", toggleQuagga);
+</script>
+
+
+
+
+<div class="app-content">
 
     <!--====== Section 1 ======-->
     <div class="u-s-p-y-60">
@@ -118,3 +166,4 @@
     </div>
     <!--====== End - Section 3 ======-->
 </div>
+
