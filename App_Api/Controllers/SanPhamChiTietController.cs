@@ -15,7 +15,7 @@ using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-//using QRCoder;
+using QRCoder;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.Reflection;
@@ -180,19 +180,19 @@ namespace App_Api.Controllers
                 sanPhamChiTiet.SoLuongDaBan = 0;
                 sanPhamChiTiet.NgayTao = DateTime.Now;
 
-                //QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                QRCodeGenerator qrGenerator = new QRCodeGenerator();
 
-                //QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
-                //QRCode qrCode = new QRCode(qrCodeData);
+                QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
+                QRCode qrCode = new QRCode(qrCodeData);
 
-                //Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
+                Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
 
-                //string qrCodeImagePath = Path.Combine(uploadDirectory, sanPhamChiTiet.Ma + ".png");
+                string qrCodeImagePath = Path.Combine(uploadDirectory, sanPhamChiTiet.Ma + ".png");
 
-                //using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
-                //{
-                //    qrCodeImage.Save(stream, ImageFormat.Png);
-                //}
+                using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
+                {
+                    qrCodeImage.Save(stream, ImageFormat.Png);
+                }
 
                 return new ResponseCreateDTO()
                 {
