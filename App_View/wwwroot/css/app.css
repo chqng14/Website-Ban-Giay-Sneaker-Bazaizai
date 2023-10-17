@@ -317,7 +317,8 @@ body {
 /*
   * Fitvids plugin modifier class
  */
-.fluid-width-video-wrapper {
+.fluid-width-
+-wrapper {
   background-color: #f5f5f5; }
 
 /*
@@ -6038,23 +6039,23 @@ input::-ms-clear {
 .hero-slide {
   background: center center/cover no-repeat; }
   .hero-slide--1 {
-    background-image: url(../images/slider/slide-1.jpg); }
-  .hero-slide--2 {
-    background-image: url(../images/slider/slide-2.jpg); }
-  .hero-slide--3 {
-    background-image: url(../images/slider/slide-3.jpg); }
-  .hero-slide--4 {
-    background-image: url(../images/slider/slide-4.jpg); }
-  .hero-slide--5 {
-    background-image: url(../images/slider/slide-5.jpg); }
-  .hero-slide--6 {
-    background-image: url(../images/slider/slide-6.jpg); }
-  .hero-slide--7 {
-    background-image: url(../images/slider/slide-7.jpg); }
-  .hero-slide--8 {
-    background-image: url(../images/slider/slide-8.jpg); }
-  .hero-slide--9 {
-    background-image: url(../images/slider/slide-9.jpg); }
+    background-image: url(../images/banners/banner1.jpg); }
+  .hero-slide--2 {                                 
+    background-image: url(../images/banners/banner1.jpg); }
+  .hero-slide--3 {                                 
+    background-image: url(../images/banners/banner1.jpg); }
+  .hero-slide--4 {                                 
+    background-image: url(../images/banners/banner1.jpg); }
+  .hero-slide--5 {                                 
+    background-image: url(../images/banners/banner1.jpg); }
+  .hero-slide--6 {                                 
+    background-image: url(../images/banners/banner1.jpg); }
+  .hero-slide--7 {                                 
+    background-image: url(../images/banners/banner1.jpg); }
+  .hero-slide--8 {                                 
+    background-image: url(../images/banners/banner1.jpg); }
+  .hero-slide--9 {                                 
+    background-image: url(../images/banners/banner1.jpg); }
 
 .owl-carousel .owl-dots {
   position: absolute; }
@@ -6416,3 +6417,110 @@ input::-ms-clear {
 #js-product-detail-modal-thumbnail:hover .pt-prev, #js-product-detail-modal-thumbnail:hover .pt-next {
   opacity: .8; }
 
+
+/*Toast*/
+#toast {
+    position: fixed;
+    top: 32px;
+    right: 32px;
+    z-index: 999999;
+}
+
+.toast {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 2px;
+    padding: 20px 0;
+    min-width: 400px;
+    max-width: 450px;
+    border-left: 4px solid;
+    box-shadow: 0 5px 8px rgba(0, 0, 0, 0.08);
+    transition: all linear 0.3s;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(calc(100% + 32px));
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+    }
+}
+
+.toast--success {
+    border-color: #47d864;
+}
+
+    .toast--success .toast__icon {
+        color: #47d864;
+    }
+
+.toast--info {
+    border-color: #2f86eb;
+}
+
+    .toast--info .toast__icon {
+        color: #2f86eb;
+    }
+
+.toast--warning {
+    border-color: #ffc021;
+}
+
+    .toast--warning .toast__icon {
+        color: #ffc021;
+    }
+
+.toast--error {
+    border-color: #ff623d;
+}
+
+    .toast--error .toast__icon {
+        color: #ff623d;
+    }
+
+.toast + .toast {
+    margin-top: 24px;
+}
+
+.toast__icon {
+    font-size: 24px;
+}
+
+.toast__icon,
+.toast__close {
+    padding: 0 16px;
+}
+
+.toast__body {
+    flex-grow: 1;
+}
+
+.toast__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.toast__msg {
+    font-size: 14px;
+    color: #888;
+    margin-top: 6px;
+    line-height: 1.5;
+}
+
+.toast__close {
+    font-size: 20px;
+    color: rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}

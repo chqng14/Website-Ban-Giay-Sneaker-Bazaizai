@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<NguoiDung> SignInManager
 @inject UserManager<NguoiDung> UserManager
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1401,18 +1402,17 @@
                                     <!--====== Dashboard Features ======-->
                                     <div class="dash__box dash__box--bg-white dash__box--shadow u-s-m-b-30">
                                         <div class="dash__pad-1">
-
-                                            <span class="dash__text u-s-m-b-16">Hello, John Doe</span>
+                                            <partial name="_FirstNamePartial" />
+                                          
                                             <ul class="dash__f-list">
                                                 <li>
-                                                    <a class="dash-active" asp-area="Identity" asp-page="/Account/Manage/Index">
-                                                        My Profile
+                                                    <a asp-area="Identity" asp-page="/Account/ManageMyAccount">
+                                                        Manage My Account
                                                     </a>
-                                                    @*                                            <a href="dashboard.html">Manage My Account</a>
-                                                    *@
+                                                  
                                                 </li>
                                                 <li>
-                                                    <a class="dash-active" asp-area="Identity" asp-page="/Account/my-profile">
+                                                    <a class="dash-address" asp-area="Identity" asp-page="/Account/my-profile">
                                                         My Profile
                                                     </a>
                                                 </li>

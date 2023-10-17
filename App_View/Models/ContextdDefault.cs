@@ -13,8 +13,7 @@ namespace App_View.Models
             var rolesToSeed = new[]{
                 new ChucVu { Name = ChucVuMacDinh.KhachHang.ToString(), Id = Guid.NewGuid().ToString(),TrangThai=(int?)TrangThaiCoBan.HoatDong,MaChucVu="CV1" },
                 new ChucVu { Name = ChucVuMacDinh.Admin.ToString(), Id = Guid.NewGuid().ToString(),TrangThai=(int?)TrangThaiCoBan.HoatDong,MaChucVu="CV2" },
-                new ChucVu { Name = ChucVuMacDinh.NhanVien.ToString(), Id = Guid.NewGuid().ToString(),TrangThai=(int?)TrangThaiCoBan.HoatDong,MaChucVu="CV3" }
-
+                //new ChucVu { Name = ChucVuMacDinh.NhanVien.ToString(), Id = Guid.NewGuid().ToString(),TrangThai=(int?)TrangThaiCoBan.HoatDong,MaChucVu="CV3" }
             };
 
             foreach (var role in rolesToSeed)
@@ -27,14 +26,17 @@ namespace App_View.Models
             ////Seed Default User
             var defaultUser = new NguoiDung
             {
-                Id= Guid.NewGuid().ToString(),  
+                Id = Guid.NewGuid().ToString(),
                 UserName = "Admin",
                 Email = "adminhehehe@gmail.com",
                 TenNguoiDung = "Mi Mi",
                 PhoneNumber = "0369426223",
                 EmailConfirmed = true,
-                NgaySinh= DateTime.ParseExact("10-10-2010", "MM-dd-yyyy", null),
+                NgaySinh = DateTime.ParseExact("10-10-2010", "MM-dd-yyyy", null),
+                DiaChi = "Hà Nội",
+                MaNguoiDung= "ND1",
                 //AnhDaiDien=
+                TrangThai = (int?)TrangThaiCoBan.HoatDong,
                 PhoneNumberConfirmed = true
             };
             if (userManager.Users.All(u => u.Id != defaultUser.Id))

@@ -13,6 +13,7 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<SanPhamYeuThich> builder)
         {
+            builder.ToTable("SanPhamYeuThich");
             builder.HasKey(c => c.IdSanPhamYeuThich);
             builder.Property(e => e.IdSanPhamYeuThich).HasDefaultValueSql("(newid())");
             builder.HasOne(d => d.NguoiDung).WithMany(p => p.SanPhamYeuThich).HasForeignKey(d => d.IdNguoiDung);

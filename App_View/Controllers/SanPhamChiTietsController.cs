@@ -24,9 +24,14 @@ namespace App_View.Controllers
             _sanPhamChiTietService = sanPhamChiTietService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string brand)
         {
-            return View(await _sanPhamChiTietService.GetListItemShopViewModelAynsc());
+            var lstSanPhamItemShop = await _sanPhamChiTietService.GetListItemShopViewModelAynsc();
+            if (!string.IsNullOrEmpty(brand))
+            {
+                lstSanPhamItemShop = (await _sanPhamChiTietService.GetListItemShopViewModelAynsc())!.Where(sp=>sp.ThuongHieu!.ToLower() == brand.ToLower()).ToList();
+            }
+            return View(lstSanPhamItemShop);
         }
 
         public async Task<IActionResult> LoadPartialViewSanPhamChiTiet(string idSanPhamChiTiet)

@@ -1,0 +1,40 @@
+﻿@page "/Admin/Roles"
+@using static App_Data.Repositories.TrangThai;
+@model App_View.Areas.Admin.Pages.Role.IndexModel
+@{
+    ViewData["Title"] = "Danh sách chức vụ";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>@ViewData["Title"]</h2>
+<partial name="_StatusMessage" model="@Model.StatusMessage" />
+
+<div class="mb-2">
+    <a class="btn btn-secondary" asp-area="Admin" asp-page="/Role/Create"> Tạo role mới</a>
+    <a class="btn btn-secondary" asp-page="../User/Index">Quản lý thành viên</a>
+</div>
+<table class="table">
+    <tr>
+        <th>Tên role</th>
+       <th>Tác vụ</th>
+    </tr>
+    @foreach (var role in @Model.roles)
+    {
+        <tr>
+            <td>@role.Name</td>    
+            <td>
+                @if (role.Name==ChucVuMacDinh.KhachHang.ToString()||role.Name==ChucVuMacDinh.Admin.ToString())
+                {
+                    <p>Chức vụ mặc định</p>
+                }
+                else
+                {
+                    <a class="btn btn-success btn-sm" asp-page="./Edit" asp asp-route-roleid="@role.Id">Cập nhật</a>
+                    <a class="btn btn-success btn-sm" asp-page="./Delete" asp asp-route-roleid="@role.Id">Xóa</a>
+                }
+            </td>
+        </tr>
+    }
+</table>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

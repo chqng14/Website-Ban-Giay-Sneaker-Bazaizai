@@ -13,6 +13,7 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ChatLieu> builder)
         {
+            builder.ToTable("ChatLieu");
             builder.HasKey(x => x.IdChatLieu);
             builder.Property(x => x.MaChatLieu).HasColumnType("nvarchar(1000)");
             builder.Property(x => x.TenChatLieu).HasColumnType("nvarchar(1000)");

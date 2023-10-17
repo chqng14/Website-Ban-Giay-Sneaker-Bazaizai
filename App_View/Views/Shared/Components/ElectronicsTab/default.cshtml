@@ -67,10 +67,6 @@
 
                                                         <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
                                                     </li>
-                                                    <li>
-
-                                                        <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -92,7 +88,11 @@
 
                                         <span class="product-o__price">
                                             @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)
-                                            <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)</span>
+                                            @if (item.KhuyenMai == true)
+                                            {
+                                                <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)</span>
+
+                                            }
                                         </span>
                                     </div>
                                 </div>
@@ -552,10 +552,7 @@
     </div>
     <!--====== End - Section Content ======-->
 </div>
-@*
-    <script src="~/js/vendor.js"></script>
-    <script src="~/js/jquery.shopnav.js"></script>
-    <script src="~/js/app.js"></script>*@
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
     $(() => {

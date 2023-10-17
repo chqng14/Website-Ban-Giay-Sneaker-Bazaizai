@@ -1,0 +1,92 @@
+﻿@using App_Data.DbContextt;
+@using App_Data.Models;
+@using App_View.IServices;
+@using App_View.Services;
+@using Microsoft.AspNetCore.Identity;
+@using static App_Data.Repositories.TrangThai;
+@model IEnumerable<App_Data.ViewModels.HoaDon.HoaDonChoDTO>
+@{
+    BazaizaiContext context = new BazaizaiContext();
+    IHoaDonServices hoaDonServices = new HoaDonServices();
+}
+@{
+    ViewData["Title"] = "DanhSachHoaDonCho";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="card">
+    <div class="row" style="height:800px">
+        <div class="col-9">
+            <div class="row" style="height: 400px;background-color:red">
+                <div class="card w-100 h-100">
+                    <button class="btn btn-primary" id="create-tab" style="width: 140px">Tạo tab mới</button>
+                    <div id="tabs">
+                            <ul>
+                                @{foreach (var item in Model)
+                                {
+                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a><span class="ui-icon ui-icon-close" role="presentation">Close</span></li>
+                                }}
+                            </ul>
+                            @{
+                            foreach (var item in Model)
+                            {
+                                <div id="tab-@item.MaHoaDon" style="height:100%">@item.MaHoaDon <div style="background-color:red;height:200px"></div></div>
+                            }}
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="height: 400px"><div class="p-3">Row column</div></div>
+
+        </div>
+        <div class="col-3" style="height: 100%">
+            <div class="p-3">Row column</div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#tabs").tabs({
+            beforeActivate: function (event, ui) {
+                if (ui.newTab.hasClass("ui-state-disabled")) {
+                    event.preventDefault();
+                }
+            }
+        });
+
+        $("#create-tab").on("click", function () {
+            if ($("#tabs ul li").length < 10) {
+                var tabIndex = "";
+                var tabTitle = "";
+                $.ajax({
+                    url: "@Url.Action("TaoHoaDonTaiQuay", "BanHangTaiQuay")",
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (response) {
+                        tabIndex = response;
+                        tabTitle = response;
+                        var tabContent = tabIndex 
+                        $("<li><a href='#tab-" + tabIndex + "'>" + tabTitle + "</a><span class='ui-icon ui-icon-close' role='presentation'>Close</span></li>").appendTo("#tabs ul");
+                        $("<div id='tab-" + tabIndex + "'>" + tabContent + "</div>").appendTo("#tabs");
+                        $("#tabs").tabs("refresh");
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    },
+                });
+            }
+        });
+
+        $("#tabs").on("click", ".ui-icon-close", function () {
+            var panelId = $(this).closest("li").remove().attr("aria-controls");
+            $("#" + panelId).remove();
+            $("#tabs").tabs("refresh");
+        });
+    });
+</script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+}
+

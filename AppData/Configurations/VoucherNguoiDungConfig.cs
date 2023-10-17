@@ -13,6 +13,7 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<VoucherNguoiDung> builder)
         {
+            builder.ToTable("VoucherNguoiDung");
             builder.HasKey(c => c.IdVouCherNguoiDung);
 
             builder.HasOne(x => x.Vouchers).WithMany(c => c.VoucherNguoiDungs).HasForeignKey(c => c.IdVouCher);

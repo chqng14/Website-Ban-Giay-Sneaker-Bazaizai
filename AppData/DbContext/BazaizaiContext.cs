@@ -51,19 +51,21 @@ namespace App_Data.DbContextt
         public DbSet<Voucher> vouchers { get; set; }
         public DbSet<VoucherNguoiDung> voucherNguoiDungs { get; set; }
         public DbSet<XuatXu> xuatXus { get; set; }
+        public DbSet<DanhGia> danhGias { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
 
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                var tableName = entityType.GetTableName();
-                if (tableName.StartsWith("AspNet"))
-                {
-                    entityType.SetTableName(tableName.Substring(6));
-                }
-            }
+            //foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            //{
+            //    var tableName = entityType.GetTableName();
+            //    if (tableName.StartsWith("AspNet"))
+            //    {
+            //        entityType.SetTableName(tableName.Substring(6));
+            //    }
+            //}
             //Cấu hình tên bảng tùy chỉnh ở đây
             //modelBuilder.Entity<NguoiDung>().ToTable("NguoiDung");
             //modelBuilder.Entity<ChucVu>().ToTable("ChucVu");

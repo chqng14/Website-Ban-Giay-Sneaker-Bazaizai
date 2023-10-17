@@ -16,11 +16,13 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<NguoiDung> builder)
         {
+            builder.ToTable("NguoiDung");
             builder.Property(e => e.Id).HasDefaultValueSql("(newid())");
             builder.Property(c => c.MaNguoiDung).HasColumnType("nvarchar(100)");
             builder.Property(c => c.TenNguoiDung).HasColumnType("nvarchar(300)");
             builder.Property(c => c.GioiTinh).HasColumnType("int");
             builder.Property(c => c.NgaySinh).HasColumnType("datetime");
+            builder.Property(c => c.DiaChi).HasColumnType("nvarchar(300)");
             builder.Property(c => c.TrangThai).HasColumnType("int");
             builder.Property(c => c.AnhDaiDien).HasColumnType("nvarchar(300)");
         }
