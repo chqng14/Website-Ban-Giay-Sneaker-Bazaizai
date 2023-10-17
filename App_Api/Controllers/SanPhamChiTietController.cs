@@ -11,8 +11,13 @@ using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using App_Data.ViewModels.XuatXu;
 using AutoMapper;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+//using QRCoder;
+using System.Drawing.Imaging;
+using System.Drawing;
 using System.Reflection;
 
 namespace App_Api.Controllers
@@ -159,20 +164,47 @@ namespace App_Api.Controllers
         [HttpPost("Creat-SanPhamChiTiet")]
         public async Task<ResponseCreateDTO> CreateSanPhamChiTiet(SanPhamChiTietDTO sanPhamChiTietDTO)
         {
-            var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietDTO);
-            sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
-            sanPhamChiTiet.Ma = !(await _sanPhamChiTietRes.GetListAsync()).Any() ?
-                "MASP1" :
-                "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
-            sanPhamChiTiet.TrangThai = 0;
-            sanPhamChiTiet.TrangThaiSale = 0;
-            sanPhamChiTiet.SoLuongDaBan = 0;
-            sanPhamChiTiet.NgayTao = DateTime.Now;
-            return new ResponseCreateDTO()
+            try
             {
-                Success = await _sanPhamChiTietRes.AddAsync(sanPhamChiTiet),
-                IdChiTietSp = sanPhamChiTiet.IdChiTietSp
-            };
+                string currentDirectory = Directory.GetCurrentDirectory();
+                string rootPath = Directory.GetParent(currentDirectory)!.FullName;
+                string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "QRCode");
+
+                var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietDTO);
+                sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
+                sanPhamChiTiet.Ma = !(await _sanPhamChiTietRes.GetListAsync()).Any() ?
+                    "MASP1" :
+                    "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
+                sanPhamChiTiet.TrangThai = 0;
+                sanPhamChiTiet.TrangThaiSale = 0;
+                sanPhamChiTiet.SoLuongDaBan = 0;
+                sanPhamChiTiet.NgayTao = DateTime.Now;
+
+                //QRCodeGenerator qrGenerator = new QRCodeGenerator();
+
+                //QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
+                //QRCode qrCode = new QRCode(qrCodeData);
+
+                //Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
+
+                //string qrCodeImagePath = Path.Combine(uploadDirectory, sanPhamChiTiet.Ma + ".png");
+
+                //using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
+                //{
+                //    qrCodeImage.Save(stream, ImageFormat.Png);
+                //}
+
+                return new ResponseCreateDTO()
+                {
+                    Success = await _sanPhamChiTietRes.AddAsync(sanPhamChiTiet),
+                    IdChiTietSp = sanPhamChiTiet.IdChiTietSp
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return new ResponseCreateDTO();
+            }
 
         }
 

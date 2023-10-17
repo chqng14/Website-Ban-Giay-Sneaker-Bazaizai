@@ -53,6 +53,7 @@
   <ItemGroup>
     <Folder Include="mailssave\" />
     <Folder Include="wwwroot\AnhSanPham\" />
+    <Folder Include="wwwroot\images\QRCode\" />
   </ItemGroup>
 
   <ItemGroup>

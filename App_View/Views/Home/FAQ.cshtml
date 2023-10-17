@@ -1,50 +1,81 @@
-﻿<script src="https://cdn.jsdelivr.net/npm/quagga"></script>
-<div id="interactive" class="viewport"></div>
-<button id="toggleQuagga">Bật/Tắt Quagga</button>
-<div id="qrCodeData"></div>
+﻿@*<button id="toggleCamera">Bật/Tắt Camera</button>
+    <video id="video" playsinline autoplay></video>
+    <canvas id="canvas" style="display: none;"></canvas>
 
-<script>
-    let isQuaggaRunning = false; // Biến để theo dõi trạng thái của Quagga
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
-    function toggleQuagga() {
-        if (isQuaggaRunning) {
-            Quagga.stop(); // Tắt Quagga nếu đang chạy
-        } else {
-            Quagga.init({
-                inputStream: {
-                    name: "Live",
-                    type: "LiveStream",
-                    target: document.querySelector("#interactive")
-                },
-                decoder: {
-                    readers: ["qrcode"]
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let scanning = false; // Trạng thái ban đầu là chưa quét
+        let stream = null; // Lưu trữ đối tượng luồng video
+
+        const toggleCameraButton = document.getElementById('toggleCamera');
+        toggleCameraButton.addEventListener('click', toggleCamera);
+
+        function toggleCamera() {
+            if (!scanning) {
+                // Bật camera
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (newStream) {
+                        video.srcObject = newStream;
+                        stream = newStream;
+                    })
+                    .catch(function (err) {
+                        console.error('getUserMedia Error: ' + err);
+                    });
+            } else {
+                // Tắt camera
+                if (stream) {
+                    const tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
+                    video.srcObject = null;
                 }
-            }, function (err) {
-                if (err) {
-                    console.error(err);
-                    return;
-                }
-                Quagga.start(); // Bật Quagga
-            });
+            }
+            // Đảo ngược trạng thái quét
+            scanning = !scanning;
+            if (scanning) {
+                // Nếu đang quét, bắt đầu quét
+                requestAnimationFrame(captureQRCode);
+            }
         }
-        isQuaggaRunning = !isQuaggaRunning; // Đảo ngược trạng thái
-    }
 
-    Quagga.onDetected(function (result) {
-        // Lấy dữ liệu từ mã QR
-        var qrCodeData = result.codeResult.code;
-        alert(qrCodeData)
+        function captureQRCode() {
+            if (!scanning) {
+                return;
+            }
 
-        // Hiển thị dữ liệu từ mã QR trong một phần tử HTML
-        document.querySelector("#qrCodeData").textContent = "QR Code Data: " + qrCodeData;
-    });
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-    // Sử dụng sự kiện click để gọi hàm toggleQuagga khi nút được nhấn
-    document.querySelector("#toggleQuagga").addEventListener("click", toggleQuagga);
-</script>
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height);
 
+            if (code) {
+                console.log('QR Code Data:', code.data);
+                alert('QR Code Data:' + code.data)
 
+                // Dừng quét và đếm thời gian
+                scanning = false;
+                setTimeout(() => {
+                    // Khởi động lại quét sau khoảng thời gian cụ thể (ví dụ, 5 giây)
+                    scanning = true;
+                    requestAnimationFrame(captureQRCode);
+                }, 1500); // 2 giây
+            } else {
+                requestAnimationFrame(captureQRCode); // Tiếp tục quét nếu chưa tìm thấy mã QR
+            }
+        }
 
+        video.onloadedmetadata = function () {
+            if (scanning) {
+                // Nếu đang quét khi camera được kích hoạt, bắt đầu quét
+                requestAnimationFrame(captureQRCode);
+            }
+        };
+    </script>*@
 
 <div class="app-content">
 

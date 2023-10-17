@@ -20,4 +20,8 @@
     <PackageReference Include="OpenXmlPowerTools" Version="4.5.3.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ViewModels\FilterViewModel\" />
+  </ItemGroup>
+
 </Project>

@@ -56,12 +56,6 @@ namespace App_Api.Helpers.Mapping
             .ForMember(
                 dest => dest.MaVoucher, opt => opt.MapFrom(x => x.Vouchers.MaVoucher));
 
-            CreateMap<SanPhamChiTiet, SanPhamChiTietDTO>().ReverseMap()
-                .ForMember(
-                        dest => dest.TrangThai,
-                        opt => opt.MapFrom(src => src.TrangThaiKhuyenMai ? 1 : 0)
-                    );
-
             CreateMap<GioHangChiTiet, GioHangChiTietDTO>()
                  .ForMember(
                     dest => dest.TenSanPham,
@@ -142,7 +136,12 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.FullName,
                         opt => opt.MapFrom(src => $"{src.ThuongHieu.TenThuongHieu} {src.SanPham.TenSanPham} {src.MauSac.TenMauSac}-{src.KichCo.SoKichCo}")
                 )
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(
+                        dest => dest.TrangThaiSale,
+                        opt => opt.MapFrom(src => src.TrangThaiKhuyenMai ? 1 : 0)
+                    )
+                ;
 
             CreateMap<List<SanPhamChiTiet>, DanhSachGiayViewModel>()
                 .ConvertUsing<SanPhamChiTietToListItemViewModelConverter>();
