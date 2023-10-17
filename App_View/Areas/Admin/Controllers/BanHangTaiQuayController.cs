@@ -19,7 +19,7 @@ namespace App_View.Areas.Admin.Controllers
         public async Task<IActionResult> DanhSachHoaDonCho()
         {
             var listHoaDonCho = await _hoaDonServices.GetAllHoaDonCho();
-            return View(listHoaDonCho.OrderBy(c=>c.MaHoaDon.Substring(2,c.MaHoaDon.Length-2)));
+            return View(listHoaDonCho.OrderBy(c=>Convert.ToInt32(c.MaHoaDon.Substring(2,c.MaHoaDon.Length-2))));
         }
         [HttpPost]
         public async Task<IActionResult> TaoHoaDonTaiQuay() {
