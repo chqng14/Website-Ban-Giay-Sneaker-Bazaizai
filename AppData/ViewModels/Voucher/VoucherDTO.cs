@@ -24,6 +24,7 @@ namespace App_Data.ViewModels.Voucher
         public int? SoLuong { get; set; }
         [CustomMucUuDaiValidation]
         public double? MucUuDai { get; set; }
+        public DateTime NgayTao { get; set; }
         [Required(ErrorMessage = "Ngày bắt đầu là trường bắt buộc.")]
         public DateTime NgayBatDau { get; set; }
         [Required(ErrorMessage = "Ngày kết thúc là trường bắt buộc.")]

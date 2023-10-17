@@ -1,0 +1,15 @@
+﻿@using App_Data.Models;
+@using System.Security.Claims;
+@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    var id = UserManager.GetUserId(User);
+    var user = await UserManager.FindByIdAsync(id);
+    var userClaims = await UserManager.GetClaimsAsync(user);
+
+    <span class="dash__text u-s-m-b-16"> Hello,@userClaims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value
+    </span>
+}

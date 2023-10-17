@@ -19,6 +19,7 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
         public double? GiaBan { get; set; }
 
         public double? GiaNhap { get; set; }
+        public double? GiaThucTe { get; set; }
 
         public string? SanPham { get; set; }
         public string? KieuDeGiay { get; set; }

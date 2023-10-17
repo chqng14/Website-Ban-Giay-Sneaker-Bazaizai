@@ -19,6 +19,7 @@ using DocumentFormat.OpenXml.Drawing.Diagrams;
 using AutoMapper;
 using App_Data.ViewModels.SanPhamChiTiet.SanPhamDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -212,7 +213,7 @@ namespace App_View.Areas.Admin.Controllers
         public async Task<IActionResult> ApllySale()
         {
             ViewData["IdSale"] = new SelectList(_context.khuyenMais, "IdKhuyenMai", "TenKhuyenMai");
-            var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Where(x => x.TrangThaiSale == 0).Select(item => CreateSanPhamDanhSachViewModel(item));
+            var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Where(x => x.TrangThaiSale == (int)TrangThaiSale.KhongApDungSale).Select(item => CreateSanPhamDanhSachViewModel(item));
             return View(getallProductDT);
         }
         [HttpPost]

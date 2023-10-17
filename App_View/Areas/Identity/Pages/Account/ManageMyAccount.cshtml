@@ -1,6 +1,8 @@
 ﻿@page "/Manage-My-Account"
 @model App_View.Areas.Identity.Pages.Account.ManageMyAccountModel
 @{
+    Layout = "/Views/Shared/_LayoutUser.cshtml";
+    
 }
 <div class="col-lg-9 col-md-12">
     <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
@@ -15,16 +17,19 @@
                             <h2 class="dash__h2 u-s-m-b-8">PERSONAL PROFILE</h2>
                             <div class="dash__link dash__link--secondary u-s-m-b-8">
 
-                                <a href="dash-edit-profile.html">Edit</a>
+                                <a asp-area="Identity" asp-page="/Account/Manage/Index">Edit</a>
                             </div>
-                            @if (!string.IsNullOrEmpty(Model.Name))
+                            <span class="dash__text">@Model.FirstName</span>
+                           
+
+                          @*  @if (!string.IsNullOrEmpty(Model.Name))
                             {
                                 <span class="dash__text">@Model.Name</span>
                             }
                             else
                             {
                                 <span class="dash__text">@Model.Username</span>
-                            }
+                            }*@
                             <span class="dash__text">@Model.Email</span>
                             <div class="dash__link dash__link--secondary u-s-m-t-8">
 

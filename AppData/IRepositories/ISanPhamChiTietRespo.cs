@@ -1,4 +1,5 @@
 ﻿using App_Data.Models;
+using App_Data.ViewModels.FilterViewModel;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using System;
@@ -30,5 +31,8 @@ namespace App_Data.IRepositories
         Task<bool> KhoiPhucKinhDoanhAynsc(string id);
         Task<List<SanPhamChiTietExcelViewModel>> GetListSanPhamExcelAynsc();
         Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO);
+        Task UpdateSoLuongSanPhamChiTietAynsc(string IdSanPhamChiTiet, int soLuong);
+        Task<FiltersVM> GetFiltersVMAynsc();
+
     }
 }

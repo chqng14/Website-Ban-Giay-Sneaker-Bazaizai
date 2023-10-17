@@ -20,6 +20,7 @@ namespace App_Data.ViewModels.VoucherNguoiDung
         public int? LoaiHinhUuDai { get; set; }
         public int? SoLuong { get; set; }
         public double? MucUuDai { get; set; }
+        public DateTime NgayTao { get; set; }
         public DateTime NgayBatDau { get; set; }
         public DateTime NgayKetThuc { get; set; }
 

@@ -156,7 +156,7 @@
                             </ul>
                         </div>
                         <div class="u-s-m-b-15">
-                            <form class="pd-detail__form" method="post" asp-action="AddToCart" asp-controller="GioHangChiTiets">
+                            <div class="pd-detail__form" method="post">
                                 <div class="u-s-m-b-15">
 
                                     <span class="pd-detail__label u-s-m-b-8">Màu sắc:</span>
@@ -253,12 +253,13 @@
                                         </div>
                                         <!--====== End - Input Counter ======-->
                                     </div>
+                                    <input value="@Model.IdChiTietSp" name="IdSanPhamCT" hidden />
                                     <div class="u-s-m-b-15">
 
-                                        <button class="btn btn--e-brand-b-2" type="submit" value="@Model.IdChiTietSp" name="IdSanPhamCT">Thêm vào giỏ hàng</button>
+                                        <button data-modal="modal" data-modal-id="#add-to-cart" class="btn btn--e-brand-b-2">Thêm vào giỏ hàng</button>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                         <div class="u-s-m-b-15">
 
@@ -997,8 +998,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).on('change', '[name="color"]', function () {
-        console.log($('[name="IdChiTietSp"]').val());
-        console.log($('[name="color"]:checked').val());
+        $('.preloader').addClass('is-active');
         var data = new FormData();
         data.append('id', $('[name="IdChiTietSp"]').val());
         data.append('mauSac', $('[name="color"]:checked').val());
@@ -1060,6 +1060,7 @@
         });
     })
     $(document).on('change', '.pd-detail__size', function () {
+        $('.preloader').addClass('is-active');
         const idSpct = $('[name="IdChiTietSp"]').val();
         const size = $(this).find('input:checked').val();
 
@@ -1080,7 +1081,41 @@
                 console.log(xhr);
             }
         });
-
-
     })
+
+
+    $(document).on('click', 'button[data-modal-id="#add-to-cart"]', function () {
+
+        var data1 = {};
+        $('.pd-detail__form').find("input, select, textarea").each(function () {
+            var fieldType = $(this).attr("type");
+            var fieldName = $(this).attr("name");
+            var fieldValue;
+
+            if (fieldType === "checkbox" || fieldType === "radio") {
+                fieldValue = $(this).is(":checked");
+            } else {
+                fieldValue = $(this).val();
+            }
+
+            data1[fieldName] = fieldValue;
+        });
+
+
+
+        $.ajax({
+            url: '/GioHangChiTiets/AddToCart',
+            type: 'POST',
+            data: data1,
+            success: function (result) {
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    });
+
 </script>

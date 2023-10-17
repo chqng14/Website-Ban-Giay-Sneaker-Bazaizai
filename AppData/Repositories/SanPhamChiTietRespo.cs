@@ -1,11 +1,13 @@
 ﻿using App_Data.DbContextt;
 using App_Data.IRepositories;
 using App_Data.Models;
+using App_Data.ViewModels.FilterViewModel;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using AutoMapper;
 using DocumentFormat.OpenXml.InkML;
 using Microsoft.EntityFrameworkCore;
+using OpenXmlPowerTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,6 +81,7 @@ namespace App_Data.Repositories
             var lstSanPhamChiTiet = await _context.sanPhamChiTiets
                 .Include(it => it.SanPham)
                 .Include(it => it.ThuongHieu)
+                .Include(it => it.KichCo)
                 .Include(it => it.Anh)
                 .ToListAsync();
             return _mapper.Map<DanhSachGiayViewModel>(lstSanPhamChiTiet);
@@ -153,19 +156,18 @@ namespace App_Data.Repositories
 
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id)
         {
-            var sanPhamChiTiet = (await _context.sanPhamChiTiets.
+            var sanPhamChiTiet = await _context.sanPhamChiTiets.
                 Include(x => x.Anh).
                 Include(x => x.SanPham).
                 Include(x => x.ThuongHieu).
                 Include(x => x.KichCo).
                 Include(x => x.MauSac).
-                ToListAsync()).FirstOrDefault(sp => sp.IdChiTietSp == id);
+                FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
             if (sanPhamChiTiet == null) return null;
             var itemDetailViewModel = _mapper.Map<ItemDetailViewModel>(sanPhamChiTiet);
-            var lstBienThe = (await _context.sanPhamChiTiets
+            var lstBienThe = await _context.sanPhamChiTiets
                 .Include(x => x.MauSac)
                 .Include(x => x.KichCo)
-                .ToListAsync())
                 .Where(sp =>
                 sp.TrangThai == 0 &&
                 sp.IdKieuDeGiay == sanPhamChiTiet!.IdKieuDeGiay &&
@@ -174,7 +176,7 @@ namespace App_Data.Repositories
                 sp.IdXuatXu == sanPhamChiTiet.IdXuatXu &&
                 sp.IdChatLieu == sanPhamChiTiet.IdChatLieu &&
                 sp.IdSanPham == sanPhamChiTiet.IdSanPham
-                ).ToList();
+                ).ToListAsync();
             itemDetailViewModel.LstMauSac = lstBienThe.Select(x => x.MauSac.TenMauSac).Distinct().ToList()!;
             itemDetailViewModel.LstKichThuoc = lstBienThe.Where(sp => sp.IdMauSac == sanPhamChiTiet.IdMauSac).Select(x => x.KichCo.SoKichCo!.Value).Distinct().OrderBy(item => item).ToList();
             return itemDetailViewModel;
@@ -182,15 +184,11 @@ namespace App_Data.Repositories
 
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac)
         {
-            var sanPhamGet = (await _context.sanPhamChiTiets.ToListAsync())
-                .FirstOrDefault(sp => sp.IdChiTietSp == id);
-            var idMauSac = (await _context.mauSacs.ToListAsync()).FirstOrDefault(x => x.TenMauSac == mauSac)!.IdMauSac;
+            var sanPhamGet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
+
+            var idMauSac = (await _context.mauSacs.FirstOrDefaultAsync(x => x.TenMauSac == mauSac))!.IdMauSac;
             if (sanPhamGet == null) return null;
-            var lstBienThe = (await _context.sanPhamChiTiets
-                .Include(x => x.MauSac)
-                .Include(x => x.KichCo)
-                .Include(x => x.Anh)
-                .ToListAsync())
+            var lstBienThe = await _context.sanPhamChiTiets
                 .Where(sp =>
                 sp.TrangThai == 0 &&
                 sp.IdKieuDeGiay == sanPhamGet!.IdKieuDeGiay &&
@@ -200,7 +198,11 @@ namespace App_Data.Repositories
                 sp.IdChatLieu == sanPhamGet.IdChatLieu &&
                 sp.IdSanPham == sanPhamGet.IdSanPham &&
                 sp.IdMauSac == idMauSac
-                ).ToList();
+                )
+                .Include(x => x.MauSac)
+                .Include(x => x.KichCo)
+                .Include(x => x.Anh)
+                .ToListAsync();
             var lstSize = lstBienThe.DistinctBy(sp => sp.KichCo.SoKichCo).OrderBy(item => item.KichCo.SoKichCo).ToList();
             var idSizeGet = lstSize.FirstOrDefault()!.KichCo.IdKichCo;
             var sanPhamChiTiet = lstBienThe.FirstOrDefault(sp => sp.IdKichCo == idSizeGet);
@@ -211,16 +213,10 @@ namespace App_Data.Repositories
 
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSizeAynsc(string id, int size)
         {
-            var sanPhamGet = (await _context.sanPhamChiTiets.ToListAsync())
-                .FirstOrDefault(sp => sp.IdChiTietSp == id);
-            var idsSize = (await _context.kichCos.ToListAsync()).FirstOrDefault(x => x.SoKichCo == size)!.IdKichCo;
-            var sanPhamChiTiet = (await _context.sanPhamChiTiets.
-                Include(x => x.Anh).
-                Include(x => x.SanPham).
-                Include(x => x.ThuongHieu).
-                Include(x => x.KichCo).
-                Include(x => x.MauSac).
-                ToListAsync()).FirstOrDefault(sp =>
+            var sanPhamGet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
+
+            var idsSize = (await _context.kichCos.FirstOrDefaultAsync(x => x.SoKichCo == size))!.IdKichCo;
+            var sanPhamChiTiet = (await _context.sanPhamChiTiets.Where(sp =>
                 sp.IdXuatXu == sanPhamGet!.IdXuatXu &&
                 sp.IdMauSac == sanPhamGet.IdMauSac &&
                 sp.IdLoaiGiay == sanPhamGet.IdLoaiGiay &&
@@ -228,8 +224,12 @@ namespace App_Data.Repositories
                 sp.IdChatLieu == sanPhamGet.IdChatLieu &&
                 sp.IdSanPham == sanPhamGet.IdSanPham &&
                 sp.IdThuongHieu == sanPhamGet.IdThuongHieu &&
-                sp.IdKichCo == idsSize
-                );
+                sp.IdKichCo == idsSize).
+                Include(x => x.Anh).
+                Include(x => x.SanPham).
+                Include(x => x.ThuongHieu).
+                Include(x => x.KichCo).
+                Include(x => x.MauSac).FirstOrDefaultAsync());
             if (sanPhamChiTiet == null) return null;
             var itemDetailViewModel = _mapper.Map<ItemDetailViewModel>(sanPhamChiTiet);
             return itemDetailViewModel;
@@ -469,5 +469,48 @@ namespace App_Data.Repositories
             };
             return spDTO;
         }
+
+        public async Task UpdateSoLuongSanPhamChiTietAynsc(string IdSanPhamChiTiet, int soLuong)
+        {
+            var sanPhamChiTiet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == IdSanPhamChiTiet);
+            sanPhamChiTiet!.SoLuongTon = sanPhamChiTiet.SoLuongTon - soLuong;
+            sanPhamChiTiet!.SoLuongDaBan = sanPhamChiTiet.SoLuongTon - soLuong;
+            await _context.SaveChangesAsync();
+        }
+
+        //Filter
+        public async Task<FiltersVM> GetFiltersVMAynsc()
+        {
+            var query = _context.sanPhamChiTiets
+                        .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong)
+                        .Include(sp => sp.MauSac)
+                        .Include(sp => sp.ThuongHieu)
+                        .Include(sp => sp.LoaiGiay)
+                        .Include(sp => sp.KichCo);
+
+            var data = await query.ToListAsync();
+
+            return new FiltersVM()
+            {
+                LstItemFilterMauSac = GetListItemFilter(data, sp => sp.MauSac.TenMauSac!),
+                LstItemFilterKichCo = GetListItemFilter(data, sp => sp.KichCo.SoKichCo.ToString()!).OrderBy(x=>x.Ten).ToList(),
+                LstItemFilterTheLoai = GetListItemFilter(data, sp => sp.LoaiGiay.TenLoaiGiay!),
+                LstItemFilterThuongHieu = GetListItemFilter(data, sp => sp.ThuongHieu.TenThuongHieu!),
+            };
+        }
+
+        private List<ItemFilter> GetListItemFilter(List<SanPhamChiTiet> data, Func<SanPhamChiTiet, string> selector)
+        {
+            return data
+                .GroupBy(selector)
+                .Select(group => new ItemFilter()
+                {
+                    Ten = group.Key,
+                    SoLuong = group.Count(),
+                })
+                .ToList();
+        }
+
+
     }
 }

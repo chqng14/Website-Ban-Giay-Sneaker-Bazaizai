@@ -22,6 +22,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using static App_Data.Repositories.TrangThai;
+using Microsoft.EntityFrameworkCore;
 
 namespace App_View.Areas.Identity.Pages.Account
 {
@@ -67,11 +68,11 @@ namespace App_View.Areas.Identity.Pages.Account
             [EmailAddress]
             public string Email { get; set; }
         }
-        
+
         public IActionResult OnGet() => RedirectToPage("./Login");
 
         //mặc định 
-        public IActionResult OnPost(string provider, string returnUrl = null)              
+        public IActionResult OnPost(string provider, string returnUrl = null)
         {
             // Request a redirect to the external login provider.
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
@@ -138,12 +139,11 @@ namespace App_View.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var externalLoginInfo = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme); 
+                var externalLoginInfo = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 var registerUser = await _userManager.FindByEmailAsync(Input.Email);
                 string externalEmail = null;
                 NguoiDung externalEmailUser = null;
-               
-                // claim - đặc tính mô tả 1 đối tượng
+
                 if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
                 {
                     externalEmail = info.Principal.FindFirstValue(ClaimTypes.Email);
@@ -158,6 +158,21 @@ namespace App_View.Areas.Identity.Pages.Account
                     if (Input.Email == externalEmail)
                     {
                         // liên kết tài khoản, đăng nhập
+                        if (registerUser.AnhDaiDien == null)
+                        {
+                            if (info.Principal.HasClaim(c => c.Type == "urn:google:picture"))
+                            {
+                                registerUser.AnhDaiDien = info.Principal.FindFirst("urn:google:picture")?.Value;
+                            }
+                        }
+                        if (registerUser.DiaChi == null)
+                        {
+                            if (info.Principal.HasClaim(c => c.Type == "urn:google:locale"))
+                            {
+                                registerUser.DiaChi = info.Principal.FindFirst("urn:google:locale")?.Value;
+                            }
+                        }
+
                         var resultLink = await _userManager.AddLoginAsync(registerUser, info);
                         if (resultLink.Succeeded)
                         {
@@ -168,10 +183,6 @@ namespace App_View.Areas.Identity.Pages.Account
                     else
                     {
                         //externalEmailUser==registerUser (Input.Email!=externalEmail)
-                        /*
-                            info -> user1= (abc1@gmail.com)
-                                    user2= (abc2@gmail.com)
-                         */
                         ModelState.AddModelError(string.Empty, "Không liên kết được tài khoản, hãy sử dụng email khác");
                         return Page();
                     }
@@ -183,7 +194,7 @@ namespace App_View.Areas.Identity.Pages.Account
                 }
                 if (externalEmailUser == null && externalEmail == Input.Email)
                 {
-                    var user = CreateUser();                  
+                    var user = CreateUser();
                     await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                     await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                     var email = Input.Email;
@@ -193,10 +204,24 @@ namespace App_View.Areas.Identity.Pages.Account
                         var userName = email.Substring(0, atIndex);
                         user.UserName = userName;
                     }
+                    if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Name))
+                    {
+                        user.TenNguoiDung = info.Principal.FindFirst(ClaimTypes.Name)?.Value;
+                    }
+                    if (info.Principal.HasClaim(c => c.Type == "urn:google:picture"))
+                    {
+                        user.AnhDaiDien = info.Principal.FindFirst("urn:google:picture")?.Value;
+                    }
+                    if (info.Principal.HasClaim(c => c.Type == "urn:google:locale"))
+                    {
+                        user.DiaChi = info.Principal.FindFirst("urn:google:locale")?.Value;
+                    }
+                    string MaTS = "ND" + (await _userManager.Users.CountAsync() + 1);
+                    user.MaNguoiDung = MaTS;
                     var result = await _userManager.CreateAsync(user);
                     if (result.Succeeded)
                     {
-                        await _userManager.AddToRoleAsync(user, ChucVuMacDinh.KhachHang.ToString());//them rolr cho user 
+                        await _userManager.AddToRoleAsync(user, ChucVuMacDinh.KhachHang.ToString());
 
                         result = await _userManager.AddLoginAsync(user, info);
                         if (result.Succeeded)
@@ -207,58 +232,41 @@ namespace App_View.Areas.Identity.Pages.Account
                                 await _userManager.AddClaimAsync(user,
                                     info.Principal.FindFirst(ClaimTypes.GivenName));
                             }
-                            if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Gender))
-                            {
-                                await _userManager.AddClaimAsync(user,
-                                    info.Principal.FindFirst(ClaimTypes.Gender));
-                            }  
+                            //if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Gender))
+                            //{
+                            //    await _userManager.AddClaimAsync(user,
+                            //        info.Principal.FindFirst(ClaimTypes.Gender));
+                            //}  
                             //if (info.Principal.HasClaim(c => c.Type == ClaimTypes.DateOfBirth))
                             //{
                             //    await _userManager.AddClaimAsync(user,
                             //        info.Principal.FindFirst(ClaimTypes.DateOfBirth));
                             //} 
-                        
+                            //if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Name))
+                            //{
+                            //    await _userManager.AddClaimAsync(user,
+                            //        info.Principal.FindFirst(ClaimTypes.Name));
+                            //}
+                            //if (info.Principal.HasClaim(c => c.Type == "urn:google:locale"))
+                            //{
+                            //    await _userManager.AddClaimAsync(user,
+                            //        info.Principal.FindFirst("urn:google:locale"));
+                            //}
 
-                            if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Name))
-                            {
-                                await _userManager.AddClaimAsync(user,
-                                    info.Principal.FindFirst(ClaimTypes.Name));
-                            }
-                            if (info.Principal.HasClaim(c => c.Type == "urn:google:locale"))
-                            {
-                                await _userManager.AddClaimAsync(user,
-                                    info.Principal.FindFirst("urn:google:locale"));
-                            }
-
-                            if (info.Principal.HasClaim(c => c.Type == "urn:google:picture"))
-                            {
-                                await _userManager.AddClaimAsync(user,
-                                    info.Principal.FindFirst("urn:google:picture"));
-                            }
+                            //if (info.Principal.HasClaim(c => c.Type == "urn:google:picture"))
+                            //{
+                            //    await _userManager.AddClaimAsync(user,
+                            //        info.Principal.FindFirst("urn:google:picture"));
+                            //}
                             var props = new AuthenticationProperties();
                             props.StoreTokens(info.AuthenticationTokens);
                             props.IsPersistent = false;
 
                             var userId = await _userManager.GetUserIdAsync(user);
-                            await AddCart(userId, 0);/// them vao ở đây
+                            await AddCart(userId, 0);
                             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                            //code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                            //var callbackUrl = Url.Page(
-                            //    "/Account/ConfirmEmail",
-                            //    pageHandler: null,
-                            //    values: new { area = "Identity", userId = userId, code = code },
-                            //    protocol: Request.Scheme);
-
-                            //await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                            //    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-                            // If account confirmation is required, we need to show the link if we don't have a real email sender
-                            //if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                            //{
-                            //    return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
-                            //}
-                            await _userManager.ConfirmEmailAsync(user, code);//thêm
-                            await _signInManager.SignInAsync(user,props /*isPersistent: false*/, info.LoginProvider);
+                            await _userManager.ConfirmEmailAsync(user, code);
+                            await _signInManager.SignInAsync(user, props /*isPersistent: false*/, info.LoginProvider);
                             return LocalRedirect(returnUrl);
                         }
                     }
@@ -296,7 +304,6 @@ namespace App_View.Areas.Identity.Pages.Account
             }
             return (IUserEmailStore<NguoiDung>)_userStore;
         }
-        //mặc định 
 
         public async Task<bool> AddCart(string idUser, int trangThai)
         {

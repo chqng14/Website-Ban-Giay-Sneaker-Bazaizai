@@ -12,6 +12,28 @@
     .note-editing-area {
         height: 400px;
     }
+
+    .cursor-image {
+        cursor: pointer;
+    }
+
+    .note-editing-area {
+        height: 400px;
+    }
+
+    .main-content {
+/*        background: #eeeeee*/
+    }
+
+    .main_danh_sach {
+/*        background: #A0C5E8;*/
+    }
+
+    .card-body {
+/*        background: #a0c5e85e !important;*/
+    }
+
+
 </style>
 
 <div class="modal fade" id="cauHinh">
@@ -56,7 +78,7 @@
                         </div>
                         <div class="form-group d-flex align-items-center col-2">
                             <div class="switch m-r-10">
-                                <input type="checkbox" id="switch-1-day" class="switch-2-day">
+                                <input type="checkbox" id="switch-1-day" class="switch-2-day" checked>
                                 <label class="font-weight-semibold" for="switch-1-day"></label>
                             </div>
                             <label class="font-weight-semibold">Dây</label>
@@ -105,10 +127,10 @@
         <div style="display: flex; align-items: center; justify-content: space-between;">
             <h5 style="margin: 0;">QUẢN LÝ SẢN PHẨM</h5>
             <div class="d-flex">
-                <button class="btn btn-icon btn-danger btn-rounded btn-tone mr-1" data-toggle="modal" data-target="#cauHinh">
+                <button class="btn btn-icon btn-danger btn-rounded btn-kio mr-1" data-toggle="modal" data-target="#cauHinh">
                     <i class="fab fa-whmcs"></i>
                 </button>
-                <button onclick="generate()" class="btn btn-tone">
+                <button onclick="generate()" class="btn btn-primary">
                     <i class="fas fa-plus-circle"></i>
                     <span>Tạo các biến thể</span>
                 </button>
@@ -121,7 +143,7 @@
                     <div class="d-flex align-items-center">
                         <i class="fas fa-cube mr-1"></i>
                         <select class="w-100 select2-active" asp-for="IdSanPham">
-                            @foreach (var item in (SelectList)ViewData["IdSanPham"])
+                            @foreach (var item in (SelectList)ViewData["IdSanPham"]!)
                             {
                                 <option value="@item.Value">@item.Text</option>
                             }
@@ -136,7 +158,7 @@
                     <div class="d-flex align-items-center">
                         <i class="fas fa-trademark mr-1"></i>
                         <select class="select2-active w-100" asp-for="IdThuongHieu">
-                            @foreach (var item in (SelectList)ViewData["IdThuongHieu"])
+                            @foreach (var item in (SelectList)ViewData["IdThuongHieu"]!)
                             {
                                 <option value="@item.Value">@item.Text</option>
                             }
@@ -149,7 +171,7 @@
                     <div class="d-flex align-items-center">
                         <i class="fab fa-connectdevelop mr-1"></i>
                         <select class="select2-active w-100" asp-for="IdXuatXu">
-                            @foreach (var item in (SelectList)ViewData["IdXuatXu"])
+                            @foreach (var item in (SelectList)ViewData["IdXuatXu"]!)
                             {
                                 <option value="@item.Value">@item.Text</option>
                             }
@@ -162,7 +184,7 @@
                     <div class="d-flex align-items-center">
                         <i class="fab fa-centercode mr-1"></i>
                         <select class="select2-active w-100" asp-for="IdChatLieu">
-                            @foreach (var item in (SelectList)ViewData["IdChatLieu"])
+                            @foreach (var item in (SelectList)ViewData["IdChatLieu"]!)
                             {
                                 <option value="@item.Value">@item.Text</option>
                             }
@@ -175,7 +197,7 @@
                     <div class="d-flex align-items-center">
                         <i class="fab fa-magento mr-1"></i>
                         <select class="select2-active w-100" asp-for="IdLoaiGiay">
-                            @foreach (var item in (SelectList)ViewData["IdLoaiGiay"])
+                            @foreach (var item in (SelectList)ViewData["IdLoaiGiay"]!)
                             {
                                 <option value="@item.Value">@item.Text</option>
                             }
@@ -188,7 +210,7 @@
                     <div class="d-flex align-items-center mr-1">
                         <i class="fas fa-podcast mr-1"></i>
                         <select class="select2-active w-100" asp-for="IdKieuDeGiay">
-                            @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"])
+                            @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"]!)
                             {
                                 <option value="@item.Value">@item.Text</option>
                             }
@@ -204,7 +226,7 @@
                         <i class="fas fa-palette mr-1"></i>
                         <select id="IdColor" class="select2-active w-100"
                                 multiple="multiple">
-                            @foreach (var item in (SelectList)ViewData["IdMauSac"])
+                            @foreach (var item in (SelectList)ViewData["IdMauSac"]!)
                             {
                                 <option value="@item.Value">@item.Text</option>
                             }
@@ -218,7 +240,7 @@
                         <i class="fas fa-bowling-ball mr-1"></i>
                         <select id="IdSize" class="select2-active w-100"
                                 multiple="multiple">
-                            @foreach (var item in (SelectList)ViewData["IdKichCo"])
+                            @foreach (var item in (SelectList)ViewData["IdKichCo"]!)
                             {
                                 <option value="@item.Value">@item.Text</option>
                             }
@@ -232,8 +254,8 @@
 
 <div id="confirm" class="mt-2 mb-2" style="display: none">
     <div class="d-flex justify-content-end">
-        <button onclick="Huy()" class="btn btn-tone mr-2">Hủy</button>
-        <button onclick="CapNhat()" class="btn btn-tone">Cập nhật</button>
+        <button onclick="Huy()" class="btn btn-warning mr-2">Hủy</button>
+        <button onclick="CapNhat()" class="btn btn-primary">Cập nhật</button>
     </div>
 </div>
 
@@ -572,7 +594,7 @@
                    href="#collapseOneBorderless${index}">
                     <span>${Title}</span>
                 </a>
-                <button class="btn btn-tone btnn-close">
+                <button class="btn btn-waring btnn-close">
                     <i class="anticon anticon-close"></i>
                 </button>
             </h5>
@@ -592,10 +614,10 @@
                 </ul>
 
                 <div class="tab-content" id="myTabContentVertical">
-                    <div class="tab-pane fade show active" id="home-vertical${index}" role="tabpanel"
+                    <div class="tab-pane fade show active" style="height: 650px" id="home-vertical${index}" role="tabpanel"
                          aria-labelledby="home-tab-vertical${index}">
-                        <div class="card-body mt-2">
-                            <div class="row">
+                        <div class="card-body">
+                            <div class="row mt-2">
                                 <div class="form-group col-3">
                                     <label class="font-weight-semibold">Giá Nhập(*)</label>
                                     <div class="d-flex align-items-center">
@@ -623,7 +645,7 @@
                                     <label class="font-weight-semibold">Khối lượng(*)</label>
                                     <div class="d-flex align-items-center">
                                         <i class="fas fa-weight mr-1"></i>
-                                        <input class="form-control formatNumber" name="KhoiLuong" value="${khoiLuong}">(g)
+                                        <input class="form-control formatKhoiLuong" name="KhoiLuong" value="${khoiLuong}">(g)
                                     </div>
                                 </div>
                                 <div class="form-group d-flex align-items-center col-2">
@@ -640,6 +662,13 @@
                                     </div>
                                     <label class="font-weight-semibold">Nổi bật</label>
                                 </div>
+                                 <div class="form-group d-flex align-items-center col-4">
+                                     <div class="switch m-r-10">
+                                         <input type="checkbox" id="switch-${index}-2" class="switch-2-trangthaikhuyenmai" name="TrangThaiKhuyenMai" checked>
+                                         <label class="font-weight-semibold" for="switch-${index}-2"></label>
+                                     </div>
+                                     <label class="font-weight-semibold">Áp dụng khuyến mãi</label>
+                                 </div>
                                 <div class="form-group col-12">
                                     <div class="m-b-5" style="margin-top: 10px;">
                                         <label class="font-weight-semibold" style="display: block; margin-bottom: 5px;">
@@ -651,10 +680,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="profile-vertical${index}" role="tabpanel"
+                    <div class="tab-pane fade" style="height: 650px" id="profile-vertical${index}" role="tabpanel"
                          aria-labelledby="profile-tab-vertical${index}">
-                        <div class="card-body mt-2">
-                            <div class="upload">
+                        <div class="card-body">
+                            <div class="upload mt-2">
                                 <button name="choseFile" class="custom-btn btn-tone mb-2">
                                     Choose file
                                 </button>
@@ -743,7 +772,7 @@
                 promise.then((respose) => {
                     console.log(respose);
                     if (respose.success) {
-                        const itemAppend = $(ItemTemplate(index, true, respose.data.idChswitchiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa, respose.data.khoiLuong))
+                        const itemAppend = $(ItemTemplate(index, true, respose.data.idChiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa, respose.data.khoiLuong))
                         container.append(itemAppend)
                         if (respose.data.day = "true") {
                             itemAppend.find('.switch-2-day').prop('checked', true);
@@ -834,6 +863,15 @@
                 decimalCharacter: ".",
                 digitGroupSeparator: ",",
                 decimalPlaces: 0,
+                minimumValue: 0
+            });
+        });
+
+        $(".formatKhoiLuong").each(function () {
+            var autoNumeric = new AutoNumeric(this, {
+                decimalCharacter: ".",
+                digitGroupSeparator: ",",
+                decimalPlaces: 2, // Số thập phân
                 minimumValue: 0
             });
         });
@@ -997,7 +1035,7 @@
                     var toastHTML = `<div class="toast fade hide" data-delay="3000">
                                         <div class="toast-header">
                                             <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                            <strong class="mr-auto">Bootstrap</strong>
+                                            <strong class="mr-auto">Thông báo</strong>
                                             <small>1 second ago</small>
                                             <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
@@ -1005,7 +1043,7 @@
                                         </div>
                                         <div class="toast-body">
                                             Một vài thực thể dữ liệu chưa được nhập.
-                                            Vui lòng nhập để tiếp tục
+                                            Vui lòng nhập các trường cần thiết và chọn ảnh để tiếp tục!
                                         </div>
                                     </div>`
                     $('#notification-toast').append(toastHTML)
@@ -1034,7 +1072,21 @@
                     if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
                         var fieldValue = $(this).val();
                         fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
-                    } else {
+                    }
+                    else if ($(this).hasClass("formatKhoiLuong")) {
+                        var autoNumeric = new AutoNumeric(this, {
+                            decimalCharacter: ".",
+                            digitGroupSeparator: ",",
+                            decimalPlaces: 2, 
+                            minimumValue: 0
+                        });
+
+                        var numericValue = autoNumeric.getNumericString();
+
+                        var doubleValue = parseFloat(numericValue);
+                        fieldValue = doubleValue;
+                    }
+                    else {
                         fieldValue = $(this).val();
                     }
                 }
@@ -1054,80 +1106,89 @@
             });
 
             const moTa = { MoTa: currentItem.find('.moTa').summernote('code') }
+
+            var slImage = currentItem.find('.wrapper-file').length;
+
             if (isUpdate === 'true') {
-                const key = currentItem.find('.collapse').attr('id');
+                var opject = { ...GetDataMain(), ...dataBienThe, ...DataInDataset, ...{ IdChiTietSp: currentItem.attr('data-idproductdetail') }, ...moTa, ...{ Day: currentItem.find('.switch-2-day').prop('checked'), NoiBat: currentItem.find('.switch-2-noibat').prop('checked') } }
+
+                if (opject.GiaBan !== "0" && opject.GiaNhap !== "0" && opject.SoLuongTon !== "0" && opject.KhoiLuong !== "0" && slImage >= 1) {
+                    const key = currentItem.find('.collapse').attr('id');
 
 
-                if (selectedFiles[key] && Array.from(selectedFiles[key]).length > 0) {
-                    var data = new FormData();
-                    Array.from(selectedFiles[key]).map(item => data.append('lstIFormFile', item.data))
-                    data.append('IdChiTietSp', currentItem.attr('data-idproductdetail'));
+                    if (selectedFiles[key] && Array.from(selectedFiles[key]).length > 0) {
+                        var data = new FormData();
+                        Array.from(selectedFiles[key]).map(item => data.append('lstIFormFile', item.data))
+                        data.append('IdChiTietSp', currentItem.attr('data-idproductdetail'));
+                        $.ajax({
+                            url: URL_CREATE_IMAGE,
+                            type: 'POST',
+                            data: data,
+                            contentType: false,
+                            processData: false,
+                            success: function (result) {
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(xhr.responseText);
+                                console.log(status);
+                                console.log(error);
+                                console.log(xhr);
+                            }
+                        });
+                    }
+
+                    if (lstAnhRemove[key] && Array.from(lstAnhRemove[key]).length > 0) {
+                        const data = new FormData();
+                        lstAnhRemove[key].map(item => data.append('lstImageRemove', item))
+                        data.append('idProductDetail', currentItem.attr('data-idproductdetail'))
+                        fetch(URL_DELETE_LIST_IMAGE, {
+                            method: 'POST',
+                            body: data
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    if (response.headers.get("content-length") !== "0") {
+                                        return response.json();
+                                    } else {
+                                        return null;
+                                    }
+                                }
+                                throw new Error('Network response was not ok.');
+                            })
+                            .then(data => {
+
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    }
+
                     $.ajax({
-                        url: URL_CREATE_IMAGE,
+                        url: URL_UPDATE_PRODUCT_DETAIL,
                         type: 'POST',
-                        data: data,
-                        contentType: false,
-                        processData: false,
+                        data: JSON.stringify(opject),
+                        contentType: 'application/json',
                         success: function (result) {
+                            checkSS++;
+                            currentItem.remove();
+                            currentIndex++;
+                            processNextItem();
                         },
                         error: function (xhr, status, error) {
+                            checkErr++;
                             console.log(xhr.responseText);
                             console.log(status);
                             console.log(error);
                             console.log(xhr);
                         }
                     });
+                } else {
+                    checkErr++;
+                    currentIndex++;
+                    processNextItem();
                 }
-
-                if (lstAnhRemove[key] && Array.from(lstAnhRemove[key]).length > 0) {
-                    const data = new FormData();
-                    lstAnhRemove[key].map(item => data.append('lstImageRemove', item))
-                    data.append('idProductDetail', currentItem.attr('data-idproductdetail'))
-                    fetch(URL_DELETE_LIST_IMAGE, {
-                        method: 'POST',
-                        body: data
-                    })
-                        .then(response => {
-                            if (response.ok) {
-                                if (response.headers.get("content-length") !== "0") {
-                                    return response.json();
-                                } else {
-                                    return null;
-                                }
-                            }
-                            throw new Error('Network response was not ok.');
-                        })
-                        .then(data => {
-
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        });
-                }
-
-                $.ajax({
-                    url: URL_UPDATE_PRODUCT_DETAIL,
-                    type: 'POST',
-                    data: JSON.stringify({ ...GetDataMain(), ...dataBienThe, ...DataInDataset, ...{ IdChiTietSp: currentItem.attr('data-idproductdetail') }, ...moTa, ...{ Day: currentItem.find('.switch-2-day').prop('checked'), NoiBat: currentItem.find('.switch-2-noibat').prop('checked') } }),
-                    contentType: 'application/json',
-                    success: function (result) {
-                        checkSS++;
-                        currentItem.remove();
-                        currentIndex++;
-                        processNextItem();
-                    },
-                    error: function (xhr, status, error) {
-                        checkErr++;
-                        console.log(xhr.responseText);
-                        console.log(status);
-                        console.log(error);
-                        console.log(xhr);
-                    }
-                });
-
-
             } else {
-                if (dataBienThe.GiaBan != 0 && dataBienThe.GiaNhap != 0 && dataBienThe.SoLuongTon != 0) {
+                if (dataBienThe.GiaBan && dataBienThe.GiaNhap && dataBienThe.SoLuongTon && dataBienThe.KhoiLuong && slImage >= 1) {
                     $.ajax({
                         url: URL_CREATE_PRODUCT,
                         type: 'POST',

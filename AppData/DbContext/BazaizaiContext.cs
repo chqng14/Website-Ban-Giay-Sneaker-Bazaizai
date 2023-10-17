@@ -51,6 +51,8 @@ namespace App_Data.DbContextt
         public DbSet<Voucher> vouchers { get; set; }
         public DbSet<VoucherNguoiDung> voucherNguoiDungs { get; set; }
         public DbSet<XuatXu> xuatXus { get; set; }
+        public DbSet<DanhGia> danhGias { get; set; }
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
