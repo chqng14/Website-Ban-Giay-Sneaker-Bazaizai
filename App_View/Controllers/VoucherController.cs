@@ -1,5 +1,6 @@
 ﻿using App_Data.DbContextt;
 using App_Data.Models;
+using App_Data.Repositories;
 using App_View.IServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,7 +22,7 @@ namespace App_View.Controllers
             _signInManager = signInManager;
             _userManager = userManager;
         }
-        public async Task<IActionResult> VoucherToCalm()
+        public async Task<IActionResult> VoucherToCalm(string LoaiHinh)
         {
             var idNguoiDung = _userManager.GetUserId(User);
             if (string.IsNullOrEmpty(idNguoiDung))
@@ -32,16 +33,22 @@ namespace App_View.Controllers
 
 
             var allVouchers = (await _voucherSV.GetAllVoucher()).Where(c => c.TrangThai == 0);
-
-            var tienMatVouchers = allVouchers.Where(c => c.LoaiHinhUuDai == (int)TrangThaiLoaiKhuyenMai.TienMat);
-            var phanTramVouchers = allVouchers.Where(c => c.LoaiHinhUuDai == (int)TrangThaiLoaiKhuyenMai.PhanTram);
-            var freeShipVouchers = allVouchers.Where(c => c.LoaiHinhUuDai == (int)TrangThaiLoaiKhuyenMai.Freeship);
-
-            ViewBag.TheoTienMat = tienMatVouchers;
-            ViewBag.TheoPhanTram = phanTramVouchers;
-            ViewBag.FreeShip = freeShipVouchers;
-
-            return View();
+            switch (LoaiHinh)
+            {
+                case "TienMat":
+                    allVouchers = allVouchers.Where(c => c.LoaiHinhUuDai == (int)TrangThaiLoaiKhuyenMai.TienMat);
+                    break;
+                case "PhanTram":
+                    allVouchers = allVouchers.Where(c => c.LoaiHinhUuDai == (int)TrangThaiLoaiKhuyenMai.PhanTram);
+                    break;
+                case "FreeShip":
+                    allVouchers = allVouchers.Where(c => c.LoaiHinhUuDai == (int)TrangThaiLoaiKhuyenMai.Freeship);
+                    break;
+                default:
+                    break;
+            }
+            ViewBag.TatCaVoucher = allVouchers;
+            return View(allVouchers);
         }
         public IActionResult Index()
         {
