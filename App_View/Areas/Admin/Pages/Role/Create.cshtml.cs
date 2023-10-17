@@ -1,14 +1,12 @@
 ﻿using App_Data.Models;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using static App_Data.Repositories.TrangThai;
 
-namespace App_View.Areas.Admin.Pages
+namespace App_View.Areas.Admin.Pages.Role
 {
     [Area("Admin")]
     public class CreateModel : PageModel
@@ -30,13 +28,15 @@ namespace App_View.Areas.Admin.Pages
             [Display(Name = "Tên chức vụ")]
             [StringLength(100, ErrorMessage = "{0} dài {2} đến {1} ký tự.", MinimumLength = 3)]
             public string Name { set; get; }
+            //[Required(ErrorMessage = "Phải có trạng thái")]
+            //[Display(Name = "Trạng thái")]
+            //public int? TrangThai { set; get; }
+            
         }
 
         [BindProperty]
         public InputModel Input { set; get; }
 
-        [BindProperty]
-        public bool IsUpdate { set; get; }
 
         public async Task<IActionResult> OnPostAsync()
         {
@@ -49,7 +49,10 @@ namespace App_View.Areas.Admin.Pages
             var newRole = new ChucVu();
             newRole.Name = Input.Name;
             newRole.Id = Guid.NewGuid().ToString();
+            //newRole.TrangThai = Input.TrangThai;
+            newRole.TrangThai = (int?)TrangThaiCoBan.HoatDong;
             string MaTS = "CV" + (await _roleManager.Roles.CountAsync() + 1);
+            newRole.MaChucVu = MaTS;
             var result = await _roleManager.CreateAsync(newRole);
             if (result.Succeeded)
             {

@@ -10,7 +10,7 @@ using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Office2010.Drawing;
 using Microsoft.AspNetCore.Authorization;
 
-namespace App_View.Areas.Identity.Pages.User
+namespace App_View.Areas.Admin.Pages.User
 {
     public class IndexModel : PageModel
     {
@@ -32,7 +32,7 @@ namespace App_View.Areas.Identity.Pages.User
         [TempData]
         public string StatusMessage { get; set; }
 
-        public const int ITEMS_PER_PAGE = 15;
+        public const int ITEMS_PER_PAGE = 10;//số phần tử trong 1 trang
 
         [BindProperty(SupportsGet = true, Name = "p")]
         public int currentPage { get; set; }
@@ -44,7 +44,7 @@ namespace App_View.Areas.Identity.Pages.User
 
         public async Task<IActionResult> OnGet()
         {
-            var qr = _userManager.Users.OrderBy(x => x.UserName);
+            var qr = _userManager.Users.OrderBy(x => x.MaNguoiDung);
             totalUsers = await qr.CountAsync();
             countPages = (int)Math.Ceiling((double)totalUsers / ITEMS_PER_PAGE);
             if (currentPage < 1)
@@ -65,20 +65,19 @@ namespace App_View.Areas.Identity.Pages.User
                 user.RoleName=string.Join(",", roles);
             }
 
-            //users= await  _userManager.Users.OrderBy(x=>x.UserName).ToListAsync();
+            //users = await _userManager.Users.OrderBy(x => x.UserName).ToListAsync();
             return Page();
         }
-        //public async Task<IActionResult> OnPostAsync()
-        //{
-        //    if (Request.Form["addButton"] != StringValues.Empty)
-        //    {
-        //        for (int i = 0; i < 100; i++)
-        //        {
-        //            await _userManager.CreateAsync(new NguoiDung { UserName = "user" + i, Email = "user" + i + "@gmail.com" }, "123");
-        //        }
-        //    }
-
-        //    return Page();
-        //}
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (Request.Form["addButton"] != StringValues.Empty)
+            {
+                for (int i = 2; i < 500; i++)
+                {
+                    await _userManager.CreateAsync(new NguoiDung { MaNguoiDung="ND2", UserName = "user" + i, Email = "user" + i + "@gmail.com" }, "1234567");
+                }
+            }
+            return Page();
+        }
     }
 }

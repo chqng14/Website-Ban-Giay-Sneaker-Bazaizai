@@ -21,6 +21,7 @@ namespace App_Data.Configurations
             builder.Property(c => c.TenNguoiDung).HasColumnType("nvarchar(300)");
             builder.Property(c => c.GioiTinh).HasColumnType("int");
             builder.Property(c => c.NgaySinh).HasColumnType("datetime");
+            builder.Property(c => c.DiaChi).HasColumnType("nvarchar(300)");
             builder.Property(c => c.TrangThai).HasColumnType("int");
             builder.Property(c => c.AnhDaiDien).HasColumnType("nvarchar(300)");
         }

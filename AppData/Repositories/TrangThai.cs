@@ -56,6 +56,21 @@ namespace App_Data.Repositories
             [Description("Hết hiệu lực")]
             HetHieuLuc = 2
         }
+        public enum TrangThaiHoaDon
+        {
+            [Description("Chưa thanh toán")]
+            ChuaThanhToan = 0,
+            [Description("Đã thanh toán")]
+            DaThanhToan = 1,
+            [Description("Hủy")]
+            Huy = 2,
+        }
+        public enum TrangThaiGiaoHang
+        {
+            [Description("Tại quầy")]
+            TaiQuay = 0,
+            
+        }
         public enum TrangThaiSale 
         {
             [Description("Không thể áp dụng sale")]
@@ -77,6 +92,5 @@ namespace App_Data.Repositories
             Nu = 2,
             Khac=3
         }
-     
     }
 }

@@ -1,0 +1,46 @@
+﻿@page "/Admin/Add-Role"
+@using static App_Data.Repositories.TrangThai;
+
+@model App_View.Areas.Admin.Pages.Role.CreateModel
+
+@{
+    ViewData["Title"] = "Tạo chức vụ mới";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>@ViewData["Title"]</h2>
+<partial name="_StatusMessage" model="@Model.StatusMessage" />
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.Name" class="control-label"></label>
+                <input asp-for="Input.Name" class="form-control">
+                <span asp-validation-for="Input.Name" class="text-danger"></span>
+
+
+            </div>
+          @*  <div class="form-group">
+                <label asp-for="Input.TrangThai" class="control-label"></label>
+                <br />
+                <select asp-for="Input.TrangThai" class="form-select" aria-label="Default select example">
+                    <option class="hidden" selected disabled>Open this select menu</option>
+                    <option value="@((int)TrangThaiCoBan.HoatDong)">Hoạt động</option>
+                    <option value="@((int)TrangThaiCoBan.KhongHoatDong)">Không hoạt động</option>
+                </select>
+                <span asp-validation-for="Input.TrangThai" class="text-danger"></span>
+            </div>*@
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Tạo mới" class="btn btn-primary" />
+                <a class="btn btn-primary" asp-page="./Index">Danh sách chức vụ</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
