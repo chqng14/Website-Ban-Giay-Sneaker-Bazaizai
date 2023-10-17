@@ -85,14 +85,6 @@ namespace App_Api.Controllers
             return _gioHangChiTiet.EditCartDetail(ghct);
         }
 
-        [HttpPut("EditNologin")]
-        public bool UpdateCartNologin(string IdSanPhamChiTiet, int SoLuong)
-        {
-            var ghct = _gioHangChiTiet.GetAll().FirstOrDefault(c => c.IdSanPhamCT == IdSanPhamChiTiet);
-            ghct.Soluong = SoLuong;
-            return _gioHangChiTiet.EditCartDetail(ghct);
-        }
-
         // DELETE api/<GioHangChiTietController>/5
         [HttpDelete("Delete")]
         public bool Delete(string id)

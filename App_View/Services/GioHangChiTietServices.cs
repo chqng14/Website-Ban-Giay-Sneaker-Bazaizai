@@ -57,25 +57,6 @@ namespace App_View.Services
             }
             catch (Exception e)
             {
-
-                return false;
-            }
-        }
-
-        public async Task<bool> UpdateGioHangNologin(string IdSanPhamChiTiet, int SoLuong)
-        {
-            try
-            {
-                var httpResponse = await _httpClient.PutAsync($"https://localhost:7038/api/GioHangChiTiet/EditNologin?IdSanPhamChiTiet={IdSanPhamChiTiet}&SoLuong={SoLuong}", null);
-                if (httpResponse.IsSuccessStatusCode)
-                {
-                    return await httpResponse.Content.ReadAsAsync<bool>();
-                }
-                return false;
-            }
-            catch (Exception e)
-            {
-
                 return false;
             }
         }

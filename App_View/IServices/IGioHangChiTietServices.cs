@@ -9,8 +9,6 @@ namespace App_View.IServices
         Task<List<GioHangChiTietDTO>> GetAllGioHang();
         Task<bool> CreateCartDetailDTO(GioHangChiTietDTOCUD gioHangChiTietDTOCUD);
         Task<bool> UpdateGioHang(string IdSanPhamChiTiet, int SoLuong,string IdNguoiDung);
-        Task<bool> UpdateGioHangNologin(string IdSanPhamChiTiet, int SoLuong);
-
         Task<bool> DeleteGioHang(string id);
     }
 }
