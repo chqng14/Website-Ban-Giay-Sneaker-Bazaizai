@@ -16,6 +16,7 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<NguoiDung> builder)
         {
+            builder.ToTable("NguoiDung");
             builder.Property(e => e.Id).HasDefaultValueSql("(newid())");
             builder.Property(c => c.MaNguoiDung).HasColumnType("nvarchar(100)");
             builder.Property(c => c.TenNguoiDung).HasColumnType("nvarchar(300)");

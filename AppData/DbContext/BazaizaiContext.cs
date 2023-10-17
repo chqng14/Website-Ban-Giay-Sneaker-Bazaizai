@@ -58,14 +58,14 @@ namespace App_Data.DbContextt
             base.OnModelCreating(modelBuilder);
 
 
-            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-            {
-                var tableName = entityType.GetTableName();
-                if (tableName.StartsWith("AspNet"))
-                {
-                    entityType.SetTableName(tableName.Substring(6));
-                }
-            }
+            //foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            //{
+            //    var tableName = entityType.GetTableName();
+            //    if (tableName.StartsWith("AspNet"))
+            //    {
+            //        entityType.SetTableName(tableName.Substring(6));
+            //    }
+            //}
             //Cấu hình tên bảng tùy chỉnh ở đây
             //modelBuilder.Entity<NguoiDung>().ToTable("NguoiDung");
             //modelBuilder.Entity<ChucVu>().ToTable("ChucVu");
@@ -74,7 +74,7 @@ namespace App_Data.DbContextt
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=MSI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
+            optionsBuilder.UseSqlServer(@"Data Source=bazaizai\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
         }
 
 

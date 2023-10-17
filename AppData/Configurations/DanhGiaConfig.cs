@@ -14,7 +14,7 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<DanhGia> builder)
         {
-            builder.ToTable("Đánh giá");
+            builder.ToTable("DanhGia");
             builder.HasKey(e => e.IdDanhGia);
             builder.Property(e => e.IdDanhGia).HasDefaultValueSql("(newid())");
             builder.Property(c => c.BinhLuan).HasColumnType("nvarchar(500)");
