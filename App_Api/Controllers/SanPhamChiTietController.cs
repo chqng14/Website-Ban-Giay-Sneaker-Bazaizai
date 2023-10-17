@@ -19,6 +19,7 @@ using QRCoder;
 using System.Drawing.Imaging;
 using System.Drawing;
 using System.Reflection;
+using App_Data.ViewModels.FilterViewModel;
 
 namespace App_Api.Controllers
 {
@@ -254,6 +255,13 @@ namespace App_Api.Controllers
         public async Task<SanPhamChiTietDTO> GetItemExcel(BienTheDTO bienTheDTO)
         {
             return await _sanPhamChiTietRes.GetItemExcelAynsc(bienTheDTO);
+        }
+
+        //GetItemfilterVm
+        [HttpGet("get-ItemFilterVM")]
+        public async Task<FiltersVM> GetItemFilterVM()
+        {
+            return await _sanPhamChiTietRes.GetFiltersVMAynsc();
         }
 
         //SanPham

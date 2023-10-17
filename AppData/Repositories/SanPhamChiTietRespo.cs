@@ -1,11 +1,13 @@
 ﻿using App_Data.DbContextt;
 using App_Data.IRepositories;
 using App_Data.Models;
+using App_Data.ViewModels.FilterViewModel;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using AutoMapper;
 using DocumentFormat.OpenXml.InkML;
 using Microsoft.EntityFrameworkCore;
+using OpenXmlPowerTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -475,5 +477,40 @@ namespace App_Data.Repositories
             sanPhamChiTiet!.SoLuongDaBan = sanPhamChiTiet.SoLuongTon - soLuong;
             await _context.SaveChangesAsync();
         }
+
+        //Filter
+        public async Task<FiltersVM> GetFiltersVMAynsc()
+        {
+            var query = _context.sanPhamChiTiets
+                        .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong)
+                        .Include(sp => sp.MauSac)
+                        .Include(sp => sp.ThuongHieu)
+                        .Include(sp => sp.LoaiGiay)
+                        .Include(sp => sp.KichCo);
+
+            var data = await query.ToListAsync();
+
+            return new FiltersVM()
+            {
+                LstItemFilterMauSac = GetListItemFilter(data, sp => sp.MauSac.TenMauSac!),
+                LstItemFilterKichCo = GetListItemFilter(data, sp => sp.KichCo.SoKichCo.ToString()!).OrderBy(x=>x.Ten).ToList(),
+                LstItemFilterTheLoai = GetListItemFilter(data, sp => sp.LoaiGiay.TenLoaiGiay!),
+                LstItemFilterThuongHieu = GetListItemFilter(data, sp => sp.ThuongHieu.TenThuongHieu!),
+            };
+        }
+
+        private List<ItemFilter> GetListItemFilter(List<SanPhamChiTiet> data, Func<SanPhamChiTiet, string> selector)
+        {
+            return data
+                .GroupBy(selector)
+                .Select(group => new ItemFilter()
+                {
+                    Ten = group.Key,
+                    SoLuong = group.Count(),
+                })
+                .ToList();
+        }
+
+
     }
 }

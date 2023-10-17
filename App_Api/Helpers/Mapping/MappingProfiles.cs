@@ -24,12 +24,13 @@ using static Peg.Base.PegBaseParser;
 
 using App_Data.ViewModels.ThongTinGHDTO;
 using App_Data.ViewModels.HoaDon;
-
+using App_Data.DbContextt;
 
 namespace App_Api.Helpers.Mapping
 {
     public class MappingProfiles : Profile
     {
+        private readonly BazaizaiContext bazaizaiContext = new BazaizaiContext();
         public MappingProfiles()
         {
             CreateMap<MauSacDTO, MauSac>();
@@ -222,6 +223,48 @@ namespace App_Api.Helpers.Mapping
                 .ForMember(
                         dest => dest.SoLanDanhGia,
                         opt => opt.MapFrom(src => 32)
+                    )
+                 .ForMember(
+                        dest => dest.GiaMin,
+                        opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
+                        .Where(x=>
+                        x.IdXuatXu == src.IdXuatXu && 
+                        x.IdSanPham == src.IdSanPham &&
+                        x.IdLoaiGiay == src.IdLoaiGiay &&
+                        x.IdThuongHieu == src.IdThuongHieu &&
+                        x.IdKieuDeGiay == src.IdKieuDeGiay &&
+                        x.IdChatLieu == src.IdChatLieu
+                        )
+                        .Select(x=>x.GiaThucTe).Min()
+                        )
+                    )
+                 .ForMember(
+                        dest => dest.GiaMax,
+                        opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
+                        .Where(x =>
+                        x.IdXuatXu == src.IdXuatXu &&
+                        x.IdSanPham == src.IdSanPham &&
+                        x.IdLoaiGiay == src.IdLoaiGiay &&
+                        x.IdThuongHieu == src.IdThuongHieu &&
+                        x.IdKieuDeGiay == src.IdKieuDeGiay &&
+                        x.IdChatLieu == src.IdChatLieu
+                        )
+                        .Select(x => x.GiaThucTe).Max()
+                        )
+                    )
+                 .ForMember(
+                        dest => dest.SoMauSac,
+                        opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
+                        .Where(x =>
+                        x.IdXuatXu == src.IdXuatXu &&
+                        x.IdSanPham == src.IdSanPham &&
+                        x.IdLoaiGiay == src.IdLoaiGiay &&
+                        x.IdThuongHieu == src.IdThuongHieu &&
+                        x.IdKieuDeGiay == src.IdKieuDeGiay &&
+                        x.IdChatLieu == src.IdChatLieu
+                        )
+                        .Select(sp=>sp.IdMauSac).Distinct().Count()
+                        )
                     )
                 ;
             CreateMap<SanPhamChiTiet, ItemDetailViewModel>()
