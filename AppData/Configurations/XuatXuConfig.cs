@@ -16,7 +16,7 @@ namespace App_Data.Configurations
             builder.ToTable("XuatXu");
             builder.HasKey(x => x.IdXuatXu);
             builder.Property(x => x.Ma).HasColumnType("varchar(50)");
-            builder.Property(x => x.Ten).HasColumnType("nvarchar(250)");
+            builder.Property(x => x.Ten).HasColumnType("nvarchar(1000)");
         }
     }
 }

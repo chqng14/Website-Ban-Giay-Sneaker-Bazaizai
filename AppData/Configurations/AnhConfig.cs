@@ -18,7 +18,6 @@ namespace App_Data.Configurations
             builder.Property(x => x.Url).HasColumnType("nvarchar(max)");
             builder.HasOne(x => x.SanPhamChiTiets).WithMany(y => y.Anh).
             HasForeignKey(c => c.IdSanPhamChiTiet);
-
         }
     }
 }

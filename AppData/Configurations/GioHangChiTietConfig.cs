@@ -14,7 +14,7 @@ namespace App_Data.Configurations
         public void Configure(EntityTypeBuilder<GioHangChiTiet> builder)
         {
             builder.ToTable("GioHangChiTiet");
-            builder.HasKey(x => x.IdGioHangChiTiet);
+            builder.HasKey(x => x.IdGioHangChiTiet); 
             builder.Property(x => x.Soluong).HasColumnType("int");
             builder.Property(x => x.TrangThai).HasColumnType("int");
             builder.HasOne(x => x.GioHang).WithMany(x => x.GioHangChiTiet).HasForeignKey(x => x.IdNguoiDung);

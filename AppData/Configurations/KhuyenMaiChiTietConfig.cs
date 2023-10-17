@@ -15,11 +15,10 @@ namespace App_Data.Configurations
         {
             builder.ToTable("KhuyenMaiChiTiet");
             builder.HasKey(e => e.IdKhuyenMaiChiTiet);
-            builder.Property(e => e.IdKhuyenMaiChiTiet).HasDefaultValueSql("(newid())");
             builder.Property(e => e.IdSanPhamChiTiet).HasColumnName("IdSanPhamChiTiet");
             builder.Property(e => e.IdKhuyenMai).HasColumnName("IdKhuyenMai");
             builder.Property(e => e.TrangThai).HasDefaultValueSql("((0))");
-            builder.Property(e => e.MoTa).HasMaxLength(500);
+            builder.Property(e => e.MoTa).HasColumnType("nvarchar(max)");
             builder.HasOne(d => d.SanPhamChiTiet).WithMany(p => p.KhuyenMaiChiTiet).HasForeignKey(d => d.IdSanPhamChiTiet);
             builder.HasOne(d => d.KhuyenMai).WithMany(p => p.KhuyenMaiChiTiet).HasForeignKey(d => d.IdKhuyenMai);
         }
