@@ -23,13 +23,13 @@ namespace App_Data.Models
         public double? TienGiam { get; set; }
         public double? TongTien { get; set; }
         public string? MoTa { get; set; }
-        public int? TrangThai { get; set; }
+        public int? TrangThaiGiaoHang { get; set; }
         public int? TrangThaiThanhToan { get; set; }
-        public virtual List<HoaDonChiTiet> HoaDonChiTiet { get; set; }
-        public virtual ThongTinGiaoHang ThongTinGiaoHang { get; set; }
-        public virtual KhachHang KhachHang { get; set; }
-        public virtual NguoiDung NguoiDung { get; set; }
-        public virtual Voucher Voucher { get; set; }
-        public virtual List<PhuongThucThanhToanChiTiet> PhuongThucThanhToanChiTiet { get; set; }
+        public virtual List<HoaDonChiTiet>? HoaDonChiTiet { get; set; }
+        public virtual ThongTinGiaoHang? ThongTinGiaoHang { get; set; }
+        public virtual KhachHang? KhachHang { get; set; }
+        public virtual NguoiDung? NguoiDung { get; set; }
+        public virtual Voucher? Voucher { get; set; }
+        public virtual List<PhuongThucThanhToanChiTiet>? PhuongThucThanhToanChiTiet { get; set; }
     }
 }

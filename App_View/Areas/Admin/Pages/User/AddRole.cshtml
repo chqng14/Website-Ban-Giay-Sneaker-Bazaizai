@@ -1,0 +1,56 @@
+﻿@page "/admin/Add-User-Role/{id}"
+@model AddRoleModel
+@{
+    ViewData["Title"] = "Phân quyền cho người dùng";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+}
+<link rel="stylesheet" href="~/css/multiselect.css" />
+
+<h3>Phân quyền cho thành viên: @Model.user.UserName</h3>
+<br />
+<br />
+<br />
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form id="set-password-form" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+
+                <label asp-for="RoleNames" ></label>
+                 @Html.ListBoxFor(m=>m.RoleNames,@Model.allRoles, new{
+                id="id-select-roles",
+                @class = "w-100"
+                })
+                <span asp-validation-for="RoleNames" class="text-danger"></span>
+            </div>
+          
+            <button type="submit" class=" btn btn-primary">Cập nhật</button>
+            <a class=" btn btn-primary" asp-page="./Index">Danh sách các thành viên</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.sumoselect/3.0.2/jquery.sumoselect.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.sumoselect/3.0.2/sumoselect.min.css" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#id-select-roles').SumoSelect();
+            $('#id-select-roles').SumoSelect({ selectAll: true});
+            console.log("ready!");
+        });
+
+        var buttonClick = function () {
+            alert($('#id-select-roles').val());
+        }
+       
+    </script>
+
+
+}
+

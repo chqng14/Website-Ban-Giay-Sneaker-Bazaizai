@@ -13,6 +13,7 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<KhachHang> builder)
         {
+            builder.ToTable("KhachHang");
             builder.HasKey(c => c.IdKhachHang);
             builder.Property(c => c.TenKhachHang).HasColumnType("nvarchar(300)");
             builder.Property(c => c.SDT).HasColumnType("nvarchar(10)");

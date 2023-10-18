@@ -67,6 +67,7 @@ namespace App_Api.Controllers
             voucherDTO.IdVoucher = Guid.NewGuid().ToString();
             var voucher = _mapper.Map<Voucher>(voucherDTO);
             voucher.MaVoucher = GenerateRandomVoucherCode();
+            voucher.NgayTao = DateTime.Now;
             if (voucher.NgayBatDau > DateTime.Now)
             {
                 voucher.TrangThai = (int)TrangThaiVoucher.ChuaBatDau;
@@ -100,6 +101,9 @@ namespace App_Api.Controllers
         public bool Update(VoucherDTO voucherDTO)
         {
             var voucherGet = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == voucherDTO.IdVoucher);
+
+            DateTime NgayTao= voucherGet.NgayTao;
+
             if (voucherGet != null)
             {
                 _mapper.Map(voucherDTO, voucherGet);
@@ -119,12 +123,10 @@ namespace App_Api.Controllers
                 {
                     voucherGet.TrangThai = (int)TrangThaiVoucher.HoatDong;
                 }
+                voucherGet.NgayTao = NgayTao;
                 return allRepo.EditItem(voucherGet);
             }
             return false;
         }
-
-
-
     }
 }

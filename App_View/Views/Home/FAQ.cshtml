@@ -1,4 +1,83 @@
-﻿<div class="app-content">
+﻿@*<button id="toggleCamera">Bật/Tắt Camera</button>
+    <video id="video" playsinline autoplay></video>
+    <canvas id="canvas" style="display: none;"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
+    <script>
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let scanning = false; // Trạng thái ban đầu là chưa quét
+        let stream = null; // Lưu trữ đối tượng luồng video
+
+        const toggleCameraButton = document.getElementById('toggleCamera');
+        toggleCameraButton.addEventListener('click', toggleCamera);
+
+        function toggleCamera() {
+            if (!scanning) {
+                // Bật camera
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function (newStream) {
+                        video.srcObject = newStream;
+                        stream = newStream;
+                    })
+                    .catch(function (err) {
+                        console.error('getUserMedia Error: ' + err);
+                    });
+            } else {
+                // Tắt camera
+                if (stream) {
+                    const tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
+                    video.srcObject = null;
+                }
+            }
+            // Đảo ngược trạng thái quét
+            scanning = !scanning;
+            if (scanning) {
+                // Nếu đang quét, bắt đầu quét
+                requestAnimationFrame(captureQRCode);
+            }
+        }
+
+        function captureQRCode() {
+            if (!scanning) {
+                return;
+            }
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+            if (code) {
+                console.log('QR Code Data:', code.data);
+                alert('QR Code Data:' + code.data)
+
+                // Dừng quét và đếm thời gian
+                scanning = false;
+                setTimeout(() => {
+                    // Khởi động lại quét sau khoảng thời gian cụ thể (ví dụ, 5 giây)
+                    scanning = true;
+                    requestAnimationFrame(captureQRCode);
+                }, 1500); // 2 giây
+            } else {
+                requestAnimationFrame(captureQRCode); // Tiếp tục quét nếu chưa tìm thấy mã QR
+            }
+        }
+
+        video.onloadedmetadata = function () {
+            if (scanning) {
+                // Nếu đang quét khi camera được kích hoạt, bắt đầu quét
+                requestAnimationFrame(captureQRCode);
+            }
+        };
+    </script>*@
+
+<div class="app-content">
 
     <!--====== Section 1 ======-->
     <div class="u-s-p-y-60">
@@ -118,3 +197,4 @@
     </div>
     <!--====== End - Section 3 ======-->
 </div>
+

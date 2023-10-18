@@ -1,4 +1,5 @@
 ﻿using App_Data.Models;
+using App_Data.ViewModels.HoaDon;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,8 @@ namespace App_Data.IRepositories
 {
     public interface IHoaDonRepos
     {
-        public IEnumerable<HoaDon> GetAll();
+        public HoaDon TaoHoaDonTaiQuay(HoaDon hoaDon);
+        public List<HoaDonChoDTO> GetAllHoaDonCho();
         public bool AddBill(HoaDon item);
-        public bool RemoveBill(HoaDon item);
-        public bool EditBill(HoaDon item);
-        public List<HoaDon> FindBillByCode(string ma);
     }
 }
