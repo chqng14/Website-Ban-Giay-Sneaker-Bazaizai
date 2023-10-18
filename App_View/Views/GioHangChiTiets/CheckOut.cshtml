@@ -86,7 +86,7 @@
                                             </div>
                                             <div class="u-s-m-b-15">
 
-                                            <button class="btn btn--e-transparent-brand-b-2" type="submit" id="button-coupon">SỬ DỤNG</button>
+                                            <button class="btn btn--e-transparent-brand-b-2" type="submit" id="button-coupon" onclick="applyVoucher()">SỬ DỤNG</button>
                                             </div>
                                         </div>
                                     @* </form> *@
@@ -1054,10 +1054,16 @@
         });
     </script>
 
-    @* <script>
+    <script>
         var uudai = "";
         var tongtienSanPham = parseInt(document.getElementById("tamtinh").innerText.replace("đ", "").replace(/\,/g, "").replace(/\./g, "").trim());
         var tongtien = document.getElementById("tongtien");
+
+        function applyVoucher() {
+            var voucherValue = document.getElementById("voucherinput").value;
+            voucher(voucherValue);
+        }
+
         function voucher(value) {
             if (value != null && value.trim() != "") {
                 var formData = new FormData();
@@ -1071,7 +1077,7 @@
                     success: function (result) {
                         console.log(result);
                         if (result) {
-                            $('#giamgia').text("-" + result.MucUuDai.toLocaleString("vi-VN") + "đ");
+                            $('#TienGiam').text("-" + result.MucUuDai.toLocaleString("vi-VN") + "đ");
                             $('#textvoucher').text("");
                             uudai = result.MucUuDai;
                             console.log(uudai);
@@ -1079,26 +1085,12 @@
                             var tong = tongtienSanPham - uudai;
                             tongtien.innerText = tong.toLocaleString("vi-VN") + "đ";
                             tongtien.value = tong.toString();
-                            // var totalAmountElement1 = document.getElementById("totalAmount1");
-                            // totalAmountElement1.innerText = tongtien1.toLocaleString("vi-VN") + "đ";
-                            // var paymentAmountElement = document.getElementById("paymentAmount");
-                            // paymentAmountElement.innerText = tongtien1.toLocaleString("vi-VN") + "đ";
-
-                            // var voucherValue = document.getElementById("voucherinput").value;
-                            // document.getElementById("voucher1").value = voucherValue;
                         }
                         else {
                             $('#textvoucher').text("mã không hợp lệ");
-                            $('#giamgia').text("0".toLocaleString("vi-VN") + "đ");
+                            $('#TienGiam').text("0".toLocaleString("vi-VN") + "đ");
                             tongtien.innerText = tamtinhelement.toLocaleString("vi-VN") + "đ";
                             tongtien.value = tamtinhelement.toString();
-                            // var totalAmountElement1 = document.getElementById("totalAmount1");
-                            // totalAmountElement1.innerText = tongtien.toLocaleString("vi-VN") + "đ";
-                            // var paymentAmountElement = document.getElementById("paymentAmount");
-                            // paymentAmountElement.innerText = tongtien.toLocaleString("vi-VN") + "đ";
-
-                            // var voucherValue = document.getElementById("voucherinput").value;
-                            // document.getElementById("voucher1").value = "Vouc11";
                         }
                     },
                     error: function (xhr, status, error) {
@@ -1111,11 +1103,9 @@
             } else {
                 tongtien.innerText = tamtinhelement.toLocaleString("vi-VN") + "đ";
                 tongtien.value = tamtinhelement.toString();
-                $('#giamgia').text("0".toLocaleString("vi-VN") + "đ");
+                $('#TienGiam').text("0".toLocaleString("vi-VN") + "đ");
                 $('#textvoucher').text("");
             }
-
-
         }
-    </script> *@
+    </script>
 }
