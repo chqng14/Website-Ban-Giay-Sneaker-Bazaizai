@@ -168,6 +168,9 @@ Task.Run(() =>
         capNhatTime.CheckNgayKetThuc();
         capNhatTime.CapNhatTrangThaiSaleDetail();
         capNhatTime.CapNhatGiaBanThucTe();
+        capNhatTime.CapNhatVoucherHetHan();
+        capNhatTime.CapNhatVoucherDenHan();
+        capNhatTime.CapNhatVoucherNguoiDung();
         Thread.Sleep(TimeSpan.FromSeconds(5));
     }
 });
