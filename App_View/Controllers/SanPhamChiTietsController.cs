@@ -49,7 +49,12 @@ namespace App_View.Controllers
                 }
 
             });
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> LoadPartialViewDanhSachSanPhamNguoiDung([FromBody]FilterData filterData)
+        {
+            return PartialView("_DanhSachSanPhamPartialView", new FilterDataVM());
         }
 
         public async Task<IActionResult> LoadPartialViewSanPhamChiTiet(string idSanPhamChiTiet)

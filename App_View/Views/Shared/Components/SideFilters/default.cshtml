@@ -237,18 +237,22 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).on("click", ".filterPrice, input[type='checkbox']", function () {
+
         var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
             return $(this).attr('id')
         }).get();
+
         var lstMauSac = $('.lst-mausac input[type="checkbox"]:checked').map(function () {
             return $(this).attr('id')
         }).get();
+
         var lstTheLoai = $('.lst-theloai input[type="checkbox"]:checked').map(function () {
             return $(this).closest('.list__content').find('span').text()
         }).get();
 
         var data = {};
         $('#s-price').find("input, select, textarea").each(function () {
+
             var fieldType = $(this).attr("type");
             var fieldName = $(this).attr("name");
             var fieldValue;
@@ -260,12 +264,30 @@
             }
 
             data[fieldName] = fieldValue;
+
+        });
+
+        var filterdata = {
+            key: value,
+        };
+        $.ajax({
+            url: '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+            type: 'POST',
+            data: JSON.stringify(filterdata),
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.success) {
+
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
         });
 
 
-        console.log(lstKichCo);
-        console.log(lstMauSac);
-        console.log(lstTheLoai);
-        console.log(data);
     })
 </script>
