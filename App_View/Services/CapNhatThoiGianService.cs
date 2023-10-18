@@ -1,4 +1,5 @@
 ﻿using App_Data.DbContextt;
+using App_Data.Repositories;
 using App_View.IServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,26 +22,38 @@ namespace App_View.Services
         public void CheckNgayKetThuc()
         {
             var ngayKetThucSale = _dbContext.khuyenMais
-                .Where(p => p.NgayKetThuc <= DateTime.Now && p.TrangThai != 0)
+                .Where(p => p.NgayKetThuc <= DateTime.Now && p.TrangThai != (int)TrangThaiSale.HetHan)
                 .ToList();
 
             foreach (var sale in ngayKetThucSale)
             {
-                sale.TrangThai = 0;
+                sale.TrangThai = (int)TrangThaiSale.HetHan;
             }
             _dbContext.SaveChanges();
         }
         public void CapNhatTrangThaiSaleDetail()
         {
-            var lstHetHan = _dbContext.khuyenMais.Where(x => x.TrangThai == 0).ToList();
-            var lstKMCT = _dbContext.khuyenMaiChiTiets.ToList();
-            foreach(var a in lstHetHan)
+            var lstHetHan = _dbContext.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.HetHan).ToList();
+            var lstDangBatDau = _dbContext.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau).ToList();
+            var lstDangKhuyenMai = _dbContext.khuyenMaiChiTiets.Where(x=>x.TrangThai==(int)TrangThaiSaleDetail.DangKhuyenMai).ToList();
+            var lstNgungKhuyenMai = _dbContext.khuyenMaiChiTiets.Where(x => x.TrangThai == (int)TrangThaiSaleDetail.NgungKhuyenMai).ToList();
+            foreach (var a in lstHetHan)
             {
-                foreach(var b in lstKMCT)
+                foreach(var b in lstDangKhuyenMai)
                 {
                     if(b.IdKhuyenMai==a.IdKhuyenMai)
                     {
-                        b.TrangThai= (int)TrangThaiSaleDetail.DangKhuyenMai;
+                        b.TrangThai= (int)TrangThaiSaleDetail.NgungKhuyenMai;
+                    }
+                }
+            }
+            foreach (var a in lstDangBatDau)
+            {
+                foreach (var b in lstNgungKhuyenMai)
+                {
+                    if (b.IdKhuyenMai == a.IdKhuyenMai)
+                    {
+                        b.TrangThai = (int)TrangThaiSaleDetail.DangKhuyenMai;
                     }
                 }
             }
@@ -49,10 +62,12 @@ namespace App_View.Services
         public void CapNhatGiaBanThucTe()
         {
             var lstKhuyenMaiDangHoatDong = _dbContext.khuyenMaiChiTiets.Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai).ToList();
-            var lstCTSP = _dbContext.sanPhamChiTiets.Where(x=>x.TrangThaiSale== (int)TrangThaiSale.DuocApDungSale).ToList();
-            foreach (var ctsp in lstCTSP)
+            var lstCTSP = _dbContext.sanPhamChiTiets.Where(x=>x.TrangThaiSale== (int)TrangThaiSaleInProductDetail.DaApDungSale).ToList();
+            if(lstCTSP!=null&& lstCTSP.Count()>0)
             {
-                bool check = false;  
+                foreach (var ctsp in lstCTSP)
+                {
+                bool check = false;
 
                 foreach (var kmct in lstKhuyenMaiDangHoatDong)
                 {
@@ -70,7 +85,7 @@ namespace App_View.Services
                         ctsp.GiaThucTe = ctsp.GiaBan - (ctsp.GiaBan * mangKhuyenMai.Max()/100);
                         _dbContext.sanPhamChiTiets.Update(ctsp);
                         _dbContext.SaveChanges();
-                        check = true;  
+                        check = true;
                         break;
                     }
                 }
@@ -79,9 +94,11 @@ namespace App_View.Services
                 if (!check)
                 {
                     ctsp.GiaThucTe = ctsp.GiaBan;
+                    ctsp.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DuocApDungSale;
                     _dbContext.sanPhamChiTiets.Update(ctsp);
                     _dbContext.SaveChanges();
                 }
+            }
             }
             //_dbContext.SaveChanges();
         }

@@ -59,24 +59,35 @@ namespace App_Data.Repositories
         public enum TrangThaiHoaDon
         {
             [Description("Chưa thanh toán")]
-            ChuaThanhToan = 0,
+            ChuaThanhToan = 0, 
             [Description("Đã thanh toán")]
-            DaThanhToan = 1,
+            DaThanhToan = 1, 
             [Description("Hủy")]
             Huy = 2,
         }
         public enum TrangThaiGiaoHang
         {
             [Description("Tại quầy")]
-            TaiQuay = 0,
+            TaiQuay = 0, 
             
         }
-        public enum TrangThaiSale 
+        public enum TrangThaiSaleInProductDetail
         {
             [Description("Không thể áp dụng sale")]
             KhongApDungSale = 0,
             [Description("Được áp dụng sale")]
-            DuocApDungSale = 1
+            DuocApDungSale = 1,
+            [Description("Đã áp dụng sale")]
+            DaApDungSale = 1
+        }
+        public enum TrangThaiSale
+        {
+            [Description("Hết hạn")]
+            HetHan = 0,
+            [Description("Đang bắt đầu")]
+            DangBatDau = 1,
+            [Description("Chưa bắt đầu")]
+            ChuaBatDau = 2
         }
         public enum TrangThaiSaleDetail
         {
