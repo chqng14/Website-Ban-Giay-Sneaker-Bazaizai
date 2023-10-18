@@ -137,6 +137,7 @@ namespace App_Data.Repositories
             var listSanPham = (await _context.sanPhamChiTiets
                 .Include(it => it.SanPham)
                 .Include(it => it.ThuongHieu)
+                .Include(it => it.LoaiGiay)
                 .Include(it => it.Anh)
                 .ToArrayAsync()).Where(sp => sp.TrangThai == 0).ToList().GroupBy(
               gr => new
