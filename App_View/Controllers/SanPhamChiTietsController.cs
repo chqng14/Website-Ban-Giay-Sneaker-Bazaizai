@@ -11,6 +11,7 @@ using App_Data.IRepositories;
 using App_View.IServices;
 using DocumentFormat.OpenXml.Office.CustomUI;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
+using App_Data.ViewModels.FilterViewModel;
 
 namespace App_View.Controllers
 {
@@ -24,14 +25,36 @@ namespace App_View.Controllers
             _sanPhamChiTietService = sanPhamChiTietService;
         }
 
-        public async Task<IActionResult> Index(string brand)
+
+        public async Task<IActionResult> Index(string brand, string search)
         {
             var lstSanPhamItemShop = await _sanPhamChiTietService.GetListItemShopViewModelAynsc();
             if (!string.IsNullOrEmpty(brand))
             {
-                lstSanPhamItemShop = (await _sanPhamChiTietService.GetListItemShopViewModelAynsc())!.Where(sp=>sp.ThuongHieu!.ToLower() == brand.ToLower()).ToList();
+                lstSanPhamItemShop = lstSanPhamItemShop!.Where(sp => sp.ThuongHieu!.ToLower() == brand.ToLower()).ToList();
             }
-            return View(lstSanPhamItemShop);
+            if (!string.IsNullOrEmpty(search))
+            {
+                lstSanPhamItemShop = lstSanPhamItemShop!.Where(sp => sp.TenSanPham!.ToLower().Contains(search.ToLower())).ToList();
+            }
+
+            return View(new FilterDataVM()
+            {
+                Items = lstSanPhamItemShop!.Take(12).ToList(),
+                PagingInfo = new PagingInfo()
+                {
+                    SoItemTrenMotTrang = 12,
+                    TongSoItem = lstSanPhamItemShop!.Count(),
+                    TrangHienTai = 1
+                }
+
+            });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoadPartialViewDanhSachSanPhamNguoiDung([FromBody]FilterData filterData)
+        {
+            return PartialView("_DanhSachSanPhamPartialView", new FilterDataVM());
         }
 
         public async Task<IActionResult> LoadPartialViewSanPhamChiTiet(string idSanPhamChiTiet)
@@ -45,7 +68,7 @@ namespace App_View.Controllers
             return View(await _sanPhamChiTietService.GetItemDetailViewModelAynsc(id));
         }
 
-        public async Task<IActionResult> GetItemDetailViewModelWhenSelectColor([FromQuery]string id,[FromQuery]string mauSac)
+        public async Task<IActionResult> GetItemDetailViewModelWhenSelectColor([FromQuery] string id, [FromQuery] string mauSac)
         {
             return Ok(await _sanPhamChiTietService.GetItemDetailViewModelWhenSelectColorAynsc(id, mauSac));
         }

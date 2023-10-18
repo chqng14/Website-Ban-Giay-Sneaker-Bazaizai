@@ -226,6 +226,10 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.SoLanDanhGia,
                         opt => opt.MapFrom(src => 32)
                     )
+                .ForMember(
+                        dest => dest.TheLoai,
+                        opt => opt.MapFrom(src => src.LoaiGiay.TenLoaiGiay)
+                    )
                  .ForMember(
                         dest => dest.GiaMin,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets

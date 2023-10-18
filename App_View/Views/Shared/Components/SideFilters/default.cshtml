@@ -121,26 +121,26 @@
                                 <span class="fas fa-minus shop-w__toggle" data-target="#s-price" data-toggle="collapse"></span>
                             </div>
                             <div class="shop-w__wrap collapse show" id="s-price">
-                                <form class="shop-w__form-p">
+                                <div class="shop-w__form-p">
                                     <div class="shop-w__form-p-wrap">
                                         <div>
 
                                             <label for="price-min"></label>
 
-                                            <input class="input-text input-text--primary-style" type="text" id="price-min" placeholder="Min">
+                                            <input class="input-text input-text--primary-style" name="GiaMin" type="text" id="price-min" placeholder="Min">
                                         </div>
                                         <div>
 
                                             <label for="price-max"></label>
 
-                                            <input class="input-text input-text--primary-style" type="text" id="price-max" placeholder="Max">
+                                            <input class="input-text input-text--primary-style" name="GiaMax" type="text" id="price-max" placeholder="Max">
                                         </div>
                                         <div>
 
-                                            <button class="btn btn--icon fas fa-angle-right btn--e-transparent-platinum-b-2" type="submit"></button>
+                                            <button class="btn btn--icon fas fa-angle-right btn--e-transparent-platinum-b-2 filterPrice"></button>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -152,7 +152,7 @@
                                 <span class="fas fa-minus shop-w__toggle" data-target="#s-manufacturer" data-toggle="collapse"></span>
                             </div>
                             <div class="shop-w__wrap collapse show" id="s-manufacturer">
-                                <ul class="shop-w__list-2">
+                                <ul class="shop-w__list-2 lst-theloai">
                                     @foreach (var item in Model.LstItemFilterTheLoai!)
                                     {
                                         <li>
@@ -178,8 +178,8 @@
                                 <span class="fas fa-minus shop-w__toggle" data-target="#s-color" data-toggle="collapse"></span>
                             </div>
                             <div class="shop-w__wrap collapse show" id="s-color">
-                                <ul class="shop-w__list gl-scroll">
-                                    @foreach (var item in Model.LstItemFilterMauSac)
+                                <ul class="shop-w__list gl-scroll lst-mausac">
+                                    @foreach (var item in Model.LstItemFilterMauSac!)
                                     {
                                         <li>
                                             <div class="color__check">
@@ -205,7 +205,7 @@
                                 <span class="fas fa-minus shop-w__toggle" data-target="#s-size" data-toggle="collapse"></span>
                             </div>
                             <div class="shop-w__wrap" id="s-size">
-                                <ul class="shop-w__list gl-scroll">
+                                <ul class="shop-w__list gl-scroll lst-kichco">
                                     @foreach (var item in Model.LstItemFilterKichCo!)
                                     {
                                         <li>
@@ -234,3 +234,60 @@
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).on("click", ".filterPrice, input[type='checkbox']", function () {
+
+        var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
+            return $(this).attr('id')
+        }).get();
+
+        var lstMauSac = $('.lst-mausac input[type="checkbox"]:checked').map(function () {
+            return $(this).attr('id')
+        }).get();
+
+        var lstTheLoai = $('.lst-theloai input[type="checkbox"]:checked').map(function () {
+            return $(this).closest('.list__content').find('span').text()
+        }).get();
+
+        var data = {};
+        $('#s-price').find("input, select, textarea").each(function () {
+
+            var fieldType = $(this).attr("type");
+            var fieldName = $(this).attr("name");
+            var fieldValue;
+
+            if (fieldType === "checkbox" || fieldType === "radio") {
+                fieldValue = $(this).is(":checked");
+            } else {
+                fieldValue = $(this).val();
+            }
+
+            data[fieldName] = fieldValue;
+
+        });
+
+        var filterdata = {
+            key: value,
+        };
+        $.ajax({
+            url: '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+            type: 'POST',
+            data: JSON.stringify(filterdata),
+            contentType: 'application/json',
+            success: function (result) {
+                if (result.success) {
+
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+
+
+    })
+</script>
