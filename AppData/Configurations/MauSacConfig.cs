@@ -15,7 +15,7 @@ namespace App_Data.Configurations
         {
             builder.ToTable("MauSac");
             builder.HasKey(x => x.IdMauSac);
-            builder.Property(c => c.MaMauSac).HasColumnType("nvarchar(1000)");
+            builder.Property(c => c.MaMauSac).HasColumnType("varchar(50)");
             builder.Property(c => c.TenMauSac).HasColumnType("nvarchar(1000)");
             builder.Property(c => c.TrangThai).HasColumnType("int");
         }

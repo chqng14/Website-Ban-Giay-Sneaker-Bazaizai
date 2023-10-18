@@ -32,7 +32,7 @@ namespace App_View.Controllers
             else ViewBag.NguoiDung = idNguoiDung;
 
 
-            var allVouchers = (await _voucherSV.GetAllVoucher()).Where(c => c.TrangThai == 0);
+            var allVouchers = (await _voucherSV.GetAllVoucher()).Where(c => c.TrangThai == 0 && c.SoLuong > 0);
             switch (LoaiHinh)
             {
                 case "TienMat":
@@ -50,9 +50,12 @@ namespace App_View.Controllers
             ViewBag.TatCaVoucher = allVouchers;
             return View(allVouchers);
         }
-        public IActionResult Index()
+        public async Task<IActionResult> GetVoucherByMa(string ma)
         {
-            return View();
+            var Voucher = await _voucherSV.GetVoucherByMa(ma);
+            double mucuidai = 0;
+            var IdVoucher = "";
+            return Json(new { mucuidai = (double)Voucher.MucUuDai, IdVoucher = Voucher.IdVoucher });
         }
     }
 }

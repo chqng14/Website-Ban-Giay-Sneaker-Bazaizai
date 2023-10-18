@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Controllers
 {
@@ -128,7 +129,7 @@ namespace App_View.Controllers
                 IdNguoiDung = UserID,
                 IdKhachHang = null,
                 IdThongTinGH = hoaDonChiTietDTO.IdThongTinGH,
-                IdVoucher = null,
+                IdVoucher = hoaDonChiTietDTO.IdVoucher,
                 MaHoaDon = "HD" + DateTime.Now.ToString("ddMMyyyyhhmmss"),
                 NgayTao = DateTime.Now,
                 NgayShip = DateTime.Now.AddDays(2),
@@ -138,8 +139,8 @@ namespace App_View.Controllers
                 TongTien = hoaDonChiTietDTO.TongTien,
                 TienShip = hoaDonChiTietDTO.TienShip,
                 MoTa = hoaDonChiTietDTO.MoTa,
-                TrangThai = 0,
-                TrangThaiThanhToan = 0
+                TrangThaiGiaoHang = 0,
+                TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan
             };
             await hoaDonServices.CreateHoaDon(hoadon);
             foreach (var item in listcart)
@@ -152,7 +153,7 @@ namespace App_View.Controllers
                     SoLuong = item.SoLuong,
                     GiaGoc = item.GiaGoc,
                     GiaBan = item.GiaBan,
-                    TrangThai = 0
+                    TrangThai = (int)TrangThaiHoaDonChiTiet.ChuaThanhToan
                 });
                 var sanphamupdate = new SanPhamSoLuongDTO()
                 {

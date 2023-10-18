@@ -27,7 +27,7 @@ namespace App_Data.Repositories
         public HoaDon TaoHoaDonTaiQuay(HoaDon hoaDon)
         {
             hoaDon.MaHoaDon = MaHoaDonTuSinh();
-            hoaDon.TrangThai = (int)TrangThaiGiaoHang.TaiQuay;
+            hoaDon.TrangThaiGiaoHang = (int)TrangThaiGiaoHang.TaiQuay;
             hoaDon.TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan;
             context.HoaDons.Add(hoaDon);
             context.SaveChanges();
@@ -58,7 +58,7 @@ namespace App_Data.Repositories
         public List<HoaDonChoDTO> GetAllHoaDonCho()
         {
             var listHoaDonCho = new List<HoaDonChoDTO>();
-            var listHoaDon = context.HoaDons.Where(c => c.TrangThai == (int)TrangThaiGiaoHang.TaiQuay && c.TrangThaiThanhToan == (int)TrangThaiHoaDon.ChuaThanhToan).ToList();
+            var listHoaDon = context.HoaDons.Where(c => c.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay && c.TrangThaiThanhToan == (int)TrangThaiHoaDon.ChuaThanhToan).ToList();
 
             foreach (var item in listHoaDon)
             {
@@ -67,7 +67,7 @@ namespace App_Data.Repositories
                     Id = item.IdHoaDon,
                     IdNguoiDung = item.IdNguoiDung,
                     MaHoaDon = item.MaHoaDon,
-                    TrangThai = item.TrangThai,
+                    TrangThaiGiaoHang = item.TrangThaiGiaoHang,
                     TrangThaiThanhToan = item.TrangThaiThanhToan,
                     hoaDonChiTietDTOs = context.hoaDonChiTiets.Where(c => c.IdHoaDon == item.IdHoaDon).ToList(),
                 };

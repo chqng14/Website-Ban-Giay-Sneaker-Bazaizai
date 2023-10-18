@@ -46,10 +46,8 @@ namespace App_Data.Configurations
 
             builder.HasOne(x => x.LoaiGiay).WithMany(y => y.SanPhamChiTiets).
             HasForeignKey(c => c.IdLoaiGiay);
-
-
             builder.Property(x => x.Ma).HasColumnType("varchar(50)");
-            builder.Property(x => x.Day).HasColumnType("nvarchar(250)");
+            builder.Property(x => x.Day).HasColumnType("bit");
             builder.Property(x => x.NoiBat).HasColumnType("bit");
         }
     }

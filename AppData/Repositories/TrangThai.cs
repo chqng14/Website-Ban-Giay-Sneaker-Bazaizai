@@ -69,9 +69,9 @@ namespace App_Data.Repositories
         {
             [Description("Tại quầy")]
             TaiQuay = 0,
-            
+
         }
-        public enum TrangThaiSale 
+        public enum TrangThaiSale
         {
             [Description("Không thể áp dụng sale")]
             KhongApDungSale = 0,
@@ -87,10 +87,17 @@ namespace App_Data.Repositories
         }
         public enum GioiTinhMacDinh
         {
-            KhongMuonTraLoi=0,
+            KhongMuonTraLoi = 0,
             Nam = 1,
             Nu = 2,
-            Khac=3
+            Khac = 3
+        }
+        public enum TrangThaiHoaDonChiTiet
+        {
+            [Description("Chưa thanh toán")]
+            ChuaThanhToan = 0,
+            [Description("Đã thanh toán")]
+            DaThanhToan = 1,
         }
     }
 }

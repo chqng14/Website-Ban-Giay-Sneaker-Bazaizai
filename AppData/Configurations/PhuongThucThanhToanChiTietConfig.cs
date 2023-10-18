@@ -15,7 +15,6 @@ namespace App_Data.Configurations
         {
             builder.ToTable("PhuongThucThanhToanChiTiet");
             builder.HasKey(x => x.IdPhuongThucThanhToanChiTiet);
-
             builder.HasOne(x => x.HoaDons).WithMany(c => c.PhuongThucThanhToanChiTiet).HasForeignKey(c => c.IdHoaDon);
 
             builder.HasOne(x => x.PhuongThucThanhToan).WithMany(x => x.PhuongThucThanhToanChiTiets).HasForeignKey(c => c.IdThanhToan);

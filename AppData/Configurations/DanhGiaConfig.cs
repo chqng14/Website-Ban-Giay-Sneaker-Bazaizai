@@ -16,8 +16,7 @@ namespace App_Data.Configurations
         {
             builder.ToTable("DanhGia");
             builder.HasKey(e => e.IdDanhGia);
-            builder.Property(e => e.IdDanhGia).HasDefaultValueSql("(newid())");
-            builder.Property(c => c.BinhLuan).HasColumnType("nvarchar(500)");
+            builder.Property(c => c.BinhLuan).HasColumnType("nvarchar(max)");
             builder.Property(e => e.TrangThai).HasDefaultValueSql("((0))");
             builder.HasOne(d => d.NguoiDung).WithMany(p => p.DanhGias).HasForeignKey(d => d.IdNguoiDung);
             builder.HasOne(d => d.SanPhamChiTiet).WithMany(p => p.DanhGias).HasForeignKey(p=>p.IdSanPhamChiTiet);
