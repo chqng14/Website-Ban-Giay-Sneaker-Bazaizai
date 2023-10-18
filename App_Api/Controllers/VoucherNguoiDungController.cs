@@ -66,11 +66,10 @@ namespace App_Api.Controllers
         [HttpPost("AddVoucherNguoiDung")]
         public bool AddVoucherNguoiDung(string MaVoucher, string idNguoiDung)
         {
-            var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.MaVoucher == MaVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDong)?.IdVoucher;
-
+            var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.MaVoucher == MaVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDong && c.SoLuong > 0);
             if (VoucherKhaDung != null)
             {
-                var existsInVoucherNguoiDung = VcNguoiDungRepos.GetAll().Any(vnd => vnd.IdVouCher == VoucherKhaDung);
+                var existsInVoucherNguoiDung = VcNguoiDungRepos.GetAll().Any(vnd => vnd.IdVouCher == VoucherKhaDung.IdVoucher);
 
                 if (existsInVoucherNguoiDung)
                 {
@@ -83,10 +82,14 @@ namespace App_Api.Controllers
                     {
                         IdVouCherNguoiDung = Guid.NewGuid().ToString(),
                         IdNguoiDung = idNguoiDung,
-                        IdVouCher = VoucherKhaDung,
+                        IdVouCher = VoucherKhaDung.IdVoucher,
                         TrangThai = (int)TrangThaiVoucherNguoiDung.KhaDung
                     };
-                    VcNguoiDungRepos.AddItem(VCNguoiDung);
+                    if (VcNguoiDungRepos.AddItem(VCNguoiDung) == true)
+                    {
+                        VoucherKhaDung.SoLuong = VoucherKhaDung.SoLuong - 1;
+                        VcRepos.EditItem(VoucherKhaDung);
+                    }
                     return true; // Trả về true nếu thành công
                 }
             }
