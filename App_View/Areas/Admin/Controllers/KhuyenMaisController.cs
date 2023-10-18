@@ -13,6 +13,8 @@ using DocumentFormat.OpenXml.Drawing;
 using Org.BouncyCastle.Ocsp;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
 using Google.Apis.PeopleService.v1.Data;
+using App_Data.IRepositories;
+using App_Data.Repositories;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -21,10 +23,12 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly BazaizaiContext _context;
         private readonly HttpClient _httpClient;
+        
         public KhuyenMaisController(BazaizaiContext context)
         {
             _context = context;
             _httpClient = new HttpClient();
+           
         }
 
         // GET: Admin/KhuyenMais
@@ -95,8 +99,10 @@ namespace App_View.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(KhuyenMai khuyenMai)
         {
+           
             khuyenMai.IdKhuyenMai = Guid.NewGuid().ToString();
             khuyenMai.TrangThai = 0;
+            khuyenMai.MaKhuyenMai = "MaFake";
             ViewData["IdKhuyenMai"] = new SelectList(_context.khuyenMais, "IdKhuyenMai", "IdKhuyenMai");
             ViewBag.ListLoaiHinh = new List<SelectListItem>
             {
