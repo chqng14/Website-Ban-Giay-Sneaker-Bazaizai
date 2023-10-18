@@ -39,7 +39,7 @@ namespace App_Data.Models
 
         [Required(ErrorMessage = "Trạng thái là trường bắt buộc.")]
         public int? TrangThai { get; set; }
-
+        public string? Url { get; set; }
         public virtual ICollection<KhuyenMaiChiTiet> KhuyenMaiChiTiet { get; set; }
 
     }

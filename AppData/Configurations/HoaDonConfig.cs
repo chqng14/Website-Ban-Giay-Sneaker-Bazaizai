@@ -13,12 +13,13 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<HoaDon> builder)
         {
-            builder.HasKey(x => x.IdHoaDon);
+            builder.ToTable("HoaDon");
+            builder.HasKey(x => x.IdHoaDon); 
             builder.HasOne(x => x.ThongTinGiaoHang).WithMany(x => x.HoaDon).HasForeignKey(x => x.IdThongTinGH);
             builder.HasOne(x => x.NguoiDung).WithMany(x => x.HoaDons).HasForeignKey(x => x.IdNguoiDung);
             builder.HasOne(x => x.KhachHang).WithMany(x => x.HoaDons).HasForeignKey(x => x.IdKhachHang);
             builder.HasOne(x => x.Voucher).WithMany(x => x.HoaDon).HasForeignKey(x => x.IdVoucher);
-            builder.Property(x => x.MaHoaDon).HasColumnType("nvarchar(1000)");
+            builder.Property(x => x.MaHoaDon).HasColumnType("varchar(50)");
             builder.Property(x => x.NgayTao).HasColumnType("DateTime");
             builder.Property(x => x.NgayThanhToan).HasColumnType("DateTime");
             builder.Property(x => x.NgayShip).HasColumnType("DateTime");

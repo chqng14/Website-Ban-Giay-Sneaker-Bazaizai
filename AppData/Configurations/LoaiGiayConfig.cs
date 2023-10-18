@@ -13,8 +13,9 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<LoaiGiay> builder)
         {
+            builder.ToTable("LoaiGiay");
             builder.HasKey(x => x.IdLoaiGiay);
-            builder.Property(c => c.MaLoaiGiay).HasColumnType("nvarchar(1000)");
+            builder.Property(c => c.MaLoaiGiay).HasColumnType("varchar(50)");
             builder.Property(c => c.TenLoaiGiay).HasColumnType("nvarchar(1000)");
             builder.Property(c => c.TrangThai).HasColumnType("int");
         }

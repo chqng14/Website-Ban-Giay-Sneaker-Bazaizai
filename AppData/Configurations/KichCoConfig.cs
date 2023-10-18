@@ -14,9 +14,9 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<KichCo> builder)
         {
+            builder.ToTable("KichCo");
             builder.HasKey(e => e.IdKichCo);
-            builder.Property(e => e.IdKichCo).HasDefaultValueSql("(newid())");
-            builder.Property(c => c.MaKichCo).HasColumnType("nvarchar(1000)");
+            builder.Property(c => c.MaKichCo).HasColumnType("varchar(50)");
             builder.Property(c => c.SoKichCo).HasColumnType("int");
             builder.Property(e => e.TrangThai).HasDefaultValueSql("((0))");
         }

@@ -15,9 +15,10 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Voucher> builder)
         {
+            builder.ToTable("Voucher");
             builder.HasKey(c => c.IdVoucher);
-            builder.Property(c => c.MaVoucher).HasColumnType("nvarchar(100)");
-            builder.Property(c => c.TenVoucher).HasColumnType("nvarchar(300)");
+            builder.Property(c => c.MaVoucher).HasColumnType("varchar(50)");
+            builder.Property(c => c.TenVoucher).HasColumnType("nvarchar(1000)");
             builder.Property(c => c.SoLuong).HasColumnType("int");
             builder.Property(c => c.MucUuDai);
         }

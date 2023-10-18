@@ -4,6 +4,7 @@ using App_Data.DbContextt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App_Data.Migrations
 {
     [DbContext(typeof(BazaizaiContext))]
-    partial class BazaizaiContextModelSnapshot : ModelSnapshot
+    [Migration("20231017140612_UpdateVoucher_NgayTao")]
+    partial class UpdateVoucher_NgayTao
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,7 +42,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdSanPhamChiTiet");
 
-                    b.ToTable("Anh", (string)null);
+                    b.ToTable("Anh");
                 });
 
             modelBuilder.Entity("App_Data.Models.ChatLieu", b =>
@@ -49,7 +51,7 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaChatLieu")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenChatLieu")
                         .HasColumnType("nvarchar(1000)");
@@ -59,7 +61,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdChatLieu");
 
-                    b.ToTable("ChatLieu", (string)null);
+                    b.ToTable("ChatLieus");
                 });
 
             modelBuilder.Entity("App_Data.Models.ChucVu", b =>
@@ -72,7 +74,7 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MaChucVu")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
@@ -92,16 +94,18 @@ namespace App_Data.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("ChucVu", (string)null);
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("App_Data.Models.DanhGia", b =>
                 {
                     b.Property<string>("IdDanhGia")
-                        .HasColumnType("nvarchar(450)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("BinhLuan")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("IdNguoiDung")
                         .HasColumnType("nvarchar(450)");
@@ -134,7 +138,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("DanhGia", (string)null);
+                    b.ToTable("Đánh giá", (string)null);
                 });
 
             modelBuilder.Entity("App_Data.Models.GioHang", b =>
@@ -157,7 +161,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("NguoiDungId");
 
-                    b.ToTable("GioHang", (string)null);
+                    b.ToTable("gioHangs");
                 });
 
             modelBuilder.Entity("App_Data.Models.GioHangChiTiet", b =>
@@ -189,7 +193,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdSanPhamCT");
 
-                    b.ToTable("GioHangChiTiet", (string)null);
+                    b.ToTable("gioHangChiTiets");
                 });
 
             modelBuilder.Entity("App_Data.Models.HoaDon", b =>
@@ -210,7 +214,7 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaHoaDon")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("MoTa")
                         .HasColumnType("nvarchar(MAX)");
@@ -236,7 +240,7 @@ namespace App_Data.Migrations
                     b.Property<double?>("TongTien")
                         .HasColumnType("float");
 
-                    b.Property<int?>("TrangThaiGiaoHang")
+                    b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
                     b.Property<int?>("TrangThaiThanhToan")
@@ -252,7 +256,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdVoucher");
 
-                    b.ToTable("HoaDon", (string)null);
+                    b.ToTable("HoaDons");
                 });
 
             modelBuilder.Entity("App_Data.Models.HoaDonChiTiet", b =>
@@ -284,7 +288,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdSanPhamChiTiet");
 
-                    b.ToTable("HoaDonChiTiet", (string)null);
+                    b.ToTable("hoaDonChiTiets");
                 });
 
             modelBuilder.Entity("App_Data.Models.KhachHang", b =>
@@ -308,13 +312,15 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdNguoiDung");
 
-                    b.ToTable("KhachHang", (string)null);
+                    b.ToTable("KhachHang");
                 });
 
             modelBuilder.Entity("App_Data.Models.KhuyenMai", b =>
                 {
                     b.Property<string>("IdKhuyenMai")
-                        .HasColumnType("nvarchar(450)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValueSql("(newid())");
 
                     b.Property<int?>("LoaiHinhKM")
                         .IsRequired()
@@ -324,7 +330,7 @@ namespace App_Data.Migrations
                     b.Property<string>("MaKhuyenMai")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<decimal?>("MucGiam")
                         .IsRequired()
@@ -356,9 +362,6 @@ namespace App_Data.Migrations
                         .HasColumnType("int")
                         .HasDefaultValueSql("((0))");
 
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("IdKhuyenMai");
 
                     b.ToTable("KhuyenMai", (string)null);
@@ -367,7 +370,9 @@ namespace App_Data.Migrations
             modelBuilder.Entity("App_Data.Models.KhuyenMaiChiTiet", b =>
                 {
                     b.Property<string>("IdKhuyenMaiChiTiet")
-                        .HasColumnType("nvarchar(450)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("IdKhuyenMai")
                         .HasColumnType("nvarchar(450)")
@@ -378,7 +383,8 @@ namespace App_Data.Migrations
                         .HasColumnName("IdSanPhamChiTiet");
 
                     b.Property<string>("MoTa")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int?>("TrangThai")
                         .ValueGeneratedOnAdd()
@@ -397,10 +403,12 @@ namespace App_Data.Migrations
             modelBuilder.Entity("App_Data.Models.KichCo", b =>
                 {
                     b.Property<string>("IdKichCo")
-                        .HasColumnType("nvarchar(450)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("MaKichCo")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<int?>("SoKichCo")
                         .HasColumnType("int");
@@ -412,7 +420,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdKichCo");
 
-                    b.ToTable("KichCo", (string)null);
+                    b.ToTable("kichCos");
                 });
 
             modelBuilder.Entity("App_Data.Models.KieuDeGiay", b =>
@@ -421,7 +429,7 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaKieuDeGiay")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenKieuDeGiay")
                         .HasColumnType("nvarchar(1000)");
@@ -431,7 +439,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdKieuDeGiay");
 
-                    b.ToTable("KieuDeGiay", (string)null);
+                    b.ToTable("kieuDeGiays");
                 });
 
             modelBuilder.Entity("App_Data.Models.LoaiGiay", b =>
@@ -440,7 +448,7 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaLoaiGiay")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenLoaiGiay")
                         .HasColumnType("nvarchar(1000)");
@@ -450,7 +458,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdLoaiGiay");
 
-                    b.ToTable("LoaiGiay", (string)null);
+                    b.ToTable("LoaiGiays");
                 });
 
             modelBuilder.Entity("App_Data.Models.MauSac", b =>
@@ -459,7 +467,7 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaMauSac")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenMauSac")
                         .HasColumnType("nvarchar(1000)");
@@ -469,7 +477,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdMauSac");
 
-                    b.ToTable("MauSac", (string)null);
+                    b.ToTable("mauSacs");
                 });
 
             modelBuilder.Entity("App_Data.Models.NguoiDung", b =>
@@ -483,14 +491,14 @@ namespace App_Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("AnhDaiDien")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DiaChi")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -509,7 +517,7 @@ namespace App_Data.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("MaNguoiDung")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime?>("NgaySinh")
                         .HasColumnType("datetime");
@@ -535,7 +543,7 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TenNguoiDung")
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<int?>("TrangThai")
                         .HasColumnType("int");
@@ -557,7 +565,7 @@ namespace App_Data.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("NguoiDung", (string)null);
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("App_Data.Models.PhuongThucThanhToan", b =>
@@ -566,10 +574,10 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaPhuongThucThanhToan")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("MoTa")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenPhuongThucThanhToan")
                         .HasColumnType("nvarchar(1000)");
@@ -579,7 +587,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdPhuongThucThanhToan");
 
-                    b.ToTable("PhuongThucThanhToan", (string)null);
+                    b.ToTable("PhuongThucThanhToans");
                 });
 
             modelBuilder.Entity("App_Data.Models.PhuongThucThanhToanChiTiet", b =>
@@ -596,16 +604,13 @@ namespace App_Data.Migrations
                     b.Property<double?>("SoTien")
                         .HasColumnType("float");
 
-                    b.Property<int?>("TrangThai")
-                        .HasColumnType("int");
-
                     b.HasKey("IdPhuongThucThanhToanChiTiet");
 
                     b.HasIndex("IdHoaDon");
 
                     b.HasIndex("IdThanhToan");
 
-                    b.ToTable("PhuongThucThanhToanChiTiet", (string)null);
+                    b.ToTable("phuongThucThanhToanChiTiets");
                 });
 
             modelBuilder.Entity("App_Data.Models.SanPham", b =>
@@ -614,7 +619,7 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("MaSanPham")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("TenSanPham")
                         .HasColumnType("nvarchar(1000)");
@@ -624,7 +629,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdSanPham");
 
-                    b.ToTable("SanPham", (string)null);
+                    b.ToTable("SanPhams");
                 });
 
             modelBuilder.Entity("App_Data.Models.SanPhamChiTiet", b =>
@@ -632,8 +637,8 @@ namespace App_Data.Migrations
                     b.Property<string>("IdChiTietSp")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool?>("Day")
-                        .HasColumnType("bit");
+                    b.Property<string>("Day")
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<double?>("GiaBan")
                         .HasColumnType("float");
@@ -713,13 +718,15 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdXuatXu");
 
-                    b.ToTable("SanPhamChiTiet", (string)null);
+                    b.ToTable("sanPhamChiTiets");
                 });
 
             modelBuilder.Entity("App_Data.Models.SanPhamYeuThich", b =>
                 {
                     b.Property<string>("IdSanPhamYeuThich")
-                        .HasColumnType("nvarchar(450)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("IdNguoiDung")
                         .HasColumnType("nvarchar(450)");
@@ -727,13 +734,18 @@ namespace App_Data.Migrations
                     b.Property<string>("IdSanPhamChiTiet")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int?>("TrangThai")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValueSql("((0))");
+
                     b.HasKey("IdSanPhamYeuThich");
 
                     b.HasIndex("IdNguoiDung");
 
                     b.HasIndex("IdSanPhamChiTiet");
 
-                    b.ToTable("SanPhamYeuThich", (string)null);
+                    b.ToTable("sanPhamYeuThiches");
                 });
 
             modelBuilder.Entity("App_Data.Models.ThongTinGiaoHang", b =>
@@ -742,31 +754,36 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("DiaChi")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("IdNguoiDung")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("SDT")
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("TenNguoiNhan")
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<int?>("TrangThai")
+                        .HasColumnType("int");
 
                     b.HasKey("IdThongTinGH");
 
                     b.HasIndex("IdNguoiDung");
 
-                    b.ToTable("ThongTinGiaoHang", (string)null);
+                    b.ToTable("thongTinGiaoHangs");
                 });
 
             modelBuilder.Entity("App_Data.Models.ThuongHieu", b =>
                 {
                     b.Property<string>("IdThuongHieu")
-                        .HasColumnType("nvarchar(450)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)")
+                        .HasDefaultValueSql("(newid())");
 
                     b.Property<string>("MaThuongHieu")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("TenThuongHieu")
                         .HasColumnType("nvarchar(1000)");
@@ -778,7 +795,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdThuongHieu");
 
-                    b.ToTable("ThuongHieu", (string)null);
+                    b.ToTable("thuongHieus");
                 });
 
             modelBuilder.Entity("App_Data.Models.Voucher", b =>
@@ -795,7 +812,7 @@ namespace App_Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("MaVoucher")
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<double?>("MucUuDai")
                         .HasColumnType("float");
@@ -823,7 +840,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("IdVoucher");
 
-                    b.ToTable("Voucher", (string)null);
+                    b.ToTable("vouchers");
                 });
 
             modelBuilder.Entity("App_Data.Models.VoucherNguoiDung", b =>
@@ -846,7 +863,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdVouCher");
 
-                    b.ToTable("VoucherNguoiDung", (string)null);
+                    b.ToTable("voucherNguoiDungs");
                 });
 
             modelBuilder.Entity("App_Data.Models.XuatXu", b =>
@@ -858,14 +875,14 @@ namespace App_Data.Migrations
                         .HasColumnType("varchar(50)");
 
                     b.Property<string>("Ten")
-                        .HasColumnType("nvarchar(1000)");
+                        .HasColumnType("nvarchar(250)");
 
                     b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
                     b.HasKey("IdXuatXu");
 
-                    b.ToTable("XuatXu", (string)null);
+                    b.ToTable("xuatXus");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -890,7 +907,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("RoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -915,7 +932,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("UserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -937,7 +954,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("UserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -952,7 +969,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("UserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -971,7 +988,7 @@ namespace App_Data.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("UserTokens", (string)null);
                 });
 
             modelBuilder.Entity("App_Data.Models.Anh", b =>

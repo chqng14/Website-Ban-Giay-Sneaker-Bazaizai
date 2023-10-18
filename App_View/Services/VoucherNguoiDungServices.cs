@@ -1,17 +1,23 @@
-﻿using App_Data.Models;
+﻿using App_Data.DbContextt;
+using App_Data.IRepositories;
+using App_Data.Models;
 using App_Data.Repositories;
 using App_Data.ViewModels.Voucher;
 using App_Data.ViewModels.VoucherNguoiDung;
 using App_View.IServices;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.EntityFrameworkCore;
 using System.Net.Http;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Services
 {
     public class VoucherNguoiDungServices : IVoucherNguoiDungServices
     {
         private readonly HttpClient _httpClient;
-
+        BazaizaiContext DbContextModel = new BazaizaiContext();
+        DbSet<VoucherNguoiDung> voucherNguoiDung;
+        DbSet<Voucher> voucher;
         public VoucherNguoiDungServices(HttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -24,6 +30,23 @@ namespace App_View.Services
             var response = await httpClient.PostAsync(apiUrl, null);
             return true;
         }
+        //hàm này để check xem voucher đó đã có trong id người dùng chưa
+        public bool CheckVoucherInUser(string ma)
+        {
+            string voucherKhaDung = DbContextModel.vouchers
+                .FirstOrDefault(c => c.MaVoucher == ma && c.TrangThai == (int)TrangThaiVoucher.HoatDong).IdVoucher;
+
+            if (voucherKhaDung == null)
+            {
+                return false;
+            }
+
+            var existsInVoucherNguoiDung = DbContextModel.voucherNguoiDungs
+                .Any(vnd => vnd.IdVouCher == voucherKhaDung);
+
+            return !existsInVoucherNguoiDung;
+        }
+
 
         public Task<List<VoucherNguoiDungDTO>> GetAllVouCherNguoiDung()
         {
