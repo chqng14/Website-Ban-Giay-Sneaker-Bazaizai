@@ -238,6 +238,8 @@
 <script>
     $(document).on("click", ".filterPrice, input[type='checkbox']", function () {
 
+        const brandParam = new URLSearchParams(window.location.search).get("brand");       
+
         var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
             return $(this).attr('id')
         }).get();
@@ -261,6 +263,9 @@
                 fieldValue = $(this).is(":checked");
             } else {
                 fieldValue = $(this).val();
+                if (!fieldValue) {
+                    fieldValue = 0;
+                }
             }
 
             data[fieldName] = fieldValue;
@@ -268,17 +273,18 @@
         });
 
         var filterdata = {
-            key: value,
+            LstTheLoai: lstTheLoai,
+            LstMauSac: lstMauSac,
+            lstKichCo: lstKichCo,
+            ... data
         };
         $.ajax({
-            url: '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+            url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
             type: 'POST',
             data: JSON.stringify(filterdata),
             contentType: 'application/json',
             success: function (result) {
-                if (result.success) {
-
-                }
+                $('#body-ds').empty().html(result)
             },
             error: function (xhr, status, error) {
                 console.log(xhr.responseText);

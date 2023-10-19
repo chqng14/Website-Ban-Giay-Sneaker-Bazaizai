@@ -157,7 +157,22 @@ namespace App_Data.Repositories
 
             var itemShops = _mapper.Map<List<ItemShopViewModel>>(listSanPham.OrderByDescending(x=>x.NgayTao));
             return itemShops;
+        }
 
+        public async Task<List<ItemShopViewModel>> GetDanhSachBienTheItemShopViewModelAsync()
+        {
+            var listSanPham = await _context.sanPhamChiTiets
+                .Include(it => it.SanPham)
+                .Include(it => it.ThuongHieu)
+                .Include(it => it.LoaiGiay)
+                .Include(it => it.MauSac)
+                .Include(it => it.KichCo)
+                .Include(it => it.Anh)
+                .Where(sp => sp.TrangThai == 0)
+                .ToListAsync();
+
+            var itemShops = _mapper.Map<List<ItemShopViewModel>>(listSanPham.OrderByDescending(x => x.NgayTao));
+            return itemShops;
         }
 
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id)
@@ -517,6 +532,6 @@ namespace App_Data.Repositories
                 .ToList();
         }
 
-
+       
     }
 }

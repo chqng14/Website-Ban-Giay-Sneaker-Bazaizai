@@ -10,9 +10,13 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
     {
         public string? IdChiTietSp { get; set; }
         public string? ThuongHieu { get; set; }
+        public string? MauSac { get; set; }
+        public int KichCo { get; set; }
         public string? TheLoai { get; set; }
         public string? TenSanPham { get; set;}
         public double? GiaMin { get; set; }
+        public double? GiaThucTe { get; set; }
+        public double? GiaGoc { get; set; }
         public double? GiaMax { get; set; }
         public double? SoSao { get; set; }
         public int? SoLanDanhGia { get; set; }

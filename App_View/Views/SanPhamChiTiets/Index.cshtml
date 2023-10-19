@@ -13,87 +13,59 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    @if (Model.Items!.Count() == 0)
-                    {
+                    <div class="shop-p">
+                        <div class="shop-p__toolbar u-s-m-b-30">
+                            @*<div class="shop-p__meta-wrap u-s-m-b-60">
 
-                        <div class="u-s-p-y-60">
+                                    <span class="shop-p__meta-text-1">FOUND 18 RESULTS</span>
+                                    <div class="shop-p__meta-text-2">
 
-                            <!--====== Section Content ======-->
-                            <div class="section__content">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-lg-12 col-md-12 u-s-m-b-30">
-                                            <div class="empty">
-                                                <div class="empty__wrap">
+                                        <span>Related Searches:</span>
 
-                                                    <span class="empty__big-text">EMPTY</span>
+                                        <a class="gl-tag btn--e-brand-shadow" href="#">men's clothing</a>
 
-                                                    <span class="empty__text-1">Không sản phẩm nào được tìm thấy.</span>
+                                        <a class="gl-tag btn--e-brand-shadow" href="#">mobiles & tablets</a>
 
-                                                    <a class="empty__redirect-link btn--e-brand" href="/SanPhamchiTiets">Xóa bộ lọc</a>
-                                                </div>
-                                            </div>
+                                        <a class="gl-tag btn--e-brand-shadow" href="#">books & audible</a>
+                                    </div>
+                                </div>*@
+                            <div class="shop-p__tool-style">
+                                <div class="tool-style__group u-s-m-b-8">
+
+                                    <span class="js-shop-filter-target" data-side="#side-filter">Filters</span>
+
+                                    <span class="js-shop-grid-target is-active">Grid</span>
+
+                                    <span class="js-shop-list-target">List</span>
+                                </div>
+                                <form>
+                                    <div class="tool-style__form-wrap">
+                                        <div class="u-s-m-b-8">
+                                            <select class="select-box select-box--transparent-b-2">
+                                                <option>Show: 8</option>
+                                                <option selected>Show: 12</option>
+                                                <option>Show: 16</option>
+                                                <option>Show: 28</option>
+                                            </select>
+                                        </div>
+                                        <div class="u-s-m-b-8">
+                                            <select class="select-box select-box--transparent-b-2">
+                                                <option selected>Sort By: Newest Items</option>
+                                                <option>Sort By: Latest Items</option>
+                                                <option>Sort By: Best Selling</option>
+                                                <option>Sort By: Best Rating</option>
+                                                <option>Sort By: Lowest Price</option>
+                                                <option>Sort By: Highest Price</option>
+                                            </select>
                                         </div>
                                     </div>
-                                </div>
+                                </form>
                             </div>
-                            <!--====== End - Section Content ======-->
                         </div>
-                    }
-                    else
-                    {
-                        <div class="shop-p">
-                            <div class="shop-p__toolbar u-s-m-b-30">
-                                @*<div class="shop-p__meta-wrap u-s-m-b-60">
-
-                        <span class="shop-p__meta-text-1">FOUND 18 RESULTS</span>
-                        <div class="shop-p__meta-text-2">
-
-                            <span>Related Searches:</span>
-
-                            <a class="gl-tag btn--e-brand-shadow" href="#">men's clothing</a>
-
-                            <a class="gl-tag btn--e-brand-shadow" href="#">mobiles & tablets</a>
-
-                            <a class="gl-tag btn--e-brand-shadow" href="#">books & audible</a>
+                        <div id="body-ds">
+                            @await Html.PartialAsync("_DanhSachSanPhamPartialView", Model)
                         </div>
-                    </div>*@
-                                <div class="shop-p__tool-style">
-                                    <div class="tool-style__group u-s-m-b-8">
-
-                                        <span class="js-shop-filter-target" data-side="#side-filter">Filters</span>
-
-                                        <span class="js-shop-grid-target is-active">Grid</span>
-
-                                        <span class="js-shop-list-target">List</span>
-                                    </div>
-                                    <form>
-                                        <div class="tool-style__form-wrap">
-                                            <div class="u-s-m-b-8">
-                                                <select class="select-box select-box--transparent-b-2">
-                                                    <option>Show: 8</option>
-                                                    <option selected>Show: 12</option>
-                                                    <option>Show: 16</option>
-                                                    <option>Show: 28</option>
-                                                </select>
-                                            </div>
-                                            <div class="u-s-m-b-8">
-                                                <select class="select-box select-box--transparent-b-2">
-                                                    <option selected>Sort By: Newest Items</option>
-                                                    <option>Sort By: Latest Items</option>
-                                                    <option>Sort By: Best Selling</option>
-                                                    <option>Sort By: Best Rating</option>
-                                                    <option>Sort By: Lowest Price</option>
-                                                    <option>Sort By: Highest Price</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                           @await Html.PartialAsync("_DanhSachSanPhamPartialView",Model)
-                        </div>
-                    }
+                    </div>
 
                 </div>
             </div>

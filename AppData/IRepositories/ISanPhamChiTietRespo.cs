@@ -22,6 +22,7 @@ namespace App_Data.IRepositories
         Task<DanhSachGiayViewModel> GetDanhSachGiayViewModelAsync();
         Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(List<string> listGuid);
         Task<List<ItemShopViewModel>> GetDanhSachItemShopViewModelAsync();
+        Task<List<ItemShopViewModel>> GetDanhSachBienTheItemShopViewModelAsync();
         Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id);
         Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac);
         Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSizeAynsc(string id, int size);
@@ -33,6 +34,7 @@ namespace App_Data.IRepositories
         Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO);
         Task UpdateSoLuongSanPhamChiTietAynsc(string IdSanPhamChiTiet, int soLuong);
         Task<FiltersVM> GetFiltersVMAynsc();
+
 
     }
 }

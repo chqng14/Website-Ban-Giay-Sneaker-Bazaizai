@@ -12,7 +12,7 @@ namespace App_Data.ViewModels.FilterViewModel
         public double GiaMax { get; set;}
         public List<string>? LstTheLoai { get; set; }
         public List<string>? LstMauSac { get; set; }
-        public List<string>? LstKichCo { get; set; }
+        public List<int>? LstKichCo { get; set; }
         public int TrangHienTai { get; set; } = 1;
         public int SoLuongSanPhamTrenMotTrang { get; set; } = 8;
         public string? Sort { get; set; }
