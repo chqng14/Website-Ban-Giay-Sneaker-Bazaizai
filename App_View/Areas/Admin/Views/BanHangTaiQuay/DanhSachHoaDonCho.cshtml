@@ -13,6 +13,7 @@
     ViewData["Title"] = "DanhSachHoaDonCho";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+<link href="~/css/ban-hang-tai-quay.css" rel="stylesheet" />
 <div class="card">
     <div class="row" style="height:800px">
         <div class="col-9">
@@ -34,7 +35,27 @@
                     </div>
                 </div>
             </div>
-            <div class="row" style="height: 400px"><div class="p-3">Row column</div></div>
+            <div class="row" style="height: 400px">
+
+                <div class="row">
+                    <div class="col-4" style="margin-left: 5px;">
+                        <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="card" style="width: 15rem; margin: 5px;">
+                        <div class="card-body">
+                            <h5 class="card-title">Sản phẩm</h5>
+                            <img src="https://scontent.fhan14-2.fna.fbcdn.net/v/t39.30808-6/363362037_857800985704697_9056549640961271004_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=5f2048&_nc_ohc=Vh2YQ6vyXSYAX-IC9S4&_nc_oc=AQl2v09MS-fEzk-dnr4dLgNjzq3aBivJQzSEnQYSmU4z9JULfRXjm4wI72Lc6amtDM0&_nc_ht=scontent.fhan14-2.fna&oh=00_AfDmeUYpsisaUVn9z-gxK0nNM7VugJaevAqI1TFBzqyI8w&oe=65359210" class="card-img-top" alt="...">
+                            <p class="card-text">
+                                <span style="color: red;">Giá: 20.000đ</span><br>
+                                <span>Số lượng: 20</span>
+                                <a href="#" class="btn btn-success" style="float: right;">Add</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
         <div class="col-3" style="height: 100%">
