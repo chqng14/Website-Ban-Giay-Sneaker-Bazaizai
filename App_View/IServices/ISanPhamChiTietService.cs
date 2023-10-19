@@ -37,6 +37,7 @@ namespace App_View.IServices
         Task<MauSacDTO?> CreateTenMauSacAynsc(MauSacDTO mauSacDTO);
         Task<KichCoDTO?> CreateTenKichCoAynsc(KichCoDTO kichCoDTO);
         Task<List<ItemShopViewModel>?> GetListItemShopViewModelAynsc();
+        Task<List<ItemShopViewModel>?> GetDanhSachBienTheItemShopViewModelAsync();
         Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id);
         Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac);
         Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSizeAynsc(string id, int size);
@@ -49,5 +50,6 @@ namespace App_View.IServices
         Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO);
 
         Task UpDatSoLuongAynsc(SanPhamSoLuongDTO sanPhamSoLuongDTO);
+
     }
 }

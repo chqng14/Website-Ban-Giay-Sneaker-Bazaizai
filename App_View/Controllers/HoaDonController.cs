@@ -162,7 +162,7 @@ namespace App_View.Controllers
                 };
                 await gioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
                 var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
-                //await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
+                await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
             }
             return Ok();
         }

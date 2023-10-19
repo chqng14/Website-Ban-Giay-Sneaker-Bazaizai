@@ -18,7 +18,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/HoaDon/Create", hoaDonDTO);
+                var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/HoaDon/TaoHoaDonOnlineDTO", hoaDonDTO);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();

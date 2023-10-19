@@ -226,6 +226,18 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.SoLanDanhGia,
                         opt => opt.MapFrom(src => 32)
                     )
+                .ForMember(
+                        dest => dest.TheLoai,
+                        opt => opt.MapFrom(src => src.LoaiGiay.TenLoaiGiay)
+                    )
+                .ForMember(
+                        dest => dest.KichCo,
+                        opt => opt.MapFrom(src => src.KichCo.SoKichCo)
+                    )
+                .ForMember(
+                        dest => dest.MauSac,
+                        opt => opt.MapFrom(src => src.MauSac.TenMauSac)
+                    )
                  .ForMember(
                         dest => dest.GiaMin,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
@@ -315,16 +327,16 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => src.Anh.Where(x => x.TrangThai == 0).OrderBy(x => x.Url).Select(a => a.Url).ToList())
                     )
                  .ForMember(
-                        dest => dest.SoLuotYeuThich,
-                        opt => opt.MapFrom(src => 100)
-                    )
-                 .ForMember(
                         dest => dest.MauSac,
                         opt => opt.MapFrom(src => src.MauSac.TenMauSac)
                     )
                  .ForMember(
-                        dest => dest.Size,
+                        dest => dest.KichCo,
                         opt => opt.MapFrom(src => src.KichCo.SoKichCo)
+                    )
+                 .ForMember(
+                        dest => dest.SoLuotYeuThich,
+                        opt => opt.MapFrom(src => 100)
                     )
                 ;
             CreateMap<SanPhamDTO, SanPham>();
