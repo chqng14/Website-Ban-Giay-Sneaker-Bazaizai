@@ -25,8 +25,8 @@ namespace App_Data.Repositories
             KhongHoatDong = 1,
             [Description("Chưa bắt đầu")]
             ChuaBatDau = 2,
-            [Description("Số lượng voucher đã hết")]
-            HetVoucher = 3,
+            [Description("Đã huỷ")]
+            DaHuy = 3
 
         }
         /// <summary>
