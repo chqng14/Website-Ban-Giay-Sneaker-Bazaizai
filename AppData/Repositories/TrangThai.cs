@@ -71,12 +71,23 @@ namespace App_Data.Repositories
             TaiQuay = 0,
 
         }
-        public enum TrangThaiSale
+        public enum TrangThaiSaleInProductDetail
         {
             [Description("Không thể áp dụng sale")]
             KhongApDungSale = 0,
             [Description("Được áp dụng sale")]
-            DuocApDungSale = 1
+            DuocApDungSale = 1,
+            [Description("Đã áp dụng sale")]
+            DaApDungSale = 1
+        }
+        public enum TrangThaiSale
+        {
+            [Description("Hết hạn")]
+            HetHan = 0,
+            [Description("Đang bắt đầu")]
+            DangBatDau = 1,
+            [Description("Chưa bắt đầu")]
+            ChuaBatDau = 2
         }
         public enum TrangThaiSaleDetail
         {

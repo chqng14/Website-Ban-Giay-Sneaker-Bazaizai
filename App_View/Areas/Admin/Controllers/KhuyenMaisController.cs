@@ -227,5 +227,22 @@ namespace App_View.Areas.Admin.Controllers
         {
             return (_context.khuyenMais?.Any(e => e.IdKhuyenMai == id)).GetValueOrDefault();
         }
+        [HttpPost]
+        public JsonResult CapNhatTrangThai(string id, int trangThai)
+        {
+            var khuyenMai = _context.khuyenMais.Find(id);
+            if (trangThai == 0)
+            {
+                khuyenMai.TrangThai = 1;
+
+            }
+            else
+            {
+                khuyenMai.TrangThai = 0;
+            }
+            _context.khuyenMais.Update(khuyenMai);
+            _context.SaveChanges();
+            return Json(new { success = true });
+        }
     }
 }
