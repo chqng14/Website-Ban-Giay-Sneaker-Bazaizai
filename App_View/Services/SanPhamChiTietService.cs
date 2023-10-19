@@ -472,5 +472,18 @@ namespace App_View.Services
         {
             await _httpClient.PutAsJsonAsync("/api/SanPhamChiTiet/UpdateSoLuong", sanPhamSoLuongDTO);
         }
+
+        public async Task<List<ItemShopViewModel>?> GetDanhSachBienTheItemShopViewModelAsync()
+        {
+            try
+            {
+                return await _httpClient.GetFromJsonAsync<List<ItemShopViewModel>?>("/api/SanPhamChiTiet/Get-List-ItemBienTheShopViewModel");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return new List<ItemShopViewModel>();
+            }
+        }
     }
 }
