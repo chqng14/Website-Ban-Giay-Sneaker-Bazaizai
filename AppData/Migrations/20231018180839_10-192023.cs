@@ -4,7 +4,7 @@
 
 namespace App_Data.Migrations
 {
-    public partial class _18_10_2023_SuaTatCa : Migration
+    public partial class _10192023 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
