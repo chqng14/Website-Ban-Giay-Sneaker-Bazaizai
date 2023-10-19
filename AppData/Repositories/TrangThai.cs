@@ -25,8 +25,9 @@ namespace App_Data.Repositories
             KhongHoatDong = 1,
             [Description("Chưa bắt đầu")]
             ChuaBatDau = 2,
-            [Description("Đã huỷ")]
-            DaHuy = 3
+            [Description("Số lượng voucher đã hết")]
+            HetVoucher = 3,
+
         }
         /// <summary>
         /// ở đây là voucher
@@ -37,7 +38,7 @@ namespace App_Data.Repositories
             TienMat = 0,
             [Description("Giảm giá theo %")]
             PhanTram = 1,
-            [Description("Giảm phí ship")]
+            [Description("Miễn phí ship")]
             Freeship = 2,
         }
         public enum ChucVuMacDinh
@@ -90,6 +91,13 @@ namespace App_Data.Repositories
             Nam = 1,
             Nu = 2,
             Khac = 3
+        }
+        public enum TrangThaiHoaDonChiTiet
+        {
+            [Description("Chưa thanh toán")]
+            ChuaThanhToan = 0,
+            [Description("Đã thanh toán")]
+            DaThanhToan = 1,
         }
     }
 }

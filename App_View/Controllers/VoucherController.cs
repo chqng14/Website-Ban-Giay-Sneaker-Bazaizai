@@ -50,14 +50,12 @@ namespace App_View.Controllers
             ViewBag.TatCaVoucher = allVouchers;
             return View(allVouchers);
         }
-        public bool GetVoucherByMa(string ma)
+        public async Task<IActionResult> GetVoucherByMa(string ma)
         {
-            var Voucher = _voucherSV.GetVoucherByMa(ma);
-            if (Voucher != null)
-            {
-                return true;
-            }
-            return false;
+            var Voucher = await _voucherSV.GetVoucherByMa(ma);
+            double mucuidai = 0;
+            var IdVoucher = "";
+            return Json(new { mucuidai = (double)Voucher.MucUuDai, IdVoucher = Voucher.IdVoucher });
         }
     }
 }
