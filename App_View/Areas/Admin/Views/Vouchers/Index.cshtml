@@ -21,15 +21,16 @@
                     <select id="trangThai" name="trangThai" class="custom-select">
                         <option value="tatCa">Tất cả</option>
                         <option value="hoatDong">Hoạt động</option>
+                            <option value="chuaBatDau">Chưa bắt đầu</option>
                         <option value="khongHoatDong">Không hoạt động</option>
-                        <option value="chuaBatDau">Chưa bắt đầu</option>
+                        <option value="DaHuy">Đã huỷ</option>
                     </select>                 
                 </div>
                 <div class="m-b-10 ml-1">
                     <button type="submit" class="btn btn-primary">Lọc</button>
                 </div>                                          
             </div>
-        </form>
+             </form>
         </div>
         <div class="col-lg-4 text-right">
             <h1>  <a class="btn btn-primary" asp-action="Create"><i class="anticon anticon-plus-circle"></i> Tạo mới</a></h1>
@@ -58,6 +59,9 @@
             </th>
             <th>
                 Số lượng
+            </th>
+            <th>
+                Ngày khởi tạo
             </th>
             <th>
                Ngày bắt đầu
@@ -118,7 +122,9 @@
             <td>
                 @item.SoLuong
             </td>
-     
+                <td>
+                    @item.NgayTao
+                </td>
             <td>
                 @item.NgayBatDau
             </td>
@@ -138,9 +144,9 @@
                     {
                         <span>Chưa bắt đầu</span>
                     }
-                    else
+                    else if(item.TrangThai==3)
                     {
-                        <span>Trạng thái lỗi</span>
+                        <span>Đã huỷ</span>
                     }
             </td>
                 <td>
@@ -148,15 +154,16 @@
                 </td>
 
             <td>
-                    <a asp-action="Edit" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i></a> |
-                    <a asp-action="Details" asp-route-id="@item.IdVoucher"><i class="anticon anticon-eye"></i></a> |
-                    <a asp-action="Delete" asp-route-id="@item.IdVoucher"><i class="anticon anticon-delete"></i></a>
+                    <a asp-action="Edit" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i></a> 
+                  @*   <a asp-action="Details" asp-route-id="@item.IdVoucher"><i class="anticon anticon-eye"></i></a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdVoucher"><i class="anticon anticon-delete"></i></a> *@
             </td>
         </tr>
 }
     </tbody>
 </table>
 <button class="btn btn-warning mr-2"  id="delete-button">Huỷ hoạt động của voucher đã chọn</button>
+<button class="btn btn-success mr-2" id="restore-button">Khôi phục voucher đã chọn</button>
 
 <script>
     $(document).ready(function () {
@@ -181,6 +188,16 @@
                 // Gọi hàm để huỷ hoạt động voucher
                 huyHoatDongVoucher(selectedIds);
             });
+            $('#restore-button').on('click', function () {
+                // Lấy danh sách id voucher đã chọn
+                var selectedIds = [];
+
+                $('.voucher-checkbox:checked').each(function () {
+                    selectedIds.push($(this).data('value'));
+                });
+                // Gọi hàm để huỷ hoạt động voucher
+                KhoiPhucVoucher(selectedIds);
+            });
         });
 
         // Hàm để gọi Ajax và chuyển về controller để huỷ hoạt động voucher
@@ -197,6 +214,22 @@
                 },
                 error: function (error) {
                     console.error('Lỗi khi huỷ hoạt động voucher', error);
+                }
+            });
+        }
+        function KhoiPhucVoucher(selectedIds) {
+            // Thực hiện Ajax request để chuyển selectedIds về controller
+            $.ajax({
+                url: '/Admin/Vouchers/RestoreVoucherWithList', // Thay 'ControllerName' bằng tên thực tế của controller
+                type: 'POST', // Hoặc 'GET' tùy thuộc vào yêu cầu của bạn
+                data: { voucherIds: selectedIds },
+                success: function (response) {
+                    // Xử lý kết quả từ controller nếu cần
+                    alert('Khôi phục voucher thành công');
+                    window.location.reload();
+                },
+                error: function (error) {
+                    console.error('Lỗi khi khôi phục voucher', error);
                 }
             });
         }

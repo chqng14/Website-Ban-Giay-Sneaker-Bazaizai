@@ -1,0 +1,299 @@
+﻿@model App_Data.ViewModels.FilterViewModel.FiltersVM
+<div class="shop-a" id="side-filter">
+    <div class="shop-a__wrap">
+        <div class="shop-a__inner gl-scroll">
+            <div class="shop-w-master">
+                <h1 class="shop-w-master__heading u-s-m-b-30">
+                    <i class="fas fa-filter u-s-m-r-8"></i>
+
+                    <span>FILTERS</span>
+                </h1>
+                <div class="shop-w-master__sidebar">
+                    <div class="u-s-m-b-30">
+                        <div class="shop-w">
+                            <div class="shop-w__intro-wrap">
+                                <h1 class="shop-w__h">THƯƠNG HIỆU</h1>
+
+                                <span class="fas fa-minus shop-w__toggle" data-target="#s-category" data-toggle="collapse"></span>
+                            </div>
+                           
+                                <div class="shop-w__wrap collapse show" id="s-category">
+                                    <ul class="shop-w__category-list gl-scroll">
+                                        <li>
+
+                                            <a href="/sanphamchitiets">Tất cả</a>
+
+                                            <span class="category-list__text u-s-m-l-6">(All)</span>
+                                        </li>
+                                        @foreach (var item in Model.LstItemFilterThuongHieu!)
+                                        {
+                                            <li>
+
+                                                <a href="/sanphamchitiets?brand=@item.Ten">@item.Ten</a>
+
+                                                <span class="category-list__text u-s-m-l-6">(@item.SoLuong)</span>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                        </div>
+                    </div>
+                    <div class="u-s-m-b-30">
+                        <div class="shop-w">
+                            <div class="shop-w__intro-wrap">
+                                <h1 class="shop-w__h">ĐÁNH GIÁ</h1>
+
+                                <span class="fas fa-minus shop-w__toggle" data-target="#s-rating" data-toggle="collapse"></span>
+                            </div>
+                            <div class="shop-w__wrap collapse show" id="s-rating">
+                                <ul class="shop-w__list gl-scroll">
+                                    <li>
+                                        <div class="rating__check">
+
+                                            <input type="checkbox">
+                                            <div class="rating__check-star-wrap"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                                        </div>
+
+                                        <span class="shop-w__total-text">(2)</span>
+                                    </li>
+                                    <li>
+                                        <div class="rating__check">
+
+                                            <input type="checkbox">
+                                            <div class="rating__check-star-wrap">
+                                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+
+                                                <span>& Up</span>
+                                            </div>
+                                        </div>
+
+                                        <span class="shop-w__total-text">(8)</span>
+                                    </li>
+                                    <li>
+                                        <div class="rating__check">
+
+                                            <input type="checkbox">
+                                            <div class="rating__check-star-wrap">
+                                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+
+                                                <span>& Up</span>
+                                            </div>
+                                        </div>
+
+                                        <span class="shop-w__total-text">(10)</span>
+                                    </li>
+                                    <li>
+                                        <div class="rating__check">
+
+                                            <input type="checkbox">
+                                            <div class="rating__check-star-wrap">
+                                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+
+                                                <span>& Up</span>
+                                            </div>
+                                        </div>
+
+                                        <span class="shop-w__total-text">(12)</span>
+                                    </li>
+                                    <li>
+                                        <div class="rating__check">
+
+                                            <input type="checkbox">
+                                            <div class="rating__check-star-wrap">
+                                                <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+
+                                                <span>& Up</span>
+                                            </div>
+                                        </div>
+
+                                        <span class="shop-w__total-text">(1)</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+   
+                    <div class="u-s-m-b-30">
+                        <div class="shop-w">
+                            <div class="shop-w__intro-wrap">
+                                <h1 class="shop-w__h">GIÁ</h1>
+
+                                <span class="fas fa-minus shop-w__toggle" data-target="#s-price" data-toggle="collapse"></span>
+                            </div>
+                            <div class="shop-w__wrap collapse show" id="s-price">
+                                <div class="shop-w__form-p">
+                                    <div class="shop-w__form-p-wrap">
+                                        <div>
+
+                                            <label for="price-min"></label>
+
+                                            <input class="input-text input-text--primary-style" name="GiaMin" type="text" id="price-min" placeholder="Min">
+                                        </div>
+                                        <div>
+
+                                            <label for="price-max"></label>
+
+                                            <input class="input-text input-text--primary-style" name="GiaMax" type="text" id="price-max" placeholder="Max">
+                                        </div>
+                                        <div>
+
+                                            <button class="btn btn--icon fas fa-angle-right btn--e-transparent-platinum-b-2 filterPrice"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="u-s-m-b-30">
+                        <div class="shop-w">
+                            <div class="shop-w__intro-wrap">
+                                <h1 class="shop-w__h">THỂ LOẠI</h1>
+
+                                <span class="fas fa-minus shop-w__toggle" data-target="#s-manufacturer" data-toggle="collapse"></span>
+                            </div>
+                            <div class="shop-w__wrap collapse show" id="s-manufacturer">
+                                <ul class="shop-w__list-2 lst-theloai">
+                                    @foreach (var item in Model.LstItemFilterTheLoai!)
+                                    {
+                                        <li>
+                                            <div class="list__content">
+
+                                                <input type="checkbox">
+
+                                                <span>@item.Ten</span>
+                                            </div>
+
+                                            <span class="shop-w__total-text">(@item.SoLuong)</span>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="u-s-m-b-30">
+                        <div class="shop-w">
+                            <div class="shop-w__intro-wrap">
+                                <h1 class="shop-w__h">MÀU SẮC</h1>
+
+                                <span class="fas fa-minus shop-w__toggle" data-target="#s-color" data-toggle="collapse"></span>
+                            </div>
+                            <div class="shop-w__wrap collapse show" id="s-color">
+                                <ul class="shop-w__list gl-scroll lst-mausac">
+                                    @foreach (var item in Model.LstItemFilterMauSac!)
+                                    {
+                                        <li>
+                                            <div class="color__check">
+
+                                                <input type="checkbox" id="@item.Ten">
+
+                                                <label class="color__check-label" for="@item.Ten" style="background-color: @item.Ten"></label>
+                                            </div>
+
+                                            <span class="shop-w__total-text">(@item.SoLuong)</span>
+                                        </li>
+
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="u-s-m-b-30">
+                        <div class="shop-w">
+                            <div class="shop-w__intro-wrap">
+                                <h1 class="shop-w__h">KÍCH CỠ</h1>
+
+                                <span class="fas fa-minus shop-w__toggle" data-target="#s-size" data-toggle="collapse"></span>
+                            </div>
+                            <div class="shop-w__wrap" id="s-size">
+                                <ul class="shop-w__list gl-scroll lst-kichco">
+                                    @foreach (var item in Model.LstItemFilterKichCo!)
+                                    {
+                                        <li>
+
+                                            <!--====== Check Box ======-->
+                                            <div class="check-box">
+
+                                                <input type="checkbox" id="@item.Ten">
+                                                <div class="check-box__state check-box__state--primary">
+
+                                                    <label class="check-box__label" for="xs">@item.Ten</label>
+                                                </div>
+                                            </div>
+                                            <!--====== End - Check Box ======-->
+
+                                            <span class="shop-w__total-text">(@item.SoLuong)</span>
+                                        </li>
+
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).on("click", ".filterPrice, input[type='checkbox']", function () {
+
+        const brandParam = new URLSearchParams(window.location.search).get("brand");       
+
+        var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
+            return $(this).attr('id')
+        }).get();
+
+        var lstMauSac = $('.lst-mausac input[type="checkbox"]:checked').map(function () {
+            return $(this).attr('id')
+        }).get();
+
+        var lstTheLoai = $('.lst-theloai input[type="checkbox"]:checked').map(function () {
+            return $(this).closest('.list__content').find('span').text()
+        }).get();
+
+        var data = {};
+        $('#s-price').find("input, select, textarea").each(function () {
+
+            var fieldType = $(this).attr("type");
+            var fieldName = $(this).attr("name");
+            var fieldValue;
+
+            if (fieldType === "checkbox" || fieldType === "radio") {
+                fieldValue = $(this).is(":checked");
+            } else {
+                fieldValue = $(this).val();
+                if (!fieldValue) {
+                    fieldValue = 0;
+                }
+            }
+
+            data[fieldName] = fieldValue;
+
+        });
+
+        var filterdata = {
+            LstTheLoai: lstTheLoai,
+            LstMauSac: lstMauSac,
+            lstKichCo: lstKichCo,
+            ... data
+        };
+        $.ajax({
+            url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+            type: 'POST',
+            data: JSON.stringify(filterdata),
+            contentType: 'application/json',
+            success: function (result) {
+                $('#body-ds').empty().html(result)
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+
+
+    })
+</script>

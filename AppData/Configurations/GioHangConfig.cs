@@ -13,7 +13,8 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<GioHang> builder)
         {
-            builder.HasKey(c => c.IdNguoiDung);
+            builder.ToTable("GioHang");
+            builder.HasKey(c => c.IdNguoiDung); 
             builder.Property(e => e.NgayTao).HasColumnType("datetime");
             builder.Property(e => e.TrangThai).HasDefaultValueSql("((0))");
         }

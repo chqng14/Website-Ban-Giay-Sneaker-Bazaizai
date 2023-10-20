@@ -11,6 +11,7 @@ namespace App_Data.ViewModels.HoaDonChiTietDTO
         public string? IdHoaDonChiTiet { get; set; }
         public string? IdHoaDon { get; set; }
         public string? IdSanPhamChiTiet { get; set; }
+        public string? IdVoucher { get; set; }
         public string? IdThongTinGH { get; set; }
         public int? SoLuong { get; set; }
         public double? GiaGoc { get; set; }

@@ -26,6 +26,7 @@ namespace App_Data.Models
         public int? SoLuong { get; set; }
         [CustomMucUuDaiValidation]
         public double? MucUuDai { get; set; }
+        public DateTime NgayTao { get; set; }
         [Required(ErrorMessage = "Ngày bắt đầu là trường bắt buộc.")]
         public DateTime NgayBatDau { get; set; }
 

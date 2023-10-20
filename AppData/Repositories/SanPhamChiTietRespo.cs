@@ -1,11 +1,16 @@
 ﻿using App_Data.DbContextt;
 using App_Data.IRepositories;
 using App_Data.Models;
+using App_Data.ViewModels.FilterViewModel;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using DocumentFormat.OpenXml.InkML;
+using DocumentFormat.OpenXml.Math;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.EntityFrameworkCore;
+using OpenXmlPowerTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -129,26 +134,44 @@ namespace App_Data.Repositories
                 return false;
             }
         }
-
         public async Task<List<ItemShopViewModel>> GetDanhSachItemShopViewModelAsync()
         {
-            var listSanPham = (await _context.sanPhamChiTiets
+            var listSanPham = await _context.sanPhamChiTiets
                 .Include(it => it.SanPham)
                 .Include(it => it.ThuongHieu)
+                .Include(it => it.LoaiGiay)
                 .Include(it => it.Anh)
-                .ToArrayAsync()).Where(sp => sp.TrangThai == 0).ToList().GroupBy(
-              gr => new
-              {
-                  gr.IdChatLieu,
-                  gr.IdSanPham,
-                  gr.IdLoaiGiay,
-                  gr.IdKieuDeGiay,
-                  gr.IdThuongHieu,
-                  gr.IdXuatXu,
-              }).Select(gr => gr.First())
-              .OrderByDescending(sp => sp.Ma)
-              .ToList();
-            var itemShops = _mapper.Map<List<ItemShopViewModel>>(listSanPham);
+                .Where(sp => sp.TrangThai == 0)
+                .GroupBy(
+                  gr => new
+                  {
+                      gr.IdChatLieu,
+                      gr.IdSanPham,
+                      gr.IdLoaiGiay,
+                      gr.IdKieuDeGiay,
+                      gr.IdThuongHieu,
+                      gr.IdXuatXu,
+                  })
+                .Select(gr => gr.First())
+                .ToListAsync();
+
+            var itemShops = _mapper.Map<List<ItemShopViewModel>>(listSanPham.OrderByDescending(x=>x.NgayTao));
+            return itemShops;
+        }
+
+        public async Task<List<ItemShopViewModel>> GetDanhSachBienTheItemShopViewModelAsync()
+        {
+            var listSanPham = await _context.sanPhamChiTiets
+                .Include(it => it.SanPham)
+                .Include(it => it.ThuongHieu)
+                .Include(it => it.LoaiGiay)
+                .Include(it => it.MauSac)
+                .Include(it => it.KichCo)
+                .Include(it => it.Anh)
+                .Where(sp => sp.TrangThai == 0)
+                .ToListAsync();
+
+            var itemShops = _mapper.Map<List<ItemShopViewModel>>(listSanPham.OrderByDescending(x => x.NgayTao));
             return itemShops;
         }
 
@@ -475,5 +498,40 @@ namespace App_Data.Repositories
             sanPhamChiTiet!.SoLuongDaBan = sanPhamChiTiet.SoLuongTon - soLuong;
             await _context.SaveChangesAsync();
         }
+
+        //Filter
+        public async Task<FiltersVM> GetFiltersVMAynsc()
+        {
+            var query = _context.sanPhamChiTiets
+                        .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong)
+                        .Include(sp => sp.MauSac)
+                        .Include(sp => sp.ThuongHieu)
+                        .Include(sp => sp.LoaiGiay)
+                        .Include(sp => sp.KichCo);
+
+            var data = await query.ToListAsync();
+
+            return new FiltersVM()
+            {
+                LstItemFilterMauSac = GetListItemFilter(data, sp => sp.MauSac.TenMauSac!),
+                LstItemFilterKichCo = GetListItemFilter(data, sp => sp.KichCo.SoKichCo.ToString()!).OrderBy(x => x.Ten).ToList(),
+                LstItemFilterTheLoai = GetListItemFilter(data, sp => sp.LoaiGiay.TenLoaiGiay!),
+                LstItemFilterThuongHieu = GetListItemFilter(data, sp => sp.ThuongHieu.TenThuongHieu!),
+            };
+        }
+
+        private List<ItemFilter> GetListItemFilter(List<SanPhamChiTiet> data, Func<SanPhamChiTiet, string> selector)
+        {
+            return data
+                .GroupBy(selector)
+                .Select(group => new ItemFilter()
+                {
+                    Ten = group.Key,
+                    SoLuong = group.Count(),
+                })
+                .ToList();
+        }
+
+       
     }
 }

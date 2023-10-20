@@ -15,7 +15,8 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<ChucVu> builder)
         {
-            builder.Property(c => c.MaChucVu).HasColumnType("nvarchar(100)");
+            builder.ToTable("ChucVu");
+            builder.Property(c => c.MaChucVu).HasColumnType("varchar(50)");
             builder.Property(c => c.TrangThai).HasColumnType("int");
         }
     }

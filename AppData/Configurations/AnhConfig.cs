@@ -13,12 +13,11 @@ namespace App_Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Anh> builder)
         {
-
+            builder.ToTable("Anh");
             builder.HasKey(x => x.IdAnh);
             builder.Property(x => x.Url).HasColumnType("nvarchar(max)");
             builder.HasOne(x => x.SanPhamChiTiets).WithMany(y => y.Anh).
             HasForeignKey(c => c.IdSanPhamChiTiet);
-
         }
     }
 }

@@ -21,13 +21,17 @@ namespace App_Api.Controllers
     [ApiController]
     public class VoucherController : ControllerBase
     {
+        private readonly IAllRepo<VoucherNguoiDung> VcNguoiDungRepos;
         private readonly IAllRepo<Voucher> allRepo;
         private readonly IMapper _mapper;
         BazaizaiContext DbContextModel = new BazaizaiContext();
         DbSet<Voucher> vouchers;
-
+        DbSet<VoucherNguoiDung> voucherNguoiDung;
         public VoucherController(IMapper mapper)
         {
+            voucherNguoiDung = DbContextModel.voucherNguoiDungs;
+            AllRepo<VoucherNguoiDung> VcNd = new AllRepo<VoucherNguoiDung>(DbContextModel, voucherNguoiDung);
+            VcNguoiDungRepos = VcNd;
             vouchers = DbContextModel.vouchers;
             AllRepo<Voucher> all = new AllRepo<Voucher>(DbContextModel, vouchers);
             allRepo = all;
@@ -67,6 +71,7 @@ namespace App_Api.Controllers
             voucherDTO.IdVoucher = Guid.NewGuid().ToString();
             var voucher = _mapper.Map<Voucher>(voucherDTO);
             voucher.MaVoucher = GenerateRandomVoucherCode();
+            voucher.NgayTao = DateTime.Now;
             if (voucher.NgayBatDau > DateTime.Now)
             {
                 voucher.TrangThai = (int)TrangThaiVoucher.ChuaBatDau;
@@ -88,10 +93,34 @@ namespace App_Api.Controllers
         [HttpPut("DeleteVoucher/{id}")]
         public bool Delete(string id)
         {
-            var VoucherGet = GetVoucher(id);
+            var VoucherGet = GetAllVoucher().FirstOrDefault(c => c.IdVoucher == id);
             if (VoucherGet != null)
             {
-                VoucherGet!.TrangThai = 1;
+                if (VoucherGet.TrangThai != (int)TrangThaiVoucher.KhongHoatDong)
+                {
+                    VoucherGet!.TrangThai = (int)TrangThaiVoucher.DaHuy;
+                    allRepo.EditItem(VoucherGet);
+                    //sau khi huỷ hoạt động voucher sẽ xoá voucher người dùng khi họ chưa dùng
+                    var VoucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCher == id && c.TrangThai != (int)TrangThaiVoucherNguoiDung.DaSuDung);
+                    return VcNguoiDungRepos.RemoveItem(VoucherNguoiDung);
+                }
+            }
+            return false;
+        }
+        [HttpPut("RestoreVoucher/{id}")]
+        public bool RestoreVoucher(string id)
+        {
+            var VoucherGet = GetAllVoucher().FirstOrDefault(c => c.IdVoucher == id);
+            if (VoucherGet != null)
+            {
+                if (VoucherGet.NgayBatDau < DateTime.Now && VoucherGet.NgayKetThuc > DateTime.Now)
+                {
+                    VoucherGet.TrangThai = (int)TrangThaiVoucher.HoatDong;
+                }
+                else if (VoucherGet.NgayBatDau > DateTime.Now && VoucherGet.NgayKetThuc > DateTime.Now)
+                {
+                    VoucherGet.TrangThai = (int)TrangThaiVoucher.ChuaBatDau;
+                }
                 return allRepo.EditItem(VoucherGet);
             }
             return false;
@@ -100,6 +129,9 @@ namespace App_Api.Controllers
         public bool Update(VoucherDTO voucherDTO)
         {
             var voucherGet = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == voucherDTO.IdVoucher);
+
+            DateTime NgayTao = voucherGet.NgayTao;
+
             if (voucherGet != null)
             {
                 _mapper.Map(voucherDTO, voucherGet);
@@ -119,12 +151,10 @@ namespace App_Api.Controllers
                 {
                     voucherGet.TrangThai = (int)TrangThaiVoucher.HoatDong;
                 }
+                voucherGet.NgayTao = NgayTao;
                 return allRepo.EditItem(voucherGet);
             }
             return false;
         }
-
-
-
     }
 }

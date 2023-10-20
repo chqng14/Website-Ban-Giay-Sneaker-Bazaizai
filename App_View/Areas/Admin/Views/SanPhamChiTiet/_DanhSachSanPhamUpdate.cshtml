@@ -237,7 +237,7 @@
                                             <label class="font-weight-semibold" for="productBrand">Khối lượng</label>
                                             <div class="d-flex align-items-center">
                                                 <i class="fas fa-weight mr-1"></i>
-                                                <input type="text" class="form-control formatNumber" name="KhoiLuong" value="@sp.KhoiLuong">
+                                                <input type="text" class="form-control formatKhoiLuong" name="KhoiLuong" value="@sp.KhoiLuong">
                                             </div>
                                         </div>
 
@@ -256,6 +256,24 @@
                                             </div>
                                             <label class="font-weight-semibold">Dây</label>
                                         </div>
+
+                                        <div class="form-group d-flex align-items-center col-4">
+                                            <div class="switch m-r-10">
+                                                @if (sp.TrangThaiKhuyenMai == true)
+                                                {
+                                                    <input type="checkbox" name="TrangThaiKhuyenMai" id="switch-trangThaiKhuyenMai-@sp.IdChiTietSp" class="switch-2-trangThaiKhuyenMai" checked>
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="TrangThaiKhuyenMai" id="switch-trangThaiKhuyenMai-@sp.IdChiTietSp" class="switch-2-trangThaiKhuyenMai">
+                                                }
+
+                                                <label class="font-weight-semibold" for="switch-trangThaiKhuyenMai-@sp.IdChiTietSp"></label>
+                                            </div>
+                                            <label class="font-weight-semibold">Trạng thái khuyến mãi</label>
+                                        </div>
+
+
                                         <div class="form-group d-flex align-items-center col-2">
                                             <div class="switch m-r-10">
                                                 @if (sp.NoiBat == true)
@@ -648,6 +666,14 @@
                 minimumValue: 0
             });
         });
+        $(".formatKhoiLuong").each(function () {
+            var autoNumeric = new AutoNumeric(this, {
+                decimalCharacter: ".",
+                digitGroupSeparator: ",",
+                decimalPlaces: 2, // Số thập phân
+                minimumValue: 0
+            });
+        });
     })
 
     $(document).on('click', '.btn-delete', function () {
@@ -875,7 +901,7 @@
                     });
             }
         })
-        window.location.reload();
+        //window.location.reload();
     })
 
 </script>

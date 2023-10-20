@@ -25,8 +25,8 @@ namespace App_Data.Repositories
             KhongHoatDong = 1,
             [Description("Chưa bắt đầu")]
             ChuaBatDau = 2,
-            [Description("Số lượng voucher đã hết")]
-            HetVoucher = 3,
+            [Description("Đã huỷ")]
+            DaHuy = 3
 
         }
         /// <summary>
@@ -69,14 +69,25 @@ namespace App_Data.Repositories
         {
             [Description("Tại quầy")]
             TaiQuay = 0,
-            
+
         }
-        public enum TrangThaiSale 
+        public enum TrangThaiSaleInProductDetail
         {
             [Description("Không thể áp dụng sale")]
             KhongApDungSale = 0,
             [Description("Được áp dụng sale")]
-            DuocApDungSale = 1
+            DuocApDungSale = 1,
+            [Description("Đã áp dụng sale")]
+            DaApDungSale = 1
+        }
+        public enum TrangThaiSale
+        {
+            [Description("Hết hạn")]
+            HetHan = 0,
+            [Description("Đang bắt đầu")]
+            DangBatDau = 1,
+            [Description("Chưa bắt đầu")]
+            ChuaBatDau = 2
         }
         public enum TrangThaiSaleDetail
         {
@@ -87,10 +98,17 @@ namespace App_Data.Repositories
         }
         public enum GioiTinhMacDinh
         {
-            KhongMuonTraLoi=0,
+            KhongMuonTraLoi = 0,
             Nam = 1,
             Nu = 2,
-            Khac=3
+            Khac = 3
+        }
+        public enum TrangThaiHoaDonChiTiet
+        {
+            [Description("Chưa thanh toán")]
+            ChuaThanhToan = 0,
+            [Description("Đã thanh toán")]
+            DaThanhToan = 1,
         }
     }
 }
