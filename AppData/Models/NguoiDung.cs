@@ -10,7 +10,6 @@ namespace App_Data.Models
 {
     public class NguoiDung: IdentityUser<string>
     {
-
         public string? MaNguoiDung { get; set; }
         public string? TenNguoiDung { get; set; }
         public int? GioiTinh { get; set; }

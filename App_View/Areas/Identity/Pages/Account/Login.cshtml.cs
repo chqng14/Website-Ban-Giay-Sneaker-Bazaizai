@@ -117,8 +117,9 @@ namespace App_View.Areas.Identity.Pages.Account
                 else
                 {
                     //result.
-                    
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    //ErrorMessage = "Error: Lỗ lực đăng nhập không hợp lệ.";
+                    //return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
+                    ModelState.AddModelError(string.Empty, "Lỗ lực đăng nhập không hợp lệ.");
                     return Page();
                 }
             }
