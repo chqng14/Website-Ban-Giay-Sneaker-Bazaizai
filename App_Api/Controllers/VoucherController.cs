@@ -59,11 +59,20 @@ namespace App_Api.Controllers
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var random = new Random();
+            List<Voucher> vouchers = GetAllVoucher(); // Lấy danh sách các mã khuyến mãi hiện có
+            bool isDuplicate = false; // Biến kiểm tra trùng lặp
+            string voucherCode = ""; // Biến lưu mã khuyến mãi ngẫu nhiên
 
-            string voucherCode = new string(Enumerable.Repeat(chars, 6)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-            return voucherCode;
+            do
+            {
+                voucherCode = new string(Enumerable.Repeat(chars, 6)
+                    .Select(s => s[random.Next(s.Length)]).ToArray()); // Tạo mã khuyến mãi ngẫu nhiên
+                isDuplicate = vouchers.Any(v => v.MaVoucher == voucherCode); // Kiểm tra xem mã khuyến mãi có trùng với mã nào trong danh sách không
+            } while (isDuplicate); // Nếu trùng thì lặp lại quá trình tạo và kiểm tra
+
+            return voucherCode; // Trả về mã khuyến mãi không trùng
         }
+
 
         [HttpPost("CreateVoucher")]
         public bool Create(VoucherDTO voucherDTO)
@@ -153,6 +162,17 @@ namespace App_Api.Controllers
                 }
                 voucherGet.NgayTao = NgayTao;
                 return allRepo.EditItem(voucherGet);
+            }
+            return false;
+        }
+        [HttpPut("UpdateVoucherAfterUseIt/{ma}")]
+        public bool UpdateVoucherAfterUseIt(string ma)
+        {
+            var voucher = allRepo.GetAll().FirstOrDefault(c => c.MaVoucher == ma);
+            if (voucher.SoLuong > 0)
+            {
+                voucher.SoLuong -= 1;
+                allRepo.EditItem(voucher);
             }
             return false;
         }
