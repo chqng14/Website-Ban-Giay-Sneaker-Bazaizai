@@ -2,8 +2,11 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.ViewModels.HoaDon;
+using App_Data.ViewModels.HoaDonChiTietDTO;
+using AutoMapper;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using OpenXmlPowerTools;
 using System;
 using System.Collections.Generic;
@@ -18,10 +21,15 @@ namespace App_Data.Repositories
     public class HoaDonRepos : IHoaDonRepos
     {
         private readonly BazaizaiContext context;
-
+        private readonly IMapper _mapper;
         public HoaDonRepos()
         {
             context = new BazaizaiContext();
+            _mapper = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<HoaDon, HoaDonDTO>();
+                cfg.CreateMap<HoaDonDTO, HoaDon>();
+            }).CreateMapper();
         }
 
         public HoaDon TaoHoaDonTaiQuay(HoaDon hoaDon)
@@ -74,6 +82,12 @@ namespace App_Data.Repositories
                 listHoaDonCho.Add(hoaDonCho);
             }
             return listHoaDonCho;
+        }
+
+        public List<HoaDonDTO> GetHoaDon()
+        {
+            var hoadon = context.HoaDons.ToList();
+            return _mapper.Map<List<HoaDonDTO>>(hoadon);
         }
     }
 }

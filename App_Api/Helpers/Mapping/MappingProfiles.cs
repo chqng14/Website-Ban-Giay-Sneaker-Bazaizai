@@ -241,15 +241,15 @@ namespace App_Api.Helpers.Mapping
                  .ForMember(
                         dest => dest.GiaMin,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
-                        .Where(x=>
-                        x.IdXuatXu == src.IdXuatXu && 
+                        .Where(x =>
+                        x.IdXuatXu == src.IdXuatXu &&
                         x.IdSanPham == src.IdSanPham &&
                         x.IdLoaiGiay == src.IdLoaiGiay &&
                         x.IdThuongHieu == src.IdThuongHieu &&
                         x.IdKieuDeGiay == src.IdKieuDeGiay &&
                         x.IdChatLieu == src.IdChatLieu
                         )
-                        .Select(x=>x.GiaThucTe).Min()
+                        .Select(x => x.GiaThucTe).Min()
                         )
                     )
                  .ForMember(
@@ -277,7 +277,7 @@ namespace App_Api.Helpers.Mapping
                         x.IdKieuDeGiay == src.IdKieuDeGiay &&
                         x.IdChatLieu == src.IdChatLieu
                         )
-                        .Select(sp=>sp.IdMauSac).Distinct().Count()
+                        .Select(sp => sp.IdMauSac).Distinct().Count()
                         )
                     )
                 ;

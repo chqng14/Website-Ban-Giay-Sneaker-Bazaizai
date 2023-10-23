@@ -1,0 +1,75 @@
+﻿@model App_Data.ViewModels.HoaDon.HoaDonDTO
+@{
+    ViewData["Title"] = "Order";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/order.css" rel="stylesheet" />
+<!--====== Section 2 ======-->
+<div class="u-s-p-b-60">
+    <!--====== Section Intro ======-->
+    <div class="section__intro u-s-m-b-60" style="margin-bottom:10px;padding-top:10px">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section__text-wrap">
+                        <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="100" width="80" viewBox="0 0 48 48" aria-hidden="true" style="padding-bottom:0px">
+                            <circle class="circle" fill="#5bb543" cx="24" cy="24" r="22" />
+                            <path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17" />
+                        </svg>
+                        <h1 class="section__heading u-c-secondary" style="color:#00FF7F">Cảm ơn bạn đã đặt hàng tại Bazazai Store</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--====== End - Section Intro ======-->
+    <!--====== Section Content ======-->
+    <div class="section__content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3 u-s-m-b-30"></div>
+                <div class="col-lg-6 col-md-6 col-sm-6 u-s-m-b-30">
+                    <div class="f-cart__pad-box" style="padding:20px">
+                        <div class="u-s-m-b-30">
+                            <h2>Thông tin đơn hàng</h2>
+                            <div class="f-cart__row">
+                                <div class="f-cart__col">
+                                    <span>Mã đơn hàng:</span>
+                                    <p>@Model.MaHoaDon</p>
+                                </div>
+                                <div class="f-cart__col">
+                                    <span>Ngày mua:</span>
+                                    <p>@Model.NgayTao</p>
+                                </div>
+                                <div class="f-cart__col">
+                                    <span>Ngày giao dự kiến:</span>
+                                    <p>@Model.NgayGiaoDuKien</p>
+                                </div>
+                                <div class="f-cart__col">
+                                    <span>Tổng cộng:</span>
+                                    <p style="color:red">@string.Format("{0:N0}đ", Model.TongTien+Model.TienShip)</p>
+                                </div>
+                                <div class="f-cart__col">
+                                    <span>Phương thức thanh toán:</span>
+                                    <p>abc</p>
+                                </div>
+                                <div class="f-cart__col">
+                                    <span>Ghi chú:</span>
+                                    <p>@Model.MoTa</p>
+                                </div>
+                            </div>
+                            <h5>Mọi thông tin đơn hàng sẽ được gửi về email của bạn,vui lòng kiểm tra để biết thêm thông tin chi tiết.</h5>
+                        </div>
+                        <a class="btn btn--e-transparent-brand-b-2 order">Tiếp tục mua sắm</a>
+                        <a class="btn btn--e-brand-b-2 order">
+                            Chi tiết đơn hàng
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 u-s-m-b-30"></div>
+            </div>
+        </div>
+    </div>
+    <!--====== End - Section Content ======-->
+</div>
+<!--====== End - Section 2 ======-->
