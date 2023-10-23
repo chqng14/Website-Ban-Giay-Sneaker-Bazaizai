@@ -220,5 +220,10 @@ namespace App_View.Controllers
             }
             return RedirectToAction("ShowCartUser");
         }
+
+        public async Task<IActionResult> OrderSuccess()
+        {
+            return View();
+        }
     }
 }
