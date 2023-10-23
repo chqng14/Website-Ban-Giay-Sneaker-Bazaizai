@@ -14,7 +14,17 @@ namespace App_View.Models.Components
 
         public IViewComponentResult Invoke()
         {
-            return View(_sanPhamChiTietService.GetDanhSachGiayViewModelAynsc().Result);
+            var model = new App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel();
+            try
+            {
+                model = _sanPhamChiTietService.GetDanhSachGiayViewModelAynsc().Result;
+            }
+            catch (Exception)
+            {
+                model = new App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel();
+            }
+                
+            return View(model);
         }
     }
 }

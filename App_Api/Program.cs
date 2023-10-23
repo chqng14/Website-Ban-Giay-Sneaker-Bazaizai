@@ -1,3 +1,4 @@
+using App_Api.Controllers;
 using App_Api.Helpers.CustomJson;
 using App_Data.IRepositories;
 using App_Data.Models;
@@ -43,6 +44,7 @@ builder.Services.AddScoped<ISanPhamChiTietRespo, SanPhamChiTietRespo>();
 builder.Services.AddScoped<IXuatXuRespo ,XuatXuRespo>();
 builder.Services.AddScoped<IMauSacRespo ,MauSacRespo>();
 builder.Services.AddScoped<IAnhRespo ,AnhRespo>();
+builder.Services.AddScoped<AnhController>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

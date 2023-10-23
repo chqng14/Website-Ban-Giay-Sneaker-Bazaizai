@@ -433,11 +433,13 @@
 
             $('#table-sanpham').on('draw.dt', function () {
                 $('input[type="checkbox"]').each(function () {
-                    const id = $(this).attr('id').replace('check-item-', '');
-                    if (selectedCheckboxes[id]) {
-                        $(this).prop('checked', true);
-                    } else {
-                        $(this).prop('checked', false);
+                    if ($(this).attr('id')) {
+                        const id = $(this).attr('id').replace('check-item-', '');
+                        if (selectedCheckboxes[id]) {
+                            $(this).prop('checked', true);
+                        } else {
+                            $(this).prop('checked', false);
+                        }
                     }
                 });
             });

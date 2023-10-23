@@ -77,12 +77,12 @@ namespace App_Api.Controllers
                 {
                     item.TrangThai = 1;
                     _allRepoImage.EditItem(item);
-                    string filePath = Path.Combine(uploadDirectory, item.Url);
+                    //string filePath = Path.Combine(uploadDirectory, item.Url);
 
-                    if (System.IO.File.Exists(filePath))
-                    {
-                        System.IO.File.Delete(filePath);
-                    }
+                    //if (System.IO.File.Exists(filePath))
+                    //{
+                    //    System.IO.File.Delete(filePath);
+                    //}
                 }
                 return Ok();
             }

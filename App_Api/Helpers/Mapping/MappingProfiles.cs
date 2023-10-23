@@ -242,6 +242,7 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.GiaMin,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
                         .Where(x=>
+                        x.TrangThai == 0 &&
                         x.IdXuatXu == src.IdXuatXu && 
                         x.IdSanPham == src.IdSanPham &&
                         x.IdLoaiGiay == src.IdLoaiGiay &&
@@ -256,6 +257,7 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.GiaMax,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
                         .Where(x =>
+                        x.TrangThai == 0 &&
                         x.IdXuatXu == src.IdXuatXu &&
                         x.IdSanPham == src.IdSanPham &&
                         x.IdLoaiGiay == src.IdLoaiGiay &&
@@ -270,6 +272,7 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.SoMauSac,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
                         .Where(x =>
+                        x.TrangThai == 0 &&
                         x.IdXuatXu == src.IdXuatXu &&
                         x.IdSanPham == src.IdSanPham &&
                         x.IdLoaiGiay == src.IdLoaiGiay &&

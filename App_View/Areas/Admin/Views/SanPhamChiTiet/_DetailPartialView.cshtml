@@ -13,7 +13,11 @@
                     <div class="d-md-flex m-b-15 align-items-center justify-content-between">
                         <div class="media align-items-center m-b-15">
                             <div class="avatar avatar-image rounded" style="height: 70px; width: 70px">
-                                <img src="/AnhSanPham/@Model.ListTenAnh[0]" alt="">
+                                @if (Model.ListTenAnh != null && Model.ListTenAnh.Any())
+                                {
+                                    <img src="/AnhSanPham/@Model.ListTenAnh[0]" alt="">
+
+                                }
                             </div>
                             <div class="m-l-15">
                                 <h4 class="m-b-0">@Model.SanPham</h4>
@@ -125,14 +129,11 @@
             </form>
         </div>
         <div class="modal-footer d-flex justify-content-between" style="background: #d0dae3 ">
-            <div>
-                <button class="btn btn-primary">
+            <div id="form-getID">
+                <input asp-for="IdChiTietSp" hidden/>
+                <button class="btn btn-primary" id="btn-coppy">
                     <i class="far fa-copy"></i>
                     <span>Coppy</span>
-                </button>
-                <button class="btn btn-outline-primary">
-                    <i class="fas fa-barcode"></i>
-                    <span>In mã vạch</span>
                 </button>
             </div>
             <div>
@@ -154,4 +155,34 @@
     }
 
     $(() => $('.soLuong').text(formatNumber('@Model.SoLuongTon')))
+
+    $(document).off('click', '#btn-coppy');
+
+    $(document).one('click', '#btn-coppy', function () {
+        var id = $(this).closest('#form-getID').find('[name="IdChiTietSp"]').val();
+
+        var data = {
+            IdSanPhamChiTiet: id,
+        };
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/GetPartialViewSanPhamCopy',
+            type: 'Get',
+            data: data,
+            success: function (result) {
+                $('#modalSanPham').fadeOut(30, function () {
+                    $(this).empty().html(result).css('opacity', 0);
+
+                    $(this).fadeIn(20, function () {
+                        $(this).css('opacity', 1);
+                    });
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    })
 </script>

@@ -22,6 +22,13 @@ using App_Data.ViewModels.SanPhamChiTietDTO;
 using OfficeOpenXml;
 using System.Diagnostics;
 using App_View.Models.DTO;
+using System.Text;
+using System.Text.Json;
+using Google.Apis.PeopleService.v1.Data;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Serialization;
+using DocumentFormat.OpenXml;
+using Microsoft.Extensions.Primitives;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -31,13 +38,15 @@ namespace App_View.Areas.Admin.Controllers
         private readonly BazaizaiContext _context;
         private readonly ISanPhamChiTietService _sanPhamChiTietService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly HttpClient _httpClient;
 
-        public SanPhamChiTietController(ISanPhamChiTietService sanPhamChiTietService, IWebHostEnvironment webHostEnvironment)
+        public SanPhamChiTietController(ISanPhamChiTietService sanPhamChiTietService, IWebHostEnvironment webHostEnvironment, HttpClient httpClient)
         {
             _context = new BazaizaiContext();
             _sanPhamChiTietService = sanPhamChiTietService;
             _webHostEnvironment = webHostEnvironment;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            _httpClient = httpClient;
         }
         [HttpGet]
         // GET: Admin/SanPhamChiTiet/DanhSachSanPham
@@ -49,7 +58,6 @@ namespace App_View.Areas.Admin.Controllers
             ViewData["SanPham"] = new SelectList(_context.SanPhams, "IdSanPham", "TenSanPham");
             return View();
         }
-
 
         // GET: Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh
         public IActionResult DanhSachSanPhamNgungKinhDoanh()
@@ -264,6 +272,85 @@ namespace App_View.Areas.Admin.Controllers
             ViewData["IdXuatXu"] = new SelectList(_context.xuatXus, "IdXuatXu", "Ten");
             var model = await _sanPhamChiTietService.GetListSanPhamChiTietDTOAsync(listGuildDTO);
             return PartialView("_DanhSachSanPhamUpdate", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPartialViewSanPhamCopy(string IdSanPhamChiTiet)
+        {
+            ViewData["IdChatLieu"] = new SelectList(_context.ChatLieus, "IdChatLieu", "TenChatLieu");
+            ViewData["IdKichCo"] = new SelectList(_context.kichCos, "IdKichCo", "SoKichCo");
+            ViewData["IdKieuDeGiay"] = new SelectList(_context.kieuDeGiays, "IdKieuDeGiay", "TenKieuDeGiay");
+            ViewData["IdLoaiGiay"] = new SelectList(_context.LoaiGiays, "IdLoaiGiay", "TenLoaiGiay");
+            ViewData["IdMauSac"] = new SelectList(_context.mauSacs, "IdMauSac", "TenMauSac");
+            ViewData["IdSanPham"] = new SelectList(_context.SanPhams, "IdSanPham", "TenSanPham");
+            ViewData["IdThuongHieu"] = new SelectList(_context.thuongHieus, "IdThuongHieu", "TenThuongHieu");
+            ViewData["IdXuatXu"] = new SelectList(_context.xuatXus, "IdXuatXu", "Ten");
+            var model = (await _sanPhamChiTietService.GetListSanPhamChiTietDTOAsync(new ListGuildDTO()
+            {
+                listGuild = new List<string>()
+                {
+                    IdSanPhamChiTiet
+                }
+            })).FirstOrDefault();
+            return PartialView("_SanPhamCopyPartialView", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateSanPhamChiTietCoppy([FromForm] SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO)
+        {
+            var multipartContent = new MultipartFormDataContent();
+
+            if (sanPhamChiTietCopyDTO.ListAnhCreate != null && sanPhamChiTietCopyDTO.ListAnhCreate.Any())
+            {
+                foreach (var file in sanPhamChiTietCopyDTO.ListAnhCreate)
+                {
+                    var fileContent = new StreamContent(file.OpenReadStream());
+                    fileContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                    {
+                        Name = $"SanPhamChiTietCopyDTO.ListAnhCreate",
+                        FileName = file.FileName
+                    };
+
+                    multipartContent.Add(fileContent, $"SanPhamChiTietCopyDTO.ListAnhCreate");
+                }
+            }
+
+            if (sanPhamChiTietCopyDTO.ListTenAnhRemove != null && sanPhamChiTietCopyDTO.ListTenAnhRemove.Any())
+            {
+                foreach (var ten in sanPhamChiTietCopyDTO.ListTenAnhRemove)
+                {
+                    multipartContent.Add(new StringContent(ten), $"SanPhamChiTietCopyDTO.ListTenAnhRemove");
+                }
+            }
+
+
+
+            var sanPhamChiTietDataProperties = typeof(SanPhamChiTietDTO).GetProperties();
+            foreach (var property in sanPhamChiTietDataProperties)
+            {
+                var value = property.GetValue(sanPhamChiTietCopyDTO.SanPhamChiTietData);
+
+                if (!(value is List<string>) && !(value is List<int>) && !(value is List<IFormFile>))
+                {
+                    var stringValue = value?.ToString() ?? string.Empty;
+                    Console.WriteLine(stringValue);
+                    Console.WriteLine(property.Name);
+                    multipartContent.Add(new StringContent(stringValue), $"SanPhamChiTietCopyDTO.SanPhamChiTietData.{property.Name}");
+                }
+
+                if (property.Name == "DanhSachAnh")
+                {
+                    foreach (var item in sanPhamChiTietCopyDTO.SanPhamChiTietData!.DanhSachAnh!)
+                    {
+                        multipartContent.Add(new StringContent(item), $"SanPhamChiTietCopyDTO.SanPhamChiTietData.DanhSachAnh");
+                    }
+                }
+            }
+
+            var response = await _httpClient.PostAsync("/api/SanPhamChiTiet/Creat-SanPhamChiTietCopy", multipartContent);
+
+            Console.WriteLine(await response.Content.ReadAsStringAsync());
+            return Ok(response);
         }
 
         public async Task<IActionResult> GetDanhSachSanPham([FromBody]FilterAdminDTO filterAdminDTO)
