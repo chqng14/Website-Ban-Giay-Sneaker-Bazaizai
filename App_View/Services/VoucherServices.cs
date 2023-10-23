@@ -72,7 +72,22 @@ namespace App_View.Services
                 return false;
             }
         }
-
+        public async Task<bool> RestoreVoucherWithList(List<string> Id)
+        {
+            try
+            {
+                foreach (string item in Id)
+                {
+                    var response = await _httpClient.PutAsync($"/api/Voucher/RestoreVoucher/{item}", null);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
         public Task<List<Voucher>> GetAllVoucher()
         {
             return _httpClient.GetFromJsonAsync<List<Voucher>>("/api/Voucher/GetVoucher");
@@ -88,11 +103,35 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<VoucherDTO>($"/api/Voucher/GetVoucherDTOByMa/{id}");
         }
 
+
+
         public async Task<bool> UpdateVoucher(VoucherDTO voucherDTO)
         {
             try
             {
                 var reponse = await _httpClient.PutAsJsonAsync($"/api/Voucher/UpdateVoucher", voucherDTO);
+                if (reponse.IsSuccessStatusCode)
+                {
+                    return await reponse.Content.ReadAsAsync<bool>();
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateVoucherAfterUseIt(string ma)
+        {
+            ///api/Voucher/UpdateVoucherAfterUseIt/{ma
+            try
+            {
+                var reponse = await _httpClient.PutAsync($"api/Voucher/UpdateVoucherAfterUseIt/{ma}", null);
                 if (reponse.IsSuccessStatusCode)
                 {
                     return await reponse.Content.ReadAsAsync<bool>();

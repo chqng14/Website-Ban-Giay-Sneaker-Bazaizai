@@ -57,5 +57,15 @@ namespace App_View.Controllers
             var IdVoucher = "";
             return Json(new { mucuidai = (double)Voucher.MucUuDai, IdVoucher = Voucher.IdVoucher });
         }
+
+        public async Task<IActionResult> UpdateVoucherAfterUseIt(string ma)
+        {
+            if (await _voucherSV.UpdateVoucherAfterUseIt(ma))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+
     }
 }
