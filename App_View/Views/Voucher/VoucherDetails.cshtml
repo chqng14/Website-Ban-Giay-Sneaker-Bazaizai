@@ -1,0 +1,164 @@
+﻿@model App_Data.Models.Voucher
+@using App_Data.DbContextt;
+@using System.Globalization;
+@using App_View.IServices;
+@using App_View.Services;
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    BazaizaiContext context = new BazaizaiContext();
+}
+<style>
+    .m-order__list {
+        display: flex;
+        flex-wrap: wrap; /* Cho phép các cột wrap (được xuống dòng) khi không đủ chỗ */
+        margin-right: -40px;
+    }
+
+    .m-order__get {
+        width: 45%;
+        height: 210px; /* Đặt chiều rộng của mỗi cột là 50% để chúng hiển thị trong cùng một cột */
+        padding: 10px;
+        margin-left: 20px;
+        box-sizing: border-box;
+    }
+
+    .manage-o__badge {
+        transition: background-color 0.3s, color 0.3s; /* Tạo hiệu ứng chuyển màu mượt mà */
+    }
+
+        .manage-o__badge:hover {
+            background-color: pink; /* Màu nền hồng khi hover */
+            color: white; /* Màu văn bản nổi lên trắng khi hover */
+        }
+        .list-group-item {
+    padding-left: 10px; /* Điều chỉnh khoảng cách bên trái */
+}
+
+</style>
+@{
+    var httpClient = new HttpClient(); // Tạo đối tượng HttpClient
+    var _voucherND = new VoucherNguoiDungServices(httpClient); // Truyền đối tượng HttpClient vào constructor của VoucherNguoiDungServices
+}
+
+@functions {
+    // Hàm trợ giúp để định dạng số nguyên thành tiền tệ Việt Nam
+
+    // Thay thế 'YourVoucherNguoiDungServices' bằng tên thực của dịch vụ của bạn
+    public string FormatCurrency(int? value)
+    {
+        return string.Format(new CultureInfo("vi-VN"), "{0:C0}", value);
+    }
+    public string FormatDate(DateTime? value)
+    {
+        if (value.HasValue)
+        {
+            string formattedDate = value.Value.ToString("dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.CurrentCulture);
+            return formattedDate;
+        }
+        return string.Empty; // hoặc bạn có thể trả về một giá trị mặc định khác nếu cần
+    }
+}
+
+<link href="~/css/voucherDetails.css" rel="stylesheet" />
+<div class="u-s-p-b-60">
+    <!--====== Section Intro ======-->
+    <div class="section__intro u-s-m-b-60" style="margin-bottom:10px;padding-top:10px">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section__text-wrap">
+                        <h1 class="section__heading u-c-secondary" style="color:#00FF7F">Thông tin chi tiết voucher</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--====== End - Section Intro ======-->
+    <!--====== Section Content ======-->
+    <div class="section__content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-3 col-sm-3 u-s-m-b-30"></div>
+                <div class="col-lg-6 col-md-6 col-sm-6 u-s-m-b-30">
+                    <div class="f-cart__pad-box" style="padding:20px">
+                        <div class="u-s-m-b-30">
+                            <h2>@Model.TenVoucher</h2>
+                            <div class="f-cart__row">
+                                <div class="f-cart__col">
+                                    <span>Mã Voucher:</span>
+                                    <p>@Model.MaVoucher</p>
+                                </div>
+                                <div class="f-cart__col">
+                                    <span>Hạn sử dụng: </span>
+                                    <div style="color:#FF4500" class="manage-o__text u-c-silver"> 🕛@FormatDate(Model.NgayBatDau) - @FormatDate(Model.NgayKetThuc)</div>
+                                 
+                                </div>
+                                <div class="f-cart__col">
+                                    <span>Điều kiện:</span>
+                                </div>
+                                <div class="f-cart__col">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item">
+                                            Giảm  @if (Model.LoaiHinhUuDai == 1)
+                                            {
+                                                <span style="color:Red">@Model.MucUuDai %</span>
+                                            }
+                                            else
+                                            {
+                                                double? mucUuDai = Model.MucUuDai;
+                                                <span style="color:Red">  @string.Format("{0:N0}đ", Model.MucUuDai)</span>
+                                              
+                                                // Định dạng giá trị theo định dạng tiền Việt Nam
+                                            }
+                                            cho hoá đơn có giá trị từ <span style="color:red">@string.Format("{0:N0}đ", Model.DieuKien)</span> trở lên.
+                                        </li>
+                                        <li class="list-group-item">Áp dụng khi đặt hàng hoặc thanh toán online.</li>
+                                        <li class="list-group-item">Mỗi khách hàng chỉ được sử dụng tối đa 1 lần.</li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                            <h5>Nếu có thông tin thắc mắc có thể lên hệ hỗ trợ.</h5>
+                        </div>
+                        <a class="btn btn--e-transparent-brand-b-2 order" id="quayLai">Quay lại</a>
+
+                        <a class="btn btn--e-brand-b-2 order copyButton">Copy Mã</a>
+                            <textarea class="textToCopy" style="display: none;">@Model.MaVoucher</textarea>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 u-s-m-b-30"></div>
+            </div>
+        </div>
+    </div>
+    <!--====== End - Section Content ======-->
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).on('click', '.copyButton', function () {
+        var maVoucher = $('.textToCopy').text(); // Sử dụng .text() để lấy nội dung trong thẻ textarea
+
+        var tempInput = document.createElement("input");
+        tempInput.setAttribute('value', maVoucher);
+        document.body.appendChild(tempInput);
+
+        // Chọn văn bản trong phần tử input tạm thời
+        tempInput.select();
+        document.execCommand("copy");
+
+        // Xóa phần tử input tạm thời
+        document.body.removeChild(tempInput);
+
+        toast({
+            title: "Đã sao chép!",
+            message: "Đã sao chép mã vào clipboard: " + maVoucher,
+            type: "success",
+            duration: 5000
+        });
+    });
+
+    document.getElementById("quayLai").addEventListener("click", function () {
+        window.history.back(); // Quay trở lại trang trước đó
+    });
+
+</script>

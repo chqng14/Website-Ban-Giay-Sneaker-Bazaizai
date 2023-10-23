@@ -4,8 +4,6 @@
 
 @{
     Layout = "/Views/Shared/_LayoutUser.cshtml";
-    //Layout = "/Views/Shared/_LayoutLogin.cshtml";
-    //Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <style>
@@ -110,9 +108,8 @@
                                     {
                                         <p>Miễn phí vận chuyển</p>
                                     }
-                                    <div class="dash__link dash__link--brand">
-
-                                        <a  style="float:right" href="dash-manage-order.html">Chi tiết</a>
+                                    <div class="dash__link dash__link--brand" style="float:right">
+                                        @Html.ActionLink("Chi tiết", "VoucherDetails","Voucher", new {  ma=item.MaVoucher })
                                     </div>
                                 </div>
                             </div>
@@ -171,8 +168,12 @@
 
         // Xóa phần tử input tạm thời
         document.body.removeChild(tempInput);
-
-        alert("Đã sao chép mã vào clipboard: " + maVoucher);
+        toast({
+            title: "Đã sao chép!",
+            message: "Đã sao chép mã vào clipboard: " + maVoucher,
+            type: "success",
+            duration: 5000
+        });
     })
     // Sau khi nhận phản hồi thành công từ server
   
