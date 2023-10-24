@@ -44,7 +44,7 @@
 
                                                     <span class="table-p__name">
 
-                                                        <a href="product-detail.html">@item.TenSanPham</a>
+                                                        <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = item.IdSanPhamCT })">@item.TenThuongHieu @item.TenSanPham</a>
                                                     </span>
 
                                                     @* <span class="table-p__category">

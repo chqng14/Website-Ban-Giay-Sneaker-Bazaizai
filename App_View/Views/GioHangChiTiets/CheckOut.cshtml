@@ -270,7 +270,7 @@
 
                                                         <span class="o-card__name">
 
-                                                            <a href="product-detail.html">@item.TenSanPham</a>
+                                                            <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = item.IdSanPhamCT })">@item.TenThuongHieu @item.TenSanPham</a>
                                                         </span>
 
                                                         <span class="o-card__quantity">Số lượng x @item.SoLuong</span>
@@ -1074,6 +1074,7 @@
         // }
 
         // Hàm xử lý voucher
+        var IdVoucher = "";
         function voucher(value) {
             if (value != null && value.trim() != "") {
                 var ma = { ma: value };
@@ -1084,7 +1085,7 @@
                     success: function (result) {
                         $('#textvoucher').text("");
                         MucUuDai = result.mucuidai;
-                        var IdVoucher = result.idVoucher;
+                        IdVoucher = result.idVoucher;
                         $('input[name="IdVoucher"]').val(IdVoucher);
                         // Áp dụng giảm giá từ voucher
                         applyDiscount(MucUuDai);
@@ -1111,6 +1112,25 @@
             // Hiển thị tổng tiền sau khi giảm giá
             totalAmountElement.innerText = tongTienSauGiamGia.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
             totalAmountElement.value = tongTienSauGiamGia.toString();
+        }
+        function UpdateVoucher() {
+            if (MucUuDai != null) {
+                $.ajax({
+                    url: '/Voucher/UpdateVoucherAfterUseIt',
+                    type: 'POST',
+                    data: { idVoucher: IdVoucher },
+                    success: function (result) {
+                        console.log("UpdateVoucherAfterUseIt");
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            } else {
+                $('#textvoucher').text("");
+                // Nếu không có voucher, hiển thị tổng tiền không giảm giá
+                applyDiscount(0);
+            }
         }
     </script>
 
@@ -1147,6 +1167,7 @@
                         url: '/HoaDon/ThanhToan',
                         data: paymentFormData,
                         success: function (paymentResponse) {
+                            UpdateVoucher()
                             // Xử lý kết quả nếu cần
                             var idHoaDon = paymentResponse.idHoaDon;
                             window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
@@ -1182,8 +1203,10 @@
                                 url: '/HoaDon/ThanhToan',
                                 data: paymentFormData,
                                 success: function (paymentResponse) {
+                                    UpdateVoucher()
                                     // Xử lý kết quả nếu cần
-                                    window.location.href = "/GioHangChiTiets/ShowCartUser"
+                                    var idHoaDon = paymentResponse.idHoaDon;
+                                    window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
                                 },
                                 error: function (paymentError) {
                                     // Xử lý lỗi nếu cần

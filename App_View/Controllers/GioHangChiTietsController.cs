@@ -55,16 +55,28 @@ namespace App_View.Controllers
             else
             {
                 var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
-                return View(giohang);
+                if (giohang.Count == 0)
+                {
+                    return View("Empty");
+                }
+                else
+                {
+                    return View(giohang);
+                }
             }
         }
 
         public async Task<IActionResult> ShowCartNoLogin()
         {
             var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-
-            return View(giohangSession);
-
+            if (giohangSession.Count == 0)
+            {
+                return View("Empty");
+            }
+            else
+            {
+                return View(giohangSession);
+            }
         }
 
         public async Task<IActionResult> CheckOut()
@@ -120,8 +132,8 @@ namespace App_View.Controllers
                     giohang.IdSanPhamCT = gioHangChiTietDTOCUD.IdSanPhamCT;
                     giohang.IdNguoiDung = GetIdNguoiDung();
                     giohang.SoLuong = gioHangChiTietDTOCUD.SoLuong;
-                    giohang.GiaGoc = product.GiaNhap;
-                    giohang.GiaBan = product.GiaBan;
+                    giohang.GiaGoc = product.GiaBan;
+                    giohang.GiaBan = product.GiaThucTe;
                     GioHangChiTietServices.CreateCartDetailDTO(giohang);
                 }
             }

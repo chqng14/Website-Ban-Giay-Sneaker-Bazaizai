@@ -165,10 +165,10 @@ namespace App_Api.Controllers
             }
             return false;
         }
-        [HttpPut("UpdateVoucherAfterUseIt/{ma}")]
-        public bool UpdateVoucherAfterUseIt(string ma)
+        [HttpPut("UpdateVoucherAfterUseIt/{idVoucher}")]
+        public bool UpdateVoucherAfterUseIt(string idVoucher)
         {
-            var voucher = allRepo.GetAll().FirstOrDefault(c => c.MaVoucher == ma);
+            var voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == idVoucher);
             if (voucher.SoLuong > 0)
             {
                 voucher.SoLuong -= 1;

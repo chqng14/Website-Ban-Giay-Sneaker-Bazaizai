@@ -140,7 +140,7 @@ namespace App_View.Controllers
                 TongTien = hoaDonDTO.TongTien,
                 TienShip = hoaDonDTO.TienShip,
                 MoTa = hoaDonDTO.MoTa,
-                TrangThaiGiaoHang = 0,
+                TrangThaiGiaoHang = (int)TrangThaiGiaoHang.ChoXacNhan,
                 TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan
             };
             await hoaDonServices.CreateHoaDon(hoadon);

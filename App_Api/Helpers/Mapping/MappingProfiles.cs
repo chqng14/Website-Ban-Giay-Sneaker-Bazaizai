@@ -70,6 +70,9 @@ namespace App_Api.Helpers.Mapping
                     dest => dest.TenKichCo,
                     opt => opt.MapFrom(src => src.SanPhamChiTiet.KichCo.SoKichCo)
                 ).ForMember(
+                dest => dest.TenThuongHieu,
+                opt => opt.MapFrom(src => src.SanPhamChiTiet.ThuongHieu.TenThuongHieu)
+                ).ForMember(
                 dest => dest.LinkAnh,
                 opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.Select(x => x.Url).ToList())
                 );
