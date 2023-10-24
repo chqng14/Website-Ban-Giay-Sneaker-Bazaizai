@@ -20,8 +20,6 @@ using AutoMapper;
 using App_Data.ViewModels.SanPhamChiTiet.SanPhamDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using static App_Data.Repositories.TrangThai;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using System.Runtime.ConstrainedExecution;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -214,7 +212,7 @@ namespace App_View.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> ApllySale()
         {
-            ViewData["IdSale"] = new SelectList(_context.khuyenMais.Where(x=>x.TrangThai==(int)TrangThaiSale.DangBatDau), "IdKhuyenMai", "TenKhuyenMai");
+            ViewData["IdSale"] = new SelectList(_context.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau), "IdKhuyenMai", "TenKhuyenMai");
             //.Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale|| x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale)
             var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Select(item => CreateSanPhamDanhSachViewModel(item));
             return View(getallProductDT);
@@ -229,7 +227,7 @@ namespace App_View.Areas.Admin.Controllers
             try
             {
                 int temp = 0;
-                if(idSale!=null&& idSale!=""&&selectedProducts!=null&&selectedProducts.Count>0)
+                if (idSale != null && idSale != "" && selectedProducts != null && selectedProducts.Count > 0)
                 {
                     foreach (var IdProduct in selectedProducts)
                     {
@@ -292,9 +290,10 @@ namespace App_View.Areas.Admin.Controllers
                     ViewBag.Sales = DataMessage;
                     return Ok(new { err = DataMessage, add = successApllySale });
                 }
-                else {
+                else
+                {
                     successApllySale = "Vui lòng chọn sản phẩm để add sale";
-                    return Ok(new { add= successApllySale });
+                    return Ok(new { add = successApllySale });
                 }
             }
             catch (Exception)

@@ -21,13 +21,17 @@ namespace App_Api.Controllers
     [ApiController]
     public class VoucherController : ControllerBase
     {
+        private readonly IAllRepo<VoucherNguoiDung> VcNguoiDungRepos;
         private readonly IAllRepo<Voucher> allRepo;
         private readonly IMapper _mapper;
         BazaizaiContext DbContextModel = new BazaizaiContext();
         DbSet<Voucher> vouchers;
-
+        DbSet<VoucherNguoiDung> voucherNguoiDung;
         public VoucherController(IMapper mapper)
         {
+            voucherNguoiDung = DbContextModel.voucherNguoiDungs;
+            AllRepo<VoucherNguoiDung> VcNd = new AllRepo<VoucherNguoiDung>(DbContextModel, voucherNguoiDung);
+            VcNguoiDungRepos = VcNd;
             vouchers = DbContextModel.vouchers;
             AllRepo<Voucher> all = new AllRepo<Voucher>(DbContextModel, vouchers);
             allRepo = all;
@@ -55,11 +59,20 @@ namespace App_Api.Controllers
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var random = new Random();
+            List<Voucher> vouchers = GetAllVoucher(); // Lấy danh sách các mã khuyến mãi hiện có
+            bool isDuplicate = false; // Biến kiểm tra trùng lặp
+            string voucherCode = ""; // Biến lưu mã khuyến mãi ngẫu nhiên
 
-            string voucherCode = new string(Enumerable.Repeat(chars, 6)
-                .Select(s => s[random.Next(s.Length)]).ToArray());
-            return voucherCode;
+            do
+            {
+                voucherCode = new string(Enumerable.Repeat(chars, 6)
+                    .Select(s => s[random.Next(s.Length)]).ToArray()); // Tạo mã khuyến mãi ngẫu nhiên
+                isDuplicate = vouchers.Any(v => v.MaVoucher == voucherCode); // Kiểm tra xem mã khuyến mãi có trùng với mã nào trong danh sách không
+            } while (isDuplicate); // Nếu trùng thì lặp lại quá trình tạo và kiểm tra
+
+            return voucherCode; // Trả về mã khuyến mãi không trùng
         }
+
 
         [HttpPost("CreateVoucher")]
         public bool Create(VoucherDTO voucherDTO)
@@ -89,10 +102,34 @@ namespace App_Api.Controllers
         [HttpPut("DeleteVoucher/{id}")]
         public bool Delete(string id)
         {
-            var VoucherGet = GetVoucher(id);
+            var VoucherGet = GetAllVoucher().FirstOrDefault(c => c.IdVoucher == id);
             if (VoucherGet != null)
             {
-                VoucherGet!.TrangThai = 1;
+                if (VoucherGet.TrangThai != (int)TrangThaiVoucher.KhongHoatDong)
+                {
+                    VoucherGet!.TrangThai = (int)TrangThaiVoucher.DaHuy;
+                    allRepo.EditItem(VoucherGet);
+                    //sau khi huỷ hoạt động voucher sẽ xoá voucher người dùng khi họ chưa dùng
+                    var VoucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCher == id && c.TrangThai != (int)TrangThaiVoucherNguoiDung.DaSuDung);
+                    return VcNguoiDungRepos.RemoveItem(VoucherNguoiDung);
+                }
+            }
+            return false;
+        }
+        [HttpPut("RestoreVoucher/{id}")]
+        public bool RestoreVoucher(string id)
+        {
+            var VoucherGet = GetAllVoucher().FirstOrDefault(c => c.IdVoucher == id);
+            if (VoucherGet != null)
+            {
+                if (VoucherGet.NgayBatDau < DateTime.Now && VoucherGet.NgayKetThuc > DateTime.Now)
+                {
+                    VoucherGet.TrangThai = (int)TrangThaiVoucher.HoatDong;
+                }
+                else if (VoucherGet.NgayBatDau > DateTime.Now && VoucherGet.NgayKetThuc > DateTime.Now)
+                {
+                    VoucherGet.TrangThai = (int)TrangThaiVoucher.ChuaBatDau;
+                }
                 return allRepo.EditItem(VoucherGet);
             }
             return false;
@@ -102,7 +139,7 @@ namespace App_Api.Controllers
         {
             var voucherGet = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == voucherDTO.IdVoucher);
 
-            DateTime NgayTao= voucherGet.NgayTao;
+            DateTime NgayTao = voucherGet.NgayTao;
 
             if (voucherGet != null)
             {
@@ -125,6 +162,17 @@ namespace App_Api.Controllers
                 }
                 voucherGet.NgayTao = NgayTao;
                 return allRepo.EditItem(voucherGet);
+            }
+            return false;
+        }
+        [HttpPut("UpdateVoucherAfterUseIt/{ma}")]
+        public bool UpdateVoucherAfterUseIt(string ma)
+        {
+            var voucher = allRepo.GetAll().FirstOrDefault(c => c.MaVoucher == ma);
+            if (voucher.SoLuong > 0)
+            {
+                voucher.SoLuong -= 1;
+                allRepo.EditItem(voucher);
             }
             return false;
         }

@@ -1,6 +1,7 @@
 ﻿using App_Data.Models;
 using App_Data.ViewModels.HoaDon;
 using App_Data.ViewModels.HoaDonChiTietDTO;
+using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.ThongTinGHDTO;
 using App_View.IServices;
 using App_View.Services;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Controllers
 {
@@ -117,27 +119,29 @@ namespace App_View.Controllers
             await ThongTinGHController.CreateThongTin(thongTinGHDTO);
             return Ok(new { idThongTinGH = thongTinGHDTO.IdThongTinGH });
         }
-        public async Task<IActionResult> ThanhToan(HoaDonChiTietDTO hoaDonChiTietDTO)
+        public async Task<IActionResult> ThanhToan(HoaDonDTO hoaDonDTO)
         {
             var UserID = _userManager.GetUserId(User);
             var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == UserID);
             var hoadon = new HoaDonDTO()
             {
+                IdHoaDon = Guid.NewGuid().ToString(),
                 IdNguoiDung = UserID,
                 IdKhachHang = null,
-                IdThongTinGH = hoaDonChiTietDTO.IdThongTinGH,
-                IdVoucher = null,
+                IdThongTinGH = hoaDonDTO.IdThongTinGH,
+                IdVoucher = hoaDonDTO.IdVoucher,
                 MaHoaDon = "HD" + DateTime.Now.ToString("ddMMyyyyhhmmss"),
                 NgayTao = DateTime.Now,
                 NgayShip = DateTime.Now.AddDays(2),
                 NgayNhan = DateTime.Now.AddDays(4),
                 NgayThanhToan = DateTime.Now.AddDays(4),
-                TienGiam = hoaDonChiTietDTO.TienGiam,
-                TongTien = hoaDonChiTietDTO.TongTien,
-                TienShip = hoaDonChiTietDTO.TienShip,
-                MoTa = hoaDonChiTietDTO.MoTa,
-                TrangThai = 0,
-                TrangThaiThanhToan = 0
+                NgayGiaoDuKien = hoaDonDTO.NgayGiaoDuKien,
+                TienGiam = hoaDonDTO.TienGiam,
+                TongTien = hoaDonDTO.TongTien,
+                TienShip = hoaDonDTO.TienShip,
+                MoTa = hoaDonDTO.MoTa,
+                TrangThaiGiaoHang = 0,
+                TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan
             };
             await hoaDonServices.CreateHoaDon(hoadon);
             foreach (var item in listcart)
@@ -150,13 +154,23 @@ namespace App_View.Controllers
                     SoLuong = item.SoLuong,
                     GiaGoc = item.GiaGoc,
                     GiaBan = item.GiaBan,
-                    TrangThai = 0
+                    TrangThai = (int)TrangThaiHoaDonChiTiet.ChuaThanhToan
                 });
-                //await CartDetailServices.RemoveItem(item.Id);
-                //var product = await ProductDetailServices.GetById(item.IdProduct);
-                //await ProductDetailServices.UpdateSoLuong(product.Id, item.SoLuongCart);
+                var sanphamupdate = new SanPhamSoLuongDTO()
+                {
+                    IdChiTietSanPham = item.IdSanPhamCT,
+                    SoLuong = (int)item.SoLuong
+                };
+                await gioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
+                var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
+                await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
             }
-            return Ok();
+            return Ok(new { idHoaDon = hoadon.IdHoaDon });
+        }
+        public async Task<ActionResult<HoaDonDTO>> Order(string idHoaDon)
+        {
+            var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            return View(order);
         }
     }
 }

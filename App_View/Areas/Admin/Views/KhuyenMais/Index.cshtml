@@ -1,4 +1,4 @@
-﻿@using static App_Data.Repositories.TrangThai;
+﻿﻿@using static App_Data.Repositories.TrangThai;
 @model IEnumerable<App_Data.Models.KhuyenMai>
 
 @{
@@ -42,21 +42,22 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaKhuyenMai)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TenKhuyenMai)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayBatDau)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayKetThuc)
-            </td>
-            <td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaKhuyenMai)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TenKhuyenMai)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NgayBatDau)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NgayKetThuc)
+                </td>
+                <td>
                     @if (item.LoaiHinhKM == 0)
                     {
                         <text>Thương hiệu</text>
@@ -74,25 +75,25 @@
                         <text>Mức giá</text>
                     }
                 </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MucGiam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PhamVi)
-            </td>
-            <td>
-                <label class="switch">
+                <td>
+                    @Html.DisplayFor(modelItem => item.MucGiam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PhamVi)
+                </td>
+                <td>
+                    <label class="switch">
                         <input type="checkbox" class="status-toggle" data-id="@item.IdKhuyenMai" data-status="@item.TrangThai" @(item.TrangThai == (int)TrangThaiSale.DangBatDau ? "checked" : "")>
-                    <span class="slider round"></span>
-                </label>
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdKhuyenMai">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdKhuyenMai">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdKhuyenMai">Delete</a>
-            </td>
-        </tr>
-}
+                        <span class="slider round"></span>
+                    </label>
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.IdKhuyenMai">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.IdKhuyenMai">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.IdKhuyenMai">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
 <script>
@@ -104,7 +105,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("CapNhatTrangThai", "KhuyenMais")", 
+                url: "@Url.Action("CapNhatTrangThai", "KhuyenMais")",
                 data: { id: id, trangThai: status },
                 success: function (response) {
                 },
@@ -115,13 +116,12 @@
     });
 </script>
 <style>
-    
+
     .switch {
         position: relative;
         display: inline-block;
         width: 40px;
         height: 20px;
-
     }
 
         .switch input {
@@ -171,5 +171,4 @@
         transform: translateX(20px);
     }
 
-    
 </style>

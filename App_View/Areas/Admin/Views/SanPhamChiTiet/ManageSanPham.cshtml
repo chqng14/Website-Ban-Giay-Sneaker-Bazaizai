@@ -22,18 +22,16 @@
     }
 
     .main-content {
-/*        background: #eeeeee*/
+        /*        background: #eeeeee*/
     }
 
     .main_danh_sach {
-/*        background: #A0C5E8;*/
+        /*        background: #A0C5E8;*/
     }
 
     .card-body {
-/*        background: #a0c5e85e !important;*/
+        /*        background: #a0c5e85e !important;*/
     }
-
-
 </style>
 
 <div class="modal fade" id="cauHinh">
@@ -648,21 +646,21 @@
                                         <input class="form-control formatKhoiLuong" name="KhoiLuong" value="${khoiLuong}">(g)
                                     </div>
                                 </div>
-                                <div class="form-group d-flex align-items-center col-2">
+                                <div class="form-group d-flex align-items-center col-3">
                                     <div class="switch m-r-10">
                                         <input type="checkbox" id="switch-${index}" class="switch-2-day">
                                         <label class="font-weight-semibold" for="switch-${index}"></label>
                                     </div>
                                     <label class="font-weight-semibold">Dây</label>
                                 </div>
-                                <div class="form-group d-flex align-items-center col-2">
+                                <div class="form-group d-flex align-items-center col-3">
                                     <div class="switch m-r-10">
                                         <input type="checkbox" id="switch-${index}-1" class="switch-2-noibat">
                                         <label class="font-weight-semibold" for="switch-${index}-1"></label>
                                     </div>
                                     <label class="font-weight-semibold">Nổi bật</label>
                                 </div>
-                                 <div class="form-group d-flex align-items-center col-4">
+                                 <div class="form-group d-flex align-items-center col-3">
                                      <div class="switch m-r-10">
                                          <input type="checkbox" id="switch-${index}-2" class="switch-2-trangthaikhuyenmai" name="TrangThaiKhuyenMai" checked>
                                          <label class="font-weight-semibold" for="switch-${index}-2"></label>
@@ -1074,12 +1072,13 @@
                         fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
                     }
                     else if ($(this).hasClass("formatKhoiLuong")) {
-                        var autoNumeric = new AutoNumeric(this, {
-                            decimalCharacter: ".",
-                            digitGroupSeparator: ",",
-                            decimalPlaces: 2, 
-                            minimumValue: 0
-                        });
+                        var autoNumeric = new AutoNumeric(this,
+                            {
+                                decimalCharacter: ".",
+                                digitGroupSeparator: ",",
+                                decimalPlaces: 2,
+                                minimumValue: 0
+                            });
 
                         var numericValue = autoNumeric.getNumericString();
 
@@ -1110,7 +1109,18 @@
             var slImage = currentItem.find('.wrapper-file').length;
 
             if (isUpdate === 'true') {
-                var opject = { ...GetDataMain(), ...dataBienThe, ...DataInDataset, ...{ IdChiTietSp: currentItem.attr('data-idproductdetail') }, ...moTa, ...{ Day: currentItem.find('.switch-2-day').prop('checked'), NoiBat: currentItem.find('.switch-2-noibat').prop('checked') } }
+                var opject = {
+                    ...GetDataMain(),
+                    ...dataBienThe,
+                    ...DataInDataset,
+                    ...{ IdChiTietSp: currentItem.attr('data-idproductdetail') },
+                    ...moTa,
+                    ...{
+                        Day: currentItem.find('.switch-2-day').prop('checked'),
+                        NoiBat: currentItem.find('.switch-2-noibat').prop('checked'),
+                        NoiBat: currentItem.find('.switch-2-trangthaikhuyenmai').prop('checked'),
+                    }
+                }
 
                 if (opject.GiaBan !== "0" && opject.GiaNhap !== "0" && opject.SoLuongTon !== "0" && opject.KhoiLuong !== "0" && slImage >= 1) {
                     const key = currentItem.find('.collapse').attr('id');
@@ -1188,6 +1198,18 @@
                     processNextItem();
                 }
             } else {
+                console.log({
+                    ...GetDataMain()
+                    , ...dataBienThe
+                    , ...DataInDataset
+                    , ...moTa
+                    , ...{
+                        Day: currentItem.find('.switch-2-day').prop('checked'),
+                        NoiBat: currentItem.find('.switch-2-noibat').prop('checked'),
+                        TrangThaiKhuyenMai: currentItem.find('.switch-2-trangthaikhuyenmai').prop('checked'),
+                    }
+                });
+
                 if (dataBienThe.GiaBan && dataBienThe.GiaNhap && dataBienThe.SoLuongTon && dataBienThe.KhoiLuong && slImage >= 1) {
                     $.ajax({
                         url: URL_CREATE_PRODUCT,
@@ -1197,7 +1219,10 @@
                             , ...dataBienThe
                             , ...DataInDataset
                             , ...moTa
-                            , ...{ Day: currentItem.find('.switch-2-day').prop('checked'), NoiBat: currentItem.find('.switch-2-noibat').prop('checked') }
+                            , ...{
+                                Day: currentItem.find('.switch-2-day').prop('checked')
+                                , NoiBat: currentItem.find('.switch-2-noibat').prop('checked')
+                            }
                         }),
                         contentType: 'application/json',
                         success: function (result) {

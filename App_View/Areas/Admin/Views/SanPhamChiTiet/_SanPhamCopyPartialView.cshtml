@@ -1,0 +1,1082 @@
+﻿@model App_Data.ViewModels.SanPhamChiTietDTO.SanPhamChiTietDTO
+
+
+<script>
+    (function () {
+            var selectedFiles = {};
+            var lstAnhRemove = {};
+            selectedFiles = {};
+            lstAnhRemove = {};
+            var URL_UPDATE_PRODUCT_DETAIL = 'UpdateSanPham';
+            var URL_DELETE_LIST_IMAGE = 'DeleteAnh';
+            var URL_CREATE_IMAGE = 'CreateAnh';
+            $(() => {
+
+                $(".select2-active").select2();
+
+                $('.thuonghieu').each(function () {
+                    const $thuonghieu = $(this);
+                    var $thuonghieuInput = $(this).find('input.select2-input');
+                    $thuonghieuInput.off('keyup');
+                    $thuonghieuInput.on('keyup', function (e) {
+                        if (e.keyCode === 13) {
+                            var inputValue = $(this).val();
+                            if (inputValue) {
+                                var data = {
+                                    TenThuongHieu: inputValue,
+                                };
+                                var $select2 = $thuonghieu.find("[name='IdThuongHieu']");
+
+                                $.ajax({
+                                    url: 'CreateTenThuongHieu',
+                                    type: 'POST',
+                                    data: JSON.stringify(data),
+                                    contentType: 'application/json',
+                                    success: function (result) {
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenThuongHieu, result.idThuongHieu, true, true);
+                                        $select2.append(newOption).trigger('change');
+
+                                        $thuonghieuInput.val('');
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.log(xhr.responseText);
+                                        console.log(status);
+                                        console.log(error);
+                                        console.log(xhr);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+                $('.xuatxu').each(function () {
+                    const $xuatxu = $(this);
+                    var $xuatxuInput = $(this).find('input.select2-input');
+                    $xuatxuInput.off('keyup');
+                    $xuatxuInput.on('keyup', function (e) {
+                        if (e.keyCode === 13) {
+                            var inputValue = $(this).val();
+                            if (inputValue) {
+                                var data = {
+                                    Ten: inputValue,
+                                };
+                                $.ajax({
+                                    url: 'CreateTenXuatXu',
+                                    type: 'POST',
+                                    data: JSON.stringify(data),
+                                    contentType: 'application/json',
+                                    success: function (result) {
+                                        var $select2 = $xuatxu.find("[name='IdXuatXu']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.ten, result.idXuatXu, true, true);
+                                        $select2.append(newOption).trigger('change');
+
+                                        $(this).val('');
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.log(xhr.responseText);
+                                        console.log(status);
+                                        console.log(error);
+                                        console.log(xhr);
+                                    }
+                                });
+                            }
+                        }
+                    })
+                });
+                $('.sanpham').each(function () {
+                    const $sanpham = $(this);
+                    var $sanphamInput = $(this).find('input.select2-input');
+                    $sanphamInput.off('keyup');
+                    $sanphamInput.on('keyup', function (e) {
+                        if (e.keyCode === 13) {
+                            var inputValue = $(this).val();
+                            if (inputValue) {
+                                var data = {
+                                    TenSanPham: inputValue,
+                                };
+                                $.ajax({
+                                    url: 'CreateTenSanPham',
+                                    type: 'POST',
+                                    data: JSON.stringify(data),
+                                    contentType: 'application/json',
+                                    success: function (result) {
+                                        var $select2 = $sanpham.find("[name='IdSanPham']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenSanPham, result.idSanPham, true, true);
+                                        $select2.append(newOption).trigger('change');
+
+                                        $(this).val('');
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.log(xhr.responseText);
+                                        console.log(status);
+                                        console.log(error);
+                                        console.log(xhr);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+                $('.loaigiay').each(function () {
+                    const $loaigiay = $(this);
+                    var $loaigiayInput = $(this).find('input.select2-input');
+                    $loaigiayInput.off('keyup');
+                    $loaigiayInput.on('keyup', function (e) {
+                        if (e.keyCode === 13) {
+                            var inputValue = $(this).val();
+                            if (inputValue) {
+                                var data = {
+                                    TenLoaiGiay: inputValue,
+                                };
+                                $.ajax({
+                                    url: 'CreateTenLoaiGiay',
+                                    type: 'POST',
+                                    data: JSON.stringify(data),
+                                    contentType: 'application/json',
+                                    success: function (result) {
+                                        var $select2 = $loaigiay.find("[name='IdLoaiGiay']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenLoaiGiay, result.idLoaiGiay, true, true);
+                                        $select2.append(newOption).trigger('change');
+
+                                        $(this).val('');
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.log(xhr.responseText);
+                                        console.log(status);
+                                        console.log(error);
+                                        console.log(xhr);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+                $('.chatlieu').each(function () {
+                    const $chatlieu = $(this);
+                    var $chatlieuInput = $(this).find('input.select2-input');
+                    $chatlieuInput.off('keyup');
+                    $chatlieuInput.on('keyup', function (e) {
+                        if (e.keyCode === 13) {
+                            var inputValue = $(this).val();
+                            if (inputValue) {
+                                var data = {
+                                    TenChatLieu: inputValue,
+                                };
+                                $.ajax({
+                                    url: 'CreateTenChatLieu',
+                                    type: 'POST',
+                                    data: JSON.stringify(data),
+                                    contentType: 'application/json',
+                                    success: function (result) {
+                                        var $select2 = $chatlieu.find("[name='IdChatLieu']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenChatLieu, result.idChatLieu, true, true);
+                                        $select2.append(newOption).trigger('change');
+
+                                        $(this).val('');
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.log(xhr.responseText);
+                                        console.log(status);
+                                        console.log(error);
+                                        console.log(xhr);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+                $('.kieudegiay').each(function () {
+                    const $kieudegiay = $(this);
+                    var $kieudegiayInput = $(this).find('input.select2-input');
+                    $kieudegiayInput.off('keyup');
+                    $kieudegiayInput.on('keyup', function (e) {
+                        if (e.keyCode === 13) {
+                            var inputValue = $(this).val();
+                            if (inputValue) {
+                                var data = {
+                                    TenKieuDeGiay: inputValue,
+                                };
+                                $.ajax({
+                                    url: 'CreateTenKieuDeGiay',
+                                    type: 'POST',
+                                    data: JSON.stringify(data),
+                                    contentType: 'application/json',
+                                    success: function (result) {
+                                        var $select2 = $kieudegiay.find("[name='IdKieuDeGiay']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenKieuDeGiay, result.idKieuDeGiay, true, true);
+                                        $select2.append(newOption).trigger('change');
+
+                                        $(this).val('');
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.log(xhr.responseText);
+                                        console.log(status);
+                                        console.log(error);
+                                        console.log(xhr);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+                $('.mausac').each(function () {
+                    const $mausac = $(this);
+                    var $mausacInput = $(this).find('input.select2-input');
+                    $mausacInput.off('keyup');
+                    $mausacInput.on('keyup', function (e) {
+                        if (e.keyCode === 13) {
+                            var inputValue = $(this).val();
+                            if (inputValue) {
+                                var data = {
+                                    TenMauSac: inputValue,
+                                };
+                                $.ajax({
+                                    url: 'CreateTenMauSac',
+                                    type: 'POST',
+                                    data: JSON.stringify(data),
+                                    contentType: 'application/json',
+                                    success: function (result) {
+                                        var $select2 = $mausac.find("[name='IdMauSac']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenMauSac, result.idMauSac, true, true);
+                                        $select2.append(newOption).trigger('change');
+
+                                        $(this).val('');
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.log(xhr.responseText);
+                                        console.log(status);
+                                        console.log(error);
+                                        console.log(xhr);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                })
+                $('.kichco').each(function () {
+                    const $kichco = $(this);
+                    var $kichcoInput = $(this).find('input.select2-input');
+                    $kichcoInput.off('keyup');
+                    $kichcoInput.on('keyup', function (e) {
+                        if (e.keyCode === 13) {
+                            var inputValue = $(this).val();
+                            if (inputValue) {
+                                var data = {
+                                    soKichCo: inputValue,
+                                };
+                                $.ajax({
+                                    url: 'CreateTenKichCo',
+                                    type: 'POST',
+                                    data: JSON.stringify(data),
+                                    contentType: 'application/json',
+                                    success: function (result) {
+                                        var $select2 = $kichco.find("[name='IdKichCo']");
+
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
+                                        $select2.append(newOption).trigger('change');
+
+                                        $(this).val('');
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.log(xhr.responseText);
+                                        console.log(status);
+                                        console.log(error);
+                                        console.log(xhr);
+                                    }
+                                });
+                            }
+                        }
+                    });
+                });
+                $('.moTa').summernote();
+                $(".formatPrice").each(function () {
+                    var autoNumeric = new AutoNumeric(this, {
+                        decimalCharacter: ".",
+                        digitGroupSeparator: ",",
+                        decimalPlaces: 0,
+                        currencySymbol: " ₫",
+                        currencySymbolPlacement: "s",
+                        minimumValue: 0
+                    });
+                });
+                $(".formatNumber").each(function () {
+                    var autoNumeric = new AutoNumeric(this, {
+                        decimalCharacter: ".",
+                        digitGroupSeparator: ",",
+                        decimalPlaces: 0,
+                        minimumValue: 0
+                    });
+                });
+                $(".formatKhoiLuong").each(function () {
+                    var autoNumeric = new AutoNumeric(this, {
+                        decimalCharacter: ".",
+                        digitGroupSeparator: ",",
+                        decimalPlaces: 2, // Số thập phân
+                        minimumValue: 0
+                    });
+                });
+            })
+
+            $(document).off('click', '[name= "choseFile"]');
+            $(document).on('click', '[name= "choseFile"]', function () {
+                $(this).closest('.upload').find('.fileInput').click()
+                console.log(selectedFiles['@Model.IdChiTietSp']);
+            })
+
+            $(document).off("click", ".file-image")
+            $(document).on("click", ".file-image", function () {
+                console.log('@Model.IdChiTietSp');
+                changeImage($(this), $(this).attr('src').replace("/AnhSanPham/", ""), '@Model.IdChiTietSp')
+            })
+
+            $(document).off("click", ".close-icon");
+            $(document).on("click", ".close-icon", function () {
+                const wrapper = $(this).closest('.wrapper-file');
+                const key = '@Model.IdChiTietSp';
+                const nameFile = wrapper.find('.file-image').attr('src')
+                if (!nameFile.startsWith("blob:https://localhost")) {
+                    if (!lstAnhRemove[key]) {
+                        lstAnhRemove[key] = []
+                    }
+                    lstAnhRemove[key].push(nameFile.replace("/AnhSanPham/", ""))
+                    console.log(lstAnhRemove[key]);
+                } else {
+                    var name = wrapper.find('.image').attr('data-file')
+                    const indexDelete = selectedFiles[key].findIndex(item => item.key === name);
+                    selectedFiles[key].splice(indexDelete, 1);
+                }
+                wrapper.remove();
+            })
+
+            $(document).off('change', '.fileInput');
+            $(document).on('change', '.fileInput', function () {
+                const imageList = $(this).closest('.upload').find('.container-file');
+                const key = '@Model.IdChiTietSp';
+                console.log(key);
+
+                Array.from(this.files).map((file) => {
+                    if (file.type.startsWith("image")) {
+                        const wrapper = $('<div>').addClass('wrapper-file');
+                        const image = $('<div>').addClass('image');
+                        const imageElement = $('<img>').addClass('file-image').attr('src', URL.createObjectURL(file));
+                        image.attr('data-file', file.name);
+                        if (!selectedFiles[key]) {
+                            selectedFiles[key] = []
+                        }
+                        selectedFiles[key].push({ key: "them", data: file });
+
+                        const closeIcon = $('<i>').addClass('fas fa-times close-icon');
+
+
+                        image.append(imageElement);
+                        image.append(closeIcon);
+
+                        const content = $('<div>').addClass('content');
+                        const icon = $('<div>').addClass('icon');
+                        icon.html('<i class="fas fa-cloud-upload-alt"></i>');
+                        content.append(icon);
+
+                        var cancelBtn = $('<div>').addClass('cancel-btn');
+                        cancelBtn.html('<i class="fas fa-times"></i>');
+
+                        wrapper.append(image);
+                        wrapper.append(content);
+                        wrapper.append(cancelBtn);
+                        imageList.append(wrapper);
+                        return;
+                    }
+                    this.files = "";
+                    alert('Vui lòng chọn đúng định dạng');
+                });
+            })
+
+          var changeImage = (imageElement, file, key) => {
+          const newInputFile = $('<input>').attr('type', 'file').css('display', 'none');
+                console.log(selectedFiles['@Model.IdChiTietSp']);
+                newInputFile.off('change')
+                newInputFile.one('change', function () {
+                    if (!lstAnhRemove[key]) {
+                        lstAnhRemove[key] = []
+                    }
+                    const newFile = this.files[0]
+                    if (newFile) {
+                        const container = imageElement.closest('.wrapper-file')
+                        var fileName = container.find('.image').attr('data-file')
+                        console.log(fileName);
+                        container.append(newInputFile)
+
+                        if (newFile && newFile.type.startsWith('image/')) {
+
+                            if (file.startsWith('blob:https:')) {
+                                console.log(selectedFiles[key]);
+                                const CheckIndex = selectedFiles[key].findIndex(file => file.data.name === newFile.name);
+                                if (CheckIndex !== -1) {
+                                    alert('File này đã tồn tại')
+                                } else {
+                                    container.find('.image').attr('data-file', newFile.name)
+                                    const indexChange = fileName ? selectedFiles[key].findIndex(item => item.data.name === fileName) : selectedFiles[key].findIndex(item => item.data.name === file.name);
+                                    imageElement.attr('src', URL.createObjectURL(newFile));
+                                    selectedFiles[key][indexChange] = { key: "them", data: newFile };
+                                    console.log(selectedFiles[key]);
+                                }
+                                console.log(selectedFiles[key]);
+                            } else {
+                                if (!selectedFiles[key]) {
+                                    selectedFiles[key] = []
+                                    selectedFiles[key].push({ key: "them", data: newFile });
+                                    imageElement.attr('src', URL.createObjectURL(newFile));
+                                    container.find('.image').attr('data-file', newFile.name)
+                                    console.log(file);
+                                    lstAnhRemove[key].push(file)
+                                } else {
+                                    if (Array.from(selectedFiles[key]).find(item => item.data.name === newFile.name)) {
+                                        alert('File này đã được chọn trước đó!')
+                                    } else {
+                                        const foundIndexItem = selectedFiles[key].findIndex(item => item.data.name === file);
+                                        console.log(foundIndexItem);
+                                        if (foundIndexItem === -1) {
+                                            console.log(file);
+                                            lstAnhRemove[key].push(file)
+                                            selectedFiles[key].push({ key: "them", data: newFile })
+                                            container.find('.image').attr('data-file', newFile.name)
+                                            imageElement.attr('src', URL.createObjectURL(newFile))
+                                            console.log(selectedFiles[key]);
+                                        }
+                                    }
+                                }
+                            }
+                            console.log(lstAnhRemove[key]);
+                            console.log(selectedFiles[key]);
+                        }
+                    }
+                })
+                newInputFile.click()
+        }
+
+
+
+        $(document).off('click', '#btn-add-coppy');
+        $(document).on('click', '#btn-add-coppy', function () {
+
+                 var dataGet = {};
+                 $('#form-get-data').find("input, select, textarea").each(function () {
+                     var fieldType = $(this).attr("type");
+                     var fieldName = $(this).attr("name");
+                     var fieldValue;
+
+                     if (fieldType === "checkbox" || fieldType === "radio") {
+                         fieldValue = $(this).is(":checked");
+                     } else {
+                         if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
+                             var fieldValue = $(this).val();
+                             fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
+                         }
+                         else if ($(this).hasClass("formatKhoiLuong")) {
+                              var autoNumeric = new AutoNumeric(this,
+                                 {
+                                     decimalCharacter: ".",
+                                     digitGroupSeparator: ",",
+                                     decimalPlaces: 2,
+                                     minimumValue: 0
+                                 });
+
+                             var numericValue = autoNumeric.getNumericString();
+
+                             fieldValue = numericValue;
+                         }
+                         else {
+                             fieldValue = $(this).val();
+                         }
+                     }
+                     if (fieldName) {
+                         dataGet[fieldName] = fieldValue;
+                     }
+                 });
+
+
+                 var data = new FormData();
+                 for (var key in dataGet) {
+                     data.append('SanPhamChiTietData.' + key, dataGet[key]);
+                 }
+
+
+                 var danhSachAnhArray = [];
+                 @for (var i = 0; i < Model.DanhSachAnh!.Count; i++)
+                 {
+                     @:danhSachAnhArray.push('@Model.DanhSachAnh[i]');
+                 }
+
+                 for (var i = 0; i < danhSachAnhArray.length; i++) {
+                     data.append('SanPhamChiTietData.' + 'DanhSachAnh', danhSachAnhArray[i]);
+                 }
+
+                 if (lstAnhRemove['@Model.IdChiTietSp'] && lstAnhRemove['@Model.IdChiTietSp'].length > 0)
+                 {
+                     Array.from(lstAnhRemove['@Model.IdChiTietSp']).forEach((item, index) => {
+                         data.append('ListTenAnhRemove', item);
+                     })
+                 }
+
+                 if (selectedFiles['@Model.IdChiTietSp'] && selectedFiles['@Model.IdChiTietSp'].length > 0)
+                 {
+                     console.log(selectedFiles['@Model.IdChiTietSp']);
+                     Array.from(selectedFiles['@Model.IdChiTietSp']).forEach((item, index) => {
+                         data.append('ListAnhCreate', item.data);
+                     })
+                 }
+
+                 $.ajax({
+                     url: '/Admin/SanPhamChiTiet/CreateSanPhamChiTietCoppy',
+                     type: 'POST',
+                     data: data,
+                     contentType: false,
+                     processData: false,
+                     success: function (result) {
+                         if (result) {
+                             table.draw();
+                             var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                 <div class="toast-header">
+                                                     <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                     <strong class="mr-auto">Thông báo</strong>
+                                                     <small>1 second ago</small>
+                                                     <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                         <span aria-hidden="true">&times;</span>
+                                                     </button>
+                                                 </div>
+                                                 <div class="toast-body">
+                                                    Đã thêm thành công một sản phẩm
+                                                 </div>
+                                             </div>`
+                             $('#notification-toast').append(toastHTML)
+                             $('#notification-toast .toast').toast('show');
+                         } else {
+                             var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                             <div class="toast-header">
+                                                 <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                 <strong class="mr-auto">Thông báo</strong>
+                                                 <small>1 second ago</small>
+                                                 <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                     <span aria-hidden="true">&times;</span>
+                                                 </button>
+                                             </div>
+                                             <div class="toast-body">
+                                               Sản phẩm đã tồn tại!
+                                             </div>
+                                         </div>`
+                             $('#notification-toast').append(toastHTML)
+                             $('#notification-toast .toast').toast('show');
+                             setTimeout(function () {
+                                 $('#notification-toast .toast:first-child').remove();
+                             }, 3000);
+                         }
+                     },
+                     error: function (xhr, status, error) {
+                         console.log(xhr.responseText);
+                         console.log(status);
+                         console.log(error);
+                         console.log(xhr);
+                     }
+                 });
+
+
+
+             })
+        $(document).off('click', '#btn-add');
+        $(document).on('click', '#btn-add', function () {
+
+            var dataGet = {};
+            $('#form-get-data').find("input, select, textarea").each(function () {
+                var fieldType = $(this).attr("type");
+                var fieldName = $(this).attr("name");
+                var fieldValue;
+
+                if (fieldType === "checkbox" || fieldType === "radio") {
+                    fieldValue = $(this).is(":checked");
+                } else {
+                    if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
+                        var fieldValue = $(this).val();
+                        fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
+                    }
+                    else if ($(this).hasClass("formatKhoiLuong")) {
+                        var autoNumeric = new AutoNumeric(this,
+                            {
+                                decimalCharacter: ".",
+                                digitGroupSeparator: ",",
+                                decimalPlaces: 2,
+                                minimumValue: 0
+                            });
+
+                        var numericValue = autoNumeric.getNumericString();
+
+                        fieldValue = numericValue;
+                    }
+                    else {
+                        fieldValue = $(this).val();
+                    }
+                }
+                if (fieldName) {
+                    dataGet[fieldName] = fieldValue;
+                }
+            });
+
+
+            var data = new FormData();
+            for (var key in dataGet) {
+                data.append('SanPhamChiTietData.' + key, dataGet[key]);
+            }
+
+
+            var danhSachAnhArray = [];
+            @for (var i = 0; i < Model.DanhSachAnh!.Count; i++)
+            {
+                @:danhSachAnhArray.push('@Model.DanhSachAnh[i]');
+            }
+
+            for (var i = 0; i < danhSachAnhArray.length; i++) {
+                data.append('SanPhamChiTietData.' + 'DanhSachAnh', danhSachAnhArray[i]);
+            }
+
+            if (lstAnhRemove['@Model.IdChiTietSp'] && lstAnhRemove['@Model.IdChiTietSp'].length > 0)
+            {
+                Array.from(lstAnhRemove['@Model.IdChiTietSp']).forEach((item, index) => {
+                    data.append('ListTenAnhRemove', item);
+                })
+            }
+
+            if (selectedFiles['@Model.IdChiTietSp'] && selectedFiles['@Model.IdChiTietSp'].length > 0)
+            {
+                console.log(selectedFiles['@Model.IdChiTietSp']);
+                Array.from(selectedFiles['@Model.IdChiTietSp']).forEach((item, index) => {
+                    data.append('ListAnhCreate', item.data);
+                })
+            }
+
+            $.ajax({
+                url: '/Admin/SanPhamChiTiet/CreateSanPhamChiTietCoppy',
+                type: 'POST',
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (result) {
+                    if (result) {
+                        $('#modalSanPham').modal('hide');
+                        table.draw();
+                        var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                            <div class="toast-header">
+                                                <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                <strong class="mr-auto">Thông báo</strong>
+                                                <small>1 second ago</small>
+                                                <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="toast-body">
+                                               Đã thêm thành công một sản phẩm
+                                            </div>
+                                        </div>`
+                        $('#notification-toast').append(toastHTML)
+                        $('#notification-toast .toast').toast('show');
+                    } else {
+                        var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                        <div class="toast-header">
+                                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                            <strong class="mr-auto">Thông báo</strong>
+                                            <small>1 second ago</small>
+                                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="toast-body">
+                                          Sản phẩm đã tồn tại!
+                                        </div>
+                                    </div>`
+                        $('#notification-toast').append(toastHTML)
+                        $('#notification-toast .toast').toast('show');
+                        setTimeout(function () {
+                            $('#notification-toast .toast:first-child').remove();
+                        }, 3000);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    console.log(status);
+                    console.log(error);
+                    console.log(xhr);
+                }
+            });
+
+
+
+        })
+
+
+    })();
+</script>
+
+<div class="modal-dialog  modal-xl">
+    <div class="modal-content">
+        <div class="modal-header" style="background: #129dc1; ">
+            <h5 class="modal-title" id="exampleModalLabel">THÊM MỚI SẢN PHẨM</h5>
+            <button type="button" class="close" data-dismiss="modal">
+                <i class="anticon anticon-close"></i>
+            </button>
+        </div>
+        <div class="modal-body" style="background: #d3f6ff;">
+            <div class="card-body" id="form-get-data">
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home-@Model.IdChiTietSp" role="tab"
+                           aria-controls="home-@Model.IdChiTietSp" aria-selected="true">Thông tin sản phẩm</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile--@Model.IdChiTietSp" role="tab"
+                           aria-controls="profile--@Model.IdChiTietSp" aria-selected="false">Ảnh</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact-@Model.IdChiTietSp" role="tab"
+                           aria-controls="contact-@Model.IdChiTietSp" aria-selected="false">Mô tả</a>
+                    </li>
+                </ul>
+                <div class="tab-content m-t-15" id="myTabContent">
+                    <div class="tab-pane fade show active" id="home-@Model.IdChiTietSp" role="tabpanel" aria-labelledby="home-tab" style="height: 470px">
+                        <div class="card">
+                            <div class="card-body main">
+                                <div class="row">
+                                    <div class="col-4 sanpham" style="margin-top: 10px">
+                                        <label class="font-weight-semibold">Tên sản phẩm</label>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-cube mr-1"></i>
+                                            <select class="w-100 select2-active" name="IdSanPham">
+                                                @foreach (var item in (SelectList)ViewData["IdSanPham"]!)
+                                                {
+                                                    if (item.Value == Model.IdSanPham)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4 thuonghieu" style="margin-top: 10px">
+                                        <label class="font-weight-semibold">Thương hiệu</label>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-trademark mr-1"></i>
+                                            <select class="select2-active w-100" name="IdThuongHieu">
+                                                @foreach (var item in (SelectList)ViewData["IdThuongHieu"]!)
+                                                {
+                                                    if (item.Value == Model.IdThuongHieu)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4 xuatxu" style="margin-top: 10px">
+                                        <label class="font-weight-semibold">Xuất xứ</label>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fab fa-connectdevelop mr-1"></i>
+                                            <select class="select2-active w-100" name="IdXuatXu">
+                                                @foreach (var item in (SelectList)ViewData["IdXuatXu"]!)
+                                                {
+                                                    if (item.Value == Model.IdXuatXu)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4 chatlieu" style="margin-top: 10px">
+                                        <label class="font-weight-semibold">Chất liệu</label>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fab fa-centercode mr-1"></i>
+                                            <select class="select2-active w-100" name="IdChatLieu">
+                                                @foreach (var item in (SelectList)ViewData["IdChatLieu"]!)
+                                                {
+                                                    if (item.Value == Model.IdChatLieu)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4 loaigiay" style="margin-top: 10px">
+                                        <label class="font-weight-semibold">Loại giầy</label>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fab fa-magento mr-1"></i>
+                                            <select class="select2-active w-100" name="IdLoaiGiay">
+                                                @foreach (var item in (SelectList)ViewData["IdLoaiGiay"]!)
+                                                {
+                                                    if (item.Value == Model.IdLoaiGiay)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4 kieudegiay" style="margin-top: 10px">
+                                        <label class="font-weight-semibold">Kiểu đế giầy</label>
+                                        <div class="d-flex align-items-center mr-1">
+                                            <i class="fas fa-podcast mr-1"></i>
+                                            <select class="select2-active w-100" name="IdKieuDeGiay">
+                                                @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"]!)
+                                                {
+                                                    if (item.Value == Model.IdKieuDeGiay)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-6 mausac">
+                                        <label class="font-weight-semibold">Màu Sắc</label>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-palette mr-1"></i>
+                                            <select class="select2-active w-100" name="IdMauSac">
+                                                @foreach (var item in (SelectList)ViewData["IdMauSac"]!)
+                                                {
+                                                    if (item.Value == Model.IdMauSac)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-6 kichco">
+                                        <label class="font-weight-semibold">Kích cỡ</label>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-bowling-ball mr-1"></i>
+                                            <select class="select2-active w-100" name="IdKichCo">
+                                                @foreach (var item in (SelectList)ViewData["IdKichCo"]!)
+                                                {
+                                                    if (item.Value == Model.IdKichCo)
+                                                    {
+                                                        <option value="@item.Value" selected>@item.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@item.Value">@item.Text</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="form-group col-3">
+                                        <label class="font-weight-semibold" for="productBrand">Giá nhập</label>
+                                        <div class="d-flex align-items-center">
+                                            <i class="far fa-money-bill-alt mr-1"></i>
+                                            <input type="text" class="form-control formatPrice" name="GiaNhap" value="@Model.GiaNhap">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-3">
+                                        <label class="font-weight-semibold" for="productBrand">Giá bán</label>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-money-bill-wave mr-1"></i>
+                                            <input type="text" class="form-control formatPrice" name="GiaBan" value="@Model.GiaBan">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-3">
+                                        <label class="font-weight-semibold" for="productBrand">Số lượng tồn</label>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-database mr-1"></i>
+                                            <input type="text" class="form-control formatNumber" name="SoLuongTon" value="@Model.SoLuongTon">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-3">
+                                        <label class="font-weight-semibold" for="productBrand">Khối lượng</label>
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-weight mr-1"></i>
+                                            <input type="text" class="form-control formatKhoiLuong" name="KhoiLuong" value="@Model.KhoiLuong">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group d-flex align-items-center col-3">
+                                        <div class="switch m-r-10">
+                                            @if (Model.Day == true)
+                                            {
+                                                <input type="checkbox" name="Day" id="switch-day-@Model.IdChiTietSp" class="switch-2-day" checked>
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="Day" id="switch-day-@Model.IdChiTietSp" class="switch-2-day">
+                                            }
+
+                                            <label class="font-weight-semibold" for="switch-day-@Model.IdChiTietSp"></label>
+                                        </div>
+                                        <label class="font-weight-semibold">Dây</label>
+                                    </div>
+
+                                    <div class="form-group d-flex align-items-center col-3">
+                                        <div class="switch m-r-10">
+                                            @if (Model.TrangThaiKhuyenMai == true)
+                                            {
+                                                <input type="checkbox" name="TrangThaiKhuyenMai" id="switch-trangThaiKhuyenMai-@Model.IdChiTietSp" class="switch-2-trangThaiKhuyenMai" checked>
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="TrangThaiKhuyenMai" id="switch-trangThaiKhuyenMai-@Model.IdChiTietSp" class="switch-2-trangThaiKhuyenMai">
+                                            }
+
+                                            <label class="font-weight-semibold" for="switch-trangThaiKhuyenMai-@Model.IdChiTietSp"></label>
+                                        </div>
+                                        <label class="font-weight-semibold">Trạng thái khuyến mãi</label>
+                                    </div>
+
+
+                                    <div class="form-group d-flex align-items-center col-3">
+                                        <div class="switch m-r-10">
+                                            @if (Model.NoiBat == true)
+                                            {
+                                                <input type="checkbox" name="NoiBat" id="switch-noibat-@Model.IdChiTietSp" class="switch-2-noibat" checked>
+                                            }
+                                            else
+                                            {
+                                                <input type="checkbox" name="NoiBat" id="switch-noibat-@Model.IdChiTietSp" class="switch-2-noibat">
+                                            }
+                                            <label class="font-weight-semibold" for="switch-noibat-@Model.IdChiTietSp"></label>
+                                        </div>
+                                        <label class="font-weight-semibold">Nổi bật</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="profile--@Model.IdChiTietSp" role="tabpanel" aria-labelledby="profile-tab">
+                        <div class="upload">
+                            <button name="choseFile" class="custom-btn mb-2">
+                                Choose file
+                            </button>
+                            <input type="file" class="fileInput default-btn 1" multiple hidden>
+                            <div class="container-file" style="display: flex;">
+                                @foreach (var img in Model.DanhSachAnh!)
+                                {
+                                    <div class="wrapper-file">
+                                        <div class="image">
+                                            <img class="file-image"
+                                                 src="/AnhSanPham/@img"><i class="fas fa-times close-icon"></i>
+                                        </div>
+                                        <div class="content">
+                                            <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                        </div>
+                                        <div class="cancel-btn"><i class="fas fa-times"></i></div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="contact-@Model.IdChiTietSp" role="tabpanel" aria-labelledby="contact-tab">
+                        <div class="form-group col-12">
+                            <div class="m-b-5" style="margin-top: 10px;">
+                                <label class="font-weight-semibold" style="display: block; margin-bottom: 5px;">
+                                    Mô tả sản phẩm
+                                </label>
+                                <div class="moTa w-100" style="height: 400px" name="MoTa">@Html.Raw(@Model.MoTa)</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between" style="background: #d0dae3 ">
+            <div>
+                <button class="btn btn-primary" id="btn-add">
+                    <i class="far fa-copy"></i>
+                    <span>Thêm</span>
+                </button>
+                <button class="btn btn-primary" id="btn-add-coppy">
+                    <i class="far fa-copy"></i>
+                    <span>Thêm và coppy</span>
+                </button>
+            </div>
+            <div>
+                <button type="button" class="btn btn-warning" data-dismiss="modal">
+                    <i class="anticon anticon-close-circle"></i>
+                    <span>Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+

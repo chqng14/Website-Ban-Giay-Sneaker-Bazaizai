@@ -16,15 +16,18 @@
 
                                 <span class="fas fa-minus shop-w__toggle" data-target="#s-category" data-toggle="collapse"></span>
                             </div>
-                           
-                                <div class="shop-w__wrap collapse show" id="s-category">
-                                    <ul class="shop-w__category-list gl-scroll">
-                                        <li>
 
-                                            <a href="/sanphamchitiets">Tất cả</a>
+                            <div class="shop-w__wrap collapse show" id="s-category">
+                                <ul class="shop-w__category-list gl-scroll">
+                                    <li>
 
-                                            <span class="category-list__text u-s-m-l-6">(All)</span>
-                                        </li>
+                                        <a href="/sanphamchitiets">Tất cả</a>
+
+                                        <span class="category-list__text u-s-m-l-6">(All)</span>
+                                    </li>
+                                    @if (Model.LstItemFilterThuongHieu != null)
+
+                                    {
                                         @foreach (var item in Model.LstItemFilterThuongHieu!)
                                         {
                                             <li>
@@ -34,8 +37,10 @@
                                                 <span class="category-list__text u-s-m-l-6">(@item.SoLuong)</span>
                                             </li>
                                         }
-                                    </ul>
-                                </div>
+                                    }
+
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <div class="u-s-m-b-30">
@@ -112,7 +117,7 @@
                             </div>
                         </div>
                     </div>
-   
+
                     <div class="u-s-m-b-30">
                         <div class="shop-w">
                             <div class="shop-w__intro-wrap">
@@ -153,18 +158,22 @@
                             </div>
                             <div class="shop-w__wrap collapse show" id="s-manufacturer">
                                 <ul class="shop-w__list-2 lst-theloai">
-                                    @foreach (var item in Model.LstItemFilterTheLoai!)
+                                    @if (Model.LstItemFilterTheLoai != null)
+
                                     {
-                                        <li>
-                                            <div class="list__content">
+                                        @foreach (var item in Model.LstItemFilterTheLoai!)
+                                        {
+                                            <li>
+                                                <div class="list__content">
 
-                                                <input type="checkbox">
+                                                    <input type="checkbox">
 
-                                                <span>@item.Ten</span>
-                                            </div>
+                                                    <span>@item.Ten</span>
+                                                </div>
 
-                                            <span class="shop-w__total-text">(@item.SoLuong)</span>
-                                        </li>
+                                                <span class="shop-w__total-text">(@item.SoLuong)</span>
+                                            </li>
+                                        }
                                     }
                                 </ul>
                             </div>
@@ -179,20 +188,25 @@
                             </div>
                             <div class="shop-w__wrap collapse show" id="s-color">
                                 <ul class="shop-w__list gl-scroll lst-mausac">
-                                    @foreach (var item in Model.LstItemFilterMauSac!)
+                                    @if (Model.LstItemFilterMauSac != null)
+
                                     {
-                                        <li>
-                                            <div class="color__check">
+                                        @foreach (var item in Model.LstItemFilterMauSac!)
+                                        {
+                                            <li>
+                                                <div class="color__check">
 
-                                                <input type="checkbox" id="@item.Ten">
+                                                    <input type="checkbox" id="@item.Ten">
 
-                                                <label class="color__check-label" for="@item.Ten" style="background-color: @item.Ten"></label>
-                                            </div>
+                                                    <label class="color__check-label" for="@item.Ten" style="background-color: @item.Ten"></label>
+                                                </div>
 
-                                            <span class="shop-w__total-text">(@item.SoLuong)</span>
-                                        </li>
+                                                <span class="shop-w__total-text">(@item.SoLuong)</span>
+                                            </li>
 
+                                        }
                                     }
+
                                 </ul>
                             </div>
                         </div>
@@ -206,25 +220,30 @@
                             </div>
                             <div class="shop-w__wrap" id="s-size">
                                 <ul class="shop-w__list gl-scroll lst-kichco">
-                                    @foreach (var item in Model.LstItemFilterKichCo!)
+                                    @if (Model.LstItemFilterKichCo != null)
+
                                     {
-                                        <li>
+                                        @foreach (var item in Model.LstItemFilterKichCo!)
+                                        {
+                                            <li>
 
-                                            <!--====== Check Box ======-->
-                                            <div class="check-box">
+                                                <!--====== Check Box ======-->
+                                                <div class="check-box">
 
-                                                <input type="checkbox" id="@item.Ten">
-                                                <div class="check-box__state check-box__state--primary">
+                                                    <input type="checkbox" id="@item.Ten">
+                                                    <div class="check-box__state check-box__state--primary">
 
-                                                    <label class="check-box__label" for="xs">@item.Ten</label>
+                                                        <label class="check-box__label" for="xs">@item.Ten</label>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <!--====== End - Check Box ======-->
+                                                <!--====== End - Check Box ======-->
 
-                                            <span class="shop-w__total-text">(@item.SoLuong)</span>
-                                        </li>
+                                                <span class="shop-w__total-text">(@item.SoLuong)</span>
+                                            </li>
 
+                                        }
                                     }
+
                                 </ul>
                             </div>
                         </div>
@@ -238,7 +257,7 @@
 <script>
     $(document).on("click", ".filterPrice, input[type='checkbox']", function () {
 
-        const brandParam = new URLSearchParams(window.location.search).get("brand");       
+        const brandParam = new URLSearchParams(window.location.search).get("brand");
 
         var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
             return $(this).attr('id')
@@ -276,7 +295,7 @@
             LstTheLoai: lstTheLoai,
             LstMauSac: lstMauSac,
             lstKichCo: lstKichCo,
-            ... data
+            ...data
         };
         $.ajax({
             url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',

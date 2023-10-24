@@ -78,9 +78,9 @@ namespace App_Api.Controllers
 
         // PUT api/<GioHangChiTietController>/5
         [HttpPut("Edit")]
-        public bool UpdateCart(string IdGioHangChiTiet, int SoLuong)
+        public bool UpdateCart(string IdSanPhamChiTiet, int SoLuong, string IdNguoiDung)
         {
-            var ghct = _gioHangChiTiet.GetAll().FirstOrDefault(c => c.IdGioHangChiTiet == IdGioHangChiTiet);
+            var ghct = _gioHangChiTiet.GetAll().FirstOrDefault(c => c.IdSanPhamCT == IdSanPhamChiTiet && c.IdNguoiDung == IdNguoiDung);
             ghct.Soluong = SoLuong;
             return _gioHangChiTiet.EditCartDetail(ghct);
         }

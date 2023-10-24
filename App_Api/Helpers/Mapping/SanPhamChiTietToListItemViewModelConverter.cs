@@ -33,7 +33,6 @@ namespace App_Api.Helpers.Mapping
         {
             return source
                 .Where(filter)
-                .OrderByDescending(x => x.NgayTao)
                 .Take(20)
                 .Select(item => new ItemViewModel
                 {

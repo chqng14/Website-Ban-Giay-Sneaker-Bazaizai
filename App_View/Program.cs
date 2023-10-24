@@ -22,7 +22,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 // Add services to the container.
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=LAPTOP-OF-KHAI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=MSI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
 builder.Services.AddHangfireServer();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BazaizaiContext>(options =>
@@ -115,6 +115,10 @@ builder.Services.Configure<SecurityStampValidatorOptions>(option =>
     option.ValidationInterval = TimeSpan.FromSeconds(1);
 
 });
+builder.Services.AddSession(Options =>
+{
+    Options.IdleTimeout = TimeSpan.FromDays(20);
+});
 //thêm
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
@@ -154,7 +158,7 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
+app.UseSession();
 app.UseRouting();
 
 app.UseAuthentication();
@@ -168,6 +172,9 @@ Task.Run(() =>
         capNhatTime.CheckNgayKetThuc();
         capNhatTime.CapNhatTrangThaiSaleDetail();
         capNhatTime.CapNhatGiaBanThucTe();
+        capNhatTime.CapNhatVoucherHetHan();
+        capNhatTime.CapNhatVoucherDenHan();
+        capNhatTime.CapNhatVoucherNguoiDung();
         Thread.Sleep(TimeSpan.FromSeconds(5));
     }
 });

@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace App_View.Models.Components
 {
-    public class ElectronicCategory : ViewComponent
+    public class Category : ViewComponent
     {
         private readonly BazaizaiContext bazaizaiContext;
 
-        public ElectronicCategory(BazaizaiContext bazaizaiContext)
+        public Category(BazaizaiContext bazaizaiContext)
         {
             this.bazaizaiContext = bazaizaiContext;
         }

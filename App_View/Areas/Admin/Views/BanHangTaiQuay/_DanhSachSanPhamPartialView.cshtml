@@ -1,0 +1,19 @@
+﻿@model IEnumerable<App_Data.ViewModels.SanPhamChiTietViewModel.ItemShopViewModel>;
+
+    @foreach (var item in Model)
+{
+    <div class="col-3">
+        <div class="card" style="width: 16rem; ">
+            <div class="card-body">
+                <h5 class="card-title"> </h5>
+                <img src="/AnhSanPham/@item.Anh" class="card-img-top" alt="...">
+                <p class="card-text">
+                    <span style="color: red;"> Giá: </span><br>
+                    <span> Số lượng:10</span>
+                    <a href="#" class="btn btn-success" style="float: right;"> Add </a>
+                </p>
+            </div>
+        </div>
+    </div>
+}
+

@@ -29,20 +29,24 @@ namespace App_Api.Controllers
         [HttpPost]
         public async Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon)
         {
-           return _hoaDon.TaoHoaDonTaiQuay(hoaDon);
+            return _hoaDon.TaoHoaDonTaiQuay(hoaDon);
         }
         // POST api/<HoaDonController>
         [HttpPost]
         public async Task<bool> TaoHoaDonOnlineDTO(HoaDonDTO HoaDonDTO)
         {
             var hoadon = _mapper.Map<HoaDon>(HoaDonDTO);
-            hoadon.IdHoaDon = Guid.NewGuid().ToString();
             return _hoaDon.AddBill(hoadon);
         }
         [HttpGet]
         public async Task<List<HoaDonChoDTO>> GetAllHoaDonCho()
         {
             return _hoaDon.GetAllHoaDonCho();
+        }
+        [HttpGet]
+        public async Task<List<HoaDonDTO>> GetHoaDonOnline()
+        {
+            return _hoaDon.GetHoaDon();
         }
     }
 }

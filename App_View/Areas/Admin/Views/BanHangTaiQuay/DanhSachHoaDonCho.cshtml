@@ -13,7 +13,7 @@
     ViewData["Title"] = "DanhSachHoaDonCho";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
-<link href="~/css/ban-hang-tai-quay.css" rel="stylesheet" />
+@* <link href="~/css/ban-hang-tai-quay.css" rel="stylesheet" /> *@
 <div class="card">
     <div class="row">
         <div class="col-9">
@@ -25,14 +25,14 @@
                             @{
                                 foreach (var item in Model)
                                 {
-                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a><span class="ui-icon ui-icon-close" role="presentation">Close</span></li>
+                                        <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a><span class="ui-icon ui-icon-close" role="presentation">Close</span></li>
                                 }
                             }
                         </ul>
                         @{
                             foreach (var item in Model)
                             {
-                                <div id="tab-@item.MaHoaDon" style="height:300px">@item.MaHoaDon <div style="background-color:red;height:100%"></div></div>
+                                    <div id="tab-@item.MaHoaDon" style="height:300px">@item.MaHoaDon <div style="background-color:red;height:100%"></div></div>
                             }
                         }
                     </div>
@@ -49,19 +49,19 @@
                     @{
                         foreach (var item in context.sanPhamChiTiets.ToList())
                         {
-                            <div class="col-3">
-                                <div class="card" style="width: 16rem; ">
-                                    <div class="card-body">
-                                        <h5 class="card-title">@item.SanPham</h5>
-                                        <img src="@context.Anh.FirstOrDefault(c=>c.IdSanPhamChiTiet == item.IdChiTietSp).Url" class="card-img-top" alt="...">
-                                        <p class="card-text">
-                                            <span style="color: red;">Giá: @item.GiaBan</span><br>
-                                            <span>Số lượng: @item.SoLuongTon</span>
-                                            <a href="#" class="btn btn-success" style="float: right;">Add</a>
-                                        </p>
+                                <div class="col-3">
+                                    <div class="card" style="width: 16rem; ">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@item.SanPham</h5>
+                                            <img src="@context.Anh.FirstOrDefault(c=>c.IdSanPhamChiTiet == item.IdChiTietSp).Url" class="card-img-top" alt="...">
+                                            <p class="card-text">
+                                                <span style="color: red;">Giá: @item.GiaBan</span><br>
+                                                <span>Số lượng: @item.SoLuongTon</span>
+                                                <a href="#" class="btn btn-success" style="float: right;">Add</a>
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                         }
                     }
 
@@ -141,6 +141,21 @@
     </div>
 </div>
 <script>
+    $(() => {
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/LoadPartialViewDanhSachSanPham',
+            type: 'GET',
+            success: function (result) {
+               console.log(result)
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    })
     $(function () {
         $("#tabs").tabs({
             beforeActivate: function (event, ui) {

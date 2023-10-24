@@ -34,7 +34,6 @@ namespace App_Data.IRepositories
         Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO);
         Task UpdateSoLuongSanPhamChiTietAynsc(string IdSanPhamChiTiet, int soLuong);
         Task<FiltersVM> GetFiltersVMAynsc();
-
-
+        Task<bool> ProductIsNull(SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO);
     }
 }

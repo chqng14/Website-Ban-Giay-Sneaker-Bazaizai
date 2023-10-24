@@ -1,5 +1,5 @@
 ﻿using App_Data.DbContextt;
-using App_Data.Repositories;
+using App_Data.Models;
 using App_View.IServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,34 +22,22 @@ namespace App_View.Services
         public void CheckNgayKetThuc()
         {
             var ngayKetThucSale = _dbContext.khuyenMais
-                .Where(p => p.NgayKetThuc <= DateTime.Now && p.TrangThai != (int)TrangThaiSale.HetHan)
+                .Where(p => p.NgayKetThuc <= DateTime.Now && p.TrangThai != 0)
                 .ToList();
 
             foreach (var sale in ngayKetThucSale)
             {
-                sale.TrangThai = (int)TrangThaiSale.HetHan;
+                sale.TrangThai = 0;
             }
             _dbContext.SaveChanges();
         }
         public void CapNhatTrangThaiSaleDetail()
         {
-            var lstHetHan = _dbContext.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.HetHan).ToList();
-            var lstDangBatDau = _dbContext.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau).ToList();
-            var lstDangKhuyenMai = _dbContext.khuyenMaiChiTiets.Where(x=>x.TrangThai==(int)TrangThaiSaleDetail.DangKhuyenMai).ToList();
-            var lstNgungKhuyenMai = _dbContext.khuyenMaiChiTiets.Where(x => x.TrangThai == (int)TrangThaiSaleDetail.NgungKhuyenMai).ToList();
+            var lstHetHan = _dbContext.khuyenMais.Where(x => x.TrangThai == 0).ToList();
+            var lstKMCT = _dbContext.khuyenMaiChiTiets.ToList();
             foreach (var a in lstHetHan)
             {
-                foreach(var b in lstDangKhuyenMai)
-                {
-                    if(b.IdKhuyenMai==a.IdKhuyenMai)
-                    {
-                        b.TrangThai= (int)TrangThaiSaleDetail.NgungKhuyenMai;
-                    }
-                }
-            }
-            foreach (var a in lstDangBatDau)
-            {
-                foreach (var b in lstNgungKhuyenMai)
+                foreach (var b in lstKMCT)
                 {
                     if (b.IdKhuyenMai == a.IdKhuyenMai)
                     {
@@ -123,6 +111,56 @@ namespace App_View.Services
                 }
 
                 _dbContext.sanPhamChiTiets.UpdateRange(lstCTSP);
+                _dbContext.SaveChanges();
+            }
+        }
+            //_dbContext.SaveChanges();
+
+        public void CapNhatVoucherHetHan()
+        {
+            var VoucherNeedUpdate = _dbContext.vouchers.Where(c => c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.HoatDong).AsNoTracking().ToList();
+            if (VoucherNeedUpdate.Count > 0)
+            {
+                foreach (var voucher in VoucherNeedUpdate)
+                {
+                    voucher.TrangThai = (int)TrangThaiVoucher.KhongHoatDong;
+
+                }
+                _dbContext.UpdateRange(VoucherNeedUpdate);
+                _dbContext.SaveChanges();
+            }
+
+        }
+        public void CapNhatVoucherDenHan()
+        {
+            var VoucherNeedUpdate = _dbContext.vouchers.Where(c => c.NgayBatDau == DateTime.Now && c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaBatDau).AsNoTracking().ToList();
+            if (VoucherNeedUpdate.Count > 0)
+            {
+                foreach (var voucher in VoucherNeedUpdate)
+                {
+                    voucher.TrangThai = (int)TrangThaiVoucher.KhongHoatDong;
+
+                }
+                _dbContext.UpdateRange(VoucherNeedUpdate);
+                _dbContext.SaveChanges();
+            }
+        }
+        public void CapNhatVoucherNguoiDung()
+        {
+            var VoucherKhongKhaDung = _dbContext.vouchers.Where(c => c.TrangThai == (int)TrangThaiVoucher.KhongHoatDong || c.TrangThai == (int)TrangThaiVoucher.DaHuy).ToList();
+            if (VoucherKhongKhaDung.Count > 0)
+            {
+                var VoucherNguoiDungDangHoatDong = _dbContext.voucherNguoiDungs.Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung).AsNoTracking().ToList();
+                foreach (var voucher in VoucherKhongKhaDung)
+                {
+                    var VoucherNguoiDungCanSua = VoucherNguoiDungDangHoatDong.Where(c => c.IdVouCher == voucher.IdVoucher).ToList();
+                    foreach (var user in VoucherNguoiDungCanSua)
+                    {
+                        user.TrangThai = (int)TrangThaiVoucherNguoiDung.HetHieuLuc;
+                    }
+                    _dbContext.UpdateRange(VoucherNguoiDungCanSua);
+                }
+
                 _dbContext.SaveChanges();
             }
         }

@@ -9,12 +9,12 @@
 <!--====== Section 2 ======-->
 <div class="u-s-p-b-60">
     <!--====== Section Intro ======-->
-    <div class="section__intro u-s-m-b-60">
+    <div class="section__intro u-s-m-b-60" style="margin-bottom:30px;padding-top:30px">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
                     <div class="section__text-wrap">
-                        <h1 class="section__heading u-c-secondary">SHOPPING CART</h1>
+                        <h1 class="section__heading u-c-secondary">GIỎ HÀNG</h1>
                     </div>
                 </div>
             </div>
@@ -109,7 +109,7 @@
 
                             <a class="route-box__link" href="@Url.Action("DeleteAllCart", "GioHangChiTiets")">
                                 <i class="fas fa-trash"></i>
-                                <span >CLEAR CART</span>
+                                <span >XOÁ GIỎ HÀNG</span>
                             </a>
                         </div>
                     </div>
@@ -169,9 +169,9 @@
                             </div>
                             <div class="col-lg-4 col-md-6 u-s-m-b-30">
                                 <div class="f-cart__pad-box">
-                                    <h1 class="gl-h1">NOTE</h1>
+                                    <h1 class="gl-h1">GHI CHÚ</h1>
 
-                                    <span class="gl-text u-s-m-b-30">Add Special Note About Your Product</span>
+                                    <span class="gl-text u-s-m-b-30">Thêm lưu ý đặc biệt về sản phẩm của bạn</span>
                                     <div>
 
                                         <label for="f-cart-note"></label><textarea class="text-area text-area--primary-style" id="f-cart-note"></textarea>
@@ -188,6 +188,10 @@
                                                     <td id="phiship">0đ</td>
                                                 </tr>
                                                 <tr>
+                                                    <td>TIỀN GIẢM</td>
+                                                    <td>0đ</td>
+                                                </tr>
+                                                <tr>
                                                     <td>TẠM TÍNH</td>
                                                     <td id="tamtinh">@string.Format("{0:N0}đ", Model.Sum(x => x.SoLuong * x.GiaBan))</td>
                                                 </tr>
@@ -200,7 +204,7 @@
                                     </div>
                                     <div>
                                         <a class="btn btn--e-brand-b-2" href="/GioHangChiTiets/CheckOut">
-                                            PROCEED TO CHECKOUT
+                                            THANH TOÁN
                                         </a>
                                         
                                     </div>
@@ -220,7 +224,7 @@
 <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
 @* <script type="text/javascript" src="/js/CapNhatGioHang.js"></script> *@
 @section Scripts{
-    
+    <!--====== Cập nhật số lượng ======-->
     <script>
         $(document).on("input", ".input-counter__text", function () {
             updateCart(this);
@@ -259,7 +263,7 @@
             });
         }
     </script>
-
+    <!--====== Tính phí ship ======-->
     <script>
         $(document).ready(function () {
             const apiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/province';

@@ -12,9 +12,6 @@ using System.Net.Http;
 using DocumentFormat.OpenXml.Drawing;
 using Org.BouncyCastle.Ocsp;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
-using Google.Apis.PeopleService.v1.Data;
-using App_Data.IRepositories;
-using App_Data.Repositories;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -23,12 +20,10 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly BazaizaiContext _context;
         private readonly HttpClient _httpClient;
-        
         public KhuyenMaisController(BazaizaiContext context)
         {
             _context = context;
             _httpClient = new HttpClient();
-           
         }
 
         // GET: Admin/KhuyenMais
@@ -99,10 +94,8 @@ namespace App_View.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(KhuyenMai khuyenMai)
         {
-           
             khuyenMai.IdKhuyenMai = Guid.NewGuid().ToString();
             khuyenMai.TrangThai = 0;
-            khuyenMai.MaKhuyenMai = "MaFake";
             ViewData["IdKhuyenMai"] = new SelectList(_context.khuyenMais, "IdKhuyenMai", "IdKhuyenMai");
             ViewBag.ListLoaiHinh = new List<SelectListItem>
             {
@@ -134,7 +127,7 @@ namespace App_View.Areas.Admin.Controllers
                 new SelectListItem { Text = "95%", Value = "95" },
                 new SelectListItem { Text = "100%", Value = "100" }
             };
-            if (khuyenMai.MaKhuyenMai!=null&&khuyenMai.TenKhuyenMai!=null&&khuyenMai.MucGiam!=null&&khuyenMai.NgayBatDau!=null&&khuyenMai.NgayKetThuc!=null&&khuyenMai.PhamVi!=null)
+            if (khuyenMai!=null)
             {
                 await _httpClient.PostAsync($"https://localhost:7038/api/KhuyenMai?Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&PhamVi={khuyenMai.PhamVi}&loaiHinh={khuyenMai.LoaiHinhKM}", null);
                 return RedirectToAction("Index");
@@ -229,7 +222,7 @@ namespace App_View.Areas.Admin.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-        
+
         private bool KhuyenMaiExists(string id)
         {
             return (_context.khuyenMais?.Any(e => e.IdKhuyenMai == id)).GetValueOrDefault();
@@ -238,7 +231,7 @@ namespace App_View.Areas.Admin.Controllers
         public JsonResult CapNhatTrangThai(string id, int trangThai)
         {
             var khuyenMai = _context.khuyenMais.Find(id);
-            if(trangThai ==0)
+            if (trangThai == 0)
             {
                 khuyenMai.TrangThai = 1;
 
@@ -249,7 +242,7 @@ namespace App_View.Areas.Admin.Controllers
             }
             _context.khuyenMais.Update(khuyenMai);
             _context.SaveChanges();
-            return Json(new { success = true }); 
+            return Json(new { success = true });
         }
     }
 }
