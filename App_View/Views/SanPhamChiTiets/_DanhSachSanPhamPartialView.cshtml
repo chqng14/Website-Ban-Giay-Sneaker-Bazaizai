@@ -1,0 +1,180 @@
+﻿@model App_Data.ViewModels.FilterViewModel.FilterDataVM
+@if (Model.Items!.Count() == 0)
+{
+
+    <div class="u-s-p-y-60">
+
+        <!--====== Section Content ======-->
+        <div class="section__content">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 u-s-m-b-30">
+                        <div class="empty">
+                            <div class="empty__wrap">
+
+                                <span class="empty__big-text">EMPTY</span>
+
+                                <span class="empty__text-1">Không sản phẩm nào được tìm thấy.</span>
+
+                                <a class="empty__redirect-link btn--e-brand" href="/SanPhamchiTiets">Xóa bộ lọc</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--====== End - Section Content ======-->
+    </div>
+}
+else
+{
+    <div class="shop-p__collection">
+        <div class="row is-grid-active">
+            @foreach (var item in Model.Items!)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product-m">
+                        <div class="product-m__thumb" data-id="@item.IdChiTietSp">
+
+                            <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/@item.IdChiTietSp">
+
+                                <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
+                            </a>
+                        </div>
+                        <div class="product-m__content">
+                            <div class="product-m__category">
+
+                                <a>@item.ThuongHieu / @item.TheLoai</a>
+                            </div>
+                            <div class="product-m__name">
+
+                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
+                            </div>
+                            <div class="gl-rating-style">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+
+                                <span class="product-m__review">(@item.SoLanDanhGia)</span>
+                            </div>
+                            <span style="color: orangered; margin-bottom: 10px">@item.SoMauSac màu</span>
+                            <div class="product-m__price" style="color: red">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
+                            <div class="product-m__hover">
+                                <div class="product-m__preview-description">
+
+                                    <span>@item.MoTaNgan</span>
+                                </div>
+                                <div class="product-m__wishlist">
+
+                                    <a class="far fa-heart" href="#" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+
+        </div>
+    </div>
+    <div class="u-s-p-y-60">
+
+        <!--====== Pagination ======-->
+        <ul class="shop-p__pagination">
+            @if (Model.PagingInfo!.SoTrang > 1)
+            {
+
+                for (int i = 1; i <= Model.PagingInfo!.SoTrang; i++)
+                {
+                    if (i == Model.PagingInfo.TrangHienTai)
+                    {
+                        <li class="is-active">
+
+                            <a href="javascript:void(0);">@i</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+
+                            <a class="no-active" href="javascript:void(0);">@i</a>
+                        </li>
+                    }
+
+                }
+                @*<li>
+
+                        <a class="fas fa-angle-right" href="javascript:void(0);"></a>
+                    </li>*@
+            }
+
+        </ul>
+        <!--====== End - Pagination ======-->
+    </div>
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    $(document).one("click", ".no-active", function () {
+        const brandParam = new URLSearchParams(window.location.search).get("brand");
+
+        $('.preloader').addClass('is-active');
+        var trangHienTai = $(this).text()
+
+        var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
+            return $(this).attr('id')
+        }).get();
+
+        var lstMauSac = $('.lst-mausac input[type="checkbox"]:checked').map(function () {
+            return $(this).attr('id')
+        }).get();
+
+        var lstTheLoai = $('.lst-theloai input[type="checkbox"]:checked').map(function () {
+            return $(this).closest('.list__content').find('span').text()
+        }).get();
+
+        var data = {};
+        $('#s-price').find("input, select, textarea").each(function () {
+
+            var fieldType = $(this).attr("type");
+            var fieldName = $(this).attr("name");
+            var fieldValue;
+
+            if (fieldType === "checkbox" || fieldType === "radio") {
+                fieldValue = $(this).is(":checked");
+            } else {
+                fieldValue = $(this).val();
+                if (!fieldValue) {
+                    fieldValue = 0;
+                }
+            }
+
+            data[fieldName] = fieldValue;
+
+        });
+
+        var filterdata = {
+            LstTheLoai: lstTheLoai,
+            LstMauSac: lstMauSac,
+            lstKichCo: lstKichCo,
+            TrangHienTai: trangHienTai,
+            ...data
+        };
+
+        $.ajax({
+            url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+            type: 'POST',
+            data: JSON.stringify(filterdata),
+            contentType: 'application/json',
+            success: function (result) {
+                $('#body-ds').empty().html(result)
+                $('.preloader').removeClass('is-active');
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+
+    })
+</script>

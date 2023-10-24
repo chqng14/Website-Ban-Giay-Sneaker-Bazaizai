@@ -61,7 +61,7 @@
 
         </div>
         <div class="col-lg-4 text-right">
-            <button id="applySaleButton" class="btn btn-primary" ">
+            <button id="applySaleButton" class="btn btn-primary">
                 <i class="anticon anticon-plus-circle m-r-5"></i>
                 <span>Add sale</span>
             </button>
@@ -69,25 +69,63 @@
 
 
         <div class="col-sm-12">
-            <table id="data-table1" class="table dataTable">
+            <table id="data-table" class="table dataTable">
                 <select id="selectSale" class="select2">
                 @foreach (var item in (SelectList)ViewData["IdSale"])
                 {
                             <option value="@item.Value">@item.Text</option>
                 }
                     </select>
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="select-all-checkbox" />
+                        </th>
+                        <th>
+                            Tên sản phẩm
+                        </th>
+                        <th>
+                            kích cỡ
+                        </th>
+                        <th>
+                            Loại giày
+                        </th>
+                        <th>
+                            Dây
+                        </th>
+                        <th>
+                            Chất liệu
+                        </th>
+                        <th>
+                            Kiểu để giày
+                        </th>
+                        <th>
+                            Số lượng tồn
+                        </th>
+                        <th>
+                            Giá bán
+                        </th>
+                        <th>
+                            Giá nhập
+                        </th>
+                        <th>
+                            Trạng thái
+                        </th>
+                    </tr>
+                </thead>
                     <tbody>
+                        
             @foreach (var product in Model)
             {
+
                 BazaizaiContext bazaizaiContext = new BazaizaiContext();
                 var spct = bazaizaiContext.sanPhamChiTiets.Find(product.IdChiTietSp);
                         <tr>
                             <td class="sorting_1">
 
-                                <input type="checkbox" name="selectedProducts" value="@product.IdChiTietSp" />
+                                 <input type="checkbox" class="voucher-checkbox" name="selectedProducts" value="@product.IdChiTietSp" />
 
                             </td>
-                            <td>@product.IdChiTietSp</td>
                             <td>@product.SanPham</td>
                             <td>@product.KichCo</td>
                             <td>@product.LoaiGiay</td>
@@ -131,8 +169,21 @@
     </div>
 </div>
 
-
 <script>
+    $(document).ready(function () {
+
+
+        $('#select-all-checkbox').click(function () {
+            $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
+        });
+
+        
+
+       
+    });
+</script>
+<script>
+
     document.getElementById("applySaleButton").addEventListener("click", function () {
         var selectedProducts = [];
         var checkboxes = document.querySelectorAll("input[name='selectedProducts']:checked");

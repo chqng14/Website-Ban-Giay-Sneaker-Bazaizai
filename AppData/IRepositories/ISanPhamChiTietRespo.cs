@@ -1,4 +1,5 @@
 ﻿using App_Data.Models;
+using App_Data.ViewModels.FilterViewModel;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using System;
@@ -21,6 +22,7 @@ namespace App_Data.IRepositories
         Task<DanhSachGiayViewModel> GetDanhSachGiayViewModelAsync();
         Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(List<string> listGuid);
         Task<List<ItemShopViewModel>> GetDanhSachItemShopViewModelAsync();
+        Task<List<ItemShopViewModel>> GetDanhSachBienTheItemShopViewModelAsync();
         Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id);
         Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac);
         Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSizeAynsc(string id, int size);
@@ -31,5 +33,8 @@ namespace App_Data.IRepositories
         Task<List<SanPhamChiTietExcelViewModel>> GetListSanPhamExcelAynsc();
         Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO);
         Task UpdateSoLuongSanPhamChiTietAynsc(string IdSanPhamChiTiet, int soLuong);
+        Task<FiltersVM> GetFiltersVMAynsc();
+
+
     }
 }

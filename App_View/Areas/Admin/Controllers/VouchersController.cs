@@ -31,10 +31,13 @@ namespace App_View.Areas.Admin.Controllers
         // GET: Admin/Vouchers
         public async Task<IActionResult> Index(string trangThai)
         {
-            var lstVoucher = await _voucherSV.GetAllVoucher();
+            var lstVoucher = (await _voucherSV.GetAllVoucher());
 
             switch (trangThai)
             {
+                case "tatCa":
+                    lstVoucher = lstVoucher.Where(v => v.TrangThai == 0).ToList();
+                    break;
                 case "hoatDong":
                     lstVoucher = lstVoucher.Where(v => v.TrangThai == 0).ToList();
                     break;
@@ -47,13 +50,15 @@ namespace App_View.Areas.Admin.Controllers
                 default:
                     break;
             }
-
             ViewBag.TatCa = lstVoucher; // Gán danh sách lọc được vào ViewBag.TatCa
 
             return View(lstVoucher);
             //var lstVoucher = await _voucherSV.GetAllVoucher();
             //return View(lstVoucher);
         }
+
+
+
 
         public IActionResult Create()
         {

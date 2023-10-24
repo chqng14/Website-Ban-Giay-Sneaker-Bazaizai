@@ -20,6 +20,8 @@ using AutoMapper;
 using App_Data.ViewModels.SanPhamChiTiet.SanPhamDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using static App_Data.Repositories.TrangThai;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using System.Runtime.ConstrainedExecution;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -212,41 +214,62 @@ namespace App_View.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> ApllySale()
         {
-            ViewData["IdSale"] = new SelectList(_context.khuyenMais, "IdKhuyenMai", "TenKhuyenMai");
-            var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Where(x => x.TrangThaiSale == (int)TrangThaiSale.KhongApDungSale).Select(item => CreateSanPhamDanhSachViewModel(item));
+            ViewData["IdSale"] = new SelectList(_context.khuyenMais.Where(x=>x.TrangThai==(int)TrangThaiSale.DangBatDau), "IdKhuyenMai", "TenKhuyenMai");
+            //.Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale|| x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale)
+            var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Select(item => CreateSanPhamDanhSachViewModel(item));
             return View(getallProductDT);
         }
         [HttpPost]
         public async Task<IActionResult> ApllySale(string idSale, List<string> selectedProducts)
         {
-            ViewData["IdSale"] = new SelectList(_context.khuyenMais, "IdKhuyenMai", "TenKhuyenMai");
+            ViewData["IdSale"] = new SelectList(_context.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau), "IdKhuyenMai", "TenKhuyenMai");
             List<string> DataMessage = new List<string>();
             var successApllySale = "";
             var saledetailVM = khuyenMaiChiTietServices.GetAllKhuyenMaiChiTiet();
             try
             {
                 int temp = 0;
-                foreach (var IdProduct in selectedProducts)
+                if(idSale!=null&& idSale!=""&&selectedProducts!=null&&selectedProducts.Count>0)
                 {
-                    var saledetail = allRepo.GetAll().Where(x => x.IdSanPhamChiTiet == IdProduct);
-                    var name = _context.SanPhams.FirstOrDefault(x => x.IdSanPham == _context.sanPhamChiTiets.FirstOrDefault(x => x.IdChiTietSp == IdProduct).IdSanPham).TenSanPham;
-                    var nameSale = _context.khuyenMais.FirstOrDefault(x => x.IdKhuyenMai == idSale).TenKhuyenMai;
-                    if (saledetail != null && saledetail.Count() > 0)
+                    foreach (var IdProduct in selectedProducts)
                     {
-                        int i = 0;
-
-                        foreach (var checkSale in saledetail)
+                        var idChiTietSanPham = _context.sanPhamChiTiets.Find(IdProduct);
+                        var saledetail = allRepo.GetAll().Where(x => x.IdSanPhamChiTiet == IdProduct);
+                        var name = _context.SanPhams.FirstOrDefault(x => x.IdSanPham == _context.sanPhamChiTiets.FirstOrDefault(x => x.IdChiTietSp == IdProduct).IdSanPham).TenSanPham;
+                        var nameSale = _context.khuyenMais.FirstOrDefault(x => x.IdKhuyenMai == idSale).TenKhuyenMai;
+                        if (saledetail != null && saledetail.Count() > 0)
                         {
-                            if (checkSale.IdKhuyenMai == idSale)
+                            int i = 0;
+
+                            foreach (var checkSale in saledetail)
                             {
-                                i++;
-                                break;
+                                if (checkSale.IdKhuyenMai == idSale)
+                                {
+                                    i++;
+                                    break;
+                                }
                             }
-                        }
-                        if (i != 0)
-                        {
+                            if (i != 0)
+                            {
 
-                            DataMessage.Add($"Sản phẩm {name} đang áp dụng chương trình {nameSale}");
+                                DataMessage.Add($"Sản phẩm {name} đang áp dụng chương trình {nameSale}");
+                            }
+                            else
+                            {
+                                var addSale = new KhuyenMaiChiTiet()
+                                {
+                                    IdKhuyenMaiChiTiet = Guid.NewGuid().ToString(),
+                                    IdKhuyenMai = idSale,
+                                    IdSanPhamChiTiet = IdProduct,
+                                    MoTa = "Kaisan",
+                                    TrangThai = (int)TrangThaiSaleDetail.DangKhuyenMai
+                                };
+                                idChiTietSanPham.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DaApDungSale;
+                                _context.sanPhamChiTiets.Update(idChiTietSanPham);
+                                _context.SaveChanges();
+                                await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
+                                DataMessage.Add($"Áp dụng thành công chương trình giảm giá {nameSale} với sản phẩm {name}");
+                            }
                         }
                         else
                         {
@@ -256,29 +279,23 @@ namespace App_View.Areas.Admin.Controllers
                                 IdKhuyenMai = idSale,
                                 IdSanPhamChiTiet = IdProduct,
                                 MoTa = "Kaisan",
-                                TrangThai = 0
+                                TrangThai = (int)TrangThaiSaleDetail.DangKhuyenMai
                             };
+                            idChiTietSanPham.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DaApDungSale;
+                            _context.sanPhamChiTiets.Update(idChiTietSanPham);
+                            _context.SaveChanges();
                             await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
-                            DataMessage.Add($"Áp dụng thành công chương trình giảm giá {nameSale} với sản phẩm {name}");
+                            successApllySale = $"Ap dụng thành công chương trình {nameSale} với sản phẩm đã chọn";
                         }
+                        temp++;
                     }
-                    else
-                    {
-                        var addSale = new KhuyenMaiChiTiet()
-                        {
-                            IdKhuyenMaiChiTiet = Guid.NewGuid().ToString(),
-                            IdKhuyenMai = idSale,
-                            IdSanPhamChiTiet = IdProduct,
-                            MoTa = "Kaisan",
-                            TrangThai = 0
-                        };
-                        await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
-                        successApllySale = $"Ap dụng thành công chương trình {nameSale} với sản phẩm đã chọn";
-                    }
-                    temp++;
+                    ViewBag.Sales = DataMessage;
+                    return Ok(new { err = DataMessage, add = successApllySale });
                 }
-                ViewBag.Sales = DataMessage;
-                return Ok(new { err = DataMessage, add = successApllySale });
+                else {
+                    successApllySale = "Vui lòng chọn sản phẩm để add sale";
+                    return Ok(new { add= successApllySale });
+                }
             }
             catch (Exception)
             {
