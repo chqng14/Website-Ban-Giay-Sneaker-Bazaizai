@@ -217,65 +217,71 @@ namespace App_Api.Controllers
         }
 
         [HttpPost("Creat-SanPhamChiTietCopy")]
-        public async Task CreateSanPhamChiTietCoppy([FromForm]SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO)
+        public async Task<bool> CreateSanPhamChiTietCoppy([FromForm]SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO)
         {
             try
             {
-                string currentDirectory = Directory.GetCurrentDirectory();
-                string rootPath = Directory.GetParent(currentDirectory)!.FullName;
-                string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "QRCode");
-
-                var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietCopyDTO.SanPhamChiTietData);
-                sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
-                sanPhamChiTiet.Ma = !(await _sanPhamChiTietRes.GetListAsync()).Any() ?
-                    "MASP1" :
-                    "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
-                sanPhamChiTiet.TrangThai = 0;
-                sanPhamChiTiet.TrangThaiSale = 0;
-                sanPhamChiTiet.SoLuongDaBan = 0;
-                sanPhamChiTiet.NgayTao = DateTime.Now;
-
-                QRCodeGenerator qrGenerator = new QRCodeGenerator();
-
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
-                QRCode qrCode = new QRCode(qrCodeData);
-
-                Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
-
-                string qrCodeImagePath = Path.Combine(uploadDirectory, sanPhamChiTiet.Ma + ".png");
-
-                using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
+                if ((await _sanPhamChiTietRes.ProductIsNull(sanPhamChiTietCopyDTO)))
                 {
-                    qrCodeImage.Save(stream, ImageFormat.Png);
-                }
+                    string currentDirectory = Directory.GetCurrentDirectory();
+                    string rootPath = Directory.GetParent(currentDirectory)!.FullName;
+                    string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "QRCode");
 
-                await _sanPhamChiTietRes.AddAsync(sanPhamChiTiet);
+                    var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietCopyDTO.SanPhamChiTietData);
+                    sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
+                    sanPhamChiTiet.Ma = !(await _sanPhamChiTietRes.GetListAsync()).Any() ?
+                        "MASP1" :
+                        "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
+                    sanPhamChiTiet.TrangThai = 0;
+                    sanPhamChiTiet.TrangThaiSale = 0;
+                    sanPhamChiTiet.SoLuongDaBan = 0;
+                    sanPhamChiTiet.NgayTao = DateTime.Now;
 
-                if (sanPhamChiTietCopyDTO.SanPhamChiTietData!.DanhSachAnh != null)
-                {
-                    if(sanPhamChiTietCopyDTO.ListTenAnhRemove == null) sanPhamChiTietCopyDTO.ListTenAnhRemove = new List<string>();
-                    var listAnhCopy = sanPhamChiTietCopyDTO.SanPhamChiTietData!.DanhSachAnh!.Except(sanPhamChiTietCopyDTO.ListTenAnhRemove!).ToList();
-                    listAnhCopy.ForEach(tenAnh =>
+                    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
+                    QRCode qrCode = new QRCode(qrCodeData);
+
+                    Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
+
+                    string qrCodeImagePath = Path.Combine(uploadDirectory, sanPhamChiTiet.Ma + ".png");
+
+                    using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
                     {
-                        _AnhRes.AddItem(new Anh
+                        qrCodeImage.Save(stream, ImageFormat.Png);
+                    }
+
+                    await _sanPhamChiTietRes.AddAsync(sanPhamChiTiet);
+
+                    if (sanPhamChiTietCopyDTO.SanPhamChiTietData!.DanhSachAnh != null)
+                    {
+                        if (sanPhamChiTietCopyDTO.ListTenAnhRemove == null) sanPhamChiTietCopyDTO.ListTenAnhRemove = new List<string>();
+                        var listAnhCopy = sanPhamChiTietCopyDTO.SanPhamChiTietData!.DanhSachAnh!.Except(sanPhamChiTietCopyDTO.ListTenAnhRemove!).ToList();
+                        listAnhCopy.ForEach(tenAnh =>
                         {
-                            IdAnh = Guid.NewGuid().ToString(),
-                            IdSanPhamChiTiet = sanPhamChiTiet.IdChiTietSp,
-                            TrangThai = 0,
-                            Url = tenAnh
+                            _AnhRes.AddItem(new Anh
+                            {
+                                IdAnh = Guid.NewGuid().ToString(),
+                                IdSanPhamChiTiet = sanPhamChiTiet.IdChiTietSp,
+                                TrangThai = 0,
+                                Url = tenAnh
+                            });
                         });
-                    });
-                }
+                    }
 
-                if (sanPhamChiTietCopyDTO.ListAnhCreate!=null && sanPhamChiTietCopyDTO.ListAnhCreate!.Any())
-                {
-                    await _anhController.CreateImage(sanPhamChiTiet.IdChiTietSp, sanPhamChiTietCopyDTO.ListAnhCreate!);
-                }
+                    if (sanPhamChiTietCopyDTO.ListAnhCreate != null && sanPhamChiTietCopyDTO.ListAnhCreate!.Any())
+                    {
+                        await _anhController.CreateImage(sanPhamChiTiet.IdChiTietSp, sanPhamChiTietCopyDTO.ListAnhCreate!);
+                    }
+                    return true;
 
+                }
+                return false;
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
+                return false;
             }
         }
 

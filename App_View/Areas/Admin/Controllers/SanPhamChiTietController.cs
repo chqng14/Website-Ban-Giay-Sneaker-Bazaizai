@@ -285,6 +285,7 @@ namespace App_View.Areas.Admin.Controllers
             ViewData["IdSanPham"] = new SelectList(_context.SanPhams, "IdSanPham", "TenSanPham");
             ViewData["IdThuongHieu"] = new SelectList(_context.thuongHieus, "IdThuongHieu", "TenThuongHieu");
             ViewData["IdXuatXu"] = new SelectList(_context.xuatXus, "IdXuatXu", "Ten");
+
             var model = (await _sanPhamChiTietService.GetListSanPhamChiTietDTOAsync(new ListGuildDTO()
             {
                 listGuild = new List<string>()
@@ -292,6 +293,7 @@ namespace App_View.Areas.Admin.Controllers
                     IdSanPhamChiTiet
                 }
             })).FirstOrDefault();
+
             return PartialView("_SanPhamCopyPartialView", model);
         }
 
@@ -349,8 +351,7 @@ namespace App_View.Areas.Admin.Controllers
 
             var response = await _httpClient.PostAsync("/api/SanPhamChiTiet/Creat-SanPhamChiTietCopy", multipartContent);
 
-            Console.WriteLine(await response.Content.ReadAsStringAsync());
-            return Ok(response);
+            return Ok(await response.Content.ReadAsAsync<bool>());
         }
 
         public async Task<IActionResult> GetDanhSachSanPham([FromBody]FilterAdminDTO filterAdminDTO)
