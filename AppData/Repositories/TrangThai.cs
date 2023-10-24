@@ -87,7 +87,9 @@ namespace App_Data.Repositories
             [Description("Đang bắt đầu")]
             DangBatDau = 1,
             [Description("Chưa bắt đầu")]
-            ChuaBatDau = 2
+            ChuaBatDau = 2,
+            [Description("Buộc dừng")]
+            BuocDung = 3
         }
         public enum TrangThaiSaleDetail
         {

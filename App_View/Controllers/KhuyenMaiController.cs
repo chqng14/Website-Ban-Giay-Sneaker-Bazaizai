@@ -33,7 +33,7 @@ namespace App_View.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateKhuyenMai(KhuyenMai q)
         {
-            await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMai?Ten={q.TenKhuyenMai}&ngayBD={q.NgayBatDau}&ngayKT={q.NgayKetThuc}&trangThai={q.TrangThai}&mucGiam={q.MucGiam}&PhamVi={q.PhamVi}&loaiHinh={q.LoaiHinhKM}", null);
+            await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMai?Ten={q.TenKhuyenMai}&ngayBD={q.NgayBatDau}&ngayKT={q.NgayKetThuc}&trangThai={q.TrangThai}&mucGiam={q.MucGiam}&loaiHinh={q.LoaiHinhKM}", null);
             return RedirectToAction("GetAllKhuyenMai");
         }
 
@@ -59,7 +59,7 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> EditKhuyenMai(KhuyenMai q)
         {
-            var apiUrl = $"https://localhost:7038/api/KhuyenMai/{q.IdKhuyenMai}?Ten={q.TenKhuyenMai}&ngayBD={q.NgayBatDau}&ngayKT={q.NgayKetThuc}&trangThai={q.TrangThai}&mucGiam={q.MucGiam}&PhamVi={q.PhamVi}&loaiHinh={q.LoaiHinhKM}";
+            var apiUrl = $"https://localhost:7038/api/KhuyenMai/{q.IdKhuyenMai}?Ten={q.TenKhuyenMai}&ngayBD={q.NgayBatDau}&ngayKT={q.NgayKetThuc}&trangThai={q.TrangThai}&mucGiam={q.MucGiam}&loaiHinh={q.LoaiHinhKM}";
 
             var response = await httpClient.PutAsync(apiUrl, null);
 
