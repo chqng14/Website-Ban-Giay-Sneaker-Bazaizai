@@ -4,6 +4,7 @@ using App_Data.DbContextt;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App_Data.Migrations
 {
     [DbContext(typeof(BazaizaiContext))]
-    partial class BazaizaiContextModelSnapshot : ModelSnapshot
+    [Migration("20231024160545_xoaPhamViKhuyenMai")]
+    partial class xoaPhamViKhuyenMai
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -214,9 +216,6 @@ namespace App_Data.Migrations
 
                     b.Property<string>("MoTa")
                         .HasColumnType("nvarchar(MAX)");
-
-                    b.Property<DateTime?>("NgayGiaoDuKien")
-                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("NgayNhan")
                         .HasColumnType("DateTime");
