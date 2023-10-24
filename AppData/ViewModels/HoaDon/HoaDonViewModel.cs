@@ -6,18 +6,10 @@ using System.Threading.Tasks;
 
 namespace App_Data.ViewModels.HoaDon
 {
-    public class HoaDonDTO
+    public class HoaDonViewModel
     {
         public string? IdHoaDon { get; set; }
-        public string? IdNguoiDung { get; set; }
-        public string? IdKhachHang { get; set; }
-        public string? IdVoucher { get; set; }
-        public string? IdThongTinGH { get; set; }
-        public string? MaHoaDon { get; set; }
         public DateTime? NgayTao { get; set; }
-        public DateTime? NgayThanhToan { get; set; }
-        public DateTime? NgayShip { get; set; }
-        public DateTime? NgayNhan { get; set; }
         public DateTime? NgayGiaoDuKien { get; set; }
         public double? TienShip { get; set; }
         public double? TienGiam { get; set; }

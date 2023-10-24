@@ -43,5 +43,10 @@ namespace App_Api.Controllers
         {
             return _hoaDon.GetAllHoaDonCho();
         }
+        [HttpGet]
+        public async Task<List<HoaDonDTO>> GetHoaDonOnline()
+        {
+            return _hoaDon.GetHoaDon();
+        }
     }
 }
