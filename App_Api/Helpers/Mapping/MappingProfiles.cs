@@ -109,6 +109,19 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => src.LoaiGiay.TenLoaiGiay)
                     );
             CreateMap<HoaDonDTO, HoaDon>().ReverseMap();
+            CreateMap<HoaDon, HoaDonViewModel>().ForMember(
+                        dest => dest.MaVoucher,
+                        opt => opt.MapFrom(src => src.Voucher.MaVoucher)
+                    ).ForMember(
+                        dest => dest.TenNguoiNhan,
+                        opt => opt.MapFrom(src => src.ThongTinGiaoHang.TenNguoiNhan)
+                    ).ForMember(
+                        dest => dest.SDT,
+                        opt => opt.MapFrom(src => src.ThongTinGiaoHang.SDT)
+                    ).ForMember(
+                        dest => dest.DiaChi,
+                        opt => opt.MapFrom(src => src.ThongTinGiaoHang.DiaChi)
+                    );
             CreateMap<ThongTinGHDTO, ThongTinGiaoHang>().ReverseMap();
             CreateMap<HoaDonChiTietDTO, HoaDonChiTiet>().ReverseMap();
             CreateMap<HoaDonChiTiet, HoaDonChiTietViewModel>()
@@ -241,16 +254,16 @@ namespace App_Api.Helpers.Mapping
                  .ForMember(
                         dest => dest.GiaMin,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
-                        .Where(x=>
+                        .Where(x =>
                         x.TrangThai == 0 &&
-                        x.IdXuatXu == src.IdXuatXu && 
+                        x.IdXuatXu == src.IdXuatXu &&
                         x.IdSanPham == src.IdSanPham &&
                         x.IdLoaiGiay == src.IdLoaiGiay &&
                         x.IdThuongHieu == src.IdThuongHieu &&
                         x.IdKieuDeGiay == src.IdKieuDeGiay &&
                         x.IdChatLieu == src.IdChatLieu
                         )
-                        .Select(x=>x.GiaThucTe).Min()
+                        .Select(x => x.GiaThucTe).Min()
                         )
                     )
                  .ForMember(
@@ -280,7 +293,7 @@ namespace App_Api.Helpers.Mapping
                         x.IdKieuDeGiay == src.IdKieuDeGiay &&
                         x.IdChatLieu == src.IdChatLieu
                         )
-                        .Select(sp=>sp.IdMauSac).Distinct().Count()
+                        .Select(sp => sp.IdMauSac).Distinct().Count()
                         )
                     )
                 ;

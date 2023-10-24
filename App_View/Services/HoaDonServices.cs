@@ -48,9 +48,9 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<List<HoaDonChoDTO>>("https://localhost:7038/api/HoaDon/GetAllHoaDonCho");
         }
 
-        public async Task<List<HoaDonDTO>> GetHoaDon()
+        public async Task<List<HoaDonViewModel>> GetHoaDon()
         {
-            return await _httpClient.GetFromJsonAsync<List<HoaDonDTO>>("https://localhost:7038/api/HoaDon/GetHoaDonOnline");
+            return await _httpClient.GetFromJsonAsync<List<HoaDonViewModel>>("https://localhost:7038/api/HoaDon/GetHoaDonOnline");
         }
 
         public async Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon)

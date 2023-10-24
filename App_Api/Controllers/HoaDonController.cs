@@ -23,7 +23,7 @@ namespace App_Api.Controllers
         private readonly IMapper _mapper;
         public HoaDonController(IMapper mapper)
         {
-            _hoaDon = new HoaDonRepos();
+            _hoaDon = new HoaDonRepos(mapper);
             _mapper = mapper;
         }
         [HttpPost]
@@ -44,7 +44,7 @@ namespace App_Api.Controllers
             return _hoaDon.GetAllHoaDonCho();
         }
         [HttpGet]
-        public async Task<List<HoaDonDTO>> GetHoaDonOnline()
+        public async Task<List<HoaDonViewModel>> GetHoaDonOnline()
         {
             return _hoaDon.GetHoaDon();
         }

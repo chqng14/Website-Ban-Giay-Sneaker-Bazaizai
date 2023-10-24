@@ -167,7 +167,7 @@ namespace App_View.Controllers
             }
             return Ok(new { idHoaDon = hoadon.IdHoaDon });
         }
-        public async Task<ActionResult<HoaDonDTO>> Order(string idHoaDon)
+        public async Task<ActionResult<HoaDonViewModel>> Order(string idHoaDon)
         {
             var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
             return View(order);

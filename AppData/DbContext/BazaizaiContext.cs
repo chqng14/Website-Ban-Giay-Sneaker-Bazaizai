@@ -52,7 +52,7 @@ namespace App_Data.DbContextt
         public DbSet<VoucherNguoiDung> voucherNguoiDungs { get; set; }
         public DbSet<XuatXu> xuatXus { get; set; }
         public DbSet<DanhGia> danhGias { get; set; }
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -74,7 +74,7 @@ namespace App_Data.DbContextt
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=MSI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
+            optionsBuilder.UseSqlServer(@"Data Source=DESKTOP-8RSAFN0\HKLADOI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
         }
 
 
