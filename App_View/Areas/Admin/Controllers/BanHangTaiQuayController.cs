@@ -35,7 +35,7 @@ namespace App_View.Areas.Admin.Controllers
         }
         [HttpGet]
         public async Task<IActionResult> LoadPartialViewDanhSachSanPham() {
-            return PartialView("_DanhSachSanPhamPartialView", await _sanPhamChiTietService.GetListItemShopViewModelAynsc());
+            return PartialView("_DanhSachSanPhamPartialView", await _sanPhamChiTietService.GetDanhSachBienTheItemShopViewModelAsync());
         }
     }
 }

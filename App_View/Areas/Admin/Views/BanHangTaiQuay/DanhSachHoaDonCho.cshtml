@@ -45,9 +45,9 @@
                 <div class="col-8"></div>
             </div>
             <div class="row" style="height: 775px; overflow-y: scroll; overflow-x: hidden">
-                <div class="row">
+                <div class="row" id="body-danhsach">
                     @{
-                        foreach (var item in context.sanPhamChiTiets.ToList())
+                        @*foreach (var item in context.sanPhamChiTiets.ToList())
                         {
                                 <div class="col-3">
                                     <div class="card" style="width: 16rem; ">
@@ -62,7 +62,7 @@
                                         </div>
                                     </div>
                                 </div>
-                        }
+                        }*@
                     }
 
                 </div>
@@ -146,7 +146,8 @@
             url: '/Admin/BanHangTaiQuay/LoadPartialViewDanhSachSanPham',
             type: 'GET',
             success: function (result) {
-               console.log(result)
+                console.log(result)
+                $('#body-danhsach').append(result)
             },
             error: function (xhr, status, error) {
                 console.log(xhr.responseText);
