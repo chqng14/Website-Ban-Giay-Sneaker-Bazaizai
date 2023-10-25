@@ -122,7 +122,8 @@ namespace App_View.Areas.Admin.Controllers
                             var khoiLuong = worksheet.Cells[row, 12].Text;
                             var day = worksheet.Cells[row, 13].Text;
                             var noiBat = worksheet.Cells[row, 14].Text;
-                            var listTenAnh = worksheet.Cells[row, 15].Text.Split(',');
+                            var trangThaiSale = worksheet.Cells[row, 15].Text;
+                            var listTenAnh = worksheet.Cells[row, 16].Text.Split(',');
                             
                             var sanPhamDTO = await _sanPhamChiTietService.GetItemExcelAynsc(new BienTheDTO
                             {
@@ -140,6 +141,7 @@ namespace App_View.Areas.Admin.Controllers
                             sanPhamDTO.GiaBan = Convert.ToDouble(giaBan);
                             sanPhamDTO.KhoiLuong = Convert.ToDouble(khoiLuong);
                             sanPhamDTO.Day = day == "1" ? true : false;
+                            sanPhamDTO.TrangThaiKhuyenMai = trangThaiSale == "1" ? true : false;
                             sanPhamDTO.NoiBat = noiBat == "1" ? true : false;
                             var response = (await _sanPhamChiTietService.AddAysnc(sanPhamDTO));
 
@@ -285,6 +287,7 @@ namespace App_View.Areas.Admin.Controllers
             ViewData["IdSanPham"] = new SelectList(_context.SanPhams, "IdSanPham", "TenSanPham");
             ViewData["IdThuongHieu"] = new SelectList(_context.thuongHieus, "IdThuongHieu", "TenThuongHieu");
             ViewData["IdXuatXu"] = new SelectList(_context.xuatXus, "IdXuatXu", "Ten");
+
             var model = (await _sanPhamChiTietService.GetListSanPhamChiTietDTOAsync(new ListGuildDTO()
             {
                 listGuild = new List<string>()
@@ -292,6 +295,7 @@ namespace App_View.Areas.Admin.Controllers
                     IdSanPhamChiTiet
                 }
             })).FirstOrDefault();
+
             return PartialView("_SanPhamCopyPartialView", model);
         }
 
@@ -349,8 +353,7 @@ namespace App_View.Areas.Admin.Controllers
 
             var response = await _httpClient.PostAsync("/api/SanPhamChiTiet/Creat-SanPhamChiTietCopy", multipartContent);
 
-            Console.WriteLine(await response.Content.ReadAsStringAsync());
-            return Ok(response);
+            return Ok(await response.Content.ReadAsAsync<bool>());
         }
 
         public async Task<IActionResult> GetDanhSachSanPham([FromBody]FilterAdminDTO filterAdminDTO)

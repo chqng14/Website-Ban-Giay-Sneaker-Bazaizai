@@ -59,6 +59,28 @@ namespace App_Api.Helpers.Mapping
             .ForMember(
                 dest => dest.MaVoucher, opt => opt.MapFrom(x => x.Vouchers.MaVoucher));
 
+            CreateMap<GioHangChiTiet, SanPhamGioHangViewModel>()
+                .ForMember(
+                    dest => dest.IdSanPhamChiTiet,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.IdChiTietSp)
+                )
+                .ForMember(
+                    dest => dest.TenSanPham,
+                    opt => opt.MapFrom(src => $"{src.SanPhamChiTiet.SanPham.TenSanPham} {src.SanPhamChiTiet.MauSac.TenMauSac} {src.SanPhamChiTiet.KichCo.SoKichCo}")
+                )
+                .ForMember(
+                    dest => dest.SoLuong,
+                    opt => opt.MapFrom(src => src.Soluong)
+                )
+                .ForMember(
+                    dest => dest.GiaSanPham,
+                    opt => opt.MapFrom(src => src.GiaBan)
+                )
+                .ForMember(
+                    dest => dest.Anh,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(a=>a.Url).Select(x => x.Url).FirstOrDefault())
+                );
+
             CreateMap<GioHangChiTiet, GioHangChiTietDTO>()
                  .ForMember(
                     dest => dest.TenSanPham,

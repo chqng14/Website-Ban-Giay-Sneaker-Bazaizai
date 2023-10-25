@@ -15,6 +15,9 @@
     <thead>
         <tr>
             <th>
+                Ảnh Khuyến mãi
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.MaKhuyenMai)
             </th>
             <th>
@@ -32,9 +35,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.MucGiam)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PhamVi)
-            </th>
+
             <th>
                 @Html.DisplayNameFor(model => model.TrangThai)
             </th>
@@ -45,6 +46,9 @@
         @foreach (var item in Model)
         {
             <tr>
+                <td>
+                    <img src="~/AnhSale/@item.Url" style="width:60px"></img>
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.MaKhuyenMai)
                 </td>
@@ -78,9 +82,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.MucGiam)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhamVi)
-                </td>
+
                 <td>
                     <label class="switch">
                         <input type="checkbox" class="status-toggle" data-id="@item.IdKhuyenMai" data-status="@item.TrangThai" @(item.TrangThai == (int)TrangThaiSale.DangBatDau ? "checked" : "")>
@@ -101,7 +103,7 @@
         $(document).on("click", ".status-toggle", function () {
             var checkbox = $(this);
             var id = checkbox.data("id");
-            var status = checkbox.is(":checked") ? 0 : 1;
+            var status = checkbox.is(":checked") ? 3 : 1;
 
             $.ajax({
                 type: "POST",

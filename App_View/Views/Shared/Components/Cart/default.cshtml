@@ -1,0 +1,70 @@
+﻿@model App_Data.ViewModels.GioHangChiTiet.GioHangMiniViewModel
+<a class="mini-cart-shop-link">
+    <i class="fas fa-shopping-bag"></i>
+
+    <span class="total-item-round">@Model.SoLuongSanPham</span>
+</a>
+
+<!--====== Dropdown ======-->
+
+<span class="js-menu-toggle"></span>
+<div class="mini-cart">
+
+    <!--====== Mini Product Container ======-->
+    <div class="mini-product-container gl-scroll u-s-m-b-15">
+        @foreach (var item in Model.SanPhamGioHangViewModels!)
+        {
+            <!--====== Card for mini cart ======-->
+            <div class="card-mini-product">
+                <div class="mini-product">
+                    <div class="mini-product__image-wrapper">
+
+                        <a class="mini-product__link" href="/SanPhamChiTiets/Details/@item.IdSanPhamChiTiet">
+
+                            <img class="u-img-fluid" style="height: 100%" src="/AnhSanPham/@item.Anh" alt="">
+                        </a>
+                    </div>
+                    <div class="mini-product__info-wrapper">
+
+                        <span class="mini-product__category">
+
+                            <a href="shop-side-version-2.html">Electronics</a>
+                        </span>
+
+                        <span class="mini-product__name">
+
+                            <a href="product-detail.html">@item.TenSanPham</a>
+                        </span>
+
+                        <span class="mini-product__quantity">@item.SoLuong x</span>
+
+                        <span class="mini-product__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaSanPham )</span>
+                    </div>
+                </div>
+
+                <a class="mini-product__delete-link far fa-trash-alt"></a>
+            </div>
+            <!--====== End - Card for mini cart ======-->
+        }
+
+
+    </div>
+    <!--====== End - Mini Product Container ======-->
+    <!--====== Mini Product Statistics ======-->
+    <div class="mini-product-stat">
+        <div class="mini-total">
+
+            <span class="subtotal-text">SUBTOTAL</span>
+
+            <span class="subtotal-value">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.TongTien )</span>
+        </div>
+        <div class="mini-action">
+
+            <a class="mini-link btn--e-brand-b-2" href="/GioHangChiTiets/CheckOut">THANH TOÁN</a>
+
+            <a class="mini-link btn--e-transparent-secondary-b-2" href="/GioHangChiTiets/ShowCartUser">GIỎ HÀNG</a>
+        </div>
+    </div>
+    <!--====== End - Mini Product Statistics ======-->
+</div>
+<!--====== End - Dropdown ======-->
