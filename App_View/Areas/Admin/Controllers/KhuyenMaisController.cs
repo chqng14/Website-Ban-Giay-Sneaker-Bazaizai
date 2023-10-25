@@ -56,10 +56,8 @@ namespace App_View.Areas.Admin.Controllers
         {
             ViewBag.ListLoaiHinh = new List<SelectListItem>
             {
-                new SelectListItem { Text = "Thương hiệu", Value = "0" },
-                new SelectListItem { Text = "Màu săc", Value = "1" },
-                new SelectListItem { Text = "Định kỳ", Value = "2" },
-                new SelectListItem { Text = "Mức giá", Value = "3" }
+                new SelectListItem { Text = "Khuyến mại giảm giá", Value = "1" },
+                new SelectListItem { Text = "Khuyến mãi đồng giá", Value = "0" }
             };
             ViewBag.ListGiamGia = new List<SelectListItem>
             {
@@ -92,17 +90,15 @@ namespace App_View.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(KhuyenMai khuyenMai)
+        public async Task<IActionResult> Create(KhuyenMai khuyenMai,IFormFile formFile)
         {
             khuyenMai.IdKhuyenMai = Guid.NewGuid().ToString();
             khuyenMai.TrangThai = 0;
             ViewData["IdKhuyenMai"] = new SelectList(_context.khuyenMais, "IdKhuyenMai", "IdKhuyenMai");
             ViewBag.ListLoaiHinh = new List<SelectListItem>
             {
-                new SelectListItem { Text = "Thương hiệu", Value = "0" },
-                new SelectListItem { Text = "Màu săc", Value = "1" },
-                new SelectListItem { Text = "Định kỳ", Value = "2" },
-                new SelectListItem { Text = "Mức giá", Value = "3" }
+                new SelectListItem { Text = "Khuyến mại giảm giá", Value = "1" },
+                new SelectListItem { Text = "Khuyến mãi đồng giá", Value = "0" }
             };
             ViewBag.ListGiamGia = new List<SelectListItem>
             {
@@ -127,11 +123,36 @@ namespace App_View.Areas.Admin.Controllers
                 new SelectListItem { Text = "95%", Value = "95" },
                 new SelectListItem { Text = "100%", Value = "100" }
             };
-            if (khuyenMai!=null)
-            {
-                await _httpClient.PostAsync($"https://localhost:7038/api/KhuyenMai?Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&PhamVi={khuyenMai.PhamVi}&loaiHinh={khuyenMai.LoaiHinhKM}", null);
-                return RedirectToAction("Index");
+            if (khuyenMai != null) {
+
+                using var content = new MultipartFormDataContent();
+                //content.Add(new StringContent(khuyenMai.TrangThai.ToString()), "trangThai");
+                //content.Add(new StringContent(khuyenMai.TenKhuyenMai), "Ten");
+                //content.Add(new StringContent(khuyenMai.NgayBatDau.ToString()), "ngayBD");
+                //content.Add(new StringContent(khuyenMai.NgayKetThuc.ToString()), "ngayKT");
+                //content.Add(new StringContent(khuyenMai.LoaiHinhKM.ToString()), "loaiHinh");
+                //content.Add(new StringContent(khuyenMai.PhamVi), "PhamVi");
+                //content.Add(new StringContent(khuyenMai.MucGiam.ToString()), "mucGiam");
+                if (formFile != null && formFile.Length > 0)
+                {
+
+                    var streamContent = new StreamContent(formFile.OpenReadStream());
+                    streamContent.Headers.Add("Content-Type", formFile.ContentType);
+                    content.Add(streamContent, "formFile", formFile.FileName);
+                    var response = await _httpClient.PostAsync($"https://localhost:7038/api/KhuyenMai/Create-KhuyenMai?Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", content);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        Console.WriteLine(response.StatusCode);
+                        return BadRequest();
+                    }
+                }
+                return BadRequest();
             }
+
             return View();
         }
 
@@ -231,14 +252,14 @@ namespace App_View.Areas.Admin.Controllers
         public JsonResult CapNhatTrangThai(string id, int trangThai)
         {
             var khuyenMai = _context.khuyenMais.Find(id);
-            if (trangThai == 0)
+            if (trangThai == 3)
             {
                 khuyenMai.TrangThai = 1;
 
             }
             else
             {
-                khuyenMai.TrangThai = 0;
+                khuyenMai.TrangThai = 3;
             }
             _context.khuyenMais.Update(khuyenMai);
             _context.SaveChanges();
