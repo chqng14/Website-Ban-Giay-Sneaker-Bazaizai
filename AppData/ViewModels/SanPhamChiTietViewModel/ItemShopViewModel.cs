@@ -16,6 +16,7 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
         public string? TenSanPham { get; set;}
         public double? GiaMin { get; set; }
         public double? GiaThucTe { get; set; }
+        public int? SoLuongTon { get; set; }
         public double? GiaGoc { get; set; }
         public double? GiaMax { get; set; }
         public double? SoSao { get; set; }

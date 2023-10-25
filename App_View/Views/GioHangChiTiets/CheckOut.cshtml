@@ -5,7 +5,30 @@
     var thongTinGH = ViewData["ThongTinGH"] as List<App_Data.Models.ThongTinGiaoHang>; 
     var idnguoidung = ViewBag.idNguoiDung;
 }
+@if (ViewData["QuantityErrorMessages"] != null)
+{
+    <script>
+        $(document).ready(function () {
+            var messages = @Html.Raw(Json.Serialize(ViewData["QuantityErrorMessages"]));
 
+            messages.forEach(function (message) {
+                alert(message);
+            });
+        });
+    </script>
+}
+@if (ViewData["QuantityCartUser"] != null)
+{
+    <script>
+        $(document).ready(function () {
+            var messages = @Html.Raw(Json.Serialize(ViewData["QuantityCartUser"]));
+
+            messages.forEach(function (message) {
+                alert(message);
+            });
+        });
+    </script>
+}
 <div class="u-s-p-b-60" style="margin-top:20px">
 
     <!--====== Section Content ======-->
@@ -272,7 +295,8 @@
 
                                                             <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = item.IdSanPhamCT })">@item.TenThuongHieu @item.TenSanPham</a>
                                                         </span>
-
+                                                        <span class="o-card__quantity">@item.TenKichCo</span>
+                                                        <span class="o-card__quantity">@item.TenMauSac</span>
                                                         <span class="o-card__quantity">Số lượng x @item.SoLuong</span>
 
                                                         <span class="o-card__price">@string.Format("{0:N0}đ", item.GiaBan)</span>
@@ -791,7 +815,7 @@
                 });
 
                 $('#wards1').on('change', function () {
-                   if ($('#wards1').val() != null && phiship ==null) {
+                   if ($('#wards1').val() != null && phiship == null) {
                       isCalculatingShippingFee = true;
                       calculateShippingFee();
                       isCalculatingShippingFee = false;
@@ -881,7 +905,6 @@
                             }
                         })
                             .then(response => {
-                                console.log(response.data.data);
                                 var selectElement = $('#wards');
                                 selectElement.empty();
                                 selectElement.val('').trigger('change');
@@ -899,7 +922,8 @@
 
                 $(document).ready(function () {
                     $('#wards').on('change', function () {
-                        if ($('#wards1').val() != null && phiship == null) {
+                        if ($('#wards').val() != null) {
+                            isDefaultAddress = false;
                             isCalculatingShippingFee = true;
                             calculateShippingFee();
                             isCalculatingShippingFee = false;
@@ -1021,7 +1045,6 @@
             var shop_id = 705899;
             var toWardCode = isDefaultAddress ? selectedWardCode : $('#wards').val();
             var toDistrictId = isDefaultAddress ? selectedDistrictID : $('#district').val();
-            
                 axios.get(shippingApiUrl, {
                     headers: {
                         'Token': token,
@@ -1060,7 +1083,7 @@
                     // Gán giá trị vào input
                     document.querySelector('input[name="TienShip"]').value = phiship;
                     calculateDayShip();
-                    isCalculatingShippingFee = false;
+                    isCalculatingShippingFee = false; 
                 })
                 .catch(error => {
                     console.error(error);
@@ -1106,6 +1129,7 @@
         // Hàm áp dụng giảm giá
         function applyDiscount(discountAmount) {
             $('#TienGiam').text(discountAmount.toLocaleString("vi-VN") + "đ");
+            document.querySelector('input[name="TienGiam"]').value = discountAmount;
             // Tính tổng tiền sau khi giảm giá
             var tamTinhGiaGiam = tongtienSanPham + parseFloat(phiship);
             tongTienSauGiamGia = tamTinhGiaGiam - discountAmount;
@@ -1167,10 +1191,13 @@
                         url: '/HoaDon/ThanhToan',
                         data: paymentFormData,
                         success: function (paymentResponse) {
-                            UpdateVoucher()
-                            // Xử lý kết quả nếu cần
-                            var idHoaDon = paymentResponse.idHoaDon;
-                            window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
+                            if(paymentResponse.idHoaDon != null) {
+                                UpdateVoucher()
+                                var idHoaDon = paymentResponse.idHoaDon;
+                                window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
+                            }else{
+                                alert(paymentResponse.quantityError);
+                            }
                         },
                         error: function (paymentError) {
                             // Xử lý lỗi nếu cần
@@ -1192,26 +1219,31 @@
                         data: deliveryFormData,
                         success: function (deliveryResponse) {
                             // Thực hiện Ajax để gửi dữ liệu đến action ThanhToan trong controller TenControllerKhac
-                            var moTaValue = $("#order-note").val();
-                            $('input[name="MoTa"]').val(moTaValue);
-                            $("[name='IdThongTinGH']").val(deliveryResponse.idThongTinGH)
+                            if (deliveryResponse.idThongTinGH != null) {
+                                var moTaValue = $("#order-note").val();
+                                $('input[name="MoTa"]').val(moTaValue);
+                                $("[name='IdThongTinGH']").val(deliveryResponse.idThongTinGH)
 
-                            var paymentFormData = $('#paymentForm').serialize();
-                            // Gửi dữ liệu thanh toán
-                            $.ajax({
-                                type: 'POST',
-                                url: '/HoaDon/ThanhToan',
-                                data: paymentFormData,
-                                success: function (paymentResponse) {
-                                    UpdateVoucher()
-                                    // Xử lý kết quả nếu cần
-                                    var idHoaDon = paymentResponse.idHoaDon;
-                                    window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
-                                },
-                                error: function (paymentError) {
-                                    // Xử lý lỗi nếu cần
-                                }
-                            });
+                                var paymentFormData = $('#paymentForm').serialize();
+                                // Gửi dữ liệu thanh toán
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/HoaDon/ThanhToan',
+                                    data: paymentFormData,
+                                    success: function (paymentResponse) {
+                                        UpdateVoucher()
+                                        // Xử lý kết quả nếu cần
+                                        var idHoaDon = paymentResponse.idHoaDon;
+                                        window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
+                                    },
+                                    error: function (paymentError) {
+                                        // Xử lý lỗi nếu cần
+                                    }
+                                });
+                            }else{
+                                alert(deliveryResponse.quantityError);
+                            }
+                            
                         },
                         error: function (deliveryError) {
                             // Xử lý lỗi nếu cần

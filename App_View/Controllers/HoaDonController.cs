@@ -1,10 +1,12 @@
 ﻿using App_Data.Models;
+using App_Data.ViewModels.GioHangChiTiet;
 using App_Data.ViewModels.HoaDon;
 using App_Data.ViewModels.HoaDonChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.ThongTinGHDTO;
 using App_View.IServices;
 using App_View.Services;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -116,56 +118,116 @@ namespace App_View.Controllers
         {
             thongTinGHDTO.IdThongTinGH = Guid.NewGuid().ToString();
             thongTinGHDTO.IdNguoiDung = _userManager.GetUserId(User);
-            await ThongTinGHController.CreateThongTin(thongTinGHDTO);
-            return Ok(new { idThongTinGH = thongTinGHDTO.IdThongTinGH });
+            var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == _userManager.GetUserId(User));
+            var results = await Task.WhenAll(listcart.Select(async item =>
+            {
+                var sanPhamChiTiet = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                return new
+                {
+                    Item = item,
+                    SanPhamChiTiet = sanPhamChiTiet,
+                    Message = $"{sanPhamChiTiet.SanPham} màu {sanPhamChiTiet.MauSac} size {sanPhamChiTiet.KichCo} đã hết, Vui lòng chọn sản phẩm khác!"
+                };
+            }));
+
+            var outOfStockProducts = results
+                .Where(result => result.Item.SoLuong > result.SanPhamChiTiet.SoLuongTon)
+                .Select(result => result.Message).ToList();
+            if (outOfStockProducts == null)
+            {
+                await ThongTinGHController.CreateThongTin(thongTinGHDTO);
+                return Ok(new { idThongTinGH = thongTinGHDTO.IdThongTinGH });
+            }
+            else
+            {
+                return Ok(new { quantityError = outOfStockProducts });
+            }
         }
         public async Task<IActionResult> ThanhToan(HoaDonDTO hoaDonDTO)
         {
             var UserID = _userManager.GetUserId(User);
             var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == UserID);
-            var hoadon = new HoaDonDTO()
+            var results = await Task.WhenAll(listcart.Select(async item =>
             {
-                IdHoaDon = Guid.NewGuid().ToString(),
-                IdNguoiDung = UserID,
-                IdKhachHang = null,
-                IdThongTinGH = hoaDonDTO.IdThongTinGH,
-                IdVoucher = hoaDonDTO.IdVoucher,
-                MaHoaDon = "HD" + DateTime.Now.ToString("ddMMyyyyhhmmss"),
-                NgayTao = DateTime.Now,
-                NgayShip = DateTime.Now.AddDays(2),
-                NgayNhan = DateTime.Now.AddDays(4),
-                NgayThanhToan = DateTime.Now.AddDays(4),
-                NgayGiaoDuKien = hoaDonDTO.NgayGiaoDuKien,
-                TienGiam = hoaDonDTO.TienGiam,
-                TongTien = hoaDonDTO.TongTien,
-                TienShip = hoaDonDTO.TienShip,
-                MoTa = hoaDonDTO.MoTa,
-                TrangThaiGiaoHang = (int)TrangThaiGiaoHang.ChoXacNhan,
-                TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan
-            };
-            await hoaDonServices.CreateHoaDon(hoadon);
-            foreach (var item in listcart)
+                var sanPhamChiTiet = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+
+                // Thêm điều kiện kiểm tra số lượng tồn đã hết
+                if (item.SoLuong > sanPhamChiTiet.SoLuongTon && sanPhamChiTiet.SoLuongTon == 0)
+                {
+                    return new
+                    {
+                        Item = item,
+                        SanPhamChiTiet = sanPhamChiTiet,
+                        Message = $"{sanPhamChiTiet.SanPham} màu {sanPhamChiTiet.MauSac} size {sanPhamChiTiet.KichCo} đã hết hàng, Vui lòng chọn sản phẩm khác!"
+                    };
+                }
+                if (item.SoLuong > sanPhamChiTiet.SoLuongTon)
+                {
+                    return new
+                    {
+                        Item = item,
+                        SanPhamChiTiet = sanPhamChiTiet,
+                        Message = $"Sản phẩm {sanPhamChiTiet.SanPham} màu {sanPhamChiTiet.MauSac} size {sanPhamChiTiet.KichCo} chỉ còn {sanPhamChiTiet.SoLuongTon}, Vui lòng chọn lại số lượng sản phẩm!"
+                    };
+                }
+
+                return null; // Trả về null nếu sản phẩm có sẵn để không bị lẫn vào danh sách outOfStockProducts
+            }));
+
+            var outOfStockProducts = results
+                .Where(result => result != null)
+                .Select(result => result.Message)
+                .ToList();
+            if (outOfStockProducts == null)
             {
-                await hoaDonChiTietServices.CreateHoaDonChiTiet(new HoaDonChiTietDTO()
+                var hoadon = new HoaDonDTO()
                 {
-                    IdHoaDonChiTiet = Guid.NewGuid().ToString(),
-                    IdHoaDon = hoadon.IdHoaDon,
-                    IdSanPhamChiTiet = item.IdSanPhamCT,
-                    SoLuong = item.SoLuong,
-                    GiaGoc = item.GiaGoc,
-                    GiaBan = item.GiaBan,
-                    TrangThai = (int)TrangThaiHoaDonChiTiet.ChuaThanhToan
-                });
-                var sanphamupdate = new SanPhamSoLuongDTO()
-                {
-                    IdChiTietSanPham = item.IdSanPhamCT,
-                    SoLuong = (int)item.SoLuong
+                    IdHoaDon = Guid.NewGuid().ToString(),
+                    IdNguoiDung = UserID,
+                    IdKhachHang = null,
+                    IdThongTinGH = hoaDonDTO.IdThongTinGH,
+                    IdVoucher = hoaDonDTO.IdVoucher,
+                    NgayTao = DateTime.Now,
+                    NgayShip = DateTime.Now.AddDays(2),
+                    NgayNhan = DateTime.Now.AddDays(4),
+                    NgayThanhToan = DateTime.Now.AddDays(4),
+                    NgayGiaoDuKien = hoaDonDTO.NgayGiaoDuKien,
+                    TienGiam = hoaDonDTO.TienGiam,
+                    TongTien = hoaDonDTO.TongTien,
+                    TienShip = hoaDonDTO.TienShip,
+                    MoTa = hoaDonDTO.MoTa,
+                    TrangThaiGiaoHang = (int)TrangThaiGiaoHang.ChoXacNhan,
+                    TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan
                 };
-                await gioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
-                var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
-                await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
+                await hoaDonServices.CreateHoaDon(hoadon);
+                foreach (var item in listcart)
+                {
+                    await hoaDonChiTietServices.CreateHoaDonChiTiet(new HoaDonChiTietDTO()
+                    {
+                        IdHoaDonChiTiet = Guid.NewGuid().ToString(),
+                        IdHoaDon = hoadon.IdHoaDon,
+                        IdSanPhamChiTiet = item.IdSanPhamCT,
+                        SoLuong = item.SoLuong,
+                        GiaGoc = item.GiaGoc,
+                        GiaBan = item.GiaBan,
+                        TrangThai = (int)TrangThaiHoaDonChiTiet.ChuaThanhToan
+                    });
+                    var sanphamupdate = new SanPhamSoLuongDTO()
+                    {
+                        IdChiTietSanPham = item.IdSanPhamCT,
+                        SoLuong = (int)item.SoLuong
+                    };
+                    await gioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
+                    var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
+                    await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
+                }
+                return Ok(new { idHoaDon = hoadon.IdHoaDon });
             }
-            return Ok(new { idHoaDon = hoadon.IdHoaDon });
+            else
+            {
+                return Ok(new { quantityError = outOfStockProducts });
+            }
+
         }
         public async Task<ActionResult<HoaDonViewModel>> Order(string idHoaDon)
         {

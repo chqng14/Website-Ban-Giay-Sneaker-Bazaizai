@@ -33,12 +33,9 @@ namespace App_Data.Models
         [Required(ErrorMessage = "Mức giảm là trường bắt buộc.")]
         [Range(0, 100, ErrorMessage = "Mức giảm phải nằm trong khoảng từ 0 đến 100.")]
         public decimal? MucGiam { get; set; }
-
-        [MaxLength(200, ErrorMessage = "Phạm vi không được vượt quá 200 ký tự.")]
-        public string PhamVi { get; set; }
-
         [Required(ErrorMessage = "Trạng thái là trường bắt buộc.")]
         public int? TrangThai { get; set; }
+        [Required(ErrorMessage = "Url là trường bắt buộc.")]
         public string? Url { get; set; }
         public virtual ICollection<KhuyenMaiChiTiet> KhuyenMaiChiTiet { get; set; }
 

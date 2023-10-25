@@ -85,5 +85,18 @@ namespace App_Data.Repositories
                 return false;
             }
         }
+
+        public async Task<List<SanPhamGioHangViewModel>> GetAllSanPhamGioHangWhenLoginAynsc(string idNguoiDung)
+        {
+            var data = await context.gioHangChiTiets
+                .Where(gh=>gh.IdNguoiDung == idNguoiDung)
+                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.Anh)
+                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.SanPham)
+                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.MauSac)
+                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.KichCo)
+                .ToListAsync();
+            var lstSanPhamGioHangVM = _mapper.Map<List<GioHangChiTiet>, List<SanPhamGioHangViewModel>>(data);
+            return lstSanPhamGioHangVM.ToList();
+        }
     }
 }

@@ -343,11 +343,6 @@ namespace App_Data.Migrations
                         .IsRequired()
                         .HasColumnType("datetime");
 
-                    b.Property<string>("PhamVi")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("nvarchar(1000)");
-
                     b.Property<string>("TenKhuyenMai")
                         .IsRequired()
                         .HasMaxLength(1000)
@@ -360,6 +355,7 @@ namespace App_Data.Migrations
                         .HasDefaultValueSql("((0))");
 
                     b.Property<string>("Url")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdKhuyenMai");

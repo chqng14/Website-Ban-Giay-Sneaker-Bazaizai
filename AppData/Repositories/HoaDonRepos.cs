@@ -33,9 +33,13 @@ namespace App_Data.Repositories
             hoaDon.MaHoaDon = MaHoaDonTuSinh();
             hoaDon.TrangThaiGiaoHang = (int)TrangThaiGiaoHang.TaiQuay;
             hoaDon.TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan;
-            context.HoaDons.Add(hoaDon);
-            context.SaveChanges();
-            return hoaDon;
+            if (context.HoaDons.FirstOrDefault(c => c.MaHoaDon == hoaDon.MaHoaDon) == null)
+            {
+                context.HoaDons.Add(hoaDon);
+                context.SaveChanges();
+                return hoaDon;
+            }
+            return null;
         }
         public string MaHoaDonTuSinh()
         {
@@ -49,6 +53,7 @@ namespace App_Data.Repositories
         {
             try
             {
+                item.MaHoaDon = MaHoaDonTuSinh();
                 context.HoaDons.Add(item);
                 context.SaveChanges();
                 return true;

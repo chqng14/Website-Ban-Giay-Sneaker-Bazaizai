@@ -69,13 +69,14 @@ namespace App_Data.Repositories
 
         public async Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(List<string> lstGuid)
         {
-            var lstSanPhamChiTiet = (await _context.sanPhamChiTiets
+            var lstSanPhamChiTiet = await _context.sanPhamChiTiets
+                 .Where(sp => lstGuid.Contains(sp.IdChiTietSp!))
                  .Include(x => x.Anh)
                  .Include(x => x.SanPham)
                  .Include(x => x.MauSac)
                  .Include(x => x.KichCo)
                  .Include(x => x.ThuongHieu)
-                 .ToListAsync()).Where(sp => lstGuid.Contains(sp.IdChiTietSp!)).ToList();
+                 .ToListAsync();
             return _mapper.Map<List<SanPhamChiTietDTO>>(lstSanPhamChiTiet);
         }
 

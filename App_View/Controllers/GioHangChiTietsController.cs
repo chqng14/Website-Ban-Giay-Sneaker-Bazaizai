@@ -17,6 +17,8 @@ using DocumentFormat.OpenXml.VariantTypes;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using Microsoft.CodeAnalysis;
 using System.Globalization;
+using System.Net.Http;
+using System.Runtime.CompilerServices;
 
 namespace App_View.Controllers
 {
@@ -61,6 +63,21 @@ namespace App_View.Controllers
                 }
                 else
                 {
+                    var quantityErrorMessages = new List<string>();
+
+                    foreach (var item in giohang)
+                    {
+                        var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                        if (item.SoLuong > product.SoLuongTon || product.SoLuongTon == 0)
+                        {
+                            quantityErrorMessages.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} {(product.SoLuongTon == 0 ? "đã hết hàng" : $"chỉ còn {product.SoLuongTon}")}, Vui lòng chọn lại số lượng sản phẩm!");
+                        }
+                    }
+
+                    if (quantityErrorMessages.Any())
+                    {
+                        ViewData["QuantityErrorMessages"] = quantityErrorMessages;
+                    }
                     return View(giohang);
                 }
             }
@@ -90,17 +107,49 @@ namespace App_View.Controllers
                 var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
                 var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(GetIdNguoiDung());
                 ViewData["ThongTinGH"] = thongTinGH;
+                var quantityErrorMessages = new List<string>();
+
+                foreach (var item in giohang)
+                {
+                    var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                    if (item.SoLuong > product.SoLuongTon || product.SoLuongTon == 0)
+                    {
+                        quantityErrorMessages.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} {(product.SoLuongTon == 0 ? "đã hết hàng" : $"chỉ còn {product.SoLuongTon}")}, Vui lòng chọn lại số lượng sản phẩm!");
+                    }
+                }
+
+                if (quantityErrorMessages.Any())
+                {
+                    ViewData["QuantityErrorMessages"] = quantityErrorMessages;
+                }
                 return View(giohang);
+            }
+        }
+
+        public async void CheckQtyProduct()
+        {
+            var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
+            var quantityErrorMessages = new List<string>();
+
+            foreach (var item in giohang)
+            {
+                var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                if (item.SoLuong > product.SoLuongTon || product.SoLuongTon == 0)
+                {
+                    quantityErrorMessages.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} {(product.SoLuongTon == 0 ? "đã hết hàng" : $"chỉ còn {product.SoLuongTon}")}, Vui lòng chọn lại số lượng sản phẩm!");
+                }
+            }
+
+            if (quantityErrorMessages.Any())
+            {
+                ViewData["QuantityErrorMessages"] = quantityErrorMessages;
             }
         }
 
         public async Task<IActionResult> CheckOutNoLogin()
         {
-            //var idNguoiDung = _userManager.GetUserId(User);
-            //var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
-            //var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
-            //ViewData["ThongTinGH"] = thongTinGH;
-            return View();
+            var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+            return View(giohangSession);
         }
 
 
@@ -109,6 +158,7 @@ namespace App_View.Controllers
         {
             var IdCart = GetIdNguoiDung();
             var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(gioHangChiTietDTOCUD.IdSanPhamCT);
+            var ListCart = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == IdCart);
             if (IdCart != null)
             {
                 var existing = (await GioHangChiTietServices.GetAllGioHang()).FirstOrDefault(x => x.IdSanPhamCT == product.IdChiTietSp && x.IdNguoiDung == IdCart);
@@ -120,7 +170,9 @@ namespace App_View.Controllers
                     }
                     else
                     {
-                        TempData["quantityCartUser"] = "Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này";
+                        var quantityCartUser = new List<string>();
+                        quantityCartUser.Add("Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này");
+                        ViewData["QuantityCartUser"] = quantityCartUser;
                         existing.SoLuong = Convert.ToInt32(product.SoLuongTon);
                     }
                     await GioHangChiTietServices.UpdateGioHang(gioHangChiTietDTOCUD.IdSanPhamCT, Convert.ToInt32(existing.SoLuong), IdCart);
@@ -164,9 +216,10 @@ namespace App_View.Controllers
                     giohang.TenSanPham = product.SanPham;
                     giohang.TenMauSac = product.MauSac;
                     giohang.TenKichCo = product.KichCo;
+                    giohang.TenThuongHieu = product.ThuongHieu;
                     giohang.LinkAnh = product.ListTenAnh;
-                    giohang.GiaGoc = product.GiaNhap;
-                    giohang.GiaBan = product.GiaBan;
+                    giohang.GiaGoc = product.GiaBan;
+                    giohang.GiaBan = product.GiaThucTe;
                     giohangSession.Add(giohang);
                 }
                 SessionServices.SetObjToSession(HttpContext.Session, "Cart", giohangSession);
@@ -178,15 +231,57 @@ namespace App_View.Controllers
         // GET: GioHangChiTiets/Edit/5
         public async Task<IActionResult> CapNhatSoLuongGioHang(string IdGioHangChiTiet, int SoLuong, string IdSanPhamChiTiet)
         {
-            var jsonupdate = await GioHangChiTietServices.UpdateGioHang(IdSanPhamChiTiet, SoLuong, GetIdNguoiDung());
+
             //var SumPrice = string.Format(CultureInfo.GetCultureInfo("vi-VN"), "{0:N0}đ", Convert.ToDouble((await _sanPhamChiTietService.GetByKeyAsync(IdSanPhamChiTiet)).GiaBan * SoLuong));
             var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
-            double TongTien = 0;
-            foreach (var item in giohang)
+            var results = await Task.WhenAll(giohang.Select(async item =>
             {
-                TongTien += (double)item.GiaBan * (int)item.SoLuong;
+                var sanPhamChiTiet = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+
+                // Thêm điều kiện kiểm tra số lượng tồn đã hết
+                if (item.SoLuong + SoLuong > sanPhamChiTiet.SoLuongTon && sanPhamChiTiet.SoLuongTon == 0)
+                {
+                    return new
+                    {
+                        Item = item,
+                        SanPhamChiTiet = sanPhamChiTiet,
+                        Message = $"{sanPhamChiTiet.SanPham} màu {sanPhamChiTiet.MauSac} size {sanPhamChiTiet.KichCo} đã hết hàng, Vui lòng chọn sản phẩm khác!",
+                        Idsanpham = sanPhamChiTiet.IdChiTietSp
+                    };
+                }
+                if (item.SoLuong + SoLuong > sanPhamChiTiet.SoLuongTon)
+                {
+                    return new
+                    {
+                        Item = item,
+                        SanPhamChiTiet = sanPhamChiTiet,
+                        Message = $"Sản phẩm {sanPhamChiTiet.SanPham} màu {sanPhamChiTiet.MauSac} size {sanPhamChiTiet.KichCo} số lượng chỉ còn {sanPhamChiTiet.SoLuongTon}, Vui lòng chọn lại số lượng sản phẩm!",
+                        Idsanpham = sanPhamChiTiet.IdChiTietSp
+                    };
+                }
+
+                return null; // Trả về null nếu sản phẩm có sẵn để không bị lẫn vào danh sách outOfStockProducts
+            }));
+
+            var outOfStockProducts = results
+                .Where(result => result != null)
+                .Where(result => result.Idsanpham == IdSanPhamChiTiet)
+                .Select(result => result.Message)
+                .ToList();
+            if (outOfStockProducts.Count == 0)
+            {
+                var jsonupdate = await GioHangChiTietServices.UpdateGioHang(IdSanPhamChiTiet, SoLuong, GetIdNguoiDung());
+                double TongTien = 0;
+                foreach (var item in giohang)
+                {
+                    TongTien += (double)item.GiaBan * (int)item.SoLuong;
+                }
+                return Json(new { /*SumPrice = SumPrice,*/ TongTien = TongTien });
             }
-            return Json(new { /*SumPrice = SumPrice,*/ TongTien = TongTien });
+            else
+            {
+                return Json(new { quantityError = outOfStockProducts });
+            }
         }
 
         public async Task<IActionResult> CapNhatSoLuongGioHangNologin(string IdGioHangChiTiet, int SoLuong, string IdSanPhamChiTiet)
@@ -217,6 +312,11 @@ namespace App_View.Controllers
             var jsondelete = await GioHangChiTietServices.DeleteGioHang(id);
             return RedirectToAction("ShowCartUser");
         }
+        public async Task<IActionResult> DeleteCartNoLogin(string id)
+        {
+            var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+            return RedirectToAction("ShowCartNoLogin");
+        }
         public async Task<IActionResult> DeleteCartCheckOut(string id)
         {
             var jsondelete = await GioHangChiTietServices.DeleteGioHang(id);
@@ -233,9 +333,29 @@ namespace App_View.Controllers
             return RedirectToAction("ShowCartUser");
         }
 
-        public async Task<IActionResult> OrderSuccess()
+
+        public async Task<IActionResult> GetGioHangMiniModel()
         {
-            return View();
+            var idNguoiDung = GetIdNguoiDung();
+            var data = new List<SanPhamGioHangViewModel>();
+            if (idNguoiDung != null)
+            {
+                data = await httpClient.GetFromJsonAsync<List<SanPhamGioHangViewModel>>($"https://localhost:7038/api/GioHangChiTiet/Get-List-SanPhamGioHangVM/{idNguoiDung}");
+            }
+            else
+            {
+                var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+                data = giohangSession.Select(gh => new SanPhamGioHangViewModel()
+                {
+                    Anh = gh.LinkAnh.OrderBy(item => item).ToList().FirstOrDefault(),
+                    GiaSanPham = Convert.ToDouble(gh.GiaBan),
+                    IdSanPhamChiTiet = gh.IdSanPhamCT.ToString(),
+                    SoLuong = Convert.ToInt32(gh.SoLuong),
+                    TenSanPham = gh.TenSanPham + " " + gh.TenMauSac + " " + gh.TenKichCo,
+
+                }).ToList();
+            }
+            return ViewComponent("Cart", data);
         }
     }
 }

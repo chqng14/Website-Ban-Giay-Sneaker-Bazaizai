@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace App_View.Models.Components
 {
-    public class ElectronicsTab: ViewComponent
+    public class TabProduct: ViewComponent
     {
         private readonly ISanPhamChiTietService _sanPhamChiTietService;
 
-        public ElectronicsTab(ISanPhamChiTietService sanPhamChiTietService)
+        public TabProduct(ISanPhamChiTietService sanPhamChiTietService)
         {
             _sanPhamChiTietService = sanPhamChiTietService;
         }

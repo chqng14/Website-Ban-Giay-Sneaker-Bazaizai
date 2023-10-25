@@ -4,7 +4,30 @@
     ViewData["Title"] = "ShowCartUser";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@if (ViewData["QuantityErrorMessages"] != null)
+{
+    <script>
+        $(document).ready(function () {
+            var messages = @Html.Raw(Json.Serialize(ViewData["QuantityErrorMessages"]));
 
+            messages.forEach(function (message) {
+                alert(message);
+            });
+        });
+    </script>
+}
+@if (ViewData["QuantityCartUser"] != null)
+{
+    <script>
+        $(document).ready(function () {
+            var messages = @Html.Raw(Json.Serialize(ViewData["QuantityCartUser"]));
+
+            messages.forEach(function (message) {
+                alert(message);
+            });
+        });
+    </script>
+}
 <!--====== End - Section 1 ======-->
 <!--====== Section 2 ======-->
 <div class="u-s-p-b-60">
@@ -76,7 +99,7 @@
 
                                                     <span class="input-counter__minus fas fa-minus" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" ></span>
 
-                                                    <input class="input-counter__text input-counter--text-primary-style" type="text" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" value="@item.SoLuong" data-min="1" data-max="1000">
+                                                    <input class="input-counter__text input-counter--text-primary-style" type="text" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" value="@item.SoLuong" data-min="1" data-max="1000" min="1">
                                                     <span class="input-counter__plus fas fa-plus" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" ></span>
                                                 </div>
                                                 <!--====== End - Input Counter ======-->
@@ -255,9 +278,19 @@
                         }
                     }
                     //var SumPrice = response.sumPrice;
-                    var TongTien = response.tongTien;
-                    $('#tamtinh').text(TongTien.toLocaleString("vi-VN") + "đ");
-                    $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
+                    if (response.tongTien != null) {
+                        var TongTien = response.tongTien;
+                        $('#tamtinh').text(TongTien.toLocaleString("vi-VN") + "đ");
+                        $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
+                    } else {
+                        var soLuongBanDau = parseInt($(inputElement).data('value'));
+                        if (soLuongBanDau == 0) {
+                            $(inputElement).val(soLuongBanDau+1);
+                        }else{
+                            $(inputElement).val(soLuongBanDau);
+                        }
+                        alert(response.quantityError);
+                    }
 
                 }
             });
