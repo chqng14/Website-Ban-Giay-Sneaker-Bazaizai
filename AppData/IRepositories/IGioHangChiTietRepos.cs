@@ -15,5 +15,6 @@ namespace App_Data.IRepositories
         public bool RemoveCartDetail(GioHangChiTiet item);
         public bool EditCartDetail(GioHangChiTiet item);
         public IEnumerable<GioHangChiTietDTO> GetAllGioHangDTO();
+        public Task<List<SanPhamGioHangViewModel>> GetAllSanPhamGioHangWhenLoginAynsc(string idNguoiDung);
     }
 }

@@ -100,7 +100,7 @@
 
                                 <span class="pd-detail__stock">@Model.SoLuongTon in stock</span>
 
-                                <span class="pd-detail__left">Only 2 left</span>
+                                @*<span class="pd-detail__left">Only 2 left</span>*@
                             </div>
                         </div>
                         <div class="u-s-m-b-15">
@@ -678,7 +678,7 @@
                             <div class="product-o product-o--hover-on">
                                 <div class="product-o__wrap">
 
-                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
+                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/">
 
                                         <img class="aspect__img" src="/images/product/electronic/product1.jpg" alt="">
                                     </a>
@@ -1083,6 +1083,24 @@
         });
     })
 
+    const updateViewCartMini = () => {
+
+        $.ajax({
+            url: '/GioHangChiTiets/GetGioHangMiniModel',
+            type: 'GET',
+            success: function (result) {
+                $('#body-mini-cart').empty().html(result)
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+
+
+    }
 
     $(document).on('click', 'button[data-modal-id="#add-to-cart"]', function () {
 
@@ -1108,6 +1126,7 @@
             type: 'POST',
             data: data1,
             success: function (result) {
+                updateViewCartMini();
             },
             error: function (xhr, status, error) {
                 console.log(xhr.responseText);

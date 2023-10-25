@@ -185,7 +185,6 @@ namespace App_Api.Controllers
                     "MASP1" :
                     "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
                 sanPhamChiTiet.TrangThai = 0;
-                sanPhamChiTiet.TrangThaiSale = 0;
                 sanPhamChiTiet.SoLuongDaBan = 0;
                 sanPhamChiTiet.NgayTao = DateTime.Now;
 
