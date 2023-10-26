@@ -23,6 +23,7 @@
 </style>
 
 <div id="body-danhsach">
+    <div class="notification-toast top-right" id="notification-toast"></div>
     <div class="modal fade" id="modal-import">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -433,11 +434,13 @@
 
             $('#table-sanpham').on('draw.dt', function () {
                 $('input[type="checkbox"]').each(function () {
-                    const id = $(this).attr('id').replace('check-item-', '');
-                    if (selectedCheckboxes[id]) {
-                        $(this).prop('checked', true);
-                    } else {
-                        $(this).prop('checked', false);
+                    if ($(this).attr('id')) {
+                        const id = $(this).attr('id').replace('check-item-', '');
+                        if (selectedCheckboxes[id]) {
+                            $(this).prop('checked', true);
+                        } else {
+                            $(this).prop('checked', false);
+                        }
                     }
                 });
             });

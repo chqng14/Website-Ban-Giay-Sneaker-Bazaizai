@@ -32,9 +32,12 @@ namespace App_View.Areas.Admin.Controllers
         // GET: Admin/Vouchers
         public async Task<IActionResult> Index(string trangThai)
         {
-            var lstVoucher = (await _voucherSV.GetAllVoucher()).OrderByDescending(c => c.NgayTao).ToList();
+            var lstVoucher = (await _voucherSV.GetAllVoucher()).ToList(); // Lấy tất cả Voucher và chuyển sang List
 
-            // Mặc định, hiển thị danh sách các voucher đang hoạt động
+            // Sắp xếp danh sách ban đầu theo NgayTao, giảm dần
+            lstVoucher = lstVoucher.OrderByDescending(c => c.NgayTao).ToList();
+
+            // Tiếp tục với việc lọc dựa trên trạng thái
             if (string.IsNullOrEmpty(trangThai) || trangThai == "hoatDong")
             {
                 lstVoucher = lstVoucher.Where(v => v.TrangThai == (int)TrangThaiVoucher.HoatDong).ToList();
@@ -44,10 +47,10 @@ namespace App_View.Areas.Admin.Controllers
                 switch (trangThai)
                 {
                     case "tatCa":
-                        var lstVoucherALL = (await _voucherSV.GetAllVoucher());
-                        lstVoucher = lstVoucherALL;
+                        // Không cần thay đổi gì
                         break;
                     case "hoatDong":
+                        // Không cần thay đổi gì
                         break;
                     case "khongHoatDong":
                         lstVoucher = lstVoucher.Where(v => v.TrangThai == (int)TrangThaiVoucher.KhongHoatDong).ToList();
@@ -83,12 +86,13 @@ namespace App_View.Areas.Admin.Controllers
             {
                 if (await _voucherSV.CreateVoucher(voucherDTO))
                 {
-                    return RedirectToAction("Index");
+                    return Ok(new { message = " Thêm mới thành công" });
                 }
             }
-            return View();
+            return Ok(new { error = "Thêm voucher thất bại" });
 
         }
+
         public async Task<ActionResult> Edit(string id)
         {
             var Voucher = await _voucherSV.GetVoucherDTOById(id);

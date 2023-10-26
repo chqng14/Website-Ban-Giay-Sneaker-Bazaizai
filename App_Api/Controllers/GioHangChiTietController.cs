@@ -52,6 +52,12 @@ namespace App_Api.Controllers
             return _gioHangChiTiet.GetAllGioHangDTO();
         }
 
+        [HttpGet("Get-List-SanPhamGioHangVM/{idNguoiDung}")]
+        public async Task<List<SanPhamGioHangViewModel>> GetListSanPhamGioHangVmWhenLogin(string idNguoiDung)
+        {
+            return await _gioHangChiTiet.GetAllSanPhamGioHangWhenLoginAynsc(idNguoiDung);
+        }
+
         // GET api/<GioHangChiTietController>/5
         [HttpGet("GetGioHangCTById")]
         public GioHangChiTiet GetGioHangCTById(string id)

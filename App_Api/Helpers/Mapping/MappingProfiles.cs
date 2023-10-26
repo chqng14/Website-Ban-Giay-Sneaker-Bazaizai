@@ -59,6 +59,28 @@ namespace App_Api.Helpers.Mapping
             .ForMember(
                 dest => dest.MaVoucher, opt => opt.MapFrom(x => x.Vouchers.MaVoucher));
 
+            CreateMap<GioHangChiTiet, SanPhamGioHangViewModel>()
+                .ForMember(
+                    dest => dest.IdSanPhamChiTiet,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.IdChiTietSp)
+                )
+                .ForMember(
+                    dest => dest.TenSanPham,
+                    opt => opt.MapFrom(src => $"{src.SanPhamChiTiet.SanPham.TenSanPham} {src.SanPhamChiTiet.MauSac.TenMauSac} {src.SanPhamChiTiet.KichCo.SoKichCo}")
+                )
+                .ForMember(
+                    dest => dest.SoLuong,
+                    opt => opt.MapFrom(src => src.Soluong)
+                )
+                .ForMember(
+                    dest => dest.GiaSanPham,
+                    opt => opt.MapFrom(src => src.GiaBan)
+                )
+                .ForMember(
+                    dest => dest.Anh,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(a=>a.Url).Select(x => x.Url).FirstOrDefault())
+                );
+
             CreateMap<GioHangChiTiet, GioHangChiTietDTO>()
                  .ForMember(
                     dest => dest.TenSanPham,
@@ -242,6 +264,7 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.GiaMin,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
                         .Where(x=>
+                        x.TrangThai == 0 &&
                         x.IdXuatXu == src.IdXuatXu && 
                         x.IdSanPham == src.IdSanPham &&
                         x.IdLoaiGiay == src.IdLoaiGiay &&
@@ -256,6 +279,7 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.GiaMax,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
                         .Where(x =>
+                        x.TrangThai == 0 &&
                         x.IdXuatXu == src.IdXuatXu &&
                         x.IdSanPham == src.IdSanPham &&
                         x.IdLoaiGiay == src.IdLoaiGiay &&
@@ -270,6 +294,7 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.SoMauSac,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
                         .Where(x =>
+                        x.TrangThai == 0 &&
                         x.IdXuatXu == src.IdXuatXu &&
                         x.IdSanPham == src.IdSanPham &&
                         x.IdLoaiGiay == src.IdLoaiGiay &&

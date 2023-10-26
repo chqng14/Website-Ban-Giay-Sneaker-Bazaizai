@@ -215,6 +215,9 @@ namespace App_Data.Migrations
                     b.Property<string>("MoTa")
                         .HasColumnType("nvarchar(MAX)");
 
+                    b.Property<DateTime?>("NgayGiaoDuKien")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("NgayNhan")
                         .HasColumnType("DateTime");
 

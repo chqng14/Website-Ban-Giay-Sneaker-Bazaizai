@@ -29,7 +29,7 @@
                                 {
                                     <div>
 
-                                        <img class="u-img-fluid" src="/AnhSanPham/@item" alt="">
+                                        <img class="u-img-fluid" src="/AnhSanPham/@item" alt="" style="height: 20rem">
                                     </div>
                                 }
                             </div>
@@ -40,7 +40,7 @@
                                 {
                                     <div>
 
-                                        <img class="u-img-fluid" src="/AnhSanPham/@item" alt="">
+                                        <img class="u-img-fluid" src="/AnhSanPham/@item" alt="" style="height: 5rem">
                                     </div>
                                 }
 
@@ -186,7 +186,24 @@
     </div>
 </div>
 <script>
+    const updateViewCartMini = () => {
 
+        $.ajax({
+            url: '/GioHangChiTiets/GetGioHangMiniModel',
+            type: 'GET',
+            success: function (result) {
+                $('#body-mini-cart').empty().html(result)
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+
+
+    }
 
     $('.add-product').click(() => {
         var data = {};
@@ -205,12 +222,14 @@
         });
 
 
+
         $.ajax({
             url: '/GioHangChiTiets/AddToCart',
             type: 'POST',
             data: data,
             success: function (result) {
                 $('.dismiss-button').trigger('click');
+                updateViewCartMini();
                 toast({
                     title: "Thành công!",
                     message: "Bạn đã thêm thành công sản phẩm vào giỏ hàng!",

@@ -119,7 +119,7 @@ namespace App_View.Controllers
             await ThongTinGHController.CreateThongTin(thongTinGHDTO);
             return Ok(new { idThongTinGH = thongTinGHDTO.IdThongTinGH });
         }
-        public async Task<IActionResult> ThanhToan(HoaDonChiTietDTO hoaDonChiTietDTO)
+        public async Task<IActionResult> ThanhToan(HoaDonDTO hoaDonDTO)
         {
             var UserID = _userManager.GetUserId(User);
             var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == UserID);
@@ -128,17 +128,18 @@ namespace App_View.Controllers
                 IdHoaDon = Guid.NewGuid().ToString(),
                 IdNguoiDung = UserID,
                 IdKhachHang = null,
-                IdThongTinGH = hoaDonChiTietDTO.IdThongTinGH,
-                IdVoucher = hoaDonChiTietDTO.IdVoucher,
+                IdThongTinGH = hoaDonDTO.IdThongTinGH,
+                IdVoucher = hoaDonDTO.IdVoucher,
                 MaHoaDon = "HD" + DateTime.Now.ToString("ddMMyyyyhhmmss"),
                 NgayTao = DateTime.Now,
                 NgayShip = DateTime.Now.AddDays(2),
                 NgayNhan = DateTime.Now.AddDays(4),
                 NgayThanhToan = DateTime.Now.AddDays(4),
-                TienGiam = hoaDonChiTietDTO.TienGiam,
-                TongTien = hoaDonChiTietDTO.TongTien,
-                TienShip = hoaDonChiTietDTO.TienShip,
-                MoTa = hoaDonChiTietDTO.MoTa,
+                NgayGiaoDuKien = hoaDonDTO.NgayGiaoDuKien,
+                TienGiam = hoaDonDTO.TienGiam,
+                TongTien = hoaDonDTO.TongTien,
+                TienShip = hoaDonDTO.TienShip,
+                MoTa = hoaDonDTO.MoTa,
                 TrangThaiGiaoHang = 0,
                 TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan
             };
@@ -164,7 +165,12 @@ namespace App_View.Controllers
                 var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
                 await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
             }
-            return Ok();
+            return Ok(new { idHoaDon = hoadon.IdHoaDon });
+        }
+        public async Task<ActionResult<HoaDonDTO>> Order(string idHoaDon)
+        {
+            var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            return View(order);
         }
     }
 }

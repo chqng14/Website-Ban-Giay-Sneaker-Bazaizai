@@ -13,5 +13,8 @@ namespace App_View.IServices
         Task<bool> RestoreVoucherWithList(List<string> Id);
         Task<Voucher> GetVoucherByMa(string ma);
         Task<VoucherDTO> GetVoucherDTOById(string id);
+        Task<bool> UpdateVoucherAfterUseIt(string ma);
+        
     }
+
 }
