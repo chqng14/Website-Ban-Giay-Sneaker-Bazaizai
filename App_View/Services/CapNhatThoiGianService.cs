@@ -70,6 +70,7 @@ namespace App_View.Services
             var khuyenMais = _dbContext.khuyenMais.AsNoTracking().ToList();
             var lstKhuyenMaiDangHoatDong = _dbContext.khuyenMaiChiTiets.Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai).AsNoTracking().ToList();
             var lstCTSP = _dbContext.sanPhamChiTiets.Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale).ToList();
+            var giohang = _dbContext.gioHangChiTiets.ToList();
             if (lstCTSP != null && lstCTSP.Count() > 0)
             {
                 foreach (var ctsp in lstCTSP)
@@ -111,7 +112,7 @@ namespace App_View.Services
                         foreach (var khuyenMai in giaThucTe)
                         {
                             var a = khuyenMais.FirstOrDefault(x => x.IdKhuyenMai == khuyenMai.IdKhuyenMai);
-                            if(a.LoaiHinhKM==1)
+                            if (a.LoaiHinhKM == 1)
                             {
                                 mangKhuyenMai.Add(Convert.ToInt32(a.MucGiam));
                             }
@@ -120,7 +121,7 @@ namespace App_View.Services
                                 mangKhuyenMaiDongGia.Add(Convert.ToInt32(a.MucGiam));
                             }
                         }
-                        if(mangKhuyenMaiDongGia.Count>0)
+                        if (mangKhuyenMaiDongGia.Count > 0)
                         {
                             ctsp.GiaThucTe = mangKhuyenMaiDongGia.Max();
                         }
@@ -128,8 +129,12 @@ namespace App_View.Services
                         {
                             ctsp.GiaThucTe = ctsp.GiaBan - (ctsp.GiaBan * mangKhuyenMai.Max() / 100);
                         }
-                       
-                        
+                        var gioHangChiTiet = giohang.Where(x => x.IdSanPhamCT == ctsp.IdChiTietSp).ToList();
+                        foreach (var item in gioHangChiTiet)
+                        {
+                            item.GiaBan = ctsp.GiaThucTe;
+                        }
+
                         //_dbContext.sanPhamChiTiets.Update(ctsp);
                         //_dbContext.SaveChanges();
                     }
@@ -139,14 +144,20 @@ namespace App_View.Services
                         ctsp.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DuocApDungSale;
                         //_dbContext.sanPhamChiTiets.Update(ctsp);
                         //_dbContext.SaveChanges();
+                        var gioHangChiTiet = giohang.Where(x => x.IdSanPhamCT == ctsp.IdChiTietSp).ToList();
+                        foreach (var item in gioHangChiTiet)
+                        {
+                            item.GiaBan = ctsp.GiaThucTe;
+                        }
                     }
-                }
 
+                }
+                _dbContext.gioHangChiTiets.UpdateRange(giohang);
                 _dbContext.sanPhamChiTiets.UpdateRange(lstCTSP);
                 _dbContext.SaveChanges();
             }
         }
-            //_dbContext.SaveChanges();
+        //_dbContext.SaveChanges();
 
         public void CapNhatVoucherHetHan()
         {

@@ -4,28 +4,13 @@
     ViewData["Title"] = "ShowCartUser";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@if (ViewData["QuantityErrorMessages"] != null)
+@if (TempData["QuantityErrorMessages"] != null)
 {
     <script>
-        $(document).ready(function () {
-            var messages = @Html.Raw(Json.Serialize(ViewData["QuantityErrorMessages"]));
-
-            messages.forEach(function (message) {
-                alert(message);
-            });
-        });
-    </script>
-}
-@if (ViewData["QuantityCartUser"] != null)
-{
-    <script>
-        $(document).ready(function () {
-            var messages = @Html.Raw(Json.Serialize(ViewData["QuantityCartUser"]));
-
-            messages.forEach(function (message) {
-                alert(message);
-            });
-        });
+        Swal.fire({
+            title: '@TempData["QuantityErrorMessages"]',
+            icon: 'error',
+        })
     </script>
 }
 <!--====== End - Section 1 ======-->
@@ -225,12 +210,22 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div>
-                                        <a class="btn btn--e-brand-b-2" href="/GioHangChiTiets/CheckOut">
-                                            THANH TOÁN
-                                        </a>
-                                        
-                                    </div>
+                                    @if (TempData["QuantityErrorMessages"]!=null)
+                                    {
+                                        <div>
+                                            <a class="btn btn--e-brand-b-2" href="/GioHangChiTiets/ShowCartUser">
+                                                THANH TOÁN
+                                            </a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div>
+                                            <a class="btn btn--e-brand-b-2" href="/GioHangChiTiets/CheckOut">
+                                                THANH TOÁN
+                                            </a>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -249,6 +244,7 @@
 @section Scripts{
     <!--====== Cập nhật số lượng ======-->
     <script>
+        var soLuongBanDau = parseInt($(".input-counter__text").data("value"));
         $(document).on("input", ".input-counter__text", function () {
             updateCart(this);
         });
@@ -283,12 +279,7 @@
                         $('#tamtinh').text(TongTien.toLocaleString("vi-VN") + "đ");
                         $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
                     } else {
-                        var soLuongBanDau = parseInt($(inputElement).data('value'));
-                        if (soLuongBanDau == 0) {
-                            $(inputElement).val(soLuongBanDau+1);
-                        }else{
-                            $(inputElement).val(soLuongBanDau);
-                        }
+                        $(inputElement).val(soLuongBanDau);
                         alert(response.quantityError);
                     }
 

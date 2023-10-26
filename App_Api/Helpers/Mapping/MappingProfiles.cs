@@ -78,7 +78,7 @@ namespace App_Api.Helpers.Mapping
                 )
                 .ForMember(
                     dest => dest.Anh,
-                    opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(a=>a.Url).Select(x => x.Url).FirstOrDefault())
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(a => a.Url).Select(x => x.Url).FirstOrDefault())
                 );
 
             CreateMap<GioHangChiTiet, GioHangChiTietDTO>()
@@ -94,6 +94,9 @@ namespace App_Api.Helpers.Mapping
                 ).ForMember(
                 dest => dest.TenThuongHieu,
                 opt => opt.MapFrom(src => src.SanPhamChiTiet.ThuongHieu.TenThuongHieu)
+                ).ForMember(
+                dest => dest.TrangThaiSanPham,
+                opt => opt.MapFrom(src => src.SanPhamChiTiet.TrangThai)
                 ).ForMember(
                 dest => dest.LinkAnh,
                 opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.Select(x => x.Url).ToList())

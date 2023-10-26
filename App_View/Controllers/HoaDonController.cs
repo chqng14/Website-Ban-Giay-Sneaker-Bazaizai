@@ -170,7 +170,15 @@ namespace App_View.Controllers
                         Message = $"Sản phẩm {sanPhamChiTiet.SanPham} màu {sanPhamChiTiet.MauSac} size {sanPhamChiTiet.KichCo} chỉ còn {sanPhamChiTiet.SoLuongTon}, Vui lòng chọn lại số lượng sản phẩm!"
                     };
                 }
-
+                if (item.TrangThaiSanPham == 1)
+                {
+                    return new
+                    {
+                        Item = item,
+                        SanPhamChiTiet = sanPhamChiTiet,
+                        Message = $"Số lượng sản phẩm {sanPhamChiTiet.SanPham} màu {sanPhamChiTiet.MauSac} size {sanPhamChiTiet.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!"
+                    };
+                }
                 return null; // Trả về null nếu sản phẩm có sẵn để không bị lẫn vào danh sách outOfStockProducts
             }));
 

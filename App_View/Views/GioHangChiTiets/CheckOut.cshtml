@@ -5,28 +5,13 @@
     var thongTinGH = ViewData["ThongTinGH"] as List<App_Data.Models.ThongTinGiaoHang>; 
     var idnguoidung = ViewBag.idNguoiDung;
 }
-@if (ViewData["QuantityErrorMessages"] != null)
+@if (TempData["QuantityErrorMessages"] != null)
 {
     <script>
-        $(document).ready(function () {
-            var messages = @Html.Raw(Json.Serialize(ViewData["QuantityErrorMessages"]));
-
-            messages.forEach(function (message) {
-                alert(message);
-            });
-        });
-    </script>
-}
-@if (ViewData["QuantityCartUser"] != null)
-{
-    <script>
-        $(document).ready(function () {
-            var messages = @Html.Raw(Json.Serialize(ViewData["QuantityCartUser"]));
-
-            messages.forEach(function (message) {
-                alert(message);
-            });
-        });
+        Swal.fire({
+            title: '@TempData["QuantityErrorMessages"]',
+            icon: 'error',
+        })
     </script>
 }
 <div class="u-s-p-b-60" style="margin-top:20px">
@@ -411,9 +396,18 @@
                                         </div>
                                         <input hidden name="IdVoucher" />
                                         <input hidden name="NgayGiaoDuKien" />
-                                        <div>
-                                            <button id="placeOrderButton" class="btn btn--e-brand-b-2" type="submit">ĐẶT HÀNG</button>
-                                        </div>
+                                        @* @if (TempData["QuantityErrorMessages"] != null)
+                                        {
+                                            <div>
+                                                <a id="placeOrderButton" class="btn btn--e-brand-b-2" href="/GioHangChiTiets/CheckOut">ĐẶT HÀNG</a>
+                                            </div>
+                                        }
+                                        else
+                                        { *@
+                                            <div>
+                                                <button id="placeOrderButton" class="btn btn--e-brand-b-2" type="submit">ĐẶT HÀNG</button>
+                                            </div>
+                                        @* } *@
                                     
                                 </div>
                             </div>
@@ -1196,7 +1190,10 @@
                                 var idHoaDon = paymentResponse.idHoaDon;
                                 window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
                             }else{
-                                alert(paymentResponse.quantityError);
+                                Swal.fire({
+                                    title: paymentResponse.quantityError,
+                                    icon: 'error',
+                                })
                             }
                         },
                         error: function (paymentError) {
@@ -1231,10 +1228,16 @@
                                     url: '/HoaDon/ThanhToan',
                                     data: paymentFormData,
                                     success: function (paymentResponse) {
-                                        UpdateVoucher()
-                                        // Xử lý kết quả nếu cần
-                                        var idHoaDon = paymentResponse.idHoaDon;
-                                        window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
+                                        if (paymentResponse.idHoaDon != null) {
+                                            UpdateVoucher()
+                                            var idHoaDon = paymentResponse.idHoaDon;
+                                            window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
+                                        } else {
+                                            Swal.fire({
+                                                title: paymentResponse.quantityError,
+                                                icon: 'error',
+                                            })
+                                        }
                                     },
                                     error: function (paymentError) {
                                         // Xử lý lỗi nếu cần

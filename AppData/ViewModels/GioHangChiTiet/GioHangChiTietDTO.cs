@@ -25,6 +25,7 @@ namespace App_Data.ViewModels.GioHangChiTiet
         public double? GiaGoc { get; set; }
         public double? GiaBan { get; set; }
         public int? TrangThai { get; set; }
+        public int? TrangThaiSanPham { get; set; }
         public List<string?> LinkAnh { get; set; }
     }
 }

@@ -63,20 +63,17 @@ namespace App_View.Controllers
                 }
                 else
                 {
-                    var quantityErrorMessages = new List<string>();
-
                     foreach (var item in giohang)
                     {
                         var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
                         if (item.SoLuong > product.SoLuongTon || product.SoLuongTon == 0)
                         {
-                            quantityErrorMessages.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} {(product.SoLuongTon == 0 ? "đã hết hàng" : $"chỉ còn {product.SoLuongTon}")}, Vui lòng chọn lại số lượng sản phẩm!");
+                            TempData["QuantityErrorMessages"] = $"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} {(product.SoLuongTon == 0 ? "đã hết hàng" : $"chỉ còn {product.SoLuongTon}")}, Vui lòng chọn lại số lượng sản phẩm!";
                         }
-                    }
-
-                    if (quantityErrorMessages.Any())
-                    {
-                        ViewData["QuantityErrorMessages"] = quantityErrorMessages;
+                        if (item.TrangThaiSanPham == 1)
+                        {
+                            TempData["QuantityErrorMessages"] = $"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!";
+                        }
                     }
                     return View(giohang);
                 }
@@ -92,6 +89,18 @@ namespace App_View.Controllers
             }
             else
             {
+                foreach (var item in giohangSession)
+                {
+                    var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                    if (item.SoLuong >= product.SoLuongTon || product.SoLuongTon == 0)
+                    {
+                        TempData["QuantityErrorMessages"] = $"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} {(product.SoLuongTon == 0 ? "đã hết hàng" : $"chỉ còn {product.SoLuongTon}")}, Vui lòng chọn lại số lượng sản phẩm!";
+                    }
+                    if (item.TrangThaiSanPham == 1)
+                    {
+                        TempData["QuantityErrorMessages"] = $"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn lại số lượng sản phẩm!";
+                    }
+                }
                 return View(giohangSession);
             }
         }
@@ -107,49 +116,52 @@ namespace App_View.Controllers
                 var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
                 var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(GetIdNguoiDung());
                 ViewData["ThongTinGH"] = thongTinGH;
-                var quantityErrorMessages = new List<string>();
-
-                foreach (var item in giohang)
+                if (giohang.Count == 0)
                 {
-                    var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
-                    if (item.SoLuong > product.SoLuongTon || product.SoLuongTon == 0)
+                    return View("Empty");
+                }
+                else
+                {
+                    foreach (var item in giohang)
                     {
-                        quantityErrorMessages.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} {(product.SoLuongTon == 0 ? "đã hết hàng" : $"chỉ còn {product.SoLuongTon}")}, Vui lòng chọn lại số lượng sản phẩm!");
+                        var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                        if (item.SoLuong > product.SoLuongTon || product.SoLuongTon == 0)
+                        {
+                            TempData["QuantityErrorMessages"] = $"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} {(product.SoLuongTon == 0 ? "đã hết hàng" : $"chỉ còn {product.SoLuongTon}")}, Vui lòng chọn lại số lượng sản phẩm!";
+                        }
+                        if (item.TrangThaiSanPham == 1)
+                        {
+                            TempData["QuantityErrorMessages"] = $"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn lại số lượng sản phẩm!";
+                        }
                     }
+                    return View(giohang);
                 }
-
-                if (quantityErrorMessages.Any())
-                {
-                    ViewData["QuantityErrorMessages"] = quantityErrorMessages;
-                }
-                return View(giohang);
-            }
-        }
-
-        public async void CheckQtyProduct()
-        {
-            var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
-            var quantityErrorMessages = new List<string>();
-
-            foreach (var item in giohang)
-            {
-                var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
-                if (item.SoLuong > product.SoLuongTon || product.SoLuongTon == 0)
-                {
-                    quantityErrorMessages.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} {(product.SoLuongTon == 0 ? "đã hết hàng" : $"chỉ còn {product.SoLuongTon}")}, Vui lòng chọn lại số lượng sản phẩm!");
-                }
-            }
-
-            if (quantityErrorMessages.Any())
-            {
-                ViewData["QuantityErrorMessages"] = quantityErrorMessages;
             }
         }
 
         public async Task<IActionResult> CheckOutNoLogin()
         {
             var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-            return View(giohangSession);
+            if (giohangSession.Count == 0)
+            {
+                return View("Empty");
+            }
+            else
+            {
+                foreach (var item in giohangSession)
+                {
+                    var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                    if (item.SoLuong >= product.SoLuongTon || product.SoLuongTon == 0)
+                    {
+                        TempData["QuantityErrorMessages"] = $"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} {(product.SoLuongTon == 0 ? "đã hết hàng" : $"chỉ còn {product.SoLuongTon}")}, Vui lòng chọn lại số lượng sản phẩm!";
+                    }
+                    if (item.TrangThaiSanPham == 1)
+                    {
+                        TempData["QuantityErrorMessages"] = $"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn lại số lượng sản phẩm!";
+                    }
+                }
+                return View(giohangSession);
+            }
         }
 
 
@@ -259,7 +271,6 @@ namespace App_View.Controllers
                         Idsanpham = sanPhamChiTiet.IdChiTietSp
                     };
                 }
-
                 return null; // Trả về null nếu sản phẩm có sẵn để không bị lẫn vào danh sách outOfStockProducts
             }));
 
