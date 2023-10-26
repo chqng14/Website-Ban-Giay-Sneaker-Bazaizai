@@ -70,8 +70,8 @@ namespace App_View.Services
             var KhuyenMaiCTs = _dbContext.khuyenMaiChiTiets.AsNoTracking().ToList();
             var khuyenMais = _dbContext.khuyenMais.AsNoTracking().ToList();
             var lstKhuyenMaiDangHoatDong = _dbContext.khuyenMaiChiTiets.Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai).AsNoTracking().ToList();
-            var lstCTSP = _dbContext.sanPhamChiTiets.Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale).ToList();
-            var giohang = _dbContext.gioHangChiTiets.ToList();
+
+            var lstCTSP = _dbContext.sanPhamChiTiets.Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale && x.TrangThai == (int)TrangThaiCoBan.HoatDong).ToList();
             if (lstCTSP != null && lstCTSP.Count() > 0)
             {
                 foreach (var ctsp in lstCTSP)
