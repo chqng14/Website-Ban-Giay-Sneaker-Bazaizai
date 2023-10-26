@@ -1,5 +1,6 @@
 ﻿using App_Data.DbContextt;
 using App_Data.Models;
+using App_Data.Repositories;
 using App_View.IServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

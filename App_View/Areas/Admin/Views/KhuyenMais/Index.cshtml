@@ -11,93 +11,38 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Ảnh Khuyến mãi
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaKhuyenMai)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TenKhuyenMai)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayBatDau)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayKetThuc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LoaiHinhKM)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MucGiam)
-            </th>
-
-            <th>
-                @Html.DisplayNameFor(model => model.TrangThai)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    <img src="~/AnhSale/@item.Url" style="width:60px"></img>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaKhuyenMai)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TenKhuyenMai)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NgayBatDau)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NgayKetThuc)
-                </td>
-                <td>
-                    @if (item.LoaiHinhKM == 0)
-                    {
-                        <text>Thương hiệu</text>
-                    }
-                    else if (item.LoaiHinhKM == 1)
-                    {
-                        <text>Màu sắc</text>
-                    }
-                    else if (item.LoaiHinhKM == 2)
-                    {
-                        <text>Định kỳ</text>
-                    }
-                    else if (item.LoaiHinhKM == 3)
-                    {
-                        <text>Mức giá</text>
-                    }
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MucGiam)
-                </td>
-
-                <td>
-                    <label class="switch">
-                        <input type="checkbox" class="status-toggle" data-id="@item.IdKhuyenMai" data-status="@item.TrangThai" @(item.TrangThai == (int)TrangThaiSale.DangBatDau ? "checked" : "")>
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.IdKhuyenMai">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.IdKhuyenMai">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.IdKhuyenMai">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div class="container">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-md-3">
+                    <figure>
+                        <img src="~/AnhSale/@item.Url" alt="Ảnh khuyến mãi" style="width:100%">
+                        <figcaption>
+                            <strong>Mã khuyến mãi:</strong> @item.MaKhuyenMai<br />
+                            <strong>Tên khuyến mãi:</strong> @item.TenKhuyenMai<br />
+                            <strong>Ngày bắt đầu:</strong> @item.NgayBatDau.ToString()<br />
+                            <strong>Ngày kết thúc:</strong> @item.NgayKetThuc.ToString()<br />
+                            <strong>Loại hình:</strong> @(item.LoaiHinhKM == 0?"Khuyến mại đồng giá":"Khuyến mại giảm giá")<br />
+                            <strong>Mức giảm:</strong> @item.MucGiam<br />
+                            
+                        <div class="label-container" style="display:flex;align-items:center;gap:10px">
+                            <strong>Trạng thái:</strong>
+                            <label class="switch">
+                                <input type="checkbox" class="status-toggle" data-id="@item.IdKhuyenMai" data-status="@item.TrangThai" @(item.TrangThai == (int)TrangThaiSale.DangBatDau ? "checked" : "")>
+                                <span class="slider round" ></span>
+                            </label>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <button class="btn btn-primary btn-tone m-r-5">Áp dụng</button>
+                            <a class="btn btn-danger btn-tone m-r-5" asp-controller="KhuyenMais" asp-action="Edit" asp-route-id="@item.IdKhuyenMai" asp-route-url="@item.Url">Chỉnh sửa</a>
+                        </div>
+                        </figcaption>
+                    </figure>
+                </div>
+            }
+        </div>
+    </div>
 <script>
     $(document).ready(function () {
         $(document).on("click", ".status-toggle", function () {

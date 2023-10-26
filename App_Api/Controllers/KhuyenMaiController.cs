@@ -31,7 +31,7 @@ namespace App_Api.Controllers
 
         [HttpPost("Create-KhuyenMai")]
 
-        public async Task<IActionResult> CreateKhuyenMaiAsync( string Ten, DateTime ngayBD, DateTime ngayKT,int trangThai,decimal mucGiam, int loaiHinh, IFormFile formFile)
+        public async Task<IActionResult> CreateKhuyenMaiAsync(string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, int loaiHinh, IFormFile formFile)
         {
             try
             {
@@ -95,16 +95,47 @@ namespace App_Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public bool EditKhuyenMai(string id, string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, string PhamVi, int loaiHinh)
+        public async Task<IActionResult> EditKhuyenMaiAsync(string id, string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, int loaiHinh, IFormFile formFile)
         {
-            var KhuyenMai = repos.GetAll().First(p => p.IdKhuyenMai == id);
-            KhuyenMai.TenKhuyenMai = Ten;
-            KhuyenMai.TrangThai = trangThai;
-            KhuyenMai.NgayBatDau = ngayBD;
-            KhuyenMai.NgayKetThuc = ngayKT;
-            KhuyenMai.MucGiam = mucGiam;
-            KhuyenMai.LoaiHinhKM = loaiHinh;
-            return repos.EditItem(KhuyenMai);
+            string currentDirectory = Directory.GetCurrentDirectory();
+            string rootPath = Directory.GetParent(currentDirectory).FullName;
+            string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSale");
+            string MaTS;
+            if (formFile.Length > 0)
+            {
+                using var stream = new MemoryStream();
+                formFile.CopyTo(stream);
+                stream.Position = 0;
+
+                using var image = SixLabors.ImageSharp.Image.Load(stream);
+
+                image.Mutate(x => x.Resize(new ResizeOptions
+                {
+                    Size = new SixLabors.ImageSharp.Size(1600, 1600),
+                    Mode = ResizeMode.Max
+                }));
+
+                var encoder = new JpegEncoder
+                {
+                    Quality = 80
+                };
+
+                string fileName = Guid.NewGuid().ToString() + formFile.FileName;
+                string outputPath = Path.Combine(uploadDirectory, fileName);
+
+                using var outputStream = new FileStream(outputPath, FileMode.Create);
+                await image.SaveAsync(outputStream, encoder);
+                var KhuyenMai = repos.GetAll().First(p => p.IdKhuyenMai == id);
+                KhuyenMai.TenKhuyenMai = Ten;
+                KhuyenMai.TrangThai = trangThai;
+                KhuyenMai.NgayBatDau = ngayBD;
+                KhuyenMai.NgayKetThuc = ngayKT;
+                KhuyenMai.MucGiam = mucGiam;
+                KhuyenMai.LoaiHinhKM = loaiHinh;
+                KhuyenMai.Url = fileName;
+                repos.EditItem(KhuyenMai);
+            }
+            return Ok();
         }
 
         [HttpDelete("{id}")]
