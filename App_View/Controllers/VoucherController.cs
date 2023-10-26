@@ -71,6 +71,11 @@ namespace App_View.Controllers
             }
             return BadRequest();
         }
+        public async Task<IActionResult> VoucherDetails(string ma)
+        {
+            var Voucher = await _voucherSV.GetVoucherByMa(ma);
+            return View(Voucher);
+        }
 
     }
 }
