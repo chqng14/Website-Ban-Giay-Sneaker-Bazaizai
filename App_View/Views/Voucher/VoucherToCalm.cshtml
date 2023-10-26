@@ -57,83 +57,7 @@
         return string.Empty; // hoặc bạn có thể trả về một giá trị mặc định khác nếu cần
     }
 }
-<!-- Button trigger modal -->
 
-
-<!-- Modal -->
-   @foreach (var item in ViewBag.TatCaVoucher)
-{
-    <div class="modal fade" id="VoucherDetails" tabindex="-1" role="dialog" aria-labelledby="VoucherDetailsTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Thông tin chi tiết</h5>
-                    <button type="button" class="close manage-o__badge badge--delivered" style="border: none; width: 45px; text-align: center; display: flex; justify-content: center; align-items: center;border-radius:40px" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" style="margin: 0; padding: 0;">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="row">
-                                    <div class="col-lg-12">
-                                        <div class="col-lg-3">
-                                            <img src="/images/logo/logo-1.png" alt="Logo" class="img-fluid">
-                                        </div>
-                                        <div class="col-lg-9">
-                                            Giảm
-                                            @if (item.LoaiHinhUuDai == 1)
-                                            {
-                                                <span> @item.MucUuDai %</span>
-                                            }
-                                            else
-                                            {
-                                                double? mucUuDai = item.MucUuDai;
-                                                @string.Format("{0:N0}đ", item.MucUuDai)
-                                                // Định dạng giá trị theo định dạng tiền Việt Nam
-                                            }
-                                            <p width:40px>Đơn tối thiểu: <br> @FormatCurrency(item.DieuKien)</p>
-                                            <div style="color:#FF4500" class="manage-o__text u-c-silver"> 🕛 @FormatDate(item.NgayKetThuc)</div>
-                                            <p>Số lượng còn lại: @item.SoLuong</p>
-                                            <p>Lưu mã từ: @FormatDate(item.NgayBatDau)</p>
-                                            <p>Hạn sử dụng mã</p>
-                                            <p>@FormatDate(item.NgayBatDau) - @FormatDate(item.NgayKetThuc)</p>
-                                            <p>Ưu đãi</p>
-                                            <p>Lượt sử dụng có hạn. Nhanh tay kẻo lỡ bạn nhé!</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <!-- Phần hiển thị thông tin thêm về mã giảm giá -->
-                                        <p>
-                                            Mã giảm ngay  Giảm
-                                            @if (item.LoaiHinhUuDai == 1)
-                                            {
-                                                <span> @item.MucUuDai %</span>
-                                            }
-                                            else
-                                            {
-                                                double? mucUuDai = item.MucUuDai;
-                                                @string.Format("{0:N0}đ", item.MucUuDai)
-                                                // Định dạng giá trị theo định dạng tiền Việt Nam
-                                            } cho đơn hàng từ
-                                        <p width:40px><br> @FormatCurrency(item.DieuKien)</p> trở lên trên App. Áp dụng cho 1 số sản phẩm tham gia chương trình nhất định. HSD: 23:59 ngày 26/10/2023. Số lượng có hạn.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
 
 
 <!--====== App Content ======-->
@@ -193,7 +117,7 @@
                                                 <div class="dash-l-r">
                                                     <div>
                                                         <div class="manage-o__text-2 u-c-secondary">@item.TenVoucher</div>
-                                                        <div style="color:#FF4500" class="manage-o__text u-c-silver"> 🕛 @FormatDate(item.NgayKetThuc)</div>
+                                                        <div style="color:#FF4500;font-size:16px" class="manage-o__text u-c-silver"> 🕛 @FormatDate(item.NgayKetThuc)</div>
                                                     </div>
                                                     <div>
                                                         @if (item.LoaiHinhUuDai == 0)
@@ -209,8 +133,7 @@
                                                             <p>Miễn phí vận chuyển</p>
                                                         }
                                                         <div class="dash__link dash__link--brand">
-
-                                                            <a style="float:right" data-toggle="modal" data-target="#VoucherDetails" href="dash-manage-order.html">Chi tiết</a>
+                                                            @Html.ActionLink("Chi tiết", "VoucherDetails", new {  ma=item.MaVoucher })      
                                                         </div>
                                                     </div>
                                                 </div>
@@ -307,7 +230,12 @@
         // Xóa phần tử input tạm thời
         document.body.removeChild(tempInput);
 
-        alert("Đã sao chép mã vào clipboard: " + maVoucher);
+        toast({
+            title: "Đã sao chép!",
+            message: "Đã sao chép mã vào clipboard: " + maVoucher,
+            type: "success",
+            duration: 5000
+        });
     })
     $(document).ready(function () {
         $("form").on("submit", function (event) {
@@ -332,11 +260,11 @@
             });
         });
     });
-    const scrollAmount = 800; // Thay đổi giá trị này nếu cần
+    // const scrollAmount = 800; // Thay đổi giá trị này nếu cần
 
-    // Kéo trang xuống khi trang tải lại
-    $(document).ready(function () {
-        $(window).scrollTop(scrollAmount);
-    });
+    // // Kéo trang xuống khi trang tải lại
+    // $(document).ready(function () {
+    //     $(window).scrollTop(scrollAmount);
+    // });
 
 </script>
