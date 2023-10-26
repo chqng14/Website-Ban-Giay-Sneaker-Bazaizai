@@ -93,6 +93,7 @@ namespace App_Data.Repositories
                 .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.SanPham)
                 .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.MauSac)
                 .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.KichCo)
+                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.ThuongHieu)
                 .ToListAsync();
             var lstSanPhamGioHangVM = _mapper.Map<List<GioHangChiTiet>, List<SanPhamGioHangViewModel>>(data);
             return lstSanPhamGioHangVM.ToList();

@@ -77,6 +77,10 @@ namespace App_Api.Helpers.Mapping
                     opt => opt.MapFrom(src => src.GiaBan)
                 )
                 .ForMember(
+                    dest => dest.TenThuongHieu,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.ThuongHieu.TenThuongHieu)
+                )
+                .ForMember(
                     dest => dest.Anh,
                     opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(a=>a.Url).Select(x => x.Url).FirstOrDefault())
                 );
