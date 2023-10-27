@@ -188,18 +188,28 @@ namespace App_Api.Controllers
                 sanPhamChiTiet.SoLuongDaBan = 0;
                 sanPhamChiTiet.NgayTao = DateTime.Now;
 
-                QRCodeGenerator qrGenerator = new QRCodeGenerator();
-
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
-                QRCode qrCode = new QRCode(qrCodeData);
-
-                Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
-
-                string qrCodeImagePath = Path.Combine(uploadDirectory, sanPhamChiTiet.Ma + ".png");
-
-                using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
+                if (!string.IsNullOrEmpty(uploadDirectory) && !string.IsNullOrEmpty(sanPhamChiTiet.Ma))
                 {
-                    qrCodeImage.Save(stream, ImageFormat.Png);
+                    string qrCodeImagePath = Path.Combine(uploadDirectory, sanPhamChiTiet.Ma + ".png");
+
+                    if (!Directory.Exists(uploadDirectory))
+                    {
+                        Directory.CreateDirectory(uploadDirectory);
+                    }
+
+                    if (!System.IO.File.Exists(qrCodeImagePath))
+                    {
+                        QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                        QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
+                        QRCode qrCode = new QRCode(qrCodeData);
+
+                        Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
+
+                        using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
+                        {
+                            qrCodeImage.Save(stream, ImageFormat.Png);
+                        }
+                    }
                 }
 
                 return new ResponseCreateDTO()
