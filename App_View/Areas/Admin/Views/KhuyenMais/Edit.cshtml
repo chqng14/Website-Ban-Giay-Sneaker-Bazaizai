@@ -9,59 +9,115 @@
 
 <h4>KhuyenMai</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdKhuyenMai" />
-            <div class="form-group">
-                <label asp-for="MaKhuyenMai" class="control-label"></label>
-                <input asp-for="MaKhuyenMai" class="form-control" />
-                <span asp-validation-for="MaKhuyenMai" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TenKhuyenMai" class="control-label"></label>
-                <input asp-for="TenKhuyenMai" class="form-control" />
-                <span asp-validation-for="TenKhuyenMai" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NgayBatDau" class="control-label"></label>
-                <input asp-for="NgayBatDau" class="form-control" />
-                <span asp-validation-for="NgayBatDau" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="NgayKetThuc" class="control-label"></label>
-                <input asp-for="NgayKetThuc" class="form-control" />
-                <span asp-validation-for="NgayKetThuc" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LoaiHinhKM" class="control-label"></label>
-                <input asp-for="LoaiHinhKM" class="form-control" />
-                <span asp-validation-for="LoaiHinhKM" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MucGiam" class="control-label"></label>
-                <input asp-for="MucGiam" class="form-control" />
-                <span asp-validation-for="MucGiam" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PhamVi" class="control-label"></label>
-                <input asp-for="PhamVi" class="form-control" />
-                <span asp-validation-for="PhamVi" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TrangThai" class="control-label"></label>
-                <input asp-for="TrangThai" class="form-control" />
-                <span asp-validation-for="TrangThai" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="TenKhuyenMai" class="control-label"></label>
+                        <input asp-for="TenKhuyenMai" class="form-control" />
+                        <span asp-validation-for="TenKhuyenMai" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="Url" class="control-label">Hình ảnh</label>
+                        <div class="custom-file">
+                            <input type="file" name="formFile" class="custom-file-input" id="formFileInput">
+                            <label class="custom-file-label" for="formFileInput">Chọn tệp hình ảnh</label>
+                        </div>
+                        <span asp-validation-for="Url" class="text-danger"></span>
+                        
+                        <img src="~/AnhSale/@Model.Url"  id="uploadedImage" style="display: block; max-width: 50%" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label asp-for="NgayBatDau" class="control-label"></label>
+                        <input asp-for="NgayBatDau" class="form-control" />
+                        <span asp-validation-for="NgayBatDau" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label asp-for="NgayKetThuc" class="control-label"></label>
+                        <input asp-for="NgayKetThuc" class="form-control" />
+                        <span asp-validation-for="NgayKetThuc" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Loại hình khuyến mãi</label>
+                        <select asp-for="LoaiHinhKM" class="form-control" asp-items="ViewBag.ListLoaiHinh" id="LoaiHinhKMSelect"></select>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Mức giảm</label>
+                        <select asp-for="MucGiam" class="form-control" asp-items="ViewBag.ListGiamGia" id="MucGiamSelect"></select>
+                        <input type="text" asp-for="MucGiam" class="form-control" style="display: none" id="MucGiamInput">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label asp-for="TrangThai" class="control-label"></label>
+                        <input asp-for="TrangThai" class="form-control" />
+                        <span asp-validation-for="TrangThai" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <button type="submit" value="Save" class="btn btn-primary bd-0 col-md-6" style="margin-top:30px">Sửa</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+<script>
+    $(document).ready(function () {
+        if (document.getElementById('LoaiHinhKMSelect').value == 0) {
+            document.getElementById('MucGiamSelect').style.display = 'none';
+            document.getElementById('MucGiamInput').style.display = 'block';
+        } else {
+            document.getElementById('MucGiamSelect').style.display = 'block';
+            document.getElementById('MucGiamInput').style.display = 'none';
+        }
+    });
+    document.getElementById('LoaiHinhKMSelect').addEventListener('change', function () {
+        var selectedValue = this.value;
+        if (selectedValue == 0) {
+            document.getElementById('MucGiamSelect').style.display = 'none';
+            document.getElementById('MucGiamInput').style.display = 'block';
+        } else {
+            document.getElementById('MucGiamSelect').style.display = 'block';
+            document.getElementById('MucGiamInput').style.display = 'none';
+        }
+    });
+    document.querySelector('form').addEventListener('submit', function () {
+        var inputElement = document.getElementById('MucGiamInput');
+        if (inputElement.style.display === 'block') {
+            var inputValue = inputElement.value;
+            console.log("Giá trị từ input: " + inputValue);
+            document.getElementById('MucGiamSelect').value = inputValue;
+        }
+    });
+    // Lắng nghe sự kiện "change" của trường nhập tệp tin
+    document.getElementById('formFileInput').addEventListener('change', function (e) {
+        var file = e.target.files[0]; // Lấy tệp tin đã chọn
 
+        if (file) {
+            var reader = new FileReader();
+
+            // Lắng nghe sự kiện "load" của FileReader để hiển thị hình ảnh
+            reader.addEventListener('load', function () {
+                var imageElement = document.getElementById('uploadedImage');
+                imageElement.src = reader.result; // Đặt nguồn hình ảnh cho thẻ <img>
+                imageElement.style.display = 'block'; // Hiển thị thẻ hình ảnh
+            });
+
+            // Đọc tệp tin ảnh
+            reader.readAsDataURL(file);
+        }
+    });
+
+</script>

@@ -14,15 +14,17 @@ namespace App_View.Models.Components
 
         public IViewComponentResult Invoke()
         {
-            var response = _httpClient.GetFromJsonAsync<FiltersVM>("/api/SanPhamChiTiet/get-ItemFilterVM").Result;
-            if (response != null)
+            var model = new FiltersVM();
+            try
             {
-                return View(response);
+                model = _httpClient.GetFromJsonAsync<FiltersVM>("/api/SanPhamChiTiet/get-ItemFilterVM").Result;
             }
-            else
+            catch (Exception)
             {
-                return View(new FiltersVM());
+                model = new FiltersVM();
             }
+               
+                return View(model);
         }
     }
 }

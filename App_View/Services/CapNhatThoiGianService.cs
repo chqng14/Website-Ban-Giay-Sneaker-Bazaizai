@@ -1,5 +1,6 @@
 ﻿using App_Data.DbContextt;
 using App_Data.Models;
+using App_Data.Repositories;
 using App_View.IServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,20 +23,37 @@ namespace App_View.Services
         public void CheckNgayKetThuc()
         {
             var ngayKetThucSale = _dbContext.khuyenMais
-                .Where(p => p.NgayKetThuc <= DateTime.Now && p.TrangThai != 0)
+                .Where(p => p.NgayKetThuc <= DateTime.Now && p.TrangThai != (int)TrangThaiSale.HetHan)
                 .ToList();
-
+            var ngaySale = _dbContext.khuyenMais
+                .Where(p => p.NgayKetThuc >= DateTime.Now && p.TrangThai == (int)TrangThaiSale.HetHan && p.TrangThai != (int)TrangThaiSale.BuocDung)
+                .ToList();
             foreach (var sale in ngayKetThucSale)
             {
-                sale.TrangThai = 0;
+                sale.TrangThai = (int)TrangThaiSale.HetHan;
+            }
+            foreach (var sale in ngaySale)
+            {
+                sale.TrangThai = (int)TrangThaiSale.DangBatDau;
             }
             _dbContext.SaveChanges();
         }
         public void CapNhatTrangThaiSaleDetail()
         {
-            var lstHetHan = _dbContext.khuyenMais.Where(x => x.TrangThai == 0).ToList();
+            var lstHetHan = _dbContext.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.HetHan || x.TrangThai == (int)TrangThaiSale.BuocDung).ToList();
+            var lstDangKhuyenMai = _dbContext.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau).ToList();
             var lstKMCT = _dbContext.khuyenMaiChiTiets.ToList();
             foreach (var a in lstHetHan)
+            {
+                foreach (var b in lstKMCT)
+                {
+                    if (b.IdKhuyenMai == a.IdKhuyenMai)
+                    {
+                        b.TrangThai = (int)TrangThaiSaleDetail.NgungKhuyenMai;
+                    }
+                }
+            }
+            foreach (var a in lstDangKhuyenMai)
             {
                 foreach (var b in lstKMCT)
                 {
@@ -52,7 +70,7 @@ namespace App_View.Services
             var KhuyenMaiCTs = _dbContext.khuyenMaiChiTiets.AsNoTracking().ToList();
             var khuyenMais = _dbContext.khuyenMais.AsNoTracking().ToList();
             var lstKhuyenMaiDangHoatDong = _dbContext.khuyenMaiChiTiets.Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai).AsNoTracking().ToList();
-            var lstCTSP = _dbContext.sanPhamChiTiets.Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale).ToList();
+            var lstCTSP = _dbContext.sanPhamChiTiets.Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale && x.TrangThai==(int)TrangThaiCoBan.HoatDong).ToList();
             if (lstCTSP != null && lstCTSP.Count() > 0)
             {
                 foreach (var ctsp in lstCTSP)
@@ -89,15 +107,30 @@ namespace App_View.Services
                     if (giaThucTe.Any())
                     {
 
-                        int[] mangKhuyenMai = new int[giaThucTe.Count()];
-                        int temp = 0;
+                        List<int> mangKhuyenMai = new List<int>();
+                        List<int> mangKhuyenMaiDongGia = new List<int>();
                         foreach (var khuyenMai in giaThucTe)
                         {
                             var a = khuyenMais.FirstOrDefault(x => x.IdKhuyenMai == khuyenMai.IdKhuyenMai);
-                            mangKhuyenMai[temp] = Convert.ToInt32(a.MucGiam);
-                            temp++;
+                            if(a.LoaiHinhKM==1)
+                            {
+                                mangKhuyenMai.Add(Convert.ToInt32(a.MucGiam));
+                            }
+                            else
+                            {
+                                mangKhuyenMaiDongGia.Add(Convert.ToInt32(a.MucGiam));
+                            }
                         }
-                        ctsp.GiaThucTe = ctsp.GiaBan - (ctsp.GiaBan * mangKhuyenMai.Max() / 100);
+                        if(mangKhuyenMaiDongGia.Count>0)
+                        {
+                            ctsp.GiaThucTe = mangKhuyenMaiDongGia.Max();
+                        }
+                        else
+                        {
+                            ctsp.GiaThucTe = ctsp.GiaBan - (ctsp.GiaBan * mangKhuyenMai.Max() / 100);
+                        }
+                       
+                        
                         //_dbContext.sanPhamChiTiets.Update(ctsp);
                         //_dbContext.SaveChanges();
                     }

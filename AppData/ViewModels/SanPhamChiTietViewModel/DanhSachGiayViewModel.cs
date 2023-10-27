@@ -8,9 +8,9 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
 {
     public class DanhSachGiayViewModel
     {
-        public List<ItemViewModel>? LstSanPhamMoi { get; set; }
-        public List<ItemViewModel>? LstBanChay { get; set; }
-        public List<ItemViewModel>? LstTopDanhGia { get; set; }
-        public List<ItemViewModel>? LstSanPhamNoiBat { get; set; }
+        public List<ItemViewModel>? LstSanPhamMoi { get; set; } = new List<ItemViewModel> { };
+        public List<ItemViewModel>? LstBanChay { get; set; } = new List<ItemViewModel> { };
+        public List<ItemViewModel>? LstTopDanhGia { get; set; } = new List<ItemViewModel> { };
+        public List<ItemViewModel>? LstSanPhamNoiBat { get; set; } = new List<ItemViewModel> { };
     }
 }

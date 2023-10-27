@@ -18,6 +18,27 @@
         <div class="card-body">
             <h4><a asp-action="Index">Back to List </a></h4>
             <form asp-action="Edit">
+                <div class="modal fade" id="confirm">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background: #3f87f5;">
+                                <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="anticon anticon-close"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body" style="background: white;">
+                                <span id="thongBao">Bạn có muốn thêm không ?</span>
+                            </div>
+                            <div class="modal-footer" style="background: white">
+
+                                <button class="btn btn-primary bd-0 col-md-6">Sửa</button>
+
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <input type="hidden" asp-for="IdVoucher" />
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-row">
@@ -74,9 +95,9 @@
                         <label class="font-weight-semibold">Điều kiện:</label>
                         <input class="form-control" type="number" asp-for="DieuKien" />
                         <span asp-validation-for="DieuKien" class="text-danger"></span>
-                    </div>
+                    </div>   
                     <div class="form-group col-md-2">
-                        <button class="btn btn-primary bd-0 col-md-6" style="margin-top:30px">Sửa</button>
+                        <a class="btn btn-primary bd-0 col-md-6" data-toggle="modal" data-target="#confirm" style="margin-top:30px;color:white">Sửa</a>
                     </div>
                 </div>
             </form>

@@ -11,6 +11,7 @@ namespace App_View.IServices
         Task<bool> UpdateHoaDon(HoaDon HoaDon);
         Task<bool> DeleteHoaDon(string idHoaDon);
         Task<List<HoaDonChoDTO>> GetAllHoaDonCho();
-        Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon); 
+        Task<List<HoaDonDTO>> GetHoaDon();
+        Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon);
     }
 }

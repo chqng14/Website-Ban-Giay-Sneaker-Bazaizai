@@ -25,15 +25,15 @@
                             </li>
                             <li class="has-separator">
 
-                                <a href="shop-side-version-2.html">Electronics</a>
+                                <a href="/sanphamchitiets">Electronics</a>
                             </li>
                             <li class="has-separator">
 
-                                <a href="shop-side-version-2.html">DSLR Cameras</a>
+                                <a href="/sanphamchitiets">DSLR Cameras</a>
                             </li>
                             <li class="is-marked">
 
-                                <a href="shop-side-version-2.html">Nikon Cameras</a>
+                                <a href="/sanphamchitiets">Nikon Cameras</a>
                             </li>
                         </ul>
                     </div>
@@ -100,7 +100,7 @@
 
                                 <span class="pd-detail__stock">@Model.SoLuongTon in stock</span>
 
-                                <span class="pd-detail__left">Only 2 left</span>
+                                @*<span class="pd-detail__left">Only 2 left</span>*@
                             </div>
                         </div>
                         <div class="u-s-m-b-15">
@@ -678,7 +678,7 @@
                             <div class="product-o product-o--hover-on">
                                 <div class="product-o__wrap">
 
-                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
+                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/">
 
                                         <img class="aspect__img" src="/images/product/electronic/product1.jpg" alt="">
                                     </a>
@@ -706,7 +706,7 @@
 
                                 <span class="product-o__category">
 
-                                    <a href="shop-side-version-2.html">Electronics</a>
+                                    <a href="/sanphamchitiets">Electronics</a>
                                 </span>
 
                                 <span class="product-o__name">
@@ -758,7 +758,7 @@
 
                                 <span class="product-o__category">
 
-                                    <a href="shop-side-version-2.html">Electronics</a>
+                                    <a href="/sanphamchitiets">Electronics</a>
                                 </span>
 
                                 <span class="product-o__name">
@@ -810,7 +810,7 @@
 
                                 <span class="product-o__category">
 
-                                    <a href="shop-side-version-2.html">Electronics</a>
+                                    <a href="/sanphamchitiets">Electronics</a>
                                 </span>
 
                                 <span class="product-o__name">
@@ -862,7 +862,7 @@
 
                                 <span class="product-o__category">
 
-                                    <a href="shop-side-version-2.html">Electronics</a>
+                                    <a href="/sanphamchitiets">Electronics</a>
                                 </span>
 
                                 <span class="product-o__name">
@@ -914,7 +914,7 @@
 
                                 <span class="product-o__category">
 
-                                    <a href="shop-side-version-2.html">Electronics</a>
+                                    <a href="/sanphamchitiets">Electronics</a>
                                 </span>
 
                                 <span class="product-o__name">
@@ -966,7 +966,7 @@
 
                                 <span class="product-o__category">
 
-                                    <a href="shop-side-version-2.html">Electronics</a>
+                                    <a href="/sanphamchitiets">Electronics</a>
                                 </span>
 
                                 <span class="product-o__name">
@@ -1083,6 +1083,24 @@
         });
     })
 
+    const updateViewCartMini = () => {
+
+        $.ajax({
+            url: '/GioHangChiTiets/GetGioHangMiniModel',
+            type: 'GET',
+            success: function (result) {
+                $('#body-mini-cart').empty().html(result)
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+
+
+    }
 
     $(document).on('click', 'button[data-modal-id="#add-to-cart"]', function () {
 
@@ -1108,6 +1126,7 @@
             type: 'POST',
             data: data1,
             success: function (result) {
+                updateViewCartMini();
             },
             error: function (xhr, status, error) {
                 console.log(xhr.responseText);

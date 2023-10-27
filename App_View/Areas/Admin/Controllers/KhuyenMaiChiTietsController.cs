@@ -214,7 +214,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             ViewData["IdSale"] = new SelectList(_context.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau), "IdKhuyenMai", "TenKhuyenMai");
             //.Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale|| x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale)
-            var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Select(item => CreateSanPhamDanhSachViewModel(item));
+            var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Where(x =>( x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale )&& x.TrangThai==(int)TrangThaiCoBan.HoatDong).Select(item => CreateSanPhamDanhSachViewModel(item));
             return View(getallProductDT);
         }
         [HttpPost]

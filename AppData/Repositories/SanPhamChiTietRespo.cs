@@ -69,13 +69,14 @@ namespace App_Data.Repositories
 
         public async Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(List<string> lstGuid)
         {
-            var lstSanPhamChiTiet = (await _context.sanPhamChiTiets
+            var lstSanPhamChiTiet = await _context.sanPhamChiTiets
+                 .Where(sp => lstGuid.Contains(sp.IdChiTietSp!))
                  .Include(x => x.Anh)
                  .Include(x => x.SanPham)
                  .Include(x => x.MauSac)
                  .Include(x => x.KichCo)
                  .Include(x => x.ThuongHieu)
-                 .ToListAsync()).Where(sp => lstGuid.Contains(sp.IdChiTietSp!)).ToList();
+                 .ToListAsync();
             return _mapper.Map<List<SanPhamChiTietDTO>>(lstSanPhamChiTiet);
         }
 
@@ -155,7 +156,7 @@ namespace App_Data.Repositories
                 .Select(gr => gr.First())
                 .ToListAsync();
 
-            var itemShops = _mapper.Map<List<ItemShopViewModel>>(listSanPham.OrderByDescending(x=>x.NgayTao));
+            var itemShops = _mapper.Map<List<ItemShopViewModel>>(listSanPham.OrderByDescending(x => x.NgayTao));
             return itemShops;
         }
 
@@ -495,29 +496,38 @@ namespace App_Data.Repositories
         {
             var sanPhamChiTiet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == IdSanPhamChiTiet);
             sanPhamChiTiet!.SoLuongTon = sanPhamChiTiet.SoLuongTon - soLuong;
-            sanPhamChiTiet!.SoLuongDaBan = sanPhamChiTiet.SoLuongTon - soLuong;
+            sanPhamChiTiet!.SoLuongDaBan = soLuong;
             await _context.SaveChangesAsync();
         }
 
         //Filter
         public async Task<FiltersVM> GetFiltersVMAynsc()
         {
-            var query = _context.sanPhamChiTiets
+            try
+            {
+                var query = _context.sanPhamChiTiets
                         .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong)
                         .Include(sp => sp.MauSac)
                         .Include(sp => sp.ThuongHieu)
                         .Include(sp => sp.LoaiGiay)
                         .Include(sp => sp.KichCo);
 
-            var data = await query.ToListAsync();
+                var data = await query.ToListAsync();
 
-            return new FiltersVM()
+                return new FiltersVM()
+                {
+                    LstItemFilterMauSac = GetListItemFilter(data, sp => sp.MauSac.TenMauSac!),
+                    LstItemFilterKichCo = GetListItemFilter(data, sp => sp.KichCo.SoKichCo.ToString()!).OrderBy(x => x.Ten).ToList(),
+                    LstItemFilterTheLoai = GetListItemFilter(data, sp => sp.LoaiGiay.TenLoaiGiay!),
+                    LstItemFilterThuongHieu = GetListItemFilter(data, sp => sp.ThuongHieu.TenThuongHieu!),
+                };
+            }
+            catch (Exception ex)
             {
-                LstItemFilterMauSac = GetListItemFilter(data, sp => sp.MauSac.TenMauSac!),
-                LstItemFilterKichCo = GetListItemFilter(data, sp => sp.KichCo.SoKichCo.ToString()!).OrderBy(x => x.Ten).ToList(),
-                LstItemFilterTheLoai = GetListItemFilter(data, sp => sp.LoaiGiay.TenLoaiGiay!),
-                LstItemFilterThuongHieu = GetListItemFilter(data, sp => sp.ThuongHieu.TenThuongHieu!),
-            };
+                Console.WriteLine(ex);
+                return new FiltersVM();
+            }
+            
         }
 
         private List<ItemFilter> GetListItemFilter(List<SanPhamChiTiet> data, Func<SanPhamChiTiet, string> selector)
@@ -532,6 +542,20 @@ namespace App_Data.Repositories
                 .ToList();
         }
 
-       
+        public async Task<bool> ProductIsNull(SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO)
+        {
+            var sanPhamChiTiet = await _context.sanPhamChiTiets
+                .Where(x =>
+                x.IdSanPham == sanPhamChiTietCopyDTO.SanPhamChiTietData!.IdSanPham &&
+                x.IdChatLieu == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdChatLieu &&
+                x.IdKichCo == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdKichCo &&
+                x.IdMauSac == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdMauSac &&
+                x.IdKieuDeGiay == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdKieuDeGiay &&
+                x.IdLoaiGiay == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdLoaiGiay &&
+                x.IdThuongHieu == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdThuongHieu &&
+                x.IdXuatXu == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdXuatXu
+                ).FirstOrDefaultAsync();
+            return sanPhamChiTiet != null ? false : true;
+        }
     }
 }

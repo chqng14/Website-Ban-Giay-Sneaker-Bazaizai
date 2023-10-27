@@ -29,12 +29,14 @@ namespace App_View.Controllers
         public async Task<IActionResult> Index(string brand, string search)
         {
             var lstSanPhamItemShop = await _sanPhamChiTietService.GetListItemShopViewModelAynsc();
+
             if (!string.IsNullOrEmpty(brand))
             {
                 lstSanPhamItemShop = lstSanPhamItemShop!
                     .Where(sp => sp.ThuongHieu!.ToLower() == brand.ToLower())
                     .ToList();
             }
+
             if (!string.IsNullOrEmpty(search))
             {
                 lstSanPhamItemShop = lstSanPhamItemShop!
@@ -60,8 +62,8 @@ namespace App_View.Controllers
         public async Task<IActionResult> LoadPartialViewDanhSachSanPhamNguoiDung([FromBody] FilterData filterData)
         {
             var brand = HttpContext.Request.Query["brand"].ToString();
-            Console.WriteLine(brand + "1");
             var data = await _sanPhamChiTietService.GetListItemShopViewModelAynsc();
+
             if (!string.IsNullOrEmpty(brand))
             {
                 data = data!.Where(sp => sp.ThuongHieu!.ToLower() == brand.ToLower()).ToList();
@@ -70,14 +72,17 @@ namespace App_View.Controllers
             if (filterData.LstKichCo!.Any() || filterData.LstMauSac!.Any() || (filterData.GiaMin != 0 && filterData.GiaMax != 0))
             {
                 data = await _sanPhamChiTietService.GetDanhSachBienTheItemShopViewModelAsync();
+
                 if (filterData.GiaMin != 0 && filterData.GiaMax != 0)
                 {
                     data = data!.Where(sp => sp.GiaBan >= filterData.GiaMin && sp.GiaBan <= filterData.GiaMax).ToList();
                 }
+
                 if (!string.IsNullOrEmpty(brand))
                 {
                     data = data!.Where(sp => sp.ThuongHieu!.ToLower() == brand.ToLower()).ToList();
                 }
+
                 if (filterData.LstMauSac!.Any())
                 {
                     data = data!

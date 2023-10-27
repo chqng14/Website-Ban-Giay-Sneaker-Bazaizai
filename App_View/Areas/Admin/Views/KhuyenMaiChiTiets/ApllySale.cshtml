@@ -76,6 +76,47 @@
                             <option value="@item.Value">@item.Text</option>
                 }
                     </select>
+                <thead>
+                    <tr>
+                        <th>
+                           <input type="checkbox" id="select-all-checkbox" />
+                        </th>
+                        <th>
+                            Tên sản phẩm
+                        </th>
+                        <th>
+                            Kích cỡ
+                        </th>
+                        <th>
+                            Loại giày
+                        </th>
+                        <th>
+                            Dây
+                        </th>
+                        <th>
+                            Chất liệu
+                        </th>
+                        <th>
+                            Kiểu đế giày
+                        </th>
+                        <th>
+                            Số lượng tồn
+                        </th>
+                        <th>
+                            Giá bán
+                        </th>
+                        <th>
+                            Giá nhập
+                        </th>
+                        <th>
+                            Trạng thái
+                        </th>
+                        
+
+                        <th></th>
+                    </tr>
+
+                </thead>
                     <tbody>
             @foreach (var product in Model)
             {
@@ -84,10 +125,9 @@
                         <tr>
                             <td class="sorting_1">
 
-                                <input type="checkbox" name="selectedProducts" value="@product.IdChiTietSp" />
+                                <input type="checkbox" class="voucher-checkbox" name="selectedProducts" value="@product.IdChiTietSp" />
 
                             </td>
-                            <td>@product.IdChiTietSp</td>
                             <td>@product.SanPham</td>
                             <td>@product.KichCo</td>
                             <td>@product.LoaiGiay</td>
@@ -133,6 +173,14 @@
 
 
 <script>
+    $(document).ready(function () {
+
+
+        $('#select-all-checkbox').click(function () {
+            $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
+        });
+
+        });
     document.getElementById("applySaleButton").addEventListener("click", function () {
         var selectedProducts = [];
         var checkboxes = document.querySelectorAll("input[name='selectedProducts']:checked");

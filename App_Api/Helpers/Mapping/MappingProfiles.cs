@@ -59,6 +59,32 @@ namespace App_Api.Helpers.Mapping
             .ForMember(
                 dest => dest.MaVoucher, opt => opt.MapFrom(x => x.Vouchers.MaVoucher));
 
+            CreateMap<GioHangChiTiet, SanPhamGioHangViewModel>()
+                .ForMember(
+                    dest => dest.IdSanPhamChiTiet,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.IdChiTietSp)
+                )
+                .ForMember(
+                    dest => dest.TenSanPham,
+                    opt => opt.MapFrom(src => $"{src.SanPhamChiTiet.SanPham.TenSanPham} {src.SanPhamChiTiet.MauSac.TenMauSac} {src.SanPhamChiTiet.KichCo.SoKichCo}")
+                )
+                .ForMember(
+                    dest => dest.SoLuong,
+                    opt => opt.MapFrom(src => src.Soluong)
+                )
+                .ForMember(
+                    dest => dest.GiaSanPham,
+                    opt => opt.MapFrom(src => src.GiaBan)
+                )
+                .ForMember(
+                    dest => dest.TenThuongHieu,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.ThuongHieu.TenThuongHieu)
+                )
+                .ForMember(
+                    dest => dest.Anh,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(a => a.Url).Select(x => x.Url).FirstOrDefault())
+                );
+
             CreateMap<GioHangChiTiet, GioHangChiTietDTO>()
                  .ForMember(
                     dest => dest.TenSanPham,
@@ -138,6 +164,10 @@ namespace App_Api.Helpers.Mapping
                 .ForMember(
                         dest => dest.FullName,
                         opt => opt.MapFrom(src => $"{src.ThuongHieu.TenThuongHieu} {src.SanPham.TenSanPham} {src.MauSac.TenMauSac}-{src.KichCo.SoKichCo}")
+                )
+                .ForMember(
+                        dest => dest.TrangThaiKhuyenMai,
+                        opt => opt.MapFrom(src => src.TrangThaiSale == 1 ? true : false)
                 )
                 .ReverseMap()
                 .ForMember(
@@ -241,21 +271,23 @@ namespace App_Api.Helpers.Mapping
                  .ForMember(
                         dest => dest.GiaMin,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
-                        .Where(x=>
-                        x.IdXuatXu == src.IdXuatXu && 
+                        .Where(x =>
+                        x.TrangThai == 0 &&
+                        x.IdXuatXu == src.IdXuatXu &&
                         x.IdSanPham == src.IdSanPham &&
                         x.IdLoaiGiay == src.IdLoaiGiay &&
                         x.IdThuongHieu == src.IdThuongHieu &&
                         x.IdKieuDeGiay == src.IdKieuDeGiay &&
                         x.IdChatLieu == src.IdChatLieu
                         )
-                        .Select(x=>x.GiaThucTe).Min()
+                        .Select(x => x.GiaThucTe).Min()
                         )
                     )
                  .ForMember(
                         dest => dest.GiaMax,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
                         .Where(x =>
+                        x.TrangThai == 0 &&
                         x.IdXuatXu == src.IdXuatXu &&
                         x.IdSanPham == src.IdSanPham &&
                         x.IdLoaiGiay == src.IdLoaiGiay &&
@@ -270,6 +302,7 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.SoMauSac,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
                         .Where(x =>
+                        x.TrangThai == 0 &&
                         x.IdXuatXu == src.IdXuatXu &&
                         x.IdSanPham == src.IdSanPham &&
                         x.IdLoaiGiay == src.IdLoaiGiay &&
@@ -277,7 +310,7 @@ namespace App_Api.Helpers.Mapping
                         x.IdKieuDeGiay == src.IdKieuDeGiay &&
                         x.IdChatLieu == src.IdChatLieu
                         )
-                        .Select(sp=>sp.IdMauSac).Distinct().Count()
+                        .Select(sp => sp.IdMauSac).Distinct().Count()
                         )
                     )
                 ;

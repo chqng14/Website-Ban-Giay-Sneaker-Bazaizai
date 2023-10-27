@@ -470,7 +470,11 @@ namespace App_View.Services
 
         public async Task UpDatSoLuongAynsc(SanPhamSoLuongDTO sanPhamSoLuongDTO)
         {
-            await _httpClient.PutAsJsonAsync("/api/SanPhamChiTiet/UpdateSoLuong", sanPhamSoLuongDTO);
+           var response =  await _httpClient.PutAsJsonAsync("/api/SanPhamChiTiet/UpdateSoLuong", sanPhamSoLuongDTO);
+            Console.WriteLine("___________________________________________________________________________________________________________________________________");
+            Console.WriteLine(await response.Content.ReadAsStringAsync());
+            Console.WriteLine("___________________________________________________________________________________________________________________________________");
+
         }
 
         public async Task<List<ItemShopViewModel>?> GetDanhSachBienTheItemShopViewModelAsync()

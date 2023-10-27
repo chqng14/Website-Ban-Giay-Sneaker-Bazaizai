@@ -13,36 +13,150 @@
     ViewData["Title"] = "DanhSachHoaDonCho";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+@* <link href="~/css/ban-hang-tai-quay.css" rel="stylesheet" /> *@
 <div class="card">
-    <div class="row" style="height:800px">
+    <div class="row">
         <div class="col-9">
-            <div class="row" style="height: 400px;background-color:red">
+            <div class="row" style="height: 800px;background-color:red">
                 <div class="card w-100 h-100">
                     <button class="btn btn-primary" id="create-tab" style="width: 140px">Tạo tab mới</button>
                     <div id="tabs">
-                            <ul>
-                                @{foreach (var item in Model)
-                                {
-                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a><span class="ui-icon ui-icon-close" role="presentation">Close</span></li>
-                                }}
-                            </ul>
+                        <ul>
                             @{
+                                foreach (var item in Model)
+                                {
+                                        <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a><span class="ui-icon ui-icon-close" role="presentation">Close</span></li>
+                                }
+                            }
+                        </ul>
+                        @{
                             foreach (var item in Model)
                             {
-                                <div id="tab-@item.MaHoaDon" style="height:100%">@item.MaHoaDon <div style="background-color:red;height:200px"></div></div>
-                            }}
+                                    <div id="tab-@item.MaHoaDon" style="height:300px">@item.MaHoaDon <div style="background-color:red;height:100%"></div></div>
+                            }
+                        }
                     </div>
                 </div>
             </div>
-            <div class="row" style="height: 400px"><div class="p-3">Row column</div></div>
+            <div class="row">
+                <div class="col-4" style="margin-left: -15px;">
+                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                </div>
+                <div class="col-8"></div>
+            </div>
+            <div class="row" style="height: 775px; overflow-y: scroll; overflow-x: hidden">
+                <div class="row" id="body-danhsach">
+                    @{
+                        @*foreach (var item in context.sanPhamChiTiets.ToList())
+                        {
+                                <div class="col-3">
+                                    <div class="card" style="width: 16rem; ">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@item.SanPham</h5>
+                                            <img src="@context.Anh.FirstOrDefault(c=>c.IdSanPhamChiTiet == item.IdChiTietSp).Url" class="card-img-top" alt="...">
+                                            <p class="card-text">
+                                                <span style="color: red;">Giá: @item.GiaBan</span><br>
+                                                <span>Số lượng: @item.SoLuongTon</span>
+                                                <a href="#" class="btn btn-success" style="float: right;">Add</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                        }*@
+                    }
 
+                </div>
+            </div>
         </div>
-        <div class="col-3" style="height: 100%">
-            <div class="p-3">Row column</div>
+        <div class="col-3" style="height: 800px">
+            <div class="card" style="width: 22rem; margin: 15px; height: 200px;">
+                <div class="card-header" style=" line-height: 50px">
+                    Khách hàng
+                </div>
+                <input type="text" class="form-control" placeholder="Tìm kiếm khách hàng" style="border-radius: 20px;">
+            </div>
+            <div class="card" style="width: 22rem; margin: 15px; min-height: 450px;">
+                <div class="card-header" style=" line-height: 50px">
+                    Thông tin hóa đơn
+                </div>
+                <div class="mb-3">
+                    <table>
+                        <tr>
+                            <td>Mã hóa đơn: </td>
+                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                        </tr>
+                        <tr>
+                            <td>Mã nhân viên: </td>
+                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                        </tr>
+                        <tr>
+                            <td>Ngày tạo: </td>
+                            <td><input class="form-control" type="date" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                        </tr>
+                        <tr>
+                            <td>Tổng tiền hàng: </td>
+                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                        </tr>
+                        <tr>
+                            <td>Mức ưu đãi: </td>
+                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
+                        </tr>
+                        <tr>
+                            <td>Giảm giá: </td>
+                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
+                        </tr>
+                        <tr>
+                            <td>Tổng tiền: </td>
+                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                        </tr>
+                        <tr>
+                            <td>HT thanh toán: </td>
+                            <td>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                                    <label class="form-check-label" for="inlineRadio1">Tiền mặt</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                                    <label class="form-check-label" for="inlineRadio2">Chuyển khoản</label>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Tiền mặt: </td>
+                            <td><input class="form-control" type="number" min="0" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
+                        </tr>
+                        <tr>
+                            <td>Tiền thừa: </td>
+                            <td><input class="form-control" type="number" min="0" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><button class="btn btn-success">Thanh toán</button> <button class="btn btn-danger">Hủy</button></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <script>
+    $(() => {
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/LoadPartialViewDanhSachSanPham',
+            type: 'GET',
+            success: function (result) {
+                console.log(result)
+                $('#body-danhsach').append(result)
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    })
     $(function () {
         $("#tabs").tabs({
             beforeActivate: function (event, ui) {
@@ -63,7 +177,7 @@
                     success: function (response) {
                         tabIndex = response;
                         tabTitle = response;
-                        var tabContent = tabIndex 
+                        var tabContent = tabIndex
                         $("<li><a href='#tab-" + tabIndex + "'>" + tabTitle + "</a><span class='ui-icon ui-icon-close' role='presentation'>Close</span></li>").appendTo("#tabs ul");
                         $("<div id='tab-" + tabIndex + "'>" + tabContent + "</div>").appendTo("#tabs");
                         $("#tabs").tabs("refresh");

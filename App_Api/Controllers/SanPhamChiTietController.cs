@@ -39,8 +39,9 @@ namespace App_Api.Controllers
         private readonly ISanPhamChiTietRespo _sanPhamChiTietRes;
         private readonly IAllRepo<Anh> _AnhRes;
         private readonly IMapper _mapper;
+        private readonly AnhController _anhController;
 
-        public SanPhamChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<ThuongHieu> thuongHieuRes, IAllRepo<LoaiGiay> loaiGiayRes, IAllRepo<KieuDeGiay> kieuDeGiayRes, IAllRepo<ChatLieu> chatLieuRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<XuatXu> xuatXuRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes)
+        public SanPhamChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<ThuongHieu> thuongHieuRes, IAllRepo<LoaiGiay> loaiGiayRes, IAllRepo<KieuDeGiay> kieuDeGiayRes, IAllRepo<ChatLieu> chatLieuRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<XuatXu> xuatXuRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes, AnhController anhController)
         {
             _kickcoRes = kickcoRes;
             _thuongHieuRes = thuongHieuRes;
@@ -53,6 +54,7 @@ namespace App_Api.Controllers
             _sanPhamChiTietRes = sanPhamChiTietRes;
             _mapper = mapper;
             _AnhRes = anhRes;
+            _anhController = anhController;
         }
 
         [HttpPost("check-add-or-update")]
@@ -116,14 +118,14 @@ namespace App_Api.Controllers
         [HttpGet("Get-List-SanPhamNgungKinhDoanhViewModel")]
         public async Task<List<SanPhamDanhSachViewModel>> GetDanhSachGiayNgungKinhDoanh()
         {
-            return (await _sanPhamChiTietRes.GetListSanPhamNgungKinhDoanhViewModelAsync()).ToList(); 
+            return (await _sanPhamChiTietRes.GetListSanPhamNgungKinhDoanhViewModelAsync()).ToList();
         }
 
 
-        [HttpGet("UpdateSoLuong")]
+        [HttpPut("UpdateSoLuong")]
         public async Task UpDateSoLuong(SanPhamSoLuongDTO sanPhamSoLuongDTO)
         {
-            await _sanPhamChiTietRes.UpdateSoLuongSanPhamChiTietAynsc(sanPhamSoLuongDTO.IdChiTietSanPham,sanPhamSoLuongDTO.SoLuong);
+            await _sanPhamChiTietRes.UpdateSoLuongSanPhamChiTietAynsc(sanPhamSoLuongDTO.IdChiTietSanPham, sanPhamSoLuongDTO.SoLuong);
         }
 
         [HttpGet("Get-List-ItemShopViewModel")]
@@ -157,9 +159,9 @@ namespace App_Api.Controllers
         }
 
         [HttpGet("Get-ItemDetailViewModel/{id}/{mauSac}")]
-        public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColor(string id,string mauSac)
+        public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColor(string id, string mauSac)
         {
-            return await _sanPhamChiTietRes.GetItemDetailViewModelWhenSelectColorAynsc(id,mauSac);
+            return await _sanPhamChiTietRes.GetItemDetailViewModelWhenSelectColorAynsc(id, mauSac);
         }
 
         [HttpGet("Get-ItemDetailViewModel/idsanpham/{id}/size/{size}")]
@@ -183,22 +185,31 @@ namespace App_Api.Controllers
                     "MASP1" :
                     "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
                 sanPhamChiTiet.TrangThai = 0;
-                sanPhamChiTiet.TrangThaiSale = 0;
                 sanPhamChiTiet.SoLuongDaBan = 0;
                 sanPhamChiTiet.NgayTao = DateTime.Now;
 
-                QRCodeGenerator qrGenerator = new QRCodeGenerator();
-
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
-                QRCode qrCode = new QRCode(qrCodeData);
-
-                Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
-
-                string qrCodeImagePath = Path.Combine(uploadDirectory, sanPhamChiTiet.Ma + ".png");
-
-                using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
+                if (!string.IsNullOrEmpty(uploadDirectory) && !string.IsNullOrEmpty(sanPhamChiTiet.Ma))
                 {
-                    qrCodeImage.Save(stream, ImageFormat.Png);
+                    string qrCodeImagePath = Path.Combine(uploadDirectory, sanPhamChiTiet.Ma + ".png");
+
+                    if (!Directory.Exists(uploadDirectory))
+                    {
+                        Directory.CreateDirectory(uploadDirectory);
+                    }
+
+                    if (!System.IO.File.Exists(qrCodeImagePath))
+                    {
+                        QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                        QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
+                        QRCode qrCode = new QRCode(qrCodeData);
+
+                        Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
+
+                        using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
+                        {
+                            qrCodeImage.Save(stream, ImageFormat.Png);
+                        }
+                    }
                 }
 
                 return new ResponseCreateDTO()
@@ -212,13 +223,81 @@ namespace App_Api.Controllers
                 Console.WriteLine(ex);
                 return new ResponseCreateDTO();
             }
+        }
 
+        [HttpPost("Creat-SanPhamChiTietCopy")]
+        public async Task<bool> CreateSanPhamChiTietCoppy([FromForm]SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO)
+        {
+            try
+            {
+                if ((await _sanPhamChiTietRes.ProductIsNull(sanPhamChiTietCopyDTO)))
+                {
+                    string currentDirectory = Directory.GetCurrentDirectory();
+                    string rootPath = Directory.GetParent(currentDirectory)!.FullName;
+                    string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "QRCode");
+
+                    var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietCopyDTO.SanPhamChiTietData);
+                    sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
+                    sanPhamChiTiet.Ma = !(await _sanPhamChiTietRes.GetListAsync()).Any() ?
+                        "MASP1" :
+                        "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
+                    sanPhamChiTiet.TrangThai = 0;
+                    sanPhamChiTiet.TrangThaiSale = 0;
+                    sanPhamChiTiet.SoLuongDaBan = 0;
+                    sanPhamChiTiet.NgayTao = DateTime.Now;
+
+                    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
+                    QRCode qrCode = new QRCode(qrCodeData);
+
+                    Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
+
+                    string qrCodeImagePath = Path.Combine(uploadDirectory, sanPhamChiTiet.Ma + ".png");
+
+                    using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
+                    {
+                        qrCodeImage.Save(stream, ImageFormat.Png);
+                    }
+
+                    await _sanPhamChiTietRes.AddAsync(sanPhamChiTiet);
+
+                    if (sanPhamChiTietCopyDTO.SanPhamChiTietData!.DanhSachAnh != null)
+                    {
+                        if (sanPhamChiTietCopyDTO.ListTenAnhRemove == null) sanPhamChiTietCopyDTO.ListTenAnhRemove = new List<string>();
+                        var listAnhCopy = sanPhamChiTietCopyDTO.SanPhamChiTietData!.DanhSachAnh!.Except(sanPhamChiTietCopyDTO.ListTenAnhRemove!).ToList();
+                        listAnhCopy.ForEach(tenAnh =>
+                        {
+                            _AnhRes.AddItem(new Anh
+                            {
+                                IdAnh = Guid.NewGuid().ToString(),
+                                IdSanPhamChiTiet = sanPhamChiTiet.IdChiTietSp,
+                                TrangThai = 0,
+                                Url = tenAnh
+                            });
+                        });
+                    }
+
+                    if (sanPhamChiTietCopyDTO.ListAnhCreate != null && sanPhamChiTietCopyDTO.ListAnhCreate!.Any())
+                    {
+                        await _anhController.CreateImage(sanPhamChiTiet.IdChiTietSp, sanPhamChiTietCopyDTO.ListAnhCreate!);
+                    }
+                    return true;
+
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
         }
 
         [HttpPut("Ngung_Kinh_Doanh_List_SanPham")]
         public async Task<bool> NgungKinhDoanhSanPham(List<string> lstGuild)
         {
-            return await _sanPhamChiTietRes.NgungKinhDoanhSanPhamAynsc(lstGuild); 
+            return await _sanPhamChiTietRes.NgungKinhDoanhSanPhamAynsc(lstGuild);
         }
 
         [HttpPut("Update-Kinh_Doanh_List_SanPham")]

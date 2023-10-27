@@ -54,8 +54,28 @@ namespace App_View.Controllers
         {
             var Voucher = await _voucherSV.GetVoucherByMa(ma);
             double mucuidai = 0;
-            var IdVoucher = "";
-            return Json(new { mucuidai = (double)Voucher.MucUuDai, IdVoucher = Voucher.IdVoucher });
+            string IdVoucher = "";
+            if (Voucher != null)
+            {
+                mucuidai = (double)Voucher.MucUuDai;
+                IdVoucher = Voucher.IdVoucher;
+            }
+            return Json(new { mucuidai, IdVoucher });
         }
+
+        public async Task<IActionResult> UpdateVoucherAfterUseIt(string ma)
+        {
+            if (await _voucherSV.UpdateVoucherAfterUseIt(ma))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
+        public async Task<IActionResult> VoucherDetails(string ma)
+        {
+            var Voucher = await _voucherSV.GetVoucherByMa(ma);
+            return View(Voucher);
+        }
+
     }
 }
