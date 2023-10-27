@@ -5,15 +5,20 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using App_Data.Models;
+using App_View.Services;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +30,6 @@ using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Areas.Identity.Pages.Account
 {
-
     public class RegisterModel : PageModel
     {
 
@@ -33,7 +37,7 @@ namespace App_View.Areas.Identity.Pages.Account
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IUserStore<NguoiDung> _userStore;
         private readonly IUserEmailStore<NguoiDung> _emailStore;
-        private readonly IUserPhoneNumberStore<NguoiDung> _phoneStore;//thêm
+        private readonly IUserPhoneNumberStore<NguoiDung> _phoneStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
@@ -65,25 +69,16 @@ namespace App_View.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [DataType(DataType.DateTime)]
-            [Display(Name = "NgaySinh")]
-            public DateTime? NgaySinh { get; set; }
+            [DataType(DataType.Text)]
+            [Display(Name = "Ngày sinh")]
+            [AgeLimit(100, ErrorMessage = "Ngày sinh bạn nhập không hợp lệ.")]
+            [RegularExpression(@"^(?:(?:31(\/)(?:0[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0[1,3-9]|1[0-2])\2))(?:(?:19\d{2}|20[0-9]\d))$|^(?:29(\/)0?2\3(?:(?:(?:1[9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0[1-9]|1\d|2[0-8])(\/)(?:(?:0[1-9])|(?:1[0-2]))\4(?:(?:19\d{2}|20[0-9]\d))$", ErrorMessage = "Ngày sinh không hợp lệ. Vui lòng kiểm tra lại định dạng ( dd/MM/YYYY ) và giá trị.")]
+            public string? NgaySinh { get; set; }
 
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
-
-            //[Required]
-            //[StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-            //[DataType(DataType.Password)]
-            //[Display(Name = "Password")]
-            //public string Password { get; set; }
-
-            //[DataType(DataType.Password)]
-            //[Display(Name = "Confirm password")]
-            //[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            //public string ConfirmPassword { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -91,13 +86,9 @@ namespace App_View.Areas.Identity.Pages.Account
             [Display(Name = "Password")]
             public string Password { get; set; }
 
-
-
-
-
             [DataType(DataType.Password)]
             [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Compare("Password", ErrorMessage = "Mật khẩu và mật khẩu xác nhận không khớp.")]
             public string ConfirmPassword { get; set; }
 
             [DataType(DataType.Text)]
@@ -106,12 +97,13 @@ namespace App_View.Areas.Identity.Pages.Account
             public string UserName { get; set; }
 
             [DataType(DataType.PhoneNumber)]
-            //[RegularExpression(@"^\d{10,11}$", ErrorMessage = "Số điện thoại phải có từ 10 đến 11 chữ số.")]
+            [RegularExpression(@"^(0)+(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-7|8|9]|9[0-4|6-9])[0-9]{7}$", ErrorMessage = "Số điện thoại không hợp lệ.")]
             [Display(Name = "Số điện thoại")]
             public string Sdt { get; set; }
 
             [DataType(DataType.Text)]
             [Required]
+            //[RegularExpression(@"[\p{L}]{2,}( [\p{L}]{1,})+", ErrorMessage = "Tên của bạn không hợp lệ.", RegexOptions = RegexOptions.None)]
             [Display(Name = "Tên của bạn")]
             public string FullName { get; set; }
 
@@ -130,6 +122,7 @@ namespace App_View.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            string format = "dd/MM/yyyy";
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
@@ -139,7 +132,19 @@ namespace App_View.Areas.Identity.Pages.Account
                 user.MaNguoiDung = MaTS;
                 user.TrangThai = (int?)TrangThaiCoBan.HoatDong;
                 user.GioiTinh = Input.GioiTinh;
-                user.NgaySinh = Input.NgaySinh;
+                var a = DateTime.Today;
+                if (DateTime.TryParseExact(Input.NgaySinh, format, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date))
+                {
+                    user.NgaySinh = date;
+                }
+                string fullName = Input.FullName; 
+                string regexPattern = @"^[\p{L}]{2,}( [\p{L}]{1,})+$";
+                if (!Regex.IsMatch(fullName, regexPattern))
+                {
+                    ModelState.AddModelError(string.Empty, "Tên của bạn không hợp lệ.");
+                }
+                else user.TenNguoiDung = Input.FullName;
+                user.AnhDaiDien= Path.Combine("user_img", "default_image.png");
                 await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 if (!string.IsNullOrEmpty(Input.Sdt))
@@ -155,7 +160,6 @@ namespace App_View.Areas.Identity.Pages.Account
                     await _userManager.AddToRoleAsync(user, ChucVuMacDinh.KhachHang.ToString());
 
                     var userId = await _userManager.GetUserIdAsync(user);
-                    //Phát sinh token để xác thực email
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
@@ -166,7 +170,7 @@ namespace App_View.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Xác nhận email của bạn",
                         $"Bạn đã đăng ký tài khoản trên Web bán giày thể thao Bazaizai. Vui lòng xác nhận(kích hoạt) tài khoản của bạn bằng cách <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>nhấn vào đây</a>.");
-                    await AddCart(userId, 0);/// them vao ở đây
+                    await AddCart(userId, 0);
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
@@ -182,8 +186,6 @@ namespace App_View.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
-            // If we got this far, something failed, redisplay form
             return Page();
         }
 

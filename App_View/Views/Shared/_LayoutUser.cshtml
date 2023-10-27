@@ -88,11 +88,11 @@
                     <div class="primary-nav">
 
                         <!--====== Main Logo ======-->
-
                         <a class="main-logo" href="/">
 
-                            <img src="/images/logo/logo-1.png" alt="">
+                            <img src="~/images/logo/logo-1.png" alt="" width="150rem">
                         </a>
+                     
                         <!--====== End - Main Logo ======-->
                         <!--====== Search Form ======-->
                         <form class="main-form">
@@ -116,64 +116,7 @@
 
                                 <!--====== List ======-->
                                 <ul class="ah-list ah-list--design1 ah-list--link-color-secondary">
-                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Account">
-                                        @if (SignInManager.IsSignedIn(User))
-                                        {
-                                            <a><i class="far fa-user-circle"></i></a>
-
-                                            <!--====== Dropdown ======-->
-
-                                            <span class="js-menu-toggle"></span>
-                                            <ul style="width:120px">
-                                                <li>
-                                                    <a href="dashboard.html">
-                                                        <i class="fas fa-user-circle u-s-m-r-6"></i>
-                                                        <span>Account</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-
-                                                    <form id="myForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                                        <button type="submit" class="nav-link btn btn-link text-dark">
-                                                            <a >
-                                                                <i class="fas fa-lock-open u-s-m-r-6"></i>
-                                                                <span>Signout</span>
-                                                            </a>
-                                                        </button>
-                                                    </form>
-                                                   @* <a href="signup.html">
-                                                        <i class="fas fa-lock-open u-s-m-r-6"></i>
-                                                        <span>Signout</span>
-                                                    </a>*@
-                                                </li>
-                                            </ul>
-                                        }
-                                        else
-                                        {
-                                            <a><i class="far fa-user-circle"></i></a>
-
-                                            <!--====== Dropdown ======-->
-
-                                            <span class="js-menu-toggle"></span>
-                                            <ul style="width:120px">
-
-                                                <li>
-                                                    <a asp-area="Identity" asp-page="/Account/Register">
-                                                        <i class="fas fa-user-plus u-s-m-r-6"></i>
-                                                        <span>Signup</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a asp-area="Identity" asp-page="/Account/Login">
-                                                        <i class="fas fa-lock u-s-m-r-6"></i>
-                                                        <span>Signin</span>
-                                                    </a>
-                                                </li>
-
-                                            </ul>
-                                        }
-                                        <!--====== End - Dropdown ======-->
-                                    </li>
+                                    <partial name="_LoginPartial" />
                                     <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Settings">
 
                                         <a><i class="fas fa-user-cog"></i></a>

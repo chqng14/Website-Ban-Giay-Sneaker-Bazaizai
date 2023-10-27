@@ -6,10 +6,14 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
-    var id = UserManager.GetUserId(User);
-    var user = await UserManager.FindByIdAsync(id);
-    var userClaims = await UserManager.GetClaimsAsync(user);
+  
+    var user = await UserManager.GetUserAsync(User);
+    var fullName = user.TenNguoiDung;
+    var parts = fullName.Split(' ');
+    var LastName = parts[0];
+    var FirstName = string.Join(' ', parts.Skip(1));
+    
 
-    <span class="dash__text u-s-m-b-16"> Hello,@userClaims.FirstOrDefault(c => c.Type == ClaimTypes.GivenName)?.Value
+    <span class="dash__text u-s-m-b-16"> Hello,@user.TenNguoiDung
     </span>
 }

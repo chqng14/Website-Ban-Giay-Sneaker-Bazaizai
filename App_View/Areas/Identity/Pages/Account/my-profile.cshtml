@@ -4,7 +4,33 @@
 @{
     Layout = "/Views/Shared/_LayoutUser.cshtml";
 }
+<style>
+    .card {
+        border-radius: 10px;
+        
+    }
 
+        .card .card-header .profile_img {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            margin: 0px auto;
+            border: 1px solid white;
+            border-radius: 50%;
+        }
+
+        .card h2 {
+           margin-top: 15px;
+        }
+
+    .centered-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+</style>
 <div class="col-lg-9 col-md-12">
 
     <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
@@ -13,94 +39,64 @@
 
             <span class="dash__text u-s-m-b-30">Look all your info, you could customize your profile.</span>
             <div class="row">
-                <div class="col-lg-4 u-s-m-b-30">
-                    <h2 class="dash__h2 u-s-m-b-8">UserName</h2>
-                    <span class="dash__text">@Model.Username</span>
-                </div>
-                <div class="col-lg-4 u-s-m-b-30">
-                    <h2 class="dash__h2 u-s-m-b-8">Full Name</h2>
-                    <span class="dash__text">@Model.FullName</span>
-                </div>
-                <div class="col-lg-4 u-s-m-b-30">
-                    <h2 class="dash__h2 u-s-m-b-8">img</h2>
-                    <img src="@Model.User.FindFirst("urn:google:picture")?.Value" alt="avatar" class="rounded-circle" style="width: 40px" />
-                </div>
-                <div class="col-lg-4 u-s-m-b-30">
-                    <h2 class="dash__h2 u-s-m-b-8">Name</h2>
+                <div class="col-lg-8 u-s-m-b-30" style=" border-right: 1px solid green;">
+                    <div class="row">
+                        <div class="col-lg-6 u-s-m-b-30">
+                            <h2 class="dash__h2 u-s-m-b-8">Tên đăng nhập</h2>
+                            <span class="dash__text">@Model.Username</span>
+                        </div>
+                        <div class="col-lg-6 u-s-m-b-30">
+                            <h2 class="dash__h2 u-s-m-b-8">Tên</h2>
+                            <span class="dash__text">@Model.FullName</span>
+                        </div>
+                        <div class="col-lg-6 u-s-m-b-30">
+                            <h2 class="dash__h2 u-s-m-b-8">Giới tính </h2>
+                            <span class="dash__text">@Model.GioiTinh</span>
+                        </div>
+                        <div class="col-lg-6 u-s-m-b-30">
+                            <h2 class="dash__h2 u-s-m-b-8">Ngày sinh</h2>
+                            <span class="dash__text">@Model.NgaySinh</span>
+                        </div>
+                        <div class="col-lg-6 u-s-m-b-30">
+                            <h2 class="dash__h2 u-s-m-b-8">Email</h2>
+                            <span class="dash__text">@Model.Email</span>
+                            <div class="dash__link dash__link--secondary">
+                                <a href="#">Change</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 u-s-m-b-30">
+                            <h2 class="dash__h2 u-s-m-b-8">Số điện thoại</h2>
+                            @if (!string.IsNullOrEmpty(Model.Phone))
+                            {
+                                <span class="dash__text">@Model.Phone</span>
+                                <div class="dash__link dash__link--secondary">
+                                    <a href="#">Change</a>
+                                </div>
 
-                    @if (!string.IsNullOrEmpty(Model.Tame))
-                    {
-                        <span class="dash__text">@Model.Tame</span>
+                            }
+                            else
+                            {
+                                <span class="dash__text">Please enter your mobile</span>
+                                <div class="dash__link dash__link--secondary">
 
-                    }
-                    else
-                    {
-                        <span class="dash__text">Chưa cập nhật</span>
-                    }
-
-                </div>
-                @* <div class="col-lg-4 u-s-m-b-30">
-                <h2 class="dash__h2 u-s-m-b-8">Picture</h2>
-
-                <img src="@Model.Picture" alt="Profile Picture">
-                </div>*@
-                <div class="col-lg-4 u-s-m-b-30">
-                    <h2 class="dash__h2 u-s-m-b-8">E-mail</h2>
-
-                    <span class="dash__text">@Model.Email</span>
-                    <div class="dash__link dash__link--secondary">
-
-                        <a href="#">Change</a>
+                                    <a href="#">Add</a>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-4 u-s-m-b-30">
-                    <h2 class="dash__h2 u-s-m-b-8">Phone</h2>
-                    @if (!string.IsNullOrEmpty(Model.Phone))
-                    {
-                        <span class="dash__text">@Model.Phone</span>
-                        <div class="dash__link dash__link--secondary">
-
-                            <a href="#">Change</a>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-transparent text-center">
+                            <div class="centered-content">
+                                <img class="profile_img" src="@Model.Picture" alt="student dp">
+                                <h2 class="dash__h2 u-s-m-b-8">Ảnh đại diện</h2>
+                            </div>
                         </div>
 
-                    }
-                    else
-                    {
-                        <span class="dash__text">Please enter your mobile</span>
-                        <div class="dash__link dash__link--secondary">
-
-                            <a href="#">Add</a>
-                        </div>
-                    }
-
+                    </div>
                 </div>
-                <div class="col-lg-4 u-s-m-b-30">
-                    <h2 class="dash__h2 u-s-m-b-8">Birthday</h2>
-                    @if (string.IsNullOrEmpty(Model.NgaySinh.ToString()))
-                    {
-                        <span class="dash__text">dd/mm/yy</span>
 
-                    }
-                    else
-                    {
-                        <span class="dash__text">@Model.NgaySinh</span>
-                    }
-
-                </div>
-                <div class="col-lg-4 u-s-m-b-30">
-                    <h2 class="dash__h2 u-s-m-b-8">Gender</h2>
-                    <span class="dash__text">@Model.Gender</span>
-                    @if (string.IsNullOrEmpty(Model.Gender))
-                    {
-                        <span class="dash__text">Chưa cập nhật</span>
-
-
-                    }
-                    else
-                    {
-                        <span class="dash__text">@Model.Gender</span>
-                    }
-                </div>
             </div>
             <div class="row">
                 <div class="col-lg-12">

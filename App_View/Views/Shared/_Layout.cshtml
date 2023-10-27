@@ -83,12 +83,12 @@
 
                                 <!--====== List ======-->
                                 <ul class="ah-list ah-list--design1 ah-list--link-color-secondary">
-                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Account">
+                                    <partial name="_LoginPartial" />
+@*                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Account">
                                         @if (SignInManager.IsSignedIn(User))
                                         {
                                             <a><i class="far fa-user-circle"></i></a>
 
-                                            <!--====== Dropdown ======-->
 
                                             <span class="js-menu-toggle"></span>
                                             <ul style="width:120px">
@@ -108,10 +108,7 @@
                                                             </a>
                                                         </button>
                                                     </form>
-                                                    @* <a href="signup.html">
-                                                            <i class="fas fa-lock-open u-s-m-r-6"></i>
-                                                            <span>Signout</span>
-                                                        </a>*@
+                                                   
                                                 </li>
                                             </ul>
                                         }
@@ -119,7 +116,6 @@
                                         {
                                             <a><i class="far fa-user-circle"></i></a>
 
-                                            <!--====== Dropdown ======-->
 
                                             <span class="js-menu-toggle"></span>
                                             <ul style="width:120px">
@@ -139,13 +135,11 @@
 
                                             </ul>
                                         }
-                                        <!--====== End - Dropdown ======-->
                                     </li>
-                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Settings">
+*@                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Settings">
 
                                         <a><i class="fas fa-user-cog"></i></a>
 
-                                        <!--====== Dropdown ======-->
 
                                         <span class="js-menu-toggle"></span>
                                         <ul style="width:120px">

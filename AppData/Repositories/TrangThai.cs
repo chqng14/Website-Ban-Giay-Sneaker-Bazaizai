@@ -98,10 +98,8 @@ namespace App_Data.Repositories
         }
         public enum GioiTinhMacDinh
         {
-            KhongMuonTraLoi = 0,
             Nam = 1,
-            Nu = 2,
-            Khac = 3
+            Nu = 2
         }
         public enum TrangThaiHoaDonChiTiet
         {
