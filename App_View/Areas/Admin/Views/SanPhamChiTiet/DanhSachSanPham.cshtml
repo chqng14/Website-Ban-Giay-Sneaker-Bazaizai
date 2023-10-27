@@ -20,6 +20,34 @@
     .main_danh_sach, .page-link {
 /*        background-color: #A0C5E8 !important;*/
     }
+    .checkbox input[type="checkbox"] {
+        display: none;
+    }
+
+    /* Thiết lập kiểu checkbox tùy chỉnh sử dụng giả lập (pseudo-elements) */
+    .checkbox label::before {
+        content: "\2714"; /* Unicode ký tự checkmark */
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #000;
+        text-align: center;
+        vertical-align: middle;
+        margin-right: 5px;
+        font-size: 18px;
+        line-height: 18px;
+        cursor: pointer;
+    }
+
+    /* Định dạng khi checkbox được chọn */
+    .checkbox input[type="checkbox"]:checked + label::before {
+        background-color: #00FF00; /* Màu nền khi đã chọn */
+    }
+
+    /* Định dạng khi checkbox chưa được chọn */
+    .checkbox input[type="checkbox"]:not(:checked) + label::before {
+        background-color: #c4d0d9; /* Màu nền khi chưa chọn */
+    }
 </style>
 
 <div id="body-danhsach">

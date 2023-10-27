@@ -82,7 +82,7 @@ namespace App_Api.Helpers.Mapping
                 )
                 .ForMember(
                     dest => dest.Anh,
-                    opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(a=>a.Url).Select(x => x.Url).FirstOrDefault())
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(a => a.Url).Select(x => x.Url).FirstOrDefault())
                 );
 
             CreateMap<GioHangChiTiet, GioHangChiTietDTO>()
@@ -164,6 +164,10 @@ namespace App_Api.Helpers.Mapping
                 .ForMember(
                         dest => dest.FullName,
                         opt => opt.MapFrom(src => $"{src.ThuongHieu.TenThuongHieu} {src.SanPham.TenSanPham} {src.MauSac.TenMauSac}-{src.KichCo.SoKichCo}")
+                )
+                .ForMember(
+                        dest => dest.TrangThaiKhuyenMai,
+                        opt => opt.MapFrom(src => src.TrangThaiSale == 1 ? true : false)
                 )
                 .ReverseMap()
                 .ForMember(
@@ -267,16 +271,16 @@ namespace App_Api.Helpers.Mapping
                  .ForMember(
                         dest => dest.GiaMin,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
-                        .Where(x=>
+                        .Where(x =>
                         x.TrangThai == 0 &&
-                        x.IdXuatXu == src.IdXuatXu && 
+                        x.IdXuatXu == src.IdXuatXu &&
                         x.IdSanPham == src.IdSanPham &&
                         x.IdLoaiGiay == src.IdLoaiGiay &&
                         x.IdThuongHieu == src.IdThuongHieu &&
                         x.IdKieuDeGiay == src.IdKieuDeGiay &&
                         x.IdChatLieu == src.IdChatLieu
                         )
-                        .Select(x=>x.GiaThucTe).Min()
+                        .Select(x => x.GiaThucTe).Min()
                         )
                     )
                  .ForMember(
@@ -306,7 +310,7 @@ namespace App_Api.Helpers.Mapping
                         x.IdKieuDeGiay == src.IdKieuDeGiay &&
                         x.IdChatLieu == src.IdChatLieu
                         )
-                        .Select(sp=>sp.IdMauSac).Distinct().Count()
+                        .Select(sp => sp.IdMauSac).Distinct().Count()
                         )
                     )
                 ;
