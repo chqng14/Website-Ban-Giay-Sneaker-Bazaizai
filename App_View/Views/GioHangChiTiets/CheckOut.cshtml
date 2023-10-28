@@ -5,12 +5,15 @@
     var thongTinGH = ViewData["ThongTinGH"] as List<App_Data.Models.ThongTinGiaoHang>; 
     var idnguoidung = ViewBag.idNguoiDung;
 }
-@if (TempData["QuantityErrorMessages"] != null)
+@if (ViewData["QuantityErrorMessages"] != null)
 {
     <script>
+        var problemCountMessage = '@TempData["problemCount"]';
+        var errorMessages = @Html.Raw(Json.Serialize(ViewData["QuantityErrorMessages"]));
         Swal.fire({
-            title: '@TempData["QuantityErrorMessages"]',
+            title: problemCountMessage,
             icon: 'error',
+            html: errorMessages.join('<br/>'),
         })
     </script>
 }
@@ -280,8 +283,7 @@
 
                                                             <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = item.IdSanPhamCT })">@item.TenThuongHieu @item.TenSanPham</a>
                                                         </span>
-                                                        <span class="o-card__quantity">@item.TenKichCo</span>
-                                                        <span class="o-card__quantity">@item.TenMauSac</span>
+                                                        <span class="o-card__quantity">Size: @item.TenKichCo Màu: @item.TenMauSac</span>
                                                         <span class="o-card__quantity">Số lượng x @item.SoLuong</span>
 
                                                         <span class="o-card__price">@string.Format("{0:N0}đ", item.GiaBan)</span>
@@ -1093,6 +1095,7 @@
         // Hàm xử lý voucher
         var IdVoucher = "";
         function voucher(value) {
+            value = value.toUpperCase();
             if (value != null && value.trim() != "") {
                 var ma = { ma: value };
                 $.ajax({
@@ -1122,7 +1125,12 @@
 
         // Hàm áp dụng giảm giá
         function applyDiscount(discountAmount) {
-            $('#TienGiam').text(discountAmount.toLocaleString("vi-VN") + "đ");
+            if (discountAmount == null || discountAmount == 0) {
+                $('#TienGiam').text(discountAmount.toLocaleString("vi-VN") + "đ");
+            }
+            else { 
+                $('#TienGiam').text("-" + discountAmount.toLocaleString("vi-VN") + "đ");
+            }
             document.querySelector('input[name="TienGiam"]').value = discountAmount;
             // Tính tổng tiền sau khi giảm giá
             var tamTinhGiaGiam = tongtienSanPham + parseFloat(phiship);
@@ -1191,8 +1199,9 @@
                                 window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
                             }else{
                                 Swal.fire({
-                                    title: paymentResponse.quantityError,
+                                    title: paymentResponse.title,
                                     icon: 'error',
+                                    html: paymentResponse.message.join('<br/>'),
                                 })
                             }
                         },
@@ -1234,8 +1243,9 @@
                                             window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
                                         } else {
                                             Swal.fire({
-                                                title: paymentResponse.quantityError,
+                                                title: paymentResponse.title,
                                                 icon: 'error',
+                                                html: paymentResponse.message.join('<br/>'),
                                             })
                                         }
                                     },

@@ -4,12 +4,15 @@
     ViewData["Title"] = "ShowCartUser";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@if (TempData["QuantityErrorMessages"] != null)
+@if (ViewData["QuantityErrorMessages"] != null)
 {
     <script>
+        var problemCountMessage = '@TempData["problemCount"]';
+        var errorMessages = @Html.Raw(Json.Serialize(ViewData["QuantityErrorMessages"]));
         Swal.fire({
-            title: '@TempData["QuantityErrorMessages"]',
+            title: problemCountMessage,
             icon: 'error',
+            html: errorMessages.join('<br/>'),
         })
     </script>
 }
@@ -210,7 +213,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    @if (TempData["QuantityErrorMessages"]!=null)
+                                    @if (ViewData["QuantityErrorMessages"] != null)
                                     {
                                         <div>
                                             <a class="btn btn--e-brand-b-2" href="/GioHangChiTiets/ShowCartUser">
@@ -280,7 +283,11 @@
                         $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
                     } else {
                         $(inputElement).val(soLuongBanDau);
-                        alert(response.quantityError);
+                        Swal.fire({
+                            title: 'Lỗi',
+                            icon: 'error',
+                            html: response.quantityError,
+                        })
                     }
 
                 }
