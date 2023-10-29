@@ -60,9 +60,13 @@
                         <div>
                             <div class="pd-detail__inline">
 
-                                <span class="pd-detail__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaBan)</span>
+                                <span class="pd-detail__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaKhuyenMai)</span>
+                                @if (Model.IsKhuyenMai)
+                                {
+                                    <span class="pd-detail__discount">(76% OFF)</span><del class="pd-detail__del">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaGoc)</del>
 
-                                <span class="pd-detail__discount">(76% OFF)</span><del class="pd-detail__del">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaKhuyenMai)</del>
+                                }
+
                             </div>
                         </div>
                         <div class="u-s-m-b-15">
@@ -77,10 +81,15 @@
                         </div>
                         <div class="u-s-m-b-15">
                             <div class="pd-detail__inline">
+                                @if (@Model.SoLuongTon > 10)
+                                {
+                                    <span class="pd-detail__stock">@Model.SoLuongTon trong kho</span>
 
-                                <span class="pd-detail__stock">@Model.SoLuongTon trong kho</span>
-
-                                <span class="pd-detail__left">Only 2 left</span>
+                                }
+                                else
+                                {
+                                    <span class="pd-detail__left">Chỉ còn: @Model.SoLuongTon</span>
+                                }
                             </div>
                         </div>
                         <div class="u-s-m-b-15">
@@ -93,7 +102,7 @@
                                 <span class="pd-detail__click-wrap">
                                     <i class="far fa-heart u-s-m-r-6"></i>
 
-                                    <a href="signin.html">Thêm vào danh sách yêu thích</a>
+                                    <a href="/">Thêm vào danh sách yêu thích</a>
 
                                     <span class="pd-detail__click-count">(222)</span>
                                 </span>
@@ -146,9 +155,8 @@
                                             <span class="input-counter__plus fas fa-plus"></span>
                                         </div>
                                         <!--====== End - Input Counter ======-->
-
                                         <!---== Input - Id Sản phẩm-->
-                                        <input value="@Model.IdChiTietSp" name="IdSanPhamCT" hidden/>
+                                        <input value="@Model.IdChiTietSp" name="IdSanPhamCT" hidden />
                                     </div>
                                     <div class="u-s-m-b-15">
 
@@ -186,8 +194,8 @@
     </div>
 </div>
 <script>
-    const updateViewCartMini = () => {
 
+    function updateViewCartMini() {
         $.ajax({
             url: '/GioHangChiTiets/GetGioHangMiniModel',
             type: 'GET',
@@ -201,8 +209,6 @@
                 console.log(xhr);
             }
         });
-
-
     }
 
     $('.add-product').click(() => {

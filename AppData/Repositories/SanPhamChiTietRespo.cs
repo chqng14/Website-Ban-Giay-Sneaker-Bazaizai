@@ -184,6 +184,7 @@ namespace App_Data.Repositories
                 Include(x => x.ThuongHieu).
                 Include(x => x.KichCo).
                 Include(x => x.MauSac).
+                Include(x => x.SanPhamYeuThichs).
                 FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
             if (sanPhamChiTiet == null) return null;
             var itemDetailViewModel = _mapper.Map<ItemDetailViewModel>(sanPhamChiTiet);
