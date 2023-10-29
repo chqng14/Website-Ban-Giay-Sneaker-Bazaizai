@@ -210,9 +210,16 @@ namespace App_View.Areas.Admin.Controllers
             };
         }
         [HttpGet]
-        public async Task<IActionResult> ApllySale()
+        public async Task<IActionResult> ApllySale(string id)
         {
-            ViewData["IdSale"] = new SelectList(_context.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau), "IdKhuyenMai", "TenKhuyenMai");
+            if(id==null)
+            {
+                ViewData["IdSale"] = new SelectList(_context.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau), "IdKhuyenMai", "TenKhuyenMai");
+            }
+            else
+            {
+                ViewData["IdSale"] = new SelectList(_context.khuyenMais.Where(x => x.IdKhuyenMai == id), "IdKhuyenMai", "TenKhuyenMai");
+            }
             //.Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale|| x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale)
             var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Where(x =>( x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale )&& x.TrangThai==(int)TrangThaiCoBan.HoatDong).Select(item => CreateSanPhamDanhSachViewModel(item));
             return View(getallProductDT);

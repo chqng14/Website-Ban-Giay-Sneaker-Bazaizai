@@ -169,7 +169,7 @@ namespace App_View.Areas.Admin.Controllers
         }
 
         // GET: Admin/KhuyenMais/Edit/5
-        public async Task<IActionResult> Edit(string id,string url)
+        public async Task<IActionResult> Edit(string id)
         {
             ViewBag.ListLoaiHinh = new List<SelectListItem>
             {
@@ -205,7 +205,6 @@ namespace App_View.Areas.Admin.Controllers
             }
 
             var khuyenMai = await _context.khuyenMais.FirstOrDefaultAsync(x=>x.IdKhuyenMai == id);
-            khuyenMai.Url = url;
             if (khuyenMai == null)
             {
                 return NotFound();
@@ -279,8 +278,18 @@ namespace App_View.Areas.Admin.Controllers
                         }
                     }
                     else {
-                        return View();
+                    khuyenMai.IdKhuyenMai = id;
+                    var response = await _httpClient.PutAsync($"https://localhost:7038/api/KhuyenMai/EditNoiImage?id={id}&Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", null);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index");
                     }
+                    else
+                    {
+                        Console.WriteLine(response.StatusCode);
+                        return BadRequest();
+                    }
+                }
                 }
             return View(khuyenMai);
         }
