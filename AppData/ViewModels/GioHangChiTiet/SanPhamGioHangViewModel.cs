@@ -8,8 +8,9 @@ namespace App_Data.ViewModels.GioHangChiTiet
 {
     public class SanPhamGioHangViewModel
     {
-        public string IdSanPhamChiTiet { get; set; }
+        public string? IdSanPhamChiTiet { get; set; }
         public string? TenSanPham { get; set; }
+        public string? TenThuongHieu { get; set; }
         public double GiaSanPham { get; set; }
         public int SoLuong { get; set; }
         public string? Anh { get; set; }

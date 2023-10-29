@@ -12,6 +12,8 @@ using App_View.IServices;
 using DocumentFormat.OpenXml.Office.CustomUI;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using App_Data.ViewModels.FilterViewModel;
+using Microsoft.AspNetCore.Identity;
+using App_Data.ViewModels.SanPhamYeuThichDTO;
 
 namespace App_View.Controllers
 {
@@ -19,10 +21,16 @@ namespace App_View.Controllers
     {
         private readonly BazaizaiContext _context;
         private readonly ISanPhamChiTietService _sanPhamChiTietService;
-        public SanPhamChiTietsController(ISanPhamChiTietService sanPhamChiTietService)
+        private readonly SignInManager<NguoiDung> _signInManager;
+        private readonly UserManager<NguoiDung> _userManager;
+        private readonly HttpClient _httpClient;
+        public SanPhamChiTietsController(ISanPhamChiTietService sanPhamChiTietService, UserManager<NguoiDung> userManager, SignInManager<NguoiDung> signInManager, HttpClient httpClient)
         {
             _context = new BazaizaiContext();
             _sanPhamChiTietService = sanPhamChiTietService;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _httpClient = httpClient;
         }
 
 
@@ -75,7 +83,7 @@ namespace App_View.Controllers
 
                 if (filterData.GiaMin != 0 && filterData.GiaMax != 0)
                 {
-                    data = data!.Where(sp => sp.GiaBan >= filterData.GiaMin && sp.GiaBan <= filterData.GiaMax).ToList();
+                    data = data!.Where(sp => sp.GiaThucTe >= filterData.GiaMin && sp.GiaThucTe <= filterData.GiaMax).ToList();
                 }
 
                 if (!string.IsNullOrEmpty(brand))
@@ -147,7 +155,27 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> Details(string id)
         {
-            return View(await _sanPhamChiTietService.GetItemDetailViewModelAynsc(id));
+            var data = await _sanPhamChiTietService.GetItemDetailViewModelAynsc(id);
+            var checkLogin = _userManager.GetUserId(User);
+
+            if (checkLogin == null)
+            {
+                data!.IsYeuThich = false;
+            }
+            else
+            {
+                var danhSachYeuThich = await _httpClient.GetFromJsonAsync<List<SanPhamYeuThichViewModel>>($"/api/SanPhamYeuThich/Get-Danh-Sach-SanPhamYeuThich?idNguoiDung={checkLogin}");
+                if (danhSachYeuThich!.FirstOrDefault(x => x.IdSanPhamChiTiet == data!.IdChiTietSp) != null)
+                {
+                    data!.IsYeuThich = true;
+                }
+                else
+                {
+                    data!.IsYeuThich = false;
+                }
+            }
+
+            return View(data);
         }
 
         public async Task<IActionResult> GetItemDetailViewModelWhenSelectColor([FromQuery] string id, [FromQuery] string mauSac)
