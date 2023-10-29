@@ -29,7 +29,7 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
         public int? KichCo { get; set; }
         public string? LoaiGiay { get; set; }
         public string? ThuongHieu { get; set; }
-
+        public int? TrangThai { get; set; }
         public List<string>? ListTenAnh { get; set; }
     }
 }

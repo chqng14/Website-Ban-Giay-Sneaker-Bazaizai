@@ -25,6 +25,7 @@ using static Peg.Base.PegBaseParser;
 using App_Data.ViewModels.ThongTinGHDTO;
 using App_Data.ViewModels.HoaDon;
 using App_Data.DbContextt;
+using App_Data.ViewModels.SanPhamYeuThichDTO;
 
 namespace App_Api.Helpers.Mapping
 {
@@ -77,8 +78,12 @@ namespace App_Api.Helpers.Mapping
                     opt => opt.MapFrom(src => src.GiaBan)
                 )
                 .ForMember(
+                    dest => dest.TenThuongHieu,
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.ThuongHieu.TenThuongHieu)
+                )
+                .ForMember(
                     dest => dest.Anh,
-                    opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(a=>a.Url).Select(x => x.Url).FirstOrDefault())
+                    opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(a => a.Url).Select(x => x.Url).FirstOrDefault())
                 );
 
             CreateMap<GioHangChiTiet, GioHangChiTietDTO>()
@@ -161,6 +166,10 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.FullName,
                         opt => opt.MapFrom(src => $"{src.ThuongHieu.TenThuongHieu} {src.SanPham.TenSanPham} {src.MauSac.TenMauSac}-{src.KichCo.SoKichCo}")
                 )
+                .ForMember(
+                        dest => dest.TrangThaiKhuyenMai,
+                        opt => opt.MapFrom(src => src.TrangThaiSale == 1 ? true : false)
+                )
                 .ReverseMap()
                 .ForMember(
                         dest => dest.TrangThaiSale,
@@ -221,12 +230,16 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => src.IdChiTietSp)
                     )
                 .ForMember(
-                        dest => dest.GiaBan,
+                        dest => dest.GiaGoc,
                         opt => opt.MapFrom(src => src.GiaBan)
                     )
                 .ForMember(
+                        dest => dest.GiaThucTe,
+                        opt => opt.MapFrom(src => src.GiaThucTe)
+                    )
+                .ForMember(
                         dest => dest.GiaKhuyenMai,
-                        opt => opt.MapFrom(src => 0)
+                        opt => opt.MapFrom(src => src.GiaThucTe)
                     )
                 .ForMember(
                         dest => dest.SoSao,
@@ -260,19 +273,19 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.MauSac,
                         opt => opt.MapFrom(src => src.MauSac.TenMauSac)
                     )
-                 .ForMember(
+                .ForMember(
                         dest => dest.GiaMin,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
-                        .Where(x=>
+                        .Where(x =>
                         x.TrangThai == 0 &&
-                        x.IdXuatXu == src.IdXuatXu && 
+                        x.IdXuatXu == src.IdXuatXu &&
                         x.IdSanPham == src.IdSanPham &&
                         x.IdLoaiGiay == src.IdLoaiGiay &&
                         x.IdThuongHieu == src.IdThuongHieu &&
                         x.IdKieuDeGiay == src.IdKieuDeGiay &&
                         x.IdChatLieu == src.IdChatLieu
                         )
-                        .Select(x=>x.GiaThucTe).Min()
+                        .Select(x => x.GiaThucTe).Min()
                         )
                     )
                  .ForMember(
@@ -302,7 +315,7 @@ namespace App_Api.Helpers.Mapping
                         x.IdKieuDeGiay == src.IdKieuDeGiay &&
                         x.IdChatLieu == src.IdChatLieu
                         )
-                        .Select(sp=>sp.IdMauSac).Distinct().Count()
+                        .Select(sp => sp.IdMauSac).Distinct().Count()
                         )
                     )
                 ;
@@ -320,12 +333,12 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => src.IdChiTietSp)
                     )
                 .ForMember(
-                        dest => dest.GiaBan,
+                        dest => dest.GiaGoc,
                         opt => opt.MapFrom(src => src.GiaBan)
                     )
                 .ForMember(
                         dest => dest.GiaKhuyenMai,
-                        opt => opt.MapFrom(src => 0)
+                        opt => opt.MapFrom(src => src.GiaThucTe)
                     )
                 .ForMember(
                         dest => dest.SoSao,
@@ -361,7 +374,7 @@ namespace App_Api.Helpers.Mapping
                     )
                  .ForMember(
                         dest => dest.SoLuotYeuThich,
-                        opt => opt.MapFrom(src => 100)
+                        opt => opt.MapFrom(src => src.SanPhamYeuThichs.ToList().Count)
                     )
                 ;
             CreateMap<SanPhamDTO, SanPham>();
@@ -380,6 +393,32 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => src.SanPhamChiTiet.SanPham.TenSanPham)
                 )
                 .ReverseMap();
+            CreateMap<SanPhamYeuThichDTO, SanPhamYeuThich>();
+            CreateMap<SanPhamYeuThich, SanPhamYeuThichViewModel>()
+                .ForMember(
+                        dest => dest.GiaBan,
+                        opt => opt.MapFrom(src => src.SanPhamChiTiet.GiaBan)
+                )
+                .ForMember(
+                        dest => dest.IdSanPhamChiTiet,
+                        opt => opt.MapFrom(src => src.SanPhamChiTiet.IdChiTietSp)
+                )
+                .ForMember(
+                        dest => dest.GiaThucTe,
+                        opt => opt.MapFrom(src => src.SanPhamChiTiet.GiaThucTe)
+                )
+                .ForMember(
+                        dest => dest.TenSanPham,
+                        opt => opt.MapFrom(src => $"{src.SanPhamChiTiet.SanPham.TenSanPham} - {src.SanPhamChiTiet.KichCo.SoKichCo}")
+                )
+                .ForMember(
+                        dest => dest.Anh,
+                        opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(x=>x.Url).FirstOrDefault()!.Url)
+                )
+                .ForMember(
+                        dest => dest.LoaiGiay,
+                        opt => opt.MapFrom(src => src.SanPhamChiTiet.LoaiGiay.TenLoaiGiay)
+                );
         }
     }
 }
