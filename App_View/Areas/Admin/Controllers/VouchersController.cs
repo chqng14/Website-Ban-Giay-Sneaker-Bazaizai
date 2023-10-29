@@ -14,6 +14,7 @@ using App_Data.ViewModels.SanPhamChiTietDTO;
 using AutoMapper;
 using App_Data.Repositories;
 using static App_Data.Repositories.TrangThai;
+using Microsoft.AspNetCore.Identity;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -22,10 +23,15 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly BazaizaiContext _context;
         private readonly IVoucherServices _voucherSV;
-
-        public VouchersController(IVoucherServices voucherServices)
+        private readonly IVoucherNguoiDungServices _voucherND;
+        private readonly SignInManager<NguoiDung> _signInManager;
+        private readonly UserManager<NguoiDung> _userManager;
+        public VouchersController(IVoucherServices voucherServices, IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
         {
+            _voucherND = voucherNDServices;
             _voucherSV = voucherServices;
+            _signInManager = signInManager;
+            _userManager = userManager;
             _context = new BazaizaiContext();
         }
 
@@ -142,5 +148,15 @@ namespace App_View.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<ActionResult> GiveVouchersToUsers(string maVoucher)
+        {
+            ViewBag.MaVoucher = maVoucher;
+            return View();
+        }
+        //[HttpGet]
+        //public async Task<ActionResult> GiveVouchersToUsers(string maVoucher)
+        //{
+        //    return View();
+        //}
     }
 }

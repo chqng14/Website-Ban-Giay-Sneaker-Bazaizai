@@ -17,7 +17,10 @@
             {
                 <div class="col-md-3">
                     <figure>
-                        <img src="~/AnhSale/@item.Url" alt="Ảnh khuyến mãi" style="width:100%">
+                    <div style="width:231.25px;height: 290.42px">
+                            <img src="~/AnhSale/@item.Url" alt="Ảnh khuyến mãi" style="width:100%">
+                        </div>
+                        
                         <figcaption>
                             <strong>Mã khuyến mãi:</strong> @item.MaKhuyenMai<br />
                             <strong>Tên khuyến mãi:</strong> @item.TenKhuyenMai<br />
@@ -34,8 +37,8 @@
                             </label>
                         </div>
                         <div style="display:flex;align-items:center;gap:10px">
-                            <button class="btn btn-primary btn-tone m-r-5">Áp dụng</button>
-                            <a class="btn btn-danger btn-tone m-r-5" asp-controller="KhuyenMais" asp-action="Edit" asp-route-id="@item.IdKhuyenMai" asp-route-url="@item.Url">Chỉnh sửa</a>
+                            <a class="btn btn-primary btn-tone m-r-5" asp-controller="KhuyenMaiChiTiets" asp-action="ApllySale" asp-route-id="@item.IdKhuyenMai">Áp dụng</a>
+                            <a class="btn btn-danger btn-tone m-r-5" asp-controller="KhuyenMais" asp-action="Edit" asp-route-id="@item.IdKhuyenMai">Chỉnh sửa</a>
                         </div>
                         </figcaption>
                     </figure>
