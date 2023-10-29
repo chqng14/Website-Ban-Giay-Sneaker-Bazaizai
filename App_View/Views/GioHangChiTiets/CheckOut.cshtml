@@ -1195,8 +1195,9 @@
                         success: function (paymentResponse) {
                             if(paymentResponse.idHoaDon != null) {
                                 UpdateVoucher()
-                                var idHoaDon = paymentResponse.idHoaDon;
-                                window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
+                                window.location.href = paymentResponse.url;
+                                // var idHoaDon = paymentResponse.idHoaDon;
+                                // window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
                             }else{
                                 Swal.fire({
                                     title: paymentResponse.title,
@@ -1254,6 +1255,7 @@
                                     }
                                 });
                             }else{
+                                $('#billing-street').val(inputAddressBill);
                                 Swal.fire({
                                     title: deliveryResponse.title,
                                     icon: 'error',

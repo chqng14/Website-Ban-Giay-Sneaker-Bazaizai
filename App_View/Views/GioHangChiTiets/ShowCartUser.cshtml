@@ -284,7 +284,7 @@
                     } else {
                         $(inputElement).val(soLuongBanDau);
                         Swal.fire({
-                            title: 'Lỗi',
+                            title: 'Sản phẩm lỗi',
                             icon: 'error',
                             html: response.quantityError,
                         })
@@ -341,7 +341,6 @@
                     }
                 })
                     .then(response => {
-                        console.log(response.data.data);
                         var selectElement = $('#district');
                         selectElement.empty();
                         selectElement.val('').trigger('change');
@@ -376,7 +375,6 @@
                     }
                 })
                     .then(response => {
-                        console.log(response.data.data);
                         var selectElement = $('#wards');
                         selectElement.empty();
                         selectElement.val('').trigger('change');

@@ -811,7 +811,7 @@
                     // Gửi dữ liệu DataBill
                     $.ajax({
                         type: 'POST',
-                        url: '/HoaDon/DataBill',
+                        url: '/HoaDon/DataBillNologin',
                         data: deliveryFormData,
                         success: function (deliveryResponse) {
                             // Thực hiện Ajax để gửi dữ liệu đến action ThanhToan trong controller TenControllerKhac
@@ -824,7 +824,7 @@
                             // Gửi dữ liệu thanh toán
                             $.ajax({
                                 type: 'POST',
-                                url: '/HoaDon/ThanhToan',
+                                url: '/HoaDon/ThanhToanNologin',
                                 data: paymentFormData,
                                 success: function (paymentResponse) {
                                     if (paymentResponse.idHoaDon != null) {
@@ -844,6 +844,7 @@
                                 }
                             });
                         } else {
+                            $('#billing-street').val(inputAddressBill);
                             Swal.fire({
                                 title: deliveryResponse.title,
                                 icon: 'error',

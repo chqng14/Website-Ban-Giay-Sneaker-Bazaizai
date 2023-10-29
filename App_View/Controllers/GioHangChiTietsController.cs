@@ -112,6 +112,7 @@ namespace App_View.Controllers
                     giohang.LinkAnh = product.ListTenAnh;
                     giohang.GiaGoc = product.GiaBan;
                     giohang.GiaBan = product.GiaThucTe;
+                    giohang.TrangThaiSanPham = product.TrangThai;
                     giohangSession.Add(giohang);
                 }
                 SessionServices.SetObjToSession(HttpContext.Session, "Cart", giohangSession);
@@ -345,7 +346,7 @@ namespace App_View.Controllers
                         message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng , Vui lòng chọn sản phẩm khác!");
                         outOfStockCount++;
                     }
-                    if (item.TrangThaiSanPham == 1)
+                    if (item.TrangThaiSanPham != product.TrangThai)
                     {
                         message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
                         stoppedSellingCount++;
@@ -396,7 +397,7 @@ namespace App_View.Controllers
                         message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng , Vui lòng chọn sản phẩm khác!");
                         outOfStockCount++;
                     }
-                    if (item.TrangThaiSanPham == 1)
+                    if (item.TrangThaiSanPham != product.TrangThai)
                     {
                         message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
                         stoppedSellingCount++;
@@ -455,7 +456,7 @@ namespace App_View.Controllers
                         Idsanpham = sanPhamChiTiet.IdChiTietSp
                     };
                 }
-                if (item.TrangThaiSanPham == 1)
+                if (item.TrangThaiSanPham != sanPhamChiTiet.TrangThai)
                 {
                     return new
                     {
