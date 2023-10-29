@@ -12,40 +12,70 @@
 
     <!--====== Mini Product Container ======-->
     <div class="mini-product-container gl-scroll u-s-m-b-15">
-        @foreach (var item in Model.SanPhamGioHangViewModels!)
+        @if (Model.SanPhamGioHangViewModels!.Any())
         {
-            <!--====== Card for mini cart ======-->
-            <div class="card-mini-product">
-                <div class="mini-product">
-                    <div class="mini-product__image-wrapper">
+            @foreach (var item in Model.SanPhamGioHangViewModels!)
+            {
+                <!--====== Card for mini cart ======-->
+                <div class="card-mini-product">
+                    <div class="mini-product">
+                        <div class="mini-product__image-wrapper">
 
-                        <a class="mini-product__link" href="/SanPhamChiTiets/Details/@item.IdSanPhamChiTiet">
+                            <a class="mini-product__link" href="/SanPhamChiTiets/Details/@item.IdSanPhamChiTiet">
 
-                            <img class="u-img-fluid" style="height: 100%" src="/AnhSanPham/@item.Anh" alt="">
-                        </a>
+                                <img class="u-img-fluid" style="height: 100%" src="/AnhSanPham/@item.Anh" alt="">
+                            </a>
+                        </div>
+                        <div class="mini-product__info-wrapper">
+
+                            <span class="mini-product__category">
+
+                                <a>@item.TenThuongHieu</a>
+                            </span>
+
+                            <span class="mini-product__name">
+
+                                <a href="product-detail.html">@item.TenSanPham</a>
+                            </span>
+
+                            <span class="mini-product__quantity">@item.SoLuong x</span>
+
+                            <span class="mini-product__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaSanPham)</span>
+                        </div>
                     </div>
-                    <div class="mini-product__info-wrapper">
 
-                        <span class="mini-product__category">
+                    <a class="mini-product__delete-link far fa-trash-alt"></a>
+                </div>
+                <!--====== End - Card for mini cart ======-->
+            }
+        }
+        else
+        {
+            <div class="u-s-p-y-60">
 
-                            <a>@item.TenThuongHieu</a>
-                        </span>
+                <!--====== Section Content ======-->
+                <div class="section__content">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 u-s-m-b-30">
+                                <div class="empty">
+                                    <div class="empty__wrap">
 
-                        <span class="mini-product__name">
+                                        <span class="empty__big-text">EMPTY</span>
 
-                            <a href="product-detail.html">@item.TenSanPham</a>
-                        </span>
+                                        <span class="empty__text-1">Giỏ hàng trống.</span>
 
-                        <span class="mini-product__quantity">@item.SoLuong x</span>
-
-                        <span class="mini-product__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaSanPham )</span>
+                                        <a class="empty__redirect-link btn--e-brand" href="/SanPhamchiTiets">Go Shop!</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <a class="mini-product__delete-link far fa-trash-alt"></a>
+                <!--====== End - Section Content ======-->
             </div>
-            <!--====== End - Card for mini cart ======-->
         }
+
 
 
     </div>
