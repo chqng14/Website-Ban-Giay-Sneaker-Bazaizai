@@ -1254,7 +1254,11 @@
                                     }
                                 });
                             }else{
-                                alert(deliveryResponse.quantityError);
+                                Swal.fire({
+                                    title: deliveryResponse.title,
+                                    icon: 'error',
+                                    html: deliveryResponse.message.join('<br/>'),
+                                })
                             }
                             
                         },

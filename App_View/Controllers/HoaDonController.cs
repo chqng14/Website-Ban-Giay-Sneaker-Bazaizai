@@ -119,28 +119,52 @@ namespace App_View.Controllers
             thongTinGHDTO.IdThongTinGH = Guid.NewGuid().ToString();
             thongTinGHDTO.IdNguoiDung = _userManager.GetUserId(User);
             var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == _userManager.GetUserId(User));
-            var results = await Task.WhenAll(listcart.Select(async item =>
+            var message = new List<string>();
+            int quantityErrorCount = 0;
+            int outOfStockCount = 0;
+            int stoppedSellingCount = 0;
+            foreach (var item in listcart)
             {
-                var sanPhamChiTiet = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
-                return new
+                var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                if (item.SoLuong > product.SoLuongTon && product.SoLuongTon == 0)
                 {
-                    Item = item,
-                    SanPhamChiTiet = sanPhamChiTiet,
-                    Message = $"{sanPhamChiTiet.SanPham} màu {sanPhamChiTiet.MauSac} size {sanPhamChiTiet.KichCo} đã hết, Vui lòng chọn sản phẩm khác!"
-                };
-            }));
-
-            var outOfStockProducts = results
-                .Where(result => result.Item.SoLuong > result.SanPhamChiTiet.SoLuongTon)
-                .Select(result => result.Message).ToList();
-            if (outOfStockProducts == null)
+                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng , Vui lòng chọn sản phẩm khác!");
+                    outOfStockCount++;
+                }
+                if (item.TrangThaiSanPham == 1)
+                {
+                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
+                    stoppedSellingCount++;
+                }
+                if (item.SoLuong > product.SoLuongTon)
+                {
+                    message.Add($"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} chỉ còn {product.SoLuongTon}, Vui lòng chọn lại số lượng!");
+                    quantityErrorCount++;
+                }
+            }
+            if (!message.Any())
             {
                 await ThongTinGHController.CreateThongTin(thongTinGHDTO);
                 return Ok(new { idThongTinGH = thongTinGHDTO.IdThongTinGH });
             }
             else
             {
-                return Ok(new { quantityError = outOfStockProducts });
+                if (outOfStockCount > 0)
+                {
+                    return Ok(new { title = $"Có {outOfStockCount} sản phẩm đã hết hàng.", message = message });
+                }
+                else if (stoppedSellingCount > 0)
+                {
+                    return Ok(new { title = $"Có {stoppedSellingCount} sản phẩm đã ngừng bán.", message = message });
+                }
+                else if (quantityErrorCount > 0)
+                {
+                    return Ok(new { title = $"Có {quantityErrorCount} sản phẩm không đủ số lượng.", message = message });
+                }
+                else
+                {
+                    return Ok(new { title = "Có lỗi xảy ra." });
+                }
             }
         }
         public async Task<IActionResult> ThanhToan(HoaDonDTO hoaDonDTO)
