@@ -25,14 +25,34 @@
                             @{
                                 foreach (var item in Model)
                                 {
-                                        <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a><span class="ui-icon ui-icon-close" role="presentation">Close</span></li>
+                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a><span class="ui-icon ui-icon-close" role="presentation">Close</span></li>
                                 }
                             }
                         </ul>
                         @{
                             foreach (var item in Model)
                             {
-                                    <div id="tab-@item.MaHoaDon" style="height:300px">@item.MaHoaDon <div style="background-color:red;height:100%"></div></div>
+                                <div id="tab-@item.MaHoaDon" style="height:700px">
+                                    <div class="table-responsive" style=" height:650px; overflow-y: scroll; overflow-x: hidden">
+
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" style="position: sticky; top: 0;background-color:white">STT</th>
+                                                    <th scope="col" style="position: sticky; top: 0;background-color:white" hidden>IdSanPham</th>
+                                                    <th scope="col" style="position: sticky; top: 0;background-color:white">Mã sản phẩm</th>
+                                                    <th scope="col" style="position: sticky; top: 0;background-color:white">Tên sản phẩm</th>
+                                                    <th scope="col" style="position: sticky; top: 0;background-color:white">Số lượng</th>
+                                                    <th scope="col" style="position: sticky; top: 0;background-color:white"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr scope="col" style="position: sticky; top: 0;background-color:white"><td>1</td><td hidden>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             }
                         }
                     </div>
@@ -40,7 +60,7 @@
             </div>
             <div class="row">
                 <div class="col-4" style="margin-left: -15px;">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <input type="text" class="form-control" oninput="timKiem(this.value)" id="timKiemSanPham" placeholder="Tìm kiếm sản phẩm">
                 </div>
                 <div class="col-8"></div>
             </div>
@@ -48,21 +68,21 @@
                 <div class="row" id="body-danhsach">
                     @{
                         @*foreach (var item in context.sanPhamChiTiets.ToList())
-                        {
-                                <div class="col-3">
-                                    <div class="card" style="width: 16rem; ">
-                                        <div class="card-body">
-                                            <h5 class="card-title">@item.SanPham</h5>
-                                            <img src="@context.Anh.FirstOrDefault(c=>c.IdSanPhamChiTiet == item.IdChiTietSp).Url" class="card-img-top" alt="...">
-                                            <p class="card-text">
-                                                <span style="color: red;">Giá: @item.GiaBan</span><br>
-                                                <span>Số lượng: @item.SoLuongTon</span>
-                                                <a href="#" class="btn btn-success" style="float: right;">Add</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                        }*@
+                    {
+                    <div class="col-3">
+                    <div class="card" style="width: 16rem; ">
+                    <div class="card-body">
+                    <h5 class="card-title">@item.SanPham</h5>
+                    <img src="@context.Anh.FirstOrDefault(c=>c.IdSanPhamChiTiet == item.IdChiTietSp).Url" class="card-img-top" alt="...">
+                    <p class="card-text">
+                    <span style="color: red;">Giá: @item.GiaBan</span><br>
+                    <span>Số lượng: @item.SoLuongTon</span>
+                    <a href="#" class="btn btn-success" style="float: right;">Add</a>
+                    </p>
+                    </div>
+                    </div>
+                    </div>
+                    }*@
                     }
 
                 </div>
@@ -95,7 +115,7 @@
                         </tr>
                         <tr>
                             <td>Tổng tiền hàng: </td>
-                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                            <td><input class="form-control" type="text" id="tongtien" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                         </tr>
                         <tr>
                             <td>Mức ưu đãi: </td>
@@ -112,14 +132,12 @@
                         <tr>
                             <td>HT thanh toán: </td>
                             <td>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                    <label class="form-check-label" for="inlineRadio1">Tiền mặt</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                    <label class="form-check-label" for="inlineRadio2">Chuyển khoản</label>
-                                </div>
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected>Chọn hình thức thanh toán</option>
+                                    <option value="1">Tiền mặt</option>
+                                    <option value="2">Chuyển khoản</option>
+                                    <option value="3">Cả tiền mặt cả chuyển khoản</option>
+                                </select>
                             </td>
                         </tr>
                         <tr>
@@ -132,7 +150,7 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td><button class="btn btn-success">Thanh toán</button> <button class="btn btn-danger">Hủy</button></td>
+                            <td><button class="btn btn-success">Thanh toán</button> <button class="btn btn-danger" onclick="HuyHoaDon()">Hủy</button></td>
                         </tr>
                     </table>
                 </div>
@@ -141,6 +159,50 @@
     </div>
 </div>
 <script>
+
+    var maHoaDonChoSelect = "";
+    $(function () {
+        $("#tabs").tabs({
+            beforeActivate: function (event, ui) {
+                if (ui.newTab.hasClass("ui-state-disabled")) {
+                    event.preventDefault();
+                }
+            },
+            activate: function (event, ui) {
+                maHoaDonChoSelect = ui.newPanel.attr("id");
+                $("<tr scope='col' style='position: sticky; top: 0; background - color:white'><td>1</td><td hidden>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>").appendTo("#" + maHoaDonChoSelect + " table tbody");
+            }
+        });
+
+        $("#create-tab").on("click", function () {
+            if (@Model.Count() <10) {
+                var tabIndex = "";
+                var tabTitle = "";
+                $.ajax({
+                    url: "@Url.Action("TaoHoaDonTaiQuay", "BanHangTaiQuay")",
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (response) {
+                        tabIndex = response;
+                        tabTitle = response;
+                        var tabContent = tabIndex
+                        $("<li><a href='#tab-" + tabIndex + "'>" + tabTitle + "</a><span class='ui-icon ui-icon-close' role='presentation'>Close</span></li>").appendTo("#tabs ul");
+                        $("<div id='tab-" + tabIndex + "'></div>").appendTo("#tabs");
+                        $("#tabs").tabs("refresh");
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    },
+                });
+            }
+        });
+
+        $("#tabs").on("click", ".ui-icon-close", function () {
+            var panelId = $(this).closest("li").remove().attr("aria-controls");
+            $("#" + panelId).remove();
+            $("#tabs").tabs("refresh");
+        });
+    });
     $(() => {
         $.ajax({
             url: '/Admin/BanHangTaiQuay/LoadPartialViewDanhSachSanPham',
@@ -157,44 +219,30 @@
             }
         });
     })
-    $(function () {
-        $("#tabs").tabs({
-            beforeActivate: function (event, ui) {
-                if (ui.newTab.hasClass("ui-state-disabled")) {
-                    event.preventDefault();
-                }
+    function timKiem(value) {
+
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/LoadPartialViewDanhSachSanPham?tukhoa=' + value,
+            type: 'GET',
+            success: function (result) {
+                $('#body-danhsach').empty();
+                $('#body-danhsach').append(result);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
             }
         });
-
-        $("#create-tab").on("click", function () {
-            if ($("#tabs ul li").length < 10) {
-                var tabIndex = "";
-                var tabTitle = "";
-                $.ajax({
-                    url: "@Url.Action("TaoHoaDonTaiQuay", "BanHangTaiQuay")",
-                    type: "POST",
-                    dataType: 'json',
-                    success: function (response) {
-                        tabIndex = response;
-                        tabTitle = response;
-                        var tabContent = tabIndex
-                        $("<li><a href='#tab-" + tabIndex + "'>" + tabTitle + "</a><span class='ui-icon ui-icon-close' role='presentation'>Close</span></li>").appendTo("#tabs ul");
-                        $("<div id='tab-" + tabIndex + "'>" + tabContent + "</div>").appendTo("#tabs");
-                        $("#tabs").tabs("refresh");
-                    },
-                    error: function (error) {
-                        console.error(error);
-                    },
-                });
-            }
-        });
-
-        $("#tabs").on("click", ".ui-icon-close", function () {
-            var panelId = $(this).closest("li").remove().attr("aria-controls");
-            $("#" + panelId).remove();
-            $("#tabs").tabs("refresh");
-        });
-    });
+    };
+    function HuyHoaDon() {
+        var selectedTabId = $("#tabs .ui-tabs-active a").attr("href"); // Lấy ID của tab đang được chọn
+        $(selectedTabId).remove(); // Xóa nội dung tab
+        console.log(selectedTabId);
+        $("#tabs ul li.ui-tabs-active").remove(); // Xóa tab từ danh sách tab
+        $("#tabs").tabs("refresh");
+    }
 </script>
 @section Scripts {
     @{

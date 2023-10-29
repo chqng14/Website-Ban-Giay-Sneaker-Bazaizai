@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<App_Data.ViewModels.SanPhamChiTietViewModel.ItemShopViewModel>;
 
-    @foreach (var item in Model)
+@foreach (var item in Model)
 {
     <div class="col-3">
         <div class="card" style="width: 16rem;">
@@ -8,24 +8,129 @@
                 <h5 class="card-title"> </h5>
                 <img src="/AnhSanPham/@item.Anh" class="card-img-top" alt="..." style="height:200px;width:200px">
                 <p class="card-text">
-                    <span>@item.TenSanPham @item.MauSac @item.KichCo</span>
+                    <span>@item.TenSanPham/@item.MauSac/@item.KichCo</span>
                     <br />
                     @{
                         if (item.GiaBan != item.GiaThucTe)
                         {
-                              <span style="color: red;">
+                            <span style="color: red;">
                                 Giá:<strike>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaBan)</strike><br>
                             </span>
+                        }
+                        else
+                        {
+                            <br>
                         }
                     }
                     <span style="color: red;">
                         Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaThucTe)
                     </span><br>
-                    <span>Số lượng:</span><span name="@item.IdChiTietSp">@item.SoLuongTon</span>
-                    <a href="#" class="btn btn-success" style="float: right;"> Add </a>
+                    @{
+
+                        <span>Số lượng:</span>
+                        if (item.SoLuongTon > 0)
+                        {
+                            <span id="@item.IdChiTietSp">@item.SoLuongTon</span>
+                        }
+                        else
+                        {
+                            <span id="@item.IdChiTietSp">Hết Hàng</span>
+                        }
+                        <button onclick="add('@item.IdChiTietSp')" class="btn btn-success" style="float: right;"> Add </button>
+                    }
                 </p>
             </div>
         </div>
     </div>
+   
 }
+<script>
+    function add(id) {
+        alert(id);
+        var element = document.getElementById(id);
+        var maHoaDon = $("#tabs .ui-tabs-active a").text();
+        $.ajax({
+            url: "@Url.Action("ThemSanPhamVaoHoaDon", "BanHangTaiQuay")",
+            type: "POST",
+            data: {
+                "maHD": maHoaDon,
+                "idSanPham": id
+            },
+            success: function (response) {
+                // Xử lý kết quả AJAX ở đây
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+        $("#tab-" + maHoaDon).empty().append("Đây là tab " + maHoaDon); // Chú ý sử dụng dấu ngoặc kép cho chuỗi
+        if (parseInt(element.textContent, 10) > 1) {
+            var currentNumber = parseInt(element.textContent, 10);
+            var newNumber = currentNumber - 1;
+            $("#tabs").tabs({
+                beforeActivate: function (event, ui) {
+                    if (ui.newTab.hasClass("ui-state-disabled")) {
+                        event.preventDefault();
+                    }
+                },
+                activate: function (event, ui) {
+                    maHoaDonChoSelect = ui.newPanel.attr("id");
+                    $("<tr scope='col' style='position: sticky; top: 0; background-color: white'><td>1</td><td hidden>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>").appendTo("#" + maHoaDonChoSelect + " table tbody");
+                }
+            });
+            element.textContent = newNumber;
+        }
+        else if (parseInt(element.textContent, 10) === 1) { // Đổi dấu bằng sang '==='
+            element.textContent = "Hết hàng";
+        }
+        else {
+            element.textContent = "Hết hàng";
+        }
+    }
+    
+    // function add(id) {
+    //     var element = document.getElementById(id);
+    //     var maHoaDon = $("#tabs .ui-tabs-active a").text();
+    //     $.ajax({
+    //         url: "@Url.Action("ThemSanPhamVaoHoaDon", "BanHangTaiQuay")",
+    //         type: "POST",
+    //         data: {
+    //             "maHD": maHoaDon,
+    //             "idSanPham": id
+    //         }
+    //         success: function (response) {
+                
+    //         },
+    //         error: function (error) {
+    //             console.error(error);
+    //         },
+    //     });
+    //     $("#tab-" + maHoaDon).empty().append(Đay la tap {maHoaDon})
+    //     if (parseInt(element.textContent, 10) > 1) {
+    //         // Chuyển nội dung thành số và trừ đi 1
+    //         var currentNumber = parseInt(element.textContent, 10);
 
+    //         var newNumber = currentNumber - 1;
+    //         $("#tabs").tabs({
+    //             beforeActivate: function (event, ui) {
+    //                 if (ui.newTab.hasClass("ui-state-disabled")) {
+    //                     event.preventDefault();
+    //                 }
+    //             },
+    //             activate: function (event, ui) {
+    //                 maHoaDonChoSelect = ui.newPanel.attr("id");
+    //                 $("<tr scope='col' style='position: sticky; top: 0; background - color:white'><td>1</td><td hidden>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>").appendTo("#" + ma + " table tbody");
+
+    //             }
+    //         });
+    //         // Đặt nội dung mới vào phần tử
+    //         element.textContent = newNumber;
+    //     }
+    //     else if (parseInt(element.textContent, 10) == 1) {
+    //         element.textContent = "Hết hàng";
+    //     }
+    //     else {
+    //         element.textContent = "Hết hàng";
+    //     }
+    // }
+</script>
