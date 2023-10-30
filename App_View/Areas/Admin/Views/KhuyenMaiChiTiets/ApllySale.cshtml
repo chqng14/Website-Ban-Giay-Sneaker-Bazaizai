@@ -1,5 +1,6 @@
 ﻿@using App_Data.DbContextt;
-@model IEnumerable<App_Data.ViewModels.SanPhamChiTietViewModel.SanPhamDanhSachViewModel>
+@using App_View.Models.ViewModels;
+@model IEnumerable<SanPhamSaleViewModel>
 
 @{
     ViewData["Title"] = "ApllySale";
@@ -58,6 +59,9 @@
                            <input type="checkbox" id="select-all-checkbox" />
                         </th>
                         <th>
+                           Ảnh
+                        </th>
+                        <th>
                             Tên sản phẩm
                         </th>
                         <th>
@@ -97,22 +101,23 @@
             @foreach (var product in Model)
             {
                 BazaizaiContext bazaizaiContext = new BazaizaiContext();
-                var spct = bazaizaiContext.sanPhamChiTiets.Find(product.IdChiTietSp);
+                var spct = bazaizaiContext.sanPhamChiTiets.Find(product.SanPhamDanhSachView.IdChiTietSp);
                         <tr>
                             <td class="sorting_1">
 
-                                <input type="checkbox" class="voucher-checkbox" name="selectedProducts" value="@product.IdChiTietSp" />
+                                <input type="checkbox" class="voucher-checkbox" name="selectedProducts" value="@product.SanPhamDanhSachView.IdChiTietSp" />
 
                             </td>
-                            <td>@product.SanPham</td>
-                            <td>@product.KichCo</td>
-                            <td>@product.LoaiGiay</td>
-                            <td>@product.Day</td>
-                            <td>@product.ChatLieu</td>
-                            <td>@product.KieuDeGiay</td>
-                            <td>@product.SoLuongTon</td>
-                            <td>@product.GiaBan</td>
-                            <td>@product.GiaNhap</td>
+                            <td><img src="/AnhSanPham/@product.SanPhamDanhSachView.Anh" style="height: 80px; width: auto" /></td>
+                            <td>@product.SanPhamDanhSachView.SanPham</td>
+                            <td>@product.SanPhamDanhSachView.KichCo</td>
+                            <td>@product.SanPhamDanhSachView.LoaiGiay</td>
+                            <td>@product.SanPhamDanhSachView.Day</td>
+                            <td>@product.SanPhamDanhSachView.ChatLieu</td>
+                            <td>@product.SanPhamDanhSachView.KieuDeGiay</td>
+                            <td>@product.SanPhamDanhSachView.SoLuongTon</td>
+                            <td>@product.SanPhamDanhSachView.GiaBan</td>
+                            <td>@product.SanPhamDanhSachView.GiaNhap</td>
                             <td>
                         @if (spct.TrangThai == 0)
                         {
