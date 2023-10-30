@@ -71,15 +71,10 @@ namespace App_View.Areas.Admin.Controllers
                         break;
                 }
             }
-
             ViewBag.TatCa = lstVoucher; // Gán danh sách lọc được vào ViewBag.TatCa
 
             return View(lstVoucher);
         }
-
-
-
-
         public IActionResult Create()
         {
             return View();
@@ -117,11 +112,6 @@ namespace App_View.Areas.Admin.Controllers
             }
             return View();
         }
-        //public async Task<ActionResult> Details(string id)
-        //{
-        //    var Voucher = (await _voucherSV.GetVoucherDTOById(id));
-        //    return View(Voucher);
-        //}
 
         public async Task<ActionResult> Delete(string id)
         {
@@ -151,12 +141,26 @@ namespace App_View.Areas.Admin.Controllers
         public async Task<ActionResult> GiveVouchersToUsers(string maVoucher)
         {
             ViewBag.MaVoucher = maVoucher;
+
+            var lstUser = await _userManager.Users.ToListAsync();
+            if (lstUser.Any())
+            {
+                ViewBag.User = lstUser;
+            }
+
             return View();
         }
-        //[HttpGet]
-        //public async Task<ActionResult> GiveVouchersToUsers(string maVoucher)
-        //{
-        //    return View();
-        //}
+
+        public async Task<IActionResult> PartialViewForNotiAddVoucherUser()
+        {
+            return PartialView("PartialViewForNotiAddVoucherUser");
+        }
+        [HttpPost]
+        public async Task<IActionResult> GiveVouchersToUsers(string MaVoucher, List<string> lstNguoiDung)
+        {
+            int countUser = lstNguoiDung.Count();
+
+            return PartialView("PartialViewForNotiAddVoucherUser");
+        }
     }
 }

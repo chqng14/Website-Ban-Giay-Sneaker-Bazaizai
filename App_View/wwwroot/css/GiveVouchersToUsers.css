@@ -25,23 +25,15 @@ input {
     /*    font-family: Raleway;*/
     border: 1px solid #aaaaaa;
     border-radius: 10px;
-    -webkit-appearance: none;
+    /*    -webkit-appearance: none;*/
 }
 
 
+    input.invalid {
+        border: 1px solid #e03a0666;
+    }
 
-.tab input:focus {
-    border: 1px solid #1F1717 !important;
-    outline: none;
-}
 
-input.invalid {
-    border: 1px solid #e03a0666;
-}
-
-.tab {
-    display: none
-}
 
 button {
     background-color: #1F1717;
@@ -110,7 +102,7 @@ button {
     margin-top: 30px;
     margin-bottom: 30px
 }
-
+/*
 .thanks-message {
     display: none
-}
+}*/
