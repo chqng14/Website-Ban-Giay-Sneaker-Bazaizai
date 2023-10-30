@@ -62,5 +62,10 @@ namespace App_Api.Controllers
             var hoadonChiTiet = _hoaDonChiTiet.GetAll().FirstOrDefault(c => c.IdHoaDonChiTiet == id);
             return _hoaDonChiTiet.RemoveBillDetail(hoadonChiTiet);
         }
+        [HttpPost("ThemSanPhamVaoHoaDon")]
+        public async Task<HoaDonChiTiet> ThemSanPhamVaoHoaDon(HoaDonChiTiet hoaDonChiTiet)
+        {
+            return _hoaDonChiTiet.ThemSanPhamVaoHoaDon(hoaDonChiTiet);
+        }
     }
 }

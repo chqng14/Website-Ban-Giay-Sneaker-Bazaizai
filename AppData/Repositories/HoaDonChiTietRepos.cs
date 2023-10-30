@@ -5,6 +5,7 @@ using App_Data.ViewModels.GioHangChiTiet;
 using App_Data.ViewModels.HoaDonChiTietDTO;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using OpenXmlPowerTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,6 +81,34 @@ namespace App_Data.Repositories
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        public HoaDonChiTiet ThemSanPhamVaoHoaDon(HoaDonChiTiet hoaDonChiTiet)
+        {
+            try
+            {
+                var hoadDonChiTietTrung = context.hoaDonChiTiets.FirstOrDefault(c=>c.IdSanPhamChiTiet == hoaDonChiTiet.IdSanPhamChiTiet && c.IdHoaDon == hoaDonChiTiet.IdHoaDon);
+                if(hoadDonChiTietTrung == null)
+                {
+                    context.hoaDonChiTiets.Add(hoaDonChiTiet);
+                    context.SaveChanges();
+                    return hoaDonChiTiet;
+                }
+                else
+                {
+                    hoadDonChiTietTrung.SoLuong = hoadDonChiTietTrung.SoLuong+1;
+                    context.hoaDonChiTiets.Update(hoadDonChiTietTrung);
+                    context.SaveChanges();
+                    return hoadDonChiTietTrung;
+
+                }
+               
+            }
+            catch (Exception)
+            {
+
+                return null;
             }
         }
     }

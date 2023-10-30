@@ -14,6 +14,7 @@ using App_Data.ViewModels.SanPhamChiTietDTO;
 using AutoMapper;
 using App_Data.Repositories;
 using static App_Data.Repositories.TrangThai;
+using Microsoft.AspNetCore.Identity;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -22,19 +23,27 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly BazaizaiContext _context;
         private readonly IVoucherServices _voucherSV;
-
-        public VouchersController(IVoucherServices voucherServices)
+        private readonly IVoucherNguoiDungServices _voucherND;
+        private readonly SignInManager<NguoiDung> _signInManager;
+        private readonly UserManager<NguoiDung> _userManager;
+        public VouchersController(IVoucherServices voucherServices, IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
         {
+            _voucherND = voucherNDServices;
             _voucherSV = voucherServices;
+            _signInManager = signInManager;
+            _userManager = userManager;
             _context = new BazaizaiContext();
         }
 
         // GET: Admin/Vouchers
         public async Task<IActionResult> Index(string trangThai)
         {
-            var lstVoucher = (await _voucherSV.GetAllVoucher()).OrderByDescending(c => c.NgayTao).ToList();
+            var lstVoucher = (await _voucherSV.GetAllVoucher()).ToList(); // Lấy tất cả Voucher và chuyển sang List
 
-            // Mặc định, hiển thị danh sách các voucher đang hoạt động
+            // Sắp xếp danh sách ban đầu theo NgayTao, giảm dần
+            lstVoucher = lstVoucher.OrderByDescending(c => c.NgayTao).ToList();
+
+            // Tiếp tục với việc lọc dựa trên trạng thái
             if (string.IsNullOrEmpty(trangThai) || trangThai == "hoatDong")
             {
                 lstVoucher = lstVoucher.Where(v => v.TrangThai == (int)TrangThaiVoucher.HoatDong).ToList();
@@ -44,10 +53,10 @@ namespace App_View.Areas.Admin.Controllers
                 switch (trangThai)
                 {
                     case "tatCa":
-                        var lstVoucherALL = (await _voucherSV.GetAllVoucher());
-                        lstVoucher = lstVoucherALL;
+                        // Không cần thay đổi gì
                         break;
                     case "hoatDong":
+                        // Không cần thay đổi gì
                         break;
                     case "khongHoatDong":
                         lstVoucher = lstVoucher.Where(v => v.TrangThai == (int)TrangThaiVoucher.KhongHoatDong).ToList();
@@ -83,12 +92,13 @@ namespace App_View.Areas.Admin.Controllers
             {
                 if (await _voucherSV.CreateVoucher(voucherDTO))
                 {
-                    return RedirectToAction("Index");
+                    return Ok(new { message = " Thêm mới thành công" });
                 }
             }
-            return View();
+            return Ok(new { error = "Thêm voucher thất bại" });
 
         }
+
         public async Task<ActionResult> Edit(string id)
         {
             var Voucher = await _voucherSV.GetVoucherDTOById(id);
@@ -138,5 +148,15 @@ namespace App_View.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<ActionResult> GiveVouchersToUsers(string maVoucher)
+        {
+            ViewBag.MaVoucher = maVoucher;
+            return View();
+        }
+        //[HttpGet]
+        //public async Task<ActionResult> GiveVouchersToUsers(string maVoucher)
+        //{
+        //    return View();
+        //}
     }
 }

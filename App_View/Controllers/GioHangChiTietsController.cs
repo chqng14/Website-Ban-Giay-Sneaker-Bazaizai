@@ -17,6 +17,7 @@ using DocumentFormat.OpenXml.VariantTypes;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using Microsoft.CodeAnalysis;
 using System.Globalization;
+using System.Net.Http;
 
 namespace App_View.Controllers
 {
@@ -224,6 +225,30 @@ namespace App_View.Controllers
         public async Task<IActionResult> OrderSuccess()
         {
             return View();
+        }
+
+        public async Task<IActionResult> GetGioHangMiniModel()
+        {
+            var idNguoiDung = GetIdNguoiDung();
+            var data = new List<SanPhamGioHangViewModel>();
+            if (idNguoiDung != null)
+            {
+                data = await httpClient.GetFromJsonAsync<List<SanPhamGioHangViewModel>>($"https://localhost:7038/api/GioHangChiTiet/Get-List-SanPhamGioHangVM/{idNguoiDung}");
+            }
+            else
+            {
+                var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+                data = giohangSession.Select(gh => new SanPhamGioHangViewModel()
+                {
+                    Anh = gh.LinkAnh.OrderBy(item => item).ToList().FirstOrDefault(),
+                    GiaSanPham = Convert.ToDouble(gh.GiaBan),
+                    IdSanPhamChiTiet = gh.IdSanPhamCT.ToString(),
+                    SoLuong = Convert.ToInt32(gh.SoLuong),
+                    TenSanPham = gh.TenSanPham + " " + gh.TenMauSac + " " + gh.TenKichCo,
+
+                }).ToList();
+            }
+            return ViewComponent("Cart", data);
         }
     }
 }

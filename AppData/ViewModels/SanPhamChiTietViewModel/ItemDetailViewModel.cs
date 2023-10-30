@@ -12,7 +12,9 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
         public int? SoLuotYeuThich { get; set; }
         public List<string>? LstMauSac { get; set; }
         public List<int>? LstKichThuoc { get; set; }
-        public int? SoLuongTon { get; set; }
         public List<string>? DanhSachAnh { get; set; }
+        public bool IsYeuThich { get; set; }
+        public bool IsKhuyenMai { get; set; }
+
     }
 }

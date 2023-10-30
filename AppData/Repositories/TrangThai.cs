@@ -107,10 +107,12 @@ namespace App_Data.Repositories
         }
         public enum TrangThaiHoaDonChiTiet
         {
+            [Description("Chờ tại quầy")]
+            ChoTaiQuay = 0,
             [Description("Chưa thanh toán")]
-            ChuaThanhToan = 0,
-            [Description("Đã thanh toán")]
-            DaThanhToan = 1,
+            ChuaThanhToan = 1,
+            [Description("Đã  thanh toán")]
+            DaThanhToan = 2,
         }
     }
 }

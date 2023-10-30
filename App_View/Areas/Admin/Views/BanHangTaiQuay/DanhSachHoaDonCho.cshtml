@@ -38,17 +38,32 @@
                                         <table class="table">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col" style="position: sticky; top: 0;background-color:white">STT</th>
-                                                    <th scope="col" style="position: sticky; top: 0;background-color:white" hidden>IdSanPham</th>
-                                                    <th scope="col" style="position: sticky; top: 0;background-color:white">Mã sản phẩm</th>
-                                                    <th scope="col" style="position: sticky; top: 0;background-color:white">Tên sản phẩm</th>
-                                                    <th scope="col" style="position: sticky; top: 0;background-color:white">Số lượng</th>
-                                                    <th scope="col" style="position: sticky; top: 0;background-color:white"></th>
+                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
+                                                    <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
+                                                    <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
+                                                    <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
+                                                    <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
+                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
+                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr scope="col" style="position: sticky; top: 0;background-color:white"><td>1</td><td hidden>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
-
+                                                @{
+                                                    int stt = 1;
+                                                    foreach (var hoaDonChiTiet in item.hoaDonChiTietDTOs)
+                                                    {
+                                                        <tr scope="col" id="hdct-@hoaDonChiTiet.IdSanPhamChiTiet">
+                                                            <td>@stt</td>
+                                                            <td hidden>@hoaDonChiTiet.IdSanPhamChiTiet</td>
+                                                            <td>@hoaDonChiTiet.MaSanPham</td>
+                                                            <td>@hoaDonChiTiet.TenSanPham</td>
+                                                            <td>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", hoaDonChiTiet.GiaBan)</td>
+                                                            <td><input type="number" max="1000" min="1" value="@hoaDonChiTiet.SoLuong" /></td>
+                                                            <td><a class="btn btn-tone">X</a></td>
+                                                        </tr>
+                                                        stt++;
+                                                    }
+                                                }
                                             </tbody>
                                         </table>
                                     </div>
@@ -170,12 +185,11 @@
             },
             activate: function (event, ui) {
                 maHoaDonChoSelect = ui.newPanel.attr("id");
-                $("<tr scope='col' style='position: sticky; top: 0; background - color:white'><td>1</td><td hidden>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>").appendTo("#" + maHoaDonChoSelect + " table tbody");
             }
         });
 
         $("#create-tab").on("click", function () {
-            if (@Model.Count() <10) {
+            if ($("#tabs ul li").length < 10) {
                 var tabIndex = "";
                 var tabTitle = "";
                 $.ajax({
@@ -239,7 +253,6 @@
     function HuyHoaDon() {
         var selectedTabId = $("#tabs .ui-tabs-active a").attr("href"); // Lấy ID của tab đang được chọn
         $(selectedTabId).remove(); // Xóa nội dung tab
-        console.log(selectedTabId);
         $("#tabs ul li.ui-tabs-active").remove(); // Xóa tab từ danh sách tab
         $("#tabs").tabs("refresh");
     }

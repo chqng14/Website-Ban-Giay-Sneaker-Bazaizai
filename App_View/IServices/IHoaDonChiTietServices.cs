@@ -1,4 +1,5 @@
-﻿using App_Data.ViewModels.HoaDonChiTietDTO;
+﻿using App_Data.Models;
+using App_Data.ViewModels.HoaDonChiTietDTO;
 
 namespace App_View.IServices
 {
@@ -8,5 +9,6 @@ namespace App_View.IServices
         Task<bool> CreateHoaDonChiTiet(HoaDonChiTietDTO hoaDonChiTietDTO);
         Task<bool> UpdateHoaDonChiTiet(HoaDonChiTietDTO hoaDonChiTietDTO);
         Task<bool> DeleteHoaDonChiTiet(string idHoaDonChiTiet);
+        Task<HoaDonChiTiet> ThemSanPhamVaoHoaDon(HoaDonChiTiet hoaDonChiTiet);
     }
 }
