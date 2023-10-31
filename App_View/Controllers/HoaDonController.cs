@@ -5,13 +5,16 @@ using App_Data.ViewModels.HoaDonChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.ThongTinGHDTO;
 using App_View.IServices;
+using App_View.Models.Momo;
 using App_View.Models.Order;
 using App_View.Services;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using NuGet.Packaging.Signing;
 using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Controllers
@@ -167,6 +170,7 @@ namespace App_View.Controllers
                     var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
                     await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                 }
+
                 var TenNguoiNhan = _userManager.GetUserName(User);
                 var model = new OrderInfoModel()
                 {
@@ -175,8 +179,8 @@ namespace App_View.Controllers
                     OrderInfo = "Thanh toán tại Bazazai Store",
                     Amount = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam == null ? 0 : hoadon.TienGiam)),
                 };
+                SessionServices.SetIPNToSession(HttpContext.Session, "IPN", model);
                 var response = await _momoService.CreatePaymentAsync(model, hoadon.IdHoaDon);
-                var a = response.ErrorCode;
                 return Ok(new { url = response.PayUrl, idHoaDon = hoadon.IdHoaDon });
             }
             else
@@ -346,12 +350,29 @@ namespace App_View.Controllers
             }
         }
         #endregion
-        public async Task<ActionResult<HoaDonViewModel>> Order(string idHoaDon)
+        public async Task<ActionResult<HoaDonViewModel>> Order()
         {
-            var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
-            return View(order);
+            OrderInfoModel orderInfoModel = SessionServices.GetIPNFomSession(HttpContext.Session, "IPN");
+            var jsonresponse = await _momoService.IPN(orderInfoModel);
+            //var order1 = await OrderIPN();
+            if (jsonresponse.ResultCode == 0)
+            {
+                var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == orderInfoModel.OrderId);
+                return View(order);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
-
+        public async Task<int> OrderIPN()
+        {
+            string id = SessionServices.GetIdFomSession(HttpContext.Session, "id");
+            OrderInfoModel orderInfoModel = SessionServices.GetIPNFomSession(HttpContext.Session, "IPN");
+            var jsonresponse = await _momoService.IPN(orderInfoModel);
+            var test = jsonresponse.ResultCode;
+            return test;
+        }
         //[HttpPost]
         //public async Task<IActionResult> CreatePaymentUrl(HoaDonDTO hoaDonDTO)
         //{
