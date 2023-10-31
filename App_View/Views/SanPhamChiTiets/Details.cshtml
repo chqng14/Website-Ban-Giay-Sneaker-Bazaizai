@@ -21,7 +21,7 @@
                         <ul class="pd-breadcrumb__list">
                             <li class="has-separator">
 
-                                <a href="/">Trang chủ</a>
+                                <a href="/">HOME</a>
                             </li>
                             <li class="has-separator">
 
@@ -100,7 +100,7 @@
 
                                 @if (@Model.SoLuongTon > 10)
                                 {
-                                    <span class="pd-detail__stock">@Model.SoLuongTon trong kho</span>
+                                    <span class="pd-detail__stock">Còn: @Model.SoLuongTon</span>
 
                                 }
                                 else
@@ -1038,6 +1038,9 @@
                 console.log(status);
                 console.log(error);
                 console.log(xhr);
+                if (xhr.status === 401) {
+                    window.location.href='/login'
+                }
             }
         });
     });
@@ -1071,6 +1074,9 @@
                 console.log(status);
                 console.log(error);
                 console.log(xhr);
+                if (xhr.status === 401) {
+                    window.location.href = '/login'
+                }
             }
         });
     });

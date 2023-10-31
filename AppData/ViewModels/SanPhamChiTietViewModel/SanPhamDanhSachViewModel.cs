@@ -12,6 +12,8 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
 
         public string? Day { get; set; }
 
+        public string? Ma { get; set; }
+
         public int? SoLuongTon { get; set; }
 
         public double? GiaBan { get; set; }

@@ -11,6 +11,7 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
         public string? IdChiTietSp { get; set; }
 
         public string? Day { get; set; }
+        public string? Ma { get; set; }
 
         public string? MoTa { get; set; }
 

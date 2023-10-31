@@ -111,7 +111,8 @@ namespace App_Data.Repositories
                 Anh = _context.Anh.ToList().Where(x => x.IdSanPhamChiTiet == sanPham.IdChiTietSp && x.TrangThai == 0).OrderBy(x => x.Url).FirstOrDefault()?.Url,
                 KieuDeGiay = _context.kieuDeGiays.ToList().FirstOrDefault(x => x.IdKieuDeGiay == sanPham.IdKieuDeGiay)?.TenKieuDeGiay,
                 LoaiGiay = _context.LoaiGiays.ToList().FirstOrDefault(x => x.IdLoaiGiay == sanPham.IdLoaiGiay)?.TenLoaiGiay,
-                SoLuongTon = sanPham.SoLuongTon
+                SoLuongTon = sanPham.SoLuongTon,
+                Ma = sanPham.Ma
             };
         }
 
@@ -170,9 +171,35 @@ namespace App_Data.Repositories
                 .Include(it => it.KichCo)
                 .Include(it => it.Anh)
                 .Where(sp => sp.TrangThai == 0)
+                .AsNoTracking()
                 .ToListAsync();
 
             var itemShops = _mapper.Map<List<ItemShopViewModel>>(listSanPham.OrderByDescending(x => x.NgayTao));
+            return itemShops;
+        }
+
+        public async Task<List<ItemShopViewModel>> GetDanhSachBienTheItemShopViewModelSaleAsync()
+        {
+            var listSanPham = await _context.sanPhamChiTiets
+                .Where(sp => sp.TrangThai == 0 && sp.TrangThaiSale == 2)
+                .OrderByDescending(x => x.NgayTao)
+                .AsNoTracking().ToListAsync();
+
+            var itemShops = listSanPham.Select(sp => new ItemShopViewModel()
+            {
+                Anh = _context.Anh.Where(a=>a.IdSanPhamChiTiet == sp.IdChiTietSp).OrderBy(a=>a.Url).FirstOrDefault()!.Url,
+                GiaGoc = sp.GiaBan,
+                GiaKhuyenMai = sp.GiaThucTe,
+                MauSac = _context.mauSacs.FirstOrDefault(ms=>ms.IdMauSac==sp.IdMauSac)!.TenMauSac,
+                TheLoai = _context.LoaiGiays.FirstOrDefault(lg => lg.IdLoaiGiay == sp.IdLoaiGiay)!.TenLoaiGiay,
+                KichCo = Convert.ToInt32(_context.kichCos.FirstOrDefault(kc => kc.IdKichCo == sp.IdKichCo).SoKichCo),
+                IdChiTietSp = sp.IdChiTietSp,
+                SoLanDanhGia = 32,
+                TenSanPham = _context.SanPhams.FirstOrDefault(sp => sp.IdSanPham == sp.IdSanPham)!.TenSanPham,
+                ThuongHieu = _context.thuongHieus.FirstOrDefault(th => th.IdThuongHieu == sp.IdThuongHieu)!.TenThuongHieu,
+                GiaThucTe = sp.GiaThucTe
+
+            }).ToList();
             return itemShops;
         }
 
@@ -558,5 +585,7 @@ namespace App_Data.Repositories
                 ).FirstOrDefaultAsync();
             return sanPhamChiTiet != null ? false : true;
         }
+
+        
     }
 }

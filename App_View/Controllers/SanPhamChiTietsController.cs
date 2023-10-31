@@ -67,6 +67,13 @@ namespace App_View.Controllers
         }
 
         [HttpPost]
+        public IActionResult LoadComponentDanhSachSanPhamUuDai(int page)
+        {
+            return ViewComponent("DanhSachSanPhamUuDai", new {page});
+        }
+
+
+        [HttpPost]
         public async Task<IActionResult> LoadPartialViewDanhSachSanPhamNguoiDung([FromBody] FilterData filterData)
         {
             var brand = HttpContext.Request.Query["brand"].ToString();

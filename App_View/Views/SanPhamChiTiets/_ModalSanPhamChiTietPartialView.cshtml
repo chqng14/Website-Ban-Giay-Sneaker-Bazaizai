@@ -83,7 +83,7 @@
                             <div class="pd-detail__inline">
                                 @if (@Model.SoLuongTon > 10)
                                 {
-                                    <span class="pd-detail__stock">@Model.SoLuongTon trong kho</span>
+                                    <span class="pd-detail__stock">Còn: @Model.SoLuongTon</span>
 
                                 }
                                 else
@@ -100,15 +100,22 @@
                             <div class="pd-detail__inline">
 
                                 <span class="pd-detail__click-wrap">
-                                    <i class="far fa-heart u-s-m-r-6"></i>
-
-                                    <a href="/">Thêm vào danh sách yêu thích</a>
-
-                                    <span class="pd-detail__click-count">(222)</span>
+                                    @if (Model.IsYeuThich)
+                                    {
+                                        <a class="fas fa-heart u-s-m-r-6" style="color: red;" href="javascript:void(0);" id="removeToFavorite"></a>
+                                    }
+                                    else
+                                    {
+                                        <a class="far fa-heart u-s-m-r-6" href="javascript:void(0);" id="addToFavorite"></a>
+                                    }
+                                    <span>(@Model.SoLuotYeuThich) lượt yêu thích</span>
                                 </span>
+                                <form id="addToFavoriteForm" method="post" action="/SanPhamYeuThich/Create">
+                                    <input type="hidden" name="IdSanPhamChiTiet" value="@Model.IdChiTietSp" />
+                                </form>
                             </div>
                         </div>
-                        <div class="u-s-m-b-15">
+                        @*<div class="u-s-m-b-15">
                             <div class="pd-detail__inline">
 
                                 <span class="pd-detail__click-wrap">
@@ -119,7 +126,7 @@
                                     <span class="pd-detail__click-count">(20)</span>
                                 </span>
                             </div>
-                        </div>
+                        </div>*@
                         <div class="u-s-m-b-15">
                             <ul class="pd-social-list">
                                 <li>
@@ -194,6 +201,79 @@
     </div>
 </div>
 <script>
+
+    $("#addToFavorite").on("click", function () {
+        var data = {};
+        $('#addToFavoriteForm').find("input, select, textarea").each(function () {
+            var fieldType = $(this).attr("type");
+            var fieldName = $(this).attr("name");
+            var fieldValue;
+
+            if (fieldType === "checkbox" || fieldType === "radio") {
+                fieldValue = $(this).is(":checked");
+            } else {
+                fieldValue = $(this).val();
+            }
+
+            data[fieldName] = fieldValue;
+        });
+
+        $.ajax({
+            url: '/SanPhamYeuThich/Create',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: function (result) {
+                window.location.href = '/sanphamyeuthich/danhsachsanphamyeuthich'
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+                if (xhr.status === 401) {
+                    window.location.href = '/login'
+                }
+            }
+        });
+    });
+
+    $("#removeToFavorite").on("click", function () {
+        var data = {};
+        $('#addToFavoriteForm').find("input, select, textarea").each(function () {
+            var fieldType = $(this).attr("type");
+            var fieldName = $(this).attr("name");
+            var fieldValue;
+
+            if (fieldType === "checkbox" || fieldType === "radio") {
+                fieldValue = $(this).is(":checked");
+            } else {
+                fieldValue = $(this).val();
+            }
+
+            data[fieldName] = fieldValue;
+        });
+
+        $.ajax({
+            url: '/SanPhamYeuThich/Remove',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: function (result) {
+                window.location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+                if (xhr.status === 401) {
+                    window.location.href = '/login'
+                }
+            }
+        });
+    });
+
 
     function updateViewCartMini() {
         $.ajax({

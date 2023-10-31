@@ -12,11 +12,11 @@
                         <ul class="breadcrumb__list">
                             <li class="has-separator">
 
-                                <a href="index.html">Home</a>
+                                <a href="/">Home</a>
                             </li>
                             <li class="is-marked">
 
-                                <a href="wishlist.html">Wishlist</a>
+                                <a href="/sanphamyeuthich/danhsachsanphamyeuthich">Danh sách sản phẩm yêu thích</a>
                             </li>
                         </ul>
                     </div>
@@ -111,12 +111,12 @@
                                             </div>
                                         </div>
                                         <div class="w-r__wrap-2">
+                                            <form id="removeToFavoriteForm" method="post" action="/SanPhamYeuThich/Remove">
+                                                <input type="hidden" name="IdSanPhamChiTiet" value="@item.IdSanPhamChiTiet" />
+                                            </form>
+                                            <a class="w-r__link btn--e-transparent-platinum-b-2" href="/sanphamchitiets/details/@item.IdSanPhamChiTiet">VIEW</a>
 
-                                            <a class="w-r__link btn--e-brand-b-2" data-modal="modal" data-modal-id="#add-to-cart">ADD TO CART</a>
-
-                                            <a class="w-r__link btn--e-transparent-platinum-b-2" href="product-detail.html">VIEW</a>
-
-                                            <a class="w-r__link btn--e-transparent-platinum-b-2" href="#">REMOVE</a>
+                                            <button class="w-r__link btn--e-transparent-platinum-b-2 btn-remove-sanphamyeuthich">REMOVE</button>
                                         </div>
                                     </div>
                                 </div>
@@ -128,7 +128,7 @@
                             <div class="route-box">
                                 <div class="route-box__g">
 
-                                    <a class="route-box__link" href="shop-side-version-2.html">
+                                    <a class="route-box__link" href="/sanphamchitiets">
                                         <i class="fas fa-long-arrow-alt-left"></i>
 
                                         <span>CONTINUE SHOPPING</span>
@@ -136,11 +136,11 @@
                                 </div>
                                 <div class="route-box__g">
 
-                                    <a class="route-box__link" href="wishlist.html">
+                                    @*<a class="route-box__link" href="wishlist.html">
                                         <i class="fas fa-trash"></i>
 
                                         <span>CLEAR WISHLIST</span>
-                                    </a>
+                                    </a>*@
                                 </div>
                             </div>
                         </div>
@@ -154,3 +154,39 @@
 
 
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    $(document).on('click', '.btn-remove-sanphamyeuthich', function () {
+        var data = {};
+        $(this).closest('.w-r__wrap-2').find('form').find("input, select, textarea").each(function () {
+            var fieldType = $(this).attr("type");
+            var fieldName = $(this).attr("name");
+            var fieldValue;
+
+            if (fieldType === "checkbox" || fieldType === "radio") {
+                fieldValue = $(this).is(":checked");
+            } else {
+                fieldValue = $(this).val();
+            }
+
+            data[fieldName] = fieldValue;
+        });
+
+        $.ajax({
+            url: '/SanPhamYeuThich/Remove',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: function (result) {
+                window.location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    })
+</script>

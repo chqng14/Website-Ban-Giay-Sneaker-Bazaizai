@@ -140,6 +140,12 @@ namespace App_Api.Controllers
             return await _sanPhamChiTietRes.GetDanhSachBienTheItemShopViewModelAsync();
         }
 
+        [HttpGet("Get-List-ItemBienTheShopViewModelSale")]
+        public async Task<List<ItemShopViewModel>?> GetDanhSachItemBienTheShowViewModelSale()
+        {
+            return await _sanPhamChiTietRes.GetDanhSachBienTheItemShopViewModelSaleAsync();
+        }
+
         [HttpGet("Get-SanPhamChiTiet/{id}")]
         public async Task<SanPhamChiTiet?> GetSanPham(string id)
         {
