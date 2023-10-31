@@ -102,7 +102,7 @@ button {
     margin-top: 30px;
     margin-bottom: 30px
 }
-/*
+
 .thanks-message {
-    display: none
-}*/
+    display: flex
+}

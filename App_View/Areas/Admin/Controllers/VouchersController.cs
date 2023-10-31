@@ -15,6 +15,8 @@ using AutoMapper;
 using App_Data.Repositories;
 using static App_Data.Repositories.TrangThai;
 using Microsoft.AspNetCore.Identity;
+using App_Data.ViewModels.VoucherNguoiDung;
+using System.Net.Http;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -150,17 +152,19 @@ namespace App_View.Areas.Admin.Controllers
 
             return View();
         }
-
-        public async Task<IActionResult> PartialViewForNotiAddVoucherUser()
-        {
-            return PartialView("PartialViewForNotiAddVoucherUser");
-        }
         [HttpPost]
-        public async Task<IActionResult> GiveVouchersToUsers(string MaVoucher, List<string> lstNguoiDung)
+        public async Task<IActionResult> GiveVouchersToUsers([FromBody] AddVoucherRequestDTO addVoucherRequestDTO)
         {
-            int countUser = lstNguoiDung.Count();
 
-            return PartialView("PartialViewForNotiAddVoucherUser");
+            if (addVoucherRequestDTO.UserId.Any())
+            {
+                if (await _voucherND.AddVoucherNguoiDungTuAdmin(addVoucherRequestDTO) == "Tặng voucher thành công")
+                {
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return View();
         }
     }
 }

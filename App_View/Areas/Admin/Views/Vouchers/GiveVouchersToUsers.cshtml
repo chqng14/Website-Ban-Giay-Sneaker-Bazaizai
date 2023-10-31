@@ -2,15 +2,14 @@
 @using App_Data.Models;
 @using App_Data.Repositories;
 @using Microsoft.AspNetCore.Identity;
+@model App_Data.ViewModels.VoucherNguoiDung.AddVoucherRequestDTO;
 @using static App_Data.Repositories.TrangThai;
 @inject SignInManager<NguoiDung> SignInManager
 @inject UserManager<NguoiDung> UserManager
-@model string
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
     BazaizaiContext context = new BazaizaiContext();
-
     var lstUser = await UserManager.GetUsersInRoleAsync(ChucVuMacDinh.KhachHang.ToString());
 }
 <head>
@@ -38,7 +37,7 @@
     </style>
 </head>
 <div class="container mt-5">
-    <form id="AddVoucherForUser" asp-action="GiveVouchersToUsers">
+    <form id="GiveVouchersToUsers" asp-action="GiveVouchersToUsers" method="post">
         <h4><a asp-action="Index">Danh sách voucher</a></h4>
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-md-8">
@@ -48,20 +47,20 @@
                     <a class="step">Cá nhân</a>
                     <a class="step">Khách hàng mới</a>
                 </div>
-
                 <div class="inputVoucher">
                     <h6>Nhập mã voucher cần tặng</h6>
-                    <p>
-                        <input id="ma-voucher-input" value="@ViewBag.MaVoucher" name="MaVoucher">
-                    </p>
+                    <input id="ma-voucher-input" asp-for="MaVoucher" placeholder="@ViewBag.MaVoucher" name="MaVoucher">
                 </div>
-                <div class="thanks-message text-center" id="text-message">
-                    <img src="https://i.imgur.com/O18mJ1K.png" width="100" class="mb-4">
-                    <h3>Đã add voucher cho người dùng!</h3> <span>Những người dùng nhận được sẽ có thông báo!</span>
-                </div>
+         @*        <div id="thongbao">
+                    @{
+                        await Html.RenderPartialAsync("_PartialViewForNotiAddVoucherUser");
+                    }
+                </div> *@
+
+
                 <div style="overflow:auto;">
                     <div style="float:right;">
-                        <button id="AddVoucherForUser"><i class="anticon anticon-gift"></i></button>
+                        <button id="submit"><i class="anticon anticon-gift"></i></button>
                     </div>
                 </div>
 
@@ -99,7 +98,7 @@
                             @item.PhoneNumber
                         </td>
                         <td>
-                            <input type="checkbox" class="user-checkbox" name="lstNguoiDung" data-value="@item.Id" />
+                            <input type="checkbox" class="user-checkbox" name="lstNguoiDung" data-userId="@item.Id" />
                         </td>
                     </tr>
                 }
@@ -108,6 +107,66 @@
         </table>
     </form>
 </div>
+<script>
+
+
+    // Lấy tham chiếu đến ô kiểm "Chọn tất cả" và tất cả các ô kiểm người dùng
+    var selectAllCheckbox = document.getElementById("select-all-checkbox");
+    var userCheckboxes = document.querySelectorAll(".user-checkbox");
+
+    // Thêm sự kiện "click" cho ô kiểm "Chọn tất cả"
+    selectAllCheckbox.addEventListener("click", function () {
+        // Lấy trạng thái (checked) của ô kiểm "Chọn tất cả"
+        var isChecked = selectAllCheckbox.checked;
+
+        // Duyệt qua tất cả các ô kiểm người dùng và cập nhật trạng thái của chúng
+        userCheckboxes.forEach(function (checkbox) {
+            checkbox.checked = isChecked;
+        });
+    });
+    $("#GiveVouchersToUsers").submit(function (e) {
+        e.preventDefault();
+        var maVoucher = document.getElementById('ma-voucher-input').value;
+
+        // Thu thập danh sách UserId được chọn
+        var selectedUserIds = [];
+        userCheckboxes.forEach(function (checkbox) {
+
+            if (checkbox.checked) {
+                selectedUserIds.push(checkbox.getAttribute('data-userId'));
+            }
+        });
+
+        // Tạo đối tượng chứa dữ liệu để gửi đến máy chủ
+        var data = {
+            MaVoucher: maVoucher,
+            UserId: selectedUserIds
+        };
+        // Sử dụng $.ajax để gửi yêu cầu AJAX
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GiveVouchersToUsers", "Vouchers")",
+            data: JSON.stringify(data), // Gửi dữ liệu dưới dạng JSON
+            contentType: "application/json; charset=utf-8", // Đặt loại dữ liệu gửi đi
+            dataType: "json", // Loại dữ liệu mà bạn mong đợi nhận lại
+            success: function (result) {
+                // Xử lý phản hồi từ máy chủ ở đây
+                if (result.success) {
+                    alert('Tặng Voucher thành công');
+                    window.location.href = '/Vouchers/Index';
+                } else {
+                    alert('Lỗi khi tặng Voucher: ' + result.message);
+                }
+            },
+            error: function (error) {
+                console.error('Lỗi: ' + error);
+            }
+        });
+    });
+
+
+
+</script>
 
 
 
@@ -115,49 +174,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script>
-    $(document).ready(function () {
-        $('#submit').click(function () {
-            $('#text-message').show();
-            $('.inputVoucher').hide();
-        });
 
-        var dataTable = $('#data-table').DataTable();
-
-        document.getElementById().on('click', function () {
-            var selectedUserIds = [];
-            var maVoucher = $('#ma-voucher-input').val();
-            // const toastHeader = `<div class="toast-header">
-            //                                     <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-            //                                     <strong class="mr-auto">Thông báo</strong>
-            //                                     <small>1 second ago</small>
-            //                                     <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-            //                                         <span aria-hidden="true">&times;</span>
-            //                                     </button>
-            //                                 </div>`;
-            // $('.user-checkbox:checked').each(function () {
-            //     selectedUserIds.push($(this).data('value'));
-            // });
-
-            if (selectedUserIds.length > 0) {
-                $.ajax({
-                    type: "POST",
-                    url: '@Url.Action("GiveVouchersToUsers","Vouchers")',
-                    data: { MaVoucher: maVoucher, lstNguoiDung: selectedUserIds },
-                    success: function (data) {                    
-                        $(#thanks - message text - center).html(data)
-                      
-                });
-            } 
-        });
-
-        $('#select-all-checkbox').on('click', function () {
-            var isChecked = $(this).prop('checked');
-            $('.user-checkbox').prop('checked', isChecked);
-        });
-    });
-
-</script>
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
