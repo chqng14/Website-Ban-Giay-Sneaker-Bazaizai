@@ -104,7 +104,7 @@ namespace App_Api.Helpers.Mapping
                 opt => opt.MapFrom(src => src.SanPhamChiTiet.TrangThai)
                 ).ForMember(
                 dest => dest.LinkAnh,
-                opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.Select(x => x.Url).ToList())
+                opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(a => a.Url).Select(x => x.Url).ToList())
                 );
             CreateMap<GioHangChiTietDTOCUD, GioHangChiTiet>().ReverseMap();
 
