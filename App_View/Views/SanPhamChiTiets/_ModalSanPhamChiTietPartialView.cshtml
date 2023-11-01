@@ -16,7 +16,7 @@
                             </li>
                             <li class="is-marked">
 
-                                <a href="/sanphamchitiets">Danh sách giày</a>
+                                <a href="/sanphamchitiets">SHOP</a>
                             </li>
                         </ul>
                     </div>
@@ -55,7 +55,7 @@
                     <div class="pd-detail">
                         <div>
 
-                            <span class="pd-detail__name">@Model.TenSanPham</span>
+                            <span class="pd-detail__name">@Model.TenSanPham @Model.MauSac @Model.KichCo</span>
                         </div>
                         <div>
                             <div class="pd-detail__inline">
@@ -63,7 +63,7 @@
                                 <span class="pd-detail__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaKhuyenMai)</span>
                                 @if (Model.IsKhuyenMai)
                                 {
-                                    <span class="pd-detail__discount">(76% OFF)</span><del class="pd-detail__del">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaGoc)</del>
+                                    <span class="pd-detail__discount">(-@((int)Math.Round(Convert.ToDecimal((Model.GiaGoc - Model.GiaKhuyenMai) / Model.GiaGoc * 100)))%)</span><del class="pd-detail__del">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaGoc)</del>
 
                                 }
 
@@ -116,17 +116,17 @@
                             </div>
                         </div>
                         @*<div class="u-s-m-b-15">
-                            <div class="pd-detail__inline">
+                                <div class="pd-detail__inline">
 
-                                <span class="pd-detail__click-wrap">
-                                    <i class="far fa-envelope u-s-m-r-6"></i>
+                                    <span class="pd-detail__click-wrap">
+                                        <i class="far fa-envelope u-s-m-r-6"></i>
 
-                                    <a href="signin.html">Gửi mail cho tôi khi bạn muốn giảm giá.</a>
+                                        <a href="signin.html">Gửi mail cho tôi khi bạn muốn giảm giá.</a>
 
-                                    <span class="pd-detail__click-count">(20)</span>
-                                </span>
-                            </div>
-                        </div>*@
+                                        <span class="pd-detail__click-count">(20)</span>
+                                    </span>
+                                </div>
+                            </div>*@
                         <div class="u-s-m-b-15">
                             <ul class="pd-social-list">
                                 <li>

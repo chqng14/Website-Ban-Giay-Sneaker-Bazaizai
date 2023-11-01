@@ -53,7 +53,7 @@
                                         <span style="
     padding-top: 14px;
     color: #62e3e9;
-">-@((item.GiaGoc-item.GiaKhuyenMai)/item.GiaGoc * 100)%</span>
+">-@((int)Math.Round(Convert.ToDecimal((item.GiaGoc - item.GiaKhuyenMai) / item.GiaGoc * 100)))%</span>
 
                                     </div>
                                     <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/sanphamchitiets/details/@item.IdChiTietSp">
@@ -62,23 +62,23 @@
                                     </a>
                                     <div class="product-o2__action-wrap">
                                         @*<ul class="product-o2__action-list">
-                                        <li>
+                                                <li>
 
-                                            <a data-modal="modal" data-modal-id="#quick-look" data-toggle="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                        </li>
-                                        <li>
+                                                    <a data-modal="modal" data-modal-id="#quick-look" data-toggle="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
+                                                </li>
+                                                <li>
 
-                                            <a data-modal="modal" data-modal-id="#add-to-cart" data-toggle="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                        </li>
-                                        <li>
+                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-toggle="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
+                                                </li>
+                                                <li>
 
-                                            <a href="signin.html" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                        </li>
-                                        <li>
+                                                    <a href="signin.html" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
+                                                </li>
+                                                <li>
 
-                                            <a href="signin.html" data-toggle="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                        </li>
-                                    </ul>*@
+                                                    <a href="signin.html" data-toggle="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
+                                                </li>
+                                            </ul>*@
                                     </div>
                                 </div>
                                 <div class="product-o2__content">
@@ -114,11 +114,6 @@
             }
         </div>
     </div>
-
-    <!--====== Section Content ======-->
-</div>
-<div class="u-s-p-y-60">
-
     <!--====== Pagination ======-->
     <ul class="shop-p__pagination">
         @if (Model.PagingInfo!.SoTrang > 1)
@@ -150,6 +145,7 @@
 
     </ul>
     <!--====== End - Pagination ======-->
+    <!--====== Section Content ======-->
 </div>
 <script>
     $(document).off("click", ".no-active")

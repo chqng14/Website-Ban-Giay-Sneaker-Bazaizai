@@ -395,6 +395,10 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.SoLuotYeuThich,
                         opt => opt.MapFrom(src => src.SanPhamYeuThichs.ToList().Count)
                     )
+                 .ForMember(
+                        dest => dest.IsKhuyenMai,
+                        opt => opt.MapFrom(src => src.TrangThaiSale == 2 ? true : false)
+                    )
                 ;
             CreateMap<SanPhamDTO, SanPham>();
             CreateMap<ThuongHieuDTO, ThuongHieu>();
@@ -432,7 +436,7 @@ namespace App_Api.Helpers.Mapping
                 )
                 .ForMember(
                         dest => dest.Anh,
-                        opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(x=>x.Url).FirstOrDefault()!.Url)
+                        opt => opt.MapFrom(src => src.SanPhamChiTiet.Anh.OrderBy(x => x.Url).FirstOrDefault()!.Url)
                 )
                 .ForMember(
                         dest => dest.LoaiGiay,
