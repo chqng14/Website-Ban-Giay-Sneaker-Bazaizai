@@ -90,5 +90,26 @@ namespace App_Data.Repositories
             var hoadon = context.HoaDons.Include(c => c.Voucher).Include(c => c.ThongTinGiaoHang).ToList();
             return _mapper.Map<List<HoaDonViewModel>>(hoadon);
         }
+
+        public bool EditBill(HoaDon item)
+        {
+            try
+            {
+                var id = context.HoaDons.Find(item.IdHoaDon);
+                context.HoaDons.Update(id);
+                context.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public List<HoaDon> GetHoaDonUpdate()
+        {
+            var hoadon = context.HoaDons.ToList();
+            return hoadon;
+        }
     }
 }

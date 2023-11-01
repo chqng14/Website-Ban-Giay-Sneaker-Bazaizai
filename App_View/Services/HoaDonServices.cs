@@ -14,14 +14,14 @@ namespace App_View.Services
         {
             _httpClient = new HttpClient();
         }
-        public async Task<bool> CreateHoaDon(HoaDonDTO hoaDonDTO)
+        public async Task<string> CreateHoaDon(HoaDonDTO hoaDonDTO)
         {
             try
             {
                 var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/HoaDon/TaoHoaDonOnlineDTO", hoaDonDTO);
                 if (res.IsSuccessStatusCode)
                 {
-                    return await res.Content.ReadAsAsync<bool>();
+                    return await res.Content.ReadAsStringAsync();
                 }
                 Console.WriteLine(await res.Content.ReadAsStringAsync());
                 throw new Exception("Not IsSuccessStatusCode");
@@ -72,9 +72,23 @@ namespace App_View.Services
             }
         }
 
-        public Task<bool> UpdateHoaDon(HoaDon HoaDon)
+        public async Task<bool> UpdateHoaDon(string idHoaDon, int TrangThai)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateHoaDonOnlineDTO?idHoaDon={idHoaDon}&TrangThaiThanhToan={TrangThai}", null);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await res.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
         }
     }
 }

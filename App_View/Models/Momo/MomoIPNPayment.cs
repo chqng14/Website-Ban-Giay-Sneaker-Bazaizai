@@ -22,6 +22,7 @@ namespace App_View.Models.Momo
         public string PayType { get; set; }
 
         public int ResultCode { get; set; }
+
         public JArray RefundTrans { get; set; }
 
         public string Message { get; set; }

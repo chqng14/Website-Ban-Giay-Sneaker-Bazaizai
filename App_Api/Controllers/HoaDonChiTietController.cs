@@ -49,10 +49,15 @@ namespace App_Api.Controllers
 
         // PUT api/<HoaDonChiTietController>/5
         [HttpPut("Edit")]
-        public async Task<bool> SuaHoaDonDTO(HoaDonChiTietDTO hoaDonChiTietDTO)
+        public async Task<bool> SuaHoaDonDTO(string idHoaDon, int TrangThai)
         {
-            var hoadonChiTiet = _mapper.Map<HoaDonChiTiet>(hoaDonChiTietDTO);
-            return _hoaDonChiTiet.EditBillDetail(hoadonChiTiet);
+            var hoadonChiTiet = _hoaDonChiTiet.GetAll().Where(c => c.IdHoaDon == idHoaDon);
+            foreach (var item in hoadonChiTiet)
+            {
+                item.TrangThai = TrangThai;
+                _hoaDonChiTiet.EditBillDetail(item);
+            }
+            return true;
         }
 
         // DELETE api/<HoaDonChiTietController>/5

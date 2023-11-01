@@ -28,7 +28,7 @@ public class MomoService : IMomoService
     public async Task<MomoCreatePaymentResponseModel> CreatePaymentAsync(OrderInfoModel model, string idHoaDon)
     {
         //model.OrderId = DateTime.UtcNow.Ticks.ToString();
-        model.OrderInfo = "Khách hàng: " + model.FullName + ". Nội dung: " + model.OrderInfo;
+        //model.OrderInfo = "Khách hàng: " + model.FullName + ". Nội dung: " + model.OrderInfo;
 
         // Thêm idHoaDon vào returnUrl
         //var returnUrlWithIdHoaDon = $"{_options.Value.redirectUrl}?idHoaDon={idHoaDon}";
@@ -181,81 +181,4 @@ public class MomoService : IMomoService
         }
     }
 
-    public string buildQueryHash(string partnerCode, string merchantRefId,
-            string requestid, string publicKey)
-    {
-        string json = "{\"partnerCode\":\"" +
-            partnerCode + "\",\"partnerRefId\":\"" +
-            merchantRefId + "\",\"requestId\":\"" +
-            requestid + "\"}";
-        byte[] data = Encoding.UTF8.GetBytes(json);
-        string result = null;
-        using (var rsa = new RSACryptoServiceProvider(2048))
-        {
-            try
-            {
-                // client encrypting data with public key issued by server
-                rsa.FromXmlString(publicKey);
-                var encryptedData = rsa.Encrypt(data, false);
-                var base64Encrypted = Convert.ToBase64String(encryptedData);
-                result = base64Encrypted;
-            }
-            finally
-            {
-                rsa.PersistKeyInCsp = false;
-            }
-
-        }
-
-        return result;
-
-    }
-
-    public static string sendPaymentRequest(string endpoint, string postJsonString)
-    {
-
-        try
-        {
-            HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(endpoint);
-
-            var postData = postJsonString;
-
-            var data = Encoding.UTF8.GetBytes(postData);
-
-            httpWReq.ProtocolVersion = HttpVersion.Version11;
-            httpWReq.Method = "POST";
-            httpWReq.ContentType = "application/json";
-
-            httpWReq.ContentLength = data.Length;
-            httpWReq.ReadWriteTimeout = 30000;
-            httpWReq.Timeout = 15000;
-            Stream stream = httpWReq.GetRequestStream();
-            stream.Write(data, 0, data.Length);
-            stream.Close();
-
-            HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse();
-
-            string jsonresponse = "";
-
-            using (var reader = new StreamReader(response.GetResponseStream()))
-            {
-
-                string temp = null;
-                while ((temp = reader.ReadLine()) != null)
-                {
-                    jsonresponse += temp;
-                }
-            }
-
-
-            //todo parse it
-            return jsonresponse;
-            //return new MomoResponse(mtid, jsonresponse);
-
-        }
-        catch (WebException e)
-        {
-            return e.Message;
-        }
-    }
 }
