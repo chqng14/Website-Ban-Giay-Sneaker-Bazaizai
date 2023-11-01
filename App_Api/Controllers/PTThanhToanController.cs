@@ -25,18 +25,22 @@ namespace App_Api.Controllers
         }
         // GET: api/<PhuongThucThanhToanController>
         [HttpGet]
-        public IEnumerable<PhuongThucThanhToan> ShowAllKieuGiay()
+        public IEnumerable<PhuongThucThanhToan> ShowAll()
         {
             return allRepo.GetAll();
         }
 
         // GET api/<PhuongThucThanhToanController>/5
-        [HttpGet("TimPhuongThucThanhToan={id}")]
+        [HttpGet("PhuongThucThanhToan={id}")]
         public PhuongThucThanhToan GetPhuongThucThanhToanByID(string id)
         {
             return allRepo.GetAll().FirstOrDefault(c => c.IdPhuongThucThanhToan == id);
         }
-
+        [HttpGet("PhuongThucThanhToanByName")]
+        public string GetPhuongThucThanhToanByName(string ten)
+        {
+            return allRepo.GetAll().FirstOrDefault(c => c.TenPhuongThucThanhToan.ToUpper() == ten.ToUpper()).IdPhuongThucThanhToan;
+        }
         // POST api/<PhuongThucThanhToanController>
         [HttpPost]
         public bool AddPhuongThucThanhToan(string ten, string mota, int trangthai)
@@ -64,14 +68,11 @@ namespace App_Api.Controllers
         [HttpPut("SuaPhuongThucThanhToan={id}")]
         public bool SuaPhuongThucThanhToan(string id, string ma, string ten, string mota, int trangthai)
         {
-            var PhuongThucThanhToan = new PhuongThucThanhToan()
-            {
-                IdPhuongThucThanhToan = id,
-                MaPhuongThucThanhToan = ma,
-                TenPhuongThucThanhToan = ten,
-                MoTa = mota,
-                TrangThai = trangthai
-            };
+            var PhuongThucThanhToan = allRepo.GetAll().FirstOrDefault(c => c.IdPhuongThucThanhToan == id);
+            PhuongThucThanhToan.MaPhuongThucThanhToan = ma;
+            PhuongThucThanhToan.TenPhuongThucThanhToan = ten;
+            PhuongThucThanhToan.MoTa = mota;
+            PhuongThucThanhToan.TrangThai = trangthai;
             return allRepo.EditItem(PhuongThucThanhToan);
         }
 

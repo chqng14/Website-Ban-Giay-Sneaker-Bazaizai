@@ -41,9 +41,23 @@ namespace App_View.Services
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateHoaDonChiTiet(HoaDonChiTietDTO hoaDonChiTietDTO)
+        public async Task<bool> UpdateHoaDonChiTiet(string idHoaDon, int TrangThai)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var res = await httpClient.PutAsync($"https://localhost:7038/api/HoaDonChiTiet/Edit?idHoaDon={idHoaDon}&TrangThai={TrangThai}", null);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await res.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
         }
     }
 }

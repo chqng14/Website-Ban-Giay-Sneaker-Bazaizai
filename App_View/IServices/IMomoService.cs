@@ -7,4 +7,5 @@ public interface IMomoService
 {
     Task<MomoCreatePaymentResponseModel> CreatePaymentAsync(OrderInfoModel model, string idHoaDon);
     MomoExecuteResponseModel PaymentExecuteAsync(IQueryCollection collection);
+    Task<MomoIPNPayment> IPN(OrderInfoModel model);
 }
