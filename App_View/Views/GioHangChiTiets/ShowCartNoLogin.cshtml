@@ -4,7 +4,18 @@
     ViewData["Title"] = "ShowCartUser";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@if (ViewData["QuantityErrorMessages"] != null)
+{
+    <script>
+        var problemCountMessage = '@TempData["problemCount"]';
+        var errorMessages = @Html.Raw(Json.Serialize(ViewData["QuantityErrorMessages"]));
+        Swal.fire({
+            title: problemCountMessage,
+            icon: 'error',
+            html: errorMessages.join('<br/>'),
+        })
+    </script>
+}
 <!--====== End - Section 1 ======-->
 <!--====== Section 2 ======-->
 <div class="u-s-p-b-60">
@@ -44,7 +55,7 @@
 
                                                     <span class="table-p__name">
 
-                                                        <a href="product-detail.html">@item.TenSanPham</a>
+                                                        <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = item.IdSanPhamCT })">@item.TenThuongHieu @item.TenSanPham</a>
                                                     </span>
 
                                                     @* <span class="table-p__category">
@@ -84,7 +95,7 @@
                                         </td>
                                         <td>
                                             <div class="table-p__del-wrap">
-                                                <a class="far fa-trash-alt table-p__delete-link" href="@Url.Action("DeleteCart", "GioHangChiTiets", new { id = item.IdGioHangChiTiet })"></a>
+                                                <a class="far fa-trash-alt table-p__delete-link" href="@Url.Action("DeleteCartNoLogin", "GioHangChiTiets", new { id = item.IdSanPhamCT })"></a>
                                             </div>
                                         </td>
                                     </tr>
@@ -99,7 +110,7 @@
                     <div class="route-box">
                         <div class="route-box__g1">
 
-                            <a class="route-box__link" href="shop-side-version-2.html">
+                            <a class="route-box__link" href="/sanphamchitiets">
                                 <i class="fas fa-long-arrow-alt-left"></i>
 
                                 <span>CONTINUE SHOPPING</span>
@@ -107,7 +118,7 @@
                         </div>
                         <div class="route-box__g2">
 
-                            <a class="route-box__link" href="@Url.Action("DeleteAllCart", "GioHangChiTiets")">
+                            <a class="route-box__link" href="@Url.Action("DeleteAllCartNoLogin", "GioHangChiTiets")">
                                 <i class="fas fa-trash"></i>
                                 <span>XOÁ GIỎ HÀNG</span>
                             </a>
@@ -225,6 +236,7 @@
 @section Scripts{
     <!--====== Cập nhật số lượng ======-->
     <script>
+        var soLuongBanDau = parseInt($(".input-counter__text").data("value"));
         $(document).on("input", ".input-counter__text", function () {
             updateCart(this);
         });
@@ -253,10 +265,18 @@
                             sum += inputValue;
                         }
                     }
-                    //var SumPrice = response.sumPrice;
-                    var TongTien = response.tongTien;
-                    $('#tamtinh').text(TongTien.toLocaleString("vi-VN") + "đ");
-                    $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
+                    if (response.tongTien != null) {
+                        var TongTien = response.tongTien;
+                        $('#tamtinh').text(TongTien.toLocaleString("vi-VN") + "đ");
+                        $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
+                    } else {
+                        $(inputElement).val(soLuongBanDau);
+                        Swal.fire({
+                            title: 'Sản phẩm lỗi',
+                            icon: 'error',
+                            html: response.quantityError,
+                        })
+                    }
 
                 }
             });

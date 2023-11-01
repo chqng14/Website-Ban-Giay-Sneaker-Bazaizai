@@ -4,7 +4,18 @@
     ViewData["Title"] = "ShowCartUser";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@if (ViewData["QuantityErrorMessages"] != null)
+{
+    <script>
+        var problemCountMessage = '@TempData["problemCount"]';
+        var errorMessages = @Html.Raw(Json.Serialize(ViewData["QuantityErrorMessages"]));
+        Swal.fire({
+            title: problemCountMessage,
+            icon: 'error',
+            html: errorMessages.join('<br/>'),
+        })
+    </script>
+}
 <!--====== End - Section 1 ======-->
 <!--====== Section 2 ======-->
 <div class="u-s-p-b-60">
@@ -44,7 +55,7 @@
 
                                                     <span class="table-p__name">
 
-                                                        <a href="product-detail.html">@item.TenSanPham</a>
+                                                        <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = item.IdSanPhamCT })">@item.TenThuongHieu @item.TenSanPham</a>
                                                     </span>
 
                                                     @* <span class="table-p__category">
@@ -76,7 +87,7 @@
 
                                                     <span class="input-counter__minus fas fa-minus" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" ></span>
 
-                                                    <input class="input-counter__text input-counter--text-primary-style" type="text" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" value="@item.SoLuong" data-min="1" data-max="1000">
+                                                    <input class="input-counter__text input-counter--text-primary-style" type="text" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" value="@item.SoLuong" data-min="1" data-max="1000" min="1">
                                                     <span class="input-counter__plus fas fa-plus" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" ></span>
                                                 </div>
                                                 <!--====== End - Input Counter ======-->
@@ -99,7 +110,7 @@
                     <div class="route-box">
                         <div class="route-box__g1">
 
-                            <a class="route-box__link" href="shop-side-version-2.html">
+                            <a class="route-box__link" href="/sanphamchitiets">
                                 <i class="fas fa-long-arrow-alt-left"></i>
 
                                 <span>CONTINUE SHOPPING</span>
@@ -202,12 +213,22 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div>
-                                        <a class="btn btn--e-brand-b-2" href="/GioHangChiTiets/CheckOut">
-                                            THANH TOÁN
-                                        </a>
-                                        
-                                    </div>
+                                    @if (ViewData["QuantityErrorMessages"] != null)
+                                    {
+                                        <div>
+                                            <a class="btn btn--e-brand-b-2" href="/GioHangChiTiets/ShowCartUser">
+                                                THANH TOÁN
+                                            </a>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div>
+                                            <a class="btn btn--e-brand-b-2" href="/GioHangChiTiets/CheckOut">
+                                                THANH TOÁN
+                                            </a>
+                                        </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -226,6 +247,7 @@
 @section Scripts{
     <!--====== Cập nhật số lượng ======-->
     <script>
+        var soLuongBanDau = parseInt($(".input-counter__text").data("value"));
         $(document).on("input", ".input-counter__text", function () {
             updateCart(this);
         });
@@ -255,9 +277,18 @@
                         }
                     }
                     //var SumPrice = response.sumPrice;
-                    var TongTien = response.tongTien;
-                    $('#tamtinh').text(TongTien.toLocaleString("vi-VN") + "đ");
-                    $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
+                    if (response.tongTien != null) {
+                        var TongTien = response.tongTien;
+                        $('#tamtinh').text(TongTien.toLocaleString("vi-VN") + "đ");
+                        $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
+                    } else {
+                        $(inputElement).val(soLuongBanDau);
+                        Swal.fire({
+                            title: 'Sản phẩm lỗi',
+                            icon: 'error',
+                            html: response.quantityError,
+                        })
+                    }
 
                 }
             });
@@ -310,7 +341,6 @@
                     }
                 })
                     .then(response => {
-                        console.log(response.data.data);
                         var selectElement = $('#district');
                         selectElement.empty();
                         selectElement.val('').trigger('change');
@@ -345,7 +375,6 @@
                     }
                 })
                     .then(response => {
-                        console.log(response.data.data);
                         var selectElement = $('#wards');
                         selectElement.empty();
                         selectElement.val('').trigger('change');

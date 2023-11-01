@@ -5,7 +5,18 @@
     var thongTinGH = ViewData["ThongTinGH"] as List<App_Data.Models.ThongTinGiaoHang>; 
     var idnguoidung = ViewBag.idNguoiDung;
 }
-
+@if (ViewData["QuantityErrorMessages"] != null)
+{
+    <script>
+        var problemCountMessage = '@TempData["problemCount"]';
+        var errorMessages = @Html.Raw(Json.Serialize(ViewData["QuantityErrorMessages"]));
+        Swal.fire({
+            title: problemCountMessage,
+            icon: 'error',
+            html: errorMessages.join('<br/>'),
+        })
+    </script>
+}
 <div class="u-s-p-b-60" style="margin-top:20px">
 
     <!--====== Section Content ======-->
@@ -270,9 +281,9 @@
 
                                                         <span class="o-card__name">
 
-                                                            <a href="product-detail.html">@item.TenSanPham</a>
+                                                            <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = item.IdSanPhamCT })">@item.TenThuongHieu @item.TenSanPham</a>
                                                         </span>
-
+                                                        <span class="o-card__quantity">Size: @item.TenKichCo Màu: @item.TenMauSac</span>
                                                         <span class="o-card__quantity">Số lượng x @item.SoLuong</span>
 
                                                         <span class="o-card__price">@string.Format("{0:N0}đ", item.GiaBan)</span>
@@ -387,9 +398,18 @@
                                         </div>
                                         <input hidden name="IdVoucher" />
                                         <input hidden name="NgayGiaoDuKien" />
-                                        <div>
-                                            <button id="placeOrderButton" class="btn btn--e-brand-b-2" type="submit">ĐẶT HÀNG</button>
-                                        </div>
+                                        @* @if (TempData["QuantityErrorMessages"] != null)
+                                        {
+                                            <div>
+                                                <a id="placeOrderButton" class="btn btn--e-brand-b-2" href="/GioHangChiTiets/CheckOut">ĐẶT HÀNG</a>
+                                            </div>
+                                        }
+                                        else
+                                        { *@
+                                            <div>
+                                                <button id="placeOrderButton" class="btn btn--e-brand-b-2" type="submit">ĐẶT HÀNG</button>
+                                            </div>
+                                        @* } *@
                                     
                                 </div>
                             </div>
@@ -623,14 +643,22 @@
                 districtdb = diaChi.split(',')[2].trim();
                 wardsdb = diaChi.split(',')[1].trim();
 
+                // Xóa tất cả các option hiện tại
+                $('#city1').empty();
+                $('#district1').empty();
+                $('#wards1').empty();
+
+                // Thêm giá trị mới
                 $('#city1').append($('<option>').text(citydb).prop('selected', true));
                 $('#district1').append($('<option>').text(districtdb).prop('selected', true));
                 $('#wards1').append($('<option>').text(wardsdb).prop('selected', true));
+
+                // Trigger sự kiện change để đảm bảo các sự kiện liên quan được kích hoạt
                 $('#city1').trigger('change');
                 $('#district1').trigger('change');
                 $('#wards1').trigger('change');
 
-                // tachDiaChi()
+                //tachDiaChi()
             }
 
             // function tachDiaChi() {
@@ -658,6 +686,10 @@
         var phiship = 0;
         var tongTienSauGiamGia = 0;
         var isDefaultAddress = true;
+        var selectedCityID = null;
+        var selectedDistrictID = null;
+        var selectedWardCode = null;
+        let hasFunctionRun = false;
         $(document).ready(function () {
             useInputAddressScript();
             $('#get-address').on('change', function () {
@@ -667,8 +699,7 @@
                 if (MucUuDai !== null && MucUuDai !== "") {
                     totalAmountElement.innerText = tongTienSauGiamGia.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
                     totalAmountElement.value = tongTienSauGiamGia.toString();
-                }
-                else {
+                } else {
                     totalAmountElement.innerText = tongtienSanPham.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
                     totalAmountElement.value = tongtienSanPham.toString();
                 }
@@ -680,54 +711,45 @@
                     useInputAddressScript();
                 }
             });
-
+            $('#city1').on('change', function () {
+                if ($(this).text() === citydb) {
+                    useDefaultAddressScript();
+                }
+            });
             function useDefaultAddressScript() {
                 $('#DefaultDropdown').show();
                 $('#InputDropdown').hide();
-                    const apiUrlCity = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/province';
-                    const apiUrlDistrict = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/district';
-                    const apiUrlWard = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/ward';
-                    const apiUrlShippingFee = 'https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee';
-                    const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
-                    const shop_id = 705899;
-                $('#city1').on('change', function () {
-                    axios.get(apiUrlCity, {
-                        headers: {
-                            'Token': token
-                        }
-                    }).then(response => {
-                        var selectedCityID = null;
-                        $.each(response.data.data, function (index, item) {
-                            if (citydb === item.ProvinceName) {
-                                selectedCityID = item.ProvinceID;
-                                return false;
-                            }
-                        });
+                const apiUrlCity = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/province';
+                const apiUrlDistrict = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/district';
+                const apiUrlWard = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/ward';
+                const apiUrlShippingFee = 'https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee';
+                const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
+                const shop_id = 705899;
 
-                        if (selectedCityID !== null) {
-                            $('#city1').append($('<option>').val(selectedCityID).text(citydb).attr('hidden', 'hidden'));
-                            $('#city1').val(selectedCityID).trigger('change');
-                        } else {
-                            console.error('Không tìm thấy ID của thành phố.');
+                axios.get(apiUrlCity, {
+                    headers: {
+                        'Token': token
+                    }
+                }).then(response => {
+                    $.each(response.data.data, function (index, item) {
+                        if (citydb === item.ProvinceName) {
+                            selectedCityID = item.ProvinceID;
+                            return false;
                         }
-                    }).catch(error => {
-                        console.error(error);
                     });
-                });
-                    
-                    // Sự kiện khi chọn thành phố
-                $('#district1').on('change', function () {
 
-                        // Load danh sách huyện
+                    if (selectedCityID !== null) {
+                        $('#city1').append($('<option>').val(selectedCityID).text(citydb).attr('hidden', 'hidden'));
+                        $('#city1').val(selectedCityID).trigger('change');
+
                         axios.get(apiUrlDistrict, {
                             headers: {
                                 'Token': token
                             },
                             params: {
-                                province_id: $('#city1').val()
+                                province_id: selectedCityID
                             }
                         }).then(response => {
-                            var selectedDistrictID = null;
                             $.each(response.data.data, function (index, item) {
                                 if (districtdb === item.DistrictName) {
                                     selectedDistrictID = item.DistrictID;
@@ -736,100 +758,65 @@
                             });
 
                             if (selectedDistrictID !== null) {
-                                // idDistric1 = selectedDistrictID;
-                            $('#district1').append($('<option>').val(selectedDistrictID).text(districtdb).attr('hidden', 'hidden'));
-                            $('#district1').val(selectedDistrictID).trigger('change');
+                                $('#district1').append($('<option>').val(selectedDistrictID).text(districtdb).attr('hidden', 'hidden'));
+                                $('#district1').val(selectedDistrictID).trigger('change');
 
+                                axios.get(apiUrlWard, {
+                                    headers: {
+                                        'Token': token
+                                    },
+                                    params: {
+                                        district_id: selectedDistrictID
+                                    }
+                                }).then(response => {
+                                    $.each(response.data.data, function (index, item) {
+                                        if (wardsdb === item.WardName) {
+                                            selectedWardCode = item.WardCode;
+                                            return false;
+                                        }
+                                    });
+
+                                    if (selectedWardCode !== null) {
+                                        // Xử lý khi có thông tin phường/xã
+
+                                        $('#wards1').append($('<option>').val(selectedWardCode).text(wardsdb).attr('hidden', 'hidden'));
+                                        $('#wards1').val(selectedWardCode).trigger('change');
+
+                                        if (!isCalculatingShippingFee) {
+                                            isDefaultAddress = true;
+
+                                            if ($('#wards1').val() != null) {
+                                                isCalculatingShippingFee = true;
+                                                calculateShippingFee();
+                                            }
+                                            // Các xử lý khác có thể thêm ở đây
+                                        }
+                                    } else {
+                                        console.error('Không tìm thấy Mã phường/xã.');
+                                    }
+                                }).catch(error => {
+                                    console.error(error);
+                                });
                             } else {
                                 console.error('Không tìm thấy ID của huyện.');
                             }
                         }).catch(error => {
                             console.error('lỗi.');
                         });
-                    });
-
-                    $('#wards1').on('change', function () {
-                        // Load danh sách xã/phường
-                        axios.get(apiUrlWard, {
-                            headers: {
-                                'Token': token
-                            },
-                            params: {
-                                district_id: $('#district1').val()
-                            }
-                        }).then(response => {
-                            var selectedWardCode = null;
-                            $.each(response.data.data, function (index, item) {
-                                if (wardsdb === item.WardName) {
-                                    selectedWardCode = item.WardCode;
-                                    return false;
-                                }
-                            });
-
-                            if (selectedWardCode !== null) {
-                            $('#wards1').append($('<option>').val(selectedWardCode).text(wardsdb).attr('hidden', 'hidden'));
-                            $('#wards1').val(selectedWardCode).trigger('change');
-                            } else {
-                                console.error('Không tìm thấy Mã phường/xã.');
-                            }
-                        }).catch(error => {
-                            console.error(error);
-                        });
-                    })
-
-
-
-                    // Khi chọn phường/xã
-                    $('#wards1').on('change', function () {
-                    if (!isCalculatingShippingFee) {
-                        isDefaultAddress = true;
-
-                        if ($('#wards1').val() != null) {
-                            isCalculatingShippingFee = true; // Đánh dấu rằng đang tính phí ship
-                            calculateShippingFee();
-                            isCalculatingShippingFee = false; // Đặt lại biến khi tính toán hoàn tất
-                        }
-                        // Các xử lý khác có thể thêm ở đây
+                    } else {
+                        console.error('Không tìm thấy ID của thành phố.');
                     }
-                        // var inputs = document.getElementsByClassName('input-counter__text');
-                        // // ...
-                        // axios.get(apiUrlShippingFee, {
-                        //     headers: {
-                        //         'Token': token,
-                        //         'shop_id': shop_id
-                        //     },
-                        //     params: {
-                        //         service_type_id: 2,
-                        //         insurance_value: $('#tamtinh').text().replace(/\D/g, ''),
-                        //         coupon: null,
-                        //         to_ward_code: $('#wards1').val(),
-                        //         to_district_id: $('#district1').val(),
-                        //         from_district_id: 3440,
-                        //         weight: 200,
-                        //         length: 20,
-                        //         width: 15,
-                        //         height: 20
-                        //     }
-                        // }).then(response => {
-                        //     $('#phiship').text(parseInt(response.data.data.service_fee).toLocaleString("vi-VN").replace(/\./g, ',') + "đ");
+                }).catch(error => {
+                    console.error(error);
+                });
 
-                        //     // Lấy ra tổng tiền của sản phẩm có trong giỏ hàng
-
-                        //     var tongTien = tongtienSanPham + response.data.data.service_fee;
-
-                        //     // Hiển thị tổng tiền
-                        //     totalAmountElement.innerText = tongTien.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
-                        //     totalAmountElement.value = tongTien.toString();
-
-                        //     // Gán giá trị vào input
-                        //     document.querySelector('input[name="TongTien"]').value = tongtienSanPham;
-                        //     document.querySelector('input[name="TienShip"]').value = response.data.data.service_fee;
-
-                        // }).catch(error => {
-                        //     console.error(error);
-                        // });
-                    });
-                
+                $('#wards1').on('change', function () {
+                   if ($('#wards1').val() != null && phiship == null) {
+                      isCalculatingShippingFee = true;
+                      calculateShippingFee();
+                      isCalculatingShippingFee = false;
+                   }
+                });
             }
 
             function useInputAddressScript() {
@@ -914,7 +901,6 @@
                             }
                         })
                             .then(response => {
-                                console.log(response.data.data);
                                 var selectElement = $('#wards');
                                 selectElement.empty();
                                 selectElement.val('').trigger('change');
@@ -932,74 +918,12 @@
 
                 $(document).ready(function () {
                     $('#wards').on('change', function () {
-                        if (!isCalculatingShippingFee) {
+                        if ($('#wards').val() != null) {
                             isDefaultAddress = false;
-
-                            if ($('#wards').val() != null) {
-                                isCalculatingShippingFee = true; // Đánh dấu rằng đang tính phí ship
-                                calculateShippingFee();
-                                isCalculatingShippingFee = false; // Đặt lại biến khi tính toán hoàn tất
-                            }
-                            // Các xử lý khác có thể thêm ở đây
+                            isCalculatingShippingFee = true;
+                            calculateShippingFee();
+                            isCalculatingShippingFee = false;
                         }
-                        // var inputs = document.getElementsByClassName('input-counter__text');
-                        // var sum = 0;
-                        // for (var i = 0; i < inputs.length - 1; i++) {
-                        //     var inputValue = parseInt(inputs[i].value);
-                        //     if (!isNaN(inputValue)) {
-                        //         sum += inputValue;
-                        //     }
-                        // }
-
-                        // var soLuongDonHang = sum;
-                        // var length = 20; // Giá trị mặc định cho chiều dài
-                        // var width = 15; // Giá trị mặc định cho chiều rộng
-                        // var height = 20;
-                        // var weight = parseInt((length * width * height) / 5000);
-                        // if ($('#wards').val() != null) {
-                        //     const apiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee';
-                        //     const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
-                        //     const shop_id = 705899;
-                        //     axios.get(apiUrl, {
-                        //         headers: {
-                        //             'Token': token,
-                        //             'shop_id': shop_id
-                        //         },
-                        //         params: {
-                        //             service_type_id: 2,
-                        //             insurance_value: $('#tamtinh').text().replace(/\D/g, ''),
-                        //             coupon: null,
-                        //             to_ward_code: $('#wards').val(),
-                        //             to_district_id: $('#district').val(),
-                        //             from_district_id: 3440,
-                        //             weight: weight,
-                        //             length: length,
-                        //             width: width,
-                        //             height: height
-                        //         }
-                        //     })
-                        //         .then(response => {
-
-                        //             //lưu tiền ship vào localstorage
-                        //             localStorage.setItem('phiship', response.data.data.service_fee);
-                        //             //gán tiền ship vào id phiship
-                        //             $('#phiship').text(parseInt(response.data.data.service_fee).toLocaleString("vi-VN").replace(/\./g, ',') + "đ");
-                        //             // $('#divShippingFee1').val(response.data.data.service_fee);
-
-                        //             // lấy ra tổng tiền của sản phẩm có trong giỏ hàng
-
-                        //             var tongTien = tongtienSanPham + response.data.data.service_fee;
-
-                        //             // Hiển thị tổng tiền
-                        //             totalAmountElement.innerText = tongTien.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
-                        //             totalAmountElement.value = tongTien.toString();
-                        //             document.querySelector('input[name="TongTien"]').value = tongtienSanPham;
-                        //             document.querySelector('input[name="TienShip"]').value = response.data.data.service_fee;
-                        //         })
-                        //         .catch(error => {
-                        //             console.error(error);
-                        //         });
-                        // }
                     });
                 });
             }
@@ -1038,7 +962,7 @@
             var ApiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/available-services';
             var token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
             var shop_id = 705899;
-            var toDistrictId = isDefaultAddress ? $('#district1').val() : $('#district').val();
+            var toDistrictId = isDefaultAddress ? selectedDistrictID : $('#district').val();
             return new Promise((resolve, reject) => {
                 axios.get(ApiUrl, {
                     headers: {
@@ -1070,8 +994,8 @@
                 var dayshipApiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/leadtime';
                 var token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
                 var shop_id = 705899;
-                var toWardCode = isDefaultAddress ? $('#wards1').val() : $('#wards').val();
-                var toDistrictId = isDefaultAddress ? $('#district1').val() : $('#district').val();
+                var toWardCode = isDefaultAddress ? selectedWardCode : $('#wards').val();
+                var toDistrictId = isDefaultAddress ? selectedDistrictID : $('#district').val();
 
                 axios.get(dayshipApiUrl, {
                     headers: {
@@ -1115,26 +1039,26 @@
             var shippingApiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee';
             var token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
             var shop_id = 705899;
-            var toWardCode = isDefaultAddress ? $('#wards1').val() : $('#wards').val();
-            var toDistrictId = isDefaultAddress ? $('#district1').val() : $('#district').val();
-            axios.get(shippingApiUrl, {
-                headers: {
-                    'Token': token,
-                    'shop_id': shop_id
-                },
-                params: {
-                    service_type_id: 2,
-                    insurance_value: $('#tamtinh').text().replace(/\D/g, ''),
-                    coupon: null,
-                    to_ward_code: toWardCode,
-                    to_district_id: toDistrictId,
-                    from_district_id: 3440,
-                    weight: weight,
-                    length: length,
-                    width: width,
-                    height: height
-                }
-            })
+            var toWardCode = isDefaultAddress ? selectedWardCode : $('#wards').val();
+            var toDistrictId = isDefaultAddress ? selectedDistrictID : $('#district').val();
+                axios.get(shippingApiUrl, {
+                    headers: {
+                        'Token': token,
+                        'shop_id': shop_id
+                    },
+                    params: {
+                        service_type_id: 2,
+                        insurance_value: $('#tamtinh').text().replace(/\D/g, ''),
+                        coupon: null,
+                        to_ward_code: toWardCode,
+                        to_district_id: toDistrictId,
+                        from_district_id: 3440,
+                        weight: weight,
+                        length: length,
+                        width: width,
+                        height: height
+                    }
+                })
                 .then(response => {
                     // Gán tiền ship vào id phiship
                     phiship = response.data.data.service_fee;
@@ -1142,8 +1066,8 @@
 
                     // Lấy ra tổng tiền của sản phẩm có trong giỏ hàng
                     if (MucUuDai !== null && MucUuDai !== "") {
-                        var tongTien = tongTienSauGiamGia + phiship;
-                        document.querySelector('input[name="TongTien"]').value = tongTienSauGiamGia;
+                        var tongTien = tongtienSanPham-MucUuDai + phiship;
+                        document.querySelector('input[name="TongTien"]').value = tongtienSanPham;
                     }
                     else {
                         var tongTien = tongtienSanPham + phiship;
@@ -1155,6 +1079,7 @@
                     // Gán giá trị vào input
                     document.querySelector('input[name="TienShip"]').value = phiship;
                     calculateDayShip();
+                    isCalculatingShippingFee = false; 
                 })
                 .catch(error => {
                     console.error(error);
@@ -1168,7 +1093,9 @@
         // }
 
         // Hàm xử lý voucher
+        var IdVoucher = "";
         function voucher(value) {
+            value = value.toUpperCase();
             if (value != null && value.trim() != "") {
                 var ma = { ma: value };
                 $.ajax({
@@ -1178,7 +1105,7 @@
                     success: function (result) {
                         $('#textvoucher').text("");
                         MucUuDai = result.mucuidai;
-                        var IdVoucher = result.idVoucher;
+                        IdVoucher = result.idVoucher;
                         $('input[name="IdVoucher"]').val(IdVoucher);
                         // Áp dụng giảm giá từ voucher
                         applyDiscount(MucUuDai);
@@ -1198,14 +1125,38 @@
 
         // Hàm áp dụng giảm giá
         function applyDiscount(discountAmount) {
-            $('#TienGiam').text(discountAmount.toLocaleString("vi-VN") + "đ");
+            if (discountAmount == null || discountAmount == 0) {
+                $('#TienGiam').text(discountAmount.toLocaleString("vi-VN") + "đ");
+            }
+            else { 
+                $('#TienGiam').text("-" + discountAmount.toLocaleString("vi-VN") + "đ");
+            }
+            document.querySelector('input[name="TienGiam"]').value = discountAmount;
             // Tính tổng tiền sau khi giảm giá
             var tamTinhGiaGiam = tongtienSanPham + parseFloat(phiship);
             tongTienSauGiamGia = tamTinhGiaGiam - discountAmount;
-
             // Hiển thị tổng tiền sau khi giảm giá
             totalAmountElement.innerText = tongTienSauGiamGia.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
             totalAmountElement.value = tongTienSauGiamGia.toString();
+        }
+        function UpdateVoucher() {
+            if (MucUuDai != null) {
+                $.ajax({
+                    url: '/Voucher/UpdateVoucherAfterUseIt',
+                    type: 'POST',
+                    data: { idVoucher: IdVoucher },
+                    success: function (result) {
+                        console.log("UpdateVoucherAfterUseIt");
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            } else {
+                $('#textvoucher').text("");
+                // Nếu không có voucher, hiển thị tổng tiền không giảm giá
+                applyDiscount(0);
+            }
         }
     </script>
 
@@ -1242,9 +1193,18 @@
                         url: '/HoaDon/ThanhToan',
                         data: paymentFormData,
                         success: function (paymentResponse) {
-                            // Xử lý kết quả nếu cần
-                            var idHoaDon = paymentResponse.idHoaDon;
-                            window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
+                            if(paymentResponse.idHoaDon != null) {
+                                UpdateVoucher()
+                                window.location.href = paymentResponse.url;
+                                // var idHoaDon = paymentResponse.idHoaDon;
+                                // window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
+                            }else{
+                                Swal.fire({
+                                    title: paymentResponse.title,
+                                    icon: 'error',
+                                    html: paymentResponse.message.join('<br/>'),
+                                })
+                            }
                         },
                         error: function (paymentError) {
                             // Xử lý lỗi nếu cần
@@ -1266,24 +1226,43 @@
                         data: deliveryFormData,
                         success: function (deliveryResponse) {
                             // Thực hiện Ajax để gửi dữ liệu đến action ThanhToan trong controller TenControllerKhac
-                            var moTaValue = $("#order-note").val();
-                            $('input[name="MoTa"]').val(moTaValue);
-                            $("[name='IdThongTinGH']").val(deliveryResponse.idThongTinGH)
+                            if (deliveryResponse.idThongTinGH != null) {
+                                var moTaValue = $("#order-note").val();
+                                $('input[name="MoTa"]').val(moTaValue);
+                                $("[name='IdThongTinGH']").val(deliveryResponse.idThongTinGH)
 
-                            var paymentFormData = $('#paymentForm').serialize();
-                            // Gửi dữ liệu thanh toán
-                            $.ajax({
-                                type: 'POST',
-                                url: '/HoaDon/ThanhToan',
-                                data: paymentFormData,
-                                success: function (paymentResponse) {
-                                    // Xử lý kết quả nếu cần
-                                    window.location.href = "/GioHangChiTiets/ShowCartUser"
-                                },
-                                error: function (paymentError) {
-                                    // Xử lý lỗi nếu cần
-                                }
-                            });
+                                var paymentFormData = $('#paymentForm').serialize();
+                                // Gửi dữ liệu thanh toán
+                                $.ajax({
+                                    type: 'POST',
+                                    url: '/HoaDon/ThanhToan',
+                                    data: paymentFormData,
+                                    success: function (paymentResponse) {
+                                        if (paymentResponse.idHoaDon != null) {
+                                            UpdateVoucher()
+                                            var idHoaDon = paymentResponse.idHoaDon;
+                                            window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
+                                        } else {
+                                            Swal.fire({
+                                                title: paymentResponse.title,
+                                                icon: 'error',
+                                                html: paymentResponse.message.join('<br/>'),
+                                            })
+                                        }
+                                    },
+                                    error: function (paymentError) {
+                                        // Xử lý lỗi nếu cần
+                                    }
+                                });
+                            }else{
+                                $('#billing-street').val(inputAddressBill);
+                                Swal.fire({
+                                    title: deliveryResponse.title,
+                                    icon: 'error',
+                                    html: deliveryResponse.message.join('<br/>'),
+                                })
+                            }
+                            
                         },
                         error: function (deliveryError) {
                             // Xử lý lỗi nếu cần

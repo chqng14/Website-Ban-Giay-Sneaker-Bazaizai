@@ -126,12 +126,12 @@ namespace App_View.Services
             }
         }
 
-        public async Task<bool> UpdateVoucherAfterUseIt(string ma)
+        public async Task<bool> UpdateVoucherAfterUseIt(string idVoucher)
         {
             ///api/Voucher/UpdateVoucherAfterUseIt/{ma
             try
             {
-                var reponse = await _httpClient.PutAsync($"api/Voucher/UpdateVoucherAfterUseIt/{ma}", null);
+                var reponse = await _httpClient.PutAsync($"api/Voucher/UpdateVoucherAfterUseIt/{idVoucher}", null);
                 if (reponse.IsSuccessStatusCode)
                 {
                     return await reponse.Content.ReadAsAsync<bool>();

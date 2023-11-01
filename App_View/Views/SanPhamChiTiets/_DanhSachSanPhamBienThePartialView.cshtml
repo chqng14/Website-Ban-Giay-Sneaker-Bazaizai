@@ -35,7 +35,23 @@ else
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="product-m">
                         <div class="product-m__thumb" data-id="@item.IdChiTietSp">
+                            <div style="
+    position: absolute;
+    clip-path: polygon(0 0, 100% 0%, 100% 100%, 50% 73%, 0 100%);
+    background: red;
+    height: 68px;
+    width: 43px;
+    z-index: 2;
+    right: 0px;
+    display: flex;
+    justify-content: center;
+">
+                                <span style="
+    padding-top: 14px;
+    color: #62e3e9;
+">-@((int)Math.Round(Convert.ToDecimal((item.GiaGoc - item.GiaKhuyenMai) / item.GiaGoc * 100)))%</span>
 
+                            </div>
                             <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/@item.IdChiTietSp">
 
                                 <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
@@ -55,7 +71,25 @@ else
 
                                 <span class="product-m__review">(@item.SoLanDanhGia)</span>
                             </div>
-                            <div class="product-m__price" style="color: red">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaThucTe)</div>
+                            @if (item.IsKhuyenMai)
+                            {
+                                <div class="product-m__price" style="color: red">
+                                    <span class="product-o__price">
+                                        @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)
+                                        <span class="product-o__discount">
+                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)
+                                        </span>
+                                    </span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="product-m__price" style="color: red">
+                                    <span class="product-o__price">
+                                        @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)
+                                    </span>
+                                </div>
+                            }
                             <div class="product-m__hover">
                                 <div class="product-m__preview-description">
 

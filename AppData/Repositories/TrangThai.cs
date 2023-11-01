@@ -69,7 +69,8 @@ namespace App_Data.Repositories
         {
             [Description("Tại quầy")]
             TaiQuay = 0,
-
+            [Description("Chờ xác nhận")]
+            ChoXacNhan = 1,
         }
         public enum TrangThaiSaleInProductDetail
         {

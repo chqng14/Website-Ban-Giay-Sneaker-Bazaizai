@@ -21,15 +21,15 @@
                         <ul class="pd-breadcrumb__list">
                             <li class="has-separator">
 
-                                <a href="/">Trang chủ</a>
+                                <a href="/">HOME</a>
                             </li>
                             <li class="has-separator">
 
-                                <a href="/sanphamchitiets">Danh Sách sản phẩm</a>
+                                <a href="/sanphamchitiets">SHOP</a>
                             </li>
                             <li class="is-marked">
 
-                                <a>@Model.TenSanPham</a>
+                                <a>@Model.TenSanPham!.ToUpper()</a>
                             </li>
                         </ul>
                     </div>
@@ -38,7 +38,7 @@
                     <div class="pd u-s-m-b-30">
                         <div class="slider-fouc pd-wrap">
                             <div id="pd-o-initiate">
-                                @foreach (var item in Model.DanhSachAnh)
+                                @foreach (var item in Model.DanhSachAnh!)
                                 {
                                     <div class="pd-o-img-wrap" data-src="/AnhSanPham/@item">
 
@@ -79,10 +79,9 @@
                                 <span class="pd-detail__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaKhuyenMai)</span>
                                 @if (Model.IsKhuyenMai)
                                 {
-                                    <span class="pd-detail__discount">(76% OFF)</span><del class="pd-detail__del">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaGoc)</del>
+                                    <span class="pd-detail__discount">(-@((int)Math.Round(Convert.ToDecimal((Model.GiaGoc - Model.GiaKhuyenMai) / Model.GiaGoc * 100)))%)</span><del class="pd-detail__del">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaGoc)</del>
 
                                 }
-
                             </div>
                         </div>
                         <div class="u-s-m-b-15">
@@ -100,7 +99,7 @@
 
                                 @if (@Model.SoLuongTon > 10)
                                 {
-                                    <span class="pd-detail__stock">@Model.SoLuongTon trong kho</span>
+                                    <span class="pd-detail__stock">Còn: @Model.SoLuongTon</span>
 
                                 }
                                 else
@@ -1038,6 +1037,9 @@
                 console.log(status);
                 console.log(error);
                 console.log(xhr);
+                if (xhr.status === 401) {
+                    window.location.href='/login'
+                }
             }
         });
     });
@@ -1071,6 +1073,9 @@
                 console.log(status);
                 console.log(error);
                 console.log(xhr);
+                if (xhr.status === 401) {
+                    window.location.href = '/login'
+                }
             }
         });
     });

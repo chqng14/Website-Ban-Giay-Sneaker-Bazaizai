@@ -63,9 +63,9 @@ namespace App_View.Controllers
             return Json(new { mucuidai, IdVoucher });
         }
 
-        public async Task<IActionResult> UpdateVoucherAfterUseIt(string ma)
+        public async Task<IActionResult> UpdateVoucherAfterUseIt(string idVoucher)
         {
-            if (await _voucherSV.UpdateVoucherAfterUseIt(ma))
+            if (await _voucherSV.UpdateVoucherAfterUseIt(idVoucher))
             {
                 return Ok();
             }

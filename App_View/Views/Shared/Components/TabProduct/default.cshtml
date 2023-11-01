@@ -63,10 +63,7 @@
 
                                                         <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
                                                     </li>*@
-                                                    <li>
-
-                                                        <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                    </li>
+                                                    
                                                 </ul>
                                             </div>
                                         </div>
@@ -125,10 +122,7 @@
 
                                                         <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
                                                     </li>*@
-                                                    <li>
-
-                                                        <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                    </li>
+                                                    
                                                 </ul>
                                             </div>
                                         </div>
@@ -149,9 +143,12 @@
                                         </div>
 
                                         <span class="product-o__price">
-                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)
+                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)
+                                            @if (item.KhuyenMai == true)
+                                            {
+                                                <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)</span>
 
-                                            <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)</span>
+                                            }
                                         </span>
                                     </div>
                                 </div>
@@ -244,10 +241,7 @@
 
                                                         <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
                                                     </li>*@
-                                                    <li>
-
-                                                        <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                    </li>
+                                                    
                                                 </ul>
                                             </div>
                                         </div>
@@ -268,9 +262,12 @@
                                         </div>
 
                                         <span class="product-o__price">
-                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)
+                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)
+                                            @if (item.KhuyenMai == true)
+                                            {
+                                                <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)</span>
 
-                                            <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)</span>
+                                            }
                                         </span>
                                     </div>
                                 </div>
