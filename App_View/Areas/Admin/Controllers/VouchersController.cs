@@ -140,7 +140,7 @@ namespace App_View.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<ActionResult> GiveVouchersToUsers(string maVoucher)
+        public async Task<ActionResult> GiveVouchersToUsers(string? maVoucher)
         {
             ViewBag.MaVoucher = maVoucher;
 
@@ -155,16 +155,19 @@ namespace App_View.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> GiveVouchersToUsers([FromBody] AddVoucherRequestDTO addVoucherRequestDTO)
         {
-
+            if (addVoucherRequestDTO.MaVoucher == null)
+            {
+                return Ok(false);
+            }
             if (addVoucherRequestDTO.UserId.Any())
             {
                 if (await _voucherND.AddVoucherNguoiDungTuAdmin(addVoucherRequestDTO) == "Tặng voucher thành công")
                 {
-                    return RedirectToAction("Index");
+                    return Ok(true);
                 }
             }
 
-            return View();
+            return Ok(false);
         }
     }
 }

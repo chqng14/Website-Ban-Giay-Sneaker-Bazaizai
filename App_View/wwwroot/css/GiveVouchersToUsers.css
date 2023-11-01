@@ -71,7 +71,7 @@ button {
 
 .step {
     height: 50px;
-    width: 100px;
+    width: auto;
     margin: 0 2px;
     background-color: #bbbbbb;
     border: none;
