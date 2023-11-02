@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App_Data.Migrations
 {
     [DbContext(typeof(BazaizaiContext))]
-    [Migration("20231102151025_2_11_2023_ThemThuocTinh")]
+    [Migration("20231102161646_2_11_2023_ThemThuocTinh")]
     partial class _2_11_2023_ThemThuocTinh
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -138,7 +138,7 @@ namespace App_Data.Migrations
                     b.Property<int>("SuaDoi")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TrangThai")
+                    b.Property<int>("TrangThai")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValueSql("((0))");
@@ -506,6 +506,7 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DiaChi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")

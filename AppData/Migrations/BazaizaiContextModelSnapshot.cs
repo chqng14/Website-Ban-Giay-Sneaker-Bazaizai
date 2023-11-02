@@ -136,7 +136,7 @@ namespace App_Data.Migrations
                     b.Property<int>("SuaDoi")
                         .HasColumnType("int");
 
-                    b.Property<int?>("TrangThai")
+                    b.Property<int>("TrangThai")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValueSql("((0))");
@@ -504,6 +504,7 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DiaChi")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")

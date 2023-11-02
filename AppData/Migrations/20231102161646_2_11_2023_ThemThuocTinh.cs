@@ -15,6 +15,16 @@ namespace App_Data.Migrations
                 type: "int",
                 nullable: true);
 
+            migrationBuilder.AlterColumn<string>(
+                name: "DiaChi",
+                table: "NguoiDung",
+                type: "nvarchar(max)",
+                nullable: false,
+                defaultValue: "",
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)",
+                oldNullable: true);
+
             migrationBuilder.AddColumn<int>(
                 name: "SuaDoi",
                 table: "NguoiDung",
@@ -26,6 +36,23 @@ namespace App_Data.Migrations
                 table: "NguoiDung",
                 type: "float",
                 nullable: true);
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "NgayGiaoDuKien",
+                table: "HoaDon",
+                type: "datetime2",
+                nullable: true);
+
+            migrationBuilder.AlterColumn<int>(
+                name: "TrangThai",
+                table: "DanhGia",
+                type: "int",
+                nullable: false,
+                defaultValueSql: "((0))",
+                oldClrType: typeof(int),
+                oldType: "int",
+                oldNullable: true,
+                oldDefaultValueSql: "((0))");
 
             migrationBuilder.AddColumn<string>(
                 name: "ChatLuongSanPham",
@@ -75,6 +102,10 @@ namespace App_Data.Migrations
                 table: "NguoiDung");
 
             migrationBuilder.DropColumn(
+                name: "NgayGiaoDuKien",
+                table: "HoaDon");
+
+            migrationBuilder.DropColumn(
                 name: "ChatLuongSanPham",
                 table: "DanhGia");
 
@@ -93,6 +124,24 @@ namespace App_Data.Migrations
             migrationBuilder.DropColumn(
                 name: "NgayTao",
                 table: "Anh");
+
+            migrationBuilder.AlterColumn<string>(
+                name: "DiaChi",
+                table: "NguoiDung",
+                type: "nvarchar(max)",
+                nullable: true,
+                oldClrType: typeof(string),
+                oldType: "nvarchar(max)");
+
+            migrationBuilder.AlterColumn<int>(
+                name: "TrangThai",
+                table: "DanhGia",
+                type: "int",
+                nullable: true,
+                defaultValueSql: "((0))",
+                oldClrType: typeof(int),
+                oldType: "int",
+                oldDefaultValueSql: "((0))");
         }
     }
 }

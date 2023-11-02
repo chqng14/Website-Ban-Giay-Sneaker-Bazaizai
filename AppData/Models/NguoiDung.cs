@@ -13,7 +13,7 @@ namespace App_Data.Models
         public string? MaNguoiDung { get; set; }
         public string? TenNguoiDung { get; set; }
         public int? GioiTinh { get; set; }
-        public string? DiaChi { get; set; }
+        public string DiaChi { get; set; }
         public DateTime? NgaySinh { get; set; }
         public double? TongChiTieu { get; set; } = 0;
         public int? SuaDoi { get; set; } = 1;
