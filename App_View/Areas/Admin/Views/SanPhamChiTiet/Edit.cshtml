@@ -1,0 +1,11 @@
+﻿@model List<App_Data.ViewModels.SanPhamChiTietDTO.SanPhamChiTietDTO>
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

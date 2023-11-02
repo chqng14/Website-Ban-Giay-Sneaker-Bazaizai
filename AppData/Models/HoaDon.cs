@@ -11,6 +11,7 @@ namespace App_Data.Models
     {
         public string? IdHoaDon { get; set; }
         public string? IdNguoiDung { get; set; }
+        public string? IdNguoiSuaGanNhat { get; set; }
         public string? IdKhachHang { get; set; }
         public string? IdVoucher { get; set; }
         public string? IdThongTinGH { get; set; }

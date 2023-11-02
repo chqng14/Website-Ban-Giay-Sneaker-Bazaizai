@@ -6,6 +6,7 @@ public class MomoCreatePaymentResponseModel
     public int ErrorCode { get; set; }
     public string OrderId { get; set; }
     public string Message { get; set; }
+    public long responseTime { get; set; }
     public string LocalMessage { get; set; }
     public string RequestType { get; set; }
     public string PayUrl { get; set; }

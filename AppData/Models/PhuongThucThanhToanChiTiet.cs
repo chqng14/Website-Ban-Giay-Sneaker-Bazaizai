@@ -11,7 +11,6 @@ namespace App_Data.Models
         public string? IdPhuongThucThanhToanChiTiet { get; set; }
         public string? IdHoaDon { get; set; }
         public string? IdThanhToan { get; set; }
-
         public double? SoTien { get; set; }
         public int? TrangThai { get; set; }
         public virtual PhuongThucThanhToan PhuongThucThanhToan { get; set; }

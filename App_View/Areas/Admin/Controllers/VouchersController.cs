@@ -15,6 +15,8 @@ using AutoMapper;
 using App_Data.Repositories;
 using static App_Data.Repositories.TrangThai;
 using Microsoft.AspNetCore.Identity;
+using App_Data.ViewModels.VoucherNguoiDung;
+using System.Net.Http;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -71,15 +73,10 @@ namespace App_View.Areas.Admin.Controllers
                         break;
                 }
             }
-
             ViewBag.TatCa = lstVoucher; // Gán danh sách lọc được vào ViewBag.TatCa
 
             return View(lstVoucher);
         }
-
-
-
-
         public IActionResult Create()
         {
             return View();
@@ -117,11 +114,6 @@ namespace App_View.Areas.Admin.Controllers
             }
             return View();
         }
-        //public async Task<ActionResult> Details(string id)
-        //{
-        //    var Voucher = (await _voucherSV.GetVoucherDTOById(id));
-        //    return View(Voucher);
-        //}
 
         public async Task<ActionResult> Delete(string id)
         {
@@ -148,15 +140,34 @@ namespace App_View.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<ActionResult> GiveVouchersToUsers(string maVoucher)
+        public async Task<ActionResult> GiveVouchersToUsers(string? maVoucher)
         {
             ViewBag.MaVoucher = maVoucher;
+
+            var lstUser = await _userManager.Users.ToListAsync();
+            if (lstUser.Any())
+            {
+                ViewBag.User = lstUser;
+            }
+
             return View();
         }
-        //[HttpGet]
-        //public async Task<ActionResult> GiveVouchersToUsers(string maVoucher)
-        //{
-        //    return View();
-        //}
+        [HttpPost]
+        public async Task<IActionResult> GiveVouchersToUsers([FromBody] AddVoucherRequestDTO addVoucherRequestDTO)
+        {
+            if (addVoucherRequestDTO.MaVoucher == null)
+            {
+                return Ok(false);
+            }
+            if (addVoucherRequestDTO.UserId.Any())
+            {
+                if (await _voucherND.AddVoucherNguoiDungTuAdmin(addVoucherRequestDTO) == "Tặng voucher thành công")
+                {
+                    return Ok(true);
+                }
+            }
+
+            return Ok(false);
+        }
     }
 }
