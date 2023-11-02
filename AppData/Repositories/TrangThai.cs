@@ -69,7 +69,8 @@ namespace App_Data.Repositories
         {
             [Description("Tại quầy")]
             TaiQuay = 0,
-
+            [Description("Chờ xác nhận")]
+            ChoXacNhan = 1,
         }
         public enum TrangThaiSaleInProductDetail
         {
@@ -110,14 +111,22 @@ namespace App_Data.Repositories
             [Description("Đã thanh toán")]
             DaThanhToan = 1,
         }
+
         public enum TrangThaiDanhGia
         {
             [Description("Đã duyệt")]
-            DaDuyet=0,
+            DaDuyet = 0,
             [Description("Đã Ẩn")]
-            DaAn=1,
+            DaAn = 1,
             [Description("Chưa duyệt")]
-            ChuaDuyet=2,
+            ChuaDuyet = 2,
+        }
+        public enum PTThanhToanChiTiet
+        {
+            [Description("Chưa thanh toán")]
+            ChuaThanhToan = 0,
+            [Description("Đã thanh toán")]
+            DaThanhToan = 1,
         }
     }
 }

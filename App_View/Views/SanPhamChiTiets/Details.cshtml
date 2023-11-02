@@ -21,19 +21,15 @@
                         <ul class="pd-breadcrumb__list">
                             <li class="has-separator">
 
-                                <a href="index.hml">Home</a>
+                                <a href="/">HOME</a>
                             </li>
                             <li class="has-separator">
 
-                                <a href="/sanphamchitiets">Electronics</a>
-                            </li>
-                            <li class="has-separator">
-
-                                <a href="/sanphamchitiets">DSLR Cameras</a>
+                                <a href="/sanphamchitiets">SHOP</a>
                             </li>
                             <li class="is-marked">
 
-                                <a href="/sanphamchitiets">Nikon Cameras</a>
+                                <a>@Model.TenSanPham!.ToUpper()</a>
                             </li>
                         </ul>
                     </div>
@@ -42,7 +38,7 @@
                     <div class="pd u-s-m-b-30">
                         <div class="slider-fouc pd-wrap">
                             <div id="pd-o-initiate">
-                                @foreach (var item in Model.DanhSachAnh)
+                                @foreach (var item in Model.DanhSachAnh!)
                                 {
                                     <div class="pd-o-img-wrap" data-src="/AnhSanPham/@item">
 
@@ -80,9 +76,12 @@
                         </div>
                         <div>
                             <div class="pd-detail__inline">
-                                <span class="pd-detail__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaBan)</span>
+                                <span class="pd-detail__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaKhuyenMai)</span>
+                                @if (Model.IsKhuyenMai)
+                                {
+                                    <span class="pd-detail__discount">(-@((int)Math.Round(Convert.ToDecimal((Model.GiaGoc - Model.GiaKhuyenMai) / Model.GiaGoc * 100)))%)</span><del class="pd-detail__del">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaGoc)</del>
 
-                                <span class="pd-detail__discount">(76% OFF)</span><del class="pd-detail__del">$28.97</del>
+                                }
                             </div>
                         </div>
                         <div class="u-s-m-b-15">
@@ -98,9 +97,26 @@
                         <div class="u-s-m-b-15">
                             <div class="pd-detail__inline">
 
-                                <span class="pd-detail__stock">@Model.SoLuongTon in stock</span>
+                                @if (@Model.SoLuongTon > 10)
+                                {
+                                    <span class="pd-detail__stock">Còn: @Model.SoLuongTon</span>
 
-                                @*<span class="pd-detail__left">Only 2 left</span>*@
+                                }
+                                else
+                                {
+                                    @if (@Model.SoLuongTon > 0)
+                                    {
+                                        <span class="pd-detail__left">Chỉ còn: @Model.SoLuongTon</span>
+
+                                    }
+                                    else
+                                    {
+                                        <span class="pd-detail__left">Hết hàng</span>
+
+                                    }
+
+                                }
+
                             </div>
                         </div>
                         <div class="u-s-m-b-15">
@@ -111,24 +127,19 @@
                             <div class="pd-detail__inline">
 
                                 <span class="pd-detail__click-wrap">
-                                    <i class="far fa-heart u-s-m-r-6"></i>
-
-                                    <a href="signin.html">Thêm vào danh sách yêu thích</a>
-
-                                    <span class="pd-detail__click-count">(@Model.SoLuotYeuThich)</span>
+                                    @if (Model.IsYeuThich)
+                                    {
+                                        <a class="fas fa-heart u-s-m-r-6" style="color: red;" href="javascript:void(0);" id="removeToFavorite"></a>
+                                    }
+                                    else
+                                    {
+                                        <a class="far fa-heart u-s-m-r-6" href="javascript:void(0);" id="addToFavorite"></a>
+                                    }
+                                    <span>(@Model.SoLuotYeuThich) lượt yêu thích</span>
                                 </span>
-                            </div>
-                        </div>
-                        <div class="u-s-m-b-15">
-                            <div class="pd-detail__inline">
-
-                                <span class="pd-detail__click-wrap">
-                                    <i class="far fa-envelope u-s-m-r-6"></i>
-
-                                    <a href="signin.html">Gửi mail khi bạn muốn giảm giá</a>
-
-                                    <span class="pd-detail__click-count">(20)</span>
-                                </span>
+                                <form id="addToFavoriteForm" method="post" action="/SanPhamYeuThich/Create">
+                                    <input type="hidden" name="IdSanPhamChiTiet" value="@Model.IdChiTietSp" />
+                                </form>
                             </div>
                         </div>
                         <div class="u-s-m-b-15">
@@ -695,6 +706,79 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+    $("#addToFavorite").on("click", function () {
+        var data = {};
+        $('#addToFavoriteForm').find("input, select, textarea").each(function () {
+            var fieldType = $(this).attr("type");
+            var fieldName = $(this).attr("name");
+            var fieldValue;
+
+            if (fieldType === "checkbox" || fieldType === "radio") {
+                fieldValue = $(this).is(":checked");
+            } else {
+                fieldValue = $(this).val();
+            }
+
+            data[fieldName] = fieldValue;
+        });
+
+        $.ajax({
+            url: '/SanPhamYeuThich/Create',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: function (result) {
+                window.location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+                if (xhr.status === 401) {
+                    window.location.href='/login'
+                }
+            }
+        });
+    });
+
+    $("#removeToFavorite").on("click", function () {
+        var data = {};
+        $('#addToFavoriteForm').find("input, select, textarea").each(function () {
+            var fieldType = $(this).attr("type");
+            var fieldName = $(this).attr("name");
+            var fieldValue;
+
+            if (fieldType === "checkbox" || fieldType === "radio") {
+                fieldValue = $(this).is(":checked");
+            } else {
+                fieldValue = $(this).val();
+            }
+
+            data[fieldName] = fieldValue;
+        });
+
+        $.ajax({
+            url: '/SanPhamYeuThich/Remove',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: function (result) {
+                window.location.reload();
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+                if (xhr.status === 401) {
+                    window.location.href = '/login'
+                }
+            }
+        });
+    });
+
+
     $(document).on('change', '[name="color"]', function () {
         $('.preloader').addClass('is-active');
         var data = new FormData();

@@ -6,7 +6,7 @@ namespace App_View.IServices
     {
         Task<List<HoaDonChiTietViewModel>> GetAllHoaDonChiTiet();
         Task<bool> CreateHoaDonChiTiet(HoaDonChiTietDTO hoaDonChiTietDTO);
-        Task<bool> UpdateHoaDonChiTiet(HoaDonChiTietDTO hoaDonChiTietDTO);
+        Task<bool> UpdateHoaDonChiTiet(string idHoaDonChiTiet, int TrangThai);
         Task<bool> DeleteHoaDonChiTiet(string idHoaDonChiTiet);
     }
 }

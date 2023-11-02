@@ -1,0 +1,108 @@
+﻿body {
+    background: #eee
+}
+
+#regForm {
+    background-color: #ffffff;
+    margin: 0px auto;
+    /* font-family: Raleway;*/
+    padding: 40px;
+    border-radius: 10px
+}
+
+#register {
+    color: #1F1717;
+}
+
+h1 {
+    text-align: center
+}
+
+input {
+    padding: 10px;
+    width: 100%;
+    font-size: 17px;
+    /*    font-family: Raleway;*/
+    border: 1px solid #aaaaaa;
+    border-radius: 10px;
+    /*    -webkit-appearance: none;*/
+}
+
+
+    input.invalid {
+        border: 1px solid #e03a0666;
+    }
+
+
+
+button {
+    background-color: #1F1717;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    padding: 10px 20px;
+    font-size: 17px;
+    /*    font-family: Raleway;*/
+    cursor: pointer
+}
+
+    button:hover {
+        opacity: 0.8
+    }
+
+    button:focus {
+        outline: none !important;
+    }
+
+#prevBtn {
+    background-color: #bbbbbb
+}
+
+
+.all-steps {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    width: 100%;
+    display: inline-flex;
+    justify-content: center;
+    color: #1F1717;
+}
+
+.step {
+    height: 50px;
+    width: auto;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none;
+    /*  border-radius: 50%;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    color: #1F1717;
+    opacity: 0.8;
+}
+
+    .step.active {
+        opacity: 1
+    }
+
+
+    .step.finish {
+        color: #fff;
+        background: #1F1717;
+        opacity: 1;
+    }
+
+
+
+.all-steps {
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px
+}
+
+.thanks-message {
+    display: flex
+}

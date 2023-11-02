@@ -7,7 +7,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>BazaizaiShop - Team 6</title>
+    <title>Bazaizai Store</title>
     <meta charset="UTF-8">
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -16,6 +16,7 @@
     <link href="/images/logo.jpg" rel="shortcut icon">
     <title>Ludus - Electronics, Apparel, Computers, Books, DVDs & more</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--====== Google Font ======-->
     @*<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet">*@
 
@@ -62,11 +63,11 @@
                         </a>
                         <!--====== End - Main Logo ======-->
                         <!--====== Search Form ======-->
-                        <form class="main-form">
+                        <form class="main-form" action="/sanphamchitiets/index" method="get">
 
                             <label for="main-search"></label>
 
-                            <input class="input-text input-text--border-radius input-text--style-1" type="text" id="main-search" placeholder="Search">
+                            <input class="input-text input-text--border-radius input-text--style-1" type="text" name="search" id="main-search" placeholder="Search">
 
                             <button class="btn btn--icon fas fa-search main-search-button" type="submit"></button>
                         </form>
@@ -1146,7 +1147,7 @@
                                     </li>
                                     <li>
 
-                                        <a href="wishlist.html"><i class="far fa-heart"></i></a>
+                                        <a href="/SanPhamYeuThich/DanhSachSanPhamYeuThich"><i class="far fa-heart"></i></a>
                                     </li>
                                     <li class="has-dropdown" id="body-mini-cart">
 
@@ -1378,9 +1379,7 @@
                                     </div>
                                     <div class="success__info-wrap">
 
-                                        <span class="success__name">Bazaizai Shop</span>
-
-                                        <span class="success__quantity">K 15.3</span>
+                                        <span class="success__name">Bazaizai Store</span>
 
                                     </div>
                                 </div>

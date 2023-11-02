@@ -23,7 +23,7 @@ namespace App_Api.Controllers
         private readonly IMapper _mapper;
         public HoaDonController(IMapper mapper)
         {
-            _hoaDon = new HoaDonRepos();
+            _hoaDon = new HoaDonRepos(mapper);
             _mapper = mapper;
         }
         [HttpPost]
@@ -33,10 +33,11 @@ namespace App_Api.Controllers
         }
         // POST api/<HoaDonController>
         [HttpPost]
-        public async Task<bool> TaoHoaDonOnlineDTO(HoaDonDTO HoaDonDTO)
+        public async Task<string> TaoHoaDonOnlineDTO(HoaDonDTO HoaDonDTO)
         {
             var hoadon = _mapper.Map<HoaDon>(HoaDonDTO);
-            return _hoaDon.AddBill(hoadon);
+            _hoaDon.AddBill(hoadon);
+            return hoadon.MaHoaDon;
         }
         [HttpGet]
         public async Task<List<HoaDonChoDTO>> GetAllHoaDonCho()
@@ -44,9 +45,17 @@ namespace App_Api.Controllers
             return _hoaDon.GetAllHoaDonCho();
         }
         [HttpGet]
-        public async Task<List<HoaDonDTO>> GetHoaDonOnline()
+        public async Task<List<HoaDonViewModel>> GetHoaDonOnline()
         {
             return _hoaDon.GetHoaDon();
+        }
+
+        [HttpPut]
+        public async Task<bool> UpdateHoaDonOnlineDTO(string idHoaDon, int TrangThaiThanhToan)
+        {
+            var hoadon = _hoaDon.GetHoaDonUpdate().FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            hoadon.TrangThaiThanhToan = TrangThaiThanhToan;
+            return _hoaDon.EditBill(hoadon);
         }
     }
 }

@@ -21,6 +21,7 @@ namespace App_Api.Controllers
     public class VoucherNguoiDungController : ControllerBase
     {
         private readonly IAllRepo<VoucherNguoiDung> VcNguoiDungRepos;
+        private readonly IVoucherNguoiDungRepos voucherNguoiDungRep;
         private readonly IAllRepo<Voucher> VcRepos;
         private readonly IMapper _mapper;
         BazaizaiContext DbContextModel = new BazaizaiContext();
@@ -32,7 +33,7 @@ namespace App_Api.Controllers
             voucher = DbContextModel.vouchers;
             AllRepo<VoucherNguoiDung> VcNd = new AllRepo<VoucherNguoiDung>(DbContextModel, voucherNguoiDung);
             VcNguoiDungRepos = VcNd;
-
+            voucherNguoiDungRep = new VoucherNguoiDungRepos();
             AllRepo<Voucher> Vc = new AllRepo<Voucher>(DbContextModel, voucher);
             VcRepos = Vc;
 
@@ -117,5 +118,71 @@ namespace App_Api.Controllers
             var cl = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCherNguoiDung == id);
             return VcNguoiDungRepos.RemoveItem(cl);
         }
+
+        //[HttpPost("AddVoucherNguoiDungTuAdmin")]
+        //public async Task<bool> AddVoucherNguoiDungTuAdmin(string maVoucher, List<string> UserId)
+        //{
+        //    var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.MaVoucher == maVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDong && c.SoLuong > 0);
+        //    if (VoucherKhaDung != null)
+        //    {
+        //        foreach (var item in UserId.ToList())
+        //        {
+        //            var existsInVoucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(vnd => vnd.IdVouCher == VoucherKhaDung.IdVoucher && vnd.IdNguoiDung == item);
+
+        //            if (existsInVoucherNguoiDung != null)
+        //            {
+        //                // IdVoucher đã tồn tại trong bảng VoucherNguoiDung, loại bỏ phần tử khỏi danh sách UserId
+        //                UserId.Remove(item);
+        //            }
+        //        }
+        //        int soNguoiDuocTangVoucher = UserId.Count();
+        //        if (soNguoiDuocTangVoucher>0 && VoucherKhaDung.SoLuong >= soNguoiDuocTangVoucher)
+        //        {
+        //            if (await (voucherNguoiDungRep.TangVoucherNguoiDung(maVoucher, UserId)) == true)
+        //            {
+        //                VoucherKhaDung.SoLuong = VoucherKhaDung.SoLuong - soNguoiDuocTangVoucher;
+        //                VcRepos.EditItem(VoucherKhaDung);
+        //            }
+        //            return true;
+        //        }
+
+        //    }
+        //    return false;
+        //}
+        [HttpPost("AddVoucherNguoiDungTuAdmin")]
+        public async Task<string> AddVoucherNguoiDungTuAdmin(AddVoucherRequestDTO addVoucherRequestDTO)
+        {
+            var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.MaVoucher == addVoucherRequestDTO.MaVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDong && c.SoLuong > 0);
+            if (VoucherKhaDung != null)
+            {
+                foreach (var item in addVoucherRequestDTO.UserId.ToList())
+                {
+                    var existsInVoucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(vnd => vnd.IdVouCher == VoucherKhaDung.IdVoucher && vnd.IdNguoiDung == item);
+
+                    if (existsInVoucherNguoiDung != null)
+                    {
+                        // IdVoucher đã tồn tại trong bảng VoucherNguoiDung, loại bỏ phần tử khỏi danh sách UserId
+                        addVoucherRequestDTO.UserId.Remove(item);
+                    }
+                }
+                int soNguoiDuocTangVoucher = addVoucherRequestDTO.UserId.Count();
+                if (soNguoiDuocTangVoucher > 0 && VoucherKhaDung.SoLuong >= soNguoiDuocTangVoucher)
+                {
+                    if (await (voucherNguoiDungRep.TangVoucherNguoiDung(addVoucherRequestDTO)) == true)
+                    {
+                        VoucherKhaDung.SoLuong = VoucherKhaDung.SoLuong - soNguoiDuocTangVoucher;
+                        VcRepos.EditItem(VoucherKhaDung);
+                    }
+                    return "Tặng voucher thành công";
+                }
+                else
+                {
+                    return "Người dùng đã có voucher này rồi";
+                }
+
+            }
+            return "Voucher không còn khả dụng";
+        }
+
     }
 }

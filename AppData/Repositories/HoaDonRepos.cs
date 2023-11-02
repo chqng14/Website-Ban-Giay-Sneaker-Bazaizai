@@ -22,14 +22,10 @@ namespace App_Data.Repositories
     {
         private readonly BazaizaiContext context;
         private readonly IMapper _mapper;
-        public HoaDonRepos()
+        public HoaDonRepos(IMapper mapper)
         {
             context = new BazaizaiContext();
-            _mapper = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<HoaDon, HoaDonDTO>();
-                cfg.CreateMap<HoaDonDTO, HoaDon>();
-            }).CreateMapper();
+            _mapper = mapper;
         }
 
         public HoaDon TaoHoaDonTaiQuay(HoaDon hoaDon)
@@ -57,6 +53,7 @@ namespace App_Data.Repositories
         {
             try
             {
+                item.MaHoaDon = MaHoaDonTuSinh();
                 context.HoaDons.Add(item);
                 context.SaveChanges();
                 return true;
@@ -88,10 +85,31 @@ namespace App_Data.Repositories
             return listHoaDonCho;
         }
 
-        public List<HoaDonDTO> GetHoaDon()
+        public List<HoaDonViewModel> GetHoaDon()
+        {
+            var hoadon = context.HoaDons.Include(c => c.Voucher).Include(c => c.ThongTinGiaoHang).ToList();
+            return _mapper.Map<List<HoaDonViewModel>>(hoadon);
+        }
+
+        public bool EditBill(HoaDon item)
+        {
+            try
+            {
+                var id = context.HoaDons.Find(item.IdHoaDon);
+                context.HoaDons.Update(id);
+                context.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public List<HoaDon> GetHoaDonUpdate()
         {
             var hoadon = context.HoaDons.ToList();
-            return _mapper.Map<List<HoaDonDTO>>(hoadon);
+            return hoadon;
         }
     }
 }

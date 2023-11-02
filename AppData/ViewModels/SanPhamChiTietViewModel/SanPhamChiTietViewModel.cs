@@ -11,6 +11,7 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
         public string? IdChiTietSp { get; set; }
 
         public string? Day { get; set; }
+        public string? Ma { get; set; }
 
         public string? MoTa { get; set; }
 
@@ -29,7 +30,7 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
         public int? KichCo { get; set; }
         public string? LoaiGiay { get; set; }
         public string? ThuongHieu { get; set; }
-
+        public int? TrangThai { get; set; }
         public List<string>? ListTenAnh { get; set; }
     }
 }

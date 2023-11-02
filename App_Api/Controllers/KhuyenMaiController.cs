@@ -100,8 +100,7 @@ namespace App_Api.Controllers
             string currentDirectory = Directory.GetCurrentDirectory();
             string rootPath = Directory.GetParent(currentDirectory).FullName;
             string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSale");
-            string MaTS;
-            if (formFile.Length > 0)
+            if (formFile.Length > 0 && formFile != null)
             {
                 using var stream = new MemoryStream();
                 formFile.CopyTo(stream);
@@ -135,6 +134,30 @@ namespace App_Api.Controllers
                 KhuyenMai.Url = fileName;
                 repos.EditItem(KhuyenMai);
             }
+            else 
+            {
+                var KhuyenMai = await context.khuyenMais.FindAsync(id);
+                KhuyenMai.TenKhuyenMai = Ten;
+                KhuyenMai.TrangThai = trangThai;
+                KhuyenMai.NgayBatDau = ngayBD;
+                KhuyenMai.NgayKetThuc = ngayKT;
+                KhuyenMai.MucGiam = mucGiam;
+                KhuyenMai.LoaiHinhKM = loaiHinh;
+                repos.EditItem(KhuyenMai);
+            }
+            return Ok();
+        }
+        [HttpPut("EditNoiImage")]
+        public async Task<IActionResult> EditKhuyenMai(string id, string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, int loaiHinh)
+        {
+                var KhuyenMai = await context.khuyenMais.FindAsync(id);
+                KhuyenMai.TenKhuyenMai = Ten;
+                KhuyenMai.TrangThai = trangThai;
+                KhuyenMai.NgayBatDau = ngayBD;
+                KhuyenMai.NgayKetThuc = ngayKT;
+                KhuyenMai.MucGiam = mucGiam;
+                KhuyenMai.LoaiHinhKM = loaiHinh;
+                repos.EditItem(KhuyenMai);
             return Ok();
         }
 

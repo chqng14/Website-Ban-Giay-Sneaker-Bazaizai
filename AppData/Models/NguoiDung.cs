@@ -14,7 +14,9 @@ namespace App_Data.Models
         public string? TenNguoiDung { get; set; }
         public int? GioiTinh { get; set; }
         public string? DiaChi { get; set; }
-        public DateTime? NgaySinh { get; set; }       
+        public DateTime? NgaySinh { get; set; }
+        public double? TongChiTieu { get; set; } = 0;
+        public int? SuaDoi { get; set; } = 1;
         public string? AnhDaiDien { get; set; }
         public int? TrangThai { get; set; }
         public virtual List<VoucherNguoiDung> VoucherNguoiDungs { get; set; }

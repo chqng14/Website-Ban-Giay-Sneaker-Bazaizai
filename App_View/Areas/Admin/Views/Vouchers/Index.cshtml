@@ -164,6 +164,10 @@
                 </td>
 
                 <td>
+
+                    <a asp-action="GiveVouchersToUsers" asp-route-maVoucher="@item.MaVoucher"><i class="anticon anticon-gift"></i></a>
+              
+                    
                     <a asp-action="Edit" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i></a>
                     @*   <a asp-action="Details" asp-route-id="@item.IdVoucher"><i class="anticon anticon-eye"></i></a> |
                 <a asp-action="Delete" asp-route-id="@item.IdVoucher"><i class="anticon anticon-delete"></i></a> *@
@@ -218,6 +222,8 @@
         </div>
     </div>
 </div>
+@* //Tặng voucher đã chọn *@
+<a class="btn btn-secondary mr-2"  asp-action="GiveVouchersToUsers">Tặng voucher</a>
 <script>
     $(document).ready(function () {
         $('#data-table').DataTable()

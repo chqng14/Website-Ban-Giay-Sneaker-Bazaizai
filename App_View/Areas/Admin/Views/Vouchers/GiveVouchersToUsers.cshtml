@@ -1,0 +1,251 @@
+﻿@using App_Data.DbContextt;
+@using App_Data.Models;
+@using App_Data.Repositories;
+@using Microsoft.AspNetCore.Identity;
+@model App_Data.ViewModels.VoucherNguoiDung.AddVoucherRequestDTO;
+@using static App_Data.Repositories.TrangThai;
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    BazaizaiContext context = new BazaizaiContext();
+    var lstUser = await UserManager.GetUsersInRoleAsync(ChucVuMacDinh.KhachHang.ToString());
+}
+<head>
+    <link href="~/css//GiveVouchersToUsers.css" rel="stylesheet" />
+    <!-- Thêm tệp CSS của SweetAlert2 -->
+
+    <style>
+
+        .checkbox_css {
+            width: 20px;
+            height: 20px;
+        }
+
+        .user-checkbox {
+            width: 20px;
+            height: 20px;
+        }
+
+        table.dataTable thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting, table.dataTable thead > tr > td.sorting_asc, table.dataTable thead > tr > td.sorting_desc, table.dataTable thead > tr > td.sorting {
+            padding-right: 14px;
+        }
+
+        div.dataTables_wrapper div.dataTables_length select {
+            width: auto;
+            display: inline-block;
+            height: 40px;
+        }
+
+
+
+        #data-table_previous a {
+            color: black; /* Đổi màu chữ thành đỏ */
+            border: none;
+        }
+
+
+
+        #data-table_next a {
+            color: black; /* Đổi màu chữ thành đỏ */
+            border: none; /* Loại bỏ đường viền */
+        }
+    </style>
+</head>
+<div class="container mt-5">
+    <div>
+        <h4><a asp-action="Index">Danh sách voucher</a></h4>
+        <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-md-8">
+
+                <h1 id="register">Tặng voucher cho người dùng</h1>
+                <div class="all-steps" id="all-steps">
+                    <a class="step"> Tặng cho khách hàng mới (chưa từng mua hàng)</a>
+                </div>
+                <div class="inputVoucher">
+                    <h6>Nhập mã voucher cần tặng</h6>
+                    <input id="ma-voucher-input" asp-for="MaVoucher" placeholder="@ViewBag.MaVoucher" required name="MaVoucher">
+                </div>
+                <div style="overflow:auto;">
+                    <div style="float:right;margin-top:20px;margin-bottom:20px;border-radius:40%">
+                        <button id="Gift"><i class="anticon anticon-gift"></i></button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <table id="data-table" class="table" style="text-align:center;padding-top:50px">
+
+            <thead>
+                <tr>
+                    <th>
+                        Tên người dùng
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Số điện thoại
+                    </th>
+                    <th>
+                        <input type="checkbox" id="select-all-checkbox" class="checkbox_css" />
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in lstUser)
+                {
+                    <tr>
+                        <td>
+                            @item.TenNguoiDung
+                        </td>
+                        <td>
+                            @item.Email
+                        </td>
+                        <td>
+                            @item.PhoneNumber
+                        </td>
+                        <td>
+                            <input type="checkbox" class="user-checkbox" name="lstNguoiDung" data-userId="@item.Id" />
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+
+
+
+<script>
+    // Lấy tham chiếu đến ô kiểm "Chọn tất cả" và tất cả các ô kiểm người dùng
+    var selectAllCheckbox = document.getElementById("select-all-checkbox");
+    var userCheckboxes = document.querySelectorAll(".user-checkbox");
+
+    // Thêm sự kiện "click" cho ô kiểm "Chọn tất cả"
+    selectAllCheckbox.addEventListener("click", function () {
+        // Lấy trạng thái (checked) của ô kiểm "Chọn tất cả"
+        var isChecked = selectAllCheckbox.checked;
+
+        // Duyệt qua tất cả các ô kiểm người dùng và cập nhật trạng thái của chúng
+        userCheckboxes.forEach(function (checkbox) {
+            checkbox.checked = isChecked;
+        });
+    });
+    // $("#GiveVouchersToUsers").submit(function (e) {
+    //     e.preventDefault();
+    //     var maVoucher = document.getElementById('ma-voucher-input').value;
+
+    //     // Thu thập danh sách UserId được chọn
+    //     var selectedUserIds = [];
+    //     userCheckboxes.forEach(function (checkbox) {
+
+    //         if (checkbox.checked) {
+    //             selectedUserIds.push(checkbox.getAttribute('data-userId'));
+    //         }
+    //     });
+
+    //     // Tạo đối tượng chứa dữ liệu để gửi đến máy chủ
+    //     var data = {
+    //         MaVoucher: maVoucher,
+    //         UserId: selectedUserIds
+    //     };
+    //     // Sử dụng $.ajax để gửi yêu cầu AJAX
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "@Url.Action("GiveVouchersToUsers", "Vouchers")",
+    //         data: JSON.stringify(data), // Gửi dữ liệu dưới dạng JSON
+    //         contentType: "application/json; charset=utf-8", // Đặt loại dữ liệu gửi đi
+    //         dataType: "json", // Loại dữ liệu mà bạn mong đợi nhận lại
+    //         success: function (result) {
+    //             // Xử lý phản hồi từ máy chủ ở đây
+    //             if (result.success) {
+    //                 alert('Tặng Voucher thành công');
+    //                 window.location.href = '/Vouchers/Index';
+    //             } else {
+    //                 alert('Lỗi khi tặng Voucher: ' + result.message);
+    //             }
+    //         },
+    //         error: function (error) {
+    //             console.error('Lỗi: ' + error);
+    //         }
+    //     });
+    // });
+    $("#Gift").click(function () {
+        var maVoucher = document.getElementById('ma-voucher-input').value;
+        if (maVoucher == '') {
+            Swal.fire({
+                title: 'Thông báo!',
+                text: 'Vui lòng nhập mã voucher',
+                icon: 'error',
+                confirmButtonText: 'Đóng'
+            });
+            return;
+        }
+        
+        // Thu thập danh sách UserId được chọn
+        var selectedUserIds = [];
+        userCheckboxes.forEach(function (checkbox) {
+
+            if (checkbox.checked) {
+                selectedUserIds.push(checkbox.getAttribute('data-userId'));
+            }
+        });
+     
+        // Tạo đối tượng chứa dữ liệu để gửi đến máy chủ
+        var data = {
+            MaVoucher: maVoucher,
+            UserId: selectedUserIds
+        };
+        // Sử dụng $.ajax để gửi yêu cầu AJAX
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GiveVouchersToUsers", "Vouchers")",
+            data: JSON.stringify(data), // Gửi dữ liệu dưới dạng JSON
+            contentType: "application/json; charset=utf-8", // Đặt loại dữ liệu gửi đi
+            success: function (result) {
+                if (result) {
+                    Swal.fire('Thông báo!', 'Tặng voucher thành công!', 'success');
+
+                } else {
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Tặng voucher thất bại do người dùng đã có mã này hoặc voucher không tồn tại.',
+                        icon: 'error',
+                        confirmButtonText: 'Đóng'
+                    });
+                }
+            },
+            error: function (error) {
+                console.error('Lỗi: ' + error);
+            }
+        });
+    });
+
+
+
+</script>
+
+<!-- Thêm tệp JavaScript của SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+}

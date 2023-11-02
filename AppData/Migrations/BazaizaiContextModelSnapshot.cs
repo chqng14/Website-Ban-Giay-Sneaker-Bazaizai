@@ -30,6 +30,9 @@ namespace App_Data.Migrations
                     b.Property<string>("IdSanPhamChiTiet")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime?>("NgayTao")
+                        .HasColumnType("datetime2");
+
                     b.Property<int?>("TrangThai")
                         .HasColumnType("int");
 
@@ -103,11 +106,20 @@ namespace App_Data.Migrations
                     b.Property<string>("BinhLuan")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ChatLuongSanPham")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("IdNguoiDung")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("IdSanPhamChiTiet")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("LuotYeuThich")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MoTa")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("NgayDanhGia")
                         .HasColumnType("datetime2");
@@ -119,6 +131,9 @@ namespace App_Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("SaoVanChuyen")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SuaDoi")
                         .HasColumnType("int");
 
                     b.Property<int?>("TrangThai")
@@ -533,8 +548,14 @@ namespace App_Data.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("SuaDoi")
+                        .HasColumnType("int");
+
                     b.Property<string>("TenNguoiDung")
                         .HasColumnType("nvarchar(256)");
+
+                    b.Property<double?>("TongChiTieu")
+                        .HasColumnType("float");
 
                     b.Property<int?>("TrangThai")
                         .HasColumnType("int");
@@ -751,6 +772,9 @@ namespace App_Data.Migrations
 
                     b.Property<string>("TenNguoiNhan")
                         .HasColumnType("nvarchar(300)");
+
+                    b.Property<int?>("TrangThai")
+                        .HasColumnType("int");
 
                     b.HasKey("IdThongTinGH");
 
