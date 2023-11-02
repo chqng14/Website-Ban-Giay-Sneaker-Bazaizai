@@ -41,11 +41,11 @@ namespace App_View.Services
             throw new NotImplementedException();
         }
 
-        public async Task<bool> UpdateHoaDonChiTiet(string idHoaDon, int TrangThai)
+        public async Task<bool> UpdateTrangThaiHoaDonChiTiet(string idHoaDon, int TrangThai)
         {
             try
             {
-                var res = await httpClient.PutAsync($"https://localhost:7038/api/HoaDonChiTiet/Edit?idHoaDon={idHoaDon}&TrangThai={TrangThai}", null);
+                var res = await httpClient.PutAsync($"https://localhost:7038/api/HoaDonChiTiet/SuaTrangThaiHoaDon?idHoaDon={idHoaDon}&TrangThai={TrangThai}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();

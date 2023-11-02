@@ -18,13 +18,18 @@ namespace App_Api.Controllers
     [ApiController]
     public class HoaDonController : ControllerBase
     {
-
+        private PTThanhToanChiTietController _PTThanhToanChiTietController;
+        private HoaDonChiTietController _hoaDonChiTietController;
         private readonly IHoaDonRepos _hoaDon;
         private readonly IMapper _mapper;
+        private PTThanhToanController _PTThanhToanController;
         public HoaDonController(IMapper mapper)
         {
             _hoaDon = new HoaDonRepos(mapper);
             _mapper = mapper;
+            _hoaDonChiTietController = new HoaDonChiTietController(mapper);
+            _PTThanhToanChiTietController = new PTThanhToanChiTietController();
+            _PTThanhToanController = new PTThanhToanController();
         }
         [HttpPost]
         public async Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon)
@@ -51,11 +56,30 @@ namespace App_Api.Controllers
         }
 
         [HttpPut]
-        public async Task<bool> UpdateHoaDonOnlineDTO(string idHoaDon, int TrangThaiThanhToan)
+        public async Task<bool> UpdateTrangThaiHoaDonOnline(string idHoaDon, int TrangThaiThanhToan)
         {
             var hoadon = _hoaDon.GetHoaDonUpdate().FirstOrDefault(c => c.IdHoaDon == idHoaDon);
             hoadon.TrangThaiThanhToan = TrangThaiThanhToan;
+            _hoaDonChiTietController.SuaTrangThaiHoaDon(idHoaDon, TrangThaiThanhToan);
             return _hoaDon.EditBill(hoadon);
+        }
+
+        [HttpPut]
+        public async Task<bool> UpdateNgayHoaDonOnline(string idHoaDon, DateTime NgayThanhToan, DateTime NgayNhan, DateTime NgayShip)
+        {
+            var hoadon = _hoaDon.GetHoaDonUpdate().FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            hoadon.NgayNhan = NgayNhan;
+            hoadon.NgayShip = NgayShip;
+            hoadon.NgayThanhToan = NgayThanhToan;
+            return _hoaDon.EditBill(hoadon);
+        }
+
+        [HttpGet]
+        public async Task<string> GetPTThanhToan(string idhoadon)
+        {
+            var pt = _PTThanhToanChiTietController.PhuongThucThanhToanChiTietByIdPTTT(idhoadon);
+            var idpt = _PTThanhToanController.ShowAll().FirstOrDefault(c => c.IdPhuongThucThanhToan == pt.IdThanhToan);
+            return idpt.TenPhuongThucThanhToan;
         }
     }
 }

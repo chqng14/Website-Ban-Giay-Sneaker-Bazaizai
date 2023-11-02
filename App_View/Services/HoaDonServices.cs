@@ -53,6 +53,11 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<List<HoaDonViewModel>>("https://localhost:7038/api/HoaDon/GetHoaDonOnline");
         }
 
+        public async Task<string> GetPayMent(string idHoaDon)
+        {
+            return await _httpClient.GetStringAsync($"https://localhost:7038/api/HoaDon/GetPTThanhToan?idhoadon={idHoaDon}");
+        }
+
         public async Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon)
         {
             try
@@ -72,11 +77,16 @@ namespace App_View.Services
             }
         }
 
-        public async Task<bool> UpdateHoaDon(string idHoaDon, int TrangThai)
+        public Task<bool> UpdateNgayHoaDon(string idHoaDon, DateTime NgayThanhToan, DateTime NgayNhan, DateTime NgayShip)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<bool> UpdateTrangThaiHoaDon(string idHoaDon, int TrangThai)
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateHoaDonOnlineDTO?idHoaDon={idHoaDon}&TrangThaiThanhToan={TrangThai}", null);
+                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateTrangThaiHoaDonOnline?idHoaDon={idHoaDon}&TrangThaiThanhToan={TrangThai}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();

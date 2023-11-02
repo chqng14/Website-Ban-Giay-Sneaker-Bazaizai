@@ -143,9 +143,9 @@ namespace App_View.Controllers
                     IdThongTinGH = hoaDonDTO.IdThongTinGH,
                     IdVoucher = hoaDonDTO.IdVoucher,
                     NgayTao = DateTime.Now,
-                    NgayShip = DateTime.Now.AddDays(2),
-                    NgayNhan = DateTime.Now.AddDays(4),
-                    NgayThanhToan = DateTime.Now.AddDays(4),
+                    NgayShip = null,
+                    NgayNhan = null,
+                    NgayThanhToan = null,
                     NgayGiaoDuKien = hoaDonDTO.NgayGiaoDuKien,
                     TienGiam = hoaDonDTO.TienGiam == null ? 0 : hoaDonDTO.TienGiam,
                     TongTien = hoaDonDTO.TongTien,
@@ -176,9 +176,9 @@ namespace App_View.Controllers
                     var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
                     await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                 }
+                var tien = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam == null ? 0 : hoadon.TienGiam));
                 if (hoaDonDTO.LoaiThanhToan == "Momo")
                 {
-                    var tien = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam == null ? 0 : hoadon.TienGiam));
                     var TenNguoiNhan = _userManager.GetUserName(User);
                     var model = new OrderInfoModel()
                     {
@@ -197,6 +197,9 @@ namespace App_View.Controllers
                 }
                 else
                 {
+                    var Pay = await PTThanhToanController.GetPTThanhToanByName("COD");
+                    var idPay = await PTThanhToanChiTietController.CreatePTThanhToanChiTiet(hoadon.IdHoaDon, Pay, tien);
+                    SessionServices.SetIdToSession(HttpContext.Session, "idPay", idPay);
                     return Ok(new { idHoaDon = hoadon.IdHoaDon });
                 }
             }
@@ -369,27 +372,32 @@ namespace App_View.Controllers
         #endregion
         public async Task<ActionResult<HoaDonViewModel>> Order(string idHoaDon)
         {
+            var idpt = SessionServices.GetIdFomSession(HttpContext.Session, "idPay");
             if (!string.IsNullOrEmpty(idHoaDon))
             {
+                string payment = await hoaDonServices.GetPayMent(idHoaDon);
+                //ViewBag.payment = payment;
                 var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+                order.LoaiThanhToan = payment;
+                await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDon, (int)TrangThaiHoaDon.ChuaThanhToan);
+                await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.ChuaThanhToan);
                 return View(order);
             }
             else
             {
                 OrderInfoModel orderInfoModel = SessionServices.GetIPNFomSession(HttpContext.Session, "IPN");
                 var idhd = SessionServices.GetIdFomSession(HttpContext.Session, "idhd");
-                var idpt = SessionServices.GetIdFomSession(HttpContext.Session, "idPay");
                 var jsonresponse = await _momoService.IPN(orderInfoModel);
                 //var order1 = await OrderIPN();
                 if (jsonresponse.ResultCode == 0)
                 {
                     await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.DaThanhToan);
-                    await hoaDonServices.UpdateHoaDon(idhd, (int)TrangThaiHoaDon.DaThanhToan);
-                    await hoaDonChiTietServices.UpdateHoaDonChiTiet(idhd, (int)TrangThaiHoaDonChiTiet.DaThanhToan);
+                    await hoaDonServices.UpdateTrangThaiHoaDon(idhd, (int)TrangThaiHoaDon.DaThanhToan);
+                    //await hoaDonChiTietServices.UpdateTrangThaiHoaDonChiTiet(idhd, (int)TrangThaiHoaDonChiTiet.DaThanhToan);
+                    string payment = await hoaDonServices.GetPayMent(idhd);
+                    //ViewBag.payment = payment;
                     var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idhd);
-                    //HttpContext.Session.Remove("idPay");
-                    //HttpContext.Session.Remove("idhd");
-                    //HttpContext.Session.Remove("IPN");
+                    order.LoaiThanhToan = payment;
                     return View(order);
                 }
                 else

@@ -48,8 +48,8 @@ namespace App_Api.Controllers
         }
 
         // PUT api/<HoaDonChiTietController>/5
-        [HttpPut("Edit")]
-        public async Task<bool> SuaHoaDonDTO(string idHoaDon, int TrangThai)
+        [HttpPut("SuaTrangThaiHoaDon")]
+        public async Task<bool> SuaTrangThaiHoaDon(string idHoaDon, int TrangThai)
         {
             var hoadonChiTiet = _hoaDonChiTiet.GetAll().Where(c => c.IdHoaDon == idHoaDon);
             foreach (var item in hoadonChiTiet)
