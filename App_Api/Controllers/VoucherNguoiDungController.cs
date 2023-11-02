@@ -183,6 +183,22 @@ namespace App_Api.Controllers
             }
             return "Voucher không còn khả dụng";
         }
+        [HttpGet("ShowAllUserNeverBuy")]
+        public List<NguoiDung> ShowAllUserNeverBuy()
+        {
+            var lstNguoidung = DbContextModel.Users.ToList();
+            var lstHoaDon = DbContextModel.HoaDons.ToList();
+            //var lstThongTinGiaoHang
+
+            List<NguoiDung> lstCantim = new List<NguoiDung>();
+            foreach (var item in lstHoaDon)
+            {
+                lstNguoidung.Where(c => c.Id != item.IdNguoiDung).ToList();
+
+            }
+
+            return lstCantim.ToList();
+        }
 
     }
 }

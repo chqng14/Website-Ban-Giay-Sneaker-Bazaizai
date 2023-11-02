@@ -178,11 +178,6 @@ namespace App_Api.Controllers
             }
             return false;
         }
-        //[HttpGet("ShowAllUserNeverBuy")]
-        //public List<NguoiDung> ShowAllUserNeverBuy()
-        //{
-        //    var lstNguoidung = DbContextModel.Users.OrderBy(x => x.MaNguoiDung && ).ToList();
-        //    return lstNguoidung;
-        //}
+      
     }
 }

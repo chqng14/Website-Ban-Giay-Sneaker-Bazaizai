@@ -54,7 +54,9 @@ namespace App_Data.Repositories
             [Description("Đã sử dụng")]
             DaSuDung = 1,
             [Description("Hết hiệu lực")]
-            HetHieuLuc = 2
+            HetHieuLuc = 2,
+            [Description("Đặc biệt")]
+            DacBiet = 3
         }
         public enum TrangThaiHoaDon
         {
