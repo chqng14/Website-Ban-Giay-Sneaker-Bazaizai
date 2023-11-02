@@ -25,49 +25,49 @@
                             @{
                                 foreach (var item in Model)
                                 {
-                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a><span class="ui-icon ui-icon-close" role="presentation">Close</span></li>
+                                                <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a></li>
                                 }
                             }
                         </ul>
                         @{
                             foreach (var item in Model)
                             {
-                                <div id="tab-@item.MaHoaDon" style="height:700px">
-                                    <div class="table-responsive" style=" height:650px; overflow-y: scroll; overflow-x: hidden">
+                                            <div id="tab-@item.MaHoaDon" style="height:700px">
+                                                <div class="table-responsive" style=" height:650px; overflow-y: scroll; overflow-x: hidden">
 
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
-                                                    <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
-                                                    <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
-                                                    <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
-                                                    <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
-                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
-                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @{
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
+                                                                <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
+                                                                <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
+                                                                <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
+                                                                <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
+                                                                <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
+                                                                <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @{
                                                     int stt = 1;
                                                     foreach (var hoaDonChiTiet in item.hoaDonChiTietDTOs)
                                                     {
-                                                        <tr scope="col" id="hdct-@hoaDonChiTiet.IdSanPhamChiTiet">
-                                                            <td>@stt</td>
-                                                            <td hidden>@hoaDonChiTiet.IdSanPhamChiTiet</td>
-                                                            <td>@hoaDonChiTiet.MaSanPham</td>
-                                                            <td>@hoaDonChiTiet.TenSanPham</td>
-                                                            <td>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", hoaDonChiTiet.GiaBan)</td>
-                                                            <td><input type="number" max="1000" min="1" value="@hoaDonChiTiet.SoLuong" /></td>
-                                                            <td><a class="btn btn-tone">X</a></td>
-                                                        </tr>
+                                                                                <tr scope="col" id="hdct-@hoaDonChiTiet.IdSanPhamChiTiet">
+                                                                                    <td>@stt</td>
+                                                                                    <td hidden>@hoaDonChiTiet.IdSanPhamChiTiet</td>
+                                                                                    <td>@hoaDonChiTiet.MaSanPham</td>
+                                                                                    <td>@hoaDonChiTiet.TenSanPham</td>
+                                                                                    <td>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", hoaDonChiTiet.GiaBan)</td>
+                                                                                    <td><input type="number" max="1000" min="1" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onchange="suaSoLuongSanPham('@hoaDonChiTiet.IdSanPhamChiTiet',this)" value="@hoaDonChiTiet.SoLuong" /></td>
+                                                                                    <td><a class="btn btn-tone" onclick="XoaSanPhamTrongHoaDon('hdct-@hoaDonChiTiet.IdSanPhamChiTiet','@hoaDonChiTiet.IdSanPhamChiTiet')">X</a></td>
+                                                                                </tr>
                                                         stt++;
                                                     }
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                             }
                         }
                     </div>
@@ -81,25 +81,6 @@
             </div>
             <div class="row" style="height: 775px; overflow-y: scroll; overflow-x: hidden">
                 <div class="row" id="body-danhsach">
-                    @{
-                        @*foreach (var item in context.sanPhamChiTiets.ToList())
-                    {
-                    <div class="col-3">
-                    <div class="card" style="width: 16rem; ">
-                    <div class="card-body">
-                    <h5 class="card-title">@item.SanPham</h5>
-                    <img src="@context.Anh.FirstOrDefault(c=>c.IdSanPhamChiTiet == item.IdChiTietSp).Url" class="card-img-top" alt="...">
-                    <p class="card-text">
-                    <span style="color: red;">Giá: @item.GiaBan</span><br>
-                    <span>Số lượng: @item.SoLuongTon</span>
-                    <a href="#" class="btn btn-success" style="float: right;">Add</a>
-                    </p>
-                    </div>
-                    </div>
-                    </div>
-                    }*@
-                    }
-
                 </div>
             </div>
         </div>
@@ -118,31 +99,35 @@
                     <table>
                         <tr>
                             <td>Mã hóa đơn: </td>
-                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                            <td><input class="form-control" id="MaHoaDonDangChon" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                         </tr>
                         <tr>
                             <td>Mã nhân viên: </td>
-                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                            <td><input class="form-control" id="IdNhanVienTaoHoaDon" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                         </tr>
                         <tr>
                             <td>Ngày tạo: </td>
-                            <td><input class="form-control" type="date" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                            <td><input class="form-control" id="NgayTaoHoaDon" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                         </tr>
                         <tr>
                             <td>Tổng tiền hàng: </td>
-                            <td><input class="form-control" type="text" id="tongtien" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                            <td><input class="form-control" type="text" id="TongTienHoaDon" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                         </tr>
                         <tr>
-                            <td>Mức ưu đãi: </td>
-                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
+                            <td>VouCher: </td>
+                            <td><input class="form-control" type="text" id="MaVoucher" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
                         </tr>
                         <tr>
-                            <td>Giảm giá: </td>
-                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
+                            <td>Số tiền voucher giảm:</td>
+                            <td><input class="form-control" type="text" id="VoucherGiam" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                        </tr>
+                        <tr>
+                            <td>Số tiền khuyến mãi giảm:</td>
+                            <td><input class="form-control" type="text" id="KhuyenMaiGiam" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                         </tr>
                         <tr>
                             <td>Tổng tiền: </td>
-                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                            <td><input class="form-control" type="text" id="SoTienPhaiTra" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                         </tr>
                         <tr>
                             <td>HT thanh toán: </td>
@@ -174,7 +159,7 @@
     </div>
 </div>
 <script>
-
+    var loading = false;
     var maHoaDonChoSelect = "";
     $(function () {
         $("#tabs").tabs({
@@ -184,11 +169,31 @@
                 }
             },
             activate: function (event, ui) {
-                maHoaDonChoSelect = ui.newPanel.attr("id");
+                var maHoaDon = $("#tabs .ui-tabs-active a").text();
+                $.ajax({
+                    url: '/Admin/BanHangTaiQuay/HoaDonDuocChon?maHD='+maHoaDon,
+                    type: 'GET',
+                    success: function (result) {
+                        $("#MaHoaDonDangChon").val(result.maHoaDon);
+                        $("#NgayTaoHoaDon").val(result.ngayTao);
+                        $("#TongTienHoaDon").val(result.tongTienGoc.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#SoTienPhaiTra").val(result.tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#KhuyenMaiGiam").val(result.soTienKhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#MaVoucher").val("");
+                    },
+                    error: function (xhr, status, error) {
+
+                    }
+                });
             }
         });
 
         $("#create-tab").on("click", function () {
+            if (loading) {
+                return;
+            }
+            loading = true;
             if ($("#tabs ul li").length < 10) {
                 var tabIndex = "";
                 var tabTitle = "";
@@ -200,15 +205,17 @@
                         tabIndex = response;
                         tabTitle = response;
                         var tabContent = tabIndex
-                        $("<li><a href='#tab-" + tabIndex + "'>" + tabTitle + "</a><span class='ui-icon ui-icon-close' role='presentation'>Close</span></li>").appendTo("#tabs ul");
+                        $("<li><a href='#tab-" + tabIndex + "'>" + tabTitle + "</a></li>").appendTo("#tabs ul");
                         $("<div id='tab-" + tabIndex + "'></div>").appendTo("#tabs");
                         $("#tabs").tabs("refresh");
+                        loading = false;
                     },
                     error: function (error) {
                         console.error(error);
                     },
                 });
             }
+            loading = false;
         });
 
         $("#tabs").on("click", ".ui-icon-close", function () {
@@ -222,31 +229,45 @@
             url: '/Admin/BanHangTaiQuay/LoadPartialViewDanhSachSanPham',
             type: 'GET',
             success: function (result) {
-                console.log(result)
                 $('#body-danhsach').append(result)
             },
             error: function (xhr, status, error) {
-                console.log(xhr.responseText);
-                console.log(status);
-                console.log(error);
-                console.log(xhr);
+
+            }
+        });
+        var maHoaDon = $("#tabs .ui-tabs-active a").text();
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/HoaDonDuocChon?maHD=' + maHoaDon,
+            type: 'GET',
+            success: function (result) {
+                $("#MaHoaDonDangChon").val(result.maHoaDon);
+                $("#NgayTaoHoaDon").val(result.ngayTao);
+                $("#TongTienHoaDon").val(result.tongTienGoc.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#SoTienPhaiTra").val(result.tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#KhuyenMaiGiam").val(result.soTienKhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#MaVoucher").val("");
+            },
+            error: function (xhr, status, error) {
+
             }
         });
     })
     function timKiem(value) {
-
+        if (loading) {
+            return;
+        }
+        loading = true;
         $.ajax({
             url: '/Admin/BanHangTaiQuay/LoadPartialViewDanhSachSanPham?tukhoa=' + value,
             type: 'GET',
             success: function (result) {
                 $('#body-danhsach').empty();
                 $('#body-danhsach').append(result);
+                loading = false;
             },
             error: function (xhr, status, error) {
-                console.log(xhr.responseText);
-                console.log(status);
-                console.log(error);
-                console.log(xhr);
+
             }
         });
     };
@@ -255,6 +276,94 @@
         $(selectedTabId).remove(); // Xóa nội dung tab
         $("#tabs ul li.ui-tabs-active").remove(); // Xóa tab từ danh sách tab
         $("#tabs").tabs("refresh");
+    }
+    function suaSoLuongSanPham(idsanpham, inputElement) {
+        if (loading) {
+            return;
+        }
+        loading = true;
+        var newValue = inputElement.value;
+        var element = document.getElementById(idsanpham);
+        var maHoaDon = $("#tabs .ui-tabs-active a").text();
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/UpdateSoLuong?maHD=' + maHoaDon + '&idSanPham=' + idsanpham + '&SoLuongMoi=' + newValue + '&SoLuongTon=' + element.textContent,
+            type: 'PUT',
+            success: function (result) {
+                if (result.soLuongCu == null) {
+
+                    element.textContent = result.soLuongConLai;
+                    var tongTien = parseInt($("#TongTienHoaDon").val().replace(/\D/g, ''), 10) + result.tongTienThayDoi;
+                    var tienPhaiTra = parseInt($("#SoTienPhaiTra").val().replace(/\D/g, ''), 10) + result.soTienTraLaiThayDoi;
+                    var khuyenMaiGiam = parseInt($("#KhuyenMaiGiam").val().replace(/\D/g, ''), 10) + result.soTienKhyenMaiGiam;
+                    $("#TongTienHoaDon").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#SoTienPhaiTra").val(tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#MaVoucher").val("");
+                    loading = false;
+                }
+                else {
+                    element.textContent = result.soLuongConLai;
+                    inputElement.value = result.soLuongCu;
+                    alert("Số lượng không đủ")
+                    loading = false;
+                }
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+        if (newValue == 0 || newValue == "") {
+            var foundElement = $("#tab-" + maHoaDon + " table tbody").find("tr[id='hdct-" + idsanpham + "']");
+            foundElement.remove();
+        }
+    }
+    function isInteger(value) {
+        return /^\d+$/.test(value);
+    }
+    function XoaSanPhamTrongHoaDon(idTr, idSanPham) {
+        if (loading) {
+            return;
+        }
+        loading = true;
+        var maHoaDon = $("#tabs .ui-tabs-active a").text();
+        var element = document.getElementById(idSanPham);
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/XoaSanPhamKhoiHoaDon?maHD=' + maHoaDon + '&idSanPham=' + idSanPham,
+            type: 'DELETE',
+            success: function (result) {
+
+                if (isInteger(element.textContent)) {
+                    element.textContent = parseInt(element.textContent, 10) + result.soLuongConLai;
+                    var tongTien = parseInt($("#TongTienHoaDon").val().replace(/\D/g, ''), 10) + result.tongTienThayDoi;
+                    var tienPhaiTra = parseInt($("#SoTienPhaiTra").val().replace(/\D/g, ''), 10) + result.soTienTraLaiThayDoi;
+                    var khuyenMaiGiam = parseInt($("#KhuyenMaiGiam").val().replace(/\D/g, ''), 10) + result.soTienKhyenMaiGiam;
+                    $("#TongTienHoaDon").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#SoTienPhaiTra").val(tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#MaVoucher").val("");
+                    loading = false;
+                } else {
+                    element.textContent = result.soLuongConLai;
+                    var tongTien = parseInt($("#TongTienHoaDon").val().replace(/\D/g, ''), 10) + result.tongTienThayDoi;
+                    var tienPhaiTra = parseInt($("#SoTienPhaiTra").val().replace(/\D/g, ''), 10) + result.soTienTraLaiThayDoi;
+                    var khuyenMaiGiam = parseInt($("#KhuyenMaiGiam").val().replace(/\D/g, ''), 10) + result.soTienKhyenMaiGiam;
+                    $("#TongTienHoaDon").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#SoTienPhaiTra").val(tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#MaVoucher").val("");
+                    loading = false;
+
+                }
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+        var foundElement = $("#tab-" + maHoaDon + " table tbody").find("tr[id='" + idTr + "']");
+        foundElement.remove();
     }
 </script>
 @section Scripts {

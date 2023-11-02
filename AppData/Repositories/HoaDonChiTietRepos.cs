@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_Data.Repositories
 {
@@ -88,7 +89,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                var hoadDonChiTietTrung = context.hoaDonChiTiets.FirstOrDefault(c=>c.IdSanPhamChiTiet == hoaDonChiTiet.IdSanPhamChiTiet && c.IdHoaDon == hoaDonChiTiet.IdHoaDon);
+                var hoadDonChiTietTrung = context.hoaDonChiTiets.FirstOrDefault(c=>c.IdSanPhamChiTiet == hoaDonChiTiet.IdSanPhamChiTiet && c.IdHoaDon == hoaDonChiTiet.IdHoaDon && c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay);
                 if(hoadDonChiTietTrung == null)
                 {
                     context.hoaDonChiTiets.Add(hoaDonChiTiet);
@@ -110,6 +111,70 @@ namespace App_Data.Repositories
 
                 return null;
             }
+        }
+
+        public string UpdateSoLuong(string idHD, string idSanPham, int SoLuongMoi, string SoluongTon)
+        {
+
+            var hoaDonChiTiet = context.hoaDonChiTiets.FirstOrDefault(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD && c.IdSanPhamChiTiet == idSanPham);
+            int soLuongThayDoi = (int)SoLuongMoi - (int)hoaDonChiTiet.SoLuong;
+            int intValue;
+            if (int.TryParse(SoluongTon, out intValue))
+            {
+               
+                if (soLuongThayDoi <= int.Parse(SoluongTon))
+                {
+                    if (SoLuongMoi != 0)
+                    {
+                        hoaDonChiTiet.SoLuong = SoLuongMoi;
+                        context.hoaDonChiTiets.Update(hoaDonChiTiet);
+                        context.SaveChanges();
+                        return soLuongThayDoi.ToString();
+                    }
+                    else
+                    {
+                        context.hoaDonChiTiets.Remove(hoaDonChiTiet);
+                        context.SaveChanges();
+                        return soLuongThayDoi.ToString();
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                if(SoLuongMoi < hoaDonChiTiet.SoLuong)
+                {
+                    if (SoLuongMoi != 0)
+                    {
+                        hoaDonChiTiet.SoLuong = SoLuongMoi;
+                        context.hoaDonChiTiets.Update(hoaDonChiTiet);
+                        context.SaveChanges();
+                        return soLuongThayDoi.ToString();
+                    }
+                    else
+                    {
+                        context.hoaDonChiTiets.Remove(hoaDonChiTiet);
+                        context.SaveChanges();
+                        return soLuongThayDoi.ToString();
+                    }
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public string XoaSanPhamKhoiHoaDon(string idHD, string idSanPham)
+        {
+            var hoaDonChiTiet = context.hoaDonChiTiets.FirstOrDefault(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD && c.IdSanPhamChiTiet == idSanPham);
+            var soLuongSanPham = hoaDonChiTiet.SoLuong;
+            context.hoaDonChiTiets.Remove(hoaDonChiTiet);
+            context.SaveChanges();
+            return soLuongSanPham.ToString();
         }
     }
 }

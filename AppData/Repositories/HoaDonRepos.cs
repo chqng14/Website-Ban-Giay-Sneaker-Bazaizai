@@ -39,6 +39,7 @@ namespace App_Data.Repositories
             hoaDon.MaHoaDon = MaHoaDonTuSinh();
             hoaDon.TrangThaiGiaoHang = (int)TrangThaiGiaoHang.TaiQuay;
             hoaDon.TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan;
+            hoaDon.NgayTao = DateTime.Now;
             if (context.HoaDons.FirstOrDefault(c => c.MaHoaDon == hoaDon.MaHoaDon) == null)
             {
                 context.HoaDons.Add(hoaDon);
@@ -81,6 +82,7 @@ namespace App_Data.Repositories
                     Id = item.IdHoaDon,
                     IdNguoiDung = item.IdNguoiDung,
                     MaHoaDon = item.MaHoaDon,
+                    NgayTao = item.NgayTao,
                     TrangThaiGiaoHang = item.TrangThaiGiaoHang,
                     TrangThaiThanhToan = item.TrangThaiThanhToan,
                     hoaDonChiTietDTOs = new List<HoaDonChiTietTaiQuay>()

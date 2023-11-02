@@ -6,9 +6,13 @@
         <div class="card" style="width: 16rem;">
             <div class="card-body">
                 <h5 class="card-title"> </h5>
-                <img src="/AnhSanPham/@item.Anh" class="card-img-top" alt="..." style="height:200px;width:200px">
+                <div style="height:200px;width:200px">
+                    <img src="/AnhSanPham/@item.Anh" class="card-img-top" alt="..." style="height:200px;width:200px">
+                </div>
                 <p class="card-text">
-                    <span>@item.TenSanPham/@item.MauSac/@item.KichCo</span>
+                    <div style="height:30px">
+                        <span>@item.TenSanPham/@item.MauSac/@item.KichCo</span>
+                    </div>
                     <br />
                     @{
                         if (item.GiaGoc != item.GiaThucTe)
@@ -45,9 +49,14 @@
 
 }
 <script>
+    var isAdding = false;
     function add(id) {
         var element = document.getElementById(id);
-        if (parseInt(element.textContent, 10) > 1) {
+        if (isAdding) {
+            return;
+        }
+        isAdding = true;
+        if (parseInt(element.textContent, 10) >= 1) {
             maHoaDon = $("#tabs .ui-tabs-active a").text();
             $.ajax({
                 url: "@Url.Action("ThemSanPhamVaoHoaDon", "BanHangTaiQuay")",
@@ -61,11 +70,20 @@
                     if (foundElement.length > 0) {
                         var inputWithinFoundElement = foundElement.find("input");
                         inputWithinFoundElement.val(response.soLuong);
-                    } else {
+                        isAdding = false;
+                        var tongTien = parseInt($("#TongTienHoaDon").val().replace(/\D/g, ''), 10) + response.tongTienThayDoi;
+                        var tienPhaiTra = parseInt($("#SoTienPhaiTra").val().replace(/\D/g, ''), 10) + response.soTienTraLaiThayDoi;
+                        var khuyenMaiGiam = parseInt($("#KhuyenMaiGiam").val().replace(/\D/g, ''), 10) + response.soTienKhyenMaiGiam;
+                        $("#TongTienHoaDon").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#SoTienPhaiTra").val(tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#VoucherGiam").val(response.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#MaVoucher").val("");
+                    }
+                    else {
                         var stt = $("#tab-" + maHoaDon + " table tbody tr").length + 1;
-
                         // Create a new row and append it to the table
-                        var newRow = $("<tr>").attr("id","hdct-"+response.idSanPhamChiTiet);
+                        var newRow = $("<tr>").attr("id", "hdct-" + response.idSanPhamChiTiet);
                         newRow.append("<td>" + stt + "</td>");
                         newRow.append("<td hidden>" + response.idSanPhamChiTiet + "</td>");
                         newRow.append("<td></td>");
@@ -84,12 +102,24 @@
                             type: "number",
                             max: 1000,
                             min: 1,
+                            pattern: "[0-9]*",
+                            oninput: "this.value = this.value.replace(/[^0-9]/g, '')",
+                            onchange: "suaSoLuongSanPham('" + response.idSanPhamChiTiet + "', this)",
                             value: response.soLuong
                         });
                         newRow.append($("<td>").append(quantityInput));
-                        newRow.append("<td><a class='btn btn - tone'>X</a></td>");
+                        newRow.append("<td><a class='btn btn-tone' onclick=\"XoaSanPhamTrongHoaDon('hdct-" + response.idSanPhamChiTiet + "','" + response.idSanPhamChiTiet + "')\">X</a></td>");
                         // Append the new row to the table body
                         $("#tab-" + maHoaDon + " table tbody").append(newRow);
+                        var tongTien = parseInt($("#TongTienHoaDon").val().replace(/\D/g, ''), 10) + response.tongTienThayDoi;
+                        var tienPhaiTra = parseInt($("#SoTienPhaiTra").val().replace(/\D/g, ''), 10) + response.soTienTraLaiThayDoi;
+                        var khuyenMaiGiam = parseInt($("#KhuyenMaiGiam").val().replace(/\D/g, ''), 10) + response.soTienKhyenMaiGiam;
+                        $("#TongTienHoaDon").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#SoTienPhaiTra").val(tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#VoucherGiam").val(response.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#MaVoucher").val("");
+                        isAdding = false;
                     }
 
                 },
@@ -109,7 +139,9 @@
 
         else {
             element.textContent = "Hết hàng";
+            isAdding = false;
         }
+
     }
 
 </script>

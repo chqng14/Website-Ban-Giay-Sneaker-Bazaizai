@@ -13,6 +13,7 @@ namespace App_Data.ViewModels.HoaDon
         public string Id { get; set; }
         public string? IdNguoiDung { get; set; }
         public string? MaHoaDon { get; set; }
+        public DateTime? NgayTao { get; set; }
         public int? TrangThaiGiaoHang { get; set; }
         public int? TrangThaiThanhToan { get; set; }
         public List<HoaDonChiTietTaiQuay>? hoaDonChiTietDTOs { get; set; }
