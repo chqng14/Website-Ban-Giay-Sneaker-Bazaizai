@@ -24,8 +24,6 @@ namespace App_View.Services
 
         private readonly ILogger<SendMailService> logger;
 
-        // mailSetting được Inject qua dịch vụ hệ thống
-        // Có inject Logger để xuất log
         public SendMailService(IOptions<MailSettings> _mailSettings, ILogger<SendMailService> _logger)
         {
             mailSettings = _mailSettings.Value;

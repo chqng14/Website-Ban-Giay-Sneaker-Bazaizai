@@ -110,5 +110,14 @@ namespace App_Data.Repositories
             [Description("Đã thanh toán")]
             DaThanhToan = 1,
         }
+        public enum TrangThaiDanhGia
+        {
+            [Description("Đã duyệt")]
+            DaDuyet=0,
+            [Description("Đã Ẩn")]
+            DaAn=1,
+            [Description("Chưa duyệt")]
+            ChuaDuyet=2,
+        }
     }
 }

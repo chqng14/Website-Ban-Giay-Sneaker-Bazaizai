@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace App_View.Areas.Identity.Pages.Account.Manage
 {
