@@ -1,26 +1,86 @@
-﻿@page "Xác nhận đăng ký"
+﻿@page "/email-link"
 @model RegisterConfirmationModel
 @{
-    //ViewData["Title"] = "Register confirmation";
-    ViewData["Title"] = "Xác nhận đăng ký";
+    ViewData["Title"] = "Liên kết gửi qua Email";
+    Layout = "/Views/Shared/_LayoutQMK.cshtml";
 }
 
-<h1>@ViewData["Title"]</h1>
-@*@{
-    if (@Model.DisplayConfirmAccountLink)
-    {
-<p>
-    This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-    Normally this would be emailed: <a id="confirm-link" href="@Model.EmailConfirmationUrl">Click here to confirm your account</a>
-</p>
-    }
-    else
-    {
-<p>
-            Vui lòng kiểm tra email để xác nhận tài khoản của bạn.
-</p>
-    }
-}*@
-<p>
-    Chúng tôi đã gửi một email đến tài khoản của bạn. Vui lòng kiểm tra email để xác nhận tài khoản của bạn.
-</p>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Form sau khi gửi mail</title>
+    <link rel="stylesheet" href="~/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="~/assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="~/assets/css/Login-Form-Clean.css">
+    <link rel="stylesheet" href="~/assets/css/styles.css">
+</head>
+
+<body>
+    <section class="login-clean">
+        <form>
+            <h2 style="font-size: 13px;margin-top: -20px;margin-left: -30px;margin-right: 0px;">
+                <strong>&nbsp;</strong>
+                <a href="#" id="backLink" style="color:black"><i class="fa fa-arrow-left" style="margin-right: 20px;"></i></a>
+                <strong>Xác minh bằng liên kết gửi qua Email</strong>
+            </h2>
+            <div class="illustration" style="height: 200px;">
+                <span class="forgot" style="margin-top: 25px;">Vui lòng nhấn vào liên kết xác thực đã được gửi đến địa chỉ Email&nbsp;<br></span>
+                <span class="forgot">@Model.Email<br></span>
+                <i class="icon ion-email" style="color: var(--bs-cyan);"></i>
+               
+                <span id="demo" class="forgot"><br></span>
+           
+            </div>
+        </form>
+    </section>
+    <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById("backLink").addEventListener("click", function (event) {
+            event.preventDefault();
+            window.history.back();
+        });
+    </script>
+
+</body>
+
+</html>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+
+        var countDownDate = new Date();
+        countDownDate.setSeconds(countDownDate.getSeconds() + 60);
+        var x;
+
+        function startCountdown() {
+            x = setInterval(function () {
+                var now = new Date().getTime();
+                var distance = countDownDate - now;
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                document.getElementById("demo").innerHTML = "Vui lòng chờ trong " + seconds + " giây để gửi lại.";
+                if (distance < 0) {
+                    clearInterval(x);
+                    showResendButton();
+                }
+            }, 1000);
+        }
+
+        function showResendButton() {
+            document.getElementById("demo").innerHTML = "Bạn vẫn chưa nhận được? <a id='resendButton' href='#'style='text-decoration: none; color: red'> Gửi lại </a>";
+            document.getElementById("resendButton").addEventListener("click", function (event) {
+                event.preventDefault();
+                clearInterval(x);
+                countDownDate = new Date();
+                countDownDate.setSeconds(countDownDate.getSeconds() + 60);
+                startCountdown();
+            });
+        }
+
+        startCountdown();
+    </script>
+
+}

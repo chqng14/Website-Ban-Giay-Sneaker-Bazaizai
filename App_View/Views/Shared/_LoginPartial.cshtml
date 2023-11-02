@@ -3,26 +3,57 @@
 @inject SignInManager<NguoiDung> SignInManager
 @inject UserManager<NguoiDung> UserManager
 
-<ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-@*        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-*@        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-    </li>
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
+    var user = await UserManager.GetUserAsync(User);
+    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left">
+        <a><i><img style="margin-bottom:-7px;width:30px;height:30px; object-fit:cover; border-radius:30px" src="@user.AnhDaiDien"></i>&nbsp;@UserManager.GetUserName(User)</a>
+        <span class="js-menu-toggle"></span>
+        <ul style="width:120px">
+            <li>
+                <a asp-area="Identity" asp-page="/Account/my-profile">
+                    <i class="fas fa-user-circle u-s-m-r-6"></i>
+                    <span>Account</span>
+                </a>
+            </li>
+            <li>
+
+                <form id="myForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="nav-link btn btn-link text-dark" style="border: 0px;background-color:white;">
+                        <a>
+                            <i class="fas fa-lock-open u-s-m-r-6"></i>
+                            <span>Signout</span>
+                        </a>
+                    </button>
+                </form>
+            </li>
+        </ul>
+
+
     </li>
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Account">
+
+        <a><i class="far fa-user-circle"></i></a>
+        <span class="js-menu-toggle"></span>
+        <ul style="width:120px">
+
+            <li>
+                <a asp-area="Identity" asp-page="/Account/Register">
+                    <i class="fas fa-user-plus u-s-m-r-6"></i>
+                    <span>Signup</span>
+                </a>
+            </li>
+            <li>
+                <a asp-area="Identity" asp-page="/Account/Login">
+                    <i class="fas fa-lock u-s-m-r-6"></i>
+                    <span>Signin</span>
+                </a>
+            </li>
+
+        </ul>
+
     </li>
 }
-</ul>

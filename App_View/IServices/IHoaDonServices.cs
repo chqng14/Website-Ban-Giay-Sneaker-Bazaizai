@@ -7,8 +7,8 @@ namespace App_View.IServices
     public interface IHoaDonServices
     {
         Task<List<HoaDon>> GetAllHoaDon();
-        Task<bool> CreateHoaDon(HoaDonDTO hoaDonDTO);
-        Task<bool> UpdateHoaDon(HoaDon HoaDon);
+        Task<string> CreateHoaDon(HoaDonDTO hoaDonDTO);
+        Task<bool> UpdateHoaDon(string idHoaDon, int TrangThai);
         Task<bool> DeleteHoaDon(string idHoaDon);
         Task<List<HoaDonChoDTO>> GetAllHoaDonCho();
         Task<List<HoaDonViewModel>> GetHoaDon();

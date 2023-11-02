@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App_Data.Migrations
 {
     [DbContext(typeof(BazaizaiContext))]
-    [Migration("20231016153004_thembangdanhgia16_10_2023")]
-    partial class thembangdanhgia16_10_2023
+    [Migration("20231016150137_16_10_2023_lan1")]
+    partial class _16_10_2023_lan1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -95,50 +95,6 @@ namespace App_Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("Roles", (string)null);
-                });
-
-            modelBuilder.Entity("App_Data.Models.DanhGia", b =>
-                {
-                    b.Property<string>("IdDanhGia")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)")
-                        .HasDefaultValueSql("(newid())");
-
-                    b.Property<string>("BinhLuan")
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("IdNguoiDung")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("IdSanPhamChiTiet")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime?>("NgayDanhGia")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ParentId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("SaoSp")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SaoVanChuyen")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TrangThai")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValueSql("((0))");
-
-                    b.HasKey("IdDanhGia");
-
-                    b.HasIndex("IdNguoiDung");
-
-                    b.HasIndex("IdSanPhamChiTiet");
-
-                    b.HasIndex("ParentId");
-
-                    b.ToTable("Đánh giá", (string)null);
                 });
 
             modelBuilder.Entity("App_Data.Models.GioHang", b =>
@@ -496,9 +452,6 @@ namespace App_Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DiaChi")
-                        .HasColumnType("nvarchar(300)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -997,27 +950,6 @@ namespace App_Data.Migrations
                     b.Navigation("SanPhamChiTiets");
                 });
 
-            modelBuilder.Entity("App_Data.Models.DanhGia", b =>
-                {
-                    b.HasOne("App_Data.Models.NguoiDung", "NguoiDung")
-                        .WithMany("DanhGias")
-                        .HasForeignKey("IdNguoiDung");
-
-                    b.HasOne("App_Data.Models.SanPhamChiTiet", "SanPhamChiTiet")
-                        .WithMany("DanhGias")
-                        .HasForeignKey("IdSanPhamChiTiet");
-
-                    b.HasOne("App_Data.Models.DanhGia", "ParentDanhGia")
-                        .WithMany("ChildDanhGias")
-                        .HasForeignKey("ParentId");
-
-                    b.Navigation("NguoiDung");
-
-                    b.Navigation("ParentDanhGia");
-
-                    b.Navigation("SanPhamChiTiet");
-                });
-
             modelBuilder.Entity("App_Data.Models.GioHang", b =>
                 {
                     b.HasOne("App_Data.Models.NguoiDung", "NguoiDung")
@@ -1269,11 +1201,6 @@ namespace App_Data.Migrations
                     b.Navigation("SanPhamChiTiets");
                 });
 
-            modelBuilder.Entity("App_Data.Models.DanhGia", b =>
-                {
-                    b.Navigation("ChildDanhGias");
-                });
-
             modelBuilder.Entity("App_Data.Models.GioHang", b =>
                 {
                     b.Navigation("GioHangChiTiet");
@@ -1318,8 +1245,6 @@ namespace App_Data.Migrations
 
             modelBuilder.Entity("App_Data.Models.NguoiDung", b =>
                 {
-                    b.Navigation("DanhGias");
-
                     b.Navigation("HoaDons");
 
                     b.Navigation("KhachHangs");
@@ -1344,8 +1269,6 @@ namespace App_Data.Migrations
             modelBuilder.Entity("App_Data.Models.SanPhamChiTiet", b =>
                 {
                     b.Navigation("Anh");
-
-                    b.Navigation("DanhGias");
 
                     b.Navigation("GioHangChiTiet");
 

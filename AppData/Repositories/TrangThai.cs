@@ -103,12 +103,27 @@ namespace App_Data.Repositories
         }
         public enum GioiTinhMacDinh
         {
-            KhongMuonTraLoi = 0,
             Nam = 1,
-            Nu = 2,
-            Khac = 3
+            Nu = 2
         }
         public enum TrangThaiHoaDonChiTiet
+        {
+            [Description("Chưa thanh toán")]
+            ChuaThanhToan = 0,
+            [Description("Đã thanh toán")]
+            DaThanhToan = 1,
+        }
+
+        public enum TrangThaiDanhGia
+        {
+            [Description("Đã duyệt")]
+            DaDuyet = 0,
+            [Description("Đã Ẩn")]
+            DaAn = 1,
+            [Description("Chưa duyệt")]
+            ChuaDuyet = 2,
+        }
+        public enum PTThanhToanChiTiet
         {
             [Description("Chưa thanh toán")]
             ChuaThanhToan = 0,
