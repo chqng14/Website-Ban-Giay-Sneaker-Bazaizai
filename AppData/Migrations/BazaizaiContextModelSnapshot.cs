@@ -218,6 +218,9 @@ namespace App_Data.Migrations
                     b.Property<string>("IdNguoiDung")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("IdNguoiSuaGanNhat")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("IdThongTinGH")
                         .HasColumnType("nvarchar(450)");
 
