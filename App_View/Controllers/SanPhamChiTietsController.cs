@@ -19,14 +19,12 @@ namespace App_View.Controllers
 {
     public class SanPhamChiTietsController : Controller
     {
-        private readonly BazaizaiContext _context;
         private readonly ISanPhamChiTietService _sanPhamChiTietService;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         private readonly HttpClient _httpClient;
         public SanPhamChiTietsController(ISanPhamChiTietService sanPhamChiTietService, UserManager<NguoiDung> userManager, SignInManager<NguoiDung> signInManager, HttpClient httpClient)
         {
-            _context = new BazaizaiContext();
             _sanPhamChiTietService = sanPhamChiTietService;
             _userManager = userManager;
             _signInManager = signInManager;

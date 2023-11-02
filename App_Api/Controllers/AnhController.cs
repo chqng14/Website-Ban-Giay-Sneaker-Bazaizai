@@ -93,5 +93,30 @@ namespace App_Api.Controllers
             }
         }
 
+        [HttpPost("create-list-model-image")]
+        public bool CreateModelNameImage([FromForm]string idProductDetail,[FromForm]List<string> lstNameImage)
+        {
+            try
+            {
+                foreach (var item in lstNameImage)
+                {
+                    var modelAnh = new Anh()
+                    {
+                        IdAnh = Guid.NewGuid().ToString(),
+                        IdSanPhamChiTiet = idProductDetail,
+                        TrangThai = 0,
+                        Url = item
+                    };
+                    _allRepoImage.AddItem(modelAnh);
+                };
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
     }
 }

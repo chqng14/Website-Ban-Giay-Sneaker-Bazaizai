@@ -48,8 +48,17 @@ namespace App_View.IServices
         Task<bool> KhoiPhucKinhDoanhAynsc(string id);
         Task<List<SanPhamChiTietExcelViewModel>> GetListSanPhamExcelAynsc();
         Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO);
-
         Task UpDatSoLuongAynsc(SanPhamSoLuongDTO sanPhamSoLuongDTO);
+        #region GetListModelVariants
+        Task<List<ChatLieu>> GetListModelChatLieuAsync();
+        Task<List<KichCo>> GetListModelKichCoAsync();
+        Task<List<KieuDeGiay>> GetListModelKieuDeGiayAsync();
+        Task<List<LoaiGiay>> GetListModelLoaiGiayAsync();
+        Task<List<MauSac>> GetListModelMauSacAsync();
+        Task<List<SanPham>> GetListModelSanPhamAsync();
+        Task<List<ThuongHieu>> GetListModelThuongHieuAsync();
+        Task<List<XuatXu>> GetListModelXuatXuAsync();
+        #endregion
 
     }
 }
