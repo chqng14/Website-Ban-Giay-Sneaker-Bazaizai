@@ -12,6 +12,7 @@ using App_View.Services;
 using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Google.Apis.PeopleService.v1.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,26 +29,21 @@ namespace App_View.Controllers
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         ISanPhamChiTietService _sanPhamChiTietService;
-        IThongTinGHServices thongTinGHServices;
         IGioHangChiTietServices gioHangChiTietServices;
         IHoaDonServices hoaDonServices;
         IHoaDonChiTietServices hoaDonChiTietServices;
         ThongTinGHController ThongTinGHController;
-        private readonly GioHangChiTietsController _GioHangChiTietsController;
-        private readonly IConfiguration _configuration;
         PTThanhToanChiTietController PTThanhToanChiTietController;
         PTThanhToanController PTThanhToanController;
-        public HoaDonController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService, ThongTinGHController thongTinGHController, GioHangChiTietsController gioHangChiTietsController, IMomoService momoService)
+        public HoaDonController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService, ThongTinGHController thongTinGHController, IMomoService momoService)
         {
             _sanPhamChiTietService = sanPhamChiTietService;
-            thongTinGHServices = new ThongTinGHServices();
             _signInManager = signInManager;
             _userManager = userManager;
             gioHangChiTietServices = new GioHangChiTietServices();
             hoaDonServices = new HoaDonServices();
             hoaDonChiTietServices = new HoaDonChiTietServices();
             ThongTinGHController = thongTinGHController;
-            _GioHangChiTietsController = gioHangChiTietsController;
             _momoService = momoService;
             PTThanhToanChiTietController = new PTThanhToanChiTietController();
             PTThanhToanController = new PTThanhToanController();
@@ -58,29 +54,7 @@ namespace App_View.Controllers
             thongTinGHDTO.IdThongTinGH = Guid.NewGuid().ToString();
             thongTinGHDTO.IdNguoiDung = _userManager.GetUserId(User);
             var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == _userManager.GetUserId(User));
-            var message = new List<string>();
-            int quantityErrorCount = 0;
-            int outOfStockCount = 0;
-            int stoppedSellingCount = 0;
-            foreach (var item in listcart)
-            {
-                var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
-                if (item.SoLuong > product.SoLuongTon && product.SoLuongTon == 0)
-                {
-                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng , Vui lòng chọn sản phẩm khác!");
-                    outOfStockCount++;
-                }
-                if (item.TrangThaiSanPham != product.TrangThai)
-                {
-                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
-                    stoppedSellingCount++;
-                }
-                if (item.SoLuong > product.SoLuongTon)
-                {
-                    message.Add($"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} chỉ còn {product.SoLuongTon}, Vui lòng chọn lại số lượng!");
-                    quantityErrorCount++;
-                }
-            }
+            var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
             {
                 await ThongTinGHController.CreateThongTin(thongTinGHDTO);
@@ -110,29 +84,7 @@ namespace App_View.Controllers
         {
             var UserID = _userManager.GetUserId(User);
             var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == UserID);
-            var message = new List<string>();
-            int quantityErrorCount = 0;
-            int outOfStockCount = 0;
-            int stoppedSellingCount = 0;
-            foreach (var item in listcart)
-            {
-                var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
-                if (item.SoLuong > product.SoLuongTon && product.SoLuongTon == 0)
-                {
-                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng , Vui lòng chọn sản phẩm khác!");
-                    outOfStockCount++;
-                }
-                if (item.TrangThaiSanPham != product.TrangThai)
-                {
-                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
-                    stoppedSellingCount++;
-                }
-                if (item.SoLuong > product.SoLuongTon)
-                {
-                    message.Add($"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} chỉ còn {product.SoLuongTon}, Vui lòng chọn lại số lượng!");
-                    quantityErrorCount++;
-                }
-            }
+            var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
             {
                 var hoadon = new HoaDonDTO()
@@ -179,27 +131,12 @@ namespace App_View.Controllers
                 var tien = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam == null ? 0 : hoadon.TienGiam));
                 if (hoaDonDTO.LoaiThanhToan == "Momo")
                 {
-                    var TenNguoiNhan = _userManager.GetUserName(User);
-                    var model = new OrderInfoModel()
-                    {
-                        FullName = TenNguoiNhan,
-                        OrderId = mahd,
-                        OrderInfo = "Thanh toán tại Bazazai Store",
-                        Amount = tien,
-                    };
-                    SessionServices.SetIPNToSession(HttpContext.Session, "IPN", model);
-                    SessionServices.SetIdToSession(HttpContext.Session, "idhd", hoadon.IdHoaDon);
-                    var response = await _momoService.CreatePaymentAsync(model, hoadon.IdHoaDon);
-                    var Pay = await PTThanhToanController.GetPTThanhToanByName("Momo");
-                    var idPay = await PTThanhToanChiTietController.CreatePTThanhToanChiTiet(hoadon.IdHoaDon, Pay, tien);
-                    SessionServices.SetIdToSession(HttpContext.Session, "idPay", idPay);
-                    return Ok(new { url = response.PayUrl, idHoaDon = hoadon.IdHoaDon });
+                    var url = await Momo(hoadon.IdHoaDon, mahd, tien);
+                    return Ok(new { url = url, idHoaDon = hoadon.IdHoaDon });
                 }
                 else
                 {
-                    var Pay = await PTThanhToanController.GetPTThanhToanByName("COD");
-                    var idPay = await PTThanhToanChiTietController.CreatePTThanhToanChiTiet(hoadon.IdHoaDon, Pay, tien);
-                    SessionServices.SetIdToSession(HttpContext.Session, "idPay", idPay);
+                    await Cod(hoadon.IdHoaDon, tien);
                     return Ok(new { idHoaDon = hoadon.IdHoaDon });
                 }
             }
@@ -230,29 +167,7 @@ namespace App_View.Controllers
         {
             thongTinGHDTO.IdThongTinGH = Guid.NewGuid().ToString();
             var listcart = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-            var message = new List<string>();
-            int quantityErrorCount = 0;
-            int outOfStockCount = 0;
-            int stoppedSellingCount = 0;
-            foreach (var item in listcart)
-            {
-                var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
-                if (item.SoLuong > product.SoLuongTon && product.SoLuongTon == 0)
-                {
-                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng , Vui lòng chọn sản phẩm khác!");
-                    outOfStockCount++;
-                }
-                if (item.TrangThaiSanPham != product.TrangThai)
-                {
-                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
-                    stoppedSellingCount++;
-                }
-                if (item.SoLuong > product.SoLuongTon)
-                {
-                    message.Add($"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} chỉ còn {product.SoLuongTon}, Vui lòng chọn lại số lượng!");
-                    quantityErrorCount++;
-                }
-            }
+            var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
             {
                 await ThongTinGHController.CreateThongTin(thongTinGHDTO);
@@ -281,29 +196,7 @@ namespace App_View.Controllers
         public async Task<IActionResult> ThanhToanNologin(HoaDonDTO hoaDonDTO)
         {
             var listcart = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-            var message = new List<string>();
-            int quantityErrorCount = 0;
-            int outOfStockCount = 0;
-            int stoppedSellingCount = 0;
-            foreach (var item in listcart)
-            {
-                var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
-                if (item.SoLuong > product.SoLuongTon && product.SoLuongTon == 0)
-                {
-                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng , Vui lòng chọn sản phẩm khác!");
-                    outOfStockCount++;
-                }
-                if (item.TrangThaiSanPham != product.TrangThai)
-                {
-                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
-                    stoppedSellingCount++;
-                }
-                if (item.SoLuong > product.SoLuongTon)
-                {
-                    message.Add($"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} chỉ còn {product.SoLuongTon}, Vui lòng chọn lại số lượng!");
-                    quantityErrorCount++;
-                }
-            }
+            var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
             {
                 var hoadon = new HoaDonDTO()
@@ -314,9 +207,9 @@ namespace App_View.Controllers
                     IdThongTinGH = hoaDonDTO.IdThongTinGH,
                     IdVoucher = hoaDonDTO.IdVoucher,
                     NgayTao = DateTime.Now,
-                    NgayShip = DateTime.Now.AddDays(2),
-                    NgayNhan = DateTime.Now.AddDays(4),
-                    NgayThanhToan = DateTime.Now.AddDays(4),
+                    NgayShip = null,
+                    NgayNhan = null,
+                    NgayThanhToan = null,
                     NgayGiaoDuKien = hoaDonDTO.NgayGiaoDuKien,
                     TienGiam = hoaDonDTO.TienGiam == null ? 0 : hoaDonDTO.TienGiam,
                     TongTien = hoaDonDTO.TongTien,
@@ -325,7 +218,7 @@ namespace App_View.Controllers
                     TrangThaiGiaoHang = (int)TrangThaiGiaoHang.ChoXacNhan,
                     TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan
                 };
-                await hoaDonServices.CreateHoaDon(hoadon);
+                var mahd = await hoaDonServices.CreateHoaDon(hoadon);
                 foreach (var item in listcart)
                 {
                     await hoaDonChiTietServices.CreateHoaDonChiTiet(new HoaDonChiTietDTO()
@@ -343,11 +236,21 @@ namespace App_View.Controllers
                         IdChiTietSanPham = item.IdSanPhamCT,
                         SoLuong = (int)item.SoLuong
                     };
-                    listcart.Clear();
                     var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
                     await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                 }
-                return Ok(new { idHoaDon = hoadon.IdHoaDon });
+                listcart.Clear();
+                var tien = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam == null ? 0 : hoadon.TienGiam));
+                if (hoaDonDTO.LoaiThanhToan == "Momo")
+                {
+                    var url = await Momo(hoadon.IdHoaDon, mahd, tien);
+                    return Ok(new { url = url, idHoaDon = hoadon.IdHoaDon });
+                }
+                else
+                {
+                    await Cod(hoadon.IdHoaDon, tien);
+                    return Ok(new { idHoaDon = hoadon.IdHoaDon });
+                }
             }
             else
             {
@@ -370,6 +273,8 @@ namespace App_View.Controllers
             }
         }
         #endregion
+
+        #region Chung
         public async Task<ActionResult<HoaDonViewModel>> Order(string idHoaDon)
         {
             var idpt = SessionServices.GetIdFomSession(HttpContext.Session, "idPay");
@@ -393,9 +298,8 @@ namespace App_View.Controllers
                 {
                     await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.DaThanhToan);
                     await hoaDonServices.UpdateTrangThaiHoaDon(idhd, (int)TrangThaiHoaDon.DaThanhToan);
-                    //await hoaDonChiTietServices.UpdateTrangThaiHoaDonChiTiet(idhd, (int)TrangThaiHoaDonChiTiet.DaThanhToan);
+                    await hoaDonServices.UpdateNgayHoaDon(idhd, DateTime.Now, null, null);
                     string payment = await hoaDonServices.GetPayMent(idhd);
-                    //ViewBag.payment = payment;
                     var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idhd);
                     order.LoaiThanhToan = payment;
                     return View(order);
@@ -406,27 +310,61 @@ namespace App_View.Controllers
                 }
             }
         }
-        //public async Task<int> OrderIPN()
-        //{
-        //    string id = SessionServices.GetIdFomSession(HttpContext.Session, "id");
-        //    OrderInfoModel orderInfoModel = SessionServices.GetIPNFomSession(HttpContext.Session, "IPN");
-        //    var jsonresponse = await _momoService.IPN(orderInfoModel);
-        //    var test = jsonresponse.ResultCode;
-        //    return test;
-        //}
-        //[HttpPost]
-        //public async Task<IActionResult> CreatePaymentUrl(HoaDonDTO hoaDonDTO)
-        //{
-        //    var TenNguoiNhan = _userManager.GetUserName(User);
-        //    var model = new OrderInfoModel()
-        //    {
-        //        FullName = TenNguoiNhan,
-        //        OrderId = hoaDonDTO.IdHoaDon,
-        //        OrderInfo = "Thanh toán tại Bazazai Store",
-        //        Amount = (double)(hoaDonDTO.TongTien + hoaDonDTO.TienShip - hoaDonDTO.TienGiam == null ? 0 : hoaDonDTO.TienGiam),
-        //    };
-        //    var response = await _momoService.CreatePaymentAsync(model, hoaDonDTO.IdHoaDon);
-        //    return Ok(new { url = response.PayUrl });
-        //}
+        public async Task<string> Momo(string IdHoaDon, string MaHd, double tien)
+        {
+            var TenNguoiNhan = _userManager.GetUserName(User);
+            var model = new OrderInfoModel()
+            {
+                FullName = TenNguoiNhan,
+                OrderId = MaHd,
+                OrderInfo = "Thanh toán tại Bazazai Store",
+                Amount = tien,
+            };
+            SessionServices.SetIPNToSession(HttpContext.Session, "IPN", model);
+            SessionServices.SetIdToSession(HttpContext.Session, "idhd", IdHoaDon);
+            var response = await _momoService.CreatePaymentAsync(model, IdHoaDon);
+            var Pay = await PTThanhToanController.GetPTThanhToanByName("Momo");
+            var idPay = await PTThanhToanChiTietController.CreatePTThanhToanChiTiet(IdHoaDon, Pay, tien);
+            SessionServices.SetIdToSession(HttpContext.Session, "idPay", idPay);
+            return response.PayUrl;
+        }
+        public async Task<IActionResult> Cod(string IdHoaDon, double tien)
+        {
+            var Pay = await PTThanhToanController.GetPTThanhToanByName("COD");
+            var idPay = await PTThanhToanChiTietController.CreatePTThanhToanChiTiet(IdHoaDon, Pay, tien);
+            SessionServices.SetIdToSession(HttpContext.Session, "idPay", idPay);
+            return Ok();
+        }
+        private async Task<Tuple<int, int, int, List<string>>> KiemTraGioHang(IEnumerable<GioHangChiTietDTO> listcart)
+        {
+            var message = new List<string>();
+            int quantityErrorCount = 0;
+            int outOfStockCount = 0;
+            int stoppedSellingCount = 0;
+
+            foreach (var item in listcart)
+            {
+                var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+
+                if (item.SoLuong > product.SoLuongTon && product.SoLuongTon == 0)
+                {
+                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng, Vui lòng chọn sản phẩm khác!");
+                    outOfStockCount++;
+                }
+                if (item.TrangThaiSanPham == 1 || item.TrangThaiSanPham != product.TrangThai)
+                {
+                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
+                    stoppedSellingCount++;
+                }
+                if (item.SoLuong > product.SoLuongTon)
+                {
+                    message.Add($"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} chỉ còn {product.SoLuongTon}, Vui lòng chọn lại số lượng!");
+                    quantityErrorCount++;
+                }
+            }
+
+            return System.Tuple.Create(quantityErrorCount, outOfStockCount, stoppedSellingCount, message);
+        }
+        #endregion
     }
 }

@@ -65,12 +65,12 @@ namespace App_Api.Controllers
         }
 
         [HttpPut]
-        public async Task<bool> UpdateNgayHoaDonOnline(string idHoaDon, DateTime NgayThanhToan, DateTime NgayNhan, DateTime NgayShip)
+        public async Task<bool> UpdateNgayHoaDonOnline(string idHoaDon, DateTime? NgayThanhToan, DateTime? NgayNhan, DateTime? NgayShip)
         {
             var hoadon = _hoaDon.GetHoaDonUpdate().FirstOrDefault(c => c.IdHoaDon == idHoaDon);
-            hoadon.NgayNhan = NgayNhan;
-            hoadon.NgayShip = NgayShip;
-            hoadon.NgayThanhToan = NgayThanhToan;
+            hoadon.NgayNhan = NgayNhan ?? hoadon.NgayNhan;
+            hoadon.NgayShip = NgayShip ?? hoadon.NgayShip;
+            hoadon.NgayThanhToan = NgayThanhToan ?? hoadon.NgayThanhToan;
             return _hoaDon.EditBill(hoadon);
         }
 

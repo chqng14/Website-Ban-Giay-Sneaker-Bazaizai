@@ -1,4 +1,4 @@
-﻿@model IEnumerable<App_Data.ViewModels.GioHangChiTiet.GioHangChiTietViewModel>
+﻿@model IEnumerable<App_Data.ViewModels.GioHangChiTiet.GioHangChiTietDTO>
 
 @{
     ViewData["Title"] = "CheckOutNoLogin";
@@ -318,7 +318,7 @@
                                             <!--====== Radio Box ======-->
                                             <div class="radio-box">
 
-                                                <input type="radio" id="cash-on-delivery" name="payment">
+                                                <input type="radio" value="COD" id="cash-on-delivery" name="Payment">
                                                 <div class="radio-box__state radio-box__state--primary">
 
                                                     <label class="radio-box__label" for="cash-on-delivery">COD</label>
@@ -333,7 +333,7 @@
                                             <!--====== Radio Box ======-->
                                             <div class="radio-box">
 
-                                                <input type="radio" id="direct-bank-transfer" name="payment">
+                                                <input type="radio" value="Momo" id="direct-bank-transfer" name="Payment">
                                                 <div class="radio-box__state radio-box__state--primary">
 
                                                     <label class="radio-box__label" for="direct-bank-transfer">Momo</label>
@@ -359,6 +359,7 @@
 
                                             <a class="gl-link">Terms of Service.</a>
                                         </div>
+                                        <input hidden name="LoaiThanhToan" />
                                         <input hidden name="IdVoucher" />
                                         <input hidden name="NgayGiaoDuKien" />
                                         <div>
@@ -790,6 +791,22 @@
 
     <!--====== thanh toán ======-->
     <script>
+        // Lấy tất cả các elements input có type là radio
+        var radioButtons = document.querySelectorAll('input[name="Payment"]');
+        var paymentMethod = "";
+        // Duyệt qua từng radio button
+        radioButtons.forEach(function (radioButton) {
+            // Lắng nghe sự kiện khi có thay đổi trạng thái của radio button
+            radioButton.addEventListener('change', function () {
+                // Nếu radio button được chọn
+                if (this.checked) {
+                    // Lấy giá trị của radio button và gán vào input hidden
+                    paymentMethod = this.value;
+                    // document.querySelector('input[name="LoaiThanhToan"]').value = this.value;
+                    console.log(this.value);
+                }
+            });
+        });
         $(document).ready(function () {
             $('#placeOrderButton').click(function (e) {
                 e.preventDefault();
@@ -804,7 +821,7 @@
                     inputAddressBill = $('#billing-street').val();
                     DiaChiFull = inputAddressBill + ',' + selectedWard + ',' + selectedDistrict + ',' + selectedCity;
                     $('#billing-street').val(DiaChiFull);
-
+                    $('input[name="LoaiThanhToan"]').val(paymentMethod);
                     // Thực hiện các chức năng liên quan đến useInputAddressScript
                     var deliveryFormData = $('#deliveryForm').serialize();
 
@@ -829,8 +846,11 @@
                                 success: function (paymentResponse) {
                                     if (paymentResponse.idHoaDon != null) {
                                         UpdateVoucher()
-                                        var idHoaDon = paymentResponse.idHoaDon;
-                                        window.location.href = "/HoaDon/Order?idHoaDon=" + idHoaDon;
+                                        if (paymentResponse.url != null) {
+                                            window.location.href = paymentResponse.url;
+                                        } else {
+                                            window.location.href = "/HoaDon/Order?idHoaDon=" + paymentResponse.idHoaDon;
+                                        }
                                     } else {
                                         Swal.fire({
                                             title: paymentResponse.title,

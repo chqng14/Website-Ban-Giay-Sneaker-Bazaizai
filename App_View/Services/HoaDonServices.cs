@@ -1,4 +1,5 @@
 ﻿using App_Data.Models;
+using App_Data.Repositories;
 using App_Data.ViewModels.GioHangChiTiet;
 using App_Data.ViewModels.HoaDon;
 using App_View.IServices;
@@ -77,9 +78,23 @@ namespace App_View.Services
             }
         }
 
-        public Task<bool> UpdateNgayHoaDon(string idHoaDon, DateTime NgayThanhToan, DateTime NgayNhan, DateTime NgayShip)
+        public async Task<bool> UpdateNgayHoaDon(string idHoaDon, DateTime? NgayThanhToan, DateTime? NgayNhan, DateTime? NgayShip)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateNgayHoaDonOnline?idHoaDon={idHoaDon}&NgayThanhToan={NgayThanhToan}&NgayNhan={NgayNhan}&NgayShip={NgayShip}", null);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await res.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
         }
 
         public async Task<bool> UpdateTrangThaiHoaDon(string idHoaDon, int TrangThai)

@@ -9,7 +9,7 @@ namespace App_View.IServices
         Task<List<HoaDon>> GetAllHoaDon();
         Task<string> CreateHoaDon(HoaDonDTO hoaDonDTO);
         Task<bool> UpdateTrangThaiHoaDon(string idHoaDon, int TrangThai);
-        Task<bool> UpdateNgayHoaDon(string idHoaDon, DateTime NgayThanhToan, DateTime NgayNhan, DateTime NgayShip);
+        Task<bool> UpdateNgayHoaDon(string idHoaDon, DateTime? NgayThanhToan, DateTime? NgayNhan, DateTime? NgayShip);
         Task<bool> DeleteHoaDon(string idHoaDon);
         Task<List<HoaDonChoDTO>> GetAllHoaDonCho();
         Task<List<HoaDonViewModel>> GetHoaDon();
