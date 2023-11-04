@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using static App_Data.Repositories.TrangThai;
 using Microsoft.EntityFrameworkCore;
+using Google.Apis.PeopleService.v1.Data;
 
 namespace App_View.Areas.Identity.Pages.Account
 {
@@ -51,30 +52,21 @@ namespace App_View.Areas.Identity.Pages.Account
             _emailSender = emailSender;
         }
 
-        [BindProperty]
-        public InputModel Input { get; set; }
 
         public string ProviderDisplayName { get; set; }
         public string FirstName { get; set; }
-
+        public string Email { get; set; }
         public string ReturnUrl { get; set; }
 
         [TempData]
         public string ErrorMessage { get; set; }
 
-        public class InputModel
-        {
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
-        }
+
 
         public IActionResult OnGet() => RedirectToPage("./Login");
 
-        //mặc định 
         public IActionResult OnPost(string provider, string returnUrl = null)
         {
-            // Request a redirect to the external login provider.
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
@@ -83,21 +75,13 @@ namespace App_View.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnGetCallbackAsync(string returnUrl = null, string remoteError = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
-            if (remoteError != null)
-            {
-                ErrorMessage = $"Error from external provider: {remoteError}";
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
-            }
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "Error loading external login information.";
+                ErrorMessage = "Lỗi, không lấy được thông tin từ dịch vụ ngoài.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
-
-            // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
-            string picture = info.Principal.FindFirstValue("picture");/// thêm ở đây
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
@@ -109,95 +93,46 @@ namespace App_View.Areas.Identity.Pages.Account
             }
             else
             {
-                // If the user does not have an account, then ask the user to create an account.
-                ReturnUrl = returnUrl;
-                ProviderDisplayName = info.ProviderDisplayName;
                 if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
                 {
-                    Input = new InputModel
-                    {
-                        Email = info.Principal.FindFirstValue(ClaimTypes.Email)
-                    };
+                    Email = info.Principal.FindFirstValue(ClaimTypes.Email);
                 }
-
-
-                return Page();
-            }
-        }
-
-        public async Task<IActionResult> OnPostConfirmationAsync(string returnUrl = null)
-        {
-            returnUrl = returnUrl ?? Url.Content("~/");
-            // Get the information about the user from the external login provider
-            var info = await _signInManager.GetExternalLoginInfoAsync();
-
-            if (info == null)
-            {
-                ErrorMessage = "Error loading external login information during confirmation.";
-                return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
-            }
-
-            if (ModelState.IsValid)
-            {
+                var externalEmailUser = await _userManager.FindByEmailAsync(Email);
                 var externalLoginInfo = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                var registerUser = await _userManager.FindByEmailAsync(Input.Email);
-                string externalEmail = null;
-                NguoiDung externalEmailUser = null;
-
-                if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Email))
+                if (externalEmailUser != null)
                 {
-                    externalEmail = info.Principal.FindFirstValue(ClaimTypes.Email);
-                }
-                if (externalEmail != null)
-                {
-                    externalEmailUser = await _userManager.FindByEmailAsync(externalEmail);
-                }
-                if (externalEmailUser != null && registerUser != null)
-                {
-                    //Input.Email==externalEmailregisterUser.Id == externalEmailUser.Id
-                    if (Input.Email == externalEmail)
+                    if (externalEmailUser.AnhDaiDien == null)
                     {
-                        // liên kết tài khoản, đăng nhập
-                        if (registerUser.AnhDaiDien == null)
+                        if (info.Principal.HasClaim(c => c.Type == "urn:google:picture"))
                         {
-                            if (info.Principal.HasClaim(c => c.Type == "urn:google:picture"))
-                            {
-                                registerUser.AnhDaiDien = info.Principal.FindFirst("urn:google:picture")?.Value;
-                            }
+                            externalEmailUser.AnhDaiDien = info.Principal.FindFirst("urn:google:picture")?.Value;
                         }
-                        if (registerUser.DiaChi == null)
+                    }
+                    if (externalEmailUser.DiaChi == null)
+                    {
+                        if (info.Principal.HasClaim(c => c.Type == "urn:google:locale"))
                         {
-                            if (info.Principal.HasClaim(c => c.Type == "urn:google:locale"))
-                            {
-                                registerUser.DiaChi = info.Principal.FindFirst("urn:google:locale")?.Value;
-                            }
+                            externalEmailUser.DiaChi = info.Principal.FindFirst("urn:google:locale")?.Value;
                         }
-
-                        var resultLink = await _userManager.AddLoginAsync(registerUser, info);
-                        if (resultLink.Succeeded)
-                        {
-                            await _signInManager.SignInAsync(registerUser, isPersistent: false);
-                            return LocalRedirect(returnUrl);
-                        }
+                    }
+                    var resultLink = await _userManager.AddLoginAsync(externalEmailUser, info);
+                    if (resultLink.Succeeded)
+                    {
+                        await _signInManager.SignInAsync(externalEmailUser, isPersistent: false);
+                        return LocalRedirect(returnUrl);
                     }
                     else
                     {
-                        //externalEmailUser==registerUser (Input.Email!=externalEmail)
                         ModelState.AddModelError(string.Empty, "Không liên kết được tài khoản, hãy sử dụng email khác");
                         return Page();
                     }
                 }
-                if (externalEmailUser != null && registerUser == null)
-                {
-                    ModelState.AddModelError(string.Empty, "Không hỗ trợ tạo tài khoản mới có email khác với email từ dịch vụ ngoài");
-                    return Page();
-                }
-                if (externalEmailUser == null && externalEmail == Input.Email)
+                else
                 {
                     var user = CreateUser();
-                    await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                    await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                    var email = Input.Email;
+                    await _userStore.SetUserNameAsync(user, Email, CancellationToken.None);
+                    await _emailStore.SetEmailAsync(user, Email, CancellationToken.None);
+                    var email = Email;
                     var atIndex = email.IndexOf('@');
                     if (atIndex != -1)
                     {
@@ -216,15 +151,16 @@ namespace App_View.Areas.Identity.Pages.Account
                     {
                         user.DiaChi = info.Principal.FindFirst("urn:google:locale")?.Value;
                     }
+
                     string MaTS = "ND" + (await _userManager.Users.CountAsync() + 1);
                     user.MaNguoiDung = MaTS;
-                    var result = await _userManager.CreateAsync(user);
-                    if (result.Succeeded)
+                    var result1 = await _userManager.CreateAsync(user);
+                    if (result1.Succeeded)
                     {
                         await _userManager.AddToRoleAsync(user, ChucVuMacDinh.KhachHang.ToString());
 
-                        result = await _userManager.AddLoginAsync(user, info);
-                        if (result.Succeeded)
+                        result1 = await _userManager.AddLoginAsync(user, info);
+                        if (result1.Succeeded)
                         {
                             _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
                             if (info.Principal.HasClaim(c => c.Type == ClaimTypes.GivenName))
@@ -232,54 +168,26 @@ namespace App_View.Areas.Identity.Pages.Account
                                 await _userManager.AddClaimAsync(user,
                                     info.Principal.FindFirst(ClaimTypes.GivenName));
                             }
-                            //if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Gender))
-                            //{
-                            //    await _userManager.AddClaimAsync(user,
-                            //        info.Principal.FindFirst(ClaimTypes.Gender));
-                            //}  
-                            //if (info.Principal.HasClaim(c => c.Type == ClaimTypes.DateOfBirth))
-                            //{
-                            //    await _userManager.AddClaimAsync(user,
-                            //        info.Principal.FindFirst(ClaimTypes.DateOfBirth));
-                            //} 
-                            //if (info.Principal.HasClaim(c => c.Type == ClaimTypes.Name))
-                            //{
-                            //    await _userManager.AddClaimAsync(user,
-                            //        info.Principal.FindFirst(ClaimTypes.Name));
-                            //}
-                            //if (info.Principal.HasClaim(c => c.Type == "urn:google:locale"))
-                            //{
-                            //    await _userManager.AddClaimAsync(user,
-                            //        info.Principal.FindFirst("urn:google:locale"));
-                            //}
-
-                            //if (info.Principal.HasClaim(c => c.Type == "urn:google:picture"))
-                            //{
-                            //    await _userManager.AddClaimAsync(user,
-                            //        info.Principal.FindFirst("urn:google:picture"));
-                            //}
                             var props = new AuthenticationProperties();
                             props.StoreTokens(info.AuthenticationTokens);
                             props.IsPersistent = false;
-
                             var userId = await _userManager.GetUserIdAsync(user);
                             await AddCart(userId, 0);
                             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                             await _userManager.ConfirmEmailAsync(user, code);
-                            await _signInManager.SignInAsync(user, props /*isPersistent: false*/, info.LoginProvider);
+                            await _signInManager.SignInAsync(user, props, info.LoginProvider);
                             return LocalRedirect(returnUrl);
                         }
                     }
-                    foreach (var error in result.Errors)
+                    foreach (var error in result1.Errors)
                     {
                         ModelState.AddModelError(string.Empty, error.Description);
                     }
                 }
+                ReturnUrl = returnUrl;
+                ProviderDisplayName = info.ProviderDisplayName;
+                return Page();
             }
-
-            ProviderDisplayName = info.ProviderDisplayName;
-            ReturnUrl = returnUrl;
-            return Page();
         }
 
         private NguoiDung CreateUser()

@@ -1,0 +1,20 @@
+﻿using App_Data.Models;
+using App_Data.ViewModels.DanhGia;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace App_Data.IRepositories
+{
+    public interface IDanhGiaRepo
+    {
+        public Task<List<DanhGia>> GetAllAsync();
+        public Task<DanhGia?> GetByKeyAsync(string id);
+        public Task<bool> DeleteAsync(string id);
+        public Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string productId, string parentId);
+        public Task<bool> UpdateAsync(DanhGia danhGia);
+        public Task<bool> AddAsync(DanhGia danhGia);
+    }
+}

@@ -27,14 +27,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="/Admin/Vouchers/Index">Hiển thị voucher</a>
+                                <a href="/Admin/Vouchers/Index">Voucher</a>
                             </li>
                         </ul>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/Admin/Vouchers/Create">Thêm mới voucher</a>
-                            </li>
-                        </ul>
+                      
                     </li>
                     <li>
                         <a asp-controller="BanHangTaiQuay" asp-action="DanhSachHoaDonCho">Bán hàng tại quầy</a>
@@ -52,6 +48,9 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="/Admin/Role/GetAllRole">Danh sách chức vụ</a>
+                                <a asp-page="/Role/GetAllRole">
+                                    Danh sách chức vụ
+                                </a>
                             </li>
                         </ul>
                         <ul class="dropdown-menu">

@@ -6,144 +6,170 @@
     Layout = "/Views/Shared/_LayoutUser.cshtml";
 
 }
+<style>
+    .card {
+        border-radius: 10px;
+    }
 
-@*<h3>@ViewData["Title"]</h3>
-*@@*<partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
+        .card .card-header .profile_img {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            margin: 0px auto;
+            border: 1px solid white;
+            border-radius: 50%;
+        }
+
+        .card h2 {
+            margin-top: 15px;
+        }
+
+    .centered-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+</style>
+<div class="col-lg-9 col-md-12">
+    <partial name="_StatusMessage" for="StatusMessage" />
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+        <form class="dash-edit-p" id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating">
-                <input asp-for="Username" class="form-control" disabled />
-                <label asp-for="Username" class="form-label"></label>
-            </div>
-            <div class="form-floating">
-                <input asp-for="Input.PhoneNumber" class="form-control" />
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-        </form>
-    </div>
-</div>
-*@
+            <div class="dash__pad-2">
+                <h1 class="dash__h1 u-s-m-b-14">Edit Profile</h1>
+                @if (string.IsNullOrEmpty(Model.Input.Name) && string.IsNullOrEmpty(Model.Phone) && string.IsNullOrEmpty(Model.Input.NgaySinh.ToString()) && string.IsNullOrEmpty(Model.Input.GioiTinh.ToString()))
+                {
+                    <span class="dash__text u-s-m-b-30">Looks like you haven't update your profile</span>
 
-<partial name="_StatusMessage" for="StatusMessage" />
+                }
 
+                <div class="dash__link dash__link--secondary u-s-m-b-30">
 
-                        <div class="col-lg-9 col-md-12">
-                            <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white">
-                                <div class="dash__pad-2">
-                                    <h1 class="dash__h1 u-s-m-b-14">Edit Profile</h1>
-                                    @if (string.IsNullOrEmpty(Model.Name) && string.IsNullOrEmpty(Model.Phone) && string.IsNullOrEmpty(Model.NgaySinh.ToString()) && string.IsNullOrEmpty(Model.Gender.ToString()))
-                                    {
-                                        <span class="dash__text u-s-m-b-30">Looks like you haven't update your profile</span>
+                    <a data-modal="modal" data-modal-id="#dash-newsletter">Subscribe Newsletter</a>
+                </div>
 
-                                    }
-
-                                    <div class="dash__link dash__link--secondary u-s-m-b-30">
-
-                                        <a data-modal="modal" data-modal-id="#dash-newsletter">Subscribe Newsletter</a>
+                <div class="row">
+                    <div class="col-lg-8 u-s-m-b-30" style=" border-right: 1px solid green;">
+                        <div class="row">
+                            <div class="col-lg-6 u-s-m-b-30">
+                                <label asp-for="Input.Username" class="gl-label" for="reg-fname"> Tên đăng nhập </label>
+                                <input asp-for="Input.Username" class="input-text input-text--primary-style" type="text" id="reg-fname">
+                                <span asp-validation-for="Input.Username" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-6 u-s-m-b-30">
+                                <label asp-for="Input.Name" class="gl-label" for="reg-fname"> Tên </label>
+                                <input asp-for="Input.Name" class="input-text input-text--primary-style" type="text" id="reg-fname">
+                                <span asp-validation-for="Input.Name" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-6 u-s-m-b-30">
+                                <label asp-for="Input.GioiTinh" class="gl-label" for="reg-fname">Giới tính </label>
+                                <input asp-for="Input.GioiTinh" class="input-text input-text--primary-style" type="text" id="reg-fname">
+                                <span asp-validation-for="Input.GioiTinh" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-6 u-s-m-b-30">
+                                <label asp-for="Input.NgaySinh" class="gl-label" for="reg-fname">Ngày sinh </label>
+                                <input asp-for="Input.NgaySinh" class="input-text input-text--primary-style" type="text" id="reg-fname">
+                                <span asp-validation-for="Input.NgaySinh" class="text-danger"></span>
+                            </div>
+                            <div class="col-lg-6 u-s-m-b-30">
+                                <label class="gl-label" for="reg-fname">Email</label>
+@*                                <h2 class="dash__h2 u-s-m-b-8">Email</h2>
+*@                                <span class="dash__text">@Model.Email</span>
+                                <div class="dash__link dash__link--secondary">
+                                    <a href="#">Change</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 u-s-m-b-30">
+                                <label class="gl-label" for="reg-fname">Số điện thoại </label>
+@*                                <h2 class="dash__h2 u-s-m-b-8">Số điện thoại</h2>
+*@                                @if (!string.IsNullOrEmpty(Model.Phone))
+                                {
+                                    <span class="dash__text">@Model.Phone</span>
+                                    <div class="dash__link dash__link--secondary">
+                                        <a href="#">Change</a>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <form class="dash-edit-p" id="profile-form" method="post">
-                                                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                                <div class="gl-inline">
 
-                                                    <div class="u-s-m-b-30">
+                                }
+                                else
+                                {
+                                    <span class="dash__text">Please enter your mobile</span>
+                                    <div class="dash__link dash__link--secondary">
 
-                                                        <label asp-for="Name" class="gl-label" for="reg-fname"> NAME </label>
-
-                                                        <input asp-for="Name" class="input-text input-text--primary-style" type="text" id="reg-fname" placeholder="Phạm Tuấn Anh">
-                                                    </div>
-                                                    <div class="u-s-m-b-30">
-
-                                                        <label asp-for="Username" class="gl-label" for="reg-lname">USER NAME </label>
-
-                                                        <input asp-for="Username" class="input-text input-text--primary-style" type="text" id="reg-lname">
-                                                    </div>
-
-                                                </div>
-                                                <div class="gl-inline">
-                                                    <div class="u-s-m-b-30">
-
-                                                        <!--====== Date of Birth Select-Box ======-->
-
-                                                        <span class="gl-label">BIRTHDAY</span>
-                                                        <div class="gl-dob">
-                                                            <select class="select-box select-box--primary-style">
-                                                                <option selected>Month</option>
-                                                                <option value="male">January</option>
-                                                                <option value="male">February</option>
-                                                                <option value="male">March</option>
-                                                                <option value="male">April</option>
-                                                            </select><select class="select-box select-box--primary-style">
-                                                                <option selected>Day</option>
-                                                                <option value="01">01</option>
-                                                                <option value="02">02</option>
-                                                                <option value="03">03</option>
-                                                                <option value="04">04</option>
-                                                            </select><select class="select-box select-box--primary-style">
-                                                                <option selected>Year</option>
-                                                                <option value="1991">1991</option>
-                                                                <option value="1992">1992</option>
-                                                                <option value="1993">1993</option>
-                                                                <option value="1994">1994</option>
-                                                            </select>
-                                                        </div>
-                                                        <!--====== End - Date of Birth Select-Box ======-->
-                                                    </div>
-                                                    <div class="u-s-m-b-30">
-
-                                                        <label class="gl-label" for="gender">GENDER</label><select class="select-box select-box--primary-style u-w-100" id="gender">
-                                                            <option selected>Select</option>
-                                                            <option value="male">Male</option>
-                                                            <option value="male">Female</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="gl-inline">
-                                                    <div class="u-s-m-b-30">
-                                                        <h2 class="dash__h2 u-s-m-b-8">E-mail</h2>
-                                                        <span class="dash__text">@Model.Email</span>
-                                                        <div class="dash__link dash__link--secondary">
-
-                                                            <a href="#">Change</a>
-                                                        </div>
-                                                    </div>
-                                                    <div class="u-s-m-b-30">
-                                                        <h2 class="dash__h2 u-s-m-b-8">Phone</h2>
-                                                        @if (string.IsNullOrEmpty(Model.Phone))
-                                                        {
-                                                            <span class="dash__text">Please enter your mobile</span>
-                                                            <div class="dash__link dash__link--secondary">
-
-                                                                <a href="#">Add</a>
-                                                            </div>
-                                                        }
-                                                        else
-                                                        {
-                                                            <span class="dash__text">@Model.Phone</span>
-                                                            <div class="dash__link dash__link--secondary">
-
-                                                                <a href="#">Change</a>
-                                                            </div>
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <button id="update-profile-button" class="btn btn--e-brand-b-2" type="submit">SAVE</button>
-                                            </form>
-                                        </div>
+                                        <a href="#">Add</a>
                                     </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 u-s-m-b-30">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-transparent text-center">
+                                <div class="centered-content">
+                                    
+                                    <img id="imagePreview" class="profile_img" src="@Model.Input.AnhDaiDien" alt="student dp">
+                                    <label class="input-group-text" for="imageInput">Upload</label>
+                                    <input style="display:none" id="imageInput" asp-for="Input.AnhDaiDien" type="file" class="form-control" accept=".jpg, .jpeg, .png" />
+                                    
+                                    <h2 class=" dash__h2 u-s-m-b-8">
+                                        Dụng lượng file tối đa 1 MB
+                                        <br />
+                                        Định dạng:.jpg, .jpeg, .png
+                                    </h2>
+                                    
                                 </div>
                             </div>
                         </div>
+                        <span asp-validation-for="Input.AnhDaiDien" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button id="update-profile-button" type="submit" class="btn btn--e-brand-b-2">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+        <script>
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const submitButton = document.querySelector('button[type="submit"]');
+
+        // Kiểm tra xem có giá trị trong imageInput.value không
+        if (imageInput.value) {
+            imagePreview.src = imageInput.value;
+        }
+
+        imageInput.addEventListener('change', function () {
+            if (imageInput.files && imageInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    imagePreview.src = e.target.result;
+                    // Bật nút Submit khi có tệp mới được chọn
+                    submitButton.disabled = false;
+                };
+
+                reader.readAsDataURL(imageInput.files[0]);
+            }
+        });
+
+    </script>
 }
+
+
+
+
+
+
 
 
 

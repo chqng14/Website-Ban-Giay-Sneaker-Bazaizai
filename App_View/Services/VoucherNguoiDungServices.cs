@@ -7,6 +7,8 @@ using App_Data.ViewModels.VoucherNguoiDung;
 using App_View.IServices;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1;
+using System;
 using System.Net.Http;
 using static App_Data.Repositories.TrangThai;
 
@@ -30,6 +32,33 @@ namespace App_View.Services
             var response = await httpClient.PostAsync(apiUrl, null);
             return true;
         }
+
+        public async Task<string> AddVoucherNguoiDungTuAdmin(AddVoucherRequestDTO addVoucherRequestDTO)
+        {
+            // / api / VoucherNguoiDung / AddVoucherNguoiDungTuAdmin
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("/api/VoucherNguoiDung/AddVoucherNguoiDungTuAdmin", addVoucherRequestDTO);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(content);
+                    return content;
+                }
+                else
+                {
+                    return "false";
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return "false";
+            }
+        }
+
+
+
         //hàm này để check xem voucher đó đã có trong id người dùng chưa
         public bool CheckVoucherInUser(string ma)
         {

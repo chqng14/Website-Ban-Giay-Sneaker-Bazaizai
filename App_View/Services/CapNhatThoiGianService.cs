@@ -135,7 +135,6 @@ namespace App_View.Services
                         {
                             item.GiaBan = ctsp.GiaThucTe;
                         }
-
                         //_dbContext.sanPhamChiTiets.Update(ctsp);
                         //_dbContext.SaveChanges();
                     }

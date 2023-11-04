@@ -29,7 +29,7 @@ namespace App_View.Models
                 Id = Guid.NewGuid().ToString(),
                 UserName = "Admin",
                 Email = "adminhehehe@gmail.com",
-                TenNguoiDung = "Mi Mi",
+                TenNguoiDung = "Admin",
                 PhoneNumber = "0369426223",
                 EmailConfirmed = true,
                 NgaySinh = DateTime.ParseExact("10-10-2010", "MM-dd-yyyy", null),

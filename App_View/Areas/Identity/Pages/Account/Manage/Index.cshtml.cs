@@ -3,38 +3,39 @@
 #nullable disable
 
 using System;
+using System.Collections;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using App_Data.Models;
+using App_View.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace App_View.Areas.Identity.Pages.Account.Manage
 {
-    [Authorize]
+    [Authorize]//user phải đăng nhập
     public class IndexModel : PageModel
     {
         private readonly UserManager<NguoiDung> _userManager;
         private readonly SignInManager<NguoiDung> _signInManager;
-
+        private readonly IWebHostEnvironment _webHostEnvironment;
         public IndexModel(
             UserManager<NguoiDung> userManager,
-            SignInManager<NguoiDung> signInManager)
+            SignInManager<NguoiDung> signInManager,
+            IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _webHostEnvironment = webHostEnvironment;
         }
-
-        public string Username { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public string Name { get; set; }
-        public int? Gender { get; set; }
-        public DateTime? NgaySinh { get; set; }
-
         [TempData]
         public string StatusMessage { get; set; }
 
@@ -43,63 +44,46 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
-
-
             [Display(Name = "Username")]
             public string Username { get; set; }
 
-
-            [Display(Name = "Name")]
+            [Display(Name = "Tên")]
+            //[StringLength(50)]
             public string Name { get; set; }
 
+            [DataType(DataType.Text)]
+            [Display(Name = "Giới tính")]
+            public int? GioiTinh { get; set; }
 
-            [Display(Name = "Gender")]
-            public int? Gender { get; set; }
+            [DataType(DataType.Text)]
+            [Display(Name = "Ngày sinh")]
+            [AgeLimit(100, ErrorMessage = "Ngày sinh bạn nhập không hợp lệ.")]
+            [RegularExpression(@"^(?:(?:31(\/)(?:0[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0[1,3-9]|1[0-2])\2))(?:(?:19\d{2}|20[0-9]\d))$|^(?:29(\/)0?2\3(?:(?:(?:1[9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0[1-9]|1\d|2[0-8])(\/)(?:(?:0[1-9])|(?:1[0-2]))\4(?:(?:19\d{2}|20[0-9]\d))$", ErrorMessage = "Ngày sinh không hợp lệ. Vui lòng kiểm tra lại định dạng ( dd/MM/YYYY ) và giá trị.")]
+            public string? NgaySinh { get; set; }
 
-
-            [Display(Name = "NgaySinh")]
-            public DateTime? NgaySinh { get; set; }
-
+            [Display(Name = "Ảnh đại diện")]
+            public string AnhDaiDien { get; set; }
         }
 
         private async Task LoadAsync(NguoiDung user)
         {
-            var userO = await _userManager.GetUserAsync(User);
-
             var userName = await _userManager.GetUserNameAsync(user);
-            if (!string.IsNullOrEmpty(userO.TenNguoiDung))
-            {
-                var name = userO.TenNguoiDung.ToString();
-                Name = name;
 
-            }
-            if (!string.IsNullOrEmpty(userO.NgaySinh.ToString()))
+            string ngaySinh=null;
+            if (user.NgaySinh != null)
             {
-                var ngaySinh = userO.NgaySinh;
-                NgaySinh = ngaySinh;
-
-            }
-            if (!string.IsNullOrEmpty(userO.GioiTinh.ToString()))
-            {
-                var gender = userO.GioiTinh;
-                Gender = gender;
-
+                ngaySinh = user.NgaySinh.Value.ToString("dd/MM/yyyy");
             }
 
-            var  email = await _userManager.GetEmailAsync(user);
-            var phone = await _userManager.GetPhoneNumberAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-
-            Username = userName;
-            Email = email;
-            Phone = phone;
-
+            Email = await _userManager.GetEmailAsync(user);
+            Phone = await _userManager.GetPhoneNumberAsync(user);
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                Username = userName,
+                Name = user.TenNguoiDung,
+                NgaySinh = ngaySinh,
+                GioiTinh = user.GioiTinh,
+                AnhDaiDien = user.AnhDaiDien,
             };
         }
 
@@ -117,7 +101,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
-        var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -129,19 +113,80 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
+            var username = await _userManager.GetUserNameAsync(user);
+            if (Input.Username != username)
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
+                var setUserNameResult = await _userManager.SetUserNameAsync(user, Input.Username);
+                if (!setUserNameResult.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    StatusMessage = "Lỗi không mong muốn khi cố gắng sửa tên đăng nhập.";
+                    return RedirectToPage();
+                }
+            }
+            var ngaySinhInput = Input.NgaySinh;
+            var ngaySinhUser = user.NgaySinh?.ToString("dd/MM/yyyy");
+            if (ngaySinhInput != ngaySinhUser)
+            {
+                if (DateTime.TryParseExact(Input.NgaySinh, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedNgaySinh))
+                {
+                    user.NgaySinh = parsedNgaySinh;
+                }
+                else
+                {
+                    StatusMessage = "Ngày sinh không hợp lệ.";
                     return RedirectToPage();
                 }
             }
 
+            if (Input.Name != user.TenNguoiDung)
+            {
+                user.TenNguoiDung = Input.Name;
+            }
+            if (Input.GioiTinh != user.GioiTinh)
+            {
+                user.GioiTinh = Input.GioiTinh;
+            }
+
+            if (Request.Form.Files.Count > 0)
+            {
+                IFormFile file = Request.Form.Files.FirstOrDefault();
+
+                // Tạo một thư mục để lưu trữ tệp hình ảnh (thư mục gốc hoặc thư mục cụ thể, tùy ý bạn)
+                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "user_img");
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+                string imageFileName = user.AnhDaiDien.Replace("/user_img/", "");
+                string oldImagePath = Path.Combine(uploadsFolder, imageFileName);
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                user.AnhDaiDien = "/user_img/" + uniqueFileName;
+               var setImgResult= await _userManager.UpdateAsync(user);
+                if (setImgResult.Succeeded)
+                {       
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }                  
+                }
+
+            }
+
+            var updateResult = await _userManager.UpdateAsync(user);
+
+            if (!updateResult.Succeeded)
+            {
+                StatusMessage = "Lỗi không mong muốn khi cố gắng cập nhật thông tin.";
+            }
+
+
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "Hồ sơ của bạn đã được cập nhật";
             return RedirectToPage();
         }
     }
