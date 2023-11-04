@@ -278,6 +278,7 @@ namespace App_Api.Controllers
                                 IdAnh = Guid.NewGuid().ToString(),
                                 IdSanPhamChiTiet = sanPhamChiTiet.IdChiTietSp,
                                 TrangThai = 0,
+                                NgayTao = DateTime.Now,
                                 Url = tenAnh
                             });
                         });

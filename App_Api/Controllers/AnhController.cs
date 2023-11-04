@@ -51,7 +51,7 @@ namespace App_Api.Controllers
 
                         using var outputStream = new FileStream(outputPath, FileMode.Create);
                         await image.SaveAsync(outputStream, encoder);
-                        _allRepoImage.AddItem(new Anh { IdAnh = Guid.NewGuid().ToString(), IdSanPhamChiTiet = idProductDetail, Url = fileName, TrangThai = 0 });
+                        _allRepoImage.AddItem(new Anh { IdAnh = Guid.NewGuid().ToString(), IdSanPhamChiTiet = idProductDetail, NgayTao = DateTime.Now, Url = fileName, TrangThai = 0 });
                     }
                 }
 
@@ -77,12 +77,6 @@ namespace App_Api.Controllers
                 {
                     item.TrangThai = 1;
                     _allRepoImage.EditItem(item);
-                    //string filePath = Path.Combine(uploadDirectory, item.Url);
-
-                    //if (System.IO.File.Exists(filePath))
-                    //{
-                    //    System.IO.File.Delete(filePath);
-                    //}
                 }
                 return Ok();
             }
@@ -104,6 +98,7 @@ namespace App_Api.Controllers
                     {
                         IdAnh = Guid.NewGuid().ToString(),
                         IdSanPhamChiTiet = idProductDetail,
+                        NgayTao = DateTime.Now,
                         TrangThai = 0,
                         Url = item
                     };

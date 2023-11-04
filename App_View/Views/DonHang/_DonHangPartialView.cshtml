@@ -1,0 +1,120 @@
+﻿@model List<App_Data.ViewModels.DonHang.DonHangViewModel>
+@if (!Model.Any())
+{
+    <img src="https://dacsanngon.com/extension/product/img/cart-empty.png" style="width: 100%; height: auto" />
+}
+else
+
+{
+    @foreach (var item in Model)
+    {
+        <div class="m-order__get">
+            <div class="manage-o__header u-s-m-b-30">
+                <div class="dash-l-r">
+                    <div>
+                        <div class="manage-o__text-2 u-c-secondary">Order #@item.MaDonHang</div>
+                        <div class="manage-o__text u-c-silver">Ngày đặt: @item.NgayTao - Ngày giao dự kiến: @item.NgayGiaoDuKien</div>
+                    </div>
+                    <div>
+                        <div class="dash__link dash__link--brand">
+                            @if (item.TrangThaiHoaDon == 1)
+                            {
+                                <span class="manage-o__badge badge--processing" style="width: max-content">Chờ xác nhận</span>
+                            }
+                            @if (item.TrangThaiHoaDon == 2)
+                            {
+                                <span class="manage-o__badge badge--processing" tyle="width: max-content">Chờ lấy hàng</span>
+                            }
+                            @if (item.TrangThaiHoaDon == 3)
+                            {
+                                <span class="manage-o__badge badge--processing" tyle="width: max-content">Đang giao</span>
+                            }
+                            @if (item.TrangThaiHoaDon == 4)
+                            {
+                                <span class="manage-o__badge badge--processing" tyle="width: max-content">Đã giao</span>
+                            }
+                            @if (item.TrangThaiHoaDon == 5)
+                            {
+                                <span class="manage-o__badge badge--processing" style="background: red; color: white; width: max-content">Đã hủy</span>
+                            }
+                            @if (item.TrangThaiHoaDon == 6)
+                            {
+                                <span class="manage-o__badge badge--processing" tyle="width: max-content">Trả hàng</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="manage-o__description row">
+                <div class="description__container col-lg-9">
+                    <div class="description__img-wrap">
+
+                        <img class="u-img-fluid" src="/images/logo.jpg" alt="">
+                    </div>
+                    <div class="description-title">Bazaizai Store</div>
+                </div>
+                <div class="description__info-wrap col-lg-3">
+                    <div>
+
+                        <span class="manage-o__text-2 u-c-silver">
+                            Phí ship:
+
+                            <span class="manage-o__text-2 u-c-secondary">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.PhiShip)</span>
+                        </span>
+                    </div>
+                    <div>
+
+                        <span class="manage-o__text-2 u-c-silver">
+                            Tổng tiền:
+
+                            <span class="manage-o__text-2 u-c-secondary">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.TongTien)</span>
+                        </span>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: end; padding: 10px; background-color: #f0f0f0;width: 100% ">
+                        @if (item.TrangThaiHoaDon == 1)
+
+                        {
+                            <button onclick="window.location.href='/DonHang/HuyDonHang?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+    padding: 10px;
+    background: red!important;
+    border-radius: 5px;
+    width: max-content;
+    margin-right: 5px
+">
+                                Hủy
+                            </button>
+                            <button onclick="window.location.href='/DonHang/DonHangDetail?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+    padding: 10px;
+    border-radius: 5px;
+    width: max-content;
+">
+                                Xem chi tiết
+                            </button>
+                        }
+                        @if (item.TrangThaiHoaDon == 5 || item.TrangThaiHoaDon == 4)
+
+                        {
+                            <button onclick="window.location.href='/DonHang/HuyDonHang?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+    padding: 10px;
+    background: red!important;
+    border-radius: 5px;
+    width: max-content;
+    margin-right: 5px
+">
+                                Mua lại
+                            </button>
+                            <button onclick="window.location.href='/DonHang/DonHangDetail?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+    padding: 10px;
+    border-radius: 5px;
+    width: max-content;
+">
+                                Xem chi tiết
+                            </button>
+                        }
+                </div>
+            </div>
+        </div>
+    }
+}
+

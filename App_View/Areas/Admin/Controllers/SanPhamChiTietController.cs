@@ -582,102 +582,13 @@ namespace App_View.Areas.Admin.Controllers
             await _sanPhamChiTietService.DeleteAnhAysnc(responseImageDeleteVM);
         }
 
-        //// GET: Admin/SanPhamChiTiet/Edit/5
-        //public async Task<IActionResult> Edit(string id)
-        //{
-        //    if (id == null || _context.sanPhamChiTiets == null)
-        //    {
-        //        return NotFound();
-        //    }
+        // GET: Admin/SanPhamChiTiet/Delete/5
+        public async Task<IActionResult> Delete(string id)
+        {
+            var result = await _sanPhamChiTietService.DeleteAysnc(id);
+            return Ok(result);
+        }
 
-        //    var sanPhamChiTiet = await _context.sanPhamChiTiets.FindAsync(id);
-        //    if (sanPhamChiTiet == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["IdChatLieu"] = new SelectList(_context.ChatLieus, "IdChatLieu", "IdChatLieu", sanPhamChiTiet.IdChatLieu);
-        //    ViewData["IdKichCo"] = new SelectList(_context.kichCos, "IdKichCo", "IdKichCo", sanPhamChiTiet.IdKichCo);
-        //    ViewData["IdKieuDeGiay"] = new SelectList(_context.kieuDeGiays, "IdKieuDeGiay", "IdKieuDeGiay", sanPhamChiTiet.IdKieuDeGiay);
-        //    ViewData["IdLoaiGiay"] = new SelectList(_context.LoaiGiays, "IdLoaiGiay", "IdLoaiGiay", sanPhamChiTiet.IdLoaiGiay);
-        //    ViewData["IdMauSac"] = new SelectList(_context.mauSacs, "IdMauSac", "IdMauSac", sanPhamChiTiet.IdMauSac);
-        //    ViewData["IdSanPham"] = new SelectList(_context.SanPhams, "IdSanPham", "IdSanPham", sanPhamChiTiet.IdSanPham);
-        //    ViewData["IdThuongHieu"] = new SelectList(_context.thuongHieus, "IdThuongHieu", "IdThuongHieu", sanPhamChiTiet.IdThuongHieu);
-        //    ViewData["IdXuatXu"] = new SelectList(_context.xuatXus, "IdXuatXu", "IdXuatXu", sanPhamChiTiet.IdXuatXu);
-        //    return View(sanPhamChiTiet);
-        //}
-
-        //// POST: Admin/SanPhamChiTiet/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(string id, [Bind("IdChiTietSp,Ma,Day,MoTa,SoLuongTon,GiaBan,GiaNhap,TrangThai,TrangThaiSale,IdSanPham,IdKieuDeGiay,IdXuatXu,IdChatLieu,IdMauSac,IdKichCo,IdLoaiGiay,IdThuongHieu")] SanPhamChiTiet sanPhamChiTiet)
-        //{
-        //    if (id != sanPhamChiTiet.IdChiTietSp)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(sanPhamChiTiet);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!SanPhamChiTietExists(sanPhamChiTiet.IdChiTietSp))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["IdChatLieu"] = new SelectList(_context.ChatLieus, "IdChatLieu", "IdChatLieu", sanPhamChiTiet.IdChatLieu);
-        //    ViewData["IdKichCo"] = new SelectList(_context.kichCos, "IdKichCo", "IdKichCo", sanPhamChiTiet.IdKichCo);
-        //    ViewData["IdKieuDeGiay"] = new SelectList(_context.kieuDeGiays, "IdKieuDeGiay", "IdKieuDeGiay", sanPhamChiTiet.IdKieuDeGiay);
-        //    ViewData["IdLoaiGiay"] = new SelectList(_context.LoaiGiays, "IdLoaiGiay", "IdLoaiGiay", sanPhamChiTiet.IdLoaiGiay);
-        //    ViewData["IdMauSac"] = new SelectList(_context.mauSacs, "IdMauSac", "IdMauSac", sanPhamChiTiet.IdMauSac);
-        //    ViewData["IdSanPham"] = new SelectList(_context.SanPhams, "IdSanPham", "IdSanPham", sanPhamChiTiet.IdSanPham);
-        //    ViewData["IdThuongHieu"] = new SelectList(_context.thuongHieus, "IdThuongHieu", "IdThuongHieu", sanPhamChiTiet.IdThuongHieu);
-        //    ViewData["IdXuatXu"] = new SelectList(_context.xuatXus, "IdXuatXu", "IdXuatXu", sanPhamChiTiet.IdXuatXu);
-        //    return View(sanPhamChiTiet);
-        //}
-
-        //// GET: Admin/SanPhamChiTiet/Delete/5
-        //public async Task<IActionResult> Delete(string id)
-        //{
-        //    var result = await _sanPhamChiTietService.DeleteAysnc(id);
-        //    return Ok(result);
-        //}
-
-        //// POST: Admin/SanPhamChiTiet/Delete/5
-        //[HttpPost, ActionName("Delete")]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> DeleteConfirmed(string id)
-        //{
-        //    if (_context.sanPhamChiTiets == null)
-        //    {
-        //        return Problem("Entity set 'BazaizaiContext.sanPhamChiTiets'  is null.");
-        //    }
-        //    var sanPhamChiTiet = await _context.sanPhamChiTiets.FindAsync(id);
-        //    if (sanPhamChiTiet != null)
-        //    {
-        //        _context.sanPhamChiTiets.Remove(sanPhamChiTiet);
-        //    }
-
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
-
-        //private bool SanPhamChiTietExists(string id)
-        //{
-        //    return (_context.sanPhamChiTiets?.Any(e => e.IdChiTietSp == id)).GetValueOrDefault();
-        //}
+      
     }
 }
