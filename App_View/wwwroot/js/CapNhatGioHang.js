@@ -31,7 +31,3 @@
 //    });
 //});
 
-$(window).on('beforeunload', function () {
-    // Xoá giá trị từ localStorage
-    localStorage.removeItem('phiship');
-});
