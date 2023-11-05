@@ -114,11 +114,11 @@ namespace App_Api.Controllers
         //}
 
         [HttpGet]
-        public async Task<List<HoaDonTest>> GetHoaDonOnlineTest()
+        public async Task<List<HoaDonTest>> GetHoaDonOnlineTest(string idNguoiDung)
         {
             var danhSachHoaDon = new List<HoaDonTest>();
 
-            var danhSachHoaDonGoc = await GetHoaDonOnline();
+            var danhSachHoaDonGoc = (await GetHoaDonOnline()).Where(c => c.IdNguoiDung == idNguoiDung);
             foreach (var hoadon in danhSachHoaDonGoc)
             {
                 var hoadonct = (await _hoaDonChiTietController.GetAllHoaDon()).Where(c => c.IdHoaDon == hoadon.IdHoaDon).ToList();
