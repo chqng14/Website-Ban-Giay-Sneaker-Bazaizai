@@ -55,37 +55,35 @@ namespace App_Data.Repositories
             return await _context.danhGias.Where(x => x.IdDanhGia==id).FirstOrDefaultAsync();
         }
 
-        public async Task<List<DanhGia>> GetListAsync(string productId, string parentId)
-        {
-            return await _context.danhGias.Where(x => x.ParentId == parentId && x.IdSanPhamChiTiet == productId).ToListAsync();
-        }
+        //public async Task<List<DanhGia>> GetListAsync(string productId, string parentId)
+        //{
+        //    return await _context.danhGias.Where(x => x.ParentId == parentId && x.IdSanPhamChiTiet == productId).ToListAsync();
+        //}
     
         public async Task<List<DanhGia>> GetAllAsync()
         {
             return await _context.danhGias.ToListAsync();
         }
 
-        public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string productId, string parentId)
-        {
-            var ViewMode = await (from a in _context.danhGias
-                                  join b in _context.NguoiDungs on a.IdNguoiDung equals b.Id
-                                  where a.ParentId == parentId && a.IdSanPhamChiTiet == productId
-                                  select new DanhGiaViewModel
-                                  {
-                                      IdDanhGia = a.IdDanhGia,
-                                      ParentId = parentId,
-                                      BinhLuan = a.BinhLuan,
-                                      NgayDanhGia = a.NgayDanhGia,
-                                      SaoSp = a.SaoSp,
-                                      IdSanPhamChiTiet = a.IdSanPhamChiTiet,
-                                      IdNguoiDung = a.IdNguoiDung,
-                                      TrangThai = a.TrangThai,
-                                      Name = b.TenNguoiDung
-                                  }).OrderByDescending(x => x.NgayDanhGia).ToListAsync();
-            return ViewMode;
-
-
-        }
+        //public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string productId, string parentId)
+        //{
+        //    var ViewMode = await (from a in _context.danhGias
+        //                          join b in _context.NguoiDungs on a.IdNguoiDung equals b.Id
+        //                          where a.ParentId == parentId && a.IdSanPhamChiTiet == productId
+        //                          select new DanhGiaViewModel
+        //                          {
+        //                              IdDanhGia = a.IdDanhGia,
+        //                              ParentId = parentId,
+        //                              BinhLuan = a.BinhLuan,
+        //                              NgayDanhGia = a.NgayDanhGia,
+        //                              SaoSp = a.SaoSp,
+        //                              IdSanPhamChiTiet = a.IdSanPhamChiTiet,
+        //                              IdNguoiDung = a.IdNguoiDung,
+        //                              TrangThai = a.TrangThai,
+        //                              Name = b.TenNguoiDung
+        //                          }).OrderByDescending(x => x.NgayDanhGia).ToListAsync();
+        //    return ViewMode;
+        //}
         public async Task<bool> UpdateAsync(DanhGia danhGia)
         {
             try

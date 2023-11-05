@@ -13,7 +13,7 @@ namespace App_Data.IRepositories
         public Task<List<DanhGia>> GetAllAsync();
         public Task<DanhGia?> GetByKeyAsync(string id);
         public Task<bool> DeleteAsync(string id);
-        public Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string productId, string parentId);
+        //public Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string productId, string parentId);
         public Task<bool> UpdateAsync(DanhGia danhGia);
         public Task<bool> AddAsync(DanhGia danhGia);
     }

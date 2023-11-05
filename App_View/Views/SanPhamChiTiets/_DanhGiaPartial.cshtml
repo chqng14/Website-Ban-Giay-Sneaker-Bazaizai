@@ -2,8 +2,6 @@
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<NguoiDung> SignInManager
 @inject UserManager<NguoiDung> UserManager
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 <!--====== Tab 3 ======-->
 <style>
     .dropbtn {
@@ -35,23 +33,77 @@
         z-index: 1;
     }
 
-        /* Links inside the dropdown */
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
+       
 
-            /* Change color of dropdown links on hover */
-            .dropdown-content a:hover {
-                background-color: #ddd;
-            }
-
-    /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+    
     .show {
         display: block;
     }
+
+
+    /* CSS cho modal */
+    .modal {
+
+        display: none;
+        position: fixed;
+        top: -70px;
+        width: 100%;
+        height: 130%;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1;
+        text-align: center;
+    }
+
+    .modal-content {
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 400px;
+    }
+
+    /* CSS cho nút đóng modal */
+    .close {
+        color: #888;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .report-options {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .report-option {
+        margin-bottom: 10px;
+        text-align: left;
+    }
+
+        .report-option input[type="radio"] {
+            margin-right: 10px;
+        }
+    /* CSS cho nút "Gửi" và "Hủy" */
+    .button-container {
+        text-align: right; 
+        margin-top: 20px;
+    }
+
+        .button-container button {
+            margin-right: 10px; 
+            padding: 10px 20px; 
+            background-color: orangered;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+            .button-container button:disabled {
+                background-color: gray;
+                cursor: not-allowed;
+            }
 </style>
 <div class="tab-pane fade show active" id="pd-rev">
     <div class="pd-tab__rev">
@@ -83,7 +135,7 @@
                     </div>
                 </div>
                 <div class="rev-f1__review">
-
+                 @*  hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh jhjhj*@
                     <div class="review-o u-s-m-b-15">
                         <div class="review-o__info u-s-m-b-8">
                             @if (SignInManager.IsSignedIn(User))
@@ -124,9 +176,9 @@
                                 <button onclick="myFunction()" class="dropbtn" id="ellipsisButton" style="background-color: white; cursor: pointer; border: none;">
                                     <i id="ellipsisIcon" style="color: #d5d5d5;" class="fas fa-ellipsis-v"></i>
                                 </button>
-                                <div id="myDropdown" style="width:102px;" class="dropdown-content">
+                                <div id="myDropdown" style="width:102px; height: 30px;" class="dropdown-content">
 
-                                    <button onclick="preventDefaultAndShowModal()" style="width:102px;" data-bs-toggle="modal" data-bs-target="#myModal"> <span class="review-o__name">Báo cáo</span></button>
+                                    <button onclick="openModal()" style="width:102px; height: 30px;" data-bs-toggle="modal" data-bs-target="#myModal"> <span class="review-o__name">Báo cáo</span></button>
                                 </div>
                             </div>
                             
@@ -139,26 +191,49 @@
         </div>
     </div>
 </div>
-<div class="modal" id="myModal">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
 
-            <!-- Modal Header -->
-            <div class="modal-header">
-                <h4 class="modal-title">Modal Heading</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
+<div id="myModal" class="modal">
+    <div class="modal-content">
 
-            <!-- Modal body -->
-            <div class="modal-body">
-                Modal body..
-            </div>
+        <span class="pd-detail__price">Báo cáo đánh giá này</span>
+        <p class="review-o__name" style=" text-align: left; ">Vui lòng chọn lí do báo cáo</p>
+        <ul class="report-options">
+            <li class="report-option">
+                <input type="radio" id="reason1" name="reportReason" value="Danh gia tho tuc phan cam" onchange="updateSubmitButtonState()">
+                <label for="reason1" class="review-o__name">Đánh giá thô tục phản cảm</label>
+            </li>
+            <li class="report-option">
+                <input type="radio" id="reason2" name="reportReason" value="Chua hinh anh phan cam, khoa than, khieu dam" onchange="updateSubmitButtonState()">
+                <label for="reason2" class="review-o__name">Chứa hình ảnh phản cảm, khỏa thân, khiêu dâm</label>
+            </li>
+            <li class="report-option">
+                <input type="radio" id="reason3" name="reportReason" value="Danh gia trung lap (thong tin rac)" onchange="updateSubmitButtonState()">
+                <label for="reason3" class="review-o__name">Đánh giá trùng lặp (thông tin rác)</label>
+            </li>
+            <li class="report-option">
+                <input type="radio" id="reason4" name="reportReason" value="Chua thong tin ca nhan" onchange="updateSubmitButtonState()">
+                <label for="reason4" class="review-o__name">Chứa thông tin cá nhân</label>
+            </li>
+            <li class="report-option">
+                <input type="radio" id="reason5" name="reportReason" value="Quang cao trai phep" onchange="updateSubmitButtonState()">
+                <label for="reason5" class="review-o__name">Quảng cáo trái phép</label>
+            </li>
+            <li class="report-option">
+                <input type="radio" id="reason6" name="reportReason" value="Danh gia khong chinh xac / gay hieu lam" onchange="updateSubmitButtonState()">
+                <label for="reason6" class="review-o__name">Đánh giá không chính xác / gây hiểu lầm (ví dụ như: đánh giá và sản phẩm không khớp, ...)</label>
+            </li>
+            <li class="report-option">
+                <input type="radio" id="reason7" name="reportReason" value="Vi pham khac" onchange="updateSubmitButtonState()">
+                <label for="reason7" class="review-o__name">Vi phạm khác</label>
+            </li>
+        </ul>
+        <div id="additional" style="display: none;">
+            <input class="review-o__name" style=" width: 100%; height: 30px;" id="additionalInput" type="text" placeholder="Vui lòng mô tả chi tiết vi phạm (bắt buộc)" onchange="updateSubmitButtonState()" />
 
-            <!-- Modal footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-            </div>
-
+        </div>
+        <div class="button-container">
+            <button id="cancelButton" style="background-color: white; color: black;" onclick="closeModal()">Hủy</button>
+            <button id="submitButton" disabled>Gửi</button>
         </div>
     </div>
 </div>
@@ -175,15 +250,12 @@
         event.preventDefault();
         document.getElementById("myDropdown").classList.toggle("show");
     }
+
     window.onclick = function (event) {
         if (!event.target.matches('.dropbtn')) {
-            var dropdowns = document.getElementsByClassName("dropdown-content");
-            var i;
-            for (i = 0; i < dropdowns.length; i++) {
-                var openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                    openDropdown.classList.remove('show');
-                }
+            var dropdown = document.getElementById("myDropdown");
+            if (dropdown.classList.contains('show')) {
+                dropdown.classList.remove('show');
             }
         }
     }
@@ -203,6 +275,64 @@
 
         isLiked = !isLiked; // Đảo ngược trạng thái "đã thích"
     });
+</script>
+<script>
+    function openModal() {
+        if (!event.target.matches('.dropbtn')) {
+            var dropdown = document.getElementById("myDropdown");
+           
+                dropdown.classList.remove('show');
+        
+        }
+        event.preventDefault();
+        var modal = document.getElementById("myModal");
+        modal.style.display = "block";
+         window.addEventListener("click", function(event) {
+        if (event.target === modal) {
+          modal.style.display = "block"; // Không làm gì nếu ấn bên ngoài modal
+        }
+      });
+    }
+
+    function closeModal() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "none";
+    }
+
+    window.onclick = function (event) {
+        var modal = document.getElementById("myModal");
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+    function updateSubmitButtonState() {
+        const radioButtons = document.querySelectorAll('input[type="radio"]');
+        const submitButton = document.getElementById("submitButton");
+        const isAnyRadioButtonChecked = Array.from(radioButtons).some(radio => radio.checked);
+        submitButton.disabled = !isAnyRadioButtonChecked;
+
+        const lastRadioButton = document.getElementById("reason7");
+        const additional = document.getElementById("additional");
+        const additionalInput = document.getElementById("additionalInput");
+        const inputValue = additionalInput.value.trim();
+
+        if (lastRadioButton.checked) {
+            additional.style.display = "block";
+            if (inputValue === "") {
+                submitButton.disabled = true;
+            }
+            additionalInput.addEventListener("input", function () {
+                const inputValue = additionalInput.value.trim();
+                submitButton.disabled = inputValue === "";
+            });
+        } else {
+            additional.style.display = "none";
+            additionalInput.removeEventListener("input", null); // Ngừng lắng nghe sự kiện khi ẩn ô input
+        }
+    }
+
+
+
 </script>
 
 <!--====== End - Tab 3 ======-->
