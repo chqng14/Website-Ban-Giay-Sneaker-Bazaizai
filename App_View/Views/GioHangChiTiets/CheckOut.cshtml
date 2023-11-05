@@ -636,14 +636,15 @@
                 var tenNguoiNhan = selectedRow.querySelector('#ten').innerText;
                 var sdt = selectedRow.querySelector('#sdt').innerText;
                 var diaChi = selectedRow.querySelector('#diachi').innerText;
-
+                var cacThanhPhan = diaChi.split(',');
+                // Đảo ngược thứ tự của các thành phần
+                var diaChiDaoNguoc = cacThanhPhan.reverse().join(',');
                 var thongtin = `${tenNguoiNhan} ${sdt} ${diaChi}`;
                 $('#thongtin').text(thongtin);
 
-                citydb = diaChi.split(',')[3].trim();
-                districtdb = diaChi.split(',')[2].trim();
-                wardsdb = diaChi.split(',')[1].trim();
-
+                citydb = diaChiDaoNguoc.split(',')[0].trim();
+                districtdb = diaChiDaoNguoc.split(',')[1].trim();
+                wardsdb = diaChiDaoNguoc.split(',')[2].trim();
                 // Xóa tất cả các option hiện tại
                 $('#city1').empty();
                 $('#district1').empty();
@@ -1195,7 +1196,7 @@
                     selectedDistrict = $('#district option:selected').text();
                     selectedWard = $('#wards option:selected').text();
                 }
-                console.log(paymentMethod);
+                // console.log(paymentMethod);
                 $('input[name="LoaiThanhToan"]').val(paymentMethod);
                 if ($('#DefaultDropdown').is(':visible')) {
                     var moTaValue = $("#order-note").val();

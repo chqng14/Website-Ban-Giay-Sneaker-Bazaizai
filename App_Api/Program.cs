@@ -16,6 +16,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddScoped<SanPhamChiTietController>();
 builder.Services.AddScoped<IAllRepo<Anh>, AllRepo<Anh>>();
 builder.Services.AddScoped<IAllRepo<ChatLieu>, AllRepo<ChatLieu>>();
 builder.Services.AddScoped<IAllRepo<ChucVu>, AllRepo<ChucVu>>();
@@ -41,9 +42,9 @@ builder.Services.AddScoped<IAllRepo<Voucher>, AllRepo<Voucher>>();
 builder.Services.AddScoped<IAllRepo<VoucherNguoiDung>, AllRepo<VoucherNguoiDung>>();
 builder.Services.AddScoped<IAllRepo<XuatXu>, AllRepo<XuatXu>>();
 builder.Services.AddScoped<ISanPhamChiTietRespo, SanPhamChiTietRespo>();
-builder.Services.AddScoped<IXuatXuRespo ,XuatXuRespo>();
-builder.Services.AddScoped<IMauSacRespo ,MauSacRespo>();
-builder.Services.AddScoped<IAnhRespo ,AnhRespo>();
+builder.Services.AddScoped<IXuatXuRespo, XuatXuRespo>();
+builder.Services.AddScoped<IMauSacRespo, MauSacRespo>();
+builder.Services.AddScoped<IAnhRespo, AnhRespo>();
 builder.Services.AddScoped<AnhController>();
 var app = builder.Build();
 
