@@ -72,46 +72,57 @@ else
                     </div>
                 </div>
                 <div style="display: flex; justify-content: end; padding: 10px; background-color: #f0f0f0;width: 100% ">
-                        @if (item.TrangThaiHoaDon == 1)
+                    @if (item.TrangThaiHoaDon == 1)
 
-                        {
-                            <button onclick="window.location.href='/DonHang/HuyDonHang?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+                    {
+                        <button onclick="window.location.href='/DonHang/HuyDonHang?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
     padding: 10px;
     background: red!important;
     border-radius: 5px;
     width: max-content;
     margin-right: 5px
 ">
-                                Hủy
-                            </button>
-                            <button onclick="window.location.href='/DonHang/DonHangDetail?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+                            Hủy
+                        </button>
+                        <button onclick="window.location.href='/DonHang/DonHangDetail?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
     padding: 10px;
     border-radius: 5px;
     width: max-content;
 ">
-                                Xem chi tiết
-                            </button>
-                        }
-                        @if (item.TrangThaiHoaDon == 5 || item.TrangThaiHoaDon == 4)
+                            Xem chi tiết
+                        </button>
+                    }
+                    @if (item.TrangThaiHoaDon == 2 || item.TrangThaiHoaDon == 3)
 
-                        {
-                            <button onclick="window.location.href='/DonHang/HuyDonHang?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+                    {
+                        <button onclick="window.location.href='/DonHang/DonHangDetail?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+    padding: 10px;
+    border-radius: 5px;
+    width: max-content;
+">
+                            Xem chi tiết
+                        </button>
+                    }
+                    @if (item.TrangThaiHoaDon == 5 || item.TrangThaiHoaDon == 4)
+
+                    {
+                        <button onclick="window.location.href='/DonHang/HuyDonHang?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
     padding: 10px;
     background: red!important;
     border-radius: 5px;
     width: max-content;
     margin-right: 5px
 ">
-                                Mua lại
-                            </button>
-                            <button onclick="window.location.href='/DonHang/DonHangDetail?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+                            Mua lại
+                        </button>
+                        <button onclick="window.location.href='/DonHang/DonHangDetail?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
     padding: 10px;
     border-radius: 5px;
     width: max-content;
 ">
-                                Xem chi tiết
-                            </button>
-                        }
+                            Xem chi tiết
+                        </button>
+                    }
                 </div>
             </div>
         </div>
