@@ -924,9 +924,8 @@
                     promise.push(deleteAnh);
                 }
             })
-            //Promise.all(promise)
-            //    .then(() => )
-            //window.location.reload();
+            Promise.all(promise)
+                .then(() => window.location.reload())
         })
     })();
 
