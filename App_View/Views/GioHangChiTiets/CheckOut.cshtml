@@ -1260,7 +1260,11 @@
                                     success: function (paymentResponse) {
                                         if (paymentResponse.idHoaDon != null) {
                                             UpdateVoucher()
-                                            window.location.href = paymentResponse.url;
+                                if (paymentResponse.url != null) {
+                                    window.location.href = paymentResponse.url;
+                                }else{
+                                    window.location.href = "/HoaDon/Order?idHoaDon=" + paymentResponse.idHoaDon;
+                                }
                                         } else {
                                             Swal.fire({
                                                 title: paymentResponse.title,
