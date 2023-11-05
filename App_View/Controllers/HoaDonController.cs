@@ -371,17 +371,6 @@ namespace App_View.Controllers
         }
         #endregion
 
-        public async Task<IActionResult> GetHoaDonOnline()
-        {
-            var UserID = _userManager.GetUserId(User);
-            var listHoaDon = await hoaDonServices.GetHoaDonOnline(UserID);
-            return View(listHoaDon);
-        }
-        public async Task<IActionResult> DetailHoaDonOnline(string idHoaDon)
-        {
-            var UserID = _userManager.GetUserId(User);
-            var listHoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
-            return View(listHoaDon);
-        }
+
     }
 }

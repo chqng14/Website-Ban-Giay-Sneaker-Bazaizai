@@ -1,0 +1,201 @@
+﻿@model IEnumerable<App_Data.ViewModels.HoaDon.HoaDonTest>
+@if (!Model.Any())
+{
+    <img src="https://dacsanngon.com/extension/product/img/cart-empty.png" style="width: 100%; height: auto" />
+}
+@{
+    ViewData["Title"] = "GetHoaDonOnline";
+}
+@* <link href="~/css/hoadon.css" rel="stylesheet" /> *@
+<!--====== Section 2 ======-->
+@* <div class="u-s-p-b-60">
+
+    <!--====== Section Content ======-->
+    <div class="section__content">
+        <div class="dash">
+            <div class="container">
+                <div class="row">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--====== End - Section Content ======-->
+</div> *@
+@* <div class="col-lg-9 col-md-12">
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+        <div class="dash__pad-2">
+            <h1 class="dash__h1 u-s-m-b-14">My Orders</h1>
+
+            <span class="dash__text u-s-m-b-30">Here you can see all products that have been delivered.</span>
+            <form class="m-order u-s-m-b-30">
+                <div class="m-order__select-wrapper">
+
+                    <label class="u-s-m-r-8" for="my-order-sort">Show:</label><select class="select-box select-box--primary-style" id="my-order-sort">
+                        <option selected>Last 5 orders</option>
+                        <option>Last 15 days</option>
+                        <option>Last 30 days</option>
+                        <option>Last 6 months</option>
+                        <option>Orders placed in 2018</option>
+                        <option>All Orders</option>
+                    </select>
+                </div>
+            </form>
+            <div class="m-order__list">
+            </div>
+        </div>
+    </div>
+
+</div> *@
+@foreach (var item in Model)
+{
+    <div class="m-order__get">
+        <div class="manage-o__header u-s-m-b-30">
+            <div class="dash-l-r">
+                <div>
+                    <div class="manage-o__text-2 u-c-secondary">Order #@item.MaHoaDon</div>
+                    <div class="manage-o__text u-c-silver">Ngày đặt: @item.NgayTao - Ngày giao dự kiến: @item.NgayGiaoDuKien</div>
+                </div>
+                @* <div>
+            <div class="dash__link dash__link--brand">
+
+            <a href="@Url.Action("DetailHoaDonOnline","HoaDon",new{idHoaDon = item.IdHoaDon})">MANAGE</a>
+            </div>
+            </div> *@
+                <div>
+                    <div class="dash__link dash__link--brand">
+                        @if (item.TrangThaiGiaoHang == 1)
+                        {
+                            <span class="manage-o__badge badge--processing" style="width: max-content">Chờ xác nhận</span>
+                        }
+                        @if (item.TrangThaiGiaoHang == 2)
+                        {
+                            <span class="manage-o__badge badge--processing" tyle="width: max-content">Chờ lấy hàng</span>
+                        }
+                        @if (item.TrangThaiGiaoHang == 3)
+                        {
+                            <span class="manage-o__badge badge--processing" tyle="width: max-content">Đang giao</span>
+                        }
+                        @if (item.TrangThaiGiaoHang == 4)
+                        {
+                            <span class="manage-o__badge badge--processing" tyle="width: max-content">Đã giao</span>
+                        }
+                        @if (item.TrangThaiGiaoHang == 5)
+                        {
+                            <span class="manage-o__badge badge--processing" style="background: red; color: white; width: max-content">Đã hủy</span>
+                        }
+                        @if (item.TrangThaiGiaoHang == 6)
+                        {
+                            <span class="manage-o__badge badge--processing" tyle="width: max-content">Trả hàng</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        @foreach (var sp in item.SanPham.Take(1))
+        {
+            <div class="manage-o__description" style="margin-bottom:20px">
+                <!-- Hiển thị chỉ một sản phẩm -->
+                <div class="description__container">
+                    <div class="description__img-wrap">
+                        <img class="u-img-fluid" src="/AnhSanPham/@sp.LinkAnh[0]" alt="">
+                    </div>
+                    <div class="description-title">@sp.TenSanPham</div>
+                </div>
+                <div class="description__info-wrap">
+                    <div>
+                        <span class="manage-o__text-2 u-c-silver">
+                            Số lượng:
+                            <span class="manage-o__text-2 u-c-secondary">@sp.SoLuong</span>
+                        </span>
+                    </div>
+                    <div>
+                        <span class="manage-o__text-2 u-c-silver">
+                            Tổng giá:
+                            <span class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", sp.TongTien)</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            @if (item.SanPham.Count > 1)
+            {
+                <!-- Dấu mũi tên xuống -->
+                <div class="arrow-down-btn" style="margin-bottom:20px" onclick="showHiddenProducts()"></div>
+            }
+
+            <!-- Danh sách sản phẩm ẩn -->
+            <div class="hidden-products">
+                @foreach (var hiddenSp in item.SanPham.Skip(1))
+                {
+                    <div class="manage-o__description" style="margin-top:10px;margin-bottom:20px">
+                        <!-- Hiển thị sản phẩm ẩn -->
+                        <div class="description__container">
+                            <div class="description__img-wrap">
+                                <img class="u-img-fluid" src="/AnhSanPham/@hiddenSp.LinkAnh[0]" alt="">
+                            </div>
+                            <div class="description-title">@hiddenSp.TenSanPham</div>
+                        </div>
+                        <div class="description__info-wrap">
+                            <div>
+                                <span class="manage-o__text-2 u-c-silver">
+                                    Số lượng:
+                                    <span class="manage-o__text-2 u-c-secondary">@sp.SoLuong</span>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="manage-o__text-2 u-c-silver">
+                                    Tổng giá:
+                                    <span class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", hiddenSp.TongTien)</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            @if (item.SanPham.Count > 1)
+            {
+                <!-- Dấu mũi tên lên -->
+                <div class="arrow-up-btn" style="display:none;margin-bottom:20px" onclick="hideHiddenProducts()"></div>
+            }
+        }
+        <div class="donhang-container" style="float: right;margin-top:-35px;">
+            @if (item.TrangThaiGiaoHang == 1)
+            {
+                <button class="btn btn--e-transparent-brand-b-2 order">Huỷ</button>
+                <button class="btn btn--e-brand-b-2 order" onclick="window.location.href='/DonHang/DetailHoaDonOnline?idHoaDon=@item.IdHoaDon'">
+                    Chi tiết đơn hàng
+                </button>
+            }
+            else if (item.TrangThaiGiaoHang == 5 || item.TrangThaiGiaoHang == 4)
+            {
+                <button class="btn btn--e-transparent-brand-b-2 order">Mua lại</button>
+                <button class="btn btn--e-brand-b-2 order" onclick="window.location.href='/DonHang/DetailHoaDonOnline?idHoaDon=@item.IdHoaDon'">
+                    Chi tiết đơn hàng
+                </button>
+            }
+            else
+            {
+                <button class="btn btn--e-brand-b-2 order" onclick="window.location.href='/DonHang/DetailHoaDonOnline?idHoaDon=@item.IdHoaDon'">
+                    Chi tiết đơn hàng
+                </button>
+            }
+        </div>
+    </div>
+}
+<!--====== End - Section 2 ======-->
+<script>
+    function showHiddenProducts() {
+        $('.hidden-products').css('display', 'block');
+        $('.arrow-down-btn').css('display', 'none');
+        $('.arrow-up-btn').css('display', 'block');
+    }
+    function hideHiddenProducts() {
+        $('.hidden-products').css('display', 'none');
+        $('.arrow-down-btn').css('display', 'block');
+        $('.arrow-up-btn').css('display', 'none');
+    }
+
+
+</script>
+

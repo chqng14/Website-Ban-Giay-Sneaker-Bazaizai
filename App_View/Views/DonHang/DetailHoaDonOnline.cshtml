@@ -1,0 +1,481 @@
+﻿@model App_Data.ViewModels.HoaDon.HoaDonTest
+
+@{
+    ViewData["Title"] = "DetailHoaDonOnline";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+@* <!--====== Section 2 ======-->
+<div class="u-s-p-b-60">
+
+    <!--====== Section Content ======-->
+    <div class="section__content">
+        <div class="dash">
+            <div class="container">
+                <div class="row">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--====== End - Section Content ======-->
+</div>
+<!--====== End - Section 2 ======--> *@
+
+<div class="col-lg-9 col-md-12">
+    <h1 class="dash__h1 u-s-m-b-30">Order Details</h1>
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+        <div class="dash__pad-2">
+            <div class="dash-l-r">
+                <div>
+                    <div class="manage-o__text-2 u-c-secondary">Order #@Model.MaHoaDon</div>
+                    <div class="manage-o__text u-c-silver">Ngày đặt: @Model.NgayTao</div>
+                </div>
+                <div>
+                    <div class="manage-o__text-2 u-c-silver">
+                        Tổng cộng:
+
+                        <span class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", Model.TongGia)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+        <div class="dash__pad-2">
+            <div class="manage-o">
+                <div class="manage-o__header u-s-m-b-30">
+                    <div class="manage-o__icon">
+                        <i class="fas fa-box u-s-m-r-5"></i>
+
+                        <span class="manage-o__text">Thông tin đơn hàng</span>
+                    </div>
+                </div>
+                <div class="dash-l-r">
+                    <div class="manage-o__text u-c-secondary">Ngày giao dự kiến: @Model.NgayGiaoDuKien</div>
+                    <div class="manage-o__icon">
+                        <i class="fas fa-truck u-s-m-r-5"></i>
+
+                        <span class="manage-o__text">Standard</span>
+                    </div>
+                </div>
+                <div class="manage-o__timeline">
+                    @if (Model.TrangThaiGiaoHang == 1)
+
+                    {
+                        <div class="timeline-row">
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i timeline-l-i--finish">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Chờ xác nhận</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Chờ lấy hàng</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đang giao</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đã giao</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đã hủy</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Trả hàng</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.TrangThaiGiaoHang == 2)
+
+                    {
+                        <div class="timeline-row">
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i timeline-l-i--finish">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Chờ xác nhận</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i timeline-l-i--finish">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Chờ lấy hàng</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đang giao</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đã giao</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đã hủy</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Trả hàng</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.TrangThaiGiaoHang == 3)
+
+                    {
+                        <div class="timeline-row">
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i timeline-l-i--finish">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Chờ xác nhận</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i timeline-l-i--finish">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Chờ lấy hàng</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i timeline-l-i--finish">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đang giao</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đã giao</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đã hủy</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Trả hàng</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.TrangThaiGiaoHang == 4)
+
+                    {
+                        <div class="timeline-row">
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i timeline-l-i--finish">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Chờ xác nhận</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i timeline-l-i--finish">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Chờ lấy hàng</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i timeline-l-i--finish">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đang giao</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i timeline-l-i--finish">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đã giao</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đã hủy</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Trả hàng</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @if (Model.TrangThaiGiaoHang == 5)
+
+                    {
+                        <div class="timeline-row">
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Chờ xác nhận</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Chờ lấy hàng</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đang giao</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đã giao</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i timeline-l-i--finish">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Đã hủy</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-2 u-s-m-b-30">
+                                <div class="timeline-step">
+                                    <div class="timeline-l-i">
+
+                                        <span class="timeline-circle"></span>
+                                    </div>
+
+                                    <span class="timeline-text">Trả hàng</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                @foreach (var item in Model.SanPham)
+                {
+                    <div class="manage-o__description" style="margin-top:10px">
+                        <div class="description__container">
+                            <div class="description__img-wrap">
+
+                                <img class="u-img-fluid" src="/AnhSanPham/@item.LinkAnh[0]" alt="">
+                            </div>
+                            <div class="description-title">@item.TenSanPham</div>
+                        </div>
+                        <div class="description__info-wrap">
+                            <div>
+                                <span class="manage-o__text-2 u-c-silver">
+                                    Số lượng:
+                                    <span class="manage-o__text-2 u-c-secondary">@item.SoLuong</span>
+                                </span>
+                            </div>
+                            <div>
+                                <span class="manage-o__text-2 u-c-silver">
+                                    Tổng giá:
+                                    <span class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", item.TongTien)</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="dash__box dash__box--bg-white dash__box--shadow u-s-m-b-30">
+                <div class="dash__pad-2">
+                    <h2 class="dash__h2 u-s-m-b-8">Thông tin thanh toán:</h2>
+                    @if (Model.LoaiThanhToan == "MOMO" && Model.TrangThaiThanhToan == 1)
+                    {
+                        <h3 class="manage-o__text-2 u-c-secondary">Momo</h3>
+                        <h3 class="manage-o__text-2 u-c-secondary">Đã thanh toán</h3>
+                    }
+                    else if (Model.LoaiThanhToan == "MOMO" && Model.TrangThaiThanhToan == 0)
+                    {
+                        <h3 class="manage-o__text-2 u-c-secondary">Momo</h3>
+                        <h3 class="manage-o__text-2 u-c-secondary" style="color:red">Vui lòng thanh toán đơn hàng của bạn</h3>
+                    }
+                    else
+                    {
+                        <h3 class="manage-o__text-2 u-c-secondary">COD</h3>
+                        <h3 class="manage-o__text-2 u-c-secondary">Thanh toán khi nhận hàng</h3>
+                    }
+                </div>
+            </div>
+            
+            <div class="dash__box dash__box--bg-white dash__box--shadow u-s-m-b-30" style="margin-bottom:unset">
+                
+                <div class="dash__pad-3">
+                    <h2 class="dash__h2 u-s-m-b-8">Địa chỉ giao hàng:</h2>
+                    <h2 class="dash__h2 u-s-m-b-8">@Model.TenNguoiNhan</h2>
+
+                    <span class="dash__text-2">@Model.DiaChi</span>
+
+                    <span class="dash__text-2">@Model.SDT</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6" style="height:200px">
+            <div class="dash__box dash__box--bg-white dash__box--shadow u-h-100">
+                <div class="dash__pad-3">
+                    <h2 class="dash__h2 u-s-m-b-8">Tổng tiền:</h2>
+                    <div class="dash-l-r u-s-m-b-8">
+                        <div class="manage-o__text-2 u-c-secondary">Tạm tính</div>
+                        <div class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", Model.TongTien)</div>
+                    </div>
+                    <div class="dash-l-r u-s-m-b-8">
+                        <div class="manage-o__text-2 u-c-secondary">Phí ship</div>
+                        <div class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", Model.TienShip)</div>
+                    </div>
+                    <div class="dash-l-r u-s-m-b-8">
+                        <div class="manage-o__text-2 u-c-secondary">Tiền giảm</div>
+                        <div class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", Model.TienGiam)</div>
+                    </div>
+                    <div class="dash-l-r u-s-m-b-8">
+                        <div class="manage-o__text-2 u-c-secondary">Tổng cộng</div>
+                        <div class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", Model.TongGia)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

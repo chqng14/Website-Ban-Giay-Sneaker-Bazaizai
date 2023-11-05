@@ -4,13 +4,16 @@
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
 }
 
+<link href="~/css/hoadon.css" rel="stylesheet" />
 <style>
     /* CSS cho tab */
     .tabs {
         display: flex;
         border: 1px solid #ccc;
         overflow: hidden;
-        background-color: #f3f3f3;
+        background-color: white;
+        margin-bottom:20px;
+        border-radius: 10px;
     }
 
     .tab-item {
@@ -19,122 +22,128 @@
         text-align: center;
         padding: 10px 0;
         cursor: pointer;
-        color: #333;
+        color: #333333;
         transition: background-color 0.3s;
+        font-weight: 600;
     }
 
         .tab-item.active {
             background-color: #ff4500;
             color: #fff;
+            font-weight: 600;
         }
 
-    .tab-content {
+    /* .tab-content {
         padding: 20px;
         border: 1px solid #ccc;
         border-top: none;
         border-radius: 0 0 5px 5px;
         display: none;
-    }
+    } */
 
-        .tab-content.active {
+        /* .tab-content.active {
             display: block;
         }
 
     table.dataTable {
         margin-bottom: 20px;
     }
-
+ */
         /* Đặt màu nền cho tiêu đề cột và đổi màu chữ */
-        table.dataTable thead th {
+        /* table.dataTable thead th {
             background-color: #333;
             color: white;
             padding: 10px;
-        }
+        } */
 
         /* Đặt màu nền và khoảng cách cho dòng dữ liệu */
-        table.dataTable tbody td {
+        /* table.dataTable tbody td {
             background-color: #f5f5f5;
             color: #333;
             padding: 10px;
-        }
+        } */
 
         /* Tạo khoảng cách và đổi màu nền khi di chuột qua dòng */
-        table.dataTable tbody tr:hover {
+        /* table.dataTable tbody tr:hover {
             background-color: #ddd;
-        }
+        } */
 
-    div.dataTables_paginate {
+    /* div.dataTables_paginate {
         text-align: center;
         margin-top: 10px;
-    }
+    } */
 
-        div.dataTables_paginate a {
-            color: #007BFF; /* Màu chữ cho các nút phân trang */
+       /*  div.dataTables_paginate a {
+            color: #007BFF; 
             margin: 5px;
             padding: 5px 10px;
-            border: 1px solid #007BFF; /* Viền cho các nút phân trang */
-            border-radius: 5px; /* Bo góc nút phân trang */
+            border: 1px solid #007BFF; 
+            border-radius: 5px; 
             text-decoration: none;
             display: inline-block;
             transition: background-color 0.3s;
         }
 
             div.dataTables_paginate a.active {
-                background-color: #007BFF; /* Màu nền của nút phân trang khi nút đó đang được chọn */
-                color: white; /* Màu chữ trên nút phân trang khi nút đó đang được chọn */
+                background-color: #007BFF; 
+                color: white; 
             }
 
             div.dataTables_paginate a:hover {
-                background-color: #0056b3; /* Màu nền của nút phân trang khi di chuột qua */
-                color: white; /* Màu chữ trên nút phân trang khi di chuột qua */
-            }
+                background-color: #0056b3; 
+                color: white; 
+            } */
 
-            .dataTables_length,
+            /* .dataTables_length,
         .dataTables_filter,
         .dataTables_info,
         .dataTables_paginate {
-            font-size: 50%; /* Thu nhỏ font-size xuống 50% so với kích thước mặc định */
+            font-size: 50%; 
         }
 
         table {
-            font-size: 80%; /* Thay đổi kích thước font cho toàn bộ bảng */
+            font-size: 80%; 
         }
 
-        /* CSS cho tiêu đề cột (thead) */
         table thead th {
-            font-size: 90%; /* Thay đổi kích thước font cho tiêu đề cột */
+            font-size: 90%; 
         }
 
-        /* CSS cho dòng dữ liệu (tbody) */
         table tbody td {
-            font-size: 70%; /* Thay đổi kích thước font cho dòng dữ liệu */
-        }
+            font-size: 70%; 
+        } */
 </style>
 
-<div class="your-container col-lg-9">
-    <div class="tabs">
-        <div class="tab-item active" id="tab1" data-value="">Tất cả</div>
-        <div class="tab-item" id="tab2" data-value="1">Chờ xác nhận</div>
-        <div class="tab-item" id="tab3" data-value="2">Chờ lấy hàng</div>
-        <div class="tab-item" id="tab4" data-value="3">Đang giao</div>
-        <div class="tab-item" id="tab5" data-value="4">Đã giao</div>
-        <div class="tab-item" id="tab6" data-value="5">Đã hủy</div>
-        <div class="tab-item" id="tab7" data-value="6">Trả hàng</div>
-    </div>
+<div class="col-lg-9 col-md-12">
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+        <div class="dash__pad-2">
+            <h1 class="dash__h1 u-s-m-b-14">My Orders</h1>
 
-    <div class="tab-content active" id="content1">
+            <span class="dash__text u-s-m-b-30">Here you can see all products that have been delivered.</span>
+            <div class="tabs">
+                <div class="tab-item active" id="tab1" data-value="">Tất cả</div>
+                <div class="tab-item" id="tab2" data-value="1">Chờ xác nhận</div>
+                <div class="tab-item" id="tab3" data-value="2">Chờ lấy hàng</div>
+                <div class="tab-item" id="tab4" data-value="3">Đang giao</div>
+                <div class="tab-item" id="tab5" data-value="4">Đã giao</div>
+                <div class="tab-item" id="tab6" data-value="5">Đã hủy</div>
+                <div class="tab-item" id="tab7" data-value="6">Trả hàng</div>
+            </div>
 
+            <div class="m-order__list active" id="content1">
+            </div>
+        </div>
     </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<link href="https://cdn.datatables.net/v/dt/dt-1.13.7/datatables.min.css" rel="stylesheet">
+@* <link href="https://cdn.datatables.net/v/dt/dt-1.13.7/datatables.min.css" rel="stylesheet"> *@
 
 <script>
     $(document).ready(function () {
         $('#example').DataTable();
         $.ajax({
-            url: '/DonHang/LoadPartialViewDonHangs',
+            url: '/DonHang/GetHoaDonOnline',
             type: 'GET',
             success: function (result) {
                 $('#content1').empty().html(result);
@@ -156,7 +165,7 @@
     tabItems.forEach((tabItem, index) => {
         tabItem.addEventListener('click', () => {
             // Ẩn tất cả các tab content và loại bỏ trạng thái active
-            document.querySelectorAll('.tab-content').forEach(content => {
+            document.querySelectorAll('.m-order__list').forEach(content => {
                 content.classList.remove('active');
             });
             document.querySelectorAll('.tab-item').forEach(item => {
@@ -168,7 +177,7 @@
                 trangThai: tabItem.getAttribute("data-value"),
             };
             $.ajax({
-                url: '/DonHang/LoadPartialViewDonHangs',
+                url: '/DonHang/GetHoaDonOnline',
                 type: 'GET',
                 data: data,
                 success: function (result) {
