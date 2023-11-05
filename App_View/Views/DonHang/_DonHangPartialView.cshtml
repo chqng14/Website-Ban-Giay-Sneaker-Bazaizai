@@ -47,21 +47,13 @@ else
             </div>
             <div class="manage-o__description row">
                 <div class="description__container col-lg-9">
-                    <div class="description__img-wrap">
+                    @*<div class="description__img-wrap">
 
                         <img class="u-img-fluid" src="/images/logo.jpg" alt="">
                     </div>
-                    <div class="description-title">Bazaizai Store</div>
+                    <div class="description-title">Bazaizai Store</div>*@
                 </div>
                 <div class="description__info-wrap col-lg-3">
-                    <div>
-
-                        <span class="manage-o__text-2 u-c-silver">
-                            Phí ship:
-
-                            <span class="manage-o__text-2 u-c-secondary">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.PhiShip)</span>
-                        </span>
-                    </div>
                     <div>
 
                         <span class="manage-o__text-2 u-c-silver">
@@ -70,48 +62,119 @@ else
                             <span class="manage-o__text-2 u-c-secondary">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.TongTien)</span>
                         </span>
                     </div>
+                    <div>
+
+                        <span class="manage-o__text-2 u-c-silver">
+                            Phí ship:
+
+                            <span class="manage-o__text-2 u-c-secondary">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.PhiShip)</span>
+                        </span>
+                    </div>
+
+                </div>
+                <div class="gl-scroll u-s-m-b-15" style="max-height: 280px; overflow-y: auto; padding: 17px; width: 100%">
+
+                    @foreach (var sp in item.SanPhamGioHangViewModels!)
+                    {
+                        <!--====== Card for mini cart ======-->
+                        <div class="card-mini-product">
+                            <div class="mini-product">
+                                <div class="mini-product__image-wrapper">
+
+                                    <a class="mini-product__link" href="/SanPhamChiTiets/Details/@sp.IdSanPhamChiTiet">
+
+                                        <img class="u-img-fluid" src="/AnhSanPham/@sp.Anh" alt="">
+                                    </a>
+                                </div>
+                                <div class="mini-product__info-wrapper">
+
+                                    <span class="mini-product__category">
+
+                                        <span>@sp.TenThuongHieu</span>
+                                    </span>
+
+                                    <span class="mini-product__name">
+
+                                        <a href="/SanPhamChiTiets/Details/@sp.IdSanPhamChiTiet">@sp.TenSanPham</a>
+                                    </span>
+
+                                </div>
+                            </div>
+
+                            <div class="description__info-wrap col-lg-4">
+                                <div>
+
+                                    <span class="manage-o__text-2 u-c-silver">
+                                        Số lượng: 
+
+                                        <span class="manage-o__text-2 u-c-secondary"> @sp.SoLuong</span>
+                                    </span>
+                                </div>
+                                <div>
+
+                                    <span class="manage-o__text-2 u-c-silver">
+                                        Giá:
+
+                                        <span class="manage-o__text-2 u-c-secondary">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", sp.GiaSanPham)</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--====== End - Card for mini cart ======-->
+                    }
                 </div>
                 <div style="display: flex; justify-content: end; padding: 10px; background-color: #f0f0f0;width: 100% ">
-                        @if (item.TrangThaiHoaDon == 1)
+                    @if (item.TrangThaiHoaDon == 1)
 
-                        {
-                            <button onclick="window.location.href='/DonHang/HuyDonHang?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+                    {
+                        <button onclick="window.location.href='/DonHang/HuyDonHang?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
     padding: 10px;
     background: red!important;
     border-radius: 5px;
     width: max-content;
     margin-right: 5px
 ">
-                                Hủy
-                            </button>
-                            <button onclick="window.location.href='/DonHang/DonHangDetail?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+                            Hủy
+                        </button>
+                        <button onclick="window.location.href='/DonHang/DonHangDetail?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
     padding: 10px;
     border-radius: 5px;
     width: max-content;
 ">
-                                Xem chi tiết
-                            </button>
-                        }
-                        @if (item.TrangThaiHoaDon == 5 || item.TrangThaiHoaDon == 4)
+                            Xem chi tiết
+                        </button>
+                    }
+                    @if (item.TrangThaiHoaDon == 2 || item.TrangThaiHoaDon == 3)
 
-                        {
-                            <button onclick="window.location.href='/DonHang/HuyDonHang?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+                    {
+                        <button onclick="window.location.href='/DonHang/DonHangDetail?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+    padding: 10px;
+    border-radius: 5px;
+    width: max-content;
+">
+                            Xem chi tiết
+                        </button>
+                    }
+                    @if (item.TrangThaiHoaDon == 5 || item.TrangThaiHoaDon == 4)
+
+                    {
+                        <button onclick="window.location.href='/DonHang/HuyDonHang?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
     padding: 10px;
     background: red!important;
     border-radius: 5px;
     width: max-content;
     margin-right: 5px
 ">
-                                Mua lại
-                            </button>
-                            <button onclick="window.location.href='/DonHang/DonHangDetail?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
+                            Mua lại
+                        </button>
+                        <button onclick="window.location.href='/DonHang/DonHangDetail?idDonHang=@item.IdDonHang'" class="btn btn--e-brand-b-2" style="
     padding: 10px;
     border-radius: 5px;
     width: max-content;
 ">
-                                Xem chi tiết
-                            </button>
-                        }
+                            Xem chi tiết
+                        </button>
+                    }
                 </div>
             </div>
         </div>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using App_Data.ViewModels.GioHangChiTiet;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace App_Data.ViewModels.DonHang
 {
     public class DonHangViewModel
     {
+        public List<SanPhamGioHangViewModel>? SanPhamGioHangViewModels { get; set; } = new List<SanPhamGioHangViewModel> { };
         public string? IdDonHang { get; set; }
         public string? MaDonHang { get; set; }
         public double TongTien { get; set; }

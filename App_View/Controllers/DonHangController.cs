@@ -22,7 +22,6 @@ namespace App_View.Controllers
             _httpclient = httpclient;
             _signInManager = signInManager;
             _userManager = userManager;
-            ;
             _bazaizaiContext = new BazaizaiContext();
         }
 
@@ -54,40 +53,7 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> DonHangDetail(string idDonHang)
         {
-            var hoaDonChiTiets = await _bazaizaiContext.hoaDonChiTiets
-                .Where(hdct => hdct.IdHoaDon == idDonHang)
-                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.Anh)
-                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.SanPham)
-                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.ThuongHieu)
-                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.KichCo)
-                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.MauSac)
-                .Include(it=>it.HoaDon).ThenInclude(it=>it.ThongTinGiaoHang)
-                .Include(it => it.HoaDon).ThenInclude(it=>it.PhuongThucThanhToanChiTiet)!.ThenInclude(it=>it.PhuongThucThanhToan)
-                .ToListAsync();
-            var donHangChiTietViewModel = new DonHangChiTietViewModel()
-            {
-                IdDonHang = idDonHang,
-                MaDonHang = hoaDonChiTiets.FirstOrDefault()!.HoaDon.MaHoaDon,
-                VoucherShop = hoaDonChiTiets.FirstOrDefault()?.HoaDon.TienGiam,
-                NgayTao = hoaDonChiTiets.FirstOrDefault()!.HoaDon.NgayTao.GetValueOrDefault().ToString("dd-MM-yyyy"),
-                PhiShip = hoaDonChiTiets.FirstOrDefault()!.HoaDon.TienShip.GetValueOrDefault(),
-                TongTien = (hoaDonChiTiets.FirstOrDefault()!.HoaDon.TongTien.GetValueOrDefault() - hoaDonChiTiets.FirstOrDefault()?.HoaDon.TienGiam + hoaDonChiTiets.FirstOrDefault()!.HoaDon.TienShip.GetValueOrDefault()).GetValueOrDefault(),
-                TrangThaiHoaDon = hoaDonChiTiets.FirstOrDefault()!.HoaDon.TrangThaiGiaoHang.GetValueOrDefault(),
-                SanPhamGioHangViewModels = hoaDonChiTiets.Select(hdct => new SanPhamGioHangViewModel()
-                {
-                    Anh = hdct.SanPhamChiTiet.Anh.OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
-                    GiaSanPham = hdct.SanPhamChiTiet.GiaBan.GetValueOrDefault(),
-                    IdSanPhamChiTiet = hdct.SanPhamChiTiet.IdChiTietSp,
-                    SoLuong = hdct.SoLuong.GetValueOrDefault(),
-                    TenSanPham = $"{hdct.SanPhamChiTiet.SanPham.TenSanPham} {hdct.SanPhamChiTiet.MauSac.TenMauSac} {hdct.SanPhamChiTiet.KichCo.SoKichCo}",
-                })
-                .ToList(),
-                DiaChiNhanHang = hoaDonChiTiets.FirstOrDefault()?.HoaDon.ThongTinGiaoHang?.DiaChi,
-                NgayGiaoDuKien = hoaDonChiTiets.FirstOrDefault()!.HoaDon.NgayGiaoDuKien.GetValueOrDefault().ToString("dd-MM-yyyy"),
-                SDT = hoaDonChiTiets.FirstOrDefault()?.HoaDon.ThongTinGiaoHang?.SDT,
-                TenNguoiNhan = hoaDonChiTiets.FirstOrDefault()?.HoaDon.ThongTinGiaoHang?.TenNguoiNhan,
-                //PhuongThucThanhToan = hoaDonChiTiets.FirstOrDefault()?.HoaDon.PhuongThucThanhToanChiTiet!.FirstOrDefault()!.PhuongThucThanhToan.TenPhuongThucThanhToan
-            };
+            var donHangChiTietViewModel = await _httpclient.GetFromJsonAsync<DonHangChiTietViewModel>($"/api/DonHang/GetDonHangDetail?idDonHang={idDonHang}");
             return View(donHangChiTietViewModel);
         }
     }
