@@ -51,7 +51,7 @@ namespace App_Api.Controllers
 
                         using var outputStream = new FileStream(outputPath, FileMode.Create);
                         await image.SaveAsync(outputStream, encoder);
-                        _allRepoImage.AddItem(new Anh { IdAnh = Guid.NewGuid().ToString(), IdSanPhamChiTiet = idProductDetail, Url = fileName, TrangThai = 0 });
+                        _allRepoImage.AddItem(new Anh { IdAnh = Guid.NewGuid().ToString(), IdSanPhamChiTiet = idProductDetail, NgayTao = DateTime.Now, Url = fileName, TrangThai = 0 });
                     }
                 }
 
@@ -77,12 +77,6 @@ namespace App_Api.Controllers
                 {
                     item.TrangThai = 1;
                     _allRepoImage.EditItem(item);
-                    //string filePath = Path.Combine(uploadDirectory, item.Url);
-
-                    //if (System.IO.File.Exists(filePath))
-                    //{
-                    //    System.IO.File.Delete(filePath);
-                    //}
                 }
                 return Ok();
             }
@@ -90,6 +84,32 @@ namespace App_Api.Controllers
             {
                 Console.WriteLine(ex.Message);
                 return BadRequest();
+            }
+        }
+
+        [HttpPost("create-list-model-image")]
+        public bool CreateModelNameImage([FromForm]string idProductDetail,[FromForm]List<string> lstNameImage)
+        {
+            try
+            {
+                foreach (var item in lstNameImage)
+                {
+                    var modelAnh = new Anh()
+                    {
+                        IdAnh = Guid.NewGuid().ToString(),
+                        IdSanPhamChiTiet = idProductDetail,
+                        NgayTao = DateTime.Now,
+                        TrangThai = 0,
+                        Url = item
+                    };
+                    _allRepoImage.AddItem(modelAnh);
+                };
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
             }
         }
 

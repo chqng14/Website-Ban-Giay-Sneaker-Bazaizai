@@ -656,7 +656,8 @@
                     decimalPlaces: 0,
                     currencySymbol: " ₫",
                     currencySymbolPlacement: "s",
-                    minimumValue: 0
+                    minimumValue: 0,
+                    maximumValue: 99999999
                 });
             });
             $(".formatNumber").each(function () {
@@ -664,7 +665,8 @@
                     decimalCharacter: ".",
                     digitGroupSeparator: ",",
                     decimalPlaces: 0,
-                    minimumValue: 0
+                    minimumValue: 0,
+                    maximumValue: 99999.00
                 });
             });
             $(".formatKhoiLuong").each(function () {
@@ -672,7 +674,8 @@
                     decimalCharacter: ".",
                     digitGroupSeparator: ",",
                     decimalPlaces: 2, // Số thập phân
-                    minimumValue: 0
+                    minimumValue: 0,
+                    maximumValue: 99999.00
                 });
             });
         })
@@ -814,6 +817,7 @@
         }
 
         $('.update-sp').click(function () {
+            const promise = [];
             const cards = $(".accordion > .card");
             Array.from(cards).forEach(item => {
                 const key = $(item).find('.collapse').attr('id').replace("collapseTwoDefault-", "");
@@ -827,9 +831,24 @@
                             fieldValue = $(this).is(":checked");
                         } else {
                             if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
-                                const value = $(this).val()
-                                fieldValue = value.replace(/₫|,|\s/g, "")
-                            } else {
+                                var fieldValue = $(this).val();
+                                fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
+                            }
+                            else if ($(this).hasClass("formatKhoiLuong")) {
+                                var autoNumeric = new AutoNumeric(this,
+                                    {
+                                        decimalCharacter: ".",
+                                        digitGroupSeparator: ",",
+                                        decimalPlaces: 2,
+                                        minimumValue: 0
+                                    });
+
+                                var numericValue = autoNumeric.getNumericString();
+
+                                var doubleValue = parseFloat(numericValue);
+                                fieldValue = doubleValue;
+                            }
+                            else {
                                 fieldValue = $(this).val();
                             }
                         }
@@ -839,7 +858,7 @@
                 });
                 data.MoTa = $(item).find('[name="MoTa"]').summernote('code');
 
-                $.ajax({
+                const updateProduct = $.ajax({
                     url: URL_UPDATE_PRODUCT_DETAIL,
                     type: 'POST',
                     data: JSON.stringify(data),
@@ -854,12 +873,13 @@
                         console.log(xhr);
                     }
                 });
+                promise.push(updateProduct)
 
                 if (selectedFiles[key] && Array.from(selectedFiles[key]).length > 0) {
                     var data = new FormData();
                     Array.from(selectedFiles[key]).map(item => data.append('lstIFormFile', item.data))
                     data.append('IdChiTietSp', key);
-                    $.ajax({
+                    const createAnh = $.ajax({
                         url: URL_CREATE_IMAGE,
                         type: 'POST',
                         data: data,
@@ -874,13 +894,14 @@
                             console.log(xhr);
                         }
                     });
+                    promise.push(createAnh);
                 }
 
                 if (lstAnhRemove[key] && Array.from(lstAnhRemove[key]).length > 0) {
                     const data = new FormData();
                     lstAnhRemove[key].map(item => data.append('lstImageRemove', item))
                     data.append('idProductDetail', key)
-                    fetch(URL_DELETE_LIST_IMAGE, {
+                    const deleteAnh = fetch(URL_DELETE_LIST_IMAGE, {
                         method: 'POST',
                         body: data
                     })
@@ -900,9 +921,11 @@
                         .catch(error => {
                             console.error(error);
                         });
+                    promise.push(deleteAnh);
                 }
             })
-            window.location.reload();
+            Promise.all(promise)
+                .then(() => window.location.reload())
         })
     })();
 

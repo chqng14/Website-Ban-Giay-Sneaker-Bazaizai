@@ -6,16 +6,16 @@ namespace App_View.Services
 {
     public class SessionServices
     {
-        public static List<GioHangChiTietViewModel> GetObjFomSession(ISession session, string key)
+        public static List<GioHangChiTietDTO> GetObjFomSession(ISession session, string key)
         {
             //lấy string
             var JsonData = session.GetString(key);
-            if (JsonData == null) return new List<GioHangChiTietViewModel>();
+            if (JsonData == null) return new List<GioHangChiTietDTO>();
             //chuyển dữ liệu
-            var giohangSession = JsonConvert.DeserializeObject<List<GioHangChiTietViewModel>>(JsonData);
+            var giohangSession = JsonConvert.DeserializeObject<List<GioHangChiTietDTO>>(JsonData);
             return giohangSession;
         }
-        public static void SetObjToSession(ISession session, string key, List<GioHangChiTietViewModel> value)
+        public static void SetObjToSession(ISession session, string key, List<GioHangChiTietDTO> value)
         {
             var JsonData = JsonConvert.SerializeObject(value);
             session.SetString(key, JsonData);

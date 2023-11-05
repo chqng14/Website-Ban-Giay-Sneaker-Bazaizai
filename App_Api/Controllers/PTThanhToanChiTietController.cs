@@ -35,6 +35,11 @@ namespace App_Api.Controllers
         {
             return allRepo.GetAll().FirstOrDefault(c => c.IdPhuongThucThanhToanChiTiet == id);
         }
+        [HttpGet("PhuongThucThanhToanChiTietByIdPTTT")]
+        public PhuongThucThanhToanChiTiet PhuongThucThanhToanChiTietByIdPTTT(string idhoadon)
+        {
+            return allRepo.GetAll().FirstOrDefault(c => c.IdHoaDon == idhoadon);
+        }
         // POST api/<PhuongThucThanhToanController>
         [HttpPost]
         public string AddPhuongThucThanhToanChiTiet(string IdHoaDon, string IdThanhToan, double SoTien)
