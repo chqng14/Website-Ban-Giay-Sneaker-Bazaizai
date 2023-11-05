@@ -10,7 +10,6 @@ namespace App_Data.ViewModels.DonHangChiTiet
 {
     public class DonHangChiTietViewModel: DonHangViewModel
     {
-        public List<SanPhamGioHangViewModel>? SanPhamGioHangViewModels { get; set; } = new List<SanPhamGioHangViewModel> { };
         public double TongTienSanPham => SanPhamGioHangViewModels!.Sum(x => x.GiaSanPham * x.SoLuong);
         public string? DiaChiNhanHang { get; set; }
         public string? TenNguoiNhan { get; set; }
