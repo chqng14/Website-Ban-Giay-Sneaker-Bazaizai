@@ -373,12 +373,14 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> GetHoaDonOnline()
         {
-            var listHoaDon = await hoaDonServices.GetHoaDonOnline();
+            var UserID = _userManager.GetUserId(User);
+            var listHoaDon = await hoaDonServices.GetHoaDonOnline(UserID);
             return View(listHoaDon);
         }
         public async Task<IActionResult> DetailHoaDonOnline(string idHoaDon)
         {
-            var listHoaDon = (await hoaDonServices.GetHoaDonOnline()).FirstOrDefault(c=>c.IdHoaDon == idHoaDon);
+            var UserID = _userManager.GetUserId(User);
+            var listHoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
             return View(listHoaDon);
         }
     }

@@ -54,9 +54,9 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<List<HoaDonViewModel>>("https://localhost:7038/api/HoaDon/GetHoaDonOnline");
         }
 
-        public async Task<List<HoaDonTest>> GetHoaDonOnline()
+        public async Task<List<HoaDonTest>> GetHoaDonOnline(string idNguoiDung)
         {
-            return await _httpClient.GetFromJsonAsync<List<HoaDonTest>>("https://localhost:7038/api/HoaDon/GetHoaDonOnlineTest");
+            return await _httpClient.GetFromJsonAsync<List<HoaDonTest>>($"https://localhost:7038/api/HoaDon/GetHoaDonOnlineTest?idNguoiDung={idNguoiDung}");
         }
 
         public async Task<string> GetPayMent(string idHoaDon)
