@@ -102,7 +102,7 @@ namespace App_View.Controllers
                 }
                 else
                 {
-                    var giohang = new GioHangChiTietViewModel();
+                    var giohang = new GioHangChiTietDTO();
                     giohang.IdSanPhamCT = gioHangChiTietDTOCUD.IdSanPhamCT;
                     giohang.SoLuong = gioHangChiTietDTOCUD.SoLuong;
                     giohang.TenSanPham = product.SanPham;
@@ -136,29 +136,7 @@ namespace App_View.Controllers
                 }
                 else
                 {
-                    var message = new List<string>();
-                    int quantityErrorCount = 0;
-                    int outOfStockCount = 0;
-                    int stoppedSellingCount = 0;
-                    foreach (var item in giohang)
-                    {
-                        var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
-                        if (item.SoLuong > product.SoLuongTon && product.SoLuongTon == 0)
-                        {
-                            message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng , Vui lòng chọn sản phẩm khác!");
-                            outOfStockCount++;
-                        }
-                        if (item.TrangThaiSanPham == 1)
-                        {
-                            message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
-                            stoppedSellingCount++;
-                        }
-                        if (item.SoLuong > product.SoLuongTon)
-                        {
-                            message.Add($"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} chỉ còn {product.SoLuongTon}, Vui lòng chọn lại số lượng!");
-                            quantityErrorCount++;
-                        }
-                    }
+                    var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(giohang);
                     if (message.Any())
                     {
                         if (outOfStockCount > 0)
@@ -196,29 +174,7 @@ namespace App_View.Controllers
                 }
                 else
                 {
-                    var message = new List<string>();
-                    int quantityErrorCount = 0;
-                    int outOfStockCount = 0;
-                    int stoppedSellingCount = 0;
-                    foreach (var item in giohang)
-                    {
-                        var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
-                        if (item.SoLuong > product.SoLuongTon && product.SoLuongTon == 0)
-                        {
-                            message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng , Vui lòng chọn sản phẩm khác!");
-                            outOfStockCount++;
-                        }
-                        if (item.TrangThaiSanPham == 1)
-                        {
-                            message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
-                            stoppedSellingCount++;
-                        }
-                        if (item.SoLuong > product.SoLuongTon)
-                        {
-                            message.Add($"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} chỉ còn {product.SoLuongTon}, Vui lòng chọn lại số lượng!");
-                            quantityErrorCount++;
-                        }
-                    }
+                    var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(giohang);
                     if (message.Any())
                     {
                         if (outOfStockCount > 0)
@@ -334,29 +290,7 @@ namespace App_View.Controllers
             }
             else
             {
-                var message = new List<string>();
-                int quantityErrorCount = 0;
-                int outOfStockCount = 0;
-                int stoppedSellingCount = 0;
-                foreach (var item in giohangSession)
-                {
-                    var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
-                    if (item.SoLuong > product.SoLuongTon && product.SoLuongTon == 0)
-                    {
-                        message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng , Vui lòng chọn sản phẩm khác!");
-                        outOfStockCount++;
-                    }
-                    if (item.TrangThaiSanPham != product.TrangThai)
-                    {
-                        message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
-                        stoppedSellingCount++;
-                    }
-                    if (item.SoLuong > product.SoLuongTon)
-                    {
-                        message.Add($"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} chỉ còn {product.SoLuongTon}, Vui lòng chọn lại số lượng!");
-                        quantityErrorCount++;
-                    }
-                }
+                var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(giohangSession);
                 if (message.Any())
                 {
                     if (outOfStockCount > 0)
@@ -385,29 +319,7 @@ namespace App_View.Controllers
             }
             else
             {
-                var message = new List<string>();
-                int quantityErrorCount = 0;
-                int outOfStockCount = 0;
-                int stoppedSellingCount = 0;
-                foreach (var item in giohangSession)
-                {
-                    var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
-                    if (item.SoLuong > product.SoLuongTon && product.SoLuongTon == 0)
-                    {
-                        message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng , Vui lòng chọn sản phẩm khác!");
-                        outOfStockCount++;
-                    }
-                    if (item.TrangThaiSanPham != product.TrangThai)
-                    {
-                        message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
-                        stoppedSellingCount++;
-                    }
-                    if (item.SoLuong > product.SoLuongTon)
-                    {
-                        message.Add($"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} chỉ còn {product.SoLuongTon}, Vui lòng chọn lại số lượng!");
-                        quantityErrorCount++;
-                    }
-                }
+                var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(giohangSession);
                 if (message.Any())
                 {
                     if (outOfStockCount > 0)
@@ -518,6 +430,36 @@ namespace App_View.Controllers
         }
         #endregion
 
+        private async Task<Tuple<int, int, int, List<string>>> KiemTraGioHang(IEnumerable<GioHangChiTietDTO> listcart)
+        {
+            var message = new List<string>();
+            int quantityErrorCount = 0;
+            int outOfStockCount = 0;
+            int stoppedSellingCount = 0;
+
+            foreach (var item in listcart)
+            {
+                var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+
+                if (item.SoLuong > product.SoLuongTon && product.SoLuongTon == 0)
+                {
+                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng, Vui lòng chọn sản phẩm khác!");
+                    outOfStockCount++;
+                }
+                if (item.TrangThaiSanPham == 1 || item.TrangThaiSanPham != product.TrangThai)
+                {
+                    message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
+                    stoppedSellingCount++;
+                }
+                if (item.SoLuong > product.SoLuongTon)
+                {
+                    message.Add($"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} chỉ còn {product.SoLuongTon}, Vui lòng chọn lại số lượng!");
+                    quantityErrorCount++;
+                }
+            }
+
+            return System.Tuple.Create(quantityErrorCount, outOfStockCount, stoppedSellingCount, message);
+        }
 
         public async Task<IActionResult> GetGioHangMiniModel()
         {
