@@ -94,6 +94,7 @@ namespace App_View.Controllers
                     IdKhachHang = null,
                     IdThongTinGH = hoaDonDTO.IdThongTinGH,
                     IdVoucher = hoaDonDTO.IdVoucher,
+                    IdNguoiSuaGanNhat = null,
                     NgayTao = DateTime.Now,
                     NgayShip = null,
                     NgayNhan = null,
@@ -103,6 +104,7 @@ namespace App_View.Controllers
                     TongTien = hoaDonDTO.TongTien,
                     TienShip = hoaDonDTO.TienShip,
                     MoTa = hoaDonDTO.MoTa,
+                    LiDoHuy = null,
                     TrangThaiGiaoHang = (int)TrangThaiGiaoHang.ChoXacNhan,
                     TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan
                 };
@@ -368,5 +370,16 @@ namespace App_View.Controllers
             return System.Tuple.Create(quantityErrorCount, outOfStockCount, stoppedSellingCount, message);
         }
         #endregion
+
+        public async Task<IActionResult> GetHoaDonOnline()
+        {
+            var listHoaDon = await hoaDonServices.GetHoaDonOnline();
+            return View(listHoaDon);
+        }
+        public async Task<IActionResult> DetailHoaDonOnline(string idHoaDon)
+        {
+            var listHoaDon = (await hoaDonServices.GetHoaDonOnline()).FirstOrDefault(c=>c.IdHoaDon == idHoaDon);
+            return View(listHoaDon);
+        }
     }
 }

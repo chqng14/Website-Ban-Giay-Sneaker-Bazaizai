@@ -13,6 +13,7 @@ namespace App_View.IServices
         Task<bool> DeleteHoaDon(string idHoaDon);
         Task<List<HoaDonChoDTO>> GetAllHoaDonCho();
         Task<List<HoaDonViewModel>> GetHoaDon();
+        Task<List<HoaDonTest>> GetHoaDonOnline();
         Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon);
         Task<string> GetPayMent(string idHoaDon);
     }

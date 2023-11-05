@@ -11,6 +11,7 @@ namespace App_Data.IRepositories
     public interface IHoaDonChiTietRepos
     {
         public IEnumerable<HoaDonChiTiet> GetAll();
+        public List<HoaDonChiTiet> GetAllHoaDonOnline();
         public bool AddBillDetail(HoaDonChiTiet item);
         public bool RemoveBillDetail(HoaDonChiTiet item);
         public bool EditBillDetail(HoaDonChiTiet item);

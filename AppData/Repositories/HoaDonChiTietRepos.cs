@@ -82,5 +82,10 @@ namespace App_Data.Repositories
                 return false;
             }
         }
+
+        public List<HoaDonChiTiet> GetAllHoaDonOnline()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

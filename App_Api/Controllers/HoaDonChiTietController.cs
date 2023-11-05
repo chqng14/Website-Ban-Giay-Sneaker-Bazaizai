@@ -32,6 +32,12 @@ namespace App_Api.Controllers
             return _hoaDonChiTiet.GetHoaDonDTO(idHoaDon);
         }
 
+        [HttpGet("GetAll")]
+        public async Task<IEnumerable<HoaDonChiTiet>> GetAllHoaDon()
+        {
+            return _hoaDonChiTiet.GetAll();
+        }
+
         // GET api/<HoaDonChiTietController>/5
         [HttpGet("GetHoaDonCTById")]
         public HoaDonChiTiet GetHoaDonCTById(string id)
