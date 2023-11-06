@@ -87,7 +87,7 @@ namespace App_Data.Repositories
 
         public List<HoaDonViewModel> GetHoaDon()
         {
-            var hoadon = context.HoaDons.Include(c => c.Voucher).Include(c => c.ThongTinGiaoHang).ToList();
+            var hoadon = context.HoaDons.Include(c => c.ThongTinGiaoHang).ToList();
             return _mapper.Map<List<HoaDonViewModel>>(hoadon);
         }
 

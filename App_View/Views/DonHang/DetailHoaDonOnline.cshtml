@@ -32,9 +32,7 @@
                 </div>
                 <div>
                     <div class="manage-o__text-2 u-c-silver">
-                        Tổng cộng:
-
-                        <span class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", Model.TongGia)</span>
+                        <span class="manage-o__text-2 u-c-secondary">Tổng tiền: @string.Format("{0:N0}đ", Model.TongGia)</span>
                     </div>
                 </div>
             </div>
@@ -398,18 +396,18 @@
 
                                 <img class="u-img-fluid" src="/AnhSanPham/@item.LinkAnh[0]" alt="">
                             </div>
-                            <div class="description-title">@item.TenSanPham</div>
+                            <div class="description-title" style="color:#7f7f7f">
+                                <span class="o-card__name">
+
+                                    <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = item.IdSanPhamChiTiet })">@item.TenSanPham</a>
+                                </span>
+                                <span class="o-card__quantity">Size: @item.TenKichCo Màu: @item.TenMauSac</span>
+                                <span class="o-card__quantity">Số lượng x @item.SoLuong</span>
+                            </div>
                         </div>
                         <div class="description__info-wrap">
                             <div>
                                 <span class="manage-o__text-2 u-c-silver">
-                                    Số lượng:
-                                    <span class="manage-o__text-2 u-c-secondary">@item.SoLuong</span>
-                                </span>
-                            </div>
-                            <div>
-                                <span class="manage-o__text-2 u-c-silver">
-                                    Tổng giá:
                                     <span class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", item.TongTien)</span>
                                 </span>
                             </div>

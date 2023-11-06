@@ -143,9 +143,6 @@ namespace App_Api.Helpers.Mapping
                     );
             CreateMap<HoaDonDTO, HoaDon>().ReverseMap();
             CreateMap<HoaDon, HoaDonViewModel>().ForMember(
-                        dest => dest.MaVoucher,
-                        opt => opt.MapFrom(src => src.Voucher.MaVoucher)
-                    ).ForMember(
                         dest => dest.TenNguoiNhan,
                         opt => opt.MapFrom(src => src.ThongTinGiaoHang.TenNguoiNhan)
                     ).ForMember(
@@ -179,7 +176,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<SanPhamChiTiet, SanPhamChiTietDTO>()
                 .ForMember(
                         dest => dest.DanhSachAnh,
-                        opt => opt.MapFrom(src => src.Anh.Where(a => a.TrangThai == 0).OrderBy(a=>a.NgayTao).Select(x => x.Url))
+                        opt => opt.MapFrom(src => src.Anh.Where(a => a.TrangThai == 0).OrderBy(a => a.NgayTao).Select(x => x.Url))
                 )
                 .ForMember(
                         dest => dest.FullName,

@@ -40,7 +40,7 @@ namespace App_View.Controllers
             listHoaDon = listHoaDon.OrderByDescending(dh => dh.NgayTao).ToList();
             if (!string.IsNullOrEmpty(trangThai))
             {
-                listHoaDon = listHoaDon!.Where(dh => dh.TrangThaiGiaoHang == Convert.ToInt32(trangThai)).ToList();
+                listHoaDon = listHoaDon.Where(dh => dh.TrangThaiGiaoHang == Convert.ToInt32(trangThai)).ToList();
             }
             return PartialView("GetHoaDonOnline", listHoaDon);
         }
@@ -50,31 +50,12 @@ namespace App_View.Controllers
             var listHoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
             return View(listHoaDon);
         }
-        public async Task<IActionResult> LoadPartialViewDonHangs(string trangThai)
-        {
-            var idNguoiDung = _userManager.GetUserId(User);
-            var lstDonHangViewModel = await _httpclient.GetFromJsonAsync<List<DonHangViewModel>>($"/api/DonHang/DonHangs?idNguoiDung={idNguoiDung}");
-            lstDonHangViewModel = lstDonHangViewModel!.OrderByDescending(dh => dh.NgayTao).ToList();
-            if (!string.IsNullOrEmpty(trangThai))
-            {
-                lstDonHangViewModel = lstDonHangViewModel!.Where(dh => dh.TrangThaiHoaDon == Convert.ToInt32(trangThai)).ToList();
-            }
-            return PartialView("_DonHangPartialView", lstDonHangViewModel);
-        }
 
-        public async Task<IActionResult> HuyDonHang(string idDonHang)
+        public async Task<IActionResult> HuyDonHang(string idHoaDon)
         {
-            var donHang = await _bazaizaiContext.HoaDons.FirstOrDefaultAsync(dh => dh.IdHoaDon == idDonHang);
-            donHang!.TrangThaiGiaoHang = 5;
-            _bazaizaiContext.HoaDons.Update(donHang!);
-            await _bazaizaiContext.SaveChangesAsync();
+            await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, 5);
             return View("DonHangs");
         }
 
-        public async Task<IActionResult> DonHangDetail(string idDonHang)
-        {
-            var donHangChiTietViewModel = await _httpclient.GetFromJsonAsync<DonHangChiTietViewModel>($"/api/DonHang/GetDonHangDetail?idDonHang={idDonHang}");
-            return View(donHangChiTietViewModel);
-        }
     }
 }
