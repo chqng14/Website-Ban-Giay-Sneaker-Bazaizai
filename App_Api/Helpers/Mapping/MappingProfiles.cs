@@ -179,7 +179,7 @@ namespace App_Api.Helpers.Mapping
             CreateMap<SanPhamChiTiet, SanPhamChiTietDTO>()
                 .ForMember(
                         dest => dest.DanhSachAnh,
-                        opt => opt.MapFrom(src => src.Anh.Where(a => a.TrangThai == 0).OrderBy(a=>a.NgayTao).Select(x => x.Url))
+                        opt => opt.MapFrom(src => src.Anh.Where(a => a.TrangThai == 0).OrderBy(a => a.NgayTao).Select(x => x.Url))
                 )
                 .ForMember(
                         dest => dest.FullName,
@@ -211,6 +211,14 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => src.XuatXu.Ten)
                     )
                 .ForMember(
+                        dest => dest.SoLuongDaBan,
+                        opt => opt.MapFrom(src => src.SoLuongDaBan)
+                    )
+                .ForMember(
+                        dest => dest.NgayTao,
+                        opt => opt.MapFrom(src => src.NgayTao.GetValueOrDefault().ToString("dd-MM-yyyy"))
+                    )
+                .ForMember(
                         dest => dest.ThuongHieu,
                         opt => opt.MapFrom(src => src.ThuongHieu.TenThuongHieu)
                     )
@@ -233,6 +241,14 @@ namespace App_Api.Helpers.Mapping
                 .ForMember(
                         dest => dest.LoaiGiay,
                         opt => opt.MapFrom(src => src.LoaiGiay.TenLoaiGiay)
+                    )
+                .ForMember(
+                        dest => dest.KhoiLuong,
+                        opt => opt.MapFrom(src => $"{src.KhoiLuong} g")
+                    )
+                .ForMember(
+                        dest => dest.Day,
+                        opt => opt.MapFrom(src => src.Day == true ? "Có" : "Không")
                     )
                 .ForMember(
                         dest => dest.ListTenAnh,
