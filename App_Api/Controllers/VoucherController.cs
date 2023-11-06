@@ -56,7 +56,6 @@ namespace App_Api.Controllers
             var VoucherDTO = _mapper.Map<VoucherDTO>(Voucher);
             return VoucherDTO;
         }
-
         private string GenerateRandomVoucherCode()
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -64,7 +63,6 @@ namespace App_Api.Controllers
             List<Voucher> vouchers = GetAllVoucher(); // Lấy danh sách các mã khuyến mãi hiện có
             bool isDuplicate = false; // Biến kiểm tra trùng lặp
             string voucherCode = ""; // Biến lưu mã khuyến mãi ngẫu nhiên
-
             do
             {
                 voucherCode = new string(Enumerable.Repeat(chars, 6)
@@ -74,8 +72,6 @@ namespace App_Api.Controllers
 
             return voucherCode; // Trả về mã khuyến mãi không trùng
         }
-
-
         [HttpPost("CreateVoucher")]
         public bool Create(VoucherDTO voucherDTO)
         {
@@ -142,10 +138,13 @@ namespace App_Api.Controllers
             var voucherGet = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == voucherDTO.IdVoucher);
 
             DateTime NgayTao = voucherGet.NgayTao;
-
             if (voucherGet != null)
             {
                 _mapper.Map(voucherDTO, voucherGet);
+                if(voucherDTO.TrangThai==null)
+                {
+
+                }    
                 if (voucherGet.NgayBatDau > DateTime.Now)
                 {
                     voucherGet.TrangThai = (int)TrangThaiVoucher.ChuaBatDau;
@@ -178,6 +177,5 @@ namespace App_Api.Controllers
             }
             return false;
         }
-      
     }
 }

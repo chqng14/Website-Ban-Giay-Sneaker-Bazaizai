@@ -26,7 +26,12 @@ namespace App_Data.Repositories
             [Description("Chưa bắt đầu")]
             ChuaBatDau = 2,
             [Description("Đã huỷ")]
-            DaHuy = 3
+            DaHuy = 3,
+            [Description("Voucher tặng cho người mới")]
+            VoucherTangMoi = 4,
+            [Description("Voucher tặng cho khách hàng thân thiết")]
+            VoucherThanThiet = 5,
+
 
         }
         /// <summary>
