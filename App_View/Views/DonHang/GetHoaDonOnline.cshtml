@@ -198,8 +198,8 @@
                 }
                 else
                 {
-                    <a>
-                        <button class="btn btn--e-transparent-brand-b-2 order" id="placeOrderButton" value="@item.IdHoaDon">Huỷ</button>
+                    <a href="@Url.Action("HuyDonHang","DonHang",new{idHoaDon = item.IdHoaDon})">
+                        <span class="btn btn--e-transparent-brand-b-2 order">Huỷ</span>
                     </a>
                     <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
                         <span class="btn btn--e-brand-b-2 order">
@@ -242,7 +242,7 @@
         $('.arrow-down-btn').css('display', 'block');
         $('.arrow-up-btn').css('display', 'none');
     }
-    $(document).ready(function () {
+    @* $(document).ready(function () {
         $('#placeOrderButton').click(function (e) {
             e.preventDefault();
             var idHoaDon = $(this).val();
@@ -258,7 +258,7 @@
                 }
             });
         });
-    });
+    }); *@
 
 </script>
 

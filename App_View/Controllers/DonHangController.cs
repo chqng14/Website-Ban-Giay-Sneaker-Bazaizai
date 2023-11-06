@@ -54,7 +54,7 @@ namespace App_View.Controllers
         public async Task<IActionResult> HuyDonHang(string idHoaDon)
         {
             await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, 5);
-            return View("DonHangs");
+            return RedirectToAction("DonHangs");
         }
 
     }
