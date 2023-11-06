@@ -121,7 +121,6 @@ namespace App_Api.Controllers
             return (await _sanPhamChiTietRes.GetListSanPhamNgungKinhDoanhViewModelAsync()).ToList();
         }
 
-
         [HttpPut("UpdateSoLuong")]
         public async Task UpDateSoLuong(SanPhamSoLuongDTO sanPhamSoLuongDTO)
         {
@@ -232,7 +231,7 @@ namespace App_Api.Controllers
         }
 
         [HttpPost("Creat-SanPhamChiTietCopy")]
-        public async Task<bool> CreateSanPhamChiTietCoppy([FromForm]SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO)
+        public async Task<bool> CreateSanPhamChiTietCoppy([FromForm] SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO)
         {
             try
             {
@@ -279,6 +278,7 @@ namespace App_Api.Controllers
                                 IdAnh = Guid.NewGuid().ToString(),
                                 IdSanPhamChiTiet = sanPhamChiTiet.IdChiTietSp,
                                 TrangThai = 0,
+                                NgayTao = DateTime.Now,
                                 Url = tenAnh
                             });
                         });
@@ -355,6 +355,7 @@ namespace App_Api.Controllers
             return await _sanPhamChiTietRes.GetFiltersVMAynsc();
         }
 
+        #region AddVariants
         //SanPham
         [HttpPost("Create-SanPham")]
         public SanPhamDTO? CreateSanPham(SanPhamDTO sanPhamDTO)
@@ -491,6 +492,57 @@ namespace App_Api.Controllers
             }
             return null;
         }
+        #endregion
+
+        #region GetListVariants
+        [HttpGet("Get-List-ChatLieu")]
+        public List<ChatLieu>? GetListChatLieu()
+        {
+            return _chatLieuRes.GetAll().ToList();
+        }
+
+        [HttpGet("Get-List-KichCo")]
+        public List<KichCo>? GetListModelKichCo()
+        {
+            return _kickcoRes.GetAll().ToList();
+        }
+
+        [HttpGet("Get-List-KieuDeGiay")]
+        public List<KieuDeGiay>? GetListModelKieuDeGiay()
+        {
+            return _kieuDeGiayRes.GetAll().ToList();
+        }
+
+        [HttpGet("Get-List-LoaiGiay")]
+        public List<LoaiGiay>? GetListModelLoaiGiay()
+        {
+            return _loaiGiayRes.GetAll().ToList();
+        }
+
+        [HttpGet("Get-List-MauSac")]
+        public List<MauSac>? GetListModelMauSac()
+        {
+            return _mauSacRes.GetAll().ToList();
+        }
+
+        [HttpGet("Get-List-SanPham")]
+        public List<SanPham>? GetListModelSanPham()
+        {
+            return _sanPhamRes.GetAll().ToList();
+        }
+
+        [HttpGet("Get-List-ThuongHieu")]
+        public List<ThuongHieu>? GetListModelThuongHieu()
+        {
+            return _thuongHieuRes.GetAll().ToList();
+        }
+
+        [HttpGet("Get-List-XuatXu")]
+        public List<XuatXu>? GetListModelXuatXu()
+        {
+            return _xuatXuRes.GetAll().ToList();
+        }
+        #endregion
 
 
 

@@ -1,0 +1,32 @@
+﻿/* Ẩn danh sách sản phẩm ẩn ban đầu */
+.hidden-products {
+    display: none;
+}
+
+/* Icon mũi tên xuống */
+.arrow-down-btn::before {
+    content: "\25BC"; /* Unicode của mũi tên xuống */
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 5px;
+    color: #333; /* Màu sắc tùy chọn */
+}
+
+/* Icon mũi tên lên */
+.arrow-up-btn::before {
+    content: '\25B2'; /* Mã Unicode của mũi tên lên */
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    color: #333; /* Màu sắc tùy chọn */
+}
+
+/* Hiển thị danh sách sản phẩm ẩn khi click vào mũi tên xuống */
+.arrow-down-btn.active + .hidden-products {
+    display: block;
+}
+
+.arrow-up-btn.active + .hidden-products {
+    display: none;
+}

@@ -108,7 +108,7 @@ namespace App_Data.Repositories
                 GiaNhap = sanPham.GiaNhap,
                 MauSac = _context.mauSacs.ToList().FirstOrDefault(ms => ms.IdMauSac == sanPham.IdMauSac)?.TenMauSac,
                 KichCo = _context.kichCos.ToList().FirstOrDefault(x => x.IdKichCo == sanPham.IdKichCo)?.SoKichCo,
-                Anh = _context.Anh.ToList().Where(x => x.IdSanPhamChiTiet == sanPham.IdChiTietSp && x.TrangThai == 0).OrderBy(x => x.Url).FirstOrDefault()?.Url,
+                Anh = _context.Anh.ToList().Where(x => x.IdSanPhamChiTiet == sanPham.IdChiTietSp && x.TrangThai == 0).OrderBy(x => x.NgayTao).FirstOrDefault()?.Url,
                 KieuDeGiay = _context.kieuDeGiays.ToList().FirstOrDefault(x => x.IdKieuDeGiay == sanPham.IdKieuDeGiay)?.TenKieuDeGiay,
                 LoaiGiay = _context.LoaiGiays.ToList().FirstOrDefault(x => x.IdLoaiGiay == sanPham.IdLoaiGiay)?.TenLoaiGiay,
                 SoLuongTon = sanPham.SoLuongTon,
@@ -170,7 +170,7 @@ namespace App_Data.Repositories
 
             var itemShops = listSanPham.Select(sp => new ItemShopViewModel()
             {
-                Anh = _context.Anh.Where(a => a.IdSanPhamChiTiet == sp.IdChiTietSp).OrderBy(a => a.Url).FirstOrDefault()!.Url,
+                Anh = _context.Anh.Where(a => a.IdSanPhamChiTiet == sp.IdChiTietSp).OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
                 GiaGoc = sp.GiaBan,
                 GiaKhuyenMai = sp.GiaThucTe,
                 MauSac = _context.mauSacs.FirstOrDefault(ms => ms.IdMauSac == sp.IdMauSac)!.TenMauSac,
@@ -195,7 +195,7 @@ namespace App_Data.Repositories
 
             var itemShops = listSanPham.Select(sp => new ItemShopViewModel()
             {
-                Anh = _context.Anh.Where(a => a.IdSanPhamChiTiet == sp.IdChiTietSp).OrderBy(a => a.Url).FirstOrDefault()!.Url,
+                Anh = _context.Anh.Where(a => a.IdSanPhamChiTiet == sp.IdChiTietSp).OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
                 GiaGoc = sp.GiaBan,
                 GiaKhuyenMai = sp.GiaThucTe,
                 MauSac = _context.mauSacs.FirstOrDefault(ms => ms.IdMauSac == sp.IdMauSac)!.TenMauSac,

@@ -30,8 +30,8 @@ public class MomoService : IMomoService
         //model.OrderId = DateTime.UtcNow.Ticks.ToString();
         //model.OrderInfo = "Khách hàng: " + model.FullName + ". Nội dung: " + model.OrderInfo;
 
-        // Thêm idHoaDon vào returnUrl
-        //var returnUrlWithIdHoaDon = $"{_options.Value.redirectUrl}?idHoaDon={idHoaDon}";
+        //Thêm idHoaDon vào returnUrl
+        var returnUrlWithIdHoaDon = $"{_options.Value.redirectUrl}?idHoaDon={idHoaDon}";
 
         //var rawData =
         //    $"partnerCode={_options.Value.PartnerCode}&accessKey={_options.Value.AccessKey}&requestId={model.OrderId}&amount={model.Amount}&orderId={model.OrderId}&orderInfo={model.OrderInfo}&returnUrl={returnUrlWithIdHoaDon}&notifyUrl={_options.Value.ipnUrl}&extraData=";
@@ -45,7 +45,7 @@ public class MomoService : IMomoService
                 "&orderId=" + model.OrderId +
                 "&orderInfo=" + model.OrderInfo +
                 "&partnerCode=" + _options.Value.PartnerCode +
-                "&redirectUrl=" + _options.Value.redirectUrl +
+                "&redirectUrl=" + returnUrlWithIdHoaDon +
                 "&requestId=" + model.OrderId +
                 "&requestType=" + _options.Value.RequestType
                 ;
@@ -63,7 +63,7 @@ public class MomoService : IMomoService
             amount = model.Amount,
             orderId = model.OrderId,
             orderInfo = model.OrderInfo,
-            redirectUrl = _options.Value.redirectUrl,
+            redirectUrl = returnUrlWithIdHoaDon,
             ipnUrl = _options.Value.ipnUrl,
             lang = _options.Value.lang,
             extraData = "",

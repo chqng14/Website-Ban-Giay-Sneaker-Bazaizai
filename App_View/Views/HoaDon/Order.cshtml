@@ -16,7 +16,15 @@
                             <circle class="circle" fill="#5bb543" cx="24" cy="24" r="22" />
                             <path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17" />
                         </svg>
-                        <h1 class="section__heading u-c-secondary" style="color:#00FF7F">Cảm ơn bạn đã đặt hàng tại Bazazai Store</h1>
+                        @if (Model.TrangThaiThanhToan == 0&&Model.LoaiThanhToan=="MOMO")
+                        {
+                            <h1 class="section__heading u-c-secondary">Đang chờ thanh toán</h1>
+                        }
+                        else if (Model.TrangThaiThanhToan == 1||Model.LoaiThanhToan == "COD")
+                        {
+                            <h1 class="section__heading u-c-secondary">Đặt hàng thành công</h1>
+                        }
+                        <h3 class="section__heading u-c-secondary">Cảm ơn bạn đã đặt hàng tại Bazazai Store</h3>
                     </div>
                 </div>
             </div>
@@ -51,7 +59,7 @@
                                 </div>
                                 <div class="f-cart__col">
                                     <span>Phương thức thanh toán:</span>
-                                    <p>abc</p>
+                                    <p>@Model.LoaiThanhToan</p>
                                 </div>
                                 <div class="f-cart__col">
                                     <span>Ghi chú:</span>

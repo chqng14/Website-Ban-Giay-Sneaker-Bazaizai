@@ -194,5 +194,18 @@ namespace App_View.Areas.Admin.Controllers
 
             return Ok(false);
         }
+        [HttpPost]
+        public async Task<IActionResult> GiveVoucherForNewUser([FromBody] string MaVoucher)
+        {
+            var ketQuaThemVoucher = await _voucherND.TangVoucherNguoiDungMoi(MaVoucher);
+            if(ketQuaThemVoucher== "Tặng người dùng voucher thành công")
+            {
+                return Ok(true);
+            }
+            else
+            {
+                return Ok(false);
+            }
+        }
     }
 }

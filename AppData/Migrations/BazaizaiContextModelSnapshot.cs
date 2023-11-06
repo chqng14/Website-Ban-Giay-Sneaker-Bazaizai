@@ -227,6 +227,9 @@ namespace App_Data.Migrations
                     b.Property<string>("IdVoucher")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("LiDoHuy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("MaHoaDon")
                         .HasColumnType("varchar(50)");
 
@@ -507,7 +510,6 @@ namespace App_Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DiaChi")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
@@ -863,6 +865,9 @@ namespace App_Data.Migrations
 
                     b.Property<string>("IdVouCher")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("NgayNhan")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("TrangThai")
                         .HasColumnType("int");

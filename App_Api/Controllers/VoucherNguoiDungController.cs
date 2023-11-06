@@ -85,6 +85,8 @@ namespace App_Api.Controllers
                         IdNguoiDung = idNguoiDung,
                         IdVouCher = VoucherKhaDung.IdVoucher,
                         TrangThai = (int)TrangThaiVoucherNguoiDung.KhaDung
+                        ,
+                        NgayNhan = DateTime.Now
                     };
                     if (VcNguoiDungRepos.AddItem(VCNguoiDung) == true)
                     {
@@ -119,36 +121,7 @@ namespace App_Api.Controllers
             return VcNguoiDungRepos.RemoveItem(cl);
         }
 
-        //[HttpPost("AddVoucherNguoiDungTuAdmin")]
-        //public async Task<bool> AddVoucherNguoiDungTuAdmin(string maVoucher, List<string> UserId)
-        //{
-        //    var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.MaVoucher == maVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDong && c.SoLuong > 0);
-        //    if (VoucherKhaDung != null)
-        //    {
-        //        foreach (var item in UserId.ToList())
-        //        {
-        //            var existsInVoucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(vnd => vnd.IdVouCher == VoucherKhaDung.IdVoucher && vnd.IdNguoiDung == item);
 
-        //            if (existsInVoucherNguoiDung != null)
-        //            {
-        //                // IdVoucher đã tồn tại trong bảng VoucherNguoiDung, loại bỏ phần tử khỏi danh sách UserId
-        //                UserId.Remove(item);
-        //            }
-        //        }
-        //        int soNguoiDuocTangVoucher = UserId.Count();
-        //        if (soNguoiDuocTangVoucher>0 && VoucherKhaDung.SoLuong >= soNguoiDuocTangVoucher)
-        //        {
-        //            if (await (voucherNguoiDungRep.TangVoucherNguoiDung(maVoucher, UserId)) == true)
-        //            {
-        //                VoucherKhaDung.SoLuong = VoucherKhaDung.SoLuong - soNguoiDuocTangVoucher;
-        //                VcRepos.EditItem(VoucherKhaDung);
-        //            }
-        //            return true;
-        //        }
-
-        //    }
-        //    return false;
-        //}
         [HttpPost("AddVoucherNguoiDungTuAdmin")]
         public async Task<string> AddVoucherNguoiDungTuAdmin(AddVoucherRequestDTO addVoucherRequestDTO)
         {
@@ -183,21 +156,20 @@ namespace App_Api.Controllers
             }
             return "Voucher không còn khả dụng";
         }
-        [HttpGet("ShowAllUserNeverBuy")]
-        public List<NguoiDung> ShowAllUserNeverBuy()
+        [HttpPost("TangVoucherChoNguoiDungMoi")]
+        public async Task<string> TangVoucherChoNguoiDungMoi(string ma)
         {
-            var lstNguoidung = DbContextModel.Users.ToList();
-            var lstHoaDon = DbContextModel.HoaDons.ToList();
-            //var lstThongTinGiaoHang
-
-            List<NguoiDung> lstCantim = new List<NguoiDung>();
-            foreach (var item in lstHoaDon)
+            var lstNguoidungNew = await voucherNguoiDungRep.GetLstNguoiDUngMoi();
+            if (lstNguoidungNew.Any())
             {
-                lstNguoidung.Where(c => c.Id != item.IdNguoiDung).ToList();
-
+                foreach (var item in lstNguoidungNew)
+                {
+                    await voucherNguoiDungRep.TangVoucherNguoiDungMoi(ma, item.Id);
+                }
+                return "Tặng người dùng voucher thành công";
             }
+            return "Tặng voucher thất bại";
 
-            return lstCantim.ToList();
         }
 
     }

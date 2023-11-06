@@ -94,6 +94,30 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<VoucherNguoiDung>($"/api/VoucherNguoiDung/GetChiTietVoucherNguoiDungByID{id}");
         }
 
+        public async Task<string> TangVoucherNguoiDungMoi(string ma)
+        {
+            ///api/VoucherNguoiDung/TangVoucherChoNguoiDungMoi
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/VoucherNguoiDung/TangVoucherChoNguoiDungMoi", ma);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(content);
+                    return content;
+                }
+                else
+                {
+                    return "false";
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return "false";
+            }
+        }
+
         public async Task<bool> UpdateVoucherNguoiDungSauKhiDung(VoucherNguoiDungDTO VcDTO)
         {
             try
