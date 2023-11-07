@@ -85,59 +85,60 @@
                                 <!--====== List ======-->
                                 <ul class="ah-list ah-list--design1 ah-list--link-color-secondary">
                                     <partial name="_LoginPartial" />
-@*                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Account">
-                                        @if (SignInManager.IsSignedIn(User))
-                                        {
-                                            <a><i class="far fa-user-circle"></i></a>
+                                    @*                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Account">
+                                            @if (SignInManager.IsSignedIn(User))
+                                            {
+                                                <a><i class="far fa-user-circle"></i></a>
 
 
-                                            <span class="js-menu-toggle"></span>
-                                            <ul style="width:120px">
-                                                <li>
-                                                    <a asp-area="Identity" asp-page="/Account/my-profile">
-                                                        <i class="fas fa-user-circle u-s-m-r-6"></i>
-                                                        <span>Account</span>
-                                                    </a>
-                                                </li>
-                                                <li>
+                                                <span class="js-menu-toggle"></span>
+                                                <ul style="width:120px">
+                                                    <li>
+                                                        <a asp-area="Identity" asp-page="/Account/my-profile">
+                                                            <i class="fas fa-user-circle u-s-m-r-6"></i>
+                                                            <span>Account</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
 
-                                                    <form id="myForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                                        <button type="submit" class="nav-link btn btn-link text-dark">
-                                                            <a>
-                                                                <i class="fas fa-lock-open u-s-m-r-6"></i>
-                                                                <span>Signout</span>
-                                                            </a>
-                                                        </button>
-                                                    </form>
-                                                   
-                                                </li>
-                                            </ul>
-                                        }
-                                        else
-                                        {
-                                            <a><i class="far fa-user-circle"></i></a>
+                                                        <form id="myForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                                            <button type="submit" class="nav-link btn btn-link text-dark">
+                                                                <a>
+                                                                    <i class="fas fa-lock-open u-s-m-r-6"></i>
+                                                                    <span>Signout</span>
+                                                                </a>
+                                                            </button>
+                                                        </form>
+
+                                                    </li>
+                                                </ul>
+                                            }
+                                            else
+                                            {
+                                                <a><i class="far fa-user-circle"></i></a>
 
 
-                                            <span class="js-menu-toggle"></span>
-                                            <ul style="width:120px">
+                                                <span class="js-menu-toggle"></span>
+                                                <ul style="width:120px">
 
-                                                <li>
-                                                    <a asp-area="Identity" asp-page="/Account/Register">
-                                                        <i class="fas fa-user-plus u-s-m-r-6"></i>
-                                                        <span>Signup</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a asp-area="Identity" asp-page="/Account/Login">
-                                                        <i class="fas fa-lock u-s-m-r-6"></i>
-                                                        <span>Signin</span>
-                                                    </a>
-                                                </li>
+                                                    <li>
+                                                        <a asp-area="Identity" asp-page="/Account/Register">
+                                                            <i class="fas fa-user-plus u-s-m-r-6"></i>
+                                                            <span>Signup</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-area="Identity" asp-page="/Account/Login">
+                                                            <i class="fas fa-lock u-s-m-r-6"></i>
+                                                            <span>Signin</span>
+                                                        </a>
+                                                    </li>
 
-                                            </ul>
-                                        }
-                                    </li>
-*@                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Settings">
+                                                </ul>
+                                            }
+                                        </li>
+                                    *@
+                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Settings">
 
                                         <a><i class="fas fa-user-cog"></i></a>
 
@@ -1151,7 +1152,7 @@
                                     </li>
                                     <li class="has-dropdown" id="body-mini-cart">
 
-                                       @await Component.InvokeAsync("Cart")
+                                        @await Component.InvokeAsync("Cart")
                                     </li>
                                 </ul>
                                 <!--====== End - List ======-->
@@ -1488,12 +1489,17 @@
 </body>
 </html>
 @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/App_View.styles.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/App_View.styles.css" asp-append-version="true" /> *@
 
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 @* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
 @* <script src="~/js/site.js" asp-append-version="true"></script> *@
 <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger intent="WELCOME"
+              chat-title="BazaizaiStore"
+              agent-id="7922b841-2e11-423a-8f4d-24c1404ea696"
+              language-code="vi"></df-messenger>
 @await RenderSectionAsync("Scripts", required: false)
