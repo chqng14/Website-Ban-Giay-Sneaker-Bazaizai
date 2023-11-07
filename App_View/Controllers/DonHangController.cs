@@ -51,10 +51,10 @@ namespace App_View.Controllers
             return View(listHoaDon);
         }
 
-        public async Task<IActionResult> HuyDonHang(string idHoaDon)
+        public async Task<IActionResult> HuyDonHang(string idHoaDon, string Lido)
         {
-            await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, 5);
-            return RedirectToAction("DonHangs");
+            await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, 5, Lido);
+            return Ok(new { idHoaDon = idHoaDon });
         }
 
     }

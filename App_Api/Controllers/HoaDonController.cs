@@ -175,10 +175,11 @@ namespace App_Api.Controllers
         }
 
         [HttpPut]
-        public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, int TrangThaiGiaoHang)
+        public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, int TrangThaiGiaoHang, string? Lido)
         {
             var hoadon = _hoaDon.GetHoaDonUpdate().FirstOrDefault(c => c.IdHoaDon == idHoaDon);
             hoadon.TrangThaiGiaoHang = TrangThaiGiaoHang;
+            hoadon.LiDoHuy = Lido;
             return _hoaDon.EditBill(hoadon);
         }
 

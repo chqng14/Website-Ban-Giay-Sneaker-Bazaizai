@@ -166,16 +166,6 @@
         }
         <div class="manage-o__description">
             <div class="description__container">
-                @if (item.LiDoHuy!=null)
-                {
-                    <div>
-                        <span class="manage-o__text-2 u-c-silver">
-                            <span class="manage-o__text-2 u-c-secondary">
-                                Đã hủy bởi bạn
-                            </span>
-                        </span>
-                    </div>
-                }
             </div>
             <div class="description__info-wrap">
                 <div>
@@ -187,46 +177,65 @@
                 </div>
             </div>
         </div>
-        <div class="donhang-container" style="text-align: right;">
-            @if (item.TrangThaiGiaoHang == 1||item.TrangThaiGiaoHang == 2)
-            {
-                if (item.LoaiThanhToan == "MOMO" && item.TrangThaiThanhToan == 0)
+        <div class="manage-o__description" style="margin-top:15px">
+            <div class="description__container">
+                @if (item.LiDoHuy != null && item.TrangThaiGiaoHang == 5)
                 {
-                    <a>
-                        <span class="btn btn--e-brand-b-2 order">Thanh toán</span>
-                    </a>
+                    <span class="manage-o__text-2 u-c-silver">
+                        <span class="manage-o__text-2 u-c-secondary">
+                            Đã huỷ bởi lí do: @item.LiDoHuy
+                        </span>
+                    </span>
                 }
-                else
+                @if (item.LoaiThanhToan =="MOMO"&& item.TrangThaiThanhToan==0)
                 {
-                    <a href="@Url.Action("HuyDonHang","DonHang",new{idHoaDon = item.IdHoaDon})">
-                        <span class="btn btn--e-transparent-brand-b-2 order">Huỷ</span>
-                    </a>
-                    <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
-                        <span class="btn btn--e-brand-b-2 order">
-                            Chi tiết đơn hàng
+                    <span class="manage-o__text-2 u-c-silver">
+                        <span class="manage-o__text-2 u-c-secondary">
+                            Vui lòng thanh toán đơn hàng
                         </span>
-                    </a>
+                    </span>
                 }
-            }
-            else if (item.TrangThaiGiaoHang == 5 || item.TrangThaiGiaoHang == 4)
-            {
-                <a>
-                    <span class="btn btn--e-transparent-brand-b-2 order">Mua lại</span>
-                </a>
-                <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
-                        <span class="btn btn--e-brand-b-2 order">
-                            Chi tiết đơn hàng
-                        </span>
-                </a>
-            }
-            else
-            {
-                <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
-                        <span class="btn btn--e-brand-b-2 order">
-                            Chi tiết đơn hàng
-                        </span>
-                </a>
-            }
+            </div>
+            <div class="description__info-wrap">
+                <div>
+                    @if (item.TrangThaiGiaoHang == 1 || item.TrangThaiGiaoHang == 2)
+                    {
+                        if (item.LoaiThanhToan == "MOMO" && item.TrangThaiThanhToan == 0)
+                        {
+                            <a>
+                                <span class="btn btn--e-brand-b-2 order">Thanh toán</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
+                                <span class="btn btn--e-brand-b-2 order">
+                                    Chi tiết đơn hàng
+                                </span>
+                            </a>
+                        }
+                    }
+                    else if (item.TrangThaiGiaoHang == 5 || item.TrangThaiGiaoHang == 4)
+                    {
+                        <a>
+                            <span class="btn btn--e-transparent-brand-b-2 order">Mua lại</span>
+                        </a>
+                        <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
+                            <span class="btn btn--e-brand-b-2 order">
+                                Chi tiết đơn hàng
+                            </span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
+                            <span class="btn btn--e-brand-b-2 order">
+                                Chi tiết đơn hàng
+                            </span>
+                        </a>
+                    }
+                </div>
+            </div>
         </div>
     </div>
 }

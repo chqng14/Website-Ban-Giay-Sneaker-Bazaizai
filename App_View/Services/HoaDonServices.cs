@@ -102,11 +102,11 @@ namespace App_View.Services
             }
         }
 
-        public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, int TrangThai)
+        public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, int TrangThai, string? Lido)
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateTrangThaiGiaoHangHoaDon?idHoaDon={idHoaDon}&TrangThaiGiaoHang={TrangThai}", null);
+                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateTrangThaiGiaoHangHoaDon?idHoaDon={idHoaDon}&TrangThaiGiaoHang={TrangThai}&Lido={Lido}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();

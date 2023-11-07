@@ -4,7 +4,7 @@
     ViewData["Title"] = "DetailHoaDonOnline";
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
 }
-
+<link href="~/css/hoadon.css" rel="stylesheet" />
 @* <!--====== Section 2 ======-->
 <div class="u-s-p-b-60">
 
@@ -474,6 +474,164 @@
                     </div>
                 </div>
             </div>
+            @if (Model.TrangThaiGiaoHang!=5)
+            {
+                <a data-modal="modal" data-modal-id="#edit-ship-address">
+                    <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px;text-align: center;margin-top: 15px;">Huỷ</span>
+                </a>
+            }
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="edit-ship-address">
+    <div class="modal-dialog modal-dialog-centered justify-content-center" style="max-width:fit-content">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="checkout-modal2">
+                    <div class="u-s-m-b-30">
+                        <div class="dash-l-r">
+                            <h1 class="gl-modal-h1">Chọn lí do huỷ</h1>
+                        </div>
+                    </div>
+                    <form class="checkout-modal2__form" asp-action="HuyDonHang" asp-controller="DonHang" asp-route-idHoaDon="@Model.IdHoaDon">
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <!--====== Radio Box ======-->
+                                    <div class="radio-box" style="margin-bottom: 15px;">
+
+                                        <input type="radio" name="Lido" id="1" value="">
+                                        <div class="radio-box__state radio-box__state--primary">
+                                            <label class="radio-box__label" for="address-1"></label>
+                                        </div>
+                                    </div>
+                                    <!--====== End - Radio Box ======-->
+                                </td>
+                                <span class="dash__h2 u-s-m-b-8" style="font-weight:600" id="lido1">Muốn thay đổi địa chỉ giao hàng</span>
+                            </tr><br />
+                            <tr>
+                                <td>
+                                    <!--====== Radio Box ======-->
+                                    <div class="radio-box" style="margin-bottom: 15px;">
+
+                                        <input type="radio" name="Lido" id="2">
+                                        <div class="radio-box__state radio-box__state--primary">
+
+                                            <label class="radio-box__label" for="address-1"></label>
+                                        </div>
+                                    </div>
+                                    <!--====== End - Radio Box ======-->
+                                </td>
+                                <span class="dash__h2 u-s-m-b-8" style="font-weight:600" id="lido2">Muốn nhập/thay đổi mã Voucher</span>
+                            </tr>
+                            <br />
+                            <tr>
+                                <td>
+                                    <!--====== Radio Box ======-->
+                                    <div class="radio-box" style="margin-bottom: 15px;">
+
+                                        <input type="radio" name="Lido" id="3">
+                                        <div class="radio-box__state radio-box__state--primary">
+
+                                            <label class="radio-box__label" for="address-1"></label>
+                                        </div>
+                                    </div>
+                                    <!--====== End - Radio Box ======-->
+                                </td>
+                                <span class="dash__h2 u-s-m-b-8" style="font-weight:600" id="lido3">Muốn thay đổi sản phẩm trong đơn hàng</span>
+                            </tr>
+                            <br />
+                            <tr>
+                                <td>
+                                    <!--====== Radio Box ======-->
+                                    <div class="radio-box" style="margin-bottom: 15px;">
+
+                                        <input type="radio" name="Lido" id="4">
+                                        <div class="radio-box__state radio-box__state--primary">
+
+                                            <label class="radio-box__label" for="address-1"></label>
+                                        </div>
+                                    </div>
+                                    <!--====== End - Radio Box ======-->
+                                </td>
+                                <span class="dash__h2 u-s-m-b-8" style="font-weight:600" id="lido4">Đổi ý, không muốn mua nữa</span>
+                            </tr>
+                            <br />
+                            <tr>
+                                <td>
+                                    <!--====== Radio Box ======-->
+                                    <div class="radio-box" style="margin-bottom: 15px;">
+
+                                        <input type="radio" name="Lido" id="5">
+                                        <div class="radio-box__state radio-box__state--primary">
+
+                                            <label class="radio-box__label" for="address-1"></label>
+                                        </div>
+                                    </div>
+                                    <!--====== End - Radio Box ======-->
+                                </td>
+                                <span class="dash__h2 u-s-m-b-8" style="font-weight:600" id="lido5">lí do khác</span>
+                                <br />
+                                <textarea class="text-area text-area--primary-style" style="width:305px">
+
+                                </textarea>
+                                
+                            </tr>
+                        </tbody>
+                        <div class="gl-modal-btn-group">
+                            <button class="btn btn--e-brand-b-2" id="Lido" type="submit">Đồng ý</button>
+                            @* <button class="btn btn--e-grey-b-2" type="button" data-dismiss="modal">Đóng</button> *@
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <button class="btn dismiss-button fas fa-times" type="button" data-dismiss="modal"></button>
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    var radioButtons = document.querySelectorAll('input[type=radio]');
+    var id = null;
+    let lidoElement = "";
+    radioButtons.forEach((radioButton) => {
+        radioButton.addEventListener('change', function () {
+            if (this.checked) {
+                id = this.id;
+                lidoElement = document.getElementById('lido' + id).innerHTML;
+            }
+        });
+    });
+    $(document).ready(function () {
+        $('#Lido').click(function (e) {
+            e.preventDefault();
+
+            // Kiểm tra xem có radio nào được chọn không
+            if ($('input[type=radio]:checked').length === 0) {
+                alert('Vui lòng chọn một lựa chọn.');
+                return;
+            }
+
+            // Gửi dữ liệu qua Ajax
+            $.ajax({
+                type: 'PUT',
+                url: '/DonHang/HuyDonHang', // Điều chỉnh đúng đường dẫn của controller và action của bạn
+                data: {
+                    Lido: lidoElement,
+                    IdHoaDon: '@Model.IdHoaDon'
+                },
+                success: function (data) {
+                    window.location.reload();
+                    // window.location.href = "/DonHang/DetailHoaDonOnline?idHoaDon=" + data.idHoaDon;
+                },
+                error: function (error) {
+                    // Xử lý lỗi nếu có
+                    console.error('Lỗi Ajax request:', error);
+                }
+            });
+        });
+    });
+</script>
+
