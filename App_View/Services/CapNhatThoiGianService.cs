@@ -13,10 +13,10 @@ namespace App_View.Services
     public class CapNhatThoiGianService
     {
         BazaizaiContext _dbContext = new BazaizaiContext();
-
+        bool loading = false;
         public CapNhatThoiGianService()
         {
-
+            
             _dbContext = new BazaizaiContext();
         }
 
@@ -40,30 +40,44 @@ namespace App_View.Services
         }
         public void CapNhatTrangThaiSaleDetail()
         {
-            var lstHetHan = _dbContext.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.HetHan || x.TrangThai == (int)TrangThaiSale.BuocDung).ToList();
-            var lstDangKhuyenMai = _dbContext.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau).ToList();
-            var lstKMCT = _dbContext.khuyenMaiChiTiets.ToList();
-            foreach (var a in lstHetHan)
-            {
-                foreach (var b in lstKMCT)
+           
+
+                var lstHetHan = _dbContext.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.HetHan || x.TrangThai == (int)TrangThaiSale.BuocDung).ToList();
+                var lstDangKhuyenMai = _dbContext.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau).ToList();
+                var lstKMCT = _dbContext.khuyenMaiChiTiets.ToList();
+                foreach (var a in lstHetHan)
                 {
-                    if (b.IdKhuyenMai == a.IdKhuyenMai)
+                    foreach (var b in lstKMCT)
                     {
-                        b.TrangThai = (int)TrangThaiSaleDetail.NgungKhuyenMai;
+                        if (b.IdKhuyenMai == a.IdKhuyenMai)
+                        {
+                            b.TrangThai = (int)TrangThaiSaleDetail.NgungKhuyenMai;
+                        }
                     }
                 }
-            }
-            foreach (var a in lstDangKhuyenMai)
-            {
-                foreach (var b in lstKMCT)
+                foreach (var a in lstDangKhuyenMai)
                 {
-                    if (b.IdKhuyenMai == a.IdKhuyenMai)
+                    foreach (var b in lstKMCT)
                     {
-                        b.TrangThai = (int)TrangThaiSaleDetail.DangKhuyenMai;
+                        if (b.IdKhuyenMai == a.IdKhuyenMai)
+                        {
+                            b.TrangThai = (int)TrangThaiSaleDetail.DangKhuyenMai;
+                            var spct = _dbContext.sanPhamChiTiets.Where(x => x.IdChiTietSp == b.IdSanPhamChiTiet);
+                            if (spct.Any())
+                            {
+                                foreach (var c in spct)
+                                {
+                                    c.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DaApDungSale;
+                                }
+                                _dbContext.sanPhamChiTiets.UpdateRange(spct);
+                            }
+                        }
                     }
                 }
-            }
-            _dbContext.SaveChanges();
+                _dbContext.SaveChanges();
+                loading = false;
+            
+           
         }
         public void CapNhatGiaBanThucTe()
         {

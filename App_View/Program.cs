@@ -40,7 +40,7 @@ builder.Services.AddScoped<IKhuyenMaiChiTietServices, KhuyenMaiChiTietServices>(
 builder.Services.AddScoped<IKhuyenMaiServices, KhuyenMaiServices>();
 builder.Services.AddScoped<ThongTinGHController>();  // Sử dụng AddScoped nếu bạn muốn một instance cho mỗi phạm vi của yêu cầu HTTP
 builder.Services.AddScoped<GioHangChiTietsController, GioHangChiTietsController>();
-
+builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
 builder.Services.AddIdentity<NguoiDung, ChucVu>()

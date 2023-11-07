@@ -1,4 +1,51 @@
-﻿<div class="app-content">
+﻿@using App_Data.DbContextt;
+@using App_Data.Models;
+@using App_View.IServices;
+@using App_View.Models.ViewModels;
+@using App_View.Services;
+@using static App_Data.Repositories.TrangThai;
+@inject ISanPhamChiTietService sanPhamChiTietService;
+@inject IKhuyenMaiServices khuyenMaiService;
+@{
+    BazaizaiContext context = new BazaizaiContext();
+
+    var sanPhamChiTietList = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
+    var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
+
+    foreach (var pro in sanPhamChiTietList)
+    {
+        var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
+        var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
+        var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
+        var sanPhamSaleViewModel = new SanPhamSaleViewModel
+                {
+                    SanPhamDanhSachView = pro,
+                    TrangThaiSale = Convert.ToInt32(trangThaiSale),
+                    TrangThai = Convert.ToInt32(trangThai),
+                    GiaThucTe = giaThucTe
+                };
+
+        sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
+    }
+    var lstSpDuocApDungKhuyenMai = sanPhamSaleViewModelList.Where(x => ( x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong);
+    var flashSale = context.khuyenMaiChiTiets.Where(x=>x.TrangThai==(int)TrangThaiSaleDetail.DangKhuyenMai);
+    List<string> temp = new List<string>();
+    List<KhuyenMai> tempKM = new List<KhuyenMai>();
+    foreach (var salemax in flashSale)
+    {
+        temp.Add(salemax.IdKhuyenMai);
+    }
+    foreach (var id in temp.Distinct().ToList())
+    {
+        var km = (await khuyenMaiService.GetAllKhuyenMai()).FirstOrDefault(x => x.IdKhuyenMai == id);
+        tempKM.Add(km);
+    }
+    var saleMax = tempKM.Max(x => x.MucGiam);
+    var sale = tempKM.FirstOrDefault(x => x.MucGiam == saleMax);
+    flashSale = context.khuyenMaiChiTiets.Where(x=>x.TrangThai==(int)TrangThaiSaleDetail.DangKhuyenMai&&x.IdKhuyenMai==sale.IdKhuyenMai);
+
+}
+<div class="app-content">
     <div class="fixed-list">
         <ul class="nav" id="init-scrollspy">
             <li>
@@ -50,32 +97,43 @@
 
                         <div class="owl-stage-outer">
                             <div class="owl-stage" style="transform: translate3d(-4436px, 0px, 0px); transition: all 1.5s ease 0s; width: 7763px;">
-                                <div class="owl-item cloned" style="width: 1110px; margin-right: -1px;">
-                                    <div class="hero-slide hero-slide--5">
-                                        <div class="primary-style-2-container">
-                                            <div class="row">
-                                                <div class="col-12">
-                                                    <div class="slider-content slider-content--animation">
+                                @{
+                                    int i = 5;
+                                }
+                                @if (tempKM != null && tempKM.Count > 0)
+                                {
+                                    foreach(var _km in tempKM){ 
+                                        <div class="owl-item cloned" style="width: 1110px; margin-right: -1px;">
+                                            <div class="hero-slide hero-slide--@i" style="background-image:url('/AnhSale/@_km.Url');">
+                                                <div class="primary-style-2-container">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <div class="slider-content slider-content--animation">
 
-                                                        <span class="content-span-1 u-c-white">Tìm thương hiệu hàng đầu</span>
+                                                                <span class="content-span-1 u-c-white">Tìm thương hiệu hàng đầu</span>
 
-                                                        <span class="content-span-2 u-c-white">Giảm giá 10% có các loại giày leo núi</span>
+                                                                <span class="content-span-2 u-c-white">Giảm giá 10% có các loại giày leo núi</span>
 
-                                                        <span class="content-span-3 u-c-white">Tìm giày với giá tốt nhất</span>
+                                                                <span class="content-span-3 u-c-white">Tìm giày với giá tốt nhất</span>
 
-                                                        <span class="content-span-4 u-c-white">
-                                                            Bắt đầu tại
+                                                                <span class="content-span-4 u-c-white">
+                                                                    Bắt đầu tại
 
-                                                            <span class="u-c-brand">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", 100000)</span>
-                                                        </span>
+                                                                    <span class="u-c-brand">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}",lstSpDuocApDungKhuyenMai.Min(x=>x.SanPhamDanhSachView.GiaBan)- (lstSpDuocApDungKhuyenMai.Min(x=>x.SanPhamDanhSachView.GiaBan)*Convert.ToInt32(_km.MucGiam))/100)</span>
+                                                                </span>
 
-                                                        <a class="shop-now-link btn--e-brand" href="/sanphamchitiets">SHOP NOW</a>
+                                                                <a class="shop-now-link btn--e-brand" href="/sanphamchitiets">SHOP NOW</a>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div><div class="owl-item cloned" style="width: 1110px; margin-right: -1px;">
+                                        i++;
+                                    }
+                                }
+                               
+                                @*<div class="owl-item cloned" style="width: 1110px; margin-right: -1px;">
                                     <div class="hero-slide hero-slide--6">
                                         <div class="primary-style-2-container">
                                             <div class="row">
@@ -100,7 +158,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div><div class="owl-item" style="width: 1110px; margin-right: -1px;">
+                                </div>
+                                <div class="owl-item" style="width: 1110px; margin-right: -1px;">
                                     <div class="hero-slide hero-slide--4">
                                         <div class="primary-style-2-container">
                                             <div class="row">
@@ -125,7 +184,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div><div class="owl-item" style="width: 1110px; margin-right: -1px;">
+                                </div>
+                                <div class="owl-item" style="width: 1110px; margin-right: -1px;">
                                     <div class="hero-slide hero-slide--5">
                                         <div class="primary-style-2-container">
                                             <div class="row">
@@ -150,7 +210,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div><div class="owl-item active" style="width: 1110px; margin-right: -1px;">
+                                </div>
+                                <div class="owl-item active" style="width: 1110px; margin-right: -1px;">
                                     <div class="hero-slide hero-slide--6">
                                         <div class="primary-style-2-container">
                                             <div class="row">
@@ -175,7 +236,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div><div class="owl-item cloned" style="width: 1110px; margin-right: -1px;">
+                                </div>
+                                <div class="owl-item cloned" style="width: 1110px; margin-right: -1px;">
                                     <div class="hero-slide hero-slide--4">
                                         <div class="primary-style-2-container">
                                             <div class="row">
@@ -200,7 +262,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div><div class="owl-item cloned" style="width: 1110px; margin-right: -1px;">
+                                </div>
+                                <div class="owl-item cloned" style="width: 1110px; margin-right: -1px;">
                                     <div class="hero-slide hero-slide--5">
                                         <div class="primary-style-2-container">
                                             <div class="row">
@@ -225,10 +288,15 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>*@
                             </div>
-                        </div><div class="owl-nav disabled"><button type="button" role="presentation" class="owl-prev"><span aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next"><span aria-label="Next">›</span></button></div><div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button role="button" class="owl-dot"><span></span></button><button role="button" class="owl-dot active"><span></span></button></div>
-                    </div>
+                        </div>
+                        <div class="owl-nav disabled"><button type="button" role="presentation" class="owl-prev"><span
+                                    aria-label="Previous">‹</span></button><button type="button" role="presentation" class="owl-next"><span
+                                    aria-label="Next">›</span></button></div>
+                        <div class="owl-dots"><button role="button" class="owl-dot"><span></span></button><button role="button"
+                                class="owl-dot"><span></span></button><button role="button" class="owl-dot active"><span></span></button></div>
+                                            </div>
                 </div>
                 <!--====== End - Primary Slider ======-->
             </div>
@@ -3376,12 +3444,39 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="section__text-wrap">
-                                    <h1 class="section__heading u-c-secondary u-s-m-b-12">FLASH DEALS</h1>
+                                    @if(sale!=null){
+                                    <h1 class="section__heading u-c-secondary u-s-m-b-12">@sale.TenKhuyenMai</h1>
 
                                     <span class="section__span u-c-silver u-s-m-b-16">FILL YOUR CART WITH FLASH PRODUCTS</span>
                                     <div class="section_countdown-wrap">
-                                        <div class="countdown countdown--style-section" data-countdown="2020/05/01"><div class="countdown__content"><div><span class="countdown__value">00</span><span class="countdown__key">Days</span></div></div><div class="countdown__content"><div><span class="countdown__value">00</span><span class="countdown__key">Hours</span></div></div><div class="countdown__content"><div><span class="countdown__value">00</span><span class="countdown__key">Mins</span></div></div><div class="countdown__content"><div><span class="countdown__value">00</span><span class="countdown__key">Secs</span></div></div></div>
+                                        <div class="countdown countdown--style-section" >
+                                            <div class="countdown__content">
+                                                <div>
+                                                    <div class="countdown_Day" >00</div>
+                                                    <span class="countdown__key">Days</span>
+                                                </div>
+                                            </div>
+                                            <div class="countdown__content">
+                                                <div>
+                                                    <div class="countdown_Hours" >00</div>
+                                                    <span class="countdown__key">Hours</span>
+                                                </div>
+                                            </div>
+                                            <div class="countdown__content">
+                                                <div>
+                                                    <div class="countdown_Mins">00</div>
+                                                    <span class="countdown__key">Mins</span>
+                                                </div>
+                                            </div>
+                                            <div class="countdown__content">
+                                                <div>
+                                                    <div class="countdown_Secs"> 00</div>
+                                                    <span class="countdown__key">Secs</span>
+                                                </div>
+                                            </div>
+                                        </div>                                   
                                     </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -3392,176 +3487,82 @@
                 <div class="section__content">
                     <div class="container">
                         <div class="row">
-                            <div class="col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
+                            @{
+                                int count = 0;
+                            }
+                            @if(sale!=null){
+                                @foreach (var flSale in flashSale)
+                                {
+                                    if (count < 3)
+                                    {
+                                        <div class="col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
 
-                                <!--====== Product Orientation Version 2 ======-->
-                                <div class="product-o2 u-h-100">
-                                    <div class="product-o2__wrap">
+                                            <!--====== Product Orientation Version 2 ======-->
+                                            <div class="product-o2 u-h-100">
+                                                <div class="product-o2__wrap">
 
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
+                                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
 
-                                            <img class="aspect__img product-o2__img" src="/images/product/women/product11.jpg" alt="">
-                                        </a>
-                                        <div class="product-o2__action-wrap">
-                                            <ul class="product-o2__action-list">
-                                                <li>
+                                                        <img class="aspect__img product-o2__img" src="~/AnhSanPham/@lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).SanPhamDanhSachView.Anh" alt="">
+                                                    </a>
+                                                    <div class="product-o2__action-wrap">
+                                                        <ul class="product-o2__action-list">
+                                                            <li>
 
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-toggle="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
+                                                                <a data-modal="modal" data-modal-id="#quick-look" data-toggle="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
+                                                            </li>
+                                                            <li>
 
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-toggle="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
+                                                                <a data-modal="modal" data-modal-id="#add-to-cart" data-toggle="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
+                                                            </li>
+                                                            <li>
 
-                                                    <a href="signin.html" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
+                                                                <a href="signin.html" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
+                                                            </li>
+                                                            <li>
 
-                                                    <a href="signin.html" data-toggle="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
+                                                                <a href="signin.html" data-toggle="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="product-o2__content">
+
+                                                    <span class="product-o2__category">
+
+                                                        <a href="/sanphamchitiets">@lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).SanPhamDanhSachView.LoaiGiay</a>
+                                                    </span>
+
+                                                    <span class="product-o2__name">
+
+                                                        <a href="product-detail.html">@lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).SanPhamDanhSachView.SanPham</a>
+                                                    </span>
+                                                    <div class="product-o2__rating gl-rating-style-2">
+                                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+
+                                                        <span class="product-o2__review">(23)</span>
+                                                    </div>
+
+                                                    <span class="product-o2__price">
+                                                        @lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).GiaThucTe VNĐ
+
+                                                        <span class="product-o2__discount">@lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).SanPhamDanhSachView.GiaBan VNĐ</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <!--====== End - Product Orientation Version 2 ======-->
                                         </div>
-                                    </div>
-                                    <div class="product-o2__content">
+                                        count++;
+                                    }
+                                    else
+                                    {
+                                        break;
+                                    }
+                                }
 
-                                        <span class="product-o2__category">
-
-                                            <a href="/sanphamchitiets">Women Clothing</a>
-                                        </span>
-
-                                        <span class="product-o2__name">
-
-                                            <a href="product-detail.html">New Dress H Nice Elegant</a>
-                                        </span>
-                                        <div class="product-o2__rating gl-rating-style-2">
-                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-
-                                            <span class="product-o2__review">(23)</span>
-                                        </div>
-
-                                        <span class="product-o2__price">
-                                            $125.00
-
-                                            <span class="product-o2__discount">$160.00</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!--====== End - Product Orientation Version 2 ======-->
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
-
-                                <!--====== Product Orientation Version 2 ======-->
-                                <div class="product-o2 u-h-100">
-                                    <div class="product-o2__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img product-o2__img" src="/images/product/women/product12.jpg" alt="">
-                                        </a>
-                                        <div class="product-o2__action-wrap">
-                                            <ul class="product-o2__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-toggle="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-toggle="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-toggle="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="product-o2__content">
-
-                                        <span class="product-o2__category">
-
-                                            <a href="/sanphamchitiets">Women Clothing</a>
-                                        </span>
-
-                                        <span class="product-o2__name">
-
-                                            <a href="product-detail.html">New Dress I Nice Elegant</a>
-                                        </span>
-                                        <div class="product-o2__rating gl-rating-style-2">
-                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-
-                                            <span class="product-o2__review">(23)</span>
-                                        </div>
-
-                                        <span class="product-o2__price">
-                                            $125.00
-
-                                            <span class="product-o2__discount">$160.00</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!--====== End - Product Orientation Version 2 ======-->
-                            </div>
-                            <div class="col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
-
-                                <!--====== Product Orientation Version 2 ======-->
-                                <div class="product-o2 u-h-100">
-                                    <div class="product-o2__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                            <img class="aspect__img product-o2__img" src="/images/product/women/product13.jpg" alt="">
-                                        </a>
-                                        <div class="product-o2__action-wrap">
-                                            <ul class="product-o2__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-toggle="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-toggle="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-toggle="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-toggle="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="product-o2__content">
-
-                                        <span class="product-o2__category">
-
-                                            <a href="/sanphamchitiets">Women Clothing</a>
-                                        </span>
-
-                                        <span class="product-o2__name">
-
-                                            <a href="product-detail.html">New Dress J Nice Elegant</a>
-                                        </span>
-                                        <div class="product-o2__rating gl-rating-style-2">
-                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-
-                                            <span class="product-o2__review">(23)</span>
-                                        </div>
-
-                                        <span class="product-o2__price">
-                                            $125.00
-
-                                            <span class="product-o2__discount">$160.00</span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <!--====== End - Product Orientation Version 2 ======-->
+                            }
+                               
+                            
                             </div>
                         </div>
                     </div>
@@ -3868,3 +3869,62 @@
     </div>
     <!--====== End - Anti Flash White Background ======-->
 </div>
+@{
+    DateTime? saleEndDate;
+    if(sale!=null){
+        saleEndDate = sale.NgayKetThuc;
+    }
+    else
+    {
+       saleEndDate = new DateTime(0001,01,01);
+    
+    }
+}
+<script>
+    let launchDate = new Date("@saleEndDate").getTime();
+
+    // Setup Timer to tick every 1 second
+    let timer = setInterval(tick, 1000);
+
+    function tick() {
+        // Get current time
+        let now = new Date().getTime();
+        // Get the difference in time to get time left until reaches 0
+        let t = launchDate - now;
+
+        // Check if time is above 0
+        if (t > 0) {
+            // Setup Days, hours, seconds and minutes
+            // Algorithm to calculate days...
+            let days = Math.floor(t / (1000 * 60 * 60 * 24));
+            // prefix any number below 10 with a "0" E.g. 1 = 01
+            if (days < 10) { days = "0" + days; }
+
+            // Algorithm to calculate hours
+            let hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            if (hours < 10) { hours = "0" + hours; }
+
+            // Algorithm to calculate minutes
+            let mins = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+            if (mins < 10) { mins = "0" + mins; }
+
+            // Algorithm to calc seconds
+            let secs = Math.floor((t % (1000 * 60)) / 1000);
+            if (secs < 10) { secs = "0" + secs; }
+
+            // Create Time String
+                                                    
+            let _days = `${days}`;
+            let _hours = `${hours}`;
+            let _mins= `${mins}`;
+            let _secs = `${secs}`;
+            let time = `${days} : ${hours} : ${mins} : ${secs}`;
+            
+            // Set time on document
+            document.querySelector('.countdown_Day').innerText = _days;
+             document.querySelector('.countdown_Hours').innerText = _hours;
+              document.querySelector('.countdown_Mins').innerText = _mins;
+            document.querySelector('.countdown_Secs').innerText = _secs;
+        }
+    }
+</script>

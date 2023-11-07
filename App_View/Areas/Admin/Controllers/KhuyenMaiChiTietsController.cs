@@ -229,16 +229,19 @@ namespace App_View.Areas.Admin.Controllers
             foreach (var pro in sanPhamChiTietList)
             {
                 var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
-
+                var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
+                var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
                 var sanPhamSaleViewModel = new SanPhamSaleViewModel
                 {
                     SanPhamDanhSachView = pro,
-                    TrangThaiSale = Convert.ToInt32(trangThaiSale)
+                    TrangThaiSale = Convert.ToInt32(trangThaiSale),
+                    TrangThai = Convert.ToInt32(trangThai),
+                    GiaThucTe = giaThucTe
                 };
 
                 sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
             }
-
+            var lstSpDuocApDungKhuyenMai = sanPhamSaleViewModelList.Where(x => (x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong);
             return View(sanPhamSaleViewModelList);
         }
         [HttpPost]

@@ -1,5 +1,6 @@
 ﻿@using App_Data.DbContextt;
 @using App_View.Models.ViewModels;
+@using static App_Data.Repositories.TrangThai;
 @model IEnumerable<SanPhamSaleViewModel>
 
 @{
@@ -119,12 +120,12 @@
                             <td>@product.SanPhamDanhSachView.GiaBan</td>
                             <td>@product.SanPhamDanhSachView.GiaNhap</td>
                             <td>
-                        @if (spct.TrangThai == 0)
+                        @if (product.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale)
                         {
                                     <div class="trangThai">
                                         <div class="d-flex align-items-center">
                                             <div class="badge badge-success badge-dot m-r-10"></div>
-                                            <div>Active</div>
+                                            <div>Được áp dụng</div>
                                         </div>
                                     </div>
                         }
@@ -132,8 +133,8 @@
                         {
                                     <div class="trangThai">
                                         <div class="d-flex align-items-center">
-                                            <div class="badge badge-danger badge-dot m-r-10"></div>
-                                            <div>No Active</div>
+                                            <div class="badge badge-success badge-dot m-r-10"></div>
+                                            <div>Đã áp dụng</div>
                                         </div>
                                     </div>
                         }
