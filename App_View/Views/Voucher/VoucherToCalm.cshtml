@@ -176,13 +176,13 @@
                                                 {
                                                     @if (_voucherND.CheckVoucherInUser(item.MaVoucher) == true)
                                                     {
-                                                        <form asp-action="SaveVoucher" asp-controller="VoucherNguoiDung" method="post">
+                                                      @*   <form asp-action="SaveVoucher" asp-controller="VoucherNguoiDung" method="post"> *@
                                                             <div class="description__info-wrap">
-                                                                <button type="submit" class="manage-o__badge badge--delivered" style="border:none;">Lưu Voucher</button>
+                                                            <a id="calmVoucher" class="manage-o__badge badge--delivered" style="border:none;">Lưu Voucher</a>
                                                                 <input class="input-text input-text--border-radius input-text--style-1"
-                                                                       type="text" value="@item.MaVoucher" name="MaVoucher" id="main-search" hidden="true" placeholder="Nhập mã voucher">
+                                                                   type="text" value="@item.MaVoucher" name="MaVoucher" id="ma-voucher-input" hidden placeholder="Nhập mã voucher">
                                                             </div>
-                                                        </form>
+                                                       @*  </form> *@
                                                     }
                                                     else
                                                     {
@@ -237,34 +237,35 @@
             duration: 5000
         });
     })
-    $(document).ready(function () {
-        $("form").on("submit", function (event) {
-            event.preventDefault(); // Ngăn chặn form gửi đi một cách thông thường
-
-            $.ajax({
-                url: $(this).attr("action"),
-                type: $(this).attr("method"),
-                data: $(this).serialize(),
-                success: function (response) {
-                    // Ẩn form sau khi gửi thành công
-                    $(event.target).closest(".description__info-wrap").hide();
-
-                    // Hiển thị thông báo thành công
-                    $("#success-message").show();
-
-                    // Tải lại trang sau một khoảng thời gian (ví dụ: sau 2 giây)
+    $("#calmVoucher").on('click',function () {
+        var maVoucher = document.getElementById('ma-voucher-input').value;
+        // Sử dụng $.ajax để gửi yêu cầu AJAX
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SaveVoucher", "VoucherNguoiDung")",
+            data: { MaVoucher: maVoucher }, // Gửi dữ liệu dưới dạng JSON
+            // contentType: "application/json; charset=utf-8", // Đặt loại dữ liệu gửi đi
+            success: function (result) {
+                if (result) {
+                    Swal.fire('Thông báo!', 'Nhận voucher thành công (tự reload sau 3s)!', 'success');
                     setTimeout(function () {
                         location.reload();
-                    }, 2000); // 2000 mili giây = 2 giây
+                    }, 3000);
+
+                } else {
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Lỗi khi nhận voucher!!!.',
+                        icon: 'error',
+                        confirmButtonText: 'Đóng'
+                    });
                 }
-            });
+            },
+            error: function (error) {
+                console.error('Lỗi: ' + error);
+            }
         });
     });
-    // const scrollAmount = 800; // Thay đổi giá trị này nếu cần
 
-    // // Kéo trang xuống khi trang tải lại
-    // $(document).ready(function () {
-    //     $(window).scrollTop(scrollAmount);
-    // });
 
 </script>
