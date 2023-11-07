@@ -31,8 +31,13 @@ namespace App_Data.Repositories
             VoucherTangMoi = 4,
             [Description("Voucher tặng cho khách hàng thân thiết")]
             VoucherThanThiet = 5,
-
-
+            //Tại quầy
+            [Description("Hoạt động của bản cứng")]
+            HoatDongCung = 6,
+            [Description("Không hoạt động của bản cứng")]
+            KhongHoatDongCung = 7,
+            [Description("Chưa hoạt động của bản cứng")]    
+           ChuaHoatDongCung = 8,
         }
         /// <summary>
         /// ở đây là voucher

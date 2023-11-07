@@ -125,7 +125,7 @@ namespace App_Api.Controllers
         [HttpPost("AddVoucherNguoiDungTuAdmin")]
         public async Task<string> AddVoucherNguoiDungTuAdmin(AddVoucherRequestDTO addVoucherRequestDTO)
         {
-            var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.MaVoucher == addVoucherRequestDTO.MaVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDong && c.SoLuong > 0);
+            var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.MaVoucher == addVoucherRequestDTO.MaVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDong);
             if (VoucherKhaDung != null)
             {
                 foreach (var item in addVoucherRequestDTO.UserId.ToList())
@@ -143,10 +143,8 @@ namespace App_Api.Controllers
                 {
                     if (await (voucherNguoiDungRep.TangVoucherNguoiDung(addVoucherRequestDTO)) == true)
                     {
-                        VoucherKhaDung.SoLuong = VoucherKhaDung.SoLuong - soNguoiDuocTangVoucher;
-                        VcRepos.EditItem(VoucherKhaDung);
+                        return "Tặng voucher thành công";
                     }
-                    return "Tặng voucher thành công";
                 }
                 else
                 {
@@ -157,18 +155,23 @@ namespace App_Api.Controllers
             return "Voucher không còn khả dụng";
         }
         [HttpPost("TangVoucherChoNguoiDungMoi")]
-        public async Task<string> TangVoucherChoNguoiDungMoi(string ma)
+        public async Task<bool> TangVoucherChoNguoiDungMoi(string ma)
         {
+            int i = 0;
             var lstNguoidungNew = await voucherNguoiDungRep.GetLstNguoiDUngMoi();
             if (lstNguoidungNew.Any())
             {
                 foreach (var item in lstNguoidungNew)
                 {
-                    await voucherNguoiDungRep.TangVoucherNguoiDungMoi(ma, item.Id);
+                    if (await voucherNguoiDungRep.TangVoucherNguoiDungMoi(ma, item.Id)==true)
+                    {
+                        i++;
+                    }             
                 }
-                return "Tặng người dùng voucher thành công";
+                if(i >0)
+                return true;
             }
-            return "Tặng voucher thất bại";
+            return false;
 
         }
 

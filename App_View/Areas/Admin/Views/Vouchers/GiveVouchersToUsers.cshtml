@@ -53,6 +53,10 @@
             color: black; /* Đổi màu chữ thành đỏ */
             border: none; /* Loại bỏ đường viền */
         }
+
+        #Gift{
+            border-radius:20px;
+        }
     </style>
 </head>
 <div class="container mt-5">
@@ -63,8 +67,9 @@
 
                 <h1 id="register">Tặng voucher cho người dùng</h1>
                 <div class="all-steps">
-                    <a class="step" id="GiftNewUser"> Tặng cho khách hàng mới</a>
+                    <a class="step" id="GiftNewUser">Tặng cho khách hàng mới</a>
                 </div>
+
                 <div class="inputVoucher">
                     <h6>Nhập mã voucher cần tặng</h6>
                     <input id="ma-voucher-input" asp-for="MaVoucher" placeholder="@ViewBag.MaVoucher" required name="MaVoucher">
@@ -198,13 +203,12 @@
             });
             return;
         } 
-        alert(maVoucher);
         // Sử dụng $.ajax để gửi yêu cầu AJAX
         $.ajax({
             type: "POST",
             url: "@Url.Action("GiveVoucherForNewUser", "Vouchers")",
-            data: JSON.stringify({ MaVoucher: maVoucher }), // Gửi dữ liệu dưới dạng JSON
-            contentType: "application/json; charset=utf-8", // Đặt loại dữ liệu gửi đi
+            data:{ MaVoucher: maVoucher }, // Gửi dữ liệu dưới dạng JSON
+            // contentType: "application/json; charset=utf-8", // Đặt loại dữ liệu gửi đi
             success: function (result) {
                 if (result) {
                     Swal.fire('Thông báo!', 'Tặng voucher thành công!', 'success');
@@ -212,7 +216,7 @@
                 } else {
                     Swal.fire({
                         title: 'Thông báo!',
-                        text: 'Tặng voucher thất bại.',
+                        text: 'Người dùng đã có sẵn voucher này!!!.',
                         icon: 'error',
                         confirmButtonText: 'Đóng'
                     });

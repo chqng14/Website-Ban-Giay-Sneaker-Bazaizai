@@ -61,7 +61,7 @@ namespace App_Data.Repositories
 
         }
 
-        public async Task TangVoucherNguoiDungMoi(string ma, string idUser)
+        public async Task<bool> TangVoucherNguoiDungMoi(string ma, string idUser)
         {
             var voucher = await _context.vouchers.FirstOrDefaultAsync(c => c.MaVoucher == ma && c.TrangThai == (int)TrangThaiVoucher.HoatDong);
          
@@ -81,8 +81,10 @@ namespace App_Data.Repositories
                 {
                     await _context.AddAsync(voucherNguoi);
                     await _context.SaveChangesAsync();
+                    return true;
                 }
             }
+            return false;
            
         }
     }

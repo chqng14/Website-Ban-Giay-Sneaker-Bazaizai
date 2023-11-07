@@ -94,27 +94,28 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<VoucherNguoiDung>($"/api/VoucherNguoiDung/GetChiTietVoucherNguoiDungByID{id}");
         }
 
-        public async Task<string> TangVoucherNguoiDungMoi(string ma)
+        public async Task<bool> TangVoucherNguoiDungMoi(string ma)
         {
             ///api/VoucherNguoiDung/TangVoucherChoNguoiDungMoi
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("api/VoucherNguoiDung/TangVoucherChoNguoiDungMoi", ma);
-                if (response.IsSuccessStatusCode)
+                var httpClient = new HttpClient();
+                string apiUrl = $"https://localhost:7038/api/VoucherNguoiDung/TangVoucherChoNguoiDungMoi?ma={ma}";
+                var response = await httpClient.PostAsync(apiUrl, null);
+                var check = await response.Content.ReadAsStringAsync();
+                if (check == "true")
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine(content);
-                    return content;
+                    return true;
                 }
                 else
                 {
-                    return "false";
+                    return false;
                 }
             }
             catch (Exception e)
             {
                 Console.WriteLine($"Lỗi xảy ra: {e}");
-                return "false";
+                return false;
             }
         }
 
