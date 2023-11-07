@@ -14,9 +14,9 @@
         @foreach (var sp in Model)
         {
             <div class="card">
-                <div class="card-header d-flex justify-content-between" style="background: #4bc9c9">
+                <div class="card-header d-flex justify-content-between" style="background: #e1faff">
                     <h5 class="card-title">
-                        <a style="background: #4bc9c9" class="collapsed" data-toggle="collapse" href="#collapseTwoDefault-@sp.IdChiTietSp">
+                        <a style="background: #e1faff" class="collapsed" data-toggle="collapse" href="#collapseTwoDefault-@sp.IdChiTietSp">
                             <span>@sp.FullName</span>
                         </a>
                     </h5>
@@ -40,7 +40,7 @@
                             </li>
                         </ul>
                         <div class="tab-content m-t-15" id="myTabContent">
-                            <div class="tab-pane fade show active" id="home-@sp.IdChiTietSp" role="tabpanel" aria-labelledby="home-tab" style="height: 470px">
+                            <div class="tab-pane fade show active" id="home-@sp.IdChiTietSp" role="tabpanel" aria-labelledby="home-tab" style="min-height: 420px">
                                 <div class="card">
                                     <div class="card-body main">
                                         <div class="row">

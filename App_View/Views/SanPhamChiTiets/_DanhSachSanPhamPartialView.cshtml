@@ -85,36 +85,38 @@ else
         </div>
     </div>
     <div class="u-s-p-y-60">
-
         <!--====== Pagination ======-->
         <ul class="shop-p__pagination">
+            @if (Model.PagingInfo!.TrangHienTai > 1)
+            {
+                <li>
+                    <a class="previous-page fas fa-angle-left" href="javascript:void(0);"></a>
+                </li>
+            }
             @if (Model.PagingInfo!.SoTrang > 1)
             {
-
                 for (int i = 1; i <= Model.PagingInfo!.SoTrang; i++)
                 {
                     if (i == Model.PagingInfo.TrangHienTai)
                     {
                         <li class="is-active">
-
-                            <a href="javascript:void(0);">@i</a>
+                            <a href="shop-grid-full.html">@i</a>
                         </li>
                     }
                     else
                     {
                         <li>
-
                             <a class="no-active" href="javascript:void(0);">@i</a>
                         </li>
                     }
-
                 }
-                @*<li>
-
-                        <a class="fas fa-angle-right" href="javascript:void(0);"></a>
-                    </li>*@
             }
-
+            @if (Model.PagingInfo!.TrangHienTai < Model.PagingInfo!.SoTrang)
+            {
+                <li>
+                    <a class="next-page fas fa-angle-right" href="javascript:void(0);"></a>
+                </li>
+            }
         </ul>
         <!--====== End - Pagination ======-->
     </div>
@@ -185,4 +187,75 @@ else
         });
 
     })
+
+    $(document).on("click", ".previous-page", function () {
+        changePage(-1);
+    });
+
+    $(document).on("click", ".next-page", function () {
+        changePage(1);
+    });
+
+    function changePage(direction) {
+        const brandParam = new URLSearchParams(window.location.search).get("brand");
+        $('.preloader').addClass('is-active');
+
+        var trangHienTai = parseInt($(".shop-p__pagination li.is-active a").text());
+        var newTrangHienTai = trangHienTai + direction;
+
+        var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
+            return $(this).attr('id');
+        }).get();
+
+        var lstMauSac = $('.lst-mausac input[type="checkbox"]:checked').map(function () {
+            return $(this).attr('id');
+        }).get();
+
+        var lstTheLoai = $('.lst-theloai input[type="checkbox"]:checked').map(function () {
+            return $(this).closest('.list__content').find('span').text();
+        }).get();
+
+        var data = {};
+        $('#s-price').find("input, select, textarea").each(function () {
+            var fieldType = $(this).attr("type");
+            var fieldName = $(this).attr("name");
+            var fieldValue;
+
+            if (fieldType === "checkbox" || fieldType === "radio") {
+                fieldValue = $(this).is(":checked");
+            } else {
+                fieldValue = $(this).val();
+                if (!fieldValue) {
+                    fieldValue = 0;
+                }
+            }
+
+            data[fieldName] = fieldValue;
+        });
+
+        var filterdata = {
+            LstTheLoai: lstTheLoai,
+            LstMauSac: lstMauSac,
+            lstKichCo: lstKichCo,
+            TrangHienTai: newTrangHienTai,
+            ...data
+        };
+
+        $.ajax({
+            url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+            type: 'POST',
+            data: JSON.stringify(filterdata),
+            contentType: 'application/json',
+            success: function (result) {
+                $('#body-ds').empty().html(result);
+                $('.preloader').removeClass('is-active');
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    }
 </script>
