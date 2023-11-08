@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace App_Api.Controllers
@@ -31,7 +32,7 @@ namespace App_Api.Controllers
 
         [HttpPost("Create-KhuyenMai")]
 
-        public async Task<IActionResult> CreateKhuyenMaiAsync(string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, int loaiHinh, IFormFile formFile)
+        public async Task<IActionResult> CreateKhuyenMaiAsync(string id,string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, int loaiHinh, IFormFile formFile)
         {
             try
             {
@@ -66,15 +67,14 @@ namespace App_Api.Controllers
                         Quality = 80
                     };
 
-                    string fileName = Guid.NewGuid().ToString() + formFile.FileName;
+                    string fileName = Guid.NewGuid().ToString() +formFile.FileName;
                     string outputPath = Path.Combine(uploadDirectory, fileName);
-
                     using var outputStream = new FileStream(outputPath, FileMode.Create);
                     await image.SaveAsync(outputStream, encoder);
                     KhuyenMai KhuyenMai = new KhuyenMai();
                     KhuyenMai.TenKhuyenMai = Ten;
                     KhuyenMai.MaKhuyenMai = MaTS;
-                    KhuyenMai.IdKhuyenMai = Guid.NewGuid().ToString();
+                    KhuyenMai.IdKhuyenMai = id;
                     KhuyenMai.TrangThai = trangThai;
                     KhuyenMai.NgayBatDau = ngayBD;
                     KhuyenMai.NgayKetThuc = ngayKT;
