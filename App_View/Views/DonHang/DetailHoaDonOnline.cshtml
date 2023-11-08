@@ -430,7 +430,7 @@
                     else if (Model.LoaiThanhToan == "MOMO" && Model.TrangThaiThanhToan == 0)
                     {
                         <h3 class="manage-o__text-2 u-c-secondary">Momo</h3>
-                        <h3 class="manage-o__text-2 u-c-secondary" style="color:red">Vui lòng thanh toán đơn hàng của bạn</h3>
+                        <h3 class="manage-o__text-2 u-c-secondary" style="color:red !important">Vui lòng thanh toán đơn hàng của bạn</h3>
                     }
                     else
                     {
@@ -474,12 +474,34 @@
                     </div>
                 </div>
             </div>
-            @if (Model.TrangThaiGiaoHang!=5)
-            {
-                <a data-modal="modal" data-modal-id="#edit-ship-address">
-                    <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px;text-align: center;margin-top: 15px;">Huỷ</span>
-                </a>
-            }
+            <div class="dash-l-r u-s-m-t-8">
+                @if (Model.TrangThaiGiaoHang != 5)
+                {
+                    if (Model.LoaiThanhToan == "MOMO" && Model.TrangThaiThanhToan == 0)
+                    {
+                        <a>
+                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Thanh toán</span>
+                        </a>
+                        <a data-modal="modal" data-modal-id="#edit-ship-address">
+                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Huỷ</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a data-modal="modal" data-modal-id="#edit-ship-address">
+                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px;text-align: center;margin-top: 15px;">Huỷ</span>
+                        </a>
+                    }
+                }
+                @if (Model.TrangThaiGiaoHang == 5)
+                {
+
+                    <a href="@Url.Action("ReBuy","DonHang",new{idHoaDon = Model.IdHoaDon})">
+                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px;text-align: center;margin-top: 15px;">Mua Lại</span>
+                        </a>
+                    
+                }
+            </div>
         </div>
     </div>
 </div>
@@ -623,8 +645,27 @@
                     IdHoaDon: '@Model.IdHoaDon'
                 },
                 success: function (data) {
-                    window.location.reload();
-                    // window.location.href = "/DonHang/DetailHoaDonOnline?idHoaDon=" + data.idHoaDon;
+                    if (data.mess != null) {
+                        Swal.fire({
+                            position: "top-end",
+                            title: "Huỷ đơn hàng thành công",
+                            text: "Tiền sẽ được hoàn vào ví Momo của bạn trong 24h",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(function () {
+                            window.location.reload();
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            position: "top-end",
+                            title: "Huỷ đơn hàng thành công",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(function () {
+                            window.location.reload();
+                        });
+                    }
                 },
                 error: function (error) {
                     // Xử lý lỗi nếu có

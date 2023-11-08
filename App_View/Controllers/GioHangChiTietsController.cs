@@ -51,7 +51,7 @@ namespace App_View.Controllers
         {
             var IdCart = GetIdNguoiDung();
             var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(gioHangChiTietDTOCUD.IdSanPhamCT);
-            var ListCart = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == IdCart);
+            //var ListCart = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == IdCart);
             if (IdCart != null)
             {
                 var existing = (await GioHangChiTietServices.GetAllGioHang()).FirstOrDefault(x => x.IdSanPhamCT == product.IdChiTietSp && x.IdNguoiDung == IdCart);
@@ -204,8 +204,7 @@ namespace App_View.Controllers
             {
                 var sanPhamChiTiet = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
 
-                // Thêm điều kiện kiểm tra số lượng tồn đã hết
-                if (item.SoLuong + SoLuong > sanPhamChiTiet.SoLuongTon && sanPhamChiTiet.SoLuongTon == 0)
+                if (sanPhamChiTiet.SoLuongTon == 0)
                 {
                     return new
                     {
@@ -215,7 +214,7 @@ namespace App_View.Controllers
                         Idsanpham = sanPhamChiTiet.IdChiTietSp
                     };
                 }
-                if (item.SoLuong + SoLuong > sanPhamChiTiet.SoLuongTon)
+                if (SoLuong > sanPhamChiTiet.SoLuongTon)
                 {
                     return new
                     {
@@ -446,12 +445,12 @@ namespace App_View.Controllers
                     message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã hết hàng, Vui lòng chọn sản phẩm khác!");
                     outOfStockCount++;
                 }
-                if (item.TrangThaiSanPham == 1 || item.TrangThaiSanPham != product.TrangThai)
+                else if (item.TrangThaiSanPham == 1 || item.TrangThaiSanPham != product.TrangThai)
                 {
                     message.Add($"Sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} đã ngừng bán, Vui lòng chọn sản phẩm khác!");
                     stoppedSellingCount++;
                 }
-                if (item.SoLuong > product.SoLuongTon)
+                else if (item.SoLuong > product.SoLuongTon)
                 {
                     message.Add($"Số lượng sản phẩm {product.SanPham} màu {product.MauSac} size {product.KichCo} chỉ còn {product.SoLuongTon}, Vui lòng chọn lại số lượng!");
                     quantityErrorCount++;

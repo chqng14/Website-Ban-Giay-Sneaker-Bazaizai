@@ -25,8 +25,9 @@ public class MomoService : IMomoService
         _options = options;
     }
 
-    public async Task<MomoCreatePaymentResponseModel> CreatePaymentAsync(OrderInfoModel model, string idHoaDon)
+    public async Task<MomoCreatePaymentResponseModel> CreatePayment(OrderInfoModel model, string idHoaDon)
     {
+
         //model.OrderId = DateTime.UtcNow.Ticks.ToString();
         //model.OrderInfo = "Khách hàng: " + model.FullName + ". Nội dung: " + model.OrderInfo;
 
@@ -45,7 +46,7 @@ public class MomoService : IMomoService
                 "&orderId=" + model.OrderId +
                 "&orderInfo=" + model.OrderInfo +
                 "&partnerCode=" + _options.Value.PartnerCode +
-                "&redirectUrl=" + returnUrlWithIdHoaDon +
+                "&redirectUrl=" + _options.Value.redirectUrl +
                 "&requestId=" + model.OrderId +
                 "&requestType=" + _options.Value.RequestType
                 ;
@@ -63,65 +64,65 @@ public class MomoService : IMomoService
             amount = model.Amount,
             orderId = model.OrderId,
             orderInfo = model.OrderInfo,
-            redirectUrl = returnUrlWithIdHoaDon,
+            redirectUrl = _options.Value.redirectUrl,
             ipnUrl = _options.Value.ipnUrl,
             lang = _options.Value.lang,
             extraData = "",
             requestType = _options.Value.RequestType,
             signature = signature
         };
-        //JObject message = new JObject
-        //    {
-        //        { "partnerCode", _options.Value.PartnerCode },
-        //        { "partnerName", "Test" },
-        //        { "storeId", "MomoTestStore" },
-        //        { "requestId", model.OrderId },
-        //        { "amount", model.Amount.ToString() },
-        //        { "orderId", model.OrderId },
-        //        { "orderInfo", model.OrderInfo },
-        //        { "redirectUrl", _options.Value.redirectUrl },
-        //        { "ipnUrl", _options.Value.ipnUrl },
-        //        { "lang", "vi" },
-        //        { "extraData", "" },
-        //        { "requestType", _options.Value.RequestType },
-        //        { "signature", signature }
+        request.AddParameter("application/json", JsonConvert.SerializeObject(requestData), ParameterType.RequestBody);
 
-        //    };
+        var response = await client.ExecuteAsync(request);
 
-        //HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(_options.Value.endpoint);
+        return JsonConvert.DeserializeObject<MomoCreatePaymentResponseModel>(response.Content);
+    }
 
-        //var postData = message.ToString();
+    public async Task<MomoCreatePaymentResponseModel> CreatePaymentAsync(OrderInfoModel model, string idHoaDon)
+    {
+        //model.OrderId = DateTime.UtcNow.Ticks.ToString();
+        //model.OrderInfo = "Khách hàng: " + model.FullName + ". Nội dung: " + model.OrderInfo;
 
-        //var data = Encoding.UTF8.GetBytes(postData);
+        //Thêm idHoaDon vào returnUrl
+        //var returnUrlWithIdHoaDon = $"{_options.Value.redirectUrl}?idHoaDon={idHoaDon}";
 
-        //httpWReq.ProtocolVersion = HttpVersion.Version11;
-        //httpWReq.Method = "POST";
-        //httpWReq.ContentType = "application/json";
+        //var rawData =
+        //    $"partnerCode={_options.Value.PartnerCode}&accessKey={_options.Value.AccessKey}&requestId={model.OrderId}&amount={model.Amount}&orderId={model.OrderId}&orderInfo={model.OrderInfo}&returnUrl={returnUrlWithIdHoaDon}&notifyUrl={_options.Value.ipnUrl}&extraData=";
 
-        //httpWReq.ContentLength = data.Length;
-        //httpWReq.ReadWriteTimeout = 30000;
-        //httpWReq.Timeout = 15000;
-        //Stream stream = httpWReq.GetRequestStream();
-        //stream.Write(data, 0, data.Length);
-        //stream.Close();
+        //var testAIO = $"accessKey={_options.Value.AccessKey}&amount={model.Amount}&extraData=&ipnUrl={_options.Value.ipnUrl}&orderId={model.OrderId}&orderInfo={model.OrderInfo}&partnerCode={_options.Value.PartnerCode}&redirectUrl={_options.Value.redirectUrl}&requestId={model.OrderId}& requestType={_options.Value.RequestType}";
 
-        //HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse();
+        string rawHash = "accessKey=" + _options.Value.AccessKey +
+                "&amount=" + model.Amount +
+                "&extraData=" + "" +
+                "&ipnUrl=" + _options.Value.ipnUrl +
+                "&orderId=" + model.OrderId +
+                "&orderInfo=" + model.OrderInfo +
+                "&partnerCode=" + _options.Value.PartnerCode +
+                "&redirectUrl=" + _options.Value.redirectUrl +
+                "&requestId=" + model.OrderId +
+                "&requestType=" + _options.Value.RequestType
+                ;
+        var signature = ComputeHmacSha256(rawHash, _options.Value.SecretKey);
 
-        //string jsonresponse = "";
+        var client = new RestClient(_options.Value.endpoint);
+        var request = new RestRequest() { Method = Method.Post };
+        request.AddHeader("Content-Type", "application/json; charset=UTF-8");
 
-        //using (var reader = new StreamReader(response.GetResponseStream()))
-        //{
-
-        //    string temp = null;
-        //    while ((temp = reader.ReadLine()) != null)
-        //    {
-        //        jsonresponse += temp;
-        //    }
-        //}
-
-
-        //todo parse it
-        //return jsonresponse;
+        // Create an object representing the request data
+        var requestData = new
+        {
+            partnerCode = _options.Value.PartnerCode,
+            requestId = model.OrderId,
+            amount = model.Amount,
+            orderId = model.OrderId,
+            orderInfo = model.OrderInfo,
+            redirectUrl = _options.Value.redirectUrl,
+            ipnUrl = _options.Value.ipnUrl,
+            lang = _options.Value.lang,
+            extraData = "",
+            requestType = _options.Value.RequestType,
+            signature = signature
+        };
         request.AddParameter("application/json", JsonConvert.SerializeObject(requestData), ParameterType.RequestBody);
 
         var response = await client.ExecuteAsync(request);
@@ -166,6 +167,40 @@ public class MomoService : IMomoService
             OrderId = orderId,
             OrderInfo = orderInfo
         };
+    }
+
+    public async Task<MomoRefund> Refund(OrderInfoModel model)
+    {
+        string orderId = "HoanTien" + model.OrderId;
+        string rawHash = "accessKey=" + _options.Value.AccessKey +
+                "&amount=" + model.Amount +
+                "&description=" + model.description +
+                "&orderId=" + orderId +
+                "&partnerCode=" + _options.Value.PartnerCode +
+                "&requestId=" + orderId +
+                "&transId=" + model.transId;
+        var signature = ComputeHmacSha256(rawHash, _options.Value.SecretKey);
+
+        var client = new RestClient("https://test-payment.momo.vn/v2/gateway/api/refund");
+        var request = new RestRequest() { Method = Method.Post };
+        request.AddHeader("Content-Type", "application/json; charset=UTF-8");
+
+        // Create an object representing the request data
+        var requestData = new
+        {
+            partnerCode = _options.Value.PartnerCode,
+            orderId = orderId,
+            requestId = orderId,
+            amount = model.Amount,
+            transId = model.transId,
+            lang = _options.Value.lang,
+            description = model.description,
+            signature = signature
+        };
+        request.AddParameter("application/json", JsonConvert.SerializeObject(requestData), ParameterType.RequestBody);
+
+        var response = await client.ExecuteAsync(request);
+        return JsonConvert.DeserializeObject<MomoRefund>(response.Content);
     }
 
     private string ComputeHmacSha256(string message, string secretKey)
