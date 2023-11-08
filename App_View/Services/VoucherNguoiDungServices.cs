@@ -76,7 +76,7 @@ namespace App_View.Services
 
 
         //hàm này để check xem voucher đó đã có trong id người dùng chưa
-        public bool CheckVoucherInUser(string ma)
+        public bool CheckVoucherInUser(string ma, string idUser)
         {
             string voucherKhaDung = DbContextModel.vouchers
                 .FirstOrDefault(c => c.MaVoucher == ma && c.TrangThai == (int)TrangThaiVoucher.HoatDong).IdVoucher;
@@ -87,7 +87,7 @@ namespace App_View.Services
             }
 
             var existsInVoucherNguoiDung = DbContextModel.voucherNguoiDungs
-                .Any(vnd => vnd.IdVouCher == voucherKhaDung);
+                .Any(vnd => vnd.IdVouCher == voucherKhaDung && vnd.IdNguoiDung == idUser);
 
             return !existsInVoucherNguoiDung;
         }

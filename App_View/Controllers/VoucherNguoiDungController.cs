@@ -104,5 +104,10 @@ namespace App_View.Controllers
 
             return View(voucherNguoiDung);
         }
+        public async Task<IActionResult> TotalSpending()
+        {
+            var NguoiDung=  await _userManager.GetUserAsync(User);        
+            return View(NguoiDung);
+        }
     }
 }

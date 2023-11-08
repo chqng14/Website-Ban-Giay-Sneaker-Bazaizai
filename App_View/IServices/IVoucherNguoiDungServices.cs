@@ -12,7 +12,7 @@ namespace App_View.IServices
         Task<string> AddVoucherNguoiDungTuAdmin(AddVoucherRequestDTO addVoucherRequestDTO);
         Task<bool> TangVoucherNguoiDungMoi(string ma);
         Task<bool> UpdateVoucherNguoiDungSauKhiDung(VoucherNguoiDungDTO VcDTO);
-        bool CheckVoucherInUser(string ma);
+        bool CheckVoucherInUser(string ma,string idUser);
 
     }
 }

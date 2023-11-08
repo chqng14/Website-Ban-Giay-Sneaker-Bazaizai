@@ -1,14 +1,18 @@
 ﻿@using App_Data.DbContextt;
 @using System.Globalization;
+@using App_Data.Models;
 @using App_View.IServices;
 @using App_View.Services;
+@using Microsoft.AspNetCore.Identity;
 @model IEnumerable<App_Data.Models.Voucher>
-
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
 
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
     BazaizaiContext context = new BazaizaiContext();
+    var idNguoiDung = UserManager.GetUserId(User);
 }
 <style>
     .m-order__list {
@@ -163,18 +167,17 @@
                                                     </div>
 
                                                 </div>
-                                                @if (ViewBag.NguoiDung == null)
+                                                @if (idNguoiDung == null)
                                                 {
                                                     <div class="description__info-wrap">
                                                         <div class="body_copy">
-                                                            <a class="manage-o__badge badge--delivered">Chưa đăng nhập</a>
-                                                            @* <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea> *@
+                                                            <a class="manage-o__badge badge--delivered notlogin" id="notlogin">Chưa đăng nhập</a>
                                                         </div>
                                                     </div>
                                                 }
                                                 else
                                                 {
-                                                    @if (_voucherND.CheckVoucherInUser(item.MaVoucher) == true)
+                                                    @if (_voucherND.CheckVoucherInUser(item.MaVoucher,idNguoiDung) == true)
                                                     {
                                                       @*   <form asp-action="SaveVoucher" asp-controller="VoucherNguoiDung" method="post"> *@
                                                             <div class="description__info-wrap">
@@ -182,7 +185,6 @@
                                                                 <input class="input-text input-text--border-radius input-text--style-1"
                                                                    type="text" value="@item.MaVoucher" name="MaVoucher" id="ma-voucher-input" hidden placeholder="Nhập mã voucher">
                                                             </div>
-                                                       @*  </form> *@
                                                     }
                                                     else
                                                     {
@@ -237,6 +239,17 @@
             duration: 5000
         });
     })
+    
+    // Sử dụng jQuery
+    $(".notlogin").on('click', function () {
+        toast({
+            title: "Vui lòng đăng nhập!",
+            message: "Bạn có thể dùng hoặc lưu mã khi đăng nhập",
+            type: "error",
+            duration: 5000
+        });
+    });
+
     $("#calmVoucher").on('click',function () {
         var maVoucher = document.getElementById('ma-voucher-input').value;
         // Sử dụng $.ajax để gửi yêu cầu AJAX
