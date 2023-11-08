@@ -1,0 +1,1422 @@
+﻿<!DOCTYPE html>
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<head>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet"
+          href="~/Admin/css/sale.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/micrositefe/MDCountdownTimer.e666138896378ff3f531.css">
+
+    <link rel="stylesheet" type="text/css"
+          href="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/micrositefe/573.f566b344393e4a853c86.css">
+
+    <link rel="stylesheet" type="text/css"
+          href="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/micrositefe/9088.e1b5d88bd2670733a2eb.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/micrositefe/MDProductCollection.d6bd181badb8a51c81fa.css">
+
+</head>
+
+
+<body class="nt-s nl-t">
+
+    <div id="main">
+        <style id="nebula-style">
+            :root {
+                --nc-primary: #ee4d2d;
+                --nc-primary-bg: #fef6f5;
+                --nc-primary-gradient: linear-gradient(#ee4d2d, #ff7337);
+                --nc-secondary-blue: #0046ab;
+                --nc-secondary-yellow: #eda500;
+                --nc-secondary-green: #26aa99;
+                --nc-error: #ee2c4a;
+                --nc-error-bg: #fff4f4;
+                --nc-caution: #f69113;
+                --nc-caution-bg: #fff8e4;
+                --nc-success: #30b566;
+                --nc-success-bg: #f7fffe;
+                --nc-text-primary: rgba(0, 0, 0, .87);
+                --nc-text-primary-o: #212121;
+                --nc-text-secondary: rgba(0, 0, 0, .65);
+                --nc-text-secondary-o: #595959;
+                --nc-text-tertiary: rgba(0, 0, 0, .54);
+                --nc-text-tertiary-o: #757575;
+                --nc-text-link: #0088ff;
+                --nc-util-mask: rgba(0, 0, 0, .4);
+                --nc-util-disabled: rgba(0, 0, 0, .26);
+                --nc-util-disabled-o: #bdbdbd;
+                --nc-util-line: rgba(0, 0, 0, .09);
+                --nc-util-line-o: #e8e8e8;
+                --nc-util-bg: #f5f5f5;
+                --nc-util-placeholder: #fafafa;
+                --nc-util-pressed: rgba(0, 0, 0, .05);
+                --nt-font-regular-f: -apple-system, 'HelveticaNeue', 'Helvetica Neue', 'Roboto', 'Droid Sans', Arial, sans-serif;
+                --nt-font-regular-w: 400;
+                --nt-font-medium-f: -apple-system, 'HelveticaNeue-Medium', 'Helvetica Neue', 'Roboto', 'Droid Sans', Arial, sans-serif;
+                --nt-font-medium-w: 500;
+                --nt-font-bold-f: -apple-system, 'HelveticaNeue-Bold', 'Helvetica Neue', 'Roboto', 'Droid Sans', 'Arial Bold', Arial, sans-serif;
+                --nt-font-bold-w: 700;
+                --nt-size-foot: .625rem;
+                --nt-size-foot-l: .75rem;
+                --nt-size-foot-lp: .75rem;
+                --nt-size-foot-t: 1rem;
+                --nt-size-foot-tp: 1rem;
+                --nt-size-small: .75rem;
+                --nt-size-small-l: .875rem;
+                --nt-size-small-lp: 1.25rem;
+                --nt-size-small-t: 1.125rem;
+                --nt-size-small-tp: 1.125rem;
+                --nt-size-normal: .875rem;
+                --nt-size-normal-l: 1rem;
+                --nt-size-normal-lp: 1.25rem;
+                --nt-size-normal-t: 1.375rem;
+                --nt-size-normal-tp: 1.375rem;
+                --nt-size-large: 1rem;
+                --nt-size-large-l: 1.25rem;
+                --nt-size-large-lp: 1.375rem;
+                --nt-size-large-t: 1.5rem;
+                --nt-size-large-tp: 1.5rem;
+                --nt-size-title: 1.25rem;
+                --nt-size-title-l: 1.5rem;
+                --nt-size-title-lp: 1.5rem;
+                --nt-size-title-t: 1.875rem;
+                --nt-size-title-tp: 1.875rem;
+                --ns-a: .25rem;
+                --ns-b: .5rem;
+                --ns-c: .75rem;
+                --ns-d: 1rem;
+                --ns-e: 1.25rem;
+                --ns-f: 1.5rem;
+                --ns-g: 2.5rem;
+                --ne-depth6: 0 0 .375rem rgba(0, 0, 0, .06);
+                --ne-depth9: 0 0 .5625rem rgba(0, 0, 0, .12);
+                --nr-normal: .125rem;
+                --nr-overlay: .25rem
+            }
+
+            .nt-foot {
+                font-size: var(--nt-size-foot, .625rem);
+                line-height: var(--nt-size-foot-t, 1rem)
+            }
+
+            .nt-foot-p {
+                font-size: var(--nt-size-foot, .625rem);
+                line-height: var(--nt-size-foot-tp, 1rem)
+            }
+
+            .nt-small {
+                font-size: var(--nt-size-small, .75rem);
+                line-height: var(--nt-size-small-t, 1.125rem)
+            }
+
+            .nt-small-p {
+                font-size: var(--nt-size-small, .75rem);
+                line-height: var(--nt-size-small-tp, 1.125rem)
+            }
+
+            .nt-normal {
+                font-size: var(--nt-size-normal, .875rem);
+                line-height: var(--nt-size-normal-t, 1.375rem)
+            }
+
+            .nt-normal-p {
+                font-size: var(--nt-size-normal, .875rem);
+                line-height: var(--nt-size-normal-tp, 1.375rem)
+            }
+
+            .nt-large {
+                font-size: var(--nt-size-large, 1rem);
+                line-height: var(--nt-size-large-t, 1.5rem)
+            }
+
+            .nt-large-p {
+                font-size: var(--nt-size-large, 1rem);
+                line-height: var(--nt-size-large-tp, 1.5rem)
+            }
+
+            .nt-title {
+                font-size: var(--nt-size-title, 1.25rem);
+                line-height: var(--nt-size-title-t, 1.875rem)
+            }
+
+            .nt-title-p {
+                font-size: var(--nt-size-title, 1.25rem);
+                line-height: var(--nt-size-title-tp, 1.875rem)
+            }
+
+            .nt-regular {
+                font-family: var(--nt-font-regular-f, -apple-system, 'HelveticaNeue', 'Helvetica Neue', 'Roboto', 'Droid Sans', Arial, sans-serif);
+                font-weight: var(--nt-font-regular-w, 400)
+            }
+
+            .nt-medium {
+                font-family: var(--nt-font-medium-f, -apple-system, 'HelveticaNeue-Medium', 'Helvetica Neue', 'Roboto', 'Droid Sans', Arial, sans-serif);
+                font-weight: var(--nt-font-medium-w, 500)
+            }
+
+            .nt-bold {
+                font-family: var(--nt-font-bold-f, -apple-system, 'HelveticaNeue-Bold', 'Helvetica Neue', 'Roboto', 'Droid Sans', 'Arial Bold', Arial, sans-serif);
+                font-weight: var(--nt-font-bold-w, 700)
+            }
+        </style>
+
+        <div>
+            <div class="shopee-progress-bar"></div>
+            <div style="display: contents;">
+                <div class="DHEt96">
+                    <div class="md-page">
+                        <div class="tracking-impression-placeholder"
+                             style="position: fixed; z-index: 99999; bottom: 0px; left: 0px;"></div>
+                        <div role="main" data-virtual-list="true" style="background-color: rgb(255, 255, 255);">
+                            <div style="height: 923px; overflow: hidden auto; width: 100%; position: relative;">
+                                <div style="height: 1px; pointer-events: none; transform: scale(1000.7) translateY(50%);">
+                                </div>
+                                <div style="position: absolute; top: auto; height: 559.953px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519360">
+                                                <div class="lEwcgc">
+                                                    <div style="position: absolute; top: 50%; z-index: 9999;"></div>
+                                                    <div style="position: relative;">
+                                                        <div class="" style="width: 100%; padding-top: 58.33%;">
+                                                            <div></div>
+                                                        </div>
+                                                        <picture class="JEjj5L">
+                                                            <img data-is-lazy-load-bg-image="false"
+                                                                 data-use-image-server="false" class="lazyload RPPDP+"
+                                                                 loading="lazy"
+                                                                 src="https://down-vn.img.susercontent.com/file/vn-50009109-d1fc82885649397ac8392c0d018ce795"
+                                                                 role="presentation" alt=""
+                                                                 style="position: absolute; top: 0px; height: 100%; width: 100%;">
+                                                        </picture>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 580px; height: 96px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519362">
+                                                <div class="fazD4N aKKong _8kwsZk vpiXWe" style="height: 96px;">
+                                                    <div class="cZ76Ba">
+                                                        <div class="BwuUKj"
+                                                             style="position: absolute; top: 50%; right: 50%; transform: translate(50%, -50%); max-width: 100%;">
+                                                            <div class="Z9KNYN" style="color: rgb(238, 77, 45);">
+                                                                11.11
+                                                                Siêu Sale | CÒN
+                                                            </div>
+                                                            <div class="fsk4n9 _7Agh3t"
+                                                                 style="color: rgb(238, 77, 45); animation-delay: 94352.6s;">
+                                                                <div class="_2UsJOV rbfRts _2jJhsc">
+                                                                    <span style="animation-delay: -683247s; animation-iteration-count: 1; animation-duration: 864000s;">9876543210</span>
+                                                                </div>
+                                                                <div class="rbfRts">Ngày</div>
+                                                            </div>
+                                                            <div class="fsk4n9 Q3Hjob" style="color: rgb(238, 77, 45);">
+                                                                <div class="_1mNNLN rbfRts _2jJhsc">
+                                                                    <div style="animation-delay: -78447.4s; animation-iteration-count: 3; animation-duration: 86400s;">
+                                                                        <span>23</span><span>22</span><span>21</span><span>20</span><span>19</span><span>18</span><span>17</span><span>16</span><span>15</span><span>14</span><span>13</span><span>12</span><span>11</span><span>10</span><span>09</span><span>08</span><span>07</span><span>06</span><span>05</span><span>04</span><span>03</span><span>02</span><span>01</span><span>00</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="rbfRts">Giờ</div>
+                                                            </div>
+                                                            <div class="fsk4n9" style="color: rgb(238, 77, 45);">
+                                                                <div class="FSBEZB rbfRts _2jJhsc">
+                                                                    <span style="animation-delay: -2847.42s; animation-iteration-count: 51; animation-duration: 3600s;">543210</span>
+                                                                </div>
+                                                                <div class="_2UsJOV rbfRts _2jJhsc">
+                                                                    <span style="animation-delay: -447.422s; animation-iteration-count: 302; animation-duration: 600s;">9876543210</span>
+                                                                </div>
+                                                                <div class="rbfRts">Phút</div>
+                                                            </div>
+                                                            <div class="fsk4n9" style="color: rgb(238, 77, 45);">
+                                                                <div class="FSBEZB rbfRts _2jJhsc">
+                                                                    <span style="animation-delay: -27.422s; animation-iteration-count: 3013; animation-duration: 60s;">543210</span>
+                                                                </div>
+                                                                <div class="_2UsJOV rbfRts _2jJhsc">
+                                                                    <span style="animation-delay: -7.422s; animation-iteration-count: 18076; animation-duration: 10s;">9876543210</span>
+                                                                </div>
+                                                                <div class="rbfRts">Giây</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="position: absolute; top: 656px; height: 170.391px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519368">
+                                                <div class="lEwcgc">
+                                                    <div style="position: absolute; top: 50%; z-index: 9999;"></div>
+                                                    <div style="position: relative;">
+                                                        <div class="" style="width: 100%; padding-top: 17.75%;">
+                                                            <div></div>
+                                                        </div>
+                                                        <picture class="JEjj5L">
+                                                            <img data-is-lazy-load-bg-image="false"
+                                                                 data-use-image-server="false" class="lazyload RPPDP+"
+                                                                 loading="lazy"
+                                                                 src="https://down-vn.img.susercontent.com/file/vn-50009109-33927b96946a6e8839c060c8031cadce"
+                                                                 role="presentation" alt=""
+                                                                 style="position: absolute; top: 0px; height: 100%; width: 100%;">
+                                                        </picture>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 826px; height: 332.797px; width: 960px; overflow-y: hidden; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519369">
+                                                <div>
+                                                    <div class="QCnKA8" tabindex="0" aria-label="Voucher" role="group">
+                                                        <div style="visibility: visible; width: 750px; transform: scale(1.28); transform-origin: left top; margin: 0px 210px 72.8px 0px;">
+                                                            <div class="_1F6CJK A0vq4Y">
+                                                                <div class="G-7KKK">
+                                                                    <div class="PIc+1f"
+                                                                         aria-label="flag:Khách hàng mới;display name:Mã vận chuyển;sub title:Giảm tối đa 300K;bold text:Giảm tối đa ₫300k;light text:Đơn Tối Thiểu ₫0;valid time info:Có hiệu lực từ 06 Th11;voucher status:claimable voucher"
+                                                                         tabindex="0" role="button">
+                                                                        <div class="ssKeeA">
+                                                                            <div class="zfwWLD VYmbHo"
+                                                                                 style="width: 212px;">
+                                                                                <div class="gOOwmi">
+                                                                                    <div class="WQnQNR"
+                                                                                         style="background: url(&quot;https://down-vn.img.susercontent.com/file/sg-11134004-22120-4cskiffs0olvc3&quot;) center center / contain no-repeat;">
+                                                                                    </div>
+                                                                                </div><svg width="100%" height="100%"
+                                                                                           viewBox="0 0 106 106" fill="none"
+                                                                                           xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                                           class="RLTELZ">
+                                                                                    <path fill-rule="evenodd"
+                                                                                          clip-rule="evenodd"
+                                                                                          d="M0 2a2 2 0 0 1 2-2h106v106H2a2 2 0 0 1-2-2v-3a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 0 0 0-6V2Z"
+                                                                                          fill="#26AA99"></path>
+                                                                                    <path clip-rule="evenodd"
+                                                                                          d="M.25 2.25a2 2 0 0 1 2-2M0 101.25a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m2.25 101a2 2 0 0 1-2-2"
+                                                                                          stroke="#000" opacity="0.15"
+                                                                                          stroke-width="1"></path>
+                                                                                    <path clip-rule="evenodd"
+                                                                                          d="M2 0.25h108m0 105.5H2m-1.75-1.75v-3m0-6v-4m0-6v-4m0-6v-4m0-6v-4m0-6v-4m0-6v-4m0-6v-4m0-6v-4m0-6v-4m0-6V2Z"
+                                                                                          opacity="0.15" stroke="#000"
+                                                                                          stroke-width="1.5"></path>
+                                                                                    <path d="M106 .5v105Z" stroke="#000"
+                                                                                          stroke-opacity="0.15"
+                                                                                          stroke-width="1.5"></path>
+                                                                                </svg>
+                                                                                <div class="pb+2Cn msu8ot"
+                                                                                     style="color: rgb(255, 255, 255);">
+                                                                                    Mã vận chuyển
+                                                                                </div>
+                                                                                <div class="W+FC7t ZBdOb1"
+                                                                                     style="color: rgb(255, 255, 255);">
+                                                                                    Giảm tối đa 300K
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="psGvpa"
+                                                                             style="background-color: rgb(255, 255, 255);">
+                                                                            <div class="LQ1cFs">
+                                                                                <div class="OgdVVT">
+                                                                                    <div class="tMibfV ZBdOb1"
+                                                                                         style="color: rgb(33, 33, 33);">
+                                                                                        <span class="tMibfV">
+                                                                                            Giảm tối đa
+                                                                                            ₫300k
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div class="QlQU3U msu8ot"
+                                                                                         style="color: rgb(33, 33, 33);">
+                                                                                        Đơn Tối Thiểu ₫0
+                                                                                    </div>
+                                                                                    <div class="fIIm1I"></div>
+                                                                                    <div class="-ctzyJ">
+                                                                                        <span class="_80bkgJ"
+                                                                                              style="color: rgb(117, 117, 117);">
+                                                                                            <span class="_80bkgJ">
+                                                                                                Có hiệu
+                                                                                                lực từ 06
+                                                                                                Th11
+                                                                                            </span>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="vt0P2u sENuq9">
+                                                                                <span class="nItzSb">
+                                                                                    <div class="tsBXnN">
+                                                                                        <div class="jR90xA VCvabX N+Yp8Y O01zih dVe5Lp"
+                                                                                             style="background-color: rgb(38, 170, 153); color: rgb(255, 255, 255); --bd-color: #26AA99;">
+                                                                                            <span class="">Lưu</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </span><span class="nItzSb">
+                                                                                    <a class="QRC+Pq" tabindex="0"
+                                                                                       aria-label="term and condition link"
+                                                                                       href="/voucher/details?evcode=RlNWLTc0NTk4OTU5ODQ2MTk1Mg%3D%3D&amp;from_source=microsite&amp;promotionId=745989598461952&amp;signature=76369fbb73c0c1f1eadc7fe4d02d51d269869ec150e2843c7843dc8ce296b491">
+                                                                                        Điều
+                                                                                        Kiện
+                                                                                    </a>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="PbVxjT Tn+DM-"
+                                                                             style="max-width: 212px;">
+                                                                            <div class="i4-cEX">Khách hàng mới</div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 1159px; height: 332.797px; width: 960px; overflow-y: hidden; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519370">
+                                                <div>
+                                                    <div class="QCnKA8" tabindex="0" aria-label="Voucher" role="group">
+                                                        <div style="visibility: visible; width: 750px; transform: scale(1.28); transform-origin: left top; margin: 0px 210px 72.8px 0px;">
+                                                            <div class="_1F6CJK A0vq4Y">
+                                                                <div class="G-7KKK">
+                                                                    <div class="PIc+1f"
+                                                                         aria-label="display name:SHOPEE;bold text:Giảm ₫50k;light text:Đơn Tối Thiểu ₫0;information label:Khách hàng mới;valid time info:Có hiệu lực từ 01 Th11;voucher status:claimable voucher"
+                                                                         tabindex="0" role="button">
+                                                                        <div class="ssKeeA">
+                                                                            <div class="zfwWLD VYmbHo"
+                                                                                 style="width: 212px;">
+                                                                                <div class="gOOwmi">
+                                                                                    <div class="WQnQNR VoUcv7"
+                                                                                         style="background-color: rgb(238, 77, 45);">
+                                                                                        <img src="https://down-vn.img.susercontent.com/file/e6a3b7beffa95ca492926978d5235f79"
+                                                                                             class="R9TBOH">
+                                                                                    </div>
+                                                                                </div><svg width="100%" height="100%"
+                                                                                           viewBox="0 0 106 106" fill="none"
+                                                                                           xmlns:xlink="http://www.w3.org/1999/xlink"
+                                                                                           class="RLTELZ">
+                                                                                    <path fill-rule="evenodd"
+                                                                                          clip-rule="evenodd"
+                                                                                          d="M0 2a2 2 0 0 1 2-2h106v106H2a2 2 0 0 1-2-2v-3a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 1 0 0-6v-4a3 3 0 0 0 0-6V2Z"
+                                                                                          fill="#EE4D2D"></path>
+                                                                                    <path clip-rule="evenodd"
+                                                                                          d="M.25 2.25a2 2 0 0 1 2-2M0 101.25a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m0-3.5a3 3 0 1 0 0-6.5m2.25 101a2 2 0 0 1-2-2"
+                                                                                          stroke="#000" opacity="0.15"
+                                                                                          stroke-width="1"></path>
+                                                                                    <path clip-rule="evenodd"
+                                                                                          d="M2 0.25h108m0 105.5H2m-1.75-1.75v-3m0-6v-4m0-6v-4m0-6v-4m0-6v-4m0-6v-4m0-6v-4m0-6v-4m0-6v-4m0-6v-4m0-6V2Z"
+                                                                                          opacity="0.15" stroke="#000"
+                                                                                          stroke-width="1.5"></path>
+                                                                                    <path d="M106 .5v105Z" stroke="#000"
+                                                                                          stroke-opacity="0.15"
+                                                                                          stroke-width="1.5"></path>
+                                                                                </svg>
+                                                                                <div class="pb+2Cn ZBdOb1"
+                                                                                     style="color: rgb(255, 255, 255);">
+                                                                                    SHOPEE
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="psGvpa"
+                                                                             style="background-color: rgb(255, 255, 255);">
+                                                                            <div class="LQ1cFs">
+                                                                                <div class="OgdVVT">
+                                                                                    <div class="tMibfV msu8ot"
+                                                                                         style="color: rgb(33, 33, 33);">
+                                                                                        <span class="tMibfV">
+                                                                                            Giảm
+                                                                                            ₫50k
+                                                                                        </span>
+                                                                                    </div>
+                                                                                    <div class="QlQU3U ZBdOb1"
+                                                                                         style="color: rgb(33, 33, 33);">
+                                                                                        Đơn Tối Thiểu ₫0
+                                                                                    </div>
+                                                                                    <div class="jbPP5h">
+                                                                                        <div class="if0Se8">
+                                                                                            Khách hàng
+                                                                                            mới
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="fIIm1I"></div>
+                                                                                    <div class="-ctzyJ">
+                                                                                        <span class="_80bkgJ"
+                                                                                              style="color: rgb(117, 117, 117);">
+                                                                                            <span class="_80bkgJ">
+                                                                                                Có hiệu
+                                                                                                lực từ 01
+                                                                                                Th11
+                                                                                            </span>
+                                                                                        </span>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="vt0P2u sENuq9">
+                                                                                <span class="nItzSb">
+                                                                                    <div class="tsBXnN">
+                                                                                        <div class="jR90xA VCvabX N+Yp8Y O01zih dVe5Lp"
+                                                                                             style="background-color: rgb(238, 77, 45); color: rgb(255, 255, 255); --bd-color: #EE4D2D;">
+                                                                                            <span class="">Lưu</span>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </span><span class="nItzSb">
+                                                                                    <a class="QRC+Pq" tabindex="0"
+                                                                                       aria-label="term and condition link"
+                                                                                       href="/voucher/details?evcode=Q1JNRERDTDExQlU%3D&amp;from_source=microsite&amp;promotionId=748074637230080&amp;signature=cac4bb94fb65e37191e45b8bcc5c2b96931ab1f2608422e597e1159cf49e8228">
+                                                                                        Điều
+                                                                                        Kiện
+                                                                                    </a>
+                                                                                </span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 1492px; height: 170.391px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519371">
+                                                <div class="lEwcgc">
+                                                    <div style="position: absolute; top: 50%; z-index: 9999;"></div>
+                                                    <div style="position: relative;">
+                                                        <div class="" style="width: 100%; padding-top: 17.75%;">
+                                                            <div></div>
+                                                        </div>
+                                                        <picture class="JEjj5L">
+                                                            <img data-is-lazy-load-bg-image="false"
+                                                                 data-use-image-server="false" class="lazyload RPPDP+"
+                                                                 loading="lazy"
+                                                                 src="https://down-vn.img.susercontent.com/file/vn-50009109-5b63b67c83faa5f4c2a62b615c0173a5"
+                                                                 role="presentation" alt=""
+                                                                 style="position: absolute; top: 0px; height: 100%; width: 100%;">
+                                                        </picture>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 1662px; height: 125.562px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519372">
+                                                <div class="lEwcgc">
+                                                    <div style="position: absolute; top: 50%; z-index: 9999;"></div>
+                                                    <div style="position: relative;">
+                                                        <div class="" style="width: 100%; padding-top: 13.08%;">
+                                                            <div></div>
+                                                        </div>
+                                                        <picture class="JEjj5L">
+                                                            <img data-is-lazy-load-bg-image="false"
+                                                                 data-use-image-server="false" class="lazyload RPPDP+"
+                                                                 loading="lazy"
+                                                                 src="https://down-vn.img.susercontent.com/file/vn-50009109-47ff2361184f1f16f4e5590b8a1493f2"
+                                                                 role="presentation" alt=""
+                                                                 style="position: absolute; top: 0px; height: 100%; width: 100%;">
+                                                        </picture>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 1788px; height: 132px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519373">
+                                                <div class="lEwcgc">
+                                                    <div style="position: absolute; top: 50%; z-index: 9999;"></div>
+                                                    <div style="position: relative;">
+                                                        <div class="" style="width: 100%; padding-top: 13.75%;">
+                                                            <div></div>
+                                                        </div>
+                                                        <picture class="JEjj5L">
+                                                            <img data-is-lazy-load-bg-image="false"
+                                                                 data-use-image-server="false" class="lazyload RPPDP+"
+                                                                 loading="lazy"
+                                                                 src="https://down-vn.img.susercontent.com/file/vn-50009109-c0d62dbceb5fa4bd28e74eaaa243c979"
+                                                                 role="presentation" alt=""
+                                                                 style="position: absolute; top: 0px; height: 100%; width: 100%;">
+                                                        </picture>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 1920px; height: 320.156px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519374">
+                                                <div>
+                                                    <div class="HC9+PG">
+                                                        <div class="fX9y5D rsM6mQ"></div>
+                                                        <div>
+                                                            <div class="hJ4n7F lShvj+">
+                                                                <a href="#" role="button"
+                                                                   data-is-ssr-see-all-button="true"
+                                                                   class="tQx6Fj PwG79a Gge7KH"
+                                                                   style="color: rgb(0, 0, 0);">
+                                                                    <span>
+                                                                        Xem tất
+                                                                        cả
+                                                                    </span>
+                                                                    <svg viewBox="0 0 12 12" fill="none"
+                                                                         width="12" height="12" color="#000000"
+                                                                         class="dH7hlX">
+                                                                    </svg>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div></div>
+                                                    <div class="Qn3t0w">
+                                                        <div data-is-ssr-product-cards-container="true">
+                                                            <div class="_1-jsxf">
+                                                                <div class="QoAOuE">
+                                                                    <div data-horizontal-scroll-container="true"
+                                                                         class="ggEu9K Q7tVEg">
+                                                                        <ul class="MOttpc _3N9g5K"
+                                                                            data-horizontal-scroll-wrapper="true">
+                                                                            <li class="mCTLtQ qn2FlY"
+                                                                                style="width: 16.67%;">
+                                                                                <a href="/-CHÍNH-HÃNG-BH12-THÁNG-Máy-giặt-mini-SAKURA-Tự-động-100-giặt-vắt-sấy-Có-thể-giặt-áo-khoác-lông-mùa-đông-i.460426806.17289290116"
+                                                                                   data-sqe="link" class="sgdCbK">
+                                                                                    <div class="Wj2E1T LHzHhr n98Hr6">
+                                                                                        <div class="Wc6Tex">
+                                                                                            <div class="_58HtDH">
+                                                                                                <picture class="JEjj5L">
+                                                                                                    <img data-is-lazy-load-bg-image="false"
+                                                                                                         data-use-image-server="false"
+                                                                                                         class="lazyload Mq2X5q"
+                                                                                                         loading="lazy"
+                                                                                                         src="https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lldo90v9r0zsd5_tn"
+                                                                                                         alt="[ CHÍNH HÃNG - BH12 THÁNG ] Máy giặt mini SAKURA Tự động 100%, giặt, vắt, sấy - Có thể giặt áo khoác lông mùa đông">
+                                                                                                </picture>
+                                                                                            </div>
+                                                                                            <div class="mwCb8P">
+                                                                                                <div class="l6i7Zv">
+                                                                                                    <span class="O2ltJ8">-36%</span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="QJIcs5">
+                                                                                                <div aria-hidden="true">
+                                                                                                    <svg viewBox="0 0 20 20"
+                                                                                                         enable-background="new 0 0 20 20"
+                                                                                                         class="shopee-svg-icon Bk362s icon-video-play2">
+                                                                                                        <path d="m10 20c5.5228 0 10-4.4772 10-10 0-5.5228-4.4772-10-10-10-5.5228 0-10 4.4772-10 10 0 5.5228 4.4772 10 10 10z"
+                                                                                                              clip-rule="evenodd"
+                                                                                                              fill-opacity=".5"
+                                                                                                              fill-rule="evenodd">
+                                                                                                        </path>
+                                                                                                        <path d="m7 6.1263c0-0.55798 0.4141-0.78618 0.91986-0.50718l6.6976 3.8599c0.506 0.27899 0.506 0.73534 0 1.0143l-6.6976 3.8876c-0.50603 0.279-0.91986 0.0508-0.91986-0.5072v-7.7474z"
+                                                                                                              fill="#fff">
+                                                                                                        </path>
+                                                                                                    </svg>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="_5euHDc">
+                                                                                                <div class="customized-overlay-image">
+                                                                                                    <img alt="overlay image"
+                                                                                                         src="https://down-vn.img.susercontent.com/file/vn-50009109-f87cdaca1aead83f81778d4b6aeeaec2"
+                                                                                                         width=""
+                                                                                                         height="">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="NryQg2">
+                                                                                            <div class="RGjY0m">
+                                                                                                <div aria-hidden="true"
+                                                                                                     class="Y9JWoL laR5TZ">
+                                                                                                    [ CHÍNH HÃNG - BH12
+                                                                                                    THÁNG ] Máy giặt
+                                                                                                    mini SAKURA Tự động
+                                                                                                    100%, giặt, vắt, sấy
+                                                                                                    - Có thể giặt áo
+                                                                                                    khoác lông mùa đông
+                                                                                                </div>
+                                                                                                <div class="_39xcoE">
+                                                                                                    <div aria-hidden="true"
+                                                                                                         class="m1Trmg">
+                                                                                                        ₫
+                                                                                                        1.???.??0I 11.11
+                                                                                                        lúc 00:00
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="iu8isX">
+                                                                                                <div class="MqK3rf">
+                                                                                                    <div class="_0w738K PrqYGq SlEOxC"
+                                                                                                         manifest="[object Object]"
+                                                                                                         aria-hidden="true">
+                                                                                                        ₫3.200.000 -
+                                                                                                        ₫3.300.000
+                                                                                                    </div>
+                                                                                                    <div class="_0w738K _5650Ab"
+                                                                                                         manifest="[object Object]">
+                                                                                                        <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">2.115.000</span>
+                                                                                                        - <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">2.119.000</span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="l4kljj">
+                                                                                                    <button data-addtocart="{&quot;action&quot;:1,&quot;itemName&quot;:&quot;[ CHÍNH HÃNG - BH12 THÁNG ] Máy giặt mini SAKURA Tự động 100%, giặt, vắt, sấy - Có thể giặt áo khoác lông mùa đông&quot;,&quot;shopid&quot;:460426806,&quot;itemid&quot;:17289290116}"
+                                                                                                            data-addtocarttracking="{&quot;page_type&quot;:&quot;microsite&quot;,&quot;page_section&quot;:&quot;product_collection&quot;,&quot;target_type&quot;:&quot;add_to_cart_button&quot;,&quot;data&quot;:{&quot;microsite_pageid&quot;:48866,&quot;tracking_msg&quot;:&quot;eyJwYWdlX2luZm8iOnsicGFnZV90cmFjZV9pZCI6IjFmOGExYjg0MDlhNTJhOGQwY2EzYTk4NDcxMDExMjAwIn19&quot;,&quot;md_component_id&quot;:1699246519374,&quot;component_name&quot;:&quot;NewUserZone_  3917424 _ 115&quot;,&quot;component_type&quot;:&quot;33&quot;,&quot;microsite_labelid&quot;:[],&quot;section_location&quot;:9,&quot;collection_id&quot;:3917424,&quot;is_horizontal&quot;:true,&quot;itemid&quot;:17289290116,&quot;shopid&quot;:460426806,&quot;item_location&quot;:0}}"
+                                                                                                            class="uQynIu h3YISB"></button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <div class="mCTLtQ qn2FlY"
+                                                                                 style="width: 16.67%;">
+                                                                                <div class="_00qJSX kK-mfd">
+                                                                                    <div class="hJ4n7F u4f1Yx">
+                                                                                        <a href="/collections/3917424"
+                                                                                           role="button"
+                                                                                           data-is-ssr-see-all-button="false"
+                                                                                           class="tQx6Fj _5Hogue PwG79a _5+DP0m">
+                                                                                            <span class="fB9tKY"
+                                                                                                  style="background: url(&quot;https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/micrositefe/e5a3dc5f12dce285ae9dede33ff0ba0c.svg&quot;) center center / contain no-repeat; width: 32px; height: 32px; display: inline-block;"></span><span>
+                                                                                                Xem
+                                                                                                tất cả
+                                                                                            </span>
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                                <div data-is-carousel-nav-button="prev"
+                                                                     class="JpPmOu oPcZ0D oDW-sh">
+                                                                    <svg enable-background="new 0 0 13 20"
+                                                                         viewBox="0 0 13 20" role="img"
+                                                                         class="stardust-icon stardust-icon-arrow-left-bold">
+                                                                        <path stroke="none"
+                                                                              d="m4.2 10l7.9-7.9-2.1-2.2-9 9-1.1 1.1 1.1 1 9 9 2.1-2.1z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+                                                                <div data-is-carousel-nav-button="next"
+                                                                     class="JpPmOu oPcZ0D xP3YuH">
+                                                                    <svg enable-background="new 0 0 13 21"
+                                                                         viewBox="0 0 13 21" role="img"
+                                                                         class="stardust-icon stardust-icon-arrow-right-bold">
+                                                                        <path stroke="none"
+                                                                              d="m11.1 9.9l-9-9-2.2 2.2 8 7.9-8 7.9 2.2 2.1 9-9 1-1z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 2240.05px; height: 132px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519375">
+                                                <div class="lEwcgc">
+                                                    <div style="position: absolute; top: 50%; z-index: 9999;"></div>
+                                                    <div style="position: relative;">
+                                                        <div class="" style="width: 100%; padding-top: 13.75%;">
+                                                            <div></div>
+                                                        </div>
+                                                        <picture class="JEjj5L">
+                                                            <img data-is-lazy-load-bg-image="false"
+                                                                 data-use-image-server="false" class="lazyload RPPDP+"
+                                                                 loading="lazy"
+                                                                 src="https://down-vn.img.susercontent.com/file/vn-50009109-61be6d5572c601d698c011302d240ea1"
+                                                                 role="presentation" alt=""
+                                                                 style="position: absolute; top: 0px; height: 100%; width: 100%;">
+                                                        </picture>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 2372px; height: 320.156px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519376">
+                                                <div>
+                                                    <div class="HC9+PG">
+                                                        <div class="fX9y5D rsM6mQ"></div>
+                                                        <div>
+                                                            <div class="hJ4n7F lShvj+">
+                                                                <a href="/collections/1745388"
+                                                                   role="button" data-is-ssr-see-all-button="true"
+                                                                   class="tQx6Fj PwG79a Gge7KH"
+                                                                   style="color: rgb(0, 0, 0);">
+                                                                    <span>
+                                                                        Xem tất
+                                                                        cả
+                                                                    </span>
+                                                                    <svg viewBox="0 0 12 12" fill="none"
+                                                                         width="12" height="12" color="#000000"
+                                                                         class="dH7hlX">
+                                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                              d="M9.293 6L4.146.854l.708-.708L10 5.293a1 1 0 010 1.414l-5.146 5.147-.708-.707L9.293 6z"
+                                                                              fill="currentColor"></path>
+                                                                    </svg>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div></div>
+                                                    <div class="Qn3t0w">
+                                                        <div data-is-ssr-product-cards-container="true">
+                                                            <div class="_1-jsxf">
+                                                                <div class="QoAOuE">
+                                                                    <div data-horizontal-scroll-container="true"
+                                                                         class="ggEu9K Q7tVEg">
+                                                                        <ul class="MOttpc _3N9g5K"
+                                                                            data-horizontal-scroll-wrapper="true">
+                                                                            <li class="mCTLtQ qn2FlY"
+                                                                                style="width: 16.67%;">
+                                                                                <a href="/-1Kg-Túi-Gói-Hàng-Túi-Niêm-Phong-Siêu-Dày-Siêu-Dai-(15x25-17x30-20x30-25x35-28x42-32x45-38x52-45x60)-COMBO-i.19876070.16077714622"
+                                                                                   data-sqe="link" class="sgdCbK">
+                                                                                    <div class="Wj2E1T LHzHhr n98Hr6">
+                                                                                        <div class="Wc6Tex">
+                                                                                            <div class="_58HtDH">
+                                                                                                <picture class="JEjj5L">
+                                                                                                    <img data-is-lazy-load-bg-image="false"
+                                                                                                         data-use-image-server="false"
+                                                                                                         class="lazyload Mq2X5q"
+                                                                                                         loading="lazy"
+                                                                                                         src="https://down-vn.img.susercontent.com/file/sg-11134201-22100-03t6exncs0hv23_tn"
+                                                                                                         alt="[1Kg] Túi Gói Hàng, Túi Niêm Phong Siêu Dày Siêu Dai (15x25, 17x30, 20x30, 25x35, 28x42, 32x45, 38x52, 45x60) - COMBO">
+                                                                                                </picture>
+                                                                                            </div>
+                                                                                            <div class="UghJQx">
+                                                                                                <div class="nmR9Ql L-9Goq"
+                                                                                                     style="color: rgb(242, 82, 32);">
+                                                                                                    <span class="s5DWb8">
+                                                                                                        Yêu
+                                                                                                        thích
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="mwCb8P">
+                                                                                                <div class="l6i7Zv">
+                                                                                                    <span class="O2ltJ8">-48%</span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="_5euHDc">
+                                                                                                <div class="customized-overlay-image">
+                                                                                                    <img alt="overlay image"
+                                                                                                         src="https://down-vn.img.susercontent.com/file/vn-50009109-93e19ed5c730e349c816a3d316fac0e1"
+                                                                                                         width=""
+                                                                                                         height="">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="NryQg2">
+                                                                                            <div class="RGjY0m">
+                                                                                                <div aria-hidden="true"
+                                                                                                     class="Y9JWoL laR5TZ">
+                                                                                                    [1Kg] Túi Gói Hàng,
+                                                                                                    Túi Niêm Phong Siêu
+                                                                                                    Dày Siêu Dai (15x25,
+                                                                                                    17x30, 20x30, 25x35,
+                                                                                                    28x42, 32x45, 38x52,
+                                                                                                    45x60) - COMBO
+                                                                                                </div>
+                                                                                                <div class="_39xcoE">
+                                                                                                    <div aria-hidden="true"
+                                                                                                         class="q-1xPU"
+                                                                                                         style="color: rgb(246, 145, 19);">
+                                                                                                        #Shopdacbiet
+                                                                                                    </div>
+                                                                                                    <div aria-hidden="true"
+                                                                                                         class="_7RQ68k">
+                                                                                                        Mua Kèm Deal Sốc
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="iu8isX">
+                                                                                                <div class="MqK3rf">
+                                                                                                    <div class="_0w738K PrqYGq SlEOxC"
+                                                                                                         manifest="[object Object]"
+                                                                                                         aria-hidden="true">
+                                                                                                        ₫18.888 -
+                                                                                                        ₫92.888
+                                                                                                    </div>
+                                                                                                    <div class="_0w738K _5650Ab"
+                                                                                                         manifest="[object Object]">
+                                                                                                        <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">9.888</span>
+                                                                                                        - <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">51.888</span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="l4kljj">
+                                                                                                    <button data-addtocart="{&quot;action&quot;:1,&quot;itemName&quot;:&quot;[1Kg] Túi Gói Hàng, Túi Niêm Phong Siêu Dày Siêu Dai (15x25, 17x30, 20x30, 25x35, 28x42, 32x45, 38x52, 45x60) - COMBO&quot;,&quot;shopid&quot;:19876070,&quot;itemid&quot;:16077714622}"
+                                                                                                            data-addtocarttracking="{&quot;page_type&quot;:&quot;microsite&quot;,&quot;page_section&quot;:&quot;product_collection&quot;,&quot;target_type&quot;:&quot;add_to_cart_button&quot;,&quot;data&quot;:{&quot;microsite_pageid&quot;:48866,&quot;tracking_msg&quot;:&quot;eyJwYWdlX2luZm8iOnsicGFnZV90cmFjZV9pZCI6IjFmOGExYjg0MDlhNTJhOGQwY2EzYTk4NDcxMDExMjAwIn19&quot;,&quot;md_component_id&quot;:1699246519376,&quot;component_name&quot;:&quot;NewUserZone_  1745388_ 115&quot;,&quot;component_type&quot;:&quot;33&quot;,&quot;microsite_labelid&quot;:[],&quot;section_location&quot;:11,&quot;collection_id&quot;:1745388,&quot;is_horizontal&quot;:true,&quot;itemid&quot;:16077714622,&quot;shopid&quot;:19876070,&quot;item_location&quot;:0}}"
+                                                                                                            class="uQynIu h3YISB"></button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </li>
+                                                                            <div class="mCTLtQ qn2FlY"
+                                                                                 style="width: 16.67%;">
+                                                                                <div class="_00qJSX kK-mfd">
+                                                                                    <div class="hJ4n7F u4f1Yx">
+                                                                                        <a href="/collections/1745388"
+                                                                                           role="button"
+                                                                                           data-is-ssr-see-all-button="false"
+                                                                                           class="tQx6Fj _5Hogue PwG79a _5+DP0m">
+                                                                                            <span class="fB9tKY"
+                                                                                                  style="background: url(&quot;https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/micrositefe/e5a3dc5f12dce285ae9dede33ff0ba0c.svg&quot;) center center / contain no-repeat; width: 32px; height: 32px; display: inline-block;"></span><span>
+                                                                                                Xem
+                                                                                                tất cả
+                                                                                            </span>
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                                <div data-is-carousel-nav-button="prev"
+                                                                     class="JpPmOu oPcZ0D oDW-sh">
+                                                                    <svg enable-background="new 0 0 13 20"
+                                                                         viewBox="0 0 13 20" role="img"
+                                                                         class="stardust-icon stardust-icon-arrow-left-bold">
+                                                                        <path stroke="none"
+                                                                              d="m4.2 10l7.9-7.9-2.1-2.2-9 9-1.1 1.1 1.1 1 9 9 2.1-2.1z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+                                                                <div data-is-carousel-nav-button="next"
+                                                                     class="JpPmOu oPcZ0D xP3YuH">
+                                                                    <svg enable-background="new 0 0 13 21"
+                                                                         viewBox="0 0 13 21" role="img"
+                                                                         class="stardust-icon stardust-icon-arrow-right-bold">
+                                                                        <path stroke="none"
+                                                                              d="m11.1 9.9l-9-9-2.2 2.2 8 7.9-8 7.9 2.2 2.1 9-9 1-1z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 2692px; height: 132px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519377">
+                                                <div class="lEwcgc">
+                                                    <div style="position: absolute; top: 50%; z-index: 9999;"></div>
+                                                    <div style="position: relative;">
+                                                        <div class="" style="width: 100%; padding-top: 13.75%;">
+                                                            <div></div>
+                                                        </div>
+                                                        <picture class="JEjj5L">
+                                                            <img data-is-lazy-load-bg-image="false"
+                                                                 data-use-image-server="false" class="lazyload RPPDP+"
+                                                                 loading="lazy"
+                                                                 src="https://down-vn.img.susercontent.com/file/vn-50009109-7a47301bcf0d690e56109287ecf779a9"
+                                                                 role="presentation" alt=""
+                                                                 style="position: absolute; top: 0px; height: 100%; width: 100%;">
+                                                        </picture>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 2824px; height: 79.9531px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519379">
+                                                <div class="lEwcgc">
+                                                    <div style="position: absolute; top: 50%; z-index: 9999;"></div>
+                                                    <div style="position: relative;">
+                                                        <div class="" style="width: 100%; padding-top: 8.33%;">
+                                                            <div></div>
+                                                        </div>
+                                                        <picture class="JEjj5L">
+                                                            <img data-is-lazy-load-bg-image="false"
+                                                                 data-use-image-server="false" class="lazyload RPPDP+"
+                                                                 loading="lazy"
+                                                                 src="https://down-vn.img.susercontent.com/file/vn-50009109-654f9e71e56a69fd667e09af16e1e290"
+                                                                 role="presentation" alt=""
+                                                                 style="position: absolute; top: 0px; height: 100%; width: 100%;">
+                                                        </picture>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 2904.16px; height: 402.156px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519380">
+                                                <div>
+                                                    <div class="HC9+PG">
+                                                        <div class="fX9y5D rsM6mQ"></div>
+                                                        <div>
+                                                            <div class="hJ4n7F lShvj+">
+                                                                <a href="/collections/1106033"
+                                                                   role="button" data-is-ssr-see-all-button="true"
+                                                                   class="tQx6Fj PwG79a Gge7KH"
+                                                                   style="color: rgb(0, 0, 0);">
+                                                                    <span>
+                                                                        Xem tất
+                                                                        cả
+                                                                    </span>
+                                                                    <svg viewBox="0 0 12 12" fill="none"
+                                                                         width="12" height="12" color="#000000"
+                                                                         class="dH7hlX">
+                                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                              d="M9.293 6L4.146.854l.708-.708L10 5.293a1 1 0 010 1.414l-5.146 5.147-.708-.707L9.293 6z"
+                                                                              fill="currentColor"></path>
+                                                                    </svg>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="tSMuzS" style="background-color: rgb(255, 255, 255);">
+                                                        <div data-is-tab-container="true" class="w4ueEZ">
+                                                            <div class="QoAOuE">
+                                                                <nav data-horizontal-scroll-container="true"
+                                                                     class="ggEu9K roSiCV">
+                                                                    <ul class="MOttpc"
+                                                                        data-horizontal-scroll-wrapper="true"
+                                                                        role="tablist" aria-orientation="horizontal">
+                                                                        <li data-tab-data="{&quot;collection_id&quot;:1106033}"
+                                                                            data-tab-color="{&quot;active&quot;:&quot;#FFFFFF&quot;,&quot;inactive&quot;:&quot;#000000&quot;}"
+                                                                            data-tab-index="0" class="RFbgSv"
+                                                                            tabtype="text" role="tab"
+                                                                            aria-controls="atp__1699246519380"
+                                                                            id="at__1699246519380"
+                                                                            style="color: rgb(255, 255, 255); margin-right: 0px; width: 33.33%; flex-shrink: 0; flex-grow: 0;"
+                                                                            aria-selected="true">
+                                                                            <a href="#"
+                                                                               class="Vty5lj">
+                                                                                <span class="jW0ac5 gny6En asjeIJ">
+                                                                                    TỪ
+                                                                                    9.000Đ
+                                                                                </span>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li data-tab-data="{&quot;collection_id&quot;:1108623}"
+                                                                            data-tab-color="{&quot;active&quot;:&quot;#FFFFFF&quot;,&quot;inactive&quot;:&quot;#000000&quot;}"
+                                                                            data-tab-index="1" class="RFbgSv"
+                                                                            tabtype="text" role="tab"
+                                                                            aria-controls="atp__1699246519380"
+                                                                            id="at__1699246519380"
+                                                                            style="color: rgb(0, 0, 0); margin-right: 0px; width: 33.33%; flex-shrink: 0; flex-grow: 0;">
+                                                                            <a href="#" class="Vty5lj">
+                                                                                <span class="jW0ac5 gny6En asjeIJ">
+                                                                                    TỪ
+                                                                                    29.000Đ
+                                                                                </span>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li data-tab-data="{&quot;collection_id&quot;:1108622}"
+                                                                            data-tab-color="{&quot;active&quot;:&quot;#FFFFFF&quot;,&quot;inactive&quot;:&quot;#000000&quot;}"
+                                                                            data-tab-index="2" class="RFbgSv"
+                                                                            tabtype="text" role="tab"
+                                                                            aria-controls="atp__1699246519380"
+                                                                            id="at__1699246519380"
+                                                                            style="color: rgb(0, 0, 0); margin-right: 0px; width: 33.33%; flex-shrink: 0; flex-grow: 0;">
+                                                                            <a href="#" class="Vty5lj">
+                                                                                <span class="jW0ac5 gny6En asjeIJ">
+                                                                                    TỪ
+                                                                                    59.000Đ
+                                                                                </span>
+                                                                            </a>
+                                                                        </li>
+                                                                        <div data-is-tab-indicator="true" class="XfZbR5"
+                                                                             style="background-color: rgb(0, 83, 222); z-index: 1; transition: all 0.3s ease 0s; display: block; width: 320px; height: 70px; transform: translate(0px, 0px);">
+                                                                        </div>
+                                                                    </ul>
+                                                                </nav>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="Qn3t0w">
+                                                        <div data-is-ssr-product-cards-container="true"
+                                                             id="atp__1699246519380" role="tabpanel"
+                                                             aria-labelledby="at__1699246519380">
+                                                            <div class="_1-jsxf">
+                                                                <div class="QoAOuE">
+                                                                    <div data-horizontal-scroll-container="true"
+                                                                         class="ggEu9K Q7tVEg">
+                                                                        <ul class="MOttpc _3N9g5K"
+                                                                            data-horizontal-scroll-wrapper="true">
+                                                                            <li class="mCTLtQ qn2FlY"
+                                                                                style="width: 16.67%;">
+                                                                                <a href="/-Mã-FATREND0911-giảm-đến-30k-tối-đa-99k-Áo-Thun-Đen-In-Chữ-Tom-Áo-phông-Basic-Đen-Hình-Cực-Chất-Trendy-Unisex-i.39534704.20721025592"
+                                                                                   data-sqe="link" class="sgdCbK">
+                                                                                    <div class="Wj2E1T LHzHhr n98Hr6">
+                                                                                        <div class="Wc6Tex">
+                                                                                            <div class="_58HtDH">
+                                                                                                <picture class="JEjj5L">
+                                                                                                    <img data-is-lazy-load-bg-image="false"
+                                                                                                         data-use-image-server="false"
+                                                                                                         class="lazyload Mq2X5q"
+                                                                                                         loading="lazy"
+                                                                                                         src="https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-llkl5usqriof81_tn"
+                                                                                                         alt="[Mã FATREND0911 giảm đến 30k tối đa 99k] Áo Thun Đen In Chữ Tom - Áo phông Basic Đen Hình Cực Chất Trendy Unisex">
+                                                                                                </picture>
+                                                                                            </div>
+                                                                                            <div class="mwCb8P">
+                                                                                                <div class="l6i7Zv">
+                                                                                                    <span class="O2ltJ8">-44%</span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="_5euHDc">
+                                                                                                <div class="customized-overlay-image">
+                                                                                                    <img alt="overlay image"
+                                                                                                         src="https://down-vn.img.susercontent.com/file/vn-50009109-93e19ed5c730e349c816a3d316fac0e1"
+                                                                                                         width=""
+                                                                                                         height="">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="NryQg2">
+                                                                                            <div class="RGjY0m">
+                                                                                                <div aria-hidden="true"
+                                                                                                     class="Y9JWoL laR5TZ">
+                                                                                                    [Mã FATREND0911 giảm
+                                                                                                    đến 30k tối đa 99k]
+                                                                                                    Áo Thun Đen In Chữ
+                                                                                                    Tom - Áo phông Basic
+                                                                                                    Đen Hình Cực Chất
+                                                                                                    Trendy Unisex
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="iu8isX">
+                                                                                                <div class="MqK3rf">
+                                                                                                    <div class="_0w738K PrqYGq SlEOxC"
+                                                                                                         manifest="[object Object]"
+                                                                                                         aria-hidden="true">
+                                                                                                        ₫79.000 -
+                                                                                                        ₫99.000
+                                                                                                    </div>
+                                                                                                    <div class="_0w738K _5650Ab"
+                                                                                                         manifest="[object Object]">
+                                                                                                        <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">55.000</span>
+                                                                                                        - <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">79.000</span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="l4kljj">
+                                                                                                    <button data-addtocart="{&quot;action&quot;:1,&quot;itemName&quot;:&quot;[Mã FATREND0911 giảm đến 30k tối đa 99k] Áo Thun Đen In Chữ Tom - Áo phông Basic Đen Hình Cực Chất Trendy Unisex&quot;,&quot;shopid&quot;:39534704,&quot;itemid&quot;:20721025592}"
+                                                                                                            data-addtocarttracking="{&quot;page_type&quot;:&quot;microsite&quot;,&quot;page_section&quot;:&quot;product_collection&quot;,&quot;target_type&quot;:&quot;add_to_cart_button&quot;,&quot;data&quot;:{&quot;microsite_pageid&quot;:48866,&quot;tracking_msg&quot;:&quot;eyJwYWdlX2luZm8iOnsicGFnZV90cmFjZV9pZCI6IjFmOGExYjg0MDlhNTJhOGQwY2EzYTk4NDcxMDExMjAwIn19&quot;,&quot;md_component_id&quot;:1699246519380,&quot;component_name&quot;:&quot;NewUserZone_  3 tabs _ 115&quot;,&quot;component_type&quot;:&quot;33&quot;,&quot;microsite_labelid&quot;:[],&quot;section_location&quot;:14,&quot;collection_id&quot;:1106033,&quot;is_horizontal&quot;:true,&quot;itemid&quot;:20721025592,&quot;shopid&quot;:39534704,&quot;item_location&quot;:0}}"
+                                                                                                            class="uQynIu h3YISB"></button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </li>
+                                                                            <div class="mCTLtQ qn2FlY"
+                                                                                 style="width: 16.67%;">
+                                                                                <div class="_00qJSX kK-mfd">
+                                                                                    <div class="hJ4n7F u4f1Yx">
+                                                                                        <a href="/collections/1106033"
+                                                                                           role="button"
+                                                                                           data-is-ssr-see-all-button="false"
+                                                                                           class="tQx6Fj _5Hogue PwG79a _5+DP0m">
+                                                                                            <span class="fB9tKY"
+                                                                                                  style="background: url(&quot;https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/micrositefe/e5a3dc5f12dce285ae9dede33ff0ba0c.svg&quot;) center center / contain no-repeat; width: 32px; height: 32px; display: inline-block;"></span><span>
+                                                                                                Xem
+                                                                                                tất cả
+                                                                                            </span>
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                                <div data-is-carousel-nav-button="prev"
+                                                                     class="JpPmOu oPcZ0D oDW-sh">
+                                                                    <svg enable-background="new 0 0 13 20"
+                                                                         viewBox="0 0 13 20" role="img"
+                                                                         class="stardust-icon stardust-icon-arrow-left-bold">
+                                                                        <path stroke="none"
+                                                                              d="m4.2 10l7.9-7.9-2.1-2.2-9 9-1.1 1.1 1.1 1 9 9 2.1-2.1z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+                                                                <div data-is-carousel-nav-button="next"
+                                                                     class="JpPmOu oPcZ0D xP3YuH">
+                                                                    <svg enable-background="new 0 0 13 21"
+                                                                         viewBox="0 0 13 21" role="img"
+                                                                         class="stardust-icon stardust-icon-arrow-right-bold">
+                                                                        <path stroke="none"
+                                                                              d="m11.1 9.9l-9-9-2.2 2.2 8 7.9-8 7.9 2.2 2.1 9-9 1-1z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 3306px; height: 132px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519381">
+                                                <div class="lEwcgc">
+                                                    <div style="position: absolute; top: 50%; z-index: 9999;"></div>
+                                                    <div style="position: relative;">
+                                                        <div class="" style="width: 100%; padding-top: 13.75%;">
+                                                            <div></div>
+                                                        </div>
+                                                        <picture class="JEjj5L">
+                                                            <img data-is-lazy-load-bg-image="false"
+                                                                 data-use-image-server="false" class="lazyload RPPDP+"
+                                                                 loading="lazy"
+                                                                 src="https://down-vn.img.susercontent.com/file/vn-50009109-43aab0a64a87d8a600d492ebb3c7f313"
+                                                                 role="presentation" alt=""
+                                                                 style="position: absolute; top: 0px; height: 100%; width: 100%;">
+                                                        </picture>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 3438.31px; height: 320.156px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519382">
+                                                <div>
+                                                    <div class="HC9+PG">
+                                                        <div class="fX9y5D rsM6mQ"></div>
+                                                        <div>
+                                                            <div class="hJ4n7F lShvj+">
+                                                                <a href="/collections/1123034"
+                                                                   role="button" data-is-ssr-see-all-button="true"
+                                                                   class="tQx6Fj PwG79a Gge7KH"
+                                                                   style="color: rgb(0, 0, 0);">
+                                                                    <span>
+                                                                        Xem tất
+                                                                        cả
+                                                                    </span>
+                                                                    <svg viewBox="0 0 12 12" fill="none"
+                                                                         width="12" height="12" color="#000000"
+                                                                         class="dH7hlX">
+                                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                              d="M9.293 6L4.146.854l.708-.708L10 5.293a1 1 0 010 1.414l-5.146 5.147-.708-.707L9.293 6z"
+                                                                              fill="currentColor"></path>
+                                                                    </svg>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div></div>
+                                                    <div class="Qn3t0w">
+                                                        <div data-is-ssr-product-cards-container="true">
+                                                            <div class="_1-jsxf">
+                                                                <div class="QoAOuE">
+                                                                    <div data-horizontal-scroll-container="true"
+                                                                         class="ggEu9K Q7tVEg">
+                                                                        <ul class="MOttpc _3N9g5K"
+                                                                            data-horizontal-scroll-wrapper="true">
+                                                                            <li class="mCTLtQ qn2FlY"
+                                                                                style="width: 16.67%;">
+                                                                                <a href="/Kem-tẩy-lông-OLLIE-kem-dưỡng-OLLIE-1-mặt-nạ-đất-sét-Beuclay-i.238383015.21589661210"
+                                                                                   data-sqe="link" class="sgdCbK">
+                                                                                    <div class="Wj2E1T LHzHhr n98Hr6">
+                                                                                        <div class="Wc6Tex">
+                                                                                            <div class="_58HtDH">
+                                                                                                <picture class="JEjj5L">
+                                                                                                    <img data-is-lazy-load-bg-image="false"
+                                                                                                         data-use-image-server="false"
+                                                                                                         class="lazyload Mq2X5q"
+                                                                                                         loading="lazy"
+                                                                                                         src="https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lns1n7f8zddmc6_tn"
+                                                                                                         alt="Kem tẩy lông OLLIE + kem dưỡng OLLIE+1 mặt nạ đất sét Beuclay">
+                                                                                                </picture>
+                                                                                            </div>
+                                                                                            <div class="UghJQx">
+                                                                                                <div class="nmR9Ql CAmi5z"
+                                                                                                     style="color: rgb(208, 1, 27);">
+                                                                                                    <div class="_9tKiCh">
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="mwCb8P">
+                                                                                                <div class="l6i7Zv">
+                                                                                                    <span class="O2ltJ8">-30%</span>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="_5euHDc">
+                                                                                                <div class="customized-overlay-image">
+                                                                                                    <img alt="overlay image"
+                                                                                                         src="https://down-vn.img.susercontent.com/file/vn-50009109-9de05dbff32179af6ea66c71b7824788"
+                                                                                                         width=""
+                                                                                                         height="">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="NryQg2">
+                                                                                            <div class="RGjY0m">
+                                                                                                <div aria-hidden="true"
+                                                                                                     class="Y9JWoL laR5TZ">
+                                                                                                    Kem tẩy lông OLLIE +
+                                                                                                    kem dưỡng OLLIE+1
+                                                                                                    mặt nạ đất sét
+                                                                                                    Beuclay
+                                                                                                </div>
+                                                                                                <div class="_39xcoE">
+                                                                                                    <div aria-hidden="true"
+                                                                                                         class="m1Trmg">
+                                                                                                        ₫
+                                                                                                        2??.??0I 11.11
+                                                                                                        lúc 00:00
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="iu8isX">
+                                                                                                <div class="MqK3rf">
+                                                                                                    <div class="_0w738K PrqYGq SlEOxC"
+                                                                                                         manifest="[object Object]"
+                                                                                                         aria-hidden="true">
+                                                                                                        ₫429.000
+                                                                                                    </div>
+                                                                                                    <div class="_0w738K _5650Ab"
+                                                                                                         manifest="[object Object]">
+                                                                                                        <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">299.000</span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="l4kljj">
+                                                                                                    <button data-addtocart="{&quot;action&quot;:1,&quot;itemName&quot;:&quot;Kem tẩy lông OLLIE + kem dưỡng OLLIE+1 mặt nạ đất sét Beuclay&quot;,&quot;shopid&quot;:238383015,&quot;itemid&quot;:21589661210}"
+                                                                                                            data-addtocarttracking="{&quot;page_type&quot;:&quot;microsite&quot;,&quot;page_section&quot;:&quot;product_collection&quot;,&quot;target_type&quot;:&quot;add_to_cart_button&quot;,&quot;data&quot;:{&quot;microsite_pageid&quot;:48866,&quot;tracking_msg&quot;:&quot;eyJwYWdlX2luZm8iOnsicGFnZV90cmFjZV9pZCI6IjFmOGExYjg0MDlhNTJhOGQwY2EzYTk4NDcxMDExMjAwIn19&quot;,&quot;md_component_id&quot;:1699246519382,&quot;component_name&quot;:&quot;NewUserZone_  1123034 _ 115&quot;,&quot;component_type&quot;:&quot;33&quot;,&quot;microsite_labelid&quot;:[],&quot;section_location&quot;:16,&quot;collection_id&quot;:1123034,&quot;is_horizontal&quot;:true,&quot;itemid&quot;:21589661210,&quot;shopid&quot;:238383015,&quot;item_location&quot;:0}}"
+                                                                                                            class="uQynIu _8X07Wf"></button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </a>
+                                                                            </li>
+                                                                            <div class="mCTLtQ qn2FlY"
+                                                                                 style="width: 16.67%;">
+                                                                                <div class="_00qJSX kK-mfd">
+                                                                                    <div class="hJ4n7F u4f1Yx">
+                                                                                        <a href="/collections/1123034"
+                                                                                           role="button"
+                                                                                           data-is-ssr-see-all-button="false"
+                                                                                           class="tQx6Fj _5Hogue PwG79a _5+DP0m">
+                                                                                            <span class="fB9tKY"
+                                                                                                  style="background: url(&quot;https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/micrositefe/e5a3dc5f12dce285ae9dede33ff0ba0c.svg&quot;) center center / contain no-repeat; width: 32px; height: 32px; display: inline-block;"></span><span>
+                                                                                                Xem
+                                                                                                tất cả
+                                                                                            </span>
+                                                                                        </a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                                <div data-is-carousel-nav-button="prev"
+                                                                     class="JpPmOu oPcZ0D oDW-sh">
+                                                                    <svg enable-background="new 0 0 13 20"
+                                                                         viewBox="0 0 13 20" role="img"
+                                                                         class="stardust-icon stardust-icon-arrow-left-bold">
+                                                                        <path stroke="none"
+                                                                              d="m4.2 10l7.9-7.9-2.1-2.2-9 9-1.1 1.1 1.1 1 9 9 2.1-2.1z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+                                                                <div data-is-carousel-nav-button="next"
+                                                                     class="JpPmOu oPcZ0D xP3YuH">
+                                                                    <svg enable-background="new 0 0 13 21"
+                                                                         viewBox="0 0 13 21" role="img"
+                                                                         class="stardust-icon stardust-icon-arrow-right-bold">
+                                                                        <path stroke="none"
+                                                                              d="m11.1 9.9l-9-9-2.2 2.2 8 7.9-8 7.9 2.2 2.1 9-9 1-1z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: 3758.47px; height: 170.391px; width: 960px; left: calc((100% - 960px) / 2);">
+                                    <div>
+                                        <div class="md-container">
+                                            <div class="md-component" data-component-id="1699246519384">
+                                                <div class="lEwcgc">
+                                                    <div style="position: absolute; top: 50%; z-index: 9999;"></div>
+                                                    <div style="position: relative;">
+                                                        <div class="" style="width: 100%; padding-top: 17.75%;">
+                                                            <div></div>
+                                                        </div>
+                                                        <picture class="JEjj5L">
+                                                            <img data-is-lazy-load-bg-image="false"
+                                                                 data-use-image-server="false" class="lazyload RPPDP+"
+                                                                 loading="lazy"
+                                                                 src="https://down-vn.img.susercontent.com/file/vn-50009109-6c2b7c358131789ca32a9ed53ed54f3b"
+                                                                 role="presentation" alt=""
+                                                                 style="position: absolute; top: 0px; height: 100%; width: 100%;">
+                                                        </picture>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div></div>
+            </div>
+            <div></div>
+
+        </div>
+    </div>
+</body>
