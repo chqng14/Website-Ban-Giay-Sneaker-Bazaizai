@@ -1,0 +1,30 @@
+﻿@using App_Data.DbContextt;
+@using App_Data.Models;
+@model KhuyenMai;
+<head>
+    <title>Khuyến mại ngày 2/11/2023</title>
+</head>
+<body>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td align="center">
+                <table width="600" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td align="center" bgcolor="#0073e6" style="padding: 40px 0;">
+                            <h1 style="color: #fff;">@Model.TenKhuyenMai</h1>
+                            <p style="color: #fff;">Chương trình khuyến mãi bắt đầu từ ngày @Model.NgayBatDau đến ngày @Model.NgayKetThuc.</p>
+                            <img src="https://vinshop68.com/files/assets/anh_khuyen_mai/khuyemmai.gif" alt="Hình ảnh khuyến mại" width="300">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 40px 0;">
+                            <h2>Chi tiết chương trình</h2>
+                            <p>Hot! @Model.TenKhuyenMai cho tất cả khách hàng từ ngày @Model.NgayBatDau đến ngày @Model.NgayKetThuc. Đừng bỏ lỡ cơ hội này!</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+

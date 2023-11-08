@@ -66,6 +66,10 @@ namespace App_Api.Helpers.Mapping
                     opt => opt.MapFrom(src => src.SanPhamChiTiet.IdChiTietSp)
                 )
                 .ForMember(
+                    dest => dest.IdGioHangChiTiet,
+                    opt => opt.MapFrom(src => src.IdGioHangChiTiet)
+                )
+                .ForMember(
                     dest => dest.TenSanPham,
                     opt => opt.MapFrom(src => $"{src.SanPhamChiTiet.SanPham.TenSanPham} {src.SanPhamChiTiet.MauSac.TenMauSac} {src.SanPhamChiTiet.KichCo.SoKichCo}")
                 )
@@ -208,6 +212,14 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => src.XuatXu.Ten)
                     )
                 .ForMember(
+                        dest => dest.SoLuongDaBan,
+                        opt => opt.MapFrom(src => src.SoLuongDaBan)
+                    )
+                .ForMember(
+                        dest => dest.NgayTao,
+                        opt => opt.MapFrom(src => src.NgayTao.GetValueOrDefault().ToString("dd-MM-yyyy"))
+                    )
+                .ForMember(
                         dest => dest.ThuongHieu,
                         opt => opt.MapFrom(src => src.ThuongHieu.TenThuongHieu)
                     )
@@ -230,6 +242,14 @@ namespace App_Api.Helpers.Mapping
                 .ForMember(
                         dest => dest.LoaiGiay,
                         opt => opt.MapFrom(src => src.LoaiGiay.TenLoaiGiay)
+                    )
+                .ForMember(
+                        dest => dest.KhoiLuong,
+                        opt => opt.MapFrom(src => $"{src.KhoiLuong} g")
+                    )
+                .ForMember(
+                        dest => dest.Day,
+                        opt => opt.MapFrom(src => src.Day == true ? "Có" : "Không")
                     )
                 .ForMember(
                         dest => dest.ListTenAnh,
