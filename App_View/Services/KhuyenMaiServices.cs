@@ -16,7 +16,7 @@ namespace App_View.Services
 
         public async Task<List<KhuyenMai>> GetAllKhuyenMai()
         {
-            var lstKM = (await _httpClient.GetFromJsonAsync<List<KhuyenMai>>("https://localhost:7038/api/GetAllKhuyenMai"));
+            var lstKM = (await _httpClient.GetFromJsonAsync<List<KhuyenMai>>("https://localhost:7038/api/KhuyenMai"));
             return lstKM;
         }
 

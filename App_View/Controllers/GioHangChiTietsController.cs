@@ -19,6 +19,7 @@ using Microsoft.CodeAnalysis;
 using System.Globalization;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace App_View.Controllers
 {
@@ -482,7 +483,24 @@ namespace App_View.Controllers
 
                 }).ToList();
             }
-            return ViewComponent("Cart", data);
+            return ViewComponent("Cart");
+        }
+
+        public async Task<IActionResult> DeleteLineCartMini(string id)
+        {
+            var idNguoiDung = GetIdNguoiDung();
+            if (idNguoiDung != null)
+            {
+                await GioHangChiTietServices.DeleteGioHang(id);
+            }
+            else
+            {
+                var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+                var prodct = giohangSession.FirstOrDefault(c => c.IdSanPhamCT == id);
+                giohangSession.Remove(prodct);
+                SessionServices.SetObjToSession(HttpContext.Session, "Cart", giohangSession);
+            }
+            return ViewComponent("Cart");
         }
     }
 }

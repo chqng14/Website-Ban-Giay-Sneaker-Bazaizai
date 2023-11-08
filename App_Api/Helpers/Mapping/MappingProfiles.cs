@@ -66,6 +66,10 @@ namespace App_Api.Helpers.Mapping
                     opt => opt.MapFrom(src => src.SanPhamChiTiet.IdChiTietSp)
                 )
                 .ForMember(
+                    dest => dest.IdGioHangChiTiet,
+                    opt => opt.MapFrom(src => src.IdGioHangChiTiet)
+                )
+                .ForMember(
                     dest => dest.TenSanPham,
                     opt => opt.MapFrom(src => $"{src.SanPhamChiTiet.SanPham.TenSanPham} {src.SanPhamChiTiet.MauSac.TenMauSac} {src.SanPhamChiTiet.KichCo.SoKichCo}")
                 )
