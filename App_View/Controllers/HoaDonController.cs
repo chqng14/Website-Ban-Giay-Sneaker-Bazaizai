@@ -110,6 +110,7 @@ namespace App_View.Controllers
                     TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan
                 };
                 var mahd = await hoaDonServices.CreateHoaDon(hoadon);
+                var tien = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam ?? 0));
                 foreach (var item in listcart)
                 {
                     await hoaDonChiTietServices.CreateHoaDonChiTiet(new HoaDonChiTietDTO()
@@ -131,7 +132,6 @@ namespace App_View.Controllers
                     var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
                     await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                 }
-                var tien = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam == null ? 0 : hoadon.TienGiam));
                 if (hoaDonDTO.LoaiThanhToan == "Momo")
                 {
                     var url = await Momo(hoadon.IdHoaDon, mahd, tien);
