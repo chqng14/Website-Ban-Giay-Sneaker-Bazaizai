@@ -129,8 +129,10 @@
                                     <div class="check-box">
                                             <input type="checkbox" id="get-address">
                                         <div class="check-box__state check-box__state--primary">
-
-                                            <label class="check-box__label" for="get-address">Sử dụng địa chỉ mặc định theo tài khoản</label>
+                                            @if (thongTinGH.Count>1)
+                                            {
+                                                <label class="check-box__label" for="get-address">Sử dụng địa chỉ mặc định theo tài khoản</label>
+                                            }
                                         </div>
                                     </div>
                                     <!--====== End - Check Box ======-->
@@ -1211,7 +1213,6 @@
                     $("[name='IdThongTinGH']").val(selectedId)
                     // Thực hiện các chức năng liên quan đến useDefaultAddressScript
                     var paymentFormData = $('#paymentForm').serialize();
-                    alert(IdVoucher);
                     // Gửi dữ liệu thanh toán
                     $.ajax({
                         type: 'POST',

@@ -107,7 +107,6 @@ public class MomoService : IMomoService
         var client = new RestClient(_options.Value.endpoint);
         var request = new RestRequest() { Method = Method.Post };
         request.AddHeader("Content-Type", "application/json; charset=UTF-8");
-
         // Create an object representing the request data
         var requestData = new
         {
@@ -126,6 +125,55 @@ public class MomoService : IMomoService
         request.AddParameter("application/json", JsonConvert.SerializeObject(requestData), ParameterType.RequestBody);
 
         var response = await client.ExecuteAsync(request);
+
+        #region test
+        //JObject message = new JObject
+        //    {
+        //        { "partnerCode", _options.Value.PartnerCode },
+        //        { "requestId", model.OrderId },
+        //        { "amount", model.Amount },
+        //        { "orderId", model.OrderId },
+        //        { "orderInfo", model.OrderInfo },
+        //        { "redirectUrl", _options.Value.redirectUrl },
+        //        { "ipnUrl", _options.Value.ipnUrl },
+        //        { "lang", _options.Value.lang },
+        //        { "extraData", "" },
+        //        { "requestType", _options.Value.RequestType },
+        //        { "signature", signature }
+
+        //    };
+
+        //HttpWebRequest httpWReq = (HttpWebRequest)WebRequest.Create(_options.Value.endpoint);
+
+        //var postData = message.ToString();
+
+        //var data = Encoding.UTF8.GetBytes(postData);
+
+        //httpWReq.ProtocolVersion = HttpVersion.Version11;
+        //httpWReq.Method = "POST";
+        //httpWReq.ContentType = "application/json";
+
+        //httpWReq.ContentLength = data.Length;
+        //httpWReq.ReadWriteTimeout = 30000;
+        //httpWReq.Timeout = 15000;
+        //Stream stream = httpWReq.GetRequestStream();
+        //stream.Write(data, 0, data.Length);
+        //stream.Close();
+
+        //HttpWebResponse response = (HttpWebResponse)httpWReq.GetResponse();
+
+        //string jsonresponse = "";
+
+        //using (var reader = new StreamReader(response.GetResponseStream()))
+        //{
+
+        //    string temp = null;
+        //    while ((temp = reader.ReadLine()) != null)
+        //    {
+        //        jsonresponse += temp;
+        //    }
+        //}
+        #endregion
 
         return JsonConvert.DeserializeObject<MomoCreatePaymentResponseModel>(response.Content);
     }

@@ -422,7 +422,11 @@
             <div class="dash__box dash__box--bg-white dash__box--shadow u-s-m-b-30">
                 <div class="dash__pad-2">
                     <h2 class="dash__h2 u-s-m-b-8">Thông tin thanh toán:</h2>
-                    @if (Model.LoaiThanhToan == "MOMO" && Model.TrangThaiThanhToan == 1)
+                    @if (Model.TrangThaiGiaoHang == 5)
+                    {
+                        <h3 class="manage-o__text-2 u-c-secondary" style="color:red !important">Đơn hàng đã huỷ</h3>
+                    }
+                    else if (Model.LoaiThanhToan == "MOMO" && Model.TrangThaiThanhToan == 1)
                     {
                         <h3 class="manage-o__text-2 u-c-secondary">Momo</h3>
                         <h3 class="manage-o__text-2 u-c-secondary">Đã thanh toán</h3>
