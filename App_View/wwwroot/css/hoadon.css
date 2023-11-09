@@ -11,6 +11,7 @@
     cursor: pointer;
     margin-top: 5px;
     color: #333; /* Màu sắc tùy chọn */
+    /*padding-bottom: 15px*/
 }
 
 /* Icon mũi tên lên */
@@ -20,6 +21,7 @@
     text-align: center;
     cursor: pointer;
     color: #333; /* Màu sắc tùy chọn */
+    /*padding-bottom: 15px*/
 }
 
 /* Hiển thị danh sách sản phẩm ẩn khi click vào mũi tên xuống */
@@ -29,4 +31,12 @@
 
 .arrow-up-btn.active + .hidden-products {
     display: none;
+}
+
+.order {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px;
+    border-radius: 6px;
 }

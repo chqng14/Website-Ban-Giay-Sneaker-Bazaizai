@@ -25,12 +25,13 @@ namespace App_Data.Repositories
         public HoaDonRepos(IMapper mapper)
         {
             context = new BazaizaiContext();
-            _mapper = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<HoaDon, HoaDonDTO>();
-                cfg.CreateMap<HoaDonDTO, HoaDon>();
-                cfg.CreateMap<HoaDonChiTiet, HoaDonChiTietTaiQuay>();
-            }).CreateMapper();
+            //_mapper = new MapperConfiguration(cfg =>
+            //{
+            //    cfg.CreateMap<HoaDon, HoaDonDTO>();
+            //    cfg.CreateMap<HoaDonDTO, HoaDon>();
+            //    cfg.CreateMap<HoaDonChiTiet, HoaDonChiTietTaiQuay>();
+            //}).CreateMapper();
+            _mapper = mapper;
 
         }
 
@@ -76,7 +77,7 @@ namespace App_Data.Repositories
         {
             var listHoaDonCho = new List<HoaDonChoDTO>();
             var listHoaDon = context.HoaDons.Where(c => c.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay && c.TrangThaiThanhToan == (int)TrangThaiHoaDon.ChuaThanhToan).AsNoTracking().ToList();
-            var listHoaDonChiTiet = context.hoaDonChiTiets.Where(c=>c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay).AsNoTracking().ToList();
+            var listHoaDonChiTiet = context.hoaDonChiTiets.Where(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay).AsNoTracking().ToList();
             foreach (var item in listHoaDon)
             {
                 var hoaDonCho = new HoaDonChoDTO()
@@ -89,10 +90,10 @@ namespace App_Data.Repositories
                     TrangThaiThanhToan = item.TrangThaiThanhToan,
                     hoaDonChiTietDTOs = new List<HoaDonChiTietTaiQuay>()
                 };
-                foreach (var item2 in listHoaDonChiTiet.Where(c => c.IdHoaDon == item.IdHoaDon).ToList()) 
-                { 
+                foreach (var item2 in listHoaDonChiTiet.Where(c => c.IdHoaDon == item.IdHoaDon).ToList())
+                {
                     hoaDonCho.hoaDonChiTietDTOs.Add(_mapper.Map<HoaDonChiTietTaiQuay>(item2));
-                }    
+                }
                 listHoaDonCho.Add(hoaDonCho);
             }
             return listHoaDonCho;
@@ -100,7 +101,7 @@ namespace App_Data.Repositories
 
         public List<HoaDonViewModel> GetHoaDon()
         {
-            var hoadon = context.HoaDons.Include(c => c.Voucher).Include(c => c.ThongTinGiaoHang).ToList();
+            var hoadon = context.HoaDons.Include(c => c.ThongTinGiaoHang).ToList();
             return _mapper.Map<List<HoaDonViewModel>>(hoadon);
         }
 

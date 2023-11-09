@@ -45,8 +45,13 @@ namespace App_Api.Controllers
         [HttpPost]
         public bool AddPhuongThucThanhToan(string ten, string mota, int trangthai)
         {
+            var pttts = allRepo.GetAll();
+            if (pttts.Where(c => c.TenPhuongThucThanhToan == ten).Any())
+            {
+                return false;
+            }
             string ma;
-            if (allRepo.GetAll().Count() == null)
+            if (pttts.Count() == null)
             {
                 ma = "PT1";
             }

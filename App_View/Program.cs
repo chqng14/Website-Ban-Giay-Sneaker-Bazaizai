@@ -25,7 +25,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.AddScoped<IMomoService, MomoService>();
 // Add services to the container.
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=BAZAIZAI\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=DESKTOP-8RSAFN0\HKLADOI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
 
 builder.Services.AddHangfireServer();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -136,7 +136,7 @@ using (var scope = app.Services.CreateScope())
         var roleManager = services.GetRequiredService<RoleManager<ChucVu>>();
         await ContextdDefault.SeedRolesAsync(userManager, roleManager);
         await ContextdDefault.SeeAdminAsync(userManager, roleManager);
-
+        await ContextdDefault.PhuongThucThanhToan();
     }
     catch (Exception ex)
     {

@@ -8,6 +8,7 @@ namespace App_Data.ViewModels.HoaDon
 {
     public class SanPhamTest
     {
+        public string? IdSanPhamChiTiet { get; set; }
         public string? TenSanPham { get; set; }
         public string? TenMauSac { get; set; }
         public int? TenKichCo { get; set; }
