@@ -10,8 +10,9 @@ namespace App_View.IServices
         Task<VoucherNguoiDung> GetVoucherNguoiDungById(string id);
         Task<bool> AddVoucherNguoiDung(string MaVoucher, string idNguoiDung);
         Task<string> AddVoucherNguoiDungTuAdmin(AddVoucherRequestDTO addVoucherRequestDTO);
+        Task<bool> TangVoucherNguoiDungMoi(string ma);
         Task<bool> UpdateVoucherNguoiDungSauKhiDung(VoucherNguoiDungDTO VcDTO);
-        bool CheckVoucherInUser(string ma);
+        bool CheckVoucherInUser(string ma,string idUser);
 
     }
 }

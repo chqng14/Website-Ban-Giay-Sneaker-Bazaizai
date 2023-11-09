@@ -1,5 +1,6 @@
 ﻿body {
-    background: #eee
+    background: #eee;
+
 }
 
 #regForm {
@@ -7,7 +8,8 @@
     margin: 0px auto;
     /* font-family: Raleway;*/
     padding: 40px;
-    border-radius: 10px
+    border-radius: 10px;
+   
 }
 
 #register {
@@ -60,40 +62,33 @@ button {
 
 
 .all-steps {
+    font-weight:500;
     text-align: center;
     margin-top: 30px;
     margin-bottom: 30px;
     width: 100%;
     display: inline-flex;
     justify-content: center;
-    color: #1F1717;
+    color: white;
+ 
 }
+    .all-steps > a:hover {
+        opacity:0.8
+    }
 
 .step {
     height: 50px;
     width: auto;
     margin: 0 2px;
-    background-color: #bbbbbb;
-    border: none;
-    /*  border-radius: 50%;*/
+    background-color: #886CCF;
+    border-radius: 20px;
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 15px;
-    color: #1F1717;
-    opacity: 0.8;
+    padding-left: 20px;
+    padding-right: 20px;
 }
-
-    .step.active {
-        opacity: 1
-    }
-
-
-    .step.finish {
-        color: #fff;
-        background: #1F1717;
-        opacity: 1;
-    }
 
 
 

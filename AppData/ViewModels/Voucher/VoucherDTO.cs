@@ -30,5 +30,6 @@ namespace App_Data.ViewModels.Voucher
         [Required(ErrorMessage = "Ngày kết thúc là trường bắt buộc.")]
         [CustomNgayKetThucValidation(ErrorMessage = "Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.")]
         public DateTime NgayKetThuc { get; set; }
+        public int? TrangThai { get; set; }
     }
 }

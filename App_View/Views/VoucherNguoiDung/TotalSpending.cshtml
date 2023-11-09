@@ -1,0 +1,53 @@
+﻿@using System.Globalization;
+@model App_Data.Models.NguoiDung
+
+@{
+    Layout = "/Views/Shared/_LayoutUser.cshtml";
+}
+<style>
+
+    .nav
+    {
+        width:100%
+    }
+</style>
+<div class="col-lg-9 col-md-12">
+
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+
+        <div class="dash__pad-2">
+            <div>
+                <h1 class="dash__h1 u-s-m-b-14" style="display: inline-block;">Tổng chi tiêu của bạn là   @string.Format("{0:N0}đ", Model.TongChiTieu) </h1>
+            </div>
+            <span class="dash__text u-s-m-b-30">Đây là nơi bạn có thể xem được tổng chi tiêu của mình .</span>
+            <!--Lưu mã voucher-->
+            <div class="row">
+                    <div class="col-lg-10 u-s-m-b-30" style="text-align:center">
+                        <input b-xzovs66yy5="" class="input-text input-text--border-radius input-text--style-1" type="text"  id="main-search" placeholder="Nhập sản phẩm từng mua">
+                    </div>
+                    <div class="col-lg-2" style="text-align:center;float:right">
+                    <button class="btn btn--e-brand newsletter__btn" style="border-radius: 40px;margin-right:50px;margin-top:-17px" type="submit">
+                            Tìm kiếm
+                        </button>
+                    </div>
+            </div>
+            <div class="row">
+                <ul class="nav nav-pills nav-fill">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#">100.000 VNĐ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">500.000 VNĐ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">1.000.000 VNĐ</a>
+                    </li>
+                </ul>
+            </div>
+            <!--Show mã voucher-->
+       
+        </div>
+    </div>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
