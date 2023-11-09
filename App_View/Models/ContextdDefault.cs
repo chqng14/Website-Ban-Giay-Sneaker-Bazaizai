@@ -35,7 +35,7 @@ namespace App_View.Models
                 NgaySinh = DateTime.ParseExact("10-10-2010", "MM-dd-yyyy", null),
                 DiaChi = "Hà Nội",
                 MaNguoiDung= "ND1",
-                //AnhDaiDien=
+                AnhDaiDien = "/user_img/default_image.png",
                 TrangThai = (int?)TrangThaiCoBan.HoatDong,
                 PhoneNumberConfirmed = true
             };

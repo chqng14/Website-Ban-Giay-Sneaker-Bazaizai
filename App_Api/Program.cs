@@ -46,7 +46,6 @@ builder.Services.AddScoped<IXuatXuRespo, XuatXuRespo>();
 builder.Services.AddScoped<IMauSacRespo, MauSacRespo>();
 builder.Services.AddScoped<IAnhRespo, AnhRespo>();
 builder.Services.AddScoped<AnhController>();
-builder.Services.AddScoped<IDanhGiaRepo ,DanhGiaRepo>();
 builder.Services.AddScoped<IAllRepo<DanhGia>,AllRepo<DanhGia>>();
 var app = builder.Build();
 

@@ -26,7 +26,7 @@ namespace App_Data.Models
         public int LuotYeuThich { get; set; } = 0;
         public virtual SanPhamChiTiet SanPhamChiTiet { get; set; }
         public virtual NguoiDung NguoiDung { get; set; }
-        public DanhGia ParentDanhGia { get; set; }
+        public DanhGia? ParentDanhGia { get; set; }
         public ICollection<DanhGia> ChildDanhGias { get; set; }
 
     }

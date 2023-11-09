@@ -1,7 +1,17 @@
 ﻿@using App_Data.Models;
+@using App_View.IServices;
+@using App_View.Services;
 @using Microsoft.AspNetCore.Identity
+@using Newtonsoft.Json;
+@using System.Net.Http;
 @inject SignInManager<NguoiDung> SignInManager
 @inject UserManager<NguoiDung> UserManager
+@inject IDanhGiaService _DanhGiaService
+@{
+    _DanhGiaService = new DanhGiaService();
+    var lst = await _DanhGiaService.GetListAsyncViewModel(@Model.IdChiTietSp);
+    
+}
 
 <!--====== Tab 3 ======-->
 <style>
@@ -34,9 +44,9 @@
         z-index: 1;
     }
 
-       
 
-    
+
+
     .show {
         display: block;
     }
@@ -44,14 +54,13 @@
 
     /* CSS cho modal */
     .modal {
-
         display: none;
         position: fixed;
         top: -70px;
         width: 100%;
         height: 130%;
         background-color: rgba(0, 0, 0, 0.7);
-        z-index: 1;
+        /* z-index: 1;*/
         text-align: center;
     }
 
@@ -88,13 +97,13 @@
         }
     /* CSS cho nút "Gửi" và "Hủy" */
     .button-container {
-        text-align: right; 
+        text-align: right;
         margin-top: 20px;
     }
 
         .button-container button {
-            margin-right: 10px; 
-            padding: 10px 20px; 
+            margin-right: 10px;
+            padding: 10px 20px;
             background-color: orangered;
             color: white;
             border: none;
@@ -111,7 +120,7 @@
         <div class="u-s-m-b-30">
             <div class="pd-tab__rev-score">
                 <div class="u-s-m-b-8">
-                    <h2>23 Đánh giá - 4.6 (Tổng thể)</h2>
+                    <h2> Đánh giá - 4.6 (Tổng thể)</h2>
                 </div>
                 <div class="gl-rating-style-2 u-s-m-b-8"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
                 <div class="u-s-m-b-8">
@@ -136,57 +145,142 @@
                     </div>
                 </div>
                 <div class="rev-f1__review">
-                 @*  hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh jhjhj*@
-                    <div class="review-o u-s-m-b-15">
-                        <div class="review-o__info u-s-m-b-8">
-                            @if (SignInManager.IsSignedIn(User))
+                    @*  hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh jhjhj*@
+
+                    @if (lst != null)
+                    {
+                        @foreach (var item in lst)
+                        {
+                            if (item.ParentId == null)
                             {
-                                var user = await UserManager.GetUserAsync(User);
-                                <img style="margin-bottom:-35px;width:50px;height:50px; object-fit:cover; border-radius:30px" src="@user.AnhDaiDien">
+                              @*  var user = await UserManager.FindByIdAsync(item.IdNguoiDung);*@
+
+                                <div class="review-o u-s-m-b-15">
+                                    <div class="review-o__info u-s-m-b-8">
+
+
+                                        <img style="margin-bottom:-35px;width:50px;height:50px; object-fit:cover; border-radius:30px" src="@item.AnhDaiDien">
+
+
+                                        <span class="review-o__name" style="margin-left:10px">@item.TenNguoiDung</span>
+                                        <span class="review-o__name">
+                                            <div class="review-o__rating gl-rating-style u-s-m-b-8" style="margin-left:60px">
+                                                @if (item.SaoSp == 1)
+                                                {
+
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+
+
+                                                }
+                                                else if (item.SaoSp == 2)
+                                                {
+
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+
+
+                                                }
+                                                else if (item.SaoSp == 3)
+                                                {
+
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="far fa-star"></i>
+                                                    <i class="far fa-star"></i>
+
+
+
+
+                                                }
+                                                else if (item.SaoSp == 4)
+                                                {
+
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="far fa-star"></i>
+
+
+
+                                                }
+                                                else if (item.SaoSp == 5)
+                                                {
+
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+
+
+
+
+                                                }
+
+                                            </div>
+                                        </span>
+                                        <span class="review-o__name" style="margin-left:60px">@item.NgayDanhGia | @item.SanPhamTongQuat</span>
+                                    </div>
+
+                                    <p class="review-o__text" style="margin-left:60px">@item.BinhLuan</p>
+                                    <br />
+
+
+                                    @foreach (var item1 in lst)
+                                    {
+                                        if (item1.ParentId == item.IdDanhGia)
+                                        {
+                                            <div style="width:91%;margin-left:60px;background:#d5d5d5;">
+                                                <br />
+                                                <span style="margin-left:10px;" class="review-o__name">Phản Hồi Của Shop</span>
+                                                <br />
+                                                <p class="review-o__text" style="margin-left:10px;">@item1.BinhLuan</p>
+                                                <br />
+                                            </div>
+                                            <br />
+
+                                        }
+
+                                    }
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-left: 60px;">
+                                        <div>
+                                            <button type="button" id="likeButton" style="background-color: white; cursor: pointer; border: none;">
+                                                <i id="likeIcon" class="fas fa-thumbs-up" style="color: #d5d5d5;"></i>
+                                            </button>
+                                            <span class="review-o__name">Hữu ích?</span>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button onclick="myFunction()" class="dropbtn" id="ellipsisButton" style="background-color: white; cursor: pointer; border: none;">
+                                                <i id="ellipsisIcon" style="color: #d5d5d5;" class="fas fa-ellipsis-v"></i>
+                                            </button>
+                                            <div id="myDropdown" style="width:102px; height: 30px;" class="dropdown-content">
+
+                                                <button onclick="openModal()" style="width:102px; height: 30px;" data-bs-toggle="modal" data-bs-target="#myModal"> <span class="review-o__name">Báo cáo</span></button>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+
+
                             }
+                        }
+                    }
 
-                            <span class="review-o__name" style="margin-left:10px">John Doe</span>
-                            <span class="review-o__name">
-                                <div class="review-o__rating gl-rating-style u-s-m-b-8" style="margin-left:60px">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
 
-                                </div>
-                            </span>
-                            <span class="review-o__name" style="margin-left:60px">27 Feb 2018 10:57:43 | Phân loại hàng: Trắng,L (45-51kg:M53-M59)</span>
-                        </div>
 
-                        <p class="review-o__text" style="margin-left:60px">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-                        <br />
 
-                        <div style="width:91%;margin-left:60px;background:#d5d5d5;">
-                            <br />
-                            <span style="margin-left:10px;" class="review-o__name">Phản Hồi Của Shop</span>
-                            <br />
-                            <p class="review-o__text" style="margin-left:10px;">Dạ shop cám ơn ak </p>
-                            <br />
-                        </div>
-                        <br />
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-left: 60px;">
-                            <div>
-                                <button type="button" id="likeButton" style="background-color: white; cursor: pointer; border: none;">
-                                    <i id="likeIcon" class="fas fa-thumbs-up" style="color: #d5d5d5;"></i>
-                                </button>
-                                <span class="review-o__name">Hữu ích?</span>
-                            </div>
-                            <div class="dropdown">
-                                <button onclick="myFunction()" class="dropbtn" id="ellipsisButton" style="background-color: white; cursor: pointer; border: none;">
-                                    <i id="ellipsisIcon" style="color: #d5d5d5;" class="fas fa-ellipsis-v"></i>
-                                </button>
-                                <div id="myDropdown" style="width:102px; height: 30px;" class="dropdown-content">
-
-                                    <button onclick="openModal()" style="width:102px; height: 30px;" data-bs-toggle="modal" data-bs-target="#myModal"> <span class="review-o__name">Báo cáo</span></button>
-                                </div>
-                            </div>
-                            
-
-                        </div>
-
-                    </div>
                 </div>
             </form>
         </div>
@@ -281,18 +375,18 @@
     function openModal() {
         if (!event.target.matches('.dropbtn')) {
             var dropdown = document.getElementById("myDropdown");
-           
-                dropdown.classList.remove('show');
-        
+
+            dropdown.classList.remove('show');
+
         }
         event.preventDefault();
         var modal = document.getElementById("myModal");
         modal.style.display = "block";
-         window.addEventListener("click", function(event) {
-        if (event.target === modal) {
-          modal.style.display = "block"; // Không làm gì nếu ấn bên ngoài modal
-        }
-      });
+        window.addEventListener("click", function (event) {
+            if (event.target === modal) {
+                modal.style.display = "block"; // Không làm gì nếu ấn bên ngoài modal
+            }
+        });
     }
 
     function closeModal() {

@@ -91,8 +91,6 @@ namespace App_View.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.UserNameOrEmail, Input.Password, Input.RememberMe, lockoutOnFailure: true);
                 if (!result.Succeeded)
                 {
-                    // Thất bại username/password -> tìm user theo email, nếu thấy thì thử đăng nhập
-                    // bằng user tìm được
                     var user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
                     if (user != null)
                     {
@@ -117,9 +115,9 @@ namespace App_View.Areas.Identity.Pages.Account
                 else
                 {
                     //result.
-                    //ErrorMessage = "Error: Lỗ lực đăng nhập không hợp lệ.";
+                    //ErrorMessage = "Error: Nỗ lực đăng nhập không hợp lệ.";
                     //return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
-                    ModelState.AddModelError(string.Empty, "Lỗ lực đăng nhập không hợp lệ.");
+                    ModelState.AddModelError(string.Empty, "Nỗ lực đăng nhập không hợp lệ.");
                     return Page();
                 }
             }

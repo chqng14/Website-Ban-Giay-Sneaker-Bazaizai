@@ -103,7 +103,7 @@ namespace App_View.Areas.Identity.Pages.Account
 
             [DataType(DataType.Text)]
             [Required]
-            //[RegularExpression(@"[\p{L}]{2,}( [\p{L}]{1,})+", ErrorMessage = "Tên của bạn không hợp lệ.", RegexOptions = RegexOptions.None)]
+            [NameLimit(ErrorMessage = "Tên bạn nhập không hợp lệ.")]
             [Display(Name = "Tên của bạn")]
             public string FullName { get; set; }
 
@@ -122,6 +122,7 @@ namespace App_View.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+
             string format = "dd/MM/yyyy";
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -137,14 +138,16 @@ namespace App_View.Areas.Identity.Pages.Account
                 {
                     user.NgaySinh = date;
                 }
-                string fullName = Input.FullName; 
-                string regexPattern = @"^[\p{L}]{2,}( [\p{L}]{1,})+$";
-                if (!Regex.IsMatch(fullName, regexPattern))
-                {
-                    ModelState.AddModelError(string.Empty, "Tên của bạn không hợp lệ.");
-                }
-                else user.TenNguoiDung = Input.FullName;
-                user.AnhDaiDien= Path.Combine("user_img", "default_image.png");
+                //string fullName = Input.FullName;
+                //string regexPattern = @"^[\p{L}]{2,}( [\p{L}]{1,})+$";
+                //if (!Regex.IsMatch(fullName, regexPattern))
+                //{
+                //    ModelState.AddModelError(string.Empty, "Tên của bạn không hợp lệ.");
+                //}
+                //else user.TenNguoiDung = Input.FullName;
+                user.TenNguoiDung = Input.FullName;
+                user.AnhDaiDien = "/user_img/default_image.png";
+
                 await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 if (!string.IsNullOrEmpty(Input.Sdt))

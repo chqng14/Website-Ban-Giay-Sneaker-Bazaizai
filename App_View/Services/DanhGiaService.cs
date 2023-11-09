@@ -1,93 +1,142 @@
-﻿//using App_Data.Models;
-//using App_Data.Repositories;
-//using App_Data.ViewModels.HoaDon;
-//using App_View.IServices;
-//using Newtonsoft.Json;
-//using System.Net.Http;
+﻿using App_Data.Models;
+using App_Data.Repositories;
+using App_Data.ViewModels.DanhGia;
+using App_Data.ViewModels.HoaDon;
+using App_Data.ViewModels.Voucher;
+using App_View.IServices;
+using Newtonsoft.Json;
+using OpenXmlPowerTools;
+using System.Net.Http;
 
-//namespace App_View.Services
-//{
-//    public class DanhGiaService:IDanhGiaService
-//    {
-//        private readonly HttpClient _httpClient;
-//        public DanhGiaService()
-//        {
-//            _httpClient = new HttpClient();
-//        }
-//        public async Task<string> CreateDanhGia(DanhGia DanhGia)
-//        {
-//            var httpClient = new HttpClient();
-//            string apiUrl = $"https://localhost:7280/api/Role/Create-Role?ten={ten}&trangthai={trangthai}";
-//            var response = await httpClient.PostAsync(apiUrl, null);
-//            return true;
+namespace App_View.Services
+{
+    public class DanhGiaService : IDanhGiaService
+    {
+        private readonly HttpClient _httpClient;
+        public DanhGiaService()
+        {
+            _httpClient = new HttpClient();
+        }
+
+        public async Task<bool> CreateDanhGia(DanhGia danhGia)
+        {
+            try
+            {
+                string apiUrl = $"https://localhost:7038/api/DanhGia/AddDanhGia?BinhLuan={Uri.EscapeDataString(danhGia.BinhLuan)}&ParentId={danhGia.ParentId}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}";
+                var response = await _httpClient.PostAsync(apiUrl, null);
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {                  
+                    return false;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                return false;
+            }
+        }
 
 
-//            var response = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/HoaDon/TaoHoaDonOnlineDTO", DanhGia);
-//                if (res.IsSuccessStatusCode)
-//                {
-//                    return await res.Content.ReadAsStringAsync();
-//                }
-               
-               
-          
-//        }
+        public async Task<bool> DeleteDanhGia(string id)
+        {
+            string apiUrl = $"https://localhost:7038/api/DanhGia/XoaDanhGia/{id}";
+            try
+            {
+                var response = await _httpClient.DeleteAsync(apiUrl);
+                return response.IsSuccessStatusCode;
+            }
+            catch (HttpRequestException)
+            {
+                return false;
+            }
+        }
+       
+       
+        public async Task<List<DanhGia>> GetAllDanhGia()
+        {
+            string apiUrl = "https://localhost:7038/api/DanhGia/GetAllDanhGia";
 
-//        public Task<bool> DeleteHoaDon(string idHoaDon)
-//        {
-//            throw new NotImplementedException();
-//        }
+            try
+            {
+                var apiData = await _httpClient.GetStringAsync(apiUrl);
+                return JsonConvert.DeserializeObject<List<DanhGia>>(apiData);
+            }
+            catch (HttpRequestException)
+            {
+                return new List<DanhGia>();
+            }
+        }
 
-//        public Task<List<HoaDon>> GetAllHoaDon()
-//        {
-//            throw new NotImplementedException();
-//        }
+        public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string Idchitietsp)
+        {
+            string apiUrl = $"https://localhost:7038/api/DanhGia/GetDanhGiaViewModel?idspchitiet={Idchitietsp}";
 
-//        public async Task<List<HoaDonChoDTO>> GetAllHoaDonThanhCong()
-//        {
-//            return await _httpClient.GetFromJsonAsync<List<HoaDonChoDTO>>("https://localhost:7038/api/HoaDon/GetAllHoaDonCho");
-//        }
+            try
+            {
+                var apiData = await _httpClient.GetStringAsync(apiUrl);
+                return JsonConvert.DeserializeObject<List<DanhGiaViewModel>>(apiData);
+            }
+            catch (HttpRequestException)
+            {
+                return new List<DanhGiaViewModel>();
+            }
+        }
 
-//        public async Task<List<HoaDonViewModel>> GetHoaDon()
-//        {
-//            return await _httpClient.GetFromJsonAsync<List<HoaDonViewModel>>("https://localhost:7038/api/HoaDon/GetHoaDonOnline");
-//        }
 
-//        public async Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon)
-//        {
-//            try
-//            {
-//                var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/HoaDon/TaoHoaDonTaiQuay", hoaDon);
-//                if (res.IsSuccessStatusCode)
-//                {
-//                    return await res.Content.ReadAsAsync<HoaDon>();
-//                }
-//                Console.WriteLine(await res.Content.ReadAsStringAsync());
-//                throw new Exception("Not IsSuccessStatusCode");
-//            }
-//            catch (Exception ex)
-//            {
-//                Console.WriteLine(ex.Message);
-//                throw new Exception("Not IsSuccessStatusCode");
-//            }
-//        }
+        public async Task<DanhGia> GetDanhGiaById(string id)
+        {     
+            string apiUrl = $"https://localhost:7038/api/DanhGia/GetDanhGiaById/{id}";
+            try
+            {
+                var response = await _httpClient.GetAsync(apiUrl);
 
-//        public async Task<bool> UpdateDanhGia(string iddanhGia, int TrangThai)
-//        {
-//            try
-//            {
-//                var res = await _httpClient.PutAsync($"", null);
-//                if (res.IsSuccessStatusCode)
-//                {
-//                    return await res.Content.ReadAsAsync<bool>();
-//                }
-//                Console.WriteLine(await res.Content.ReadAsStringAsync());
-//                throw new Exception("Not IsSuccessStatusCode");
-//            }
-//            catch (Exception ex)
-//            {
-//                Console.WriteLine(ex.Message);
-//                throw new Exception("Not IsSuccessStatusCode");
-//            }
-//        }
-//    }
-//}
+                if (response.IsSuccessStatusCode)
+                {
+                    string apiData = await response.Content.ReadAsStringAsync();
+                    var danhGia = JsonConvert.DeserializeObject<DanhGia>(apiData);
+                    return danhGia;
+                }
+                else
+                {              
+                    return null;
+                }
+            }
+            catch (HttpRequestException)
+            {       
+                return null;
+            }
+        }
+
+
+        public async Task<bool> UpdateDanhGia(DanhGia danhGia)
+        {
+            try
+            {
+                string apiUrl = $"https://localhost:7038/api/DanhGia/ChinhSuaDanhGia?IdDanhGia={danhGia.IdDanhGia}&BinhLuan={danhGia.BinhLuan}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}";
+
+                var content = new StringContent(string.Empty);
+
+                var response = await _httpClient.PutAsync(apiUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                return false;
+            }
+        }
+
+
+
+    }
+}

@@ -18,18 +18,37 @@ namespace App_Api.Controllers
     [ApiController]
     public class DanhGiaController : ControllerBase
     {
+        private readonly IDanhGiaRepo _danhGiaRepo;
         private readonly IAllRepo<DanhGia> repos;
         BazaizaiContext context = new BazaizaiContext();
         DbSet<DanhGia> danhGias;
         public DanhGiaController()
         {
+            _danhGiaRepo= new DanhGiaRepo();
             danhGias = context.danhGias;
             AllRepo<DanhGia> all = new AllRepo<DanhGia>(context, danhGias);
             repos = all;
         }
-        
+
+        [HttpGet("GetDanhGiaViewModel")]
+        public async Task<List<DanhGiaViewModel>> GetAllDanhGiaViewModel(string idspchitiet)
+        {
+            return await _danhGiaRepo.GetListAsyncViewModel(idspchitiet);
+        }
+
+        [HttpGet("GetSoSaoTB")]
+        public async Task<float> GetSoSaoTB(string idspchitiet)
+        {
+            return await _danhGiaRepo.SoSaoTB(idspchitiet);
+        }
+        [HttpGet("GetTongSoDanhGia")]
+        public async Task<int> GetTongSoDanhGia(string idspchitiet)
+        {
+            return await _danhGiaRepo.GetTongSoDanhGia(idspchitiet);
+        }
+
         [HttpPost("AddDanhGia")]
-        public bool CreateDanhGia(string BinhLuan, string ParentId,
+        public bool CreateDanhGia(string BinhLuan, string? ParentId,
        int SaoSp, int SaoVanChuyen, string IdNguoiDung, string IdSanPhamChiTiet)
         {
             DanhGia danhGia = new DanhGia();
@@ -51,12 +70,16 @@ namespace App_Api.Controllers
             return repos.GetAll().First(p => p.IdDanhGia == id);
         }
 
-        //[HttpGet("GetDanhGiaHienThi")]
-        //public async Task<List<DanhGia>> GetLstDanhGiaDaDuyet()
-        //{
-        //    var lstDangGia = await _danhGiaRepo.GetAllAsync();
-        //    return lstDangGia.Where(x => x.TrangThai == (int?)TrangThaiDanhGia.DaDuyet).ToList();
-        //}
+        [HttpGet("GetDanhGiaHienThi")]
+        public  List<DanhGia> GetLstDanhGiaDaDuyet()
+        {
+            return repos.GetAll().Where(x => x.TrangThai == (int?)TrangThaiDanhGia.DaDuyet).ToList();
+        }
+        [HttpGet("GetDanhGiaChuaDuyet")]
+        public List<DanhGia> GetLstDanhGiaChuaDuyet()
+        {
+            return repos.GetAll().Where(x => x.TrangThai == (int?)TrangThaiDanhGia.ChuaDuyet).ToList();
+        }
 
 
 
@@ -77,14 +100,14 @@ namespace App_Api.Controllers
 
 
         [HttpDelete("XoaDanhGia/{id}")]
-        public async Task<bool> Delete(string id)
+        public bool Delete(string id)
         {
             var danhGia = repos.GetAll().First(p => p.IdDanhGia == id);
             return repos.RemoveItem(danhGia);
         }
 
         [HttpPut("ChinhSuaDanhGia")]
-        public bool UpdateDanhGia(string IdDanhGia, string BinhLuan, string ParentId,
+        public bool UpdateDanhGia(string IdDanhGia, string BinhLuan,
         int SaoSp, int SaoVanChuyen, string IdNguoiDung, string IdSanPhamChiTiet)
         {
             var dg = GetDanhGiaById(IdDanhGia);
@@ -97,7 +120,6 @@ namespace App_Api.Controllers
                 dg.BinhLuan = BinhLuan;
                 dg.SaoSp = SaoSp;
                 dg.SaoVanChuyen = SaoVanChuyen;
-                dg.ParentId = ParentId;
                 return repos.EditItem(dg);
             }
             else return false;

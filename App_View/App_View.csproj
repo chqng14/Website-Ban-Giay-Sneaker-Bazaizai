@@ -8,15 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\DanhGia\DonHangThanhCong.cshtml.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Remove="wwwroot\js\toast.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Views\DanhGia\DonHangThanhCong.cshtml.cs" />
   </ItemGroup>
 
   <ItemGroup>
