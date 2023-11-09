@@ -38,6 +38,8 @@ namespace App_Data.Repositories
             KhongHoatDongCung = 7,
             [Description("Chưa hoạt động của bản cứng")]    
            ChuaHoatDongCung = 8,
+            [Description("Đã huỷ cứng")]
+            DaHuyCung = 9,
         }
         /// <summary>
         /// ở đây là voucher

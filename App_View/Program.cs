@@ -177,9 +177,9 @@ Task.Run(() =>
         capNhatTime.CheckNgayKetThuc();
         capNhatTime.CapNhatTrangThaiSaleDetail();
         capNhatTime.CapNhatGiaBanThucTe();
-        capNhatTime.CapNhatVoucherHetHan();
-        capNhatTime.CapNhatVoucherDenHan();
-        capNhatTime.CapNhatVoucherNguoiDung();
+        capNhatTime.CapNhatVoucherHetHanOnline();
+        capNhatTime.CapNhatVoucherDenHanOnline();
+        capNhatTime.CapNhatVoucherNguoiDungOnline();
         Thread.Sleep(TimeSpan.FromSeconds(5));
     }
 });

@@ -173,7 +173,7 @@ namespace App_View.Services
         }
         //_dbContext.SaveChanges();
 
-        public void CapNhatVoucherHetHan()
+        public void CapNhatVoucherHetHanOnline()
         {
             var VoucherNeedUpdate = _dbContext.vouchers.Where(c => c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.HoatDong).AsNoTracking().ToList();
             if (VoucherNeedUpdate.Count > 0)
@@ -188,7 +188,7 @@ namespace App_View.Services
             }
 
         }
-        public void CapNhatVoucherDenHan()
+        public void CapNhatVoucherDenHanOnline()
         {
             var VoucherNeedUpdate = _dbContext.vouchers.Where(c => c.NgayBatDau == DateTime.Now && c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaBatDau).AsNoTracking().ToList();
             if (VoucherNeedUpdate.Count > 0)
@@ -202,7 +202,7 @@ namespace App_View.Services
                 _dbContext.SaveChanges();
             }
         }
-        public void CapNhatVoucherNguoiDung()
+        public void CapNhatVoucherNguoiDungOnline()
         {
             var VoucherKhongKhaDung = _dbContext.vouchers.Where(c => c.TrangThai == (int)TrangThaiVoucher.KhongHoatDong || c.TrangThai == (int)TrangThaiVoucher.DaHuy).ToList();
             if (VoucherKhongKhaDung.Count > 0)
