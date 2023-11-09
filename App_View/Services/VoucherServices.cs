@@ -34,8 +34,6 @@ namespace App_View.Services
                 Console.WriteLine($"Lỗi xảy ra: {e}");
                 return false;
             }
-
-
         }
 
         public async Task<bool> DeleteVoucher(string id)
@@ -132,6 +130,120 @@ namespace App_View.Services
             try
             {
                 var reponse = await _httpClient.PutAsync($"api/Voucher/UpdateVoucherAfterUseIt/{idVoucher}", null);
+                if (reponse.IsSuccessStatusCode)
+                {
+                    return await reponse.Content.ReadAsAsync<bool>();
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
+
+        public async Task<bool> CreateTaiQuay(VoucherDTO voucherDTO)
+        {
+            try
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/Voucher/CreateVoucherTaiQuay", voucherDTO);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<bool>();
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteTaiQuay(string id)
+        {
+            try
+            {
+                var response = await _httpClient.PutAsync($"/api/Voucher/DeleteVoucherTaiQuay/{id}", null);
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadAsAsync<bool>();
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
+
+        public async Task<bool> DeleteVoucherWithListTaiQuay(List<string> Id)
+        {
+            try
+            {
+                foreach (string item in Id)
+                {
+                    var response = await _httpClient.PutAsync($"/api/Voucher/DeleteVoucherTaiQuay/{item}", null);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
+
+        public async Task<bool> RestoreVoucherWithListTaiQuay(List<string> Id)
+        {
+            try
+            {
+                foreach (string item in Id)
+                {
+                    var response = await _httpClient.PutAsync($"/api/Voucher/RestoreVoucherTaiQuay/{item}", null);
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateTaiQuay(VoucherDTO voucherDTO)
+        {
+            try
+            {
+                var reponse = await _httpClient.PutAsJsonAsync($"/api/Voucher/UpdateVoucherTaiQuay", voucherDTO);
+                if (reponse.IsSuccessStatusCode)
+                {
+                    return await reponse.Content.ReadAsAsync<bool>();
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
+        public async Task<bool> UpdateVoucherAfterUseItTaiQuay(string idVoucher,string idUser)
+        {
+            try
+            {
+                var reponse = await _httpClient.PutAsync($"/api/Voucher/UpdateVoucherAfterUseItTaiQuay/{idVoucher}/{idUser}", null);
                 if (reponse.IsSuccessStatusCode)
                 {
                     return await reponse.Content.ReadAsAsync<bool>();
