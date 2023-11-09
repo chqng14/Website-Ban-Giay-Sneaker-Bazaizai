@@ -58,6 +58,10 @@ namespace App_View.Areas.Admin.Controllers
         {
             var hoaDon = (await _hoaDonServices.GetAllHoaDonCho()).FirstOrDefault(hd => hd.MaHoaDon == maHD);
             var sanPham = (await _sanPhamChiTietService.GetDanhSachBienTheItemShopViewModelAsync()).FirstOrDefault(c => c.IdChiTietSp == idSanPham);
+            if (sanPham.SoLuongTon == 0)
+            {
+                return Ok(new { TrangThai = false });
+            }
             var hoaDonChitiet = new HoaDonChiTiet()
             {
                 IdHoaDon = hoaDon.Id,
@@ -76,10 +80,11 @@ namespace App_View.Areas.Admin.Controllers
                 SoLuong = 1
             });
             var tongTienThayDoi = hoaDonChiTietTraLai.GiaGoc;
-            var soTienTraLaiThayDoi =hoaDonChiTietTraLai.GiaBan;
+            var soTienTraLaiThayDoi = hoaDonChiTietTraLai.GiaBan;
             var SoTienKhyenMaiGiam = tongTienThayDoi - soTienTraLaiThayDoi;
             return Ok(new
             {
+                TrangThai = true,
                 IdHoaDon = hoaDonChiTietTraLai.IdHoaDon,
                 IdHoaDonChiTiet = hoaDonChiTietTraLai.IdHoaDonChiTiet,
                 IdSanPhamChiTiet = hoaDonChiTietTraLai.IdSanPhamChiTiet,
@@ -87,7 +92,6 @@ namespace App_View.Areas.Admin.Controllers
                 GiaBan = hoaDonChiTietTraLai.GiaBan,
                 GiaGoc = hoaDonChiTietTraLai.GiaGoc,
                 TenSanPham = sanPham.TenSanPham + "/" + sanPham.MauSac + "/" + sanPham.KichCo,
-                TrangThai = hoaDonChiTietTraLai.TrangThai,
                 TongTienThayDoi = tongTienThayDoi,
                 SoTienTraLaiThayDoi = soTienTraLaiThayDoi,
                 SoTienKhyenMaiGiam = SoTienKhyenMaiGiam,
@@ -104,69 +108,66 @@ namespace App_View.Areas.Admin.Controllers
                 return PartialView("_DanhSachSanPhamPartialView", await _sanPhamChiTietService.GetDanhSachBienTheItemShopViewModelAsync());
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateSoLuong(string maHD, string idSanPham, int SoLuongMoi, string SoLuongTon)
+        public async Task<IActionResult> UpdateSoLuong(string maHD, string idSanPham, int SoLuongMoi)
         {
             var hoaDon = (await _hoaDonServices.GetAllHoaDonCho()).FirstOrDefault(hd => hd.MaHoaDon == maHD);
-            var soLuongThayDoi = await _hoaDonChiTietServices.UpdateSoLuong(hoaDon.Id, idSanPham, SoLuongMoi, SoLuongTon);
-            var tongTienThayDoi = Convert.ToInt32(soLuongThayDoi) * (double)hoaDon.hoaDonChiTietDTOs.FirstOrDefault(c => c.IdSanPhamChiTiet == idSanPham).GiaGoc;
-            var soTienTraLaiThayDoi = Convert.ToInt32(soLuongThayDoi) * (double)hoaDon.hoaDonChiTietDTOs.FirstOrDefault(c => c.IdSanPhamChiTiet == idSanPham).GiaBan;
-            var SoTienKhyenMaiGiam = tongTienThayDoi - soTienTraLaiThayDoi;
+            var sanPham = (await _sanPhamChiTietService.GetDanhSachBienTheItemShopViewModelAsync()).FirstOrDefault(c => c.IdChiTietSp == idSanPham);
+
+            var soLuongThayDoi = await _hoaDonChiTietServices.UpdateSoLuong(hoaDon.Id, idSanPham, SoLuongMoi, sanPham.SoLuongTon.ToString());
             if (soLuongThayDoi != "")
             {
+                var tongTienThayDoi = Convert.ToInt32(soLuongThayDoi) * (double)hoaDon.hoaDonChiTietDTOs.FirstOrDefault(c => c.IdSanPhamChiTiet == idSanPham).GiaGoc;
+                var soTienTraLaiThayDoi = Convert.ToInt32(soLuongThayDoi) * (double)hoaDon.hoaDonChiTietDTOs.FirstOrDefault(c => c.IdSanPhamChiTiet == idSanPham).GiaBan;
+                var SoTienKhyenMaiGiam = tongTienThayDoi - soTienTraLaiThayDoi;
                 await _sanPhamChiTietService.UpDatSoLuongAynsc(new SanPhamSoLuongDTO()
                 {
                     IdChiTietSanPham = idSanPham,
                     SoLuong = Convert.ToInt32(soLuongThayDoi)
                 });
-                int intValue;
-                if (int.TryParse(SoLuongTon, out intValue))
+                if (Convert.ToInt32(sanPham.SoLuongTon) - Convert.ToInt32(soLuongThayDoi) != 0)
                 {
-                    if (Convert.ToInt32(SoLuongTon) - Convert.ToInt32(soLuongThayDoi) != 0)
+                    return Ok(new
                     {
-                        return Ok(new
-                        {
-                            SoLuongConLai = Convert.ToInt32(SoLuongTon) - Convert.ToInt32(soLuongThayDoi),
-                            TongTienThayDoi = tongTienThayDoi,
-                            SoTienTraLaiThayDoi = soTienTraLaiThayDoi,
-                            SoTienKhyenMaiGiam = SoTienKhyenMaiGiam,
-                            SoTienVoucherGiam = 0,
+                        TrangThai = true,
+                        SoLuongConLai = Convert.ToInt32(sanPham.SoLuongTon) - Convert.ToInt32(soLuongThayDoi),
+                        TongTienThayDoi = tongTienThayDoi,
+                        SoTienTraLaiThayDoi = soTienTraLaiThayDoi,
+                        SoTienKhyenMaiGiam = SoTienKhyenMaiGiam,
+                        SoTienVoucherGiam = 0,
 
-                        });
-                    }
-                    else
-                    {
-                        return Ok(new
-                        {
-                            TongTienThayDoi = tongTienThayDoi,
-                            SoTienTraLaiThayDoi = soTienTraLaiThayDoi,
-                            SoTienKhyenMaiGiam = SoTienKhyenMaiGiam,
-                            SoLuongConLai = "Hết hàng",
-                            SoTienVoucherGiam = 0,
-
-                        });
-                    }
+                    });
                 }
                 else
                 {
                     return Ok(new
                     {
+                        TrangThai = true,
                         TongTienThayDoi = tongTienThayDoi,
                         SoTienTraLaiThayDoi = soTienTraLaiThayDoi,
                         SoTienKhyenMaiGiam = SoTienKhyenMaiGiam,
-                        SoLuongConLai = 0 - Convert.ToInt32(soLuongThayDoi),
+                        SoLuongConLai = "Hết hàng",
                         SoTienVoucherGiam = 0,
-                    });
 
+                    });
                 }
             }
             else
             {
                 var soLuongTrongHoaDon = hoaDon.hoaDonChiTietDTOs.FirstOrDefault(c => c.IdSanPhamChiTiet == idSanPham).SoLuong;
-                return Ok(new
-                {
-                    SoLuongConLai = SoLuongTon,
-                    SoLuongCu = soLuongTrongHoaDon,
-                });
+                if (sanPham.SoLuongTon > 0)
+                    return Ok(new
+                    {
+                        TrangThai = false,
+                        SoLuongConLai = sanPham.SoLuongTon,
+                        SoLuongCu = soLuongTrongHoaDon,
+                    });
+                else
+                    return Ok(new
+                    {
+                        TrangThai = false,
+                        SoLuongConLai = "Hết hàng",
+                        SoLuongCu = soLuongTrongHoaDon,
+                    });
             }
         }
         [HttpDelete]
@@ -182,9 +183,10 @@ namespace App_View.Areas.Admin.Controllers
                 IdChiTietSanPham = idSanPham,
                 SoLuong = (-Convert.ToInt32(soLuongThayDoi))
             });
+            var sanPham = (await _sanPhamChiTietService.GetDanhSachBienTheItemShopViewModelAsync()).FirstOrDefault(c => c.IdChiTietSp == idSanPham);
             return Ok(new
             {
-                SoLuongConLai = Convert.ToInt32(soLuongThayDoi),
+                SoLuongConLai = sanPham.SoLuongTon,
                 TongTienThayDoi = tongTienThayDoi,
                 SoTienTraLaiThayDoi = soTienTraLaiThayDoi,
                 SoTienKhyenMaiGiam = SoTienKhyenMaiGiam,

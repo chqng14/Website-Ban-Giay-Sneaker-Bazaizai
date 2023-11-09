@@ -89,8 +89,8 @@ namespace App_Data.Repositories
         {
             try
             {
-                var hoadDonChiTietTrung = context.hoaDonChiTiets.FirstOrDefault(c=>c.IdSanPhamChiTiet == hoaDonChiTiet.IdSanPhamChiTiet && c.IdHoaDon == hoaDonChiTiet.IdHoaDon && c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay);
-                if(hoadDonChiTietTrung == null)
+                var hoadDonChiTietTrung = context.hoaDonChiTiets.FirstOrDefault(c => c.IdSanPhamChiTiet == hoaDonChiTiet.IdSanPhamChiTiet && c.IdHoaDon == hoaDonChiTiet.IdHoaDon && c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay);
+                if (hoadDonChiTietTrung == null)
                 {
                     context.hoaDonChiTiets.Add(hoaDonChiTiet);
                     context.SaveChanges();
@@ -98,13 +98,13 @@ namespace App_Data.Repositories
                 }
                 else
                 {
-                    hoadDonChiTietTrung.SoLuong = hoadDonChiTietTrung.SoLuong+1;
+                    hoadDonChiTietTrung.SoLuong = hoadDonChiTietTrung.SoLuong + 1;
                     context.hoaDonChiTiets.Update(hoadDonChiTietTrung);
                     context.SaveChanges();
                     return hoadDonChiTietTrung;
 
                 }
-               
+
             }
             catch (Exception)
             {
@@ -118,53 +118,25 @@ namespace App_Data.Repositories
 
             var hoaDonChiTiet = context.hoaDonChiTiets.FirstOrDefault(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD && c.IdSanPhamChiTiet == idSanPham);
             int soLuongThayDoi = (int)SoLuongMoi - (int)hoaDonChiTiet.SoLuong;
-            int intValue;
-            if (int.TryParse(SoluongTon, out intValue))
+            if (soLuongThayDoi <= int.Parse(SoluongTon))
             {
-               
-                if (soLuongThayDoi <= int.Parse(SoluongTon))
+                if (SoLuongMoi != 0)
                 {
-                    if (SoLuongMoi != 0)
-                    {
-                        hoaDonChiTiet.SoLuong = SoLuongMoi;
-                        context.hoaDonChiTiets.Update(hoaDonChiTiet);
-                        context.SaveChanges();
-                        return soLuongThayDoi.ToString();
-                    }
-                    else
-                    {
-                        context.hoaDonChiTiets.Remove(hoaDonChiTiet);
-                        context.SaveChanges();
-                        return soLuongThayDoi.ToString();
-                    }
+                    hoaDonChiTiet.SoLuong = SoLuongMoi;
+                    context.hoaDonChiTiets.Update(hoaDonChiTiet);
+                    context.SaveChanges();
+                    return soLuongThayDoi.ToString();
                 }
                 else
                 {
-                    return null;
+                    context.hoaDonChiTiets.Remove(hoaDonChiTiet);
+                    context.SaveChanges();
+                    return soLuongThayDoi.ToString();
                 }
             }
             else
             {
-                if(SoLuongMoi < hoaDonChiTiet.SoLuong)
-                {
-                    if (SoLuongMoi != 0)
-                    {
-                        hoaDonChiTiet.SoLuong = SoLuongMoi;
-                        context.hoaDonChiTiets.Update(hoaDonChiTiet);
-                        context.SaveChanges();
-                        return soLuongThayDoi.ToString();
-                    }
-                    else
-                    {
-                        context.hoaDonChiTiets.Remove(hoaDonChiTiet);
-                        context.SaveChanges();
-                        return soLuongThayDoi.ToString();
-                    }
-                }
-                else
-                {
-                    return null;
-                }
+                return null;
             }
         }
 

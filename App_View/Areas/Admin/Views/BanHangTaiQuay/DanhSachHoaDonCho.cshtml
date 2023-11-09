@@ -211,7 +211,88 @@
                         tabTitle = response;
                         var tabContent = tabIndex
                         $("<li><a href='#tab-" + tabIndex + "'>" + tabTitle + "</a></li>").appendTo("#tabs ul");
-                        $("<div id='tab-" + tabIndex + "'></div>").appendTo("#tabs");
+                        $("<div id='tab-" + tabIndex + "' style='height: 700px'></div>").appendTo("#tabs");
+                        const tableElement = document.createElement('table');
+                        tableElement.classList.add('table');
+
+                        const tableHeadElement = document.createElement('thead');
+                        const tableHeadRowElement = document.createElement('tr');
+
+                        const sttHeadingElement = document.createElement('th');
+                        sttHeadingElement.textContent = 'STT';
+                        sttHeadingElement.style.width = '10%';
+                        sttHeadingElement.style.position = 'sticky';
+                        sttHeadingElement.style.top = '0';
+                        sttHeadingElement.style.backgroundColor = 'white';
+                        tableHeadRowElement.appendChild(sttHeadingElement);
+
+                        const idSanPhamHeadingElement = document.createElement('th');
+                        idSanPhamHeadingElement.textContent = 'IdSanPham';
+                        idSanPhamHeadingElement.style.width = '0%';
+                        idSanPhamHeadingElement.style.position = 'sticky';
+                        idSanPhamHeadingElement.style.top = '0';
+                        idSanPhamHeadingElement.style.backgroundColor = 'white';
+                        idSanPhamHeadingElement.style.display = 'none';
+                        tableHeadRowElement.appendChild(idSanPhamHeadingElement);
+
+                        const maSanPhamHeadingElement = document.createElement('th');
+                        maSanPhamHeadingElement.textContent = 'Mã sản phẩm';
+                        maSanPhamHeadingElement.style.width = '20%';
+                        maSanPhamHeadingElement.style.position = 'sticky';
+                        maSanPhamHeadingElement.style.top = '0';
+                        maSanPhamHeadingElement.style.backgroundColor = 'white';
+                        tableHeadRowElement.appendChild(maSanPhamHeadingElement);
+
+                        const tenSanPhamHeadingElement = document.createElement('th');
+                        tenSanPhamHeadingElement.textContent = 'Tên sản phẩm';
+                        tenSanPhamHeadingElement.style.width = '35%';
+                        tenSanPhamHeadingElement.style.position = 'sticky';
+                        tenSanPhamHeadingElement.style.top = '0';
+                        tenSanPhamHeadingElement.style.backgroundColor = 'white';
+                        tableHeadRowElement.appendChild(tenSanPhamHeadingElement);
+
+                        const giaBanHeadingElement = document.createElement('th');
+                        giaBanHeadingElement.textContent = 'Giá bán';
+                        giaBanHeadingElement.style.width = '15%';
+                        giaBanHeadingElement.style.position = 'sticky';
+                        giaBanHeadingElement.style.top = '0';
+                        giaBanHeadingElement.style.backgroundColor = 'white';
+                        tableHeadRowElement.appendChild(giaBanHeadingElement);
+
+                        const soLuongHeadingElement = document.createElement('th');
+                        soLuongHeadingElement.textContent = 'Số lượng';
+                        soLuongHeadingElement.style.width = '10%';
+                        soLuongHeadingElement.style.position = 'sticky';
+                        soLuongHeadingElement.style.top = '0';
+                        soLuongHeadingElement.style.backgroundColor = 'white';
+                        tableHeadRowElement.appendChild(soLuongHeadingElement);
+
+                        const xoaSanPhamHeadingElement = document.createElement('th');
+                        xoaSanPhamHeadingElement.textContent = 'Xóa sản phẩm';
+                        xoaSanPhamHeadingElement.style.width = '10%';
+                        xoaSanPhamHeadingElement.style.position = 'sticky';
+                        xoaSanPhamHeadingElement.style.top = '0';
+                        xoaSanPhamHeadingElement.style.backgroundColor = 'white';
+                        tableHeadRowElement.appendChild(xoaSanPhamHeadingElement);
+
+                        tableHeadElement.appendChild(tableHeadRowElement);
+
+                        const tableBodyElement = document.createElement('tbody');
+
+                        // Populate table body with data
+
+                        // ...
+
+                        tableElement.appendChild(tableHeadElement);
+                        tableElement.appendChild(tableBodyElement);
+                        const responsiveDivElement = document.createElement('div');
+                        responsiveDivElement.classList.add('table-responsive');
+                        responsiveDivElement.style.height = '650px';
+                        responsiveDivElement.style.overflowY = 'scroll';
+                        responsiveDivElement.style.overflowX = 'hidden';
+                        responsiveDivElement.appendChild(tableElement);
+                        const divElement = document.getElementById('tab-' + tabIndex);
+                        divElement.appendChild(responsiveDivElement);
                         $("#tabs").tabs("refresh");
                         loading = false;
                     },
@@ -291,10 +372,10 @@
         var element = document.getElementById(idsanpham);
         var maHoaDon = $("#tabs .ui-tabs-active a").text();
         $.ajax({
-            url: '/Admin/BanHangTaiQuay/UpdateSoLuong?maHD=' + maHoaDon + '&idSanPham=' + idsanpham + '&SoLuongMoi=' + newValue + '&SoLuongTon=' + element.textContent,
+            url: '/Admin/BanHangTaiQuay/UpdateSoLuong?maHD=' + maHoaDon + '&idSanPham=' + idsanpham + '&SoLuongMoi=' + newValue,
             type: 'PUT',
             success: function (result) {
-                if (result.soLuongCu == null) {
+                if (result.trangThai) {
 
                     element.textContent = result.soLuongConLai;
                     var tongTien = parseInt($("#TongTienHoaDon").val().replace(/\D/g, ''), 10) + result.tongTienThayDoi;
@@ -305,6 +386,7 @@
                     $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                     $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                     $("#MaVoucher").val("");
+                    alert("Số lượng đủ")
                     loading = false;
                 }
                 else {
@@ -338,30 +420,16 @@
             type: 'DELETE',
             success: function (result) {
 
-                if (isInteger(element.textContent)) {
-                    element.textContent = parseInt(element.textContent, 10) + result.soLuongConLai;
-                    var tongTien = parseInt($("#TongTienHoaDon").val().replace(/\D/g, ''), 10) + result.tongTienThayDoi;
-                    var tienPhaiTra = parseInt($("#SoTienPhaiTra").val().replace(/\D/g, ''), 10) + result.soTienTraLaiThayDoi;
-                    var khuyenMaiGiam = parseInt($("#KhuyenMaiGiam").val().replace(/\D/g, ''), 10) + result.soTienKhyenMaiGiam;
-                    $("#TongTienHoaDon").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
-                    $("#SoTienPhaiTra").val(tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
-                    $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
-                    $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
-                    $("#MaVoucher").val("");
-                    loading = false;
-                } else {
-                    element.textContent = result.soLuongConLai;
-                    var tongTien = parseInt($("#TongTienHoaDon").val().replace(/\D/g, ''), 10) + result.tongTienThayDoi;
-                    var tienPhaiTra = parseInt($("#SoTienPhaiTra").val().replace(/\D/g, ''), 10) + result.soTienTraLaiThayDoi;
-                    var khuyenMaiGiam = parseInt($("#KhuyenMaiGiam").val().replace(/\D/g, ''), 10) + result.soTienKhyenMaiGiam;
-                    $("#TongTienHoaDon").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
-                    $("#SoTienPhaiTra").val(tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
-                    $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
-                    $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
-                    $("#MaVoucher").val("");
-                    loading = false;
-
-                }
+                element.textContent = result.soLuongConLai;
+                var tongTien = parseInt($("#TongTienHoaDon").val().replace(/\D/g, ''), 10) + result.tongTienThayDoi;
+                var tienPhaiTra = parseInt($("#SoTienPhaiTra").val().replace(/\D/g, ''), 10) + result.soTienTraLaiThayDoi;
+                var khuyenMaiGiam = parseInt($("#KhuyenMaiGiam").val().replace(/\D/g, ''), 10) + result.soTienKhyenMaiGiam;
+                $("#TongTienHoaDon").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#SoTienPhaiTra").val(tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#MaVoucher").val("");
+                loading = false;
             },
             error: function (xhr, status, error) {
 
