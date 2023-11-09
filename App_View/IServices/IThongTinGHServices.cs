@@ -10,6 +10,7 @@ namespace App_View.IServices
         Task<List<ThongTinGiaoHang>> GetThongTinByIdUser(string idNguoiDung);
         Task<bool> CreateThongTin(ThongTinGHDTO thongTinGHDTO);
         Task<bool> UpdateThongTin(ThongTinGHDTO thongTinGHDTO);
+        Task<bool> UpdateTrangThaiThongTin(string idThongTin);
         Task<bool> DeleteThongTin(string id);
     }
 }

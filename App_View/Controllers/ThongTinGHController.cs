@@ -41,8 +41,6 @@ namespace App_View.Controllers
         }
 
         // POST: ThongTinGHController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateThongTin(ThongTinGHDTO thongTinGHDTO)
         {
             await thongTinGHServices.CreateThongTin(thongTinGHDTO);
@@ -50,24 +48,18 @@ namespace App_View.Controllers
         }
 
         // GET: ThongTinGHController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+        //public ActionResult Edit(int id)
+        //{
+        //    return View();
+        //}
 
         // POST: ThongTinGHController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateTrangThai(string idThongTin)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await thongTinGHServices.UpdateTrangThaiThongTin(idThongTin);
+            return Ok();
         }
 
         // GET: ThongTinGHController/Delete/5

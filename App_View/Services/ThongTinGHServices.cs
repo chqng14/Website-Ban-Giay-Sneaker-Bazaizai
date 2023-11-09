@@ -66,5 +66,24 @@ namespace App_View.Services
                 throw new Exception("Not IsSuccessStatusCode");
             }
         }
+
+        public async Task<bool> UpdateTrangThaiThongTin(string idThongTin)
+        {
+            try
+            {
+                var res = await _httpClient.PutAsync($"https://localhost:7038/api/ThongTinGiaoHang/UpdateTrangThai?idThongTin={idThongTin}", null);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await res.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
     }
 }

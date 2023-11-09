@@ -53,7 +53,7 @@ namespace App_View.Controllers
         {
             thongTinGHDTO.IdThongTinGH = Guid.NewGuid().ToString();
             thongTinGHDTO.IdNguoiDung = _userManager.GetUserId(User);
-            thongTinGHDTO.TrangThai = (int)TrangThaiCoBan.HoatDong;
+            thongTinGHDTO.TrangThai = (int)TrangThaiThongTinGH.HoatDong;
             var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == _userManager.GetUserId(User));
             var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
@@ -169,6 +169,7 @@ namespace App_View.Controllers
         public async Task<IActionResult> DataBillNologin(ThongTinGHDTO thongTinGHDTO)
         {
             thongTinGHDTO.IdThongTinGH = Guid.NewGuid().ToString();
+            thongTinGHDTO.TrangThai = (int)TrangThaiThongTinGH.HoatDong;
             var listcart = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
             var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())

@@ -36,7 +36,7 @@ namespace App_Api.Controllers
         [HttpGet("GetByIdUser")]
         public IEnumerable<ThongTinGiaoHang> GetByIdUser(string idNguoiDung)
         {
-            return thongTinGHRepos.GetAll().Where(c => c.IdNguoiDung == idNguoiDung);
+            return thongTinGHRepos.GetAll().Where(c => c.IdNguoiDung == idNguoiDung && c.TrangThai != 2);
         }
 
         // POST api/<ThongTinGiaoHangController>
@@ -64,5 +64,25 @@ namespace App_Api.Controllers
             var ttgh = thongTinGHRepos.GetAll().FirstOrDefault(c => c.IdThongTinGH == id);
             return thongTinGHRepos.RemoveThongTinGH(ttgh);
         }
+
+        [HttpPut("UpdateTrangThai")]
+        public async Task<bool> UpdateTrangThai(string idThongTin)
+        {
+            var thongTinGiaoHangs = thongTinGHRepos.GetAll();
+
+            foreach (var item in thongTinGiaoHangs)
+            {
+                if (item.TrangThai == 0)
+                {
+                    item.TrangThai = 1;
+                    thongTinGHRepos.EditThongTinGH(item);
+                }
+            }
+
+            var thongTinGiaoHang = thongTinGiaoHangs.FirstOrDefault(c => c.IdThongTinGH == idThongTin);
+            thongTinGiaoHang.TrangThai = 0;
+            return thongTinGHRepos.EditThongTinGH(thongTinGiaoHang);
+        }
+
     }
 }
