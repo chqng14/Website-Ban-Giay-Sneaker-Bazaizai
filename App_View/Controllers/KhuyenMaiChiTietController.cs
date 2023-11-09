@@ -72,5 +72,9 @@ namespace App_View.Controllers
                 return BadRequest();
             }
         }
+        public IActionResult ViewKhuyenMai()
+        {
+            return View();
+        }
     }
 }

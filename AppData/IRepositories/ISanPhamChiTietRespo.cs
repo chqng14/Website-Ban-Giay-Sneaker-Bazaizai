@@ -23,6 +23,7 @@ namespace App_Data.IRepositories
         Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(List<string> listGuid);
         Task<List<ItemShopViewModel>> GetDanhSachItemShopViewModelAsync();
         Task<List<ItemShopViewModel>> GetDanhSachBienTheItemShopViewModelAsync();
+        Task<List<ItemShopViewModel>> GetDanhSachBienTheItemShopViewModelSaleAsync();
         Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id);
         Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac);
         Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSizeAynsc(string id, int size);

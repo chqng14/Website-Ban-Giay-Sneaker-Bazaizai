@@ -21,6 +21,7 @@ namespace App_Api.Controllers
     public class VoucherNguoiDungController : ControllerBase
     {
         private readonly IAllRepo<VoucherNguoiDung> VcNguoiDungRepos;
+        private readonly IVoucherNguoiDungRepos voucherNguoiDungRep;
         private readonly IAllRepo<Voucher> VcRepos;
         private readonly IMapper _mapper;
         BazaizaiContext DbContextModel = new BazaizaiContext();
@@ -32,7 +33,7 @@ namespace App_Api.Controllers
             voucher = DbContextModel.vouchers;
             AllRepo<VoucherNguoiDung> VcNd = new AllRepo<VoucherNguoiDung>(DbContextModel, voucherNguoiDung);
             VcNguoiDungRepos = VcNd;
-
+            voucherNguoiDungRep = new VoucherNguoiDungRepos();
             AllRepo<Voucher> Vc = new AllRepo<Voucher>(DbContextModel, voucher);
             VcRepos = Vc;
 
@@ -84,6 +85,8 @@ namespace App_Api.Controllers
                         IdNguoiDung = idNguoiDung,
                         IdVouCher = VoucherKhaDung.IdVoucher,
                         TrangThai = (int)TrangThaiVoucherNguoiDung.KhaDung
+                        ,
+                        NgayNhan = DateTime.Now
                     };
                     if (VcNguoiDungRepos.AddItem(VCNguoiDung) == true)
                     {
@@ -118,5 +121,59 @@ namespace App_Api.Controllers
             return VcNguoiDungRepos.RemoveItem(cl);
         }
 
+
+        [HttpPost("AddVoucherNguoiDungTuAdmin")]
+        public async Task<string> AddVoucherNguoiDungTuAdmin(AddVoucherRequestDTO addVoucherRequestDTO)
+        {
+            var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.MaVoucher == addVoucherRequestDTO.MaVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDong);
+            if (VoucherKhaDung != null)
+            {
+                foreach (var item in addVoucherRequestDTO.UserId.ToList())
+                {
+                    var existsInVoucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(vnd => vnd.IdVouCher == VoucherKhaDung.IdVoucher && vnd.IdNguoiDung == item);
+
+                    if (existsInVoucherNguoiDung != null)
+                    {
+                        // IdVoucher đã tồn tại trong bảng VoucherNguoiDung, loại bỏ phần tử khỏi danh sách UserId
+                        addVoucherRequestDTO.UserId.Remove(item);
+                    }
+                }
+                int soNguoiDuocTangVoucher = addVoucherRequestDTO.UserId.Count();
+                if (soNguoiDuocTangVoucher > 0 && VoucherKhaDung.SoLuong >= soNguoiDuocTangVoucher)
+                {
+                    if (await (voucherNguoiDungRep.TangVoucherNguoiDung(addVoucherRequestDTO)) == true)
+                    {
+                        return "Tặng voucher thành công";
+                    }
+                }
+                else
+                {
+                    return "Người dùng đã có voucher này rồi";
+                }
+
+            }
+            return "Voucher không còn khả dụng";
+        }
+        [HttpPost("TangVoucherChoNguoiDungMoi")]
+        public async Task<bool> TangVoucherChoNguoiDungMoi(string ma)
+        {
+            int i = 0;
+            var lstNguoidungNew = await voucherNguoiDungRep.GetLstNguoiDUngMoi();
+            if (lstNguoidungNew.Any())
+            {
+                foreach (var item in lstNguoidungNew)
+                {
+                    if (await voucherNguoiDungRep.TangVoucherNguoiDungMoi(ma, item.Id)==true)
+                    {
+                        i++;
+                    }             
+                }
+                if(i >0)
+                return true;
+            }
+            return false;
+
+        }
+     
     }
 }

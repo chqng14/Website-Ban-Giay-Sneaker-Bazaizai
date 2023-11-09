@@ -61,13 +61,14 @@ namespace App_Data.Repositories
 
         public IEnumerable<GioHangChiTietDTO> GetAllGioHangDTO()
         {
-            var a = context.gioHangChiTiets
+            var giohang = context.gioHangChiTiets
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.SanPham)
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.MauSac)
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.KichCo)
+                .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.ThuongHieu)
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.Anh)
                 .ToList();
-            return _mapper.Map<List<GioHangChiTietDTO>>(a);
+            return _mapper.Map<List<GioHangChiTietDTO>>(giohang);
         }
 
         public bool RemoveCartDetail(GioHangChiTiet item)

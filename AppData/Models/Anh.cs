@@ -14,6 +14,7 @@ namespace App_Data.Models
         public string? Url { get; set; }
         public int? TrangThai { get; set; }
         public string? IdSanPhamChiTiet { get; set; }
+        public DateTime? NgayTao { get; set; }
         public virtual SanPhamChiTiet SanPhamChiTiets { get; set; }
     }
 }

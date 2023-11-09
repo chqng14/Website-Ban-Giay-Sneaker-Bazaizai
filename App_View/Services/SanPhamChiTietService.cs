@@ -368,7 +368,6 @@ namespace App_View.Services
             }
         }
 
-
         public async Task<List<SanPhamDanhSachViewModel>> GetListSanPhamChiTietViewModelAsync()
         {
             return (await _httpClient.GetFromJsonAsync<List<SanPhamDanhSachViewModel>>("/api/SanPhamChiTiet/Get-List-SanPhamChiTietViewModel"))!;
@@ -465,12 +464,12 @@ namespace App_View.Services
                 Console.WriteLine(ex.Message);
                 throw new Exception("Not IsSuccessStatusCode");
             }
-            
+
         }
 
         public async Task UpDatSoLuongAynsc(SanPhamSoLuongDTO sanPhamSoLuongDTO)
         {
-           var response =  await _httpClient.PutAsJsonAsync("/api/SanPhamChiTiet/UpdateSoLuong", sanPhamSoLuongDTO);
+            var response = await _httpClient.PutAsJsonAsync("/api/SanPhamChiTiet/UpdateSoLuong", sanPhamSoLuongDTO);
             Console.WriteLine("___________________________________________________________________________________________________________________________________");
             Console.WriteLine(await response.Content.ReadAsStringAsync());
             Console.WriteLine("___________________________________________________________________________________________________________________________________");
@@ -488,6 +487,46 @@ namespace App_View.Services
                 Console.WriteLine(ex);
                 return new List<ItemShopViewModel>();
             }
+        }
+
+        public async Task<List<ChatLieu>> GetListModelChatLieuAsync()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<ChatLieu>?>("/api/SanPhamChiTiet/Get-List-ChatLieu"))!;
+        }
+
+        public async Task<List<KichCo>> GetListModelKichCoAsync()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<KichCo>?>("/api/SanPhamChiTiet/Get-List-KichCo"))!;
+        }
+
+        public async Task<List<KieuDeGiay>> GetListModelKieuDeGiayAsync()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<KieuDeGiay>?>("/api/SanPhamChiTiet/Get-List-KieuDeGiay"))!;
+        }
+
+        public async Task<List<LoaiGiay>> GetListModelLoaiGiayAsync()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<LoaiGiay>?>("/api/SanPhamChiTiet/Get-List-LoaiGiay"))!;
+        }
+
+        public async Task<List<MauSac>> GetListModelMauSacAsync()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<MauSac>?>("/api/SanPhamChiTiet/Get-List-MauSac"))!;
+        }
+
+        public async Task<List<SanPham>> GetListModelSanPhamAsync()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<SanPham>?>("/api/SanPhamChiTiet/Get-List-SanPham"))!;
+        }
+
+        public async Task<List<ThuongHieu>> GetListModelThuongHieuAsync()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<ThuongHieu>?>("/api/SanPhamChiTiet/Get-List-ThuongHieu"))!;
+        }
+
+        public async Task<List<XuatXu>> GetListModelXuatXuAsync()
+        {
+            return (await _httpClient.GetFromJsonAsync<List<XuatXu>>("/api/SanPhamChiTiet/Get-List-XuatXu"))!;
         }
     }
 }

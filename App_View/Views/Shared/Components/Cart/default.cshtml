@@ -1,4 +1,8 @@
 ﻿@model App_Data.ViewModels.GioHangChiTiet.GioHangMiniViewModel
+@using App_Data.Models;
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
 <a class="mini-cart-shop-link">
     <i class="fas fa-shopping-bag"></i>
 
@@ -17,35 +21,42 @@
             @foreach (var item in Model.SanPhamGioHangViewModels!)
             {
                 <!--====== Card for mini cart ======-->
-                <div class="card-mini-product">
-                    <div class="mini-product">
-                        <div class="mini-product__image-wrapper">
+        <div class="card-mini-product">
+            <div class="mini-product">
+                <div class="mini-product__image-wrapper">
 
-                            <a class="mini-product__link" href="/SanPhamChiTiets/Details/@item.IdSanPhamChiTiet">
+                    <a class="mini-product__link" href="/SanPhamChiTiets/Details/@item.IdSanPhamChiTiet">
 
-                                <img class="u-img-fluid" style="height: 100%" src="/AnhSanPham/@item.Anh" alt="">
-                            </a>
-                        </div>
-                        <div class="mini-product__info-wrapper">
-
-                            <span class="mini-product__category">
-
-                                <a>@item.TenThuongHieu</a>
-                            </span>
-
-                            <span class="mini-product__name">
-
-                                <a href="product-detail.html">@item.TenSanPham</a>
-                            </span>
-
-                            <span class="mini-product__quantity">@item.SoLuong x</span>
-
-                            <span class="mini-product__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaSanPham)</span>
-                        </div>
-                    </div>
-
-                    <a class="mini-product__delete-link far fa-trash-alt"></a>
+                        <img class="u-img-fluid" style="height: 100%" src="/AnhSanPham/@item.Anh" alt="">
+                    </a>
                 </div>
+                <div class="mini-product__info-wrapper">
+
+                    <span class="mini-product__category">
+
+                        <a>@item.TenThuongHieu</a>
+                    </span>
+
+                    <span class="mini-product__name">
+
+                        <a href="product-detail.html">@item.TenSanPham</a>
+                    </span>
+
+                    <span class="mini-product__quantity">@item.SoLuong x</span>
+
+                    <span class="mini-product__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaSanPham)</span>
+                </div>
+            </div>
+            @if (SignInManager.IsSignedIn(User))
+            {
+                <a class="mini-product__delete-link far fa-trash-alt" onclick="DeleteLine('@item.IdGioHangChiTiet')"></a>
+            }
+            else
+            {
+                <a class="mini-product__delete-link far fa-trash-alt" onclick="DeleteLine('@item.IdSanPhamChiTiet')"></a>
+
+            }
+        </div>
                 <!--====== End - Card for mini cart ======-->
             }
         }
@@ -86,7 +97,7 @@
 
             <span class="subtotal-text">SUBTOTAL</span>
 
-            <span class="subtotal-value">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.TongTien )</span>
+            <span class="subtotal-value">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.TongTien)</span>
         </div>
         <div class="mini-action">
 
@@ -98,3 +109,28 @@
     <!--====== End - Mini Product Statistics ======-->
 </div>
 <!--====== End - Dropdown ======-->
+<script>
+    function DeleteLine(id) {
+        $.ajax({
+            url: '/GioHangChiTiets/DeleteLineCartMini',
+            type: 'POST',
+            data: {
+                id: id
+            },
+            success: function (result) {
+                var path = window.location.pathname;
+                if (path.includes("GioHangChiTiets")) {
+                    window.location.reload()
+                } else {
+                    $('#body-mini-cart').empty().html(result)
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    }
+</script>

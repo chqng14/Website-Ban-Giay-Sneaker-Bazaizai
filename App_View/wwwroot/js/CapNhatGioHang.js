@@ -31,7 +31,7 @@
 //    });
 //});
 
-$(window).on('beforeunload', function () {
-    // Xoá giá trị từ localStorage
-    localStorage.removeItem('phiship');
-});
+
+// Hàm xử lý khi ấn vào mũi tên
+
+

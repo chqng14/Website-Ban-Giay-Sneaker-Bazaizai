@@ -26,8 +26,18 @@ namespace App_Data.Repositories
             [Description("Chưa bắt đầu")]
             ChuaBatDau = 2,
             [Description("Đã huỷ")]
-            DaHuy = 3
-
+            DaHuy = 3,
+            [Description("Voucher tặng cho người mới")]
+            VoucherTangMoi = 4,
+            [Description("Voucher tặng cho khách hàng thân thiết")]
+            VoucherThanThiet = 5,
+            //Tại quầy
+            [Description("Hoạt động của bản cứng")]
+            HoatDongCung = 6,
+            [Description("Không hoạt động của bản cứng")]
+            KhongHoatDongCung = 7,
+            [Description("Chưa hoạt động của bản cứng")]    
+           ChuaHoatDongCung = 8,
         }
         /// <summary>
         /// ở đây là voucher
@@ -54,7 +64,9 @@ namespace App_Data.Repositories
             [Description("Đã sử dụng")]
             DaSuDung = 1,
             [Description("Hết hiệu lực")]
-            HetHieuLuc = 2
+            HetHieuLuc = 2,
+            [Description("Đặc biệt")]
+            DacBiet = 3
         }
         public enum TrangThaiHoaDon
         {
@@ -69,7 +81,18 @@ namespace App_Data.Repositories
         {
             [Description("Tại quầy")]
             TaiQuay = 0,
-
+            [Description("Chờ xác nhận")]
+            ChoXacNhan = 1,
+            [Description("Chờ lấy hàng")]
+            ChoLayHang = 2,
+            [Description("Đang giao")]
+            DangGiao = 3,
+            [Description("Đã giao")]
+            DaGiao = 4,
+            [Description("Đã huỷ")]
+            DaHuy = 5,
+            [Description("Trả hàng")]
+            TraHang = 6,
         }
         public enum TrangThaiSaleInProductDetail
         {
@@ -100,10 +123,8 @@ namespace App_Data.Repositories
         }
         public enum GioiTinhMacDinh
         {
-            KhongMuonTraLoi = 0,
             Nam = 1,
-            Nu = 2,
-            Khac = 3
+            Nu = 2
         }
         public enum TrangThaiHoaDonChiTiet
         {
@@ -113,6 +134,23 @@ namespace App_Data.Repositories
             ChuaThanhToan = 1,
             [Description("Đã  thanh toán")]
             DaThanhToan = 2,
+        }
+
+        public enum TrangThaiDanhGia
+        {
+            [Description("Đã duyệt")]
+            DaDuyet = 0,
+            [Description("Đã Ẩn")]
+            DaAn = 1,
+            [Description("Chưa duyệt")]
+            ChuaDuyet = 2,
+        }
+        public enum PTThanhToanChiTiet
+        {
+            [Description("Chưa thanh toán")]
+            ChuaThanhToan = 0,
+            [Description("Đã thanh toán")]
+            DaThanhToan = 1,
         }
     }
 }

@@ -11,8 +11,10 @@ namespace App_Data.IRepositories
     public interface IHoaDonRepos
     {
         public HoaDon TaoHoaDonTaiQuay(HoaDon hoaDon);
-        public List<HoaDonDTO> GetHoaDon();
+        public List<HoaDonViewModel> GetHoaDon();
+        public List<HoaDon> GetHoaDonUpdate();
         public List<HoaDonChoDTO> GetAllHoaDonCho();
         public bool AddBill(HoaDon item);
+        public bool EditBill(HoaDon item);
     }
 }

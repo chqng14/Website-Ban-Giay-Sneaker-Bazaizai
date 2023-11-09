@@ -60,10 +60,24 @@ namespace App_View.Services
                 throw new Exception("Not IsSuccessStatusCode");
             }
         }
+        public async Task<bool> UpdateTrangThaiHoaDonChiTiet(string idHoaDon, int TrangThai)
 
-        public Task<bool> UpdateHoaDonChiTiet(HoaDonChiTietDTO hoaDonChiTietDTO)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var res = await httpClient.PutAsync($"https://localhost:7038/api/HoaDonChiTiet/SuaTrangThaiHoaDon?idHoaDon={idHoaDon}&TrangThai={TrangThai}", null);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await res.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
         }
 
         public async Task<string> UpdateSoLuong(string idHD, string idSanPham, int SoLuongMoi, string SoluongTon)

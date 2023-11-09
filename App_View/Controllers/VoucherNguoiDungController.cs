@@ -70,12 +70,10 @@ namespace App_View.Controllers
             if (MaVoucher != null)
             {
                 // Nếu ID người dùng tồn tại, thì gọi phương thức AddVoucherNguoiDung để thêm Mã Voucher cho người dùng
-                _voucherND.AddVoucherNguoiDung(MaVoucher, idNguoiDung);
-
-                // Trả về một ActionResult khác nếu cần
-                return RedirectToAction("Voucher_wallet", "VoucherNguoiDung");
+                if (await _voucherND.AddVoucherNguoiDung(MaVoucher, idNguoiDung) == true)
+                    return Ok(true);
             }
-            return RedirectToAction("Voucher_wallet");
+            return Ok(false);
         }
         public async Task<IActionResult> Voucher_wallet_history(int? TrangThai)
         {
@@ -105,6 +103,11 @@ namespace App_View.Controllers
             ViewBag.TatCa = voucherNguoiDung; // Gán danh sách lọc được vào ViewBag.TatCa
 
             return View(voucherNguoiDung);
+        }
+        public async Task<IActionResult> TotalSpending()
+        {
+            var NguoiDung=  await _userManager.GetUserAsync(User);        
+            return View(NguoiDung);
         }
     }
 }

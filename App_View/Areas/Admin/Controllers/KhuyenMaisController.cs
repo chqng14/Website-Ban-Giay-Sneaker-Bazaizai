@@ -12,6 +12,12 @@ using System.Net.Http;
 using DocumentFormat.OpenXml.Drawing;
 using Org.BouncyCastle.Ocsp;
 using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Identity;
+using static App_Data.Repositories.TrangThai;
+using App_View.IServices;
+using App_View.Services;
+using App_Data.Repositories;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -20,10 +26,18 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly BazaizaiContext _context;
         private readonly HttpClient _httpClient;
-        public KhuyenMaisController(BazaizaiContext context)
+        private readonly IEmailSender _emailSender;
+        private readonly SignInManager<NguoiDung> _signInManager;
+        private readonly UserManager<NguoiDung> _userManager;
+        private readonly IViewRenderService _viewRenderService;
+        public KhuyenMaisController(BazaizaiContext context, IEmailSender emailSender, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IViewRenderService viewRenderService)
         {
             _context = context;
             _httpClient = new HttpClient();
+            _emailSender = emailSender;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _viewRenderService = viewRenderService;
         }
 
         // GET: Admin/KhuyenMais
@@ -142,9 +156,18 @@ namespace App_View.Areas.Admin.Controllers
                         var streamContent = new StreamContent(formFile.OpenReadStream());
                         streamContent.Headers.Add("Content-Type", formFile.ContentType);
                         content.Add(streamContent, "formFile", formFile.FileName);
-                        var response = await _httpClient.PostAsync($"https://localhost:7038/api/KhuyenMai/Create-KhuyenMai?Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", content);
+                        var response = await _httpClient.PostAsync($"https://localhost:7038/api/KhuyenMai/Create-KhuyenMai?id={khuyenMai.IdKhuyenMai}&Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", content);
                         if (response.IsSuccessStatusCode)
                         {
+                            var lstUser = await _userManager.GetUsersInRoleAsync(ChucVuMacDinh.KhachHang.ToString());
+                            var KM = _context.khuyenMais.Find(khuyenMai.IdKhuyenMai);
+                            var htmlMessage = await _viewRenderService.RenderToStringAsync("KhuyenMai/ViewMail", KM);
+                            foreach (var user in lstUser)
+                            {
+                                await _emailSender.SendEmailAsync(user.Email, "Khuyến mại 100%",
+                                 htmlMessage);
+                            }
+                         
                             return RedirectToAction("Index");
                         }
                         else
@@ -339,14 +362,13 @@ namespace App_View.Areas.Admin.Controllers
         public JsonResult CapNhatTrangThai(string id, int trangThai)
         {
             var khuyenMai = _context.khuyenMais.Find(id);
-            if (trangThai == 3)
+            if (trangThai == (int)TrangThaiSale.BuocDung)
             {
-                khuyenMai.TrangThai = 1;
-
+                khuyenMai.TrangThai = (int)TrangThaiSale.DangBatDau;
             }
             else
             {
-                khuyenMai.TrangThai = 3;
+                khuyenMai.TrangThai = (int)TrangThaiSale.BuocDung;
             }
             _context.khuyenMais.Update(khuyenMai);
             _context.SaveChanges();

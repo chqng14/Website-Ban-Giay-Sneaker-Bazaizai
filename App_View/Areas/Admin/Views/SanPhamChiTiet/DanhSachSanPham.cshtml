@@ -5,6 +5,10 @@
 
 <style>
 
+    div.dataTables_wrapper div.dataTables_length select {
+        width: 62px !important;
+    }
+
     .cursor-image {
         cursor: pointer;
     }
@@ -380,6 +384,11 @@
                 render: function (data, type, row, meta) {
                     return meta.row + 1;
                 },
+                orderable: false
+            },
+            {
+                data: 'ma',
+                title: 'Mã SP',
                 orderable: false
             },
             {

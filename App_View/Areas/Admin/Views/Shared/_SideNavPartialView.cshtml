@@ -1,68 +1,138 @@
-﻿<div class="side-nav">
+﻿@*<div class="side-nav">
+        <div class="side-nav-inner">
+            <ul class="side-nav-menu scrollable">
+                <li class="nav-item dropdown">
+                    <a class="dropdown-toggle" href="javascript:void(0);">
+                        <span class="icon-holder">
+                            <i class="anticon anticon-dashboard"></i>
+                        </span>
+                        <span class="title">Dashboard</span>
+                        <span class="arrow">
+                            <i class="arrow-icon"></i>
+                        </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="/Admin/SanPhamChiTiet/DanhSachSanPham">Danh sách sản phẩm</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="dropdown-toggle" href="javascript:void(0);">
+                                <span class="icon-holder">
+                                    <i class="fas fa-gift"></i>
+                                </span>
+                                <span class="title">Quản lý voucher</span>
+                                <span class="arrow">
+                                    <i class="arrow-icon"></i>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="/Admin/Vouchers/Index">Voucher</a>
+                                </li>
+                            </ul>
+
+                        </li>
+                        <li>
+                            <a asp-controller="BanHangTaiQuay" asp-action="DanhSachHoaDonCho">Bán hàng tại quầy</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="dropdown-toggle" href="javascript:void(0);">
+                                <span class="icon-holder">
+                                    <i class="fas fa-gift"></i>
+                                </span>
+                                <span class="title">Quản lý chức vụ</span>
+                                <span class="arrow">
+                                    <i class="arrow-icon"></i>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="/Admin/Role/GetAllRole">Danh sách chức vụ</a>
+                                    <a asp-page="/Role/GetAllRole">
+                                        Danh sách chức vụ
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="/Admin/Role/Create">Thêm mới chức vụ</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                </li>
+            </ul>
+        </div>
+    </div>*@
+
+<div class="side-nav">
     <div class="side-nav-inner">
         <ul class="side-nav-menu scrollable">
             <li class="nav-item dropdown">
                 <a class="dropdown-toggle" href="javascript:void(0);">
                     <span class="icon-holder">
-                        <i class="anticon anticon-dashboard"></i>
+                        <i class="anticon anticon-hdd"></i>
                     </span>
-                    <span class="title">Dashboard</span>
+                    <span class="title">Quản lý sản phẩm</span>
+                    <span class="arrow">
+                        <i class="arrow-icon"></i>
+                    </span>
+                </a>
+                <ul class="dropdown-menu" style="display: none;">
+                    <li>
+                        <a href="/Admin/SanPhamChiTiet/DanhSachSanPham">Danh sách sản phẩm</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                        <i class="fas fa-gift"></i>
+                    </span>
+                    <span class="title">Quản lý voucher</span>
+                    <span class="arrow">
+                        <i class="arrow-icon"></i>
+                    </span>
+                </a>
+                <ul class="dropdown-menu" style="display: none;">
+                    <li>
+                        <a href="/Admin/Vouchers/Index">Voucher</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                        <i class="fas fa-users-cog"></i>
+                    </span>
+                    <span class="title">Quản lý chức vụ</span>
                     <span class="arrow">
                         <i class="arrow-icon"></i>
                     </span>
                 </a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a href="/Admin/SanPhamChiTiet/DanhSachSanPham">Danh sách sản phẩm</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="dropdown-toggle" href="javascript:void(0);">
-                            <span class="icon-holder">
-                                <i class="fas fa-gift"></i>
-                            </span>
-                            <span class="title">Quản lý voucher</span>
-                            <span class="arrow">
-                                <i class="arrow-icon"></i>
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/Admin/Vouchers/Index">Hiển thị voucher</a>
-                            </li>
-                        </ul>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/Admin/Vouchers/Create">Thêm mới voucher</a>
-                            </li>
-                        </ul>
+                        <a href="/Admin/Role/GetAllRole">Danh sách chức vụ</a>
                     </li>
                     <li>
-                        <a asp-controller="BanHangTaiQuay" asp-action="DanhSachHoaDonCho">Bán hàng tại quầy</a>
+                        <a asp-page="/Role/GetAllRole">Danh sách chức vụ</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="dropdown-toggle" href="javascript:void(0);">
-                            <span class="icon-holder">
-                                <i class="fas fa-gift"></i>
-                            </span>
-                            <span class="title">Quản lý chức vụ</span>
-                            <span class="arrow">
-                                <i class="arrow-icon"></i>
-                            </span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/Admin/Role/GetAllRole">Danh sách chức vụ</a>
-                            </li>
-                        </ul>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a href="/Admin/Role/Create">Thêm mới chức vụ</a>
-                            </li>
-                        </ul>
+                    <li>
+                        <a href="/Admin/Role/Create">Thêm mới chức vụ</a>
                     </li>
                 </ul>
-
+            </li>
+            <li class="nav-item dropdown">
+                <a asp-controller="BanHangTaiQuay" asp-action="DanhSachHoaDonCho">
+                    <span class="icon-holder">
+                        <i class="fas fa-shopping-basket"></i>
+                    </span>
+                    <span class="title">Bán hàng tại quầy</span>
+                </a>
             </li>
         </ul>
     </div>
 </div>
+
+

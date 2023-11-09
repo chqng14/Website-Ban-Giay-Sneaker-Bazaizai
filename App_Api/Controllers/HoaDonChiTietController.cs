@@ -32,6 +32,12 @@ namespace App_Api.Controllers
             return _hoaDonChiTiet.GetHoaDonDTO(idHoaDon);
         }
 
+        [HttpGet("GetAll")]
+        public async Task<IEnumerable<HoaDonChiTiet>> GetAllHoaDon()
+        {
+            return _hoaDonChiTiet.GetAll();
+        }
+
         // GET api/<HoaDonChiTietController>/5
         [HttpGet("GetHoaDonCTById")]
         public HoaDonChiTiet GetHoaDonCTById(string id)
@@ -48,11 +54,16 @@ namespace App_Api.Controllers
         }
 
         // PUT api/<HoaDonChiTietController>/5
-        [HttpPut("Edit")]
-        public async Task<bool> SuaHoaDonDTO(HoaDonChiTietDTO hoaDonChiTietDTO)
+        [HttpPut("SuaTrangThaiHoaDon")]
+        public async Task<bool> SuaTrangThaiHoaDon(string idHoaDon, int TrangThai)
         {
-            var hoadonChiTiet = _mapper.Map<HoaDonChiTiet>(hoaDonChiTietDTO);
-            return _hoaDonChiTiet.EditBillDetail(hoadonChiTiet);
+            var hoadonChiTiet = _hoaDonChiTiet.GetAll().Where(c => c.IdHoaDon == idHoaDon);
+            foreach (var item in hoadonChiTiet)
+            {
+                item.TrangThai = TrangThai;
+                _hoaDonChiTiet.EditBillDetail(item);
+            }
+            return true;
         }
 
         // DELETE api/<HoaDonChiTietController>/5

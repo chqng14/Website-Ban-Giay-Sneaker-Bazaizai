@@ -15,6 +15,10 @@ using AutoMapper;
 using App_Data.Repositories;
 using static App_Data.Repositories.TrangThai;
 using Microsoft.AspNetCore.Identity;
+using App_Data.ViewModels.VoucherNguoiDung;
+using System.Net.Http;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -26,12 +30,14 @@ namespace App_View.Areas.Admin.Controllers
         private readonly IVoucherNguoiDungServices _voucherND;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
-        public VouchersController(IVoucherServices voucherServices, IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
+        private readonly IEmailSender _emailSender;
+        public VouchersController(IVoucherServices voucherServices, IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IEmailSender emailSender)
         {
             _voucherND = voucherNDServices;
             _voucherSV = voucherServices;
             _signInManager = signInManager;
             _userManager = userManager;
+            _emailSender = emailSender;
             _context = new BazaizaiContext();
         }
 
@@ -71,15 +77,10 @@ namespace App_View.Areas.Admin.Controllers
                         break;
                 }
             }
-
             ViewBag.TatCa = lstVoucher; // Gán danh sách lọc được vào ViewBag.TatCa
 
             return View(lstVoucher);
         }
-
-
-
-
         public IActionResult Create()
         {
             return View();
@@ -117,11 +118,6 @@ namespace App_View.Areas.Admin.Controllers
             }
             return View();
         }
-        //public async Task<ActionResult> Details(string id)
-        //{
-        //    var Voucher = (await _voucherSV.GetVoucherDTOById(id));
-        //    return View(Voucher);
-        //}
 
         public async Task<ActionResult> Delete(string id)
         {
@@ -148,15 +144,68 @@ namespace App_View.Areas.Admin.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<ActionResult> GiveVouchersToUsers(string maVoucher)
+        public async Task<ActionResult> GiveVouchersToUsers(string? maVoucher)
         {
             ViewBag.MaVoucher = maVoucher;
+
+            var lstUser = await _userManager.Users.ToListAsync();
+            if (lstUser.Any())
+            {
+                ViewBag.User = lstUser;
+            }
+
             return View();
         }
-        //[HttpGet]
-        //public async Task<ActionResult> GiveVouchersToUsers(string maVoucher)
-        //{
-        //    return View();
-        //}
+        [HttpPost]
+        public async Task<IActionResult> GiveVouchersToUsers([FromBody] AddVoucherRequestDTO addVoucherRequestDTO)
+        {
+
+            if (addVoucherRequestDTO.MaVoucher == null)
+            {
+                return Ok(false);
+            }
+            if (addVoucherRequestDTO.UserId.Any())
+            {
+                var ketQuaThemVoucher = await _voucherND.AddVoucherNguoiDungTuAdmin(addVoucherRequestDTO);
+
+                if (ketQuaThemVoucher == "Tặng voucher thành công")
+                {
+                    foreach (var userId in addVoucherRequestDTO.UserId)
+                    {
+                        var userKhachHang = await _userManager.FindByIdAsync(userId);
+
+                        var subject = "Xác nhận email của bạn";
+                        var body = "Chào bạn,\n\n" +
+                                   "Chúng tôi có một khuyến mại đặc biệt dành cho bạn vào ngày 2/11/2023:\n" +
+                                   "Hot! Khuyến mại 100% cho tất cả khách hàng.\n" +
+                                   "Đừng bỏ lỡ cơ hội này!\n\n" +
+                                   "Trân trọng,\n" +
+                                   "Nhóm hỗ trợ của chúng tôi";
+                        string html = "<p>Hot! Khuyến mại 100% cho tất cả khách hàng trong ngày 2/11/2023</p>";
+                        html += "<img src='https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Sale-Stickers-PNG/100%25_Off_Sale_PNG_Transparent_Image.png?m=1507172109' alt='Hình ảnh khuyến mại' />";
+
+                        await _emailSender.SendEmailAsync(userKhachHang.Email, subject, body + html);
+                    }
+
+                    return Ok(true);
+                }
+
+            }
+
+            return Ok(false);
+        }
+        [HttpPost]
+        public async Task<IActionResult> GiveVoucherForNewUser( string MaVoucher)
+        {
+            var ketQuaThemVoucher = await _voucherND.TangVoucherNguoiDungMoi(MaVoucher);
+            if (ketQuaThemVoucher == true)
+            {
+                return Ok(true);
+            }
+            else
+            {
+                return Ok(false);
+            }
+        }
     }
 }

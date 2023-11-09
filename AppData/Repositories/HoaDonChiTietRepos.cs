@@ -84,7 +84,6 @@ namespace App_Data.Repositories
                 return false;
             }
         }
-
         public HoaDonChiTiet ThemSanPhamVaoHoaDon(HoaDonChiTiet hoaDonChiTiet)
         {
             try
@@ -147,6 +146,10 @@ namespace App_Data.Repositories
             context.hoaDonChiTiets.Remove(hoaDonChiTiet);
             context.SaveChanges();
             return soLuongSanPham.ToString();
+        }
+        public List<HoaDonChiTiet> GetAllHoaDonOnline()
+        {
+            throw new NotImplementedException();
         }
     }
 }

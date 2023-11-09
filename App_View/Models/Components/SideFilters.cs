@@ -23,8 +23,8 @@ namespace App_View.Models.Components
             {
                 model = new FiltersVM();
             }
-               
-                return View(model);
+
+            return View(model);
         }
     }
 }

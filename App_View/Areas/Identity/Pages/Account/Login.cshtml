@@ -3,16 +3,22 @@
 
 @{
     ViewData["Title"] = "Log in";
-    Layout = "/Views/Shared/_Layout.cshtml";
+    Layout = "/Views/Shared/_LayoutQMK.cshtml";
+    var thongbao =  TempData["ErrorMessage"];
+
 }
 
 <partial name="_StatusMessage" for="StatusMessage" />
+@if (TempData.ContainsKey("ErrorMessage"))
+{
+    <partial name="/Areas/Identity/Pages/Account/_StatusMessage.cshtml" model="thongbao" />
 
+}
 <!--====== App Content ======-->
 <div class="app-content">
 
     <!--====== Section 1 ======-->
-    <div class="u-s-p-y-60">
+@*    <div class="u-s-p-y-60">
 
         <!--====== Section Content ======-->
         <div class="section__content">
@@ -35,12 +41,12 @@
             </div>
         </div>
     </div>
-    <!--====== End - Section 1 ======-->
+*@    <!--====== End - Section 1 ======-->
     <!--====== Section 2 ======-->
     <div class="u-s-p-b-60">
 
         <!--====== Section Intro ======-->
-        <div class="section__intro u-s-m-b-60">
+@*        <div class="section__intro u-s-m-b-60">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
@@ -50,7 +56,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>*@
         <!--====== End - Section Intro ======-->
         <!--====== Section Content ======-->
         <div class="section__content">
@@ -70,7 +76,7 @@
                                     </a>
                                 </div>
                                 <h1 class="gl-h1">SIGNIN</h1>
-
+                                 <div asp-validation-summary="All" class="text-danger"></div>
                                 <span class="gl-text u-s-m-b-30">If you have an account with us, please log in.</span>
                                 @if ((Model.ExternalLogins?.Count ?? 0) != 0)
                                 {
@@ -108,7 +114,7 @@
                                     </form>
                                 }
                                 <form class="l-f-o__form" id="account" method="post">
-                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                   
 
                                     <div class="u-s-m-b-30">
 
@@ -135,7 +141,7 @@
                                             <a class="gl-link" href="lost-password.html">Lost Your Password?</a>
                                         </div>
                                     </div>
-                                    <div class="u-s-m-b-30">
+                                  @*  <div class="u-s-m-b-30">
 
                                         <!--====== Check Box ======-->
                                        
@@ -149,7 +155,7 @@
                                             </div>
                                         </div>
                                         <!--====== End - Check Box ======-->
-                                    </div>
+                                    </div>*@
                                 </form>
                             </div>
                         </div>

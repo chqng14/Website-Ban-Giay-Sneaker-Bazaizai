@@ -43,7 +43,7 @@ namespace App_Api.Helpers.Mapping
                     KhuyenMai = item?.TrangThaiSale == 2 ? true : false,
                     TenSanPham = item?.ThuongHieu?.TenThuongHieu + " " + item?.SanPham?.TenSanPham + "-" + item?.KichCo?.SoKichCo,
                     ThuongHieu = item?.ThuongHieu?.TenThuongHieu,
-                    Anh = item?.Anh.OrderBy(a => a.Url)?.FirstOrDefault()?.Url,
+                    Anh = item?.Anh.OrderBy(a => a.NgayTao)?.FirstOrDefault()?.Url,
                     SoLanDanhGia = 32,
                     SoSao = 4
                 })

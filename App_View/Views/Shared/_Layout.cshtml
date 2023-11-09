@@ -16,6 +16,7 @@
     <link href="/images/logo.jpg" rel="shortcut icon">
     <title>Ludus - Electronics, Apparel, Computers, Books, DVDs & more</title>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--====== Google Font ======-->
     @*<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800" rel="stylesheet">*@
 
@@ -62,11 +63,11 @@
                         </a>
                         <!--====== End - Main Logo ======-->
                         <!--====== Search Form ======-->
-                        <form class="main-form">
+                        <form class="main-form" action="/sanphamchitiets/index" method="get">
 
                             <label for="main-search"></label>
 
-                            <input class="input-text input-text--border-radius input-text--style-1" type="text" id="main-search" placeholder="Search">
+                            <input class="input-text input-text--border-radius input-text--style-1" type="text" name="search" id="main-search" placeholder="Search">
 
                             <button class="btn btn--icon fas fa-search main-search-button" type="submit"></button>
                         </form>
@@ -74,7 +75,7 @@
                         <!--====== Dropdown Main plugin ======-->
                         <div class="menu-init" id="navigation">
 
-                            <button class="btn btn--icon toggle-button fas fa-cogs" type="button"></button>
+                           @* <button class="btn btn--icon toggle-button fas fa-cogs" type="button"></button>*@
 
                             <!--====== Menu ======-->
                             <div class="ah-lg-mode">
@@ -83,69 +84,64 @@
 
                                 <!--====== List ======-->
                                 <ul class="ah-list ah-list--design1 ah-list--link-color-secondary">
-                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Account">
-                                        @if (SignInManager.IsSignedIn(User))
-                                        {
-                                            <a><i class="far fa-user-circle"></i></a>
+                                    <partial name="_LoginPartial" />
+                                    @*                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Account">
+                                            @if (SignInManager.IsSignedIn(User))
+                                            {
+                                                <a><i class="far fa-user-circle"></i></a>
 
-                                            <!--====== Dropdown ======-->
 
-                                            <span class="js-menu-toggle"></span>
-                                            <ul style="width:120px">
-                                                <li>
-                                                    <a asp-area="Identity" asp-page="/Account/my-profile">
-                                                        <i class="fas fa-user-circle u-s-m-r-6"></i>
-                                                        <span>Account</span>
-                                                    </a>
-                                                </li>
-                                                <li>
+                                                <span class="js-menu-toggle"></span>
+                                                <ul style="width:120px">
+                                                    <li>
+                                                        <a asp-area="Identity" asp-page="/Account/my-profile">
+                                                            <i class="fas fa-user-circle u-s-m-r-6"></i>
+                                                            <span>Account</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
 
-                                                    <form id="myForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                                        <button type="submit" class="nav-link btn btn-link text-dark">
-                                                            <a>
-                                                                <i class="fas fa-lock-open u-s-m-r-6"></i>
-                                                                <span>Signout</span>
-                                                            </a>
-                                                        </button>
-                                                    </form>
-                                                    @* <a href="signup.html">
-                                                            <i class="fas fa-lock-open u-s-m-r-6"></i>
-                                                            <span>Signout</span>
-                                                        </a>*@
-                                                </li>
-                                            </ul>
-                                        }
-                                        else
-                                        {
-                                            <a><i class="far fa-user-circle"></i></a>
+                                                        <form id="myForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                                            <button type="submit" class="nav-link btn btn-link text-dark">
+                                                                <a>
+                                                                    <i class="fas fa-lock-open u-s-m-r-6"></i>
+                                                                    <span>Signout</span>
+                                                                </a>
+                                                            </button>
+                                                        </form>
 
-                                            <!--====== Dropdown ======-->
+                                                    </li>
+                                                </ul>
+                                            }
+                                            else
+                                            {
+                                                <a><i class="far fa-user-circle"></i></a>
 
-                                            <span class="js-menu-toggle"></span>
-                                            <ul style="width:120px">
 
-                                                <li>
-                                                    <a asp-area="Identity" asp-page="/Account/Register">
-                                                        <i class="fas fa-user-plus u-s-m-r-6"></i>
-                                                        <span>Signup</span>
-                                                    </a>
-                                                </li>
-                                                <li>
-                                                    <a asp-area="Identity" asp-page="/Account/Login">
-                                                        <i class="fas fa-lock u-s-m-r-6"></i>
-                                                        <span>Signin</span>
-                                                    </a>
-                                                </li>
+                                                <span class="js-menu-toggle"></span>
+                                                <ul style="width:120px">
 
-                                            </ul>
-                                        }
-                                        <!--====== End - Dropdown ======-->
-                                    </li>
+                                                    <li>
+                                                        <a asp-area="Identity" asp-page="/Account/Register">
+                                                            <i class="fas fa-user-plus u-s-m-r-6"></i>
+                                                            <span>Signup</span>
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a asp-area="Identity" asp-page="/Account/Login">
+                                                            <i class="fas fa-lock u-s-m-r-6"></i>
+                                                            <span>Signin</span>
+                                                        </a>
+                                                    </li>
+
+                                                </ul>
+                                            }
+                                        </li>
+                                    *@
                                     <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Settings">
 
                                         <a><i class="fas fa-user-cog"></i></a>
 
-                                        <!--====== Dropdown ======-->
 
                                         <span class="js-menu-toggle"></span>
                                         <ul style="width:120px">
@@ -1135,9 +1131,9 @@
                         <!--====== Dropdown Main plugin ======-->
                         <div class="menu-init" id="navigation3">
 
-                            <button class="btn btn--icon toggle-button fas fa-shopping-bag toggle-button-shop" type="button"></button>
-
-                            <span class="total-item-round">2</span>
+@*                            <button class="btn btn--icon toggle-button fas fa-shopping-bag toggle-button-shop" type="button"></button>
+*@
+                            @*<span class="total-item-round">2</span>*@
 
                             <!--====== Menu ======-->
                             <div class="ah-lg-mode">
@@ -1156,7 +1152,7 @@
                                     </li>
                                     <li class="has-dropdown" id="body-mini-cart">
 
-                                       @await Component.InvokeAsync("Cart")
+                                        @await Component.InvokeAsync("Cart")
                                     </li>
                                 </ul>
                                 <!--====== End - List ======-->
@@ -1493,12 +1489,17 @@
 </body>
 </html>
 @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-<link rel="stylesheet" href="~/App_View.styles.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/App_View.styles.css" asp-append-version="true" /> *@
 
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 @* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
 @* <script src="~/js/site.js" asp-append-version="true"></script> *@
 <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger intent="WELCOME"
+              chat-title="BazaizaiStore"
+              agent-id="7922b841-2e11-423a-8f4d-24c1404ea696"
+              language-code="vi"></df-messenger>
 @await RenderSectionAsync("Scripts", required: false)
