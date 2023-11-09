@@ -1,12 +1,12 @@
-﻿@page
+﻿@page "/Đổi Email"
 @model EmailModel
 @{
     ViewData["Title"] = "Manage Email";
     ViewData["ActivePage"] = ManageNavPages.Email;
 }
 
-<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" for="StatusMessage" />
+@*<h3>@ViewData["Title"]</h3>*@
+@*<partial name="_StatusMessage" for="StatusMessage" />
 <div class="row">
     <div class="col-md-6">
         <form id="email-form" method="post">
@@ -41,4 +41,44 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+}*@
+
+
+@{
+    Layout = "/Views/Shared/_LayoutUser.cshtml";
+
 }
+<div class="col-lg-9 col-md-12">
+    <partial name="_StatusMessage" for="StatusMessage" />
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+        <form class="dash-edit-p" id="profile-form" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="dash__pad-2">
+                <h1 class="dash__h1 u-s-m-b-14">Thay đổi địa chỉ email</h1>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="gl-inline">
+                          
+                            <div class="u-s-m-b-30">
+
+                                <label asp-for="Input.NewEmail" asp-for="Input.NewEmail" class="gl-label" for="reg-fname">Địa chỉ email mới</label>
+
+                                <input asp-for="Input.NewEmail" class="input-text input-text--primary-style" id="reg-fname" aria-required="true" placeholder="Nhập địa chỉ email mới của bạn">
+                                <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button id="update-profile-button" id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn btn--e-brand-b-2">Tiếp theo</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

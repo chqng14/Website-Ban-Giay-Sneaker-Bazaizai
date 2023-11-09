@@ -20,7 +20,7 @@ namespace App_Data.Configurations
             builder.Property(e => e.TrangThai).HasDefaultValueSql("((0))");
             builder.HasOne(d => d.NguoiDung).WithMany(p => p.DanhGias).HasForeignKey(d => d.IdNguoiDung);
             builder.HasOne(d => d.SanPhamChiTiet).WithMany(p => p.DanhGias).HasForeignKey(p=>p.IdSanPhamChiTiet);
-            builder.HasOne(d => d.ParentDanhGia).WithMany(p => p.ChildDanhGias).HasForeignKey(d => d.ParentId);
+            //builder.HasOne(d => d.ParentDanhGia).WithMany(p => p.ChildDanhGias).HasForeignKey(d => d.ParentId);
         }
     }
 }
