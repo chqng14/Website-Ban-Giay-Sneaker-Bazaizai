@@ -35,9 +35,9 @@
 
     <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
         <div class="dash__pad-2">
-            <h1 class="dash__h1 u-s-m-b-14">My Profile</h1>
+            <h1 class="dash__h1 u-s-m-b-14">Thông tin của tôi</h1>
 
-            <span class="dash__text u-s-m-b-30">Look all your info, you could customize your profile.</span>
+            <span class="dash__text u-s-m-b-30">Xem tất cả thông tin của bạn, bạn có thể tùy chỉnh hồ sơ của mình.</span>
             <div class="row">
                 <div class="col-lg-8 u-s-m-b-30" style=" border-right: 1px solid green;">
                     <div class="row">
@@ -46,7 +46,7 @@
                             <span class="dash__text">@Model.Username</span>
                         </div>
                         <div class="col-lg-6 u-s-m-b-30">
-                            <h2 class="dash__h2 u-s-m-b-8">Tên</h2>
+                            <h2 class="dash__h2 u-s-m-b-8">Họ và tên</h2>
                             <span class="dash__text">@Model.FullName</span>
                         </div>
                         <div class="col-lg-6 u-s-m-b-30">
@@ -61,7 +61,7 @@
                             <h2 class="dash__h2 u-s-m-b-8">Email</h2>
                             <span class="dash__text">@Model.Email</span>
                             <div class="dash__link dash__link--secondary">
-                                <a href="#">Change</a>
+                                <a href="#">Thay đổi</a>
                             </div>
                         </div>
                         <div class="col-lg-6 u-s-m-b-30">
@@ -70,16 +70,16 @@
                             {
                                 <span class="dash__text">@Model.Phone</span>
                                 <div class="dash__link dash__link--secondary">
-                                    <a href="#">Change</a>
+                                    <a href="#">Thay đổi</a>
                                 </div>
 
                             }
                             else
                             {
-                                <span class="dash__text">Please enter your mobile</span>
+                                <span class="dash__text">Vui lòng nhập điện thoại di động của bạn</span>
                                 <div class="dash__link dash__link--secondary">
 
-                                    <a href="#">Add</a>
+                                    <a href="#">Thêm</a>
                                 </div>
                             }
                         </div>
@@ -102,17 +102,17 @@
                 <div class="col-lg-12">
                     <div class="dash__link dash__link--secondary u-s-m-b-30">
 
-                        <a data-modal="modal" data-modal-id="#dash-newsletter">Subscribe Newsletter</a>
+                        <a data-modal="modal" data-modal-id="#dash-newsletter">Theo dõi bản tin</a>
                     </div>
                     <div class="u-s-m-b-16">
                         <a class="dash__custom-link btn--e-transparent-brand-b-2" asp-area="Identity" asp-page="/Account/Manage/Index">
-                            Edit Profile
+                            Chỉnh sửa hồ sơ
                         </a>
 
                     </div>
                     <div>
 
-                        <a class="dash__custom-link btn--e-brand-b-2" href="#">Change Password</a>
+                        <a class="dash__custom-link btn--e-brand-b-2" href="#">Đổi mật khẩu</a>
                     </div>
                 </div>
             </div>

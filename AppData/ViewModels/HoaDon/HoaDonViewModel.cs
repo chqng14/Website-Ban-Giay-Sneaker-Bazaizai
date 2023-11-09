@@ -27,6 +27,7 @@ namespace App_Data.ViewModels.HoaDon
         public double? TienGiam { get; set; }
         public double? TongTien { get; set; }
         public string? MoTa { get; set; }
+        public string? LiDoHuy { get; set; }
         public int? TrangThaiGiaoHang { get; set; }
         public int? TrangThaiThanhToan { get; set; }
         public string? LoaiThanhToan { get; set; }

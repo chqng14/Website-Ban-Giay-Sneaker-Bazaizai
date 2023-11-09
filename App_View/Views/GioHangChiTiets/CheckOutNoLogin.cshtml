@@ -810,6 +810,10 @@
         $(document).ready(function () {
             $('#placeOrderButton').click(function (e) {
                 e.preventDefault();
+                if ($('input[type=radio]:checked').length === 0) {
+                    alert('Vui lòng chọn một lựa chọn.');
+                    return;
+                }
                 var selectedCity, selectedDistrict, selectedWard, inputAddressBill, DiaChiFull;
 
                 
@@ -845,7 +849,9 @@
                                 data: paymentFormData,
                                 success: function (paymentResponse) {
                                     if (paymentResponse.idHoaDon != null) {
-                                        UpdateVoucher()
+                                        if (IdVoucher != "") {
+                                            UpdateVoucher()
+                                        }
                                         if (paymentResponse.url != null) {
                                             window.location.href = paymentResponse.url;
                                         } else {

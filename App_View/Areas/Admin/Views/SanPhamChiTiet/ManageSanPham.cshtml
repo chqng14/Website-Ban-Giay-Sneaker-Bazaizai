@@ -847,7 +847,7 @@
         await Promise.all(ajaxPromises);
         $('#preloader').hide();
 
-        $(".formatPrice").each(function () {
+        $(".accordion").find(".formatPrice").each(function () {
             var autoNumeric = new AutoNumeric(this, {
                 decimalCharacter: ".",
                 digitGroupSeparator: ",",
@@ -859,7 +859,7 @@
             });
         });
 
-        $(".formatNumber").each(function () {
+        $(".accordion").find(".formatNumber").each(function () {
             var autoNumeric = new AutoNumeric(this, {
                 decimalCharacter: ".",
                 digitGroupSeparator: ",",
@@ -869,7 +869,7 @@
             });
         });
 
-        $(".formatKhoiLuong").each(function () {
+        $(".accordion").find(".formatKhoiLuong").each(function () {
             var autoNumeric = new AutoNumeric(this, {
                 decimalCharacter: ".",
                 digitGroupSeparator: ",",

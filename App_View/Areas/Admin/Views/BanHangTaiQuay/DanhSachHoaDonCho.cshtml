@@ -25,14 +25,49 @@
                             @{
                                 foreach (var item in Model)
                                 {
-                                        <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a><span class="ui-icon ui-icon-close" role="presentation">Close</span></li>
+                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a></li>
                                 }
                             }
                         </ul>
                         @{
                             foreach (var item in Model)
                             {
-                                    <div id="tab-@item.MaHoaDon" style="height:300px">@item.MaHoaDon <div style="background-color:red;height:100%"></div></div>
+                                <div id="tab-@item.MaHoaDon" style="height:700px">
+                                    <div class="table-responsive" style=" height:650px; overflow-y: scroll; overflow-x: hidden">
+
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
+                                                    <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
+                                                    <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
+                                                    <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
+                                                    <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
+                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
+                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
+                                                    int stt = 1;
+                                                    foreach (var hoaDonChiTiet in item.hoaDonChiTietDTOs)
+                                                    {
+                                                        <tr scope="col" id="hdct-@hoaDonChiTiet.IdSanPhamChiTiet">
+                                                            <td>@stt</td>
+                                                            <td hidden>@hoaDonChiTiet.IdSanPhamChiTiet</td>
+                                                            <td>@hoaDonChiTiet.MaSanPham</td>
+                                                            <td>@hoaDonChiTiet.TenSanPham</td>
+                                                            <td>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", hoaDonChiTiet.GiaBan)</td>
+                                                            <td><input type="number" max="1000" min="1" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onchange="suaSoLuongSanPham('@hoaDonChiTiet.IdSanPhamChiTiet',this)" value="@hoaDonChiTiet.SoLuong" /></td>
+                                                            <td><a class="btn btn-tone" onclick="XoaSanPhamTrongHoaDon('hdct-@hoaDonChiTiet.IdSanPhamChiTiet','@hoaDonChiTiet.IdSanPhamChiTiet')">X</a></td>
+                                                        </tr>
+                                                        stt++;
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             }
                         }
                     </div>
@@ -40,31 +75,12 @@
             </div>
             <div class="row">
                 <div class="col-4" style="margin-left: -15px;">
-                    <input type="text" class="form-control" placeholder="Tìm kiếm sản phẩm">
+                    <input type="text" class="form-control" oninput="timKiem(this.value)" id="timKiemSanPham" placeholder="Tìm kiếm sản phẩm">
                 </div>
                 <div class="col-8"></div>
             </div>
             <div class="row" style="height: 775px; overflow-y: scroll; overflow-x: hidden">
                 <div class="row" id="body-danhsach">
-                    @{
-                        @*foreach (var item in context.sanPhamChiTiets.ToList())
-                        {
-                                <div class="col-3">
-                                    <div class="card" style="width: 16rem; ">
-                                        <div class="card-body">
-                                            <h5 class="card-title">@item.SanPham</h5>
-                                            <img src="@context.Anh.FirstOrDefault(c=>c.IdSanPhamChiTiet == item.IdChiTietSp).Url" class="card-img-top" alt="...">
-                                            <p class="card-text">
-                                                <span style="color: red;">Giá: @item.GiaBan</span><br>
-                                                <span>Số lượng: @item.SoLuongTon</span>
-                                                <a href="#" class="btn btn-success" style="float: right;">Add</a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                        }*@
-                    }
-
                 </div>
             </div>
         </div>
@@ -83,43 +99,45 @@
                     <table>
                         <tr>
                             <td>Mã hóa đơn: </td>
-                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                            <td><input class="form-control" id="MaHoaDonDangChon" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                         </tr>
                         <tr>
                             <td>Mã nhân viên: </td>
-                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                            <td><input class="form-control" id="IdNhanVienTaoHoaDon" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                         </tr>
                         <tr>
                             <td>Ngày tạo: </td>
-                            <td><input class="form-control" type="date" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                            <td><input class="form-control" id="NgayTaoHoaDon" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                         </tr>
                         <tr>
                             <td>Tổng tiền hàng: </td>
-                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                            <td><input class="form-control" type="text" id="TongTienHoaDon" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                         </tr>
                         <tr>
-                            <td>Mức ưu đãi: </td>
-                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
+                            <td>VouCher: </td>
+                            <td><input class="form-control" type="text" id="MaVoucher" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
                         </tr>
                         <tr>
-                            <td>Giảm giá: </td>
-                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
+                            <td>Số tiền voucher giảm:</td>
+                            <td><input class="form-control" type="text" id="VoucherGiam" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                        </tr>
+                        <tr>
+                            <td>Số tiền khuyến mãi giảm:</td>
+                            <td><input class="form-control" type="text" id="KhuyenMaiGiam" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                         </tr>
                         <tr>
                             <td>Tổng tiền: </td>
-                            <td><input class="form-control" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                            <td><input class="form-control" type="text" id="SoTienPhaiTra" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                         </tr>
                         <tr>
                             <td>HT thanh toán: </td>
                             <td>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                                    <label class="form-check-label" for="inlineRadio1">Tiền mặt</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                                    <label class="form-check-label" for="inlineRadio2">Chuyển khoản</label>
-                                </div>
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected>Chọn hình thức thanh toán</option>
+                                    <option value="1">Tiền mặt</option>
+                                    <option value="2">Chuyển khoản</option>
+                                    <option value="3">Cả tiền mặt cả chuyển khoản</option>
+                                </select>
                             </td>
                         </tr>
                         <tr>
@@ -132,7 +150,7 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td><button class="btn btn-success">Thanh toán</button> <button class="btn btn-danger">Hủy</button></td>
+                            <td><button class="btn btn-success">Thanh toán</button> <button class="btn btn-danger" onclick="HuyHoaDon()">Hủy</button></td>
                         </tr>
                     </table>
                 </div>
@@ -141,32 +159,46 @@
     </div>
 </div>
 <script>
-    $(() => {
-        $.ajax({
-            url: '/Admin/BanHangTaiQuay/LoadPartialViewDanhSachSanPham',
-            type: 'GET',
-            success: function (result) {
-                console.log(result)
-                $('#body-danhsach').append(result)
-            },
-            error: function (xhr, status, error) {
-                console.log(xhr.responseText);
-                console.log(status);
-                console.log(error);
-                console.log(xhr);
-            }
-        });
-    })
+    var loading = false;
+    var maHoaDonChoSelect = "";
     $(function () {
         $("#tabs").tabs({
             beforeActivate: function (event, ui) {
                 if (ui.newTab.hasClass("ui-state-disabled")) {
                     event.preventDefault();
                 }
+            },
+            activate: function (event, ui) {
+                if (loading) {
+                    return;
+                }
+                loading = true;
+                var maHoaDon = $("#tabs .ui-tabs-active a").text();
+                $.ajax({
+                    url: '/Admin/BanHangTaiQuay/HoaDonDuocChon?maHD=' + maHoaDon,
+                    type: 'GET',
+                    success: function (result) {
+                        $("#MaHoaDonDangChon").val(result.maHoaDon);
+                        $("#NgayTaoHoaDon").val(result.ngayTao);
+                        $("#TongTienHoaDon").val(result.tongTienGoc.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#SoTienPhaiTra").val(result.tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#KhuyenMaiGiam").val(result.soTienKhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#MaVoucher").val("");
+                        loading = false;
+                    },
+                    error: function (xhr, status, error) {
+
+                    }
+                });
             }
         });
 
         $("#create-tab").on("click", function () {
+            if (loading) {
+                return;
+            }
+            loading = true;
             if ($("#tabs ul li").length < 10) {
                 var tabIndex = "";
                 var tabTitle = "";
@@ -178,15 +210,98 @@
                         tabIndex = response;
                         tabTitle = response;
                         var tabContent = tabIndex
-                        $("<li><a href='#tab-" + tabIndex + "'>" + tabTitle + "</a><span class='ui-icon ui-icon-close' role='presentation'>Close</span></li>").appendTo("#tabs ul");
-                        $("<div id='tab-" + tabIndex + "'>" + tabContent + "</div>").appendTo("#tabs");
+                        $("<li><a href='#tab-" + tabIndex + "'>" + tabTitle + "</a></li>").appendTo("#tabs ul");
+                        $("<div id='tab-" + tabIndex + "' style='height: 700px'></div>").appendTo("#tabs");
+                        const tableElement = document.createElement('table');
+                        tableElement.classList.add('table');
+
+                        const tableHeadElement = document.createElement('thead');
+                        const tableHeadRowElement = document.createElement('tr');
+
+                        const sttHeadingElement = document.createElement('th');
+                        sttHeadingElement.textContent = 'STT';
+                        sttHeadingElement.style.width = '10%';
+                        sttHeadingElement.style.position = 'sticky';
+                        sttHeadingElement.style.top = '0';
+                        sttHeadingElement.style.backgroundColor = 'white';
+                        tableHeadRowElement.appendChild(sttHeadingElement);
+
+                        const idSanPhamHeadingElement = document.createElement('th');
+                        idSanPhamHeadingElement.textContent = 'IdSanPham';
+                        idSanPhamHeadingElement.style.width = '0%';
+                        idSanPhamHeadingElement.style.position = 'sticky';
+                        idSanPhamHeadingElement.style.top = '0';
+                        idSanPhamHeadingElement.style.backgroundColor = 'white';
+                        idSanPhamHeadingElement.style.display = 'none';
+                        tableHeadRowElement.appendChild(idSanPhamHeadingElement);
+
+                        const maSanPhamHeadingElement = document.createElement('th');
+                        maSanPhamHeadingElement.textContent = 'Mã sản phẩm';
+                        maSanPhamHeadingElement.style.width = '20%';
+                        maSanPhamHeadingElement.style.position = 'sticky';
+                        maSanPhamHeadingElement.style.top = '0';
+                        maSanPhamHeadingElement.style.backgroundColor = 'white';
+                        tableHeadRowElement.appendChild(maSanPhamHeadingElement);
+
+                        const tenSanPhamHeadingElement = document.createElement('th');
+                        tenSanPhamHeadingElement.textContent = 'Tên sản phẩm';
+                        tenSanPhamHeadingElement.style.width = '35%';
+                        tenSanPhamHeadingElement.style.position = 'sticky';
+                        tenSanPhamHeadingElement.style.top = '0';
+                        tenSanPhamHeadingElement.style.backgroundColor = 'white';
+                        tableHeadRowElement.appendChild(tenSanPhamHeadingElement);
+
+                        const giaBanHeadingElement = document.createElement('th');
+                        giaBanHeadingElement.textContent = 'Giá bán';
+                        giaBanHeadingElement.style.width = '15%';
+                        giaBanHeadingElement.style.position = 'sticky';
+                        giaBanHeadingElement.style.top = '0';
+                        giaBanHeadingElement.style.backgroundColor = 'white';
+                        tableHeadRowElement.appendChild(giaBanHeadingElement);
+
+                        const soLuongHeadingElement = document.createElement('th');
+                        soLuongHeadingElement.textContent = 'Số lượng';
+                        soLuongHeadingElement.style.width = '10%';
+                        soLuongHeadingElement.style.position = 'sticky';
+                        soLuongHeadingElement.style.top = '0';
+                        soLuongHeadingElement.style.backgroundColor = 'white';
+                        tableHeadRowElement.appendChild(soLuongHeadingElement);
+
+                        const xoaSanPhamHeadingElement = document.createElement('th');
+                        xoaSanPhamHeadingElement.textContent = 'Xóa sản phẩm';
+                        xoaSanPhamHeadingElement.style.width = '10%';
+                        xoaSanPhamHeadingElement.style.position = 'sticky';
+                        xoaSanPhamHeadingElement.style.top = '0';
+                        xoaSanPhamHeadingElement.style.backgroundColor = 'white';
+                        tableHeadRowElement.appendChild(xoaSanPhamHeadingElement);
+
+                        tableHeadElement.appendChild(tableHeadRowElement);
+
+                        const tableBodyElement = document.createElement('tbody');
+
+                        // Populate table body with data
+
+                        // ...
+
+                        tableElement.appendChild(tableHeadElement);
+                        tableElement.appendChild(tableBodyElement);
+                        const responsiveDivElement = document.createElement('div');
+                        responsiveDivElement.classList.add('table-responsive');
+                        responsiveDivElement.style.height = '650px';
+                        responsiveDivElement.style.overflowY = 'scroll';
+                        responsiveDivElement.style.overflowX = 'hidden';
+                        responsiveDivElement.appendChild(tableElement);
+                        const divElement = document.getElementById('tab-' + tabIndex);
+                        divElement.appendChild(responsiveDivElement);
                         $("#tabs").tabs("refresh");
+                        loading = false;
                     },
                     error: function (error) {
                         console.error(error);
                     },
                 });
             }
+            loading = false;
         });
 
         $("#tabs").on("click", ".ui-icon-close", function () {
@@ -195,6 +310,134 @@
             $("#tabs").tabs("refresh");
         });
     });
+    $(() => {
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/LoadPartialViewDanhSachSanPham',
+            type: 'GET',
+            success: function (result) {
+                $('#body-danhsach').append(result)
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+        var maHoaDon = $("#tabs .ui-tabs-active a").text();
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/HoaDonDuocChon?maHD=' + maHoaDon,
+            type: 'GET',
+            success: function (result) {
+                $("#MaHoaDonDangChon").val(result.maHoaDon);
+                $("#NgayTaoHoaDon").val(result.ngayTao);
+                $("#TongTienHoaDon").val(result.tongTienGoc.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#SoTienPhaiTra").val(result.tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#KhuyenMaiGiam").val(result.soTienKhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#MaVoucher").val("");
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+    })
+    function timKiem(value) {
+        if (loading) {
+            return;
+        }
+        loading = true;
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/LoadPartialViewDanhSachSanPham?tukhoa=' + value,
+            type: 'GET',
+            success: function (result) {
+                $('#body-danhsach').empty();
+                $('#body-danhsach').append(result);
+                loading = false;
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+    };
+    function HuyHoaDon() {
+        var selectedTabId = $("#tabs .ui-tabs-active a").attr("href"); // Lấy ID của tab đang được chọn
+        $(selectedTabId).remove(); // Xóa nội dung tab
+        $("#tabs ul li.ui-tabs-active").remove(); // Xóa tab từ danh sách tab
+        $("#tabs").tabs("refresh");
+    }
+    function suaSoLuongSanPham(idsanpham, inputElement) {
+        if (loading) {
+            return;
+        }
+        loading = true;
+        var newValue = inputElement.value;
+        var element = document.getElementById(idsanpham);
+        var maHoaDon = $("#tabs .ui-tabs-active a").text();
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/UpdateSoLuong?maHD=' + maHoaDon + '&idSanPham=' + idsanpham + '&SoLuongMoi=' + newValue,
+            type: 'PUT',
+            success: function (result) {
+                if (result.trangThai) {
+
+                    element.textContent = result.soLuongConLai;
+                    var tongTien = parseInt($("#TongTienHoaDon").val().replace(/\D/g, ''), 10) + result.tongTienThayDoi;
+                    var tienPhaiTra = parseInt($("#SoTienPhaiTra").val().replace(/\D/g, ''), 10) + result.soTienTraLaiThayDoi;
+                    var khuyenMaiGiam = parseInt($("#KhuyenMaiGiam").val().replace(/\D/g, ''), 10) + result.soTienKhyenMaiGiam;
+                    $("#TongTienHoaDon").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#SoTienPhaiTra").val(tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#MaVoucher").val("");
+                    alert("Số lượng đủ")
+                    loading = false;
+                }
+                else {
+                    element.textContent = result.soLuongConLai;
+                    inputElement.value = result.soLuongCu;
+                    alert("Số lượng không đủ")
+                    loading = false;
+                }
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+        if (newValue == 0 || newValue == "") {
+            var foundElement = $("#tab-" + maHoaDon + " table tbody").find("tr[id='hdct-" + idsanpham + "']");
+            foundElement.remove();
+        }
+    }
+    function isInteger(value) {
+        return /^\d+$/.test(value);
+    }
+    function XoaSanPhamTrongHoaDon(idTr, idSanPham) {
+        if (loading) {
+            return;
+        }
+        loading = true;
+        var maHoaDon = $("#tabs .ui-tabs-active a").text();
+        var element = document.getElementById(idSanPham);
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/XoaSanPhamKhoiHoaDon?maHD=' + maHoaDon + '&idSanPham=' + idSanPham,
+            type: 'DELETE',
+            success: function (result) {
+
+                element.textContent = result.soLuongConLai;
+                var tongTien = parseInt($("#TongTienHoaDon").val().replace(/\D/g, ''), 10) + result.tongTienThayDoi;
+                var tienPhaiTra = parseInt($("#SoTienPhaiTra").val().replace(/\D/g, ''), 10) + result.soTienTraLaiThayDoi;
+                var khuyenMaiGiam = parseInt($("#KhuyenMaiGiam").val().replace(/\D/g, ''), 10) + result.soTienKhyenMaiGiam;
+                $("#TongTienHoaDon").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#SoTienPhaiTra").val(tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $("#MaVoucher").val("");
+                loading = false;
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+        var foundElement = $("#tab-" + maHoaDon + " table tbody").find("tr[id='" + idTr + "']");
+        foundElement.remove();
+    }
 </script>
 @section Scripts {
     @{

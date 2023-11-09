@@ -22,11 +22,11 @@ namespace App_Data.Models
 
         public string? MoTa { get; set; }
         public string? ChatLuongSanPham { get; set; }
-        public int SuaDoi { get; set; } = 1;// Số lần sửa đổi
-        public int LuotYeuThich { get; set; } = 0;
-        public virtual SanPhamChiTiet SanPhamChiTiet { get; set; }
-        public virtual NguoiDung NguoiDung { get; set; }
-        public DanhGia ParentDanhGia { get; set; }
+        public int? SuaDoi { get; set; } = 1;// Số lần sửa đổi
+        public int? LuotYeuThich { get; set; } = 0;
+        public virtual SanPhamChiTiet? SanPhamChiTiet { get; set; }
+        public virtual NguoiDung? NguoiDung { get; set; }
+        public DanhGia? ParentDanhGia { get; set; }
         public ICollection<DanhGia> ChildDanhGias { get; set; }
 
     }

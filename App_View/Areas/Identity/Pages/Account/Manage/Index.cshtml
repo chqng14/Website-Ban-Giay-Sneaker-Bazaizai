@@ -1,4 +1,5 @@
 ﻿@page "/EditProfile"
+@using static App_Data.Repositories.TrangThai;
 @model IndexModel
 @{
     //ViewData["Title"] = "Profile";
@@ -20,7 +21,7 @@
             border-radius: 50%;
         }
 
-        .card h2 {
+        .card span {
             margin-top: 15px;
         }
 
@@ -38,16 +39,16 @@
         <form class="dash-edit-p" id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="dash__pad-2">
-                <h1 class="dash__h1 u-s-m-b-14">Edit Profile</h1>
-                @if (string.IsNullOrEmpty(Model.Input.Name) && string.IsNullOrEmpty(Model.Phone) && string.IsNullOrEmpty(Model.Input.NgaySinh.ToString()) && string.IsNullOrEmpty(Model.Input.GioiTinh.ToString()))
+                <h1 class="dash__h1 u-s-m-b-14">Chỉnh sửa hồ sơ</h1>
+               @* @if ( string.IsNullOrEmpty(Model.Phone) && string.IsNullOrEmpty(Model.Input.NgaySinh.ToString()) && string.IsNullOrEmpty(Model.Input.GioiTinh.ToString()))
                 {
-                    <span class="dash__text u-s-m-b-30">Looks like you haven't update your profile</span>
+                    <span class="dash__text u-s-m-b-30">Có vẻ như bạn chưa cập nhật hồ sơ của mình</span>
 
-                }
+                }*@
 
                 <div class="dash__link dash__link--secondary u-s-m-b-30">
 
-                    <a data-modal="modal" data-modal-id="#dash-newsletter">Subscribe Newsletter</a>
+                    <a data-modal="modal" data-modal-id="#dash-newsletter">Theo dõi bản tin</a>
                 </div>
 
                 <div class="row">
@@ -59,15 +60,24 @@
                                 <span asp-validation-for="Input.Username" class="text-danger"></span>
                             </div>
                             <div class="col-lg-6 u-s-m-b-30">
-                                <label asp-for="Input.Name" class="gl-label" for="reg-fname"> Tên </label>
+                                <label asp-for="Input.Name" class="gl-label" for="reg-fname"> Họ và tên </label>
                                 <input asp-for="Input.Name" class="input-text input-text--primary-style" type="text" id="reg-fname">
                                 <span asp-validation-for="Input.Name" class="text-danger"></span>
                             </div>
                             <div class="col-lg-6 u-s-m-b-30">
                                 <label asp-for="Input.GioiTinh" class="gl-label" for="reg-fname">Giới tính </label>
-                                <input asp-for="Input.GioiTinh" class="input-text input-text--primary-style" type="text" id="reg-fname">
+                                @*<input asp-for="Input.GioiTinh" class="input-text input-text--primary-style" type="text" id="reg-fname">*@
+                                <select class="input-text input-text--primary-style" asp-for="Input.GioiTinh">
+                                    <option class="hidden" selected disabled>Giới tính</option>
+                                    <option value="@((int)GioiTinhMacDinh.Nam)">Nam</option>
+                                    <option value="@((int)GioiTinhMacDinh.Nu)">Nữ</option>
+
+                                </select>
                                 <span asp-validation-for="Input.GioiTinh" class="text-danger"></span>
                             </div>
+                           
+
+
                             <div class="col-lg-6 u-s-m-b-30">
                                 <label asp-for="Input.NgaySinh" class="gl-label" for="reg-fname">Ngày sinh </label>
                                 <input asp-for="Input.NgaySinh" class="input-text input-text--primary-style" type="text" id="reg-fname">
@@ -78,7 +88,7 @@
 @*                                <h2 class="dash__h2 u-s-m-b-8">Email</h2>
 *@                                <span class="dash__text">@Model.Email</span>
                                 <div class="dash__link dash__link--secondary">
-                                    <a href="#">Change</a>
+                                    <a href="#">Thay đổi</a>
                                 </div>
                             </div>
                             <div class="col-lg-6 u-s-m-b-30">
@@ -88,16 +98,16 @@
                                 {
                                     <span class="dash__text">@Model.Phone</span>
                                     <div class="dash__link dash__link--secondary">
-                                        <a href="#">Change</a>
+                                        <a href="#">Thay đổi</a>
                                     </div>
 
                                 }
                                 else
                                 {
-                                    <span class="dash__text">Please enter your mobile</span>
+                                    <span class="dash__text">Vui lòng nhập điện thoại di động của bạn</span>
                                     <div class="dash__link dash__link--secondary">
 
-                                        <a href="#">Add</a>
+                                        <a href="#">Thêm</a>
                                     </div>
                                 }
                             </div>
@@ -109,14 +119,15 @@
                                 <div class="centered-content">
                                     
                                     <img id="imagePreview" class="profile_img" src="@Model.Input.AnhDaiDien" alt="student dp">
-                                    <label class="input-group-text" for="imageInput">Upload</label>
-                                    <input style="display:none" id="imageInput" asp-for="Input.AnhDaiDien" type="file" class="form-control" accept=".jpg, .jpeg, .png" />
+                                    <label class="gl-label" for="imageInput" style="background-color:aliceblue; margin-top: 15px; cursor: pointer;">Chọn ảnh</label>
                                     
-                                    <h2 class=" dash__h2 u-s-m-b-8">
+                                    <input style="display:none" id="imageInput" asp-for="Input.AnhDaiDien" type="file" class="form-control" accept=".jpg, .jpeg, .png" />
+                                    <span class="dash__text">
                                         Dụng lượng file tối đa 1 MB
                                         <br />
                                         Định dạng:.jpg, .jpeg, .png
-                                    </h2>
+                                    </span>
+                                    
                                     
                                 </div>
                             </div>
@@ -127,7 +138,7 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                        <button id="update-profile-button" type="submit" class="btn btn--e-brand-b-2">Save</button>
+                        <button id="update-profile-button" type="submit" class="btn btn--e-brand-b-2">Lưu</button>
                     </div>
                 </div>
             </div>

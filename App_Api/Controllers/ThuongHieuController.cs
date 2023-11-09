@@ -29,15 +29,6 @@ namespace App_Api.Controllers
 
         [HttpPost]
 
-        //public bool CreateThuongHieu(ThuongHieu a)
-        //{
-        //    ThuongHieu b = new ThuongHieu();
-        //    b.IDThuongHieu = Guid.NewGuid();
-        //    b.MaThuongHieu = a.MaThuongHieu;
-        //    b.TenThuongHieu = a.TenThuongHieu;
-        //    b.TrangThai = a.TrangThai;
-        //    return repos.AddItem(b);
-        //}
         public bool CreateThuongHieu( int trangThai, string Ten)
         {
             string MaTS;

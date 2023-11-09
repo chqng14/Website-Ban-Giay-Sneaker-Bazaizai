@@ -73,5 +73,20 @@ namespace App_Api.Controllers
             var hoadonChiTiet = _hoaDonChiTiet.GetAll().FirstOrDefault(c => c.IdHoaDonChiTiet == id);
             return _hoaDonChiTiet.RemoveBillDetail(hoadonChiTiet);
         }
+        [HttpPost("ThemSanPhamVaoHoaDon")]
+        public async Task<HoaDonChiTiet> ThemSanPhamVaoHoaDon(HoaDonChiTiet hoaDonChiTiet)
+        {
+            return _hoaDonChiTiet.ThemSanPhamVaoHoaDon(hoaDonChiTiet);
+        }
+        [HttpPut("SuaSoLuong")]
+        public async Task<string> SuaSoLuong(string idHD, string idSanPham, int SoLuongMoi, string SoluongTon)
+        {
+            return _hoaDonChiTiet.UpdateSoLuong(idHD,idSanPham,SoLuongMoi,SoluongTon);
+        }
+        [HttpDelete("XoaSanPhamKhoiHoaDon")]
+        public async Task<string> XoaSanPhamKhoiHoaDon(string idHD, string idSanPham)
+        {
+            return _hoaDonChiTiet.XoaSanPhamKhoiHoaDon(idHD, idSanPham);
+        }
     }
 }
