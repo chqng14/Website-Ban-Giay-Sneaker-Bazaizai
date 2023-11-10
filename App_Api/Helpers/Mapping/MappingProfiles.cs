@@ -34,6 +34,10 @@ namespace App_Api.Helpers.Mapping
         private readonly BazaizaiContext bazaizaiContext = new BazaizaiContext();
         public MappingProfiles()
         {
+            CreateMap<HoaDon, HoaDonDTO>();
+            CreateMap<HoaDonDTO, HoaDon>();
+            CreateMap<HoaDonChiTiet, HoaDonChiTietTaiQuay>();
+
             CreateMap<MauSacDTO, MauSac>();
             CreateMap<XuatXuDTO, XuatXu>();
             CreateMap<VoucherDTO, Voucher>().ReverseMap();
@@ -147,9 +151,6 @@ namespace App_Api.Helpers.Mapping
                     );
             CreateMap<HoaDonDTO, HoaDon>().ReverseMap();
             CreateMap<HoaDon, HoaDonViewModel>().ForMember(
-                        dest => dest.MaVoucher,
-                        opt => opt.MapFrom(src => src.Voucher.MaVoucher)
-                    ).ForMember(
                         dest => dest.TenNguoiNhan,
                         opt => opt.MapFrom(src => src.ThongTinGiaoHang.TenNguoiNhan)
                     ).ForMember(

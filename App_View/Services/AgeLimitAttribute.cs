@@ -25,9 +25,10 @@ namespace App_View.Services
             {
                 var today = DateTime.Today;
                 var age = today.Year - dateOfBirth.Year;
-                if (dateOfBirth.Date > today.AddYears(-14))
+                if (dateOfBirth.Date > today.AddYears(-15))
                 {
-                    return new ValidationResult("Ngày sinh không hợp lệ.");
+                    return new ValidationResult("Người dùng phải từ 15 tuổi trở lên.");
+                    //return new ValidationResult("Ngày sinh không hợp lệ.");
                 }
                 if (age <= _maxAge)
                 {

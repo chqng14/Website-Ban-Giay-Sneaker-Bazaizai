@@ -5,11 +5,13 @@ using App_Data.ViewModels.GioHangChiTiet;
 using App_Data.ViewModels.HoaDonChiTietDTO;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using OpenXmlPowerTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_Data.Repositories
 {
@@ -82,7 +84,69 @@ namespace App_Data.Repositories
                 return false;
             }
         }
+        public HoaDonChiTiet ThemSanPhamVaoHoaDon(HoaDonChiTiet hoaDonChiTiet)
+        {
+            try
+            {
+                var hoadDonChiTietTrung = context.hoaDonChiTiets.FirstOrDefault(c => c.IdSanPhamChiTiet == hoaDonChiTiet.IdSanPhamChiTiet && c.IdHoaDon == hoaDonChiTiet.IdHoaDon && c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay);
+                if (hoadDonChiTietTrung == null)
+                {
+                    context.hoaDonChiTiets.Add(hoaDonChiTiet);
+                    context.SaveChanges();
+                    return hoaDonChiTiet;
+                }
+                else
+                {
+                    hoadDonChiTietTrung.SoLuong = hoadDonChiTietTrung.SoLuong + 1;
+                    context.hoaDonChiTiets.Update(hoadDonChiTietTrung);
+                    context.SaveChanges();
+                    return hoadDonChiTietTrung;
 
+                }
+
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
+        public string UpdateSoLuong(string idHD, string idSanPham, int SoLuongMoi, string SoluongTon)
+        {
+
+            var hoaDonChiTiet = context.hoaDonChiTiets.FirstOrDefault(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD && c.IdSanPhamChiTiet == idSanPham);
+            int soLuongThayDoi = (int)SoLuongMoi - (int)hoaDonChiTiet.SoLuong;
+            if (soLuongThayDoi <= int.Parse(SoluongTon))
+            {
+                if (SoLuongMoi != 0)
+                {
+                    hoaDonChiTiet.SoLuong = SoLuongMoi;
+                    context.hoaDonChiTiets.Update(hoaDonChiTiet);
+                    context.SaveChanges();
+                    return soLuongThayDoi.ToString();
+                }
+                else
+                {
+                    context.hoaDonChiTiets.Remove(hoaDonChiTiet);
+                    context.SaveChanges();
+                    return soLuongThayDoi.ToString();
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public string XoaSanPhamKhoiHoaDon(string idHD, string idSanPham)
+        {
+            var hoaDonChiTiet = context.hoaDonChiTiets.FirstOrDefault(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD && c.IdSanPhamChiTiet == idSanPham);
+            var soLuongSanPham = hoaDonChiTiet.SoLuong;
+            context.hoaDonChiTiets.Remove(hoaDonChiTiet);
+            context.SaveChanges();
+            return soLuongSanPham.ToString();
+        }
         public List<HoaDonChiTiet> GetAllHoaDonOnline()
         {
             throw new NotImplementedException();

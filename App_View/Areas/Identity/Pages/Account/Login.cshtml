@@ -2,7 +2,7 @@
 @model LoginModel
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Đăng nhập";
     Layout = "/Views/Shared/_LayoutQMK.cshtml";
     var thongbao =  TempData["ErrorMessage"];
 
@@ -65,19 +65,19 @@
                     <div class="col-lg-6 col-md-8 u-s-m-b-30">
                         <div class="l-f-o">
                             <div class="l-f-o__pad-box">
-                                <h1 class="gl-h1">I'M NEW CUSTOMER</h1>
+                                <h1 class="gl-h1">TÔI LÀ KHÁCH HÀNG MỚI</h1>
 
-                                <span class="gl-text u-s-m-b-30">By creating an account with our store, you will be able to move through the checkout process faster, store shipping addresses, view and track your orders in your account and more.</span>
+                                <span class="gl-text u-s-m-b-30">Bằng cách tạo tài khoản với cửa hàng của chúng tôi, bạn sẽ có thể thực hiện quy trình thanh toán nhanh hơn, lưu trữ địa chỉ giao hàng, xem và theo dõi đơn hàng trong tài khoản của mình, ...</span>
                                 <div class="u-s-m-b-15">
 
                                     <a class="l-f-o__create-link btn--e-transparent-brand-b-2" asp-area="Identity" asp-page="/Account/Register">
 
-                                        CREATE AN ACCOUNT
+                                        TẠO MỘT TÀI KHOẢN
                                     </a>
                                 </div>
-                                <h1 class="gl-h1">SIGNIN</h1>
+                                <h1 class="gl-h1">ĐĂNG NHẬP</h1>
                                  <div asp-validation-summary="All" class="text-danger"></div>
-                                <span class="gl-text u-s-m-b-30">If you have an account with us, please log in.</span>
+                                <span class="gl-text u-s-m-b-30">Nếu bạn đã có tài khoản, vui lòng đăng nhập.</span>
                                 @if ((Model.ExternalLogins?.Count ?? 0) != 0)
                                 {
 
@@ -92,7 +92,7 @@
                                                         <button type="submit" class="gl-s-api__btn gl-s-api__btn--gplus" name="provider" value="@provider.Name">
                                                             <i class="fab fa-google"></i>
 
-                                                            <span>Signup with Google</span>
+                                                            <span>Đăng nhập với Google</span>
                                                         </button>
                                                     </div>
                                                 }
@@ -103,7 +103,7 @@
                                                         <button type="submit" class="gl-s-api__btn gl-s-api__btn--fb" name="provider" value="@provider.Name">
                                                             <i class="fab fa-facebook-f"></i>
 
-                                                            <span>Signup with Facebook</span>
+                                                            <span>Đăng nhập với Facebook</span>
                                                         </button>
                                                     </div>
                                                 }
@@ -118,27 +118,27 @@
 
                                     <div class="u-s-m-b-30">
 
-                                        <label class="gl-label" for="login-email">EMAIL OR USERNAME*</label>
+                                        <label class="gl-label" for="login-email">EMAIL HOẶC TÊN TÀI KHOẢN*</label>
 
-                                        <input asp-for="Input.UserNameOrEmail" class="input-text input-text--primary-style" type="text" id="login-email" placeholder="Enter E-mail" autocomplete="email" autocomplete="username">
+                                        <input asp-for="Input.UserNameOrEmail" class="input-text input-text--primary-style" type="text" id="login-email" placeholder="Nhập Email hoặc tên tài khoản" autocomplete="email" autocomplete="username">
                                         <span asp-validation-for="Input.UserNameOrEmail" class="text-danger"></span>
                                     </div>
                                     <div class="u-s-m-b-30">
                                         
                                         
-                                        <label class="gl-label" for="login-password">PASSWORD *</label>
+                                        <label class="gl-label" for="login-password">MẬT KHẨU *</label>
 
-                                        <input class="input-text input-text--primary-style" asp-for="Input.Password" autocomplete="current-password" aria-required="true" placeholder="Enter Password">
+                                        <input class="input-text input-text--primary-style" asp-for="Input.Password" autocomplete="current-password" aria-required="true" placeholder="Nhập mật khẩu">
                                         <span asp-validation-for="Input.Password" class="text-danger"></span>
                                     </div>
                                     <div class="gl-inline">
                                         <div class="u-s-m-b-30">
 
-                                            <button class="btn btn--e-transparent-brand-b-2" id="login-submit" type="submit">LOGIN</button>
+                                            <button class="btn btn--e-transparent-brand-b-2" id="login-submit" type="submit">ĐĂNG NHẬP</button>
                                         </div>
                                         <div class="u-s-m-b-30">
 
-                                            <a class="gl-link" href="lost-password.html">Lost Your Password?</a>
+                                            <a class="gl-link" href="lost-password.html">Quên mật khẩu?</a>
                                         </div>
                                     </div>
                                   @*  <div class="u-s-m-b-30">

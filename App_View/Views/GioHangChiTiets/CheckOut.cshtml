@@ -129,8 +129,10 @@
                                     <div class="check-box">
                                             <input type="checkbox" id="get-address">
                                         <div class="check-box__state check-box__state--primary">
-
-                                            <label class="check-box__label" for="get-address">Sử dụng địa chỉ mặc định theo tài khoản</label>
+                                            @if (thongTinGH.Count>1)
+                                            {
+                                                <label class="check-box__label" for="get-address">Sử dụng địa chỉ mặc định theo tài khoản</label>
+                                            }
                                         </div>
                                     </div>
                                     <!--====== End - Check Box ======-->
@@ -641,7 +643,6 @@
                 var diaChiDaoNguoc = cacThanhPhan.reverse().join(',');
                 var thongtin = `${tenNguoiNhan} ${sdt} ${diaChi}`;
                 $('#thongtin').text(thongtin);
-
                 citydb = diaChiDaoNguoc.split(',')[0].trim();
                 districtdb = diaChiDaoNguoc.split(',')[1].trim();
                 wardsdb = diaChiDaoNguoc.split(',')[2].trim();
@@ -654,12 +655,15 @@
                 $('#city1').append($('<option>').text(citydb).prop('selected', true));
                 $('#district1').append($('<option>').text(districtdb).prop('selected', true));
                 $('#wards1').append($('<option>').text(wardsdb).prop('selected', true));
-
                 // Trigger sự kiện change để đảm bảo các sự kiện liên quan được kích hoạt
-                $('#city1').trigger('change');
-                $('#district1').trigger('change');
-                $('#wards1').trigger('change');
-
+                if ($('#DefaultDropdown').is(':visible')) {
+                    $('#city1').trigger('change');
+                    $('#district1').trigger('change');
+                    $('#wards1').trigger('change');
+                }
+                // $('#DefaultDropdown').hide();
+                // $('#InputDropdown').show();
+                //$('#phiship').text("0đ");
                 //tachDiaChi()
             }
 
@@ -1183,6 +1187,11 @@
         $(document).ready(function () {
             $('#placeOrderButton').click(function (e) {
                 e.preventDefault();
+                $('#placeOrderButton').prop('disabled', true);
+                if ($('input[type=radio]:checked').length === 0) {
+                    alert('Vui lòng chọn một lựa chọn.');
+                    return;
+                }
                 var selectedCity, selectedDistrict, selectedWard, inputAddressBill, DiaChiFull;
 
                 if ($('#DefaultDropdown').is(':visible')) {
@@ -1204,7 +1213,6 @@
                     $("[name='IdThongTinGH']").val(selectedId)
                     // Thực hiện các chức năng liên quan đến useDefaultAddressScript
                     var paymentFormData = $('#paymentForm').serialize();
-
                     // Gửi dữ liệu thanh toán
                     $.ajax({
                         type: 'POST',
@@ -1212,7 +1220,9 @@
                         data: paymentFormData,
                         success: function (paymentResponse) {
                             if(paymentResponse.idHoaDon != null) {
-                                UpdateVoucher()
+                                if (IdVoucher != "") {
+                                    UpdateVoucher()
+                                }
                                 if (paymentResponse.url != null) {
                                     window.location.href = paymentResponse.url;
                                 }else{
@@ -1259,8 +1269,14 @@
                                     data: paymentFormData,
                                     success: function (paymentResponse) {
                                         if (paymentResponse.idHoaDon != null) {
-                                            UpdateVoucher()
-                                            window.location.href = paymentResponse.url;
+                                            if (IdVoucher != "") {
+                                                UpdateVoucher()
+                                            }
+                                            if (paymentResponse.url != null) {
+                                                window.location.href = paymentResponse.url;
+                                            }else{
+                                                window.location.href = "/HoaDon/Order?idHoaDon=" +                              paymentResponse.idHoaDon;
+                                            }
                                         } else {
                                             Swal.fire({
                                                 title: paymentResponse.title,

@@ -182,7 +182,8 @@ namespace App_Data.Repositories
                 TenSanPham = _context.SanPhams.FirstOrDefault(sp => sp.IdSanPham == sp.IdSanPham)!.TenSanPham,
                 ThuongHieu = _context.thuongHieus.FirstOrDefault(th => th.IdThuongHieu == sp.IdThuongHieu)!.TenThuongHieu,
                 GiaThucTe = sp.GiaThucTe,
-                IsKhuyenMai = sp.TrangThaiSale == 2 ? true : false
+                IsKhuyenMai = sp.TrangThaiSale == 2 ? true : false,
+                SoLuongTon = sp.SoLuongTon,
             }).ToList();
             return itemShops;
         }

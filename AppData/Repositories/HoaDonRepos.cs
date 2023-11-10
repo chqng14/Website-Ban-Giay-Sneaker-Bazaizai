@@ -25,18 +25,27 @@ namespace App_Data.Repositories
         public HoaDonRepos(IMapper mapper)
         {
             context = new BazaizaiContext();
+            //_mapper = new MapperConfiguration(cfg =>
+            //{
+            //    cfg.CreateMap<HoaDon, HoaDonDTO>();
+            //    cfg.CreateMap<HoaDonDTO, HoaDon>();
+            //    cfg.CreateMap<HoaDonChiTiet, HoaDonChiTietTaiQuay>();
+            //}).CreateMapper();
             _mapper = mapper;
+
         }
 
         public HoaDon TaoHoaDonTaiQuay(HoaDon hoaDon)
         {
+            CancellationToken cancellationTokena = new CancellationToken();
             hoaDon.MaHoaDon = MaHoaDonTuSinh();
             hoaDon.TrangThaiGiaoHang = (int)TrangThaiGiaoHang.TaiQuay;
             hoaDon.TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan;
+            hoaDon.NgayTao = DateTime.Now;
             if (context.HoaDons.FirstOrDefault(c => c.MaHoaDon == hoaDon.MaHoaDon) == null)
             {
                 context.HoaDons.Add(hoaDon);
-                context.SaveChanges();
+                context.SaveChangesAsync(cancellationTokena);
                 return hoaDon;
             }
             return null;
@@ -67,8 +76,8 @@ namespace App_Data.Repositories
         public List<HoaDonChoDTO> GetAllHoaDonCho()
         {
             var listHoaDonCho = new List<HoaDonChoDTO>();
-            var listHoaDon = context.HoaDons.Where(c => c.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay && c.TrangThaiThanhToan == (int)TrangThaiHoaDon.ChuaThanhToan).ToList();
-
+            var listHoaDon = context.HoaDons.Where(c => c.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay && c.TrangThaiThanhToan == (int)TrangThaiHoaDon.ChuaThanhToan).AsNoTracking().ToList();
+            var listHoaDonChiTiet = context.hoaDonChiTiets.Where(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay).AsNoTracking().ToList();
             foreach (var item in listHoaDon)
             {
                 var hoaDonCho = new HoaDonChoDTO()
@@ -76,10 +85,15 @@ namespace App_Data.Repositories
                     Id = item.IdHoaDon,
                     IdNguoiDung = item.IdNguoiDung,
                     MaHoaDon = item.MaHoaDon,
+                    NgayTao = item.NgayTao,
                     TrangThaiGiaoHang = item.TrangThaiGiaoHang,
                     TrangThaiThanhToan = item.TrangThaiThanhToan,
-                    hoaDonChiTietDTOs = context.hoaDonChiTiets.Where(c => c.IdHoaDon == item.IdHoaDon).ToList(),
+                    hoaDonChiTietDTOs = new List<HoaDonChiTietTaiQuay>()
                 };
+                foreach (var item2 in listHoaDonChiTiet.Where(c => c.IdHoaDon == item.IdHoaDon).ToList())
+                {
+                    hoaDonCho.hoaDonChiTietDTOs.Add(_mapper.Map<HoaDonChiTietTaiQuay>(item2));
+                }
                 listHoaDonCho.Add(hoaDonCho);
             }
             return listHoaDonCho;
@@ -87,7 +101,7 @@ namespace App_Data.Repositories
 
         public List<HoaDonViewModel> GetHoaDon()
         {
-            var hoadon = context.HoaDons.Include(c => c.Voucher).Include(c => c.ThongTinGiaoHang).ToList();
+            var hoadon = context.HoaDons.Include(c => c.ThongTinGiaoHang).ToList();
             return _mapper.Map<List<HoaDonViewModel>>(hoadon);
         }
 

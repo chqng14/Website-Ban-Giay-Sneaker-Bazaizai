@@ -13,11 +13,15 @@ namespace App_Data.ViewModels.DanhGia
         public string? BinhLuan { get; set; }
         public DateTime? NgayDanhGia { get; set; }
         public int? SaoSp { get; set; }
-        //public int? SaoVanChuyen { get; set; }
+        public int? SaoVanChuyen { get; set; }
         public int? TrangThai { get; set; }
         public string? IdNguoiDung { get; set; }
         public string? IdSanPhamChiTiet { get; set; }
         public string? ParentId { get; set; }
-        public string? Name { get; set; }
+        public string? TenNguoiDung { get; set; }
+        public string? SanPhamTongQuat { get; set; }
+        public string? AnhDaiDien { get; set; }
+        public int? TongDanhGia { get;set; }
+
     }
 }

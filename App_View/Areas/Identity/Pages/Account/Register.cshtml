@@ -59,7 +59,7 @@
                     <div class="col-lg-6 col-md-8 u-s-m-b-30">
                         <div class="l-f-o">
                             <div class="l-f-o__pad-box">
-                                <h1 class="gl-h1">PERSONAL INFORMATION</h1>
+                                <h1 class="gl-h1">THÔNG TIN CÁ NHÂN</h1>
                                 
                                     @if ((Model.ExternalLogins?.Count ?? 0) != 0)
                                     {                                      
@@ -75,7 +75,7 @@
                                                             <button type="submit" class="gl-s-api__btn gl-s-api__btn--gplus" name="provider" value="@provider.Name">
                                                                 <i class="fab fa-google"></i>
 
-                                                                <span>Signup with Google</span>
+                                                            <span>Đăng ký với Google</span>
                                                             </button>
                                                         </div>
                                                     }
@@ -86,7 +86,7 @@
                                                             <button type="submit" class="gl-s-api__btn gl-s-api__btn--fb" name="provider" value="@provider.Name">
                                                                 <i class="fab fa-facebook-f"></i>
 
-                                                                <span>Signup with Facebook</span>
+                                                            <span>Đăng ký với Facebook</span>
                                                             </button>
                                                         </div>
                                                     }
@@ -103,16 +103,16 @@
 
                                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                                     <div class="u-s-m-b-30">
-                                        <label class="gl-label">FULL NAME *</label>
+                                        <label class="gl-label">TÊN CỦA BẠN *</label>
 
-                                        <input class="input-text input-text--primary-style" placeholder="Full Name" asp-for="Input.FullName" class="form-control" aria-required="true">
+                                        <input class="input-text input-text--primary-style" placeholder="Tên của bạn" asp-for="Input.FullName" class="form-control" aria-required="true">
                                         <span asp-validation-for="Input.FullName" class="text-danger"></span>
                                     </div>
                                     <div class="u-s-m-b-30">
 
-                                        <label class="gl-label">PHONENUMBER </label>
+                                        <label class="gl-label">SỐ ĐIỆN THOẠI </label>
 
-                                        <input class="input-text input-text--primary-style" placeholder="Phonenumber" asp-for="Input.Sdt">
+                                        <input class="input-text input-text--primary-style" placeholder="Số điện thoại" asp-for="Input.Sdt">
                                         <span asp-validation-for="Input.Sdt" class="text-danger"></span>
 
                                     </div>
@@ -121,7 +121,7 @@
 
                                             <!--====== Date of Birth Select-Box ======-->
                                             
-                                            <span class="gl-label">BIRTHDAY</span>
+                                            <span class="gl-label">NGÀY SINH</span>
                                            @* <div class="gl-dob" >
                                                 <select class="select-box select-box--primary-style" id="day" name="day">
                                                     <option class="hidden" selected disabled>Day</option>
@@ -154,11 +154,11 @@
                                         </div>
                                         <div class="u-s-m-b-30">
 
-                                            <label class="gl-label" >GENDER</label>
+                                            <label class="gl-label" >GIỚI TÍNH</label>
                                             <select class="select-box select-box--primary-style u-w-100"  asp-for="Input.GioiTinh">
-                                                <option class="hidden" selected disabled>Gender</option>
-                                                <option value="@((int)GioiTinhMacDinh.Nam)">Male</option>
-                                                <option value="@((int)GioiTinhMacDinh.Nu)">Female</option>
+                                                <option class="hidden" selected disabled>Giới tính</option>
+                                                <option value="@((int)GioiTinhMacDinh.Nam)">Nam</option>
+                                                <option value="@((int)GioiTinhMacDinh.Nu)">Nữ</option>
                                                
                                            </select>
                                             <span asp-validation-for="Input.GioiTinh" class="text-danger"></span>
@@ -166,9 +166,9 @@
                                     </div>
                                     <div class="u-s-m-b-30 ">
 
-                                        <label class="gl-label">UserName *</label>
+                                        <label class="gl-label">TÊN TÀI KHOẢN *</label>
 
-                                        <input class="input-text input-text--primary-style"  asp-for="Input.UserName" aria-required="true" placeholder="UserName">
+                                        <input class="input-text input-text--primary-style"  asp-for="Input.UserName" aria-required="true" placeholder="Nhập tên tài khoản">
                                         <span asp-validation-for="Input.UserName" class="text-danger"></span>
 
                                     </div>
@@ -176,31 +176,31 @@
 
                                         <label class="gl-label">E-MAIL *</label>
 
-                                        <input asp-for="Input.Email" class="input-text input-text--primary-style" placeholder="Enter E-mail" aria-required="true" autocomplete="username">
+                                        <input asp-for="Input.Email" class="input-text input-text--primary-style" placeholder="Nhập Email" aria-required="true" autocomplete="username">
                                         <span asp-validation-for="Input.Email" class="text-danger"></span>
 
                                     </div>
                                     <div class="u-s-m-b-30">
 
-                                        <label class="gl-label" >PASSWORD *</label>
-                                        <input asp-for="Input.Password" class="input-text input-text--primary-style" placeholder="Enter Password" aria-required="true">
+                                        <label class="gl-label">MẬT KHẨU *</label>
+                                        <input asp-for="Input.Password" class="input-text input-text--primary-style" placeholder="Nhập mật khẩu" aria-required="true">
                                         <span asp-validation-for="Input.Password" class="text-danger"></span>
 
                                     </div>
                                     <div class="u-s-m-b-30">
 
-                                        <label class="gl-label">CONFIRM PASSWORD *</label>
-                                        <input asp-for="Input.ConfirmPassword" class="input-text input-text--primary-style" placeholder="Enter Confirm Password" aria-required="true">
+                                        <label class="gl-label">XÁC NHẬN MẬT KHẨU *</label>
+                                        <input asp-for="Input.ConfirmPassword" class="input-text input-text--primary-style" placeholder="Nhập lại mật khẩu" aria-required="true">
                                         <span asp-validation-for="Input.ConfirmPassword" class="text-danger" ></span>
                                     
 
                                     </div>
                                    
                                     <div class="u-s-m-b-15">
-                                        <button class="btn btn--e-transparent-brand-b-2" id="registerSubmit" type="submit">CREATE</button>
+                                        <button class="btn btn--e-transparent-brand-b-2" id="registerSubmit" type="submit">TẠO</button>
                                     </div>
 
-                                    <a class="gl-link" asp-area="" asp-controller="Home" asp-action="Index">Return to Store</a>
+                                    <a class="gl-link" asp-area="" asp-controller="Home" asp-action="Index">Quay lại cửa hàng</a>
                                 </form>
                             </div>
                         </div>

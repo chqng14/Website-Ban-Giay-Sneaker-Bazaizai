@@ -45,7 +45,7 @@ namespace App_View.Areas.Identity.Pages.Account
             var result = await _userManager.ChangeEmailAsync(user, email, code);
             if (!result.Succeeded)
             {
-                StatusMessage = "Error changing email.";
+                StatusMessage = "Lỗi khi thay đổi email.";
                 return Page();
             }
 
@@ -54,12 +54,12 @@ namespace App_View.Areas.Identity.Pages.Account
             var setUserNameResult = await _userManager.SetUserNameAsync(user, email);
             if (!setUserNameResult.Succeeded)
             {
-                StatusMessage = "Error changing user name.";
+                StatusMessage = "Lỗi thay đổi tên người dùng.";
                 return Page();
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Thank you for confirming your email change.";
+            StatusMessage = "Cảm ơn bạn đã xác nhận thay đổi email của bạn.";
             return Page();
         }
     }

@@ -131,7 +131,7 @@ namespace App_Api.Controllers
                     var sp = await _sanPhamChiTietController.GetSanPhamViewModel(item.IdSanPhamChiTiet);
                     var sanPhamObject = new SanPhamTest
                     {
-                        //IdSanPhamChiTiet = item.IdSanPhamChiTiet,
+                        IdSanPhamChiTiet = item.IdSanPhamChiTiet,
                         SoLuong = item.SoLuong,
                         GiaBan = item.GiaBan,
                         //GiaGoc = item.GiaGoc,
@@ -164,6 +164,8 @@ namespace App_Api.Controllers
                     DiaChi = hoadon.DiaChi,
                     SDT = hoadon.SDT,
                     LoaiThanhToan = loaithanhtoan,
+                    MoTa = hoadon.MoTa,
+                    LiDoHuy = hoadon.LiDoHuy,
                 };
 
                 danhSachHoaDon.Add(hoadontest);
@@ -172,6 +174,14 @@ namespace App_Api.Controllers
             return danhSachHoaDon;
         }
 
+        [HttpPut]
+        public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, int TrangThaiGiaoHang, string? Lido)
+        {
+            var hoadon = _hoaDon.GetHoaDonUpdate().FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            hoadon.TrangThaiGiaoHang = TrangThaiGiaoHang;
+            hoadon.LiDoHuy = Lido;
+            return _hoaDon.EditBill(hoadon);
+        }
 
         [HttpPut]
         public async Task<bool> UpdateTrangThaiHoaDonOnline(string idHoaDon, int TrangThaiThanhToan)

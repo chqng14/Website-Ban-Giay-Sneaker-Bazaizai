@@ -115,7 +115,7 @@ namespace App_Data.Migrations
                     b.Property<string>("IdSanPhamChiTiet")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("LuotYeuThich")
+                    b.Property<int?>("LuotYeuThich")
                         .HasColumnType("int");
 
                     b.Property<string>("MoTa")
@@ -124,8 +124,11 @@ namespace App_Data.Migrations
                     b.Property<DateTime?>("NgayDanhGia")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ParentId")
+                    b.Property<string>("ParentDanhGiaIdDanhGia")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ParentId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("SaoSp")
                         .HasColumnType("int");
@@ -133,7 +136,7 @@ namespace App_Data.Migrations
                     b.Property<int?>("SaoVanChuyen")
                         .HasColumnType("int");
 
-                    b.Property<int>("SuaDoi")
+                    b.Property<int?>("SuaDoi")
                         .HasColumnType("int");
 
                     b.Property<int>("TrangThai")
@@ -147,7 +150,7 @@ namespace App_Data.Migrations
 
                     b.HasIndex("IdSanPhamChiTiet");
 
-                    b.HasIndex("ParentId");
+                    b.HasIndex("ParentDanhGiaIdDanhGia");
 
                     b.ToTable("DanhGia", (string)null);
                 });
@@ -1027,7 +1030,7 @@ namespace App_Data.Migrations
 
                     b.HasOne("App_Data.Models.DanhGia", "ParentDanhGia")
                         .WithMany("ChildDanhGias")
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ParentDanhGiaIdDanhGia");
 
                     b.Navigation("NguoiDung");
 

@@ -150,8 +150,6 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             if (Request.Form.Files.Count > 0)
             {
                 IFormFile file = Request.Form.Files.FirstOrDefault();
-
-                // Tạo một thư mục để lưu trữ tệp hình ảnh (thư mục gốc hoặc thư mục cụ thể, tùy ý bạn)
                 string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "user_img");
                 if (!Directory.Exists(uploadsFolder))
                 {
