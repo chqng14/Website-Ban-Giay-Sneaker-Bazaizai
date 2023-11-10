@@ -349,8 +349,6 @@ namespace App_View.Areas.Admin.Controllers
                 if (!(value is List<string>) && !(value is List<int>) && !(value is List<IFormFile>))
                 {
                     var stringValue = value?.ToString() ?? string.Empty;
-                    Console.WriteLine(stringValue);
-                    Console.WriteLine(property.Name);
                     multipartContent.Add(new StringContent(stringValue), $"SanPhamChiTietCopyDTO.SanPhamChiTietData.{property.Name}");
                 }
 
