@@ -1,4 +1,6 @@
 ﻿using App_Data.Models;
+using App_View.Services;
+using App_View.IServices;
 using EnumsNET;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -34,7 +36,7 @@ namespace App_View.Models
                 EmailConfirmed = true,
                 NgaySinh = DateTime.ParseExact("10-10-2010", "MM-dd-yyyy", null),
                 DiaChi = "Hà Nội",
-                MaNguoiDung= "ND1",
+                MaNguoiDung = "ND1",
                 AnhDaiDien = "/user_img/default_image.png",
                 TrangThai = (int?)TrangThaiCoBan.HoatDong,
                 PhoneNumberConfirmed = true
@@ -49,6 +51,12 @@ namespace App_View.Models
                 }
 
             }
+        }
+        public static async Task PhuongThucThanhToan()
+        {
+            IPTThanhToanServices _pTThanhToanServices = new PTThanhToanServices();
+            await _pTThanhToanServices.CreatePTThanhToanAsync("COD", "COD", 0);
+            await _pTThanhToanServices.CreatePTThanhToanAsync("MOMO", "MOMO", 0);
         }
     }
 }

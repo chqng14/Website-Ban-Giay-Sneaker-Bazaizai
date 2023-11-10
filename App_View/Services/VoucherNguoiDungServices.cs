@@ -27,10 +27,26 @@ namespace App_View.Services
 
         public async Task<bool> AddVoucherNguoiDung(string MaVoucher, string idNguoiDung)
         {
-            var httpClient = new HttpClient();
-            string apiUrl = $"https://localhost:7038/api/VoucherNguoiDung/AddVoucherNguoiDung?MaVoucher={MaVoucher}&idNguoiDung={idNguoiDung}";
-            var response = await httpClient.PostAsync(apiUrl, null);
-            return true;
+            try
+            {
+                var httpClient = new HttpClient();
+                string apiUrl = $"https://localhost:7038/api/VoucherNguoiDung/AddVoucherNguoiDung?MaVoucher={MaVoucher}&idNguoiDung={idNguoiDung}";
+                var response = await httpClient.PostAsync(apiUrl, null);
+                var check = await response.Content.ReadAsStringAsync();
+                if (check == "true")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
         }
 
         public async Task<string> AddVoucherNguoiDungTuAdmin(AddVoucherRequestDTO addVoucherRequestDTO)
@@ -60,7 +76,7 @@ namespace App_View.Services
 
 
         //hàm này để check xem voucher đó đã có trong id người dùng chưa
-        public bool CheckVoucherInUser(string ma)
+        public bool CheckVoucherInUser(string ma, string idUser)
         {
             string voucherKhaDung = DbContextModel.vouchers
                 .FirstOrDefault(c => c.MaVoucher == ma && c.TrangThai == (int)TrangThaiVoucher.HoatDong).IdVoucher;
@@ -71,7 +87,7 @@ namespace App_View.Services
             }
 
             var existsInVoucherNguoiDung = DbContextModel.voucherNguoiDungs
-                .Any(vnd => vnd.IdVouCher == voucherKhaDung);
+                .Any(vnd => vnd.IdVouCher == voucherKhaDung && vnd.IdNguoiDung == idUser);
 
             return !existsInVoucherNguoiDung;
         }
@@ -92,6 +108,31 @@ namespace App_View.Services
         public async Task<VoucherNguoiDung> GetVoucherNguoiDungById(string id)
         {
             return await _httpClient.GetFromJsonAsync<VoucherNguoiDung>($"/api/VoucherNguoiDung/GetChiTietVoucherNguoiDungByID{id}");
+        }
+
+        public async Task<bool> TangVoucherNguoiDungMoi(string ma)
+        {
+            ///api/VoucherNguoiDung/TangVoucherChoNguoiDungMoi
+            try
+            {
+                var httpClient = new HttpClient();
+                string apiUrl = $"https://localhost:7038/api/VoucherNguoiDung/TangVoucherChoNguoiDungMoi?ma={ma}";
+                var response = await httpClient.PostAsync(apiUrl, null);
+                var check = await response.Content.ReadAsStringAsync();
+                if (check == "true")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
         }
 
         public async Task<bool> UpdateVoucherNguoiDungSauKhiDung(VoucherNguoiDungDTO VcDTO)

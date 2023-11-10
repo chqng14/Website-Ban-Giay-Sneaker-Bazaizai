@@ -115,7 +115,7 @@ namespace App_Data.Migrations
                     b.Property<string>("IdSanPhamChiTiet")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("LuotYeuThich")
+                    b.Property<int?>("LuotYeuThich")
                         .HasColumnType("int");
 
                     b.Property<string>("MoTa")
@@ -136,7 +136,7 @@ namespace App_Data.Migrations
                     b.Property<int?>("SaoVanChuyen")
                         .HasColumnType("int");
 
-                    b.Property<int>("SuaDoi")
+                    b.Property<int?>("SuaDoi")
                         .HasColumnType("int");
 
                     b.Property<int>("TrangThai")

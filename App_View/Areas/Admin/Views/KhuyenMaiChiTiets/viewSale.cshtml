@@ -1,0 +1,33 @@
+﻿@using App_Data.Models;
+@model KhuyenMai;
+<div id="swapContainer" class="form-row">
+
+    <div class="form-group col-md-4">
+        <img src="~/AnhSale/@Model.Url" alt="Ảnh khuyến mãi" style="width:70%">
+    </div>
+
+    <div class="form-row col-md-8">
+        <div class="form-group col-md-6">
+            <strong>Mã khuyến mãi:</strong> @Model.MaKhuyenMai
+        </div>
+        <div class="form-group col-md-6">
+            <strong>Tên khuyến mãi:</strong> @Model.TenKhuyenMai
+        </div>
+        <div class="form-group col-md-6">
+            <strong>Ngày bắt đầu:</strong> @Model.NgayBatDau.ToString()<br />
+        </div>
+        <div class="form-group col-md-6">
+            <strong>Ngày bắt đầu:</strong> @Model.NgayBatDau.ToString()<br />
+        </div>
+        <div class="form-group col-md-6">
+            <strong>Ngày kết thúc:</strong> @Model.NgayKetThuc.ToString()<br />
+        </div>
+        <div class="form-group col-md-6">
+            <strong>Loại hình:</strong> @(Model.LoaiHinhKM == 0 ? "Khuyến mại đồng giá" : "Khuyến mại giảm giá")<br />
+        </div>
+        <div class="form-group col-md-6">
+            <strong>Mức giảm:</strong> @Model.MucGiam<br />
+        </div>
+    </div>
+
+</div>

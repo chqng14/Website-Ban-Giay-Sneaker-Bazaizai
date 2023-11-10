@@ -20,6 +20,7 @@ using AutoMapper;
 using App_Data.ViewModels.SanPhamChiTiet.SanPhamDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using static App_Data.Repositories.TrangThai;
+using App_View.Models.ViewModels;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -28,12 +29,13 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly BazaizaiContext _context;
         private readonly IKhuyenMaiChiTietServices khuyenMaiChiTietServices;
+        private readonly IKhuyenMaiServices _khuyenMaiServices;
         private readonly ISanPhamChiTietService sanPhamChiTietService;
         private readonly IAllRepo<KhuyenMaiChiTiet> allRepo;
         private readonly IMapper _mapper;
         HttpClient httpClient;
 
-        public KhuyenMaiChiTietsController(IKhuyenMaiChiTietServices khuyenMaiChiTietServices, ISanPhamChiTietService sanPhamChiTietService, IMapper mapper)
+        public KhuyenMaiChiTietsController(IKhuyenMaiChiTietServices khuyenMaiChiTietServices, ISanPhamChiTietService sanPhamChiTietService, IMapper mapper, IKhuyenMaiServices khuyenMaiServices)
         {
             _context = new BazaizaiContext();
 
@@ -42,6 +44,7 @@ namespace App_View.Areas.Admin.Controllers
             this.khuyenMaiChiTietServices = khuyenMaiChiTietServices;
             this.sanPhamChiTietService = sanPhamChiTietService;
             _mapper = mapper;
+            _khuyenMaiServices = khuyenMaiServices;
         }
 
         // GET: Admin/KhuyenMaiChiTiets
@@ -222,7 +225,26 @@ namespace App_View.Areas.Admin.Controllers
             }
             //.Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale|| x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale)
             var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Where(x =>( x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale )&& x.TrangThai==(int)TrangThaiCoBan.HoatDong).Select(item => CreateSanPhamDanhSachViewModel(item));
-            return View(getallProductDT);
+            var sanPhamChiTietList = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
+            var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
+
+            foreach (var pro in sanPhamChiTietList)
+            {
+                var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
+                var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
+                var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
+                var sanPhamSaleViewModel = new SanPhamSaleViewModel
+                {
+                    SanPhamDanhSachView = pro,
+                    TrangThaiSale = Convert.ToInt32(trangThaiSale),
+                    TrangThai = Convert.ToInt32(trangThai),
+                    GiaThucTe = giaThucTe
+                };
+
+                sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
+            }
+            var lstSpDuocApDungKhuyenMai = sanPhamSaleViewModelList.Where(x => (x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong);
+            return View(sanPhamSaleViewModelList);
         }
         [HttpPost]
         public async Task<IActionResult> ApllySale(string idSale, List<string> selectedProducts)
@@ -309,6 +331,12 @@ namespace App_View.Areas.Admin.Controllers
                 throw;
             }
 
+        }
+        [HttpGet]
+        public async Task<IActionResult> viewSaleAsync(string id)
+        {
+            var km = (await _khuyenMaiServices.GetAllKhuyenMai()).FirstOrDefault(x => x.IdKhuyenMai == id);
+            return PartialView("viewSale", km);
         }
     }
 }

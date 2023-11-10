@@ -11,5 +11,8 @@ namespace App_Data.IRepositories
     public interface IVoucherNguoiDungRepos
     {
         Task<bool> TangVoucherNguoiDung(AddVoucherRequestDTO addVoucherRequestDTO);
+        Task<bool> TangVoucherNguoiDungMoi(string ma, string idUser);
+
+        Task<List<NguoiDung>> GetLstNguoiDUngMoi();
     }
 }

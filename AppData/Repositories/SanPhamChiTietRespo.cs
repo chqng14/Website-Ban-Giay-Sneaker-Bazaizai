@@ -164,9 +164,10 @@ namespace App_Data.Repositories
         public async Task<List<ItemShopViewModel>> GetDanhSachBienTheItemShopViewModelAsync()
         {
             var listSanPham = await _context.sanPhamChiTiets
-                .Where(sp => sp.TrangThai == 0 && sp.TrangThaiSale == 2)
+                .Where(sp => sp.TrangThai == 0)
                 .OrderByDescending(x => x.NgayTao)
-                .AsNoTracking().ToListAsync();
+                .AsNoTracking()
+                .ToListAsync();
 
             var itemShops = listSanPham.Select(sp => new ItemShopViewModel()
             {
@@ -175,13 +176,14 @@ namespace App_Data.Repositories
                 GiaKhuyenMai = sp.GiaThucTe,
                 MauSac = _context.mauSacs.FirstOrDefault(ms => ms.IdMauSac == sp.IdMauSac)!.TenMauSac,
                 TheLoai = _context.LoaiGiays.FirstOrDefault(lg => lg.IdLoaiGiay == sp.IdLoaiGiay)!.TenLoaiGiay,
-                KichCo = Convert.ToInt32(_context.kichCos.FirstOrDefault(kc => kc.IdKichCo == sp.IdKichCo).SoKichCo),
+                KichCo = Convert.ToInt32(_context.kichCos.FirstOrDefault(kc => kc.IdKichCo == sp.IdKichCo)!.SoKichCo),
                 IdChiTietSp = sp.IdChiTietSp,
                 SoLanDanhGia = 32,
                 TenSanPham = _context.SanPhams.FirstOrDefault(sp => sp.IdSanPham == sp.IdSanPham)!.TenSanPham,
                 ThuongHieu = _context.thuongHieus.FirstOrDefault(th => th.IdThuongHieu == sp.IdThuongHieu)!.TenThuongHieu,
                 GiaThucTe = sp.GiaThucTe,
-                IsKhuyenMai = sp.TrangThaiSale == 2 ? true : false
+                IsKhuyenMai = sp.TrangThaiSale == 2 ? true : false,
+                SoLuongTon = sp.SoLuongTon,
             }).ToList();
             return itemShops;
         }
@@ -191,7 +193,8 @@ namespace App_Data.Repositories
             var listSanPham = await _context.sanPhamChiTiets
                 .Where(sp => sp.TrangThai == 0 && sp.TrangThaiSale == 2)
                 .OrderByDescending(x => x.NgayTao)
-                .AsNoTracking().ToListAsync();
+                .AsNoTracking()
+                .ToListAsync();
 
             var itemShops = listSanPham.Select(sp => new ItemShopViewModel()
             {
@@ -200,7 +203,7 @@ namespace App_Data.Repositories
                 GiaKhuyenMai = sp.GiaThucTe,
                 MauSac = _context.mauSacs.FirstOrDefault(ms => ms.IdMauSac == sp.IdMauSac)!.TenMauSac,
                 TheLoai = _context.LoaiGiays.FirstOrDefault(lg => lg.IdLoaiGiay == sp.IdLoaiGiay)!.TenLoaiGiay,
-                KichCo = Convert.ToInt32(_context.kichCos.FirstOrDefault(kc => kc.IdKichCo == sp.IdKichCo).SoKichCo),
+                KichCo = Convert.ToInt32(_context.kichCos.FirstOrDefault(kc => kc.IdKichCo == sp.IdKichCo)!.SoKichCo),
                 IdChiTietSp = sp.IdChiTietSp,
                 SoLanDanhGia = 32,
                 TenSanPham = _context.SanPhams.FirstOrDefault(sp => sp.IdSanPham == sp.IdSanPham)!.TenSanPham,

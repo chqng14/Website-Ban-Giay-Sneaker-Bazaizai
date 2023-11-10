@@ -2,6 +2,7 @@
 using App_Data.ViewModels.HoaDonChiTietDTO;
 using App_View.IServices;
 using System.Net.Http;
+using System.Net.Http.Json;
 
 namespace App_View.Services
 {
@@ -41,7 +42,26 @@ namespace App_View.Services
             throw new NotImplementedException();
         }
 
+        public async Task<HoaDonChiTiet> ThemSanPhamVaoHoaDon(HoaDonChiTiet hoaDonChiTiet)
+        {
+            try
+            {
+                var res = await httpClient.PostAsJsonAsync("https://localhost:7038/api/HoaDonChiTiet/ThemSanPhamVaoHoaDon", hoaDonChiTiet);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<HoaDonChiTiet>();
+                }
+                Console.WriteLine(await res.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
         public async Task<bool> UpdateTrangThaiHoaDonChiTiet(string idHoaDon, int TrangThai)
+
         {
             try
             {
@@ -51,6 +71,42 @@ namespace App_View.Services
                     return await res.Content.ReadAsAsync<bool>();
                 }
                 Console.WriteLine(await res.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
+        public async Task<string> UpdateSoLuong(string idHD, string idSanPham, int SoLuongMoi, string SoluongTon)
+        {
+            try
+            {
+                var res = await httpClient.PutAsync("https://localhost:7038/api/HoaDonChiTiet/SuaSoLuong?idHD="+idHD+"&idSanPham="+idSanPham+"&SoLuongMoi="+SoLuongMoi+"&SoluongTon="+SoluongTon,null);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsStringAsync();
+                }
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
+        public async Task<string> XoaSanPhamKhoiHoaDon(string idHD, string idSanPham)
+        {
+            try
+            {
+                var res = await httpClient.DeleteAsync("https://localhost:7038/api/HoaDonChiTiet/XoaSanPhamKhoiHoaDon?idHD=" + idHD + "&idSanPham=" + idSanPham);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsStringAsync();
+                }
                 throw new Exception("Not IsSuccessStatusCode");
             }
             catch (Exception ex)

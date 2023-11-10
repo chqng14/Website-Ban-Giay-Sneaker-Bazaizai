@@ -27,7 +27,9 @@
             width: 20px;
             height: 20px;
         }
-
+        a:hover{
+            color:yellow
+        }
         table.dataTable thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting, table.dataTable thead > tr > td.sorting_asc, table.dataTable thead > tr > td.sorting_desc, table.dataTable thead > tr > td.sorting {
             padding-right: 14px;
         }
@@ -51,6 +53,10 @@
             color: black; /* Đổi màu chữ thành đỏ */
             border: none; /* Loại bỏ đường viền */
         }
+
+        #Gift{
+            border-radius:20px;
+        }
     </style>
 </head>
 <div class="container mt-5">
@@ -60,9 +66,10 @@
             <div class="col-md-8">
 
                 <h1 id="register">Tặng voucher cho người dùng</h1>
-                <div class="all-steps" id="all-steps">
-                    <a class="step"> Tặng cho khách hàng mới (chưa từng mua hàng)</a>
+                <div class="all-steps">
+                    <a class="step" id="GiftNewUser">Tặng cho khách hàng mới</a>
                 </div>
+
                 <div class="inputVoucher">
                     <h6>Nhập mã voucher cần tặng</h6>
                     <input id="ma-voucher-input" asp-for="MaVoucher" placeholder="@ViewBag.MaVoucher" required name="MaVoucher">
@@ -135,45 +142,6 @@
             checkbox.checked = isChecked;
         });
     });
-    // $("#GiveVouchersToUsers").submit(function (e) {
-    //     e.preventDefault();
-    //     var maVoucher = document.getElementById('ma-voucher-input').value;
-
-    //     // Thu thập danh sách UserId được chọn
-    //     var selectedUserIds = [];
-    //     userCheckboxes.forEach(function (checkbox) {
-
-    //         if (checkbox.checked) {
-    //             selectedUserIds.push(checkbox.getAttribute('data-userId'));
-    //         }
-    //     });
-
-    //     // Tạo đối tượng chứa dữ liệu để gửi đến máy chủ
-    //     var data = {
-    //         MaVoucher: maVoucher,
-    //         UserId: selectedUserIds
-    //     };
-    //     // Sử dụng $.ajax để gửi yêu cầu AJAX
-    //     $.ajax({
-    //         type: "POST",
-    //         url: "@Url.Action("GiveVouchersToUsers", "Vouchers")",
-    //         data: JSON.stringify(data), // Gửi dữ liệu dưới dạng JSON
-    //         contentType: "application/json; charset=utf-8", // Đặt loại dữ liệu gửi đi
-    //         dataType: "json", // Loại dữ liệu mà bạn mong đợi nhận lại
-    //         success: function (result) {
-    //             // Xử lý phản hồi từ máy chủ ở đây
-    //             if (result.success) {
-    //                 alert('Tặng Voucher thành công');
-    //                 window.location.href = '/Vouchers/Index';
-    //             } else {
-    //                 alert('Lỗi khi tặng Voucher: ' + result.message);
-    //             }
-    //         },
-    //         error: function (error) {
-    //             console.error('Lỗi: ' + error);
-    //         }
-    //     });
-    // });
     $("#Gift").click(function () {
         var maVoucher = document.getElementById('ma-voucher-input').value;
         if (maVoucher == '') {
@@ -224,7 +192,41 @@
             }
         });
     });
+    $("#GiftNewUser").click(function () {
+        var maVoucher = document.getElementById('ma-voucher-input').value;
+        if (maVoucher == '') {
+            Swal.fire({
+                title: 'Thông báo!',
+                text: 'Vui lòng nhập mã voucher',
+                icon: 'error',
+                confirmButtonText: 'Đóng'
+            });
+            return;
+        } 
+        // Sử dụng $.ajax để gửi yêu cầu AJAX
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GiveVoucherForNewUser", "Vouchers")",
+            data:{ MaVoucher: maVoucher }, // Gửi dữ liệu dưới dạng JSON
+            // contentType: "application/json; charset=utf-8", // Đặt loại dữ liệu gửi đi
+            success: function (result) {
+                if (result) {
+                    Swal.fire('Thông báo!', 'Tặng voucher thành công!', 'success');
 
+                } else {
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Người dùng đã có sẵn voucher này!!!.',
+                        icon: 'error',
+                        confirmButtonText: 'Đóng'
+                    });
+                }
+            },
+            error: function (error) {
+                console.error('Lỗi: ' + error);
+            }
+        });
+    });
 
 
 </script>

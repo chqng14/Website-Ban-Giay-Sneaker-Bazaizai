@@ -53,6 +53,7 @@ namespace App_View.Controllers
         {
             thongTinGHDTO.IdThongTinGH = Guid.NewGuid().ToString();
             thongTinGHDTO.IdNguoiDung = _userManager.GetUserId(User);
+            thongTinGHDTO.TrangThai = (int)TrangThaiCoBan.HoatDong;
             var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == _userManager.GetUserId(User));
             var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
@@ -109,6 +110,7 @@ namespace App_View.Controllers
                     TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan
                 };
                 var mahd = await hoaDonServices.CreateHoaDon(hoadon);
+                var tien = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam ?? 0));
                 foreach (var item in listcart)
                 {
                     await hoaDonChiTietServices.CreateHoaDonChiTiet(new HoaDonChiTietDTO()
@@ -130,7 +132,6 @@ namespace App_View.Controllers
                     var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
                     await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                 }
-                var tien = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam == null ? 0 : hoadon.TienGiam));
                 if (hoaDonDTO.LoaiThanhToan == "Momo")
                 {
                     var url = await Momo(hoadon.IdHoaDon, mahd, tien);
@@ -221,6 +222,7 @@ namespace App_View.Controllers
                     TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan
                 };
                 var mahd = await hoaDonServices.CreateHoaDon(hoadon);
+                var tien = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam ?? 0));
                 foreach (var item in listcart)
                 {
                     await hoaDonChiTietServices.CreateHoaDonChiTiet(new HoaDonChiTietDTO()
@@ -242,7 +244,6 @@ namespace App_View.Controllers
                     await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                 }
                 listcart.Clear();
-                var tien = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam == null ? 0 : hoadon.TienGiam));
                 if (hoaDonDTO.LoaiThanhToan == "Momo")
                 {
                     var url = await Momo(hoadon.IdHoaDon, mahd, tien);
@@ -282,37 +283,33 @@ namespace App_View.Controllers
             var idpt = SessionServices.GetIdFomSession(HttpContext.Session, "idPay");
             if (!string.IsNullOrEmpty(idHoaDon))
             {
-                string payment = await hoaDonServices.GetPayMent(idHoaDon);
-                //ViewBag.payment = payment;
+                await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDon, (int)TrangThaiHoaDon.ChuaThanhToan);
+                await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.ChuaThanhToan); string payment = await hoaDonServices.GetPayMent(idHoaDon);
                 var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
                 order.LoaiThanhToan = payment;
-                await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDon, (int)TrangThaiHoaDon.ChuaThanhToan);
-                await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.ChuaThanhToan);
                 return View(order);
             }
             else
             {
+                var idHoaDonSession = SessionServices.GetIdFomSession(HttpContext.Session, "idHoaDon");
                 OrderInfoModel orderInfoModel = SessionServices.GetIPNFomSession(HttpContext.Session, "IPN");
                 var jsonresponse = await _momoService.IPN(orderInfoModel);
                 if (jsonresponse.ResultCode == 0)
                 {
+                    SessionServices.SetIdToSession(HttpContext.Session, "transID", Convert.ToString(jsonresponse.TransId));
                     await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.DaThanhToan);
-                    await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDon, (int)TrangThaiHoaDon.DaThanhToan);
-                    await hoaDonServices.UpdateNgayHoaDon(idHoaDon, DateTime.Now, null, null);
-                    string payment = await hoaDonServices.GetPayMent(idHoaDon);
-                    var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
-                    order.LoaiThanhToan = payment;
-                    return View(order);
+                    await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.DaThanhToan);
+                    await hoaDonServices.UpdateNgayHoaDon(idHoaDonSession, DateTime.Now, null, null); ;
                 }
                 else
                 {
                     await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.ChuaThanhToan);
-                    await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDon, (int)TrangThaiHoaDon.ChuaThanhToan);
-                    string payment = await hoaDonServices.GetPayMent(idHoaDon);
-                    var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
-                    order.LoaiThanhToan = payment;
-                    return View(order);
+                    await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.ChuaThanhToan);
                 }
+                string payment = await hoaDonServices.GetPayMent(idHoaDonSession);
+                var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDonSession);
+                order.LoaiThanhToan = payment;
+                return View(order);
             }
         }
         public async Task<string> Momo(string IdHoaDon, string MaHd, double tien)
@@ -330,6 +327,7 @@ namespace App_View.Controllers
             var Pay = await PTThanhToanController.GetPTThanhToanByName("Momo");
             var idPay = await PTThanhToanChiTietController.CreatePTThanhToanChiTiet(IdHoaDon, Pay, tien);
             SessionServices.SetIdToSession(HttpContext.Session, "idPay", idPay);
+            SessionServices.SetIdToSession(HttpContext.Session, "idHoaDon", IdHoaDon);
             return response.PayUrl;
         }
         public async Task<IActionResult> Cod(string IdHoaDon, double tien)
@@ -371,17 +369,6 @@ namespace App_View.Controllers
         }
         #endregion
 
-        public async Task<IActionResult> GetHoaDonOnline()
-        {
-            var UserID = _userManager.GetUserId(User);
-            var listHoaDon = await hoaDonServices.GetHoaDonOnline(UserID);
-            return View(listHoaDon);
-        }
-        public async Task<IActionResult> DetailHoaDonOnline(string idHoaDon)
-        {
-            var UserID = _userManager.GetUserId(User);
-            var listHoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
-            return View(listHoaDon);
-        }
+
     }
 }

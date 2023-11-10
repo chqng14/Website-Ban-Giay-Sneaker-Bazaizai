@@ -85,6 +85,8 @@ namespace App_Api.Controllers
                         IdNguoiDung = idNguoiDung,
                         IdVouCher = VoucherKhaDung.IdVoucher,
                         TrangThai = (int)TrangThaiVoucherNguoiDung.KhaDung
+                        ,
+                        NgayNhan = DateTime.Now
                     };
                     if (VcNguoiDungRepos.AddItem(VCNguoiDung) == true)
                     {
@@ -119,40 +121,11 @@ namespace App_Api.Controllers
             return VcNguoiDungRepos.RemoveItem(cl);
         }
 
-        //[HttpPost("AddVoucherNguoiDungTuAdmin")]
-        //public async Task<bool> AddVoucherNguoiDungTuAdmin(string maVoucher, List<string> UserId)
-        //{
-        //    var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.MaVoucher == maVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDong && c.SoLuong > 0);
-        //    if (VoucherKhaDung != null)
-        //    {
-        //        foreach (var item in UserId.ToList())
-        //        {
-        //            var existsInVoucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(vnd => vnd.IdVouCher == VoucherKhaDung.IdVoucher && vnd.IdNguoiDung == item);
 
-        //            if (existsInVoucherNguoiDung != null)
-        //            {
-        //                // IdVoucher đã tồn tại trong bảng VoucherNguoiDung, loại bỏ phần tử khỏi danh sách UserId
-        //                UserId.Remove(item);
-        //            }
-        //        }
-        //        int soNguoiDuocTangVoucher = UserId.Count();
-        //        if (soNguoiDuocTangVoucher>0 && VoucherKhaDung.SoLuong >= soNguoiDuocTangVoucher)
-        //        {
-        //            if (await (voucherNguoiDungRep.TangVoucherNguoiDung(maVoucher, UserId)) == true)
-        //            {
-        //                VoucherKhaDung.SoLuong = VoucherKhaDung.SoLuong - soNguoiDuocTangVoucher;
-        //                VcRepos.EditItem(VoucherKhaDung);
-        //            }
-        //            return true;
-        //        }
-
-        //    }
-        //    return false;
-        //}
         [HttpPost("AddVoucherNguoiDungTuAdmin")]
         public async Task<string> AddVoucherNguoiDungTuAdmin(AddVoucherRequestDTO addVoucherRequestDTO)
         {
-            var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.MaVoucher == addVoucherRequestDTO.MaVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDong && c.SoLuong > 0);
+            var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.MaVoucher == addVoucherRequestDTO.MaVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDong);
             if (VoucherKhaDung != null)
             {
                 foreach (var item in addVoucherRequestDTO.UserId.ToList())
@@ -170,10 +143,8 @@ namespace App_Api.Controllers
                 {
                     if (await (voucherNguoiDungRep.TangVoucherNguoiDung(addVoucherRequestDTO)) == true)
                     {
-                        VoucherKhaDung.SoLuong = VoucherKhaDung.SoLuong - soNguoiDuocTangVoucher;
-                        VcRepos.EditItem(VoucherKhaDung);
+                        return "Tặng voucher thành công";
                     }
-                    return "Tặng voucher thành công";
                 }
                 else
                 {
@@ -183,6 +154,26 @@ namespace App_Api.Controllers
             }
             return "Voucher không còn khả dụng";
         }
+        [HttpPost("TangVoucherChoNguoiDungMoi")]
+        public async Task<bool> TangVoucherChoNguoiDungMoi(string ma)
+        {
+            int i = 0;
+            var lstNguoidungNew = await voucherNguoiDungRep.GetLstNguoiDUngMoi();
+            if (lstNguoidungNew.Any())
+            {
+                foreach (var item in lstNguoidungNew)
+                {
+                    if (await voucherNguoiDungRep.TangVoucherNguoiDungMoi(ma, item.Id)==true)
+                    {
+                        i++;
+                    }             
+                }
+                if(i >0)
+                return true;
+            }
+            return false;
 
+        }
+     
     }
 }
