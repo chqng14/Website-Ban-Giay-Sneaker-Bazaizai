@@ -1,16 +1,40 @@
-﻿<!DOCTYPE html>
+﻿@using App_View.IServices;
+@using App_View.Models.ViewModels;
+@inject IKhuyenMaiServices _khuyenMaiService;
+@using static App_Data.Repositories.TrangThai;
+@inject ISanPhamChiTietService sanPhamChiTietService;
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    var max = (await _khuyenMaiService.GetAllKhuyenMai()).Max(x => x.MucGiam);
+    var flashSale = (await _khuyenMaiService.GetAllKhuyenMai()).FirstOrDefault(x => x.MucGiam == max);
 
+    var sanPhamChiTietList = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
+    var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
+
+    foreach (var pro in sanPhamChiTietList)
+    {
+        var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
+        var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
+        var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
+        var sanPhamSaleViewModel = new SanPhamSaleViewModel
+                {
+                    SanPhamDanhSachView = pro,
+                    TrangThaiSale = Convert.ToInt32(trangThaiSale),
+                    TrangThai = Convert.ToInt32(trangThai),
+                    GiaThucTe = giaThucTe
+                };
+
+        sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
+    }
+    var lstSpDuocApDungKhuyenMai = sanPhamSaleViewModelList.Where(x => (x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong);
 }
+<!DOCTYPE html>
 <head>
     <meta charset="utf-8">
 
     <link rel="stylesheet"
           href="~/Admin/css/sale.css">
     <link rel="stylesheet" type="text/css"
-          href="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/micrositefe/MDCountdownTimer.e666138896378ff3f531.css">
+          href="~/Admin/css/sale1.css">
 
     <link rel="stylesheet" type="text/css"
           href="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/micrositefe/573.f566b344393e4a853c86.css">
@@ -190,7 +214,7 @@
                                                             <img data-is-lazy-load-bg-image="false"
                                                                  data-use-image-server="false" class="lazyload RPPDP+"
                                                                  loading="lazy"
-                                                                 src="https://down-vn.img.susercontent.com/file/vn-50009109-d1fc82885649397ac8392c0d018ce795"
+                                                                 src="/AnhSale/@flashSale.Url"
                                                                  role="presentation" alt=""
                                                                  style="position: absolute; top: 0px; height: 100%; width: 100%;">
                                                         </picture>
@@ -576,7 +600,7 @@
                                                         <div class="fX9y5D rsM6mQ"></div>
                                                         <div>
                                                             <div class="hJ4n7F lShvj+">
-                                                                <a href="#" role="button"
+                                                                <a href="" role="button"
                                                                    data-is-ssr-see-all-button="true"
                                                                    class="tQx6Fj PwG79a Gge7KH"
                                                                    style="color: rgb(0, 0, 0);">
@@ -601,9 +625,11 @@
                                                                          class="ggEu9K Q7tVEg">
                                                                         <ul class="MOttpc _3N9g5K"
                                                                             data-horizontal-scroll-wrapper="true">
+                                                                            @foreach (var spSale in lstSpDuocApDungKhuyenMai)
+                                                                            {
                                                                             <li class="mCTLtQ qn2FlY"
                                                                                 style="width: 16.67%;">
-                                                                                <a href="/-CHÍNH-HÃNG-BH12-THÁNG-Máy-giặt-mini-SAKURA-Tự-động-100-giặt-vắt-sấy-Có-thể-giặt-áo-khoác-lông-mùa-đông-i.460426806.17289290116"
+                                                                                <a href="@Url.Action("Details","SanPhamChiTiets",new{id= spSale.SanPhamDanhSachView.IdChiTietSp})"
                                                                                    data-sqe="link" class="sgdCbK">
                                                                                     <div class="Wj2E1T LHzHhr n98Hr6">
                                                                                         <div class="Wc6Tex">
@@ -613,13 +639,20 @@
                                                                                                          data-use-image-server="false"
                                                                                                          class="lazyload Mq2X5q"
                                                                                                          loading="lazy"
-                                                                                                         src="https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lldo90v9r0zsd5_tn"
-                                                                                                         alt="[ CHÍNH HÃNG - BH12 THÁNG ] Máy giặt mini SAKURA Tự động 100%, giặt, vắt, sấy - Có thể giặt áo khoác lông mùa đông">
+                                                                                                         src="/AnhSanPham/@spSale.SanPhamDanhSachView.Anh"
+                                                                                                         alt=$"{@spSale.SanPhamDanhSachView.SanPham}">
                                                                                                 </picture>
                                                                                             </div>
                                                                                             <div class="mwCb8P">
                                                                                                 <div class="l6i7Zv">
-                                                                                                    <span class="O2ltJ8">-36%</span>
+                                                                                                        @{
+                                                                                                            var giamGia = (spSale.GiaThucTe / spSale.SanPhamDanhSachView.GiaBan) * 100;
+                                                                                                            if (spSale.GiaThucTe == 0)
+                                                                                                            {
+                                                                                                                giamGia = 100;
+                                                                                                            }
+                                                                                                        }
+                                                                                                        <span class="O2ltJ8">-@giamGia%</span>
                                                                                                 </div>
                                                                                             </div>
                                                                                             <div class="QJIcs5">
@@ -651,12 +684,7 @@
                                                                                             <div class="RGjY0m">
                                                                                                 <div aria-hidden="true"
                                                                                                      class="Y9JWoL laR5TZ">
-                                                                                                    [ CHÍNH HÃNG - BH12
-                                                                                                    THÁNG ] Máy giặt
-                                                                                                    mini SAKURA Tự động
-                                                                                                    100%, giặt, vắt, sấy
-                                                                                                    - Có thể giặt áo
-                                                                                                    khoác lông mùa đông
+                                                                                                    @spSale.SanPhamDanhSachView.SanPham
                                                                                                 </div>
                                                                                                 <div class="_39xcoE">
                                                                                                     <div aria-hidden="true"
@@ -672,13 +700,13 @@
                                                                                                     <div class="_0w738K PrqYGq SlEOxC"
                                                                                                          manifest="[object Object]"
                                                                                                          aria-hidden="true">
-                                                                                                        ₫3.200.000 -
-                                                                                                        ₫3.300.000
+                                                              
+                                                                                                        ₫@spSale.SanPhamDanhSachView.GiaBan
                                                                                                     </div>
                                                                                                     <div class="_0w738K _5650Ab"
                                                                                                          manifest="[object Object]">
-                                                                                                        <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">2.115.000</span>
-                                                                                                        - <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">2.119.000</span>
+                                                                                                        <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">@spSale.GiaThucTe</span>
+                                                                                                        
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <div class="l4kljj">
@@ -691,7 +719,7 @@
                                                                                     </div>
                                                                                 </a>
                                                                             </li>
-
+                                                                            }
                                                                             <div class="mCTLtQ qn2FlY"
                                                                                  style="width: 16.67%;">
                                                                                 <div class="_00qJSX kK-mfd">
@@ -712,7 +740,7 @@
                                                                         </ul>
                                                                     </div>
                                                                 </div>
-                                                                <div data-is-carousel-nav-button="prev"
+                                                                <div data-is-carousel-nav-button="next" style="display:block"
                                                                      class="JpPmOu oPcZ0D oDW-sh">
                                                                     <svg enable-background="new 0 0 13 20"
                                                                          viewBox="0 0 13 20" role="img"
@@ -802,97 +830,106 @@
                                                                          class="ggEu9K Q7tVEg">
                                                                         <ul class="MOttpc _3N9g5K"
                                                                             data-horizontal-scroll-wrapper="true">
-                                                                            <li class="mCTLtQ qn2FlY"
-                                                                                style="width: 16.67%;">
-                                                                                <a href="/-1Kg-Túi-Gói-Hàng-Túi-Niêm-Phong-Siêu-Dày-Siêu-Dai-(15x25-17x30-20x30-25x35-28x42-32x45-38x52-45x60)-COMBO-i.19876070.16077714622"
-                                                                                   data-sqe="link" class="sgdCbK">
-                                                                                    <div class="Wj2E1T LHzHhr n98Hr6">
-                                                                                        <div class="Wc6Tex">
-                                                                                            <div class="_58HtDH">
-                                                                                                <picture class="JEjj5L">
-                                                                                                    <img data-is-lazy-load-bg-image="false"
-                                                                                                         data-use-image-server="false"
-                                                                                                         class="lazyload Mq2X5q"
-                                                                                                         loading="lazy"
-                                                                                                         src="https://down-vn.img.susercontent.com/file/sg-11134201-22100-03t6exncs0hv23_tn"
-                                                                                                         alt="[1Kg] Túi Gói Hàng, Túi Niêm Phong Siêu Dày Siêu Dai (15x25, 17x30, 20x30, 25x35, 28x42, 32x45, 38x52, 45x60) - COMBO">
-                                                                                                </picture>
-                                                                                            </div>
-                                                                                            <div class="UghJQx">
-                                                                                                <div class="nmR9Ql L-9Goq"
-                                                                                                     style="color: rgb(242, 82, 32);">
-                                                                                                    <span class="s5DWb8">
-                                                                                                        Yêu
-                                                                                                        thích
-                                                                                                    </span>
+                                                                            @foreach (var spSale in lstSpDuocApDungKhuyenMai)
+                                                                            {
+                                                                                <li class="mCTLtQ qn2FlY"
+                                                                                    style="width: 16.67%;">
+                                                                                    <a href="@Url.Action("Details","SanPhamChiTiets",new{id= spSale.SanPhamDanhSachView.IdChiTietSp})"
+                                                                                       data-sqe="link" class="sgdCbK">
+                                                                                        <div class="Wj2E1T LHzHhr n98Hr6">
+                                                                                            <div class="Wc6Tex">
+                                                                                                <div class="_58HtDH">
+                                                                                                    <picture class="JEjj5L">
+                                                                                                        <img data-is-lazy-load-bg-image="false"
+                                                                                                             data-use-image-server="false"
+                                                                                                             class="lazyload Mq2X5q"
+                                                                                                             loading="lazy"
+                                                                                                             src="/AnhSanPham/@spSale.SanPhamDanhSachView.Anh"
+                                                                                                             alt=$"{@spSale.SanPhamDanhSachView.SanPham}">
+                                                                                                    </picture>
+                                                                                                </div>
+                                                                                                <div class="mwCb8P">
+                                                                                                    <div class="l6i7Zv">
+                                                                                                        @{
+                                                                                                            var giamGia = (spSale.GiaThucTe / spSale.SanPhamDanhSachView.GiaBan) * 100;
+                                                                                                            if (spSale.GiaThucTe == 0)
+                                                                                                            {
+                                                                                                                giamGia = 100;
+                                                                                                            }
+                                                                                                        }
+                                                                                                        <span class="O2ltJ8">-@giamGia%</span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="QJIcs5">
+                                                                                                    <div aria-hidden="true">
+                                                                                                        <svg viewBox="0 0 20 20"
+                                                                                                             enable-background="new 0 0 20 20"
+                                                                                                             class="shopee-svg-icon Bk362s icon-video-play2">
+                                                                                                            <path d="m10 20c5.5228 0 10-4.4772 10-10 0-5.5228-4.4772-10-10-10-5.5228 0-10 4.4772-10 10 0 5.5228 4.4772 10 10 10z"
+                                                                                                                  clip-rule="evenodd"
+                                                                                                                  fill-opacity=".5"
+                                                                                                                  fill-rule="evenodd">
+                                                                                                            </path>
+                                                                                                            <path d="m7 6.1263c0-0.55798 0.4141-0.78618 0.91986-0.50718l6.6976 3.8599c0.506 0.27899 0.506 0.73534 0 1.0143l-6.6976 3.8876c-0.50603 0.279-0.91986 0.0508-0.91986-0.5072v-7.7474z"
+                                                                                                                  fill="#fff">
+                                                                                                            </path>
+                                                                                                        </svg>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="_5euHDc">
+                                                                                                    <div class="customized-overlay-image">
+                                                                                                        <img alt="overlay image"
+                                                                                                             src="https://down-vn.img.susercontent.com/file/vn-50009109-f87cdaca1aead83f81778d4b6aeeaec2"
+                                                                                                             width=""
+                                                                                                             height="">
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="mwCb8P">
-                                                                                                <div class="l6i7Zv">
-                                                                                                    <span class="O2ltJ8">-48%</span>
+                                                                                            <div class="NryQg2">
+                                                                                                <div class="RGjY0m">
+                                                                                                    <div aria-hidden="true"
+                                                                                                         class="Y9JWoL laR5TZ">
+                                                                                                        @spSale.SanPhamDanhSachView.SanPham
+                                                                                                    </div>
+                                                                                                    <div class="_39xcoE">
+                                                                                                        <div aria-hidden="true"
+                                                                                                             class="m1Trmg">
+                                                                                                            ₫
+                                                                                                            1.???.??0I 11.11
+                                                                                                            lúc 00:00
+                                                                                                        </div>
+                                                                                                    </div>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                            <div class="_5euHDc">
-                                                                                                <div class="customized-overlay-image">
-                                                                                                    <img alt="overlay image"
-                                                                                                         src="https://down-vn.img.susercontent.com/file/vn-50009109-93e19ed5c730e349c816a3d316fac0e1"
-                                                                                                         width=""
-                                                                                                         height="">
+                                                                                                <div class="iu8isX">
+                                                                                                    <div class="MqK3rf">
+                                                                                                        <div class="_0w738K PrqYGq SlEOxC"
+                                                                                                             manifest="[object Object]"
+                                                                                                             aria-hidden="true">
+
+                                                                                                            ₫@spSale.SanPhamDanhSachView.GiaBan
+                                                                                                        </div>
+                                                                                                        <div class="_0w738K _5650Ab"
+                                                                                                             manifest="[object Object]">
+                                                                                                            <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">@spSale.GiaThucTe</span>
+
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="l4kljj">
+                                                                                                        <button data-addtocart="{&quot;action&quot;:1,&quot;itemName&quot;:&quot;[ CHÍNH HÃNG - BH12 THÁNG ] Máy giặt mini SAKURA Tự động 100%, giặt, vắt, sấy - Có thể giặt áo khoác lông mùa đông&quot;,&quot;shopid&quot;:460426806,&quot;itemid&quot;:17289290116}"
+                                                                                                                data-addtocarttracking="{&quot;page_type&quot;:&quot;microsite&quot;,&quot;page_section&quot;:&quot;product_collection&quot;,&quot;target_type&quot;:&quot;add_to_cart_button&quot;,&quot;data&quot;:{&quot;microsite_pageid&quot;:48866,&quot;tracking_msg&quot;:&quot;eyJwYWdlX2luZm8iOnsicGFnZV90cmFjZV9pZCI6IjFmOGExYjg0MDlhNTJhOGQwY2EzYTk4NDcxMDExMjAwIn19&quot;,&quot;md_component_id&quot;:1699246519374,&quot;component_name&quot;:&quot;NewUserZone_  3917424 _ 115&quot;,&quot;component_type&quot;:&quot;33&quot;,&quot;microsite_labelid&quot;:[],&quot;section_location&quot;:9,&quot;collection_id&quot;:3917424,&quot;is_horizontal&quot;:true,&quot;itemid&quot;:17289290116,&quot;shopid&quot;:460426806,&quot;item_location&quot;:0}}"
+                                                                                                                class="uQynIu h3YISB"></button>
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div class="NryQg2">
-                                                                                            <div class="RGjY0m">
-                                                                                                <div aria-hidden="true"
-                                                                                                     class="Y9JWoL laR5TZ">
-                                                                                                    [1Kg] Túi Gói Hàng,
-                                                                                                    Túi Niêm Phong Siêu
-                                                                                                    Dày Siêu Dai (15x25,
-                                                                                                    17x30, 20x30, 25x35,
-                                                                                                    28x42, 32x45, 38x52,
-                                                                                                    45x60) - COMBO
-                                                                                                </div>
-                                                                                                <div class="_39xcoE">
-                                                                                                    <div aria-hidden="true"
-                                                                                                         class="q-1xPU"
-                                                                                                         style="color: rgb(246, 145, 19);">
-                                                                                                        #Shopdacbiet
-                                                                                                    </div>
-                                                                                                    <div aria-hidden="true"
-                                                                                                         class="_7RQ68k">
-                                                                                                        Mua Kèm Deal Sốc
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="iu8isX">
-                                                                                                <div class="MqK3rf">
-                                                                                                    <div class="_0w738K PrqYGq SlEOxC"
-                                                                                                         manifest="[object Object]"
-                                                                                                         aria-hidden="true">
-                                                                                                        ₫18.888 -
-                                                                                                        ₫92.888
-                                                                                                    </div>
-                                                                                                    <div class="_0w738K _5650Ab"
-                                                                                                         manifest="[object Object]">
-                                                                                                        <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">9.888</span>
-                                                                                                        - <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">51.888</span>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <div class="l4kljj">
-                                                                                                    <button data-addtocart="{&quot;action&quot;:1,&quot;itemName&quot;:&quot;[1Kg] Túi Gói Hàng, Túi Niêm Phong Siêu Dày Siêu Dai (15x25, 17x30, 20x30, 25x35, 28x42, 32x45, 38x52, 45x60) - COMBO&quot;,&quot;shopid&quot;:19876070,&quot;itemid&quot;:16077714622}"
-                                                                                                            data-addtocarttracking="{&quot;page_type&quot;:&quot;microsite&quot;,&quot;page_section&quot;:&quot;product_collection&quot;,&quot;target_type&quot;:&quot;add_to_cart_button&quot;,&quot;data&quot;:{&quot;microsite_pageid&quot;:48866,&quot;tracking_msg&quot;:&quot;eyJwYWdlX2luZm8iOnsicGFnZV90cmFjZV9pZCI6IjFmOGExYjg0MDlhNTJhOGQwY2EzYTk4NDcxMDExMjAwIn19&quot;,&quot;md_component_id&quot;:1699246519376,&quot;component_name&quot;:&quot;NewUserZone_  1745388_ 115&quot;,&quot;component_type&quot;:&quot;33&quot;,&quot;microsite_labelid&quot;:[],&quot;section_location&quot;:11,&quot;collection_id&quot;:1745388,&quot;is_horizontal&quot;:true,&quot;itemid&quot;:16077714622,&quot;shopid&quot;:19876070,&quot;item_location&quot;:0}}"
-                                                                                                            class="uQynIu h3YISB"></button>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </a>
-                                                                            </li>
+                                                                                    </a>
+                                                                                </li>
+                                                                            }
                                                                             <div class="mCTLtQ qn2FlY"
                                                                                  style="width: 16.67%;">
                                                                                 <div class="_00qJSX kK-mfd">
                                                                                     <div class="hJ4n7F u4f1Yx">
-                                                                                        <a href="/collections/1745388"
+                                                                                        <a href="/collections/3917424"
                                                                                            role="button"
                                                                                            data-is-ssr-see-all-button="false"
                                                                                            class="tQx6Fj _5Hogue PwG79a _5+DP0m">
@@ -1083,77 +1120,106 @@
                                                                          class="ggEu9K Q7tVEg">
                                                                         <ul class="MOttpc _3N9g5K"
                                                                             data-horizontal-scroll-wrapper="true">
-                                                                            <li class="mCTLtQ qn2FlY"
-                                                                                style="width: 16.67%;">
-                                                                                <a href="/-Mã-FATREND0911-giảm-đến-30k-tối-đa-99k-Áo-Thun-Đen-In-Chữ-Tom-Áo-phông-Basic-Đen-Hình-Cực-Chất-Trendy-Unisex-i.39534704.20721025592"
-                                                                                   data-sqe="link" class="sgdCbK">
-                                                                                    <div class="Wj2E1T LHzHhr n98Hr6">
-                                                                                        <div class="Wc6Tex">
-                                                                                            <div class="_58HtDH">
-                                                                                                <picture class="JEjj5L">
-                                                                                                    <img data-is-lazy-load-bg-image="false"
-                                                                                                         data-use-image-server="false"
-                                                                                                         class="lazyload Mq2X5q"
-                                                                                                         loading="lazy"
-                                                                                                         src="https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-llkl5usqriof81_tn"
-                                                                                                         alt="[Mã FATREND0911 giảm đến 30k tối đa 99k] Áo Thun Đen In Chữ Tom - Áo phông Basic Đen Hình Cực Chất Trendy Unisex">
-                                                                                                </picture>
-                                                                                            </div>
-                                                                                            <div class="mwCb8P">
-                                                                                                <div class="l6i7Zv">
-                                                                                                    <span class="O2ltJ8">-44%</span>
+                                                                            @foreach (var spSale in lstSpDuocApDungKhuyenMai)
+                                                                            {
+                                                                                <li class="mCTLtQ qn2FlY"
+                                                                                    style="width: 16.67%;">
+                                                                                    <a href="@Url.Action("Details","SanPhamChiTiets",new{id= spSale.SanPhamDanhSachView.IdChiTietSp})"
+                                                                                       data-sqe="link" class="sgdCbK">
+                                                                                        <div class="Wj2E1T LHzHhr n98Hr6">
+                                                                                            <div class="Wc6Tex">
+                                                                                                <div class="_58HtDH">
+                                                                                                    <picture class="JEjj5L">
+                                                                                                        <img data-is-lazy-load-bg-image="false"
+                                                                                                             data-use-image-server="false"
+                                                                                                             class="lazyload Mq2X5q"
+                                                                                                             loading="lazy"
+                                                                                                             src="/AnhSanPham/@spSale.SanPhamDanhSachView.Anh"
+                                                                                                             alt=$"{@spSale.SanPhamDanhSachView.SanPham}">
+                                                                                                    </picture>
+                                                                                                </div>
+                                                                                                <div class="mwCb8P">
+                                                                                                    <div class="l6i7Zv">
+                                                                                                        @{
+                                                                                                            var giamGia = (spSale.GiaThucTe / spSale.SanPhamDanhSachView.GiaBan) * 100;
+                                                                                                            if (spSale.GiaThucTe == 0)
+                                                                                                            {
+                                                                                                                giamGia = 100;
+                                                                                                            }
+                                                                                                        }
+                                                                                                        <span class="O2ltJ8">-@giamGia%</span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="QJIcs5">
+                                                                                                    <div aria-hidden="true">
+                                                                                                        <svg viewBox="0 0 20 20"
+                                                                                                             enable-background="new 0 0 20 20"
+                                                                                                             class="shopee-svg-icon Bk362s icon-video-play2">
+                                                                                                            <path d="m10 20c5.5228 0 10-4.4772 10-10 0-5.5228-4.4772-10-10-10-5.5228 0-10 4.4772-10 10 0 5.5228 4.4772 10 10 10z"
+                                                                                                                  clip-rule="evenodd"
+                                                                                                                  fill-opacity=".5"
+                                                                                                                  fill-rule="evenodd">
+                                                                                                            </path>
+                                                                                                            <path d="m7 6.1263c0-0.55798 0.4141-0.78618 0.91986-0.50718l6.6976 3.8599c0.506 0.27899 0.506 0.73534 0 1.0143l-6.6976 3.8876c-0.50603 0.279-0.91986 0.0508-0.91986-0.5072v-7.7474z"
+                                                                                                                  fill="#fff">
+                                                                                                            </path>
+                                                                                                        </svg>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="_5euHDc">
+                                                                                                    <div class="customized-overlay-image">
+                                                                                                        <img alt="overlay image"
+                                                                                                             src="https://down-vn.img.susercontent.com/file/vn-50009109-f87cdaca1aead83f81778d4b6aeeaec2"
+                                                                                                             width=""
+                                                                                                             height="">
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="_5euHDc">
-                                                                                                <div class="customized-overlay-image">
-                                                                                                    <img alt="overlay image"
-                                                                                                         src="https://down-vn.img.susercontent.com/file/vn-50009109-93e19ed5c730e349c816a3d316fac0e1"
-                                                                                                         width=""
-                                                                                                         height="">
+                                                                                            <div class="NryQg2">
+                                                                                                <div class="RGjY0m">
+                                                                                                    <div aria-hidden="true"
+                                                                                                         class="Y9JWoL laR5TZ">
+                                                                                                        @spSale.SanPhamDanhSachView.SanPham
+                                                                                                    </div>
+                                                                                                    <div class="_39xcoE">
+                                                                                                        <div aria-hidden="true"
+                                                                                                             class="m1Trmg">
+                                                                                                            ₫
+                                                                                                            1.???.??0I 11.11
+                                                                                                            lúc 00:00
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="iu8isX">
+                                                                                                    <div class="MqK3rf">
+                                                                                                        <div class="_0w738K PrqYGq SlEOxC"
+                                                                                                             manifest="[object Object]"
+                                                                                                             aria-hidden="true">
+
+                                                                                                            ₫@spSale.SanPhamDanhSachView.GiaBan
+                                                                                                        </div>
+                                                                                                        <div class="_0w738K _5650Ab"
+                                                                                                             manifest="[object Object]">
+                                                                                                            <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">@spSale.GiaThucTe</span>
+
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                    <div class="l4kljj">
+                                                                                                        <button data-addtocart="{&quot;action&quot;:1,&quot;itemName&quot;:&quot;[ CHÍNH HÃNG - BH12 THÁNG ] Máy giặt mini SAKURA Tự động 100%, giặt, vắt, sấy - Có thể giặt áo khoác lông mùa đông&quot;,&quot;shopid&quot;:460426806,&quot;itemid&quot;:17289290116}"
+                                                                                                                data-addtocarttracking="{&quot;page_type&quot;:&quot;microsite&quot;,&quot;page_section&quot;:&quot;product_collection&quot;,&quot;target_type&quot;:&quot;add_to_cart_button&quot;,&quot;data&quot;:{&quot;microsite_pageid&quot;:48866,&quot;tracking_msg&quot;:&quot;eyJwYWdlX2luZm8iOnsicGFnZV90cmFjZV9pZCI6IjFmOGExYjg0MDlhNTJhOGQwY2EzYTk4NDcxMDExMjAwIn19&quot;,&quot;md_component_id&quot;:1699246519374,&quot;component_name&quot;:&quot;NewUserZone_  3917424 _ 115&quot;,&quot;component_type&quot;:&quot;33&quot;,&quot;microsite_labelid&quot;:[],&quot;section_location&quot;:9,&quot;collection_id&quot;:3917424,&quot;is_horizontal&quot;:true,&quot;itemid&quot;:17289290116,&quot;shopid&quot;:460426806,&quot;item_location&quot;:0}}"
+                                                                                                                class="uQynIu h3YISB"></button>
+                                                                                                    </div>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                        <div class="NryQg2">
-                                                                                            <div class="RGjY0m">
-                                                                                                <div aria-hidden="true"
-                                                                                                     class="Y9JWoL laR5TZ">
-                                                                                                    [Mã FATREND0911 giảm
-                                                                                                    đến 30k tối đa 99k]
-                                                                                                    Áo Thun Đen In Chữ
-                                                                                                    Tom - Áo phông Basic
-                                                                                                    Đen Hình Cực Chất
-                                                                                                    Trendy Unisex
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="iu8isX">
-                                                                                                <div class="MqK3rf">
-                                                                                                    <div class="_0w738K PrqYGq SlEOxC"
-                                                                                                         manifest="[object Object]"
-                                                                                                         aria-hidden="true">
-                                                                                                        ₫79.000 -
-                                                                                                        ₫99.000
-                                                                                                    </div>
-                                                                                                    <div class="_0w738K _5650Ab"
-                                                                                                         manifest="[object Object]">
-                                                                                                        <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">55.000</span>
-                                                                                                        - <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">79.000</span>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                                <div class="l4kljj">
-                                                                                                    <button data-addtocart="{&quot;action&quot;:1,&quot;itemName&quot;:&quot;[Mã FATREND0911 giảm đến 30k tối đa 99k] Áo Thun Đen In Chữ Tom - Áo phông Basic Đen Hình Cực Chất Trendy Unisex&quot;,&quot;shopid&quot;:39534704,&quot;itemid&quot;:20721025592}"
-                                                                                                            data-addtocarttracking="{&quot;page_type&quot;:&quot;microsite&quot;,&quot;page_section&quot;:&quot;product_collection&quot;,&quot;target_type&quot;:&quot;add_to_cart_button&quot;,&quot;data&quot;:{&quot;microsite_pageid&quot;:48866,&quot;tracking_msg&quot;:&quot;eyJwYWdlX2luZm8iOnsicGFnZV90cmFjZV9pZCI6IjFmOGExYjg0MDlhNTJhOGQwY2EzYTk4NDcxMDExMjAwIn19&quot;,&quot;md_component_id&quot;:1699246519380,&quot;component_name&quot;:&quot;NewUserZone_  3 tabs _ 115&quot;,&quot;component_type&quot;:&quot;33&quot;,&quot;microsite_labelid&quot;:[],&quot;section_location&quot;:14,&quot;collection_id&quot;:1106033,&quot;is_horizontal&quot;:true,&quot;itemid&quot;:20721025592,&quot;shopid&quot;:39534704,&quot;item_location&quot;:0}}"
-                                                                                                            class="uQynIu h3YISB"></button>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </a>
-                                                                            </li>
+                                                                                    </a>
+                                                                                </li>
+                                                                            }
                                                                             <div class="mCTLtQ qn2FlY"
                                                                                  style="width: 16.67%;">
                                                                                 <div class="_00qJSX kK-mfd">
                                                                                     <div class="hJ4n7F u4f1Yx">
-                                                                                        <a href="/collections/1106033"
+                                                                                        <a href="/collections/3917424"
                                                                                            role="button"
                                                                                            data-is-ssr-see-all-button="false"
                                                                                            class="tQx6Fj _5Hogue PwG79a _5+DP0m">
@@ -1259,88 +1325,106 @@
                                                                          class="ggEu9K Q7tVEg">
                                                                         <ul class="MOttpc _3N9g5K"
                                                                             data-horizontal-scroll-wrapper="true">
-                                                                            <li class="mCTLtQ qn2FlY"
-                                                                                style="width: 16.67%;">
-                                                                                <a href="/Kem-tẩy-lông-OLLIE-kem-dưỡng-OLLIE-1-mặt-nạ-đất-sét-Beuclay-i.238383015.21589661210"
-                                                                                   data-sqe="link" class="sgdCbK">
-                                                                                    <div class="Wj2E1T LHzHhr n98Hr6">
-                                                                                        <div class="Wc6Tex">
-                                                                                            <div class="_58HtDH">
-                                                                                                <picture class="JEjj5L">
-                                                                                                    <img data-is-lazy-load-bg-image="false"
-                                                                                                         data-use-image-server="false"
-                                                                                                         class="lazyload Mq2X5q"
-                                                                                                         loading="lazy"
-                                                                                                         src="https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lns1n7f8zddmc6_tn"
-                                                                                                         alt="Kem tẩy lông OLLIE + kem dưỡng OLLIE+1 mặt nạ đất sét Beuclay">
-                                                                                                </picture>
-                                                                                            </div>
-                                                                                            <div class="UghJQx">
-                                                                                                <div class="nmR9Ql CAmi5z"
-                                                                                                     style="color: rgb(208, 1, 27);">
-                                                                                                    <div class="_9tKiCh">
+                                                                            @foreach (var spSale in lstSpDuocApDungKhuyenMai)
+                                                                            {
+                                                                                <li class="mCTLtQ qn2FlY"
+                                                                                    style="width: 16.67%;">
+                                                                                    <a href="@Url.Action("Details","SanPhamChiTiets",new{id= spSale.SanPhamDanhSachView.IdChiTietSp})"
+                                                                                       data-sqe="link" class="sgdCbK">
+                                                                                        <div class="Wj2E1T LHzHhr n98Hr6">
+                                                                                            <div class="Wc6Tex">
+                                                                                                <div class="_58HtDH">
+                                                                                                    <picture class="JEjj5L">
+                                                                                                        <img data-is-lazy-load-bg-image="false"
+                                                                                                             data-use-image-server="false"
+                                                                                                             class="lazyload Mq2X5q"
+                                                                                                             loading="lazy"
+                                                                                                             src="/AnhSanPham/@spSale.SanPhamDanhSachView.Anh"
+                                                                                                             alt=$"{@spSale.SanPhamDanhSachView.SanPham}">
+                                                                                                    </picture>
+                                                                                                </div>
+                                                                                                <div class="mwCb8P">
+                                                                                                    <div class="l6i7Zv">
+                                                                                                        @{
+                                                                                                            var giamGia = (spSale.GiaThucTe / spSale.SanPhamDanhSachView.GiaBan) * 100;
+                                                                                                            if (spSale.GiaThucTe == 0)
+                                                                                                            {
+                                                                                                                giamGia = 100;
+                                                                                                            }
+                                                                                                        }
+                                                                                                        <span class="O2ltJ8">-@giamGia%</span>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="QJIcs5">
+                                                                                                    <div aria-hidden="true">
+                                                                                                        <svg viewBox="0 0 20 20"
+                                                                                                             enable-background="new 0 0 20 20"
+                                                                                                             class="shopee-svg-icon Bk362s icon-video-play2">
+                                                                                                            <path d="m10 20c5.5228 0 10-4.4772 10-10 0-5.5228-4.4772-10-10-10-5.5228 0-10 4.4772-10 10 0 5.5228 4.4772 10 10 10z"
+                                                                                                                  clip-rule="evenodd"
+                                                                                                                  fill-opacity=".5"
+                                                                                                                  fill-rule="evenodd">
+                                                                                                            </path>
+                                                                                                            <path d="m7 6.1263c0-0.55798 0.4141-0.78618 0.91986-0.50718l6.6976 3.8599c0.506 0.27899 0.506 0.73534 0 1.0143l-6.6976 3.8876c-0.50603 0.279-0.91986 0.0508-0.91986-0.5072v-7.7474z"
+                                                                                                                  fill="#fff">
+                                                                                                            </path>
+                                                                                                        </svg>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="_5euHDc">
+                                                                                                    <div class="customized-overlay-image">
+                                                                                                        <img alt="overlay image"
+                                                                                                             src="https://down-vn.img.susercontent.com/file/vn-50009109-f87cdaca1aead83f81778d4b6aeeaec2"
+                                                                                                             width=""
+                                                                                                             height="">
                                                                                                     </div>
                                                                                                 </div>
                                                                                             </div>
-                                                                                            <div class="mwCb8P">
-                                                                                                <div class="l6i7Zv">
-                                                                                                    <span class="O2ltJ8">-30%</span>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                            <div class="_5euHDc">
-                                                                                                <div class="customized-overlay-image">
-                                                                                                    <img alt="overlay image"
-                                                                                                         src="https://down-vn.img.susercontent.com/file/vn-50009109-9de05dbff32179af6ea66c71b7824788"
-                                                                                                         width=""
-                                                                                                         height="">
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                        <div class="NryQg2">
-                                                                                            <div class="RGjY0m">
-                                                                                                <div aria-hidden="true"
-                                                                                                     class="Y9JWoL laR5TZ">
-                                                                                                    Kem tẩy lông OLLIE +
-                                                                                                    kem dưỡng OLLIE+1
-                                                                                                    mặt nạ đất sét
-                                                                                                    Beuclay
-                                                                                                </div>
-                                                                                                <div class="_39xcoE">
+                                                                                            <div class="NryQg2">
+                                                                                                <div class="RGjY0m">
                                                                                                     <div aria-hidden="true"
-                                                                                                         class="m1Trmg">
-                                                                                                        ₫
-                                                                                                        2??.??0I 11.11
-                                                                                                        lúc 00:00
+                                                                                                         class="Y9JWoL laR5TZ">
+                                                                                                        @spSale.SanPhamDanhSachView.SanPham
+                                                                                                    </div>
+                                                                                                    <div class="_39xcoE">
+                                                                                                        <div aria-hidden="true"
+                                                                                                             class="m1Trmg">
+                                                                                                            ₫
+                                                                                                            1.???.??0I 11.11
+                                                                                                            lúc 00:00
+                                                                                                        </div>
                                                                                                     </div>
                                                                                                 </div>
-                                                                                            </div>
-                                                                                            <div class="iu8isX">
-                                                                                                <div class="MqK3rf">
-                                                                                                    <div class="_0w738K PrqYGq SlEOxC"
-                                                                                                         manifest="[object Object]"
-                                                                                                         aria-hidden="true">
-                                                                                                        ₫429.000
+                                                                                                <div class="iu8isX">
+                                                                                                    <div class="MqK3rf">
+                                                                                                        <div class="_0w738K PrqYGq SlEOxC"
+                                                                                                             manifest="[object Object]"
+                                                                                                             aria-hidden="true">
+
+                                                                                                            ₫@spSale.SanPhamDanhSachView.GiaBan
+                                                                                                        </div>
+                                                                                                        <div class="_0w738K _5650Ab"
+                                                                                                             manifest="[object Object]">
+                                                                                                            <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">@spSale.GiaThucTe</span>
+
+                                                                                                        </div>
                                                                                                     </div>
-                                                                                                    <div class="_0w738K _5650Ab"
-                                                                                                         manifest="[object Object]">
-                                                                                                        <span aria-label="current price"></span><span class="yi6wjz yS8ee6">₫</span><span class="Fh3XjX _2cK8Gd">299.000</span>
+                                                                                                    <div class="l4kljj">
+                                                                                                        <button data-addtocart="{&quot;action&quot;:1,&quot;itemName&quot;:&quot;[ CHÍNH HÃNG - BH12 THÁNG ] Máy giặt mini SAKURA Tự động 100%, giặt, vắt, sấy - Có thể giặt áo khoác lông mùa đông&quot;,&quot;shopid&quot;:460426806,&quot;itemid&quot;:17289290116}"
+                                                                                                                data-addtocarttracking="{&quot;page_type&quot;:&quot;microsite&quot;,&quot;page_section&quot;:&quot;product_collection&quot;,&quot;target_type&quot;:&quot;add_to_cart_button&quot;,&quot;data&quot;:{&quot;microsite_pageid&quot;:48866,&quot;tracking_msg&quot;:&quot;eyJwYWdlX2luZm8iOnsicGFnZV90cmFjZV9pZCI6IjFmOGExYjg0MDlhNTJhOGQwY2EzYTk4NDcxMDExMjAwIn19&quot;,&quot;md_component_id&quot;:1699246519374,&quot;component_name&quot;:&quot;NewUserZone_  3917424 _ 115&quot;,&quot;component_type&quot;:&quot;33&quot;,&quot;microsite_labelid&quot;:[],&quot;section_location&quot;:9,&quot;collection_id&quot;:3917424,&quot;is_horizontal&quot;:true,&quot;itemid&quot;:17289290116,&quot;shopid&quot;:460426806,&quot;item_location&quot;:0}}"
+                                                                                                                class="uQynIu h3YISB"></button>
                                                                                                     </div>
-                                                                                                </div>
-                                                                                                <div class="l4kljj">
-                                                                                                    <button data-addtocart="{&quot;action&quot;:1,&quot;itemName&quot;:&quot;Kem tẩy lông OLLIE + kem dưỡng OLLIE+1 mặt nạ đất sét Beuclay&quot;,&quot;shopid&quot;:238383015,&quot;itemid&quot;:21589661210}"
-                                                                                                            data-addtocarttracking="{&quot;page_type&quot;:&quot;microsite&quot;,&quot;page_section&quot;:&quot;product_collection&quot;,&quot;target_type&quot;:&quot;add_to_cart_button&quot;,&quot;data&quot;:{&quot;microsite_pageid&quot;:48866,&quot;tracking_msg&quot;:&quot;eyJwYWdlX2luZm8iOnsicGFnZV90cmFjZV9pZCI6IjFmOGExYjg0MDlhNTJhOGQwY2EzYTk4NDcxMDExMjAwIn19&quot;,&quot;md_component_id&quot;:1699246519382,&quot;component_name&quot;:&quot;NewUserZone_  1123034 _ 115&quot;,&quot;component_type&quot;:&quot;33&quot;,&quot;microsite_labelid&quot;:[],&quot;section_location&quot;:16,&quot;collection_id&quot;:1123034,&quot;is_horizontal&quot;:true,&quot;itemid&quot;:21589661210,&quot;shopid&quot;:238383015,&quot;item_location&quot;:0}}"
-                                                                                                            class="uQynIu _8X07Wf"></button>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </div>
-                                                                                    </div>
-                                                                                </a>
-                                                                            </li>
+                                                                                    </a>
+                                                                                </li>
+                                                                            }
                                                                             <div class="mCTLtQ qn2FlY"
                                                                                  style="width: 16.67%;">
                                                                                 <div class="_00qJSX kK-mfd">
                                                                                     <div class="hJ4n7F u4f1Yx">
-                                                                                        <a href="/collections/1123034"
+                                                                                        <a href="/collections/3917424"
                                                                                            role="button"
                                                                                            data-is-ssr-see-all-button="false"
                                                                                            class="tQx6Fj _5Hogue PwG79a _5+DP0m">
@@ -1420,3 +1504,41 @@
         </div>
     </div>
 </body>
+@*<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var items = document.querySelectorAll('.MOttpc .mCTLtQ');
+        var prevButton = document.querySelector('.JpPmOu.oPcZ0D.oDW-sh');
+        var nextButton = document.querySelector('.JpPmOu.oPcZ0D.xP3YuH');
+
+        var currentIndex = 0;
+        var itemsPerPage = 6;
+
+        function showItems(startIndex) {
+            // Ẩn tất cả các thẻ li
+            items.forEach(function (item) {
+                item.style.display = 'none';
+            });
+
+            // Hiển thị số lượng thẻ li tương ứng với số lượng trang
+            for (var i = startIndex; i < startIndex + itemsPerPage; i++) {
+                if (items[i]) {
+                    items[i].style.display = 'block';
+                }
+            }
+        }
+
+        prevButton.addEventListener('click', function () {
+            currentIndex = Math.max(currentIndex - itemsPerPage, 0);
+            showItems(currentIndex);
+        });
+
+        nextButton.addEventListener('click', function () {
+            currentIndex = Math.min(currentIndex + itemsPerPage, items.length - itemsPerPage);
+            showItems(currentIndex);
+        });
+
+        // Hiển thị các sản phẩm ban đầu
+        showItems(currentIndex);
+    });
+</script>*@
+

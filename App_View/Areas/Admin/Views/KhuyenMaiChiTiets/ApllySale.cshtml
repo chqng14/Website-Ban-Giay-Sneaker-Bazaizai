@@ -1,6 +1,8 @@
 ﻿@using App_Data.DbContextt;
+@using App_View.IServices;
 @using App_View.Models.ViewModels;
 @using static App_Data.Repositories.TrangThai;
+@inject IKhuyenMaiServices khuyenMaiServices;
 @model IEnumerable<SanPhamSaleViewModel>
 
 @{
@@ -8,7 +10,7 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>ApllySale</h1>
+<h1>Apply Sale</h1>
 
 <style>
     .clickable-image {
@@ -36,21 +38,23 @@
 <div class="card">
     <div class="card-body">
         
-        <div class="col-lg-3 text-right flex">
-            <select id="selectSale" class="select2">
+        <div class="col-lg-3 text-right flex" style="max-width: max-content;">
+            <select class="form-select form-select-lg mb-3" aria-label="Large select example" id="selectSale">
                 @foreach (var item in (SelectList)ViewData["IdSale"])
                 {
                     <option value="@item.Value">@item.Text</option>
                 }
             </select>
-            <button id="applySaleButton" class="btn btn-primary" ">
+            <button id="applySaleButton" class="btn btn-primary">
                 <i class="anticon anticon-plus-circle m-r-5"></i>
                 <span>Add sale</span>
             </button>
             
         </div>
+        <div id="swapContainer" class="form-row">
+        </div>
 
-
+        </div>
         <div class="col-sm-12">
             <table id="data-table1" class="table dataTable">
                
@@ -151,18 +155,19 @@
 
         </div>
     </div>
-</div>
+
 
 
 <script>
     $(document).ready(function () {
 
-
+        var select = document.getElementById('selectSale');
+        var selectValue = select.value;
+        updateSwapContent(selectValue);
         $('#select-all-checkbox').click(function () {
             $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
         });
-
-        });
+    });
     document.getElementById("applySaleButton").addEventListener("click", function () {
         var selectedProducts = [];
         var checkboxes = document.querySelectorAll("input[name='selectedProducts']:checked");
@@ -195,6 +200,27 @@
             }
         });
     });
+
+    document.getElementById('selectSale').addEventListener('change', function () {
+        updateSwapContent(this.value);
+    });
+
+    function updateSwapContent(selectedValue) {
+        $.ajax({
+            url: "@Url.Action("viewSale", "KhuyenMaiChiTiets")",
+            type: "GET",
+            data: { id: selectedValue },
+            success: function (partialViewHtml) {
+                // Cập nhật nội dung của "swap" với partial view trả về
+                document.getElementById('swapContainer').innerHTML = partialViewHtml;
+            },
+            error: function () {
+                console.error('Failed to load partial view.');
+            }
+        });
+    }
+   
+
 </script>
                 @section Scripts {
                     @{
@@ -205,3 +231,10 @@
     <script src="~/Admin_assets/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
     <script src="~/Admin_assets/js/pages/datatables.js" defer></script>
 }
+<style>
+    #swapContainer {
+        display: flex;
+        width: 100%;
+    }
+
+</style>
