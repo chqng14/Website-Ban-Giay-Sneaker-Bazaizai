@@ -62,7 +62,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             //    NewEmail = email,
             //};
 
-            //IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+            IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -144,6 +144,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
                 $"Vui lòng xác nhận tài khoản của bạn bằng cách <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Nhấn vào đây</a>.");
 
             StatusMessage = "Email xác minh đã gửi. Vui lòng kiểm tra email của bạn.";
+
             return RedirectToPage();
         }
     }

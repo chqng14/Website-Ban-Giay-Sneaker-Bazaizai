@@ -1,10 +1,81 @@
 ﻿@model string
+<style>
+    .alert {
+        position: relative;
+        padding: 1rem 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+    }
+
+    .alert-dismissible {
+        padding-right: 3rem;
+    }
+
+    .alert-danger {
+        color: #842029;
+        background-color: #f8d7da;
+        border-color: #f5c2c7;
+    }
+
+    .alert-success {
+        color: #000;
+        background-color: aqua;
+        border-color: #f5c2c7;
+    }
+
+    .alert-dismissible .btn-close {
+        top: 50%;
+        right: 1%;
+    }
+
+    .btn-close {
+        position: absolute;
+        z-index: 2;
+        padding: 1.25rem 1rem;
+        box-sizing: content-box;
+        height: 50%;
+        padding: 0.25em 0.25em;
+        color: #000;
+        background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+        border: 0;
+        border-radius: 0;
+        opacity: .5;
+        cursor: pointer; /* Added cursor style for better UX */
+        transform: translateY(-50%); /* Center vertically using transform */
+    }
+
+    button[type="button"] {
+        cursor: pointer;
+        -webkit-appearance: button;
+        text-transform: none;
+        border-radius: 0;
+        text-align: center;
+        align-items: flex-start;
+        cursor: pointer;
+        box-sizing: border-box;
+        margin: 0em;
+        padding-block: 1px;
+        padding-inline: 6px;
+        border-width: 0;
+        border-style: outset;
+        border-color: #6c757d;
+        border-image: initial;
+    }
+</style>
 
 @if (!String.IsNullOrEmpty(Model))
 {
     var statusMessageClass = Model.StartsWith("Error") ? "danger" : "success";
-    <div class="alert alert-@statusMessageClass alert-dismissible" role="alert">
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+    <div class="alert alert-@statusMessageClass alert-dismissible" style="max-width: 1140px;margin: 0 auto;" role="alert" id="myAlert">
+        <button type="button" class="btn-close" aria-label="Close" onclick="closeAlert()"></button>
         @Model
     </div>
+
+    <script>
+        function closeAlert() {
+            document.getElementById('myAlert').style.display = 'none';
+        }
+    </script>
 }

@@ -4,14 +4,18 @@
 
 @{
     ViewData["Title"] = "Đăng ký";
-    Layout = "/Views/Shared/_LayoutQMK.cshtml";
+    Layout = "/Views/Shared/_Layout.cshtml";
 }
-
+<style>
+    .text-danger {
+       color:red;
+    }
+</style>
 <!--====== App Content ======-->
 <div class="app-content">
 
     <!--====== Section 1 ======-->
-   @* <div class="u-s-p-y-60">
+    <div class="u-s-p-y-60">
 
         <!--====== Section Content ======-->
         <div class="section__content">
@@ -21,12 +25,12 @@
                         <ul class="breadcrumb__list">
                             <li class="has-separator">
 
-                                <a  asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
                             </li>
                             <li class="is-marked">
 
                                 <a asp-area="Identity" asp-page="/Account/Register">
-                                    Signup
+                                    Đăng ký
                                 </a>
                             </li>
                         </ul>
@@ -34,23 +38,23 @@
                 </div>
             </div>
         </div>
-    </div>*@
+    </div>
     <!--====== End - Section 1 ======-->
     <!--====== Section 2 ======-->
     <div class="u-s-p-b-60">
 
         <!--====== Section Intro ======-->
-     @*   <div class="section__intro u-s-m-b-60">
+        <div class="section__intro u-s-m-b-60">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="section__text-wrap">
-                            <h1 class="section__heading u-c-secondary">CREATE AN ACCOUNT</h1>
+                            <h1 class="section__heading u-c-secondary">TẠO MỘT TÀI KHOẢN</h1>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>*@
+        </div>
         <!--====== End - Section Intro ======-->
         <!--====== Section Content ======-->
         <div class="section__content">
@@ -60,48 +64,49 @@
                         <div class="l-f-o">
                             <div class="l-f-o__pad-box">
                                 <h1 class="gl-h1">THÔNG TIN CÁ NHÂN</h1>
-                                
-                                    @if ((Model.ExternalLogins?.Count ?? 0) != 0)
-                                    {                                      
-                                    
-                                        <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                                            <div class="gl-s-api">
-                                                @foreach (var provider in Model.ExternalLogins!)
-                                                {
-                                                    @if (@provider.DisplayName == "Google")
-                                                    {
-                                                        <div class="u-s-m-b-30">
 
-                                                            <button type="submit" class="gl-s-api__btn gl-s-api__btn--gplus" name="provider" value="@provider.Name">
-                                                                <i class="fab fa-google"></i>
+                                @if ((Model.ExternalLogins?.Count ?? 0) != 0)
+                                {
+
+                                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                        <div class="gl-s-api">
+                                            @foreach (var provider in Model.ExternalLogins!)
+                                            {
+                                                @if (@provider.DisplayName == "Google")
+                                                {
+                                                    <div class="u-s-m-b-30">
+
+                                                        <button type="submit" class="gl-s-api__btn gl-s-api__btn--gplus" name="provider" value="@provider.Name">
+                                                            <i class="fab fa-google"></i>
 
                                                             <span>Đăng ký với Google</span>
-                                                            </button>
-                                                        </div>
-                                                    }
-                                                    else if (@provider.DisplayName == "Facebook")
-                                                    {
-                                                        <div class="u-s-m-b-15">
+                                                        </button>
+                                                    </div>
+                                                }
+                                                else if (@provider.DisplayName == "Facebook")
+                                                {
+                                                    <div class="u-s-m-b-15">
 
-                                                            <button type="submit" class="gl-s-api__btn gl-s-api__btn--fb" name="provider" value="@provider.Name">
-                                                                <i class="fab fa-facebook-f"></i>
+                                                        <button type="submit" class="gl-s-api__btn gl-s-api__btn--fb" name="provider" value="@provider.Name">
+                                                            <i class="fab fa-facebook-f"></i>
 
                                                             <span>Đăng ký với Facebook</span>
-                                                            </button>
-                                                        </div>
-                                                    }
-
+                                                        </button>
+                                                    </div>
                                                 }
 
-                                            </div>
+                                            }
+
+                                        </div>
 
 
-                                        </form>
-                                    }
-                                
+                                    </form>
+                                }
+
                                 <form class="l-f-o__form" id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
 
                                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
                                     <div class="u-s-m-b-30">
                                         <label class="gl-label">TÊN CỦA BẠN *</label>
 
@@ -120,47 +125,47 @@
                                         <div class="u-s-m-b-30">
 
                                             <!--====== Date of Birth Select-Box ======-->
-                                            
+
                                             <span class="gl-label">NGÀY SINH</span>
-                                           @* <div class="gl-dob" >
-                                                <select class="select-box select-box--primary-style" id="day" name="day">
-                                                    <option class="hidden" selected disabled>Day</option>
-                                                    @for (int day = 1; day <= 31; day++)
-                                                    {
-                                                        <option value="@day">@day</option>
-                                                    }
-                                                </select>
-                                                <select class="select-box select-box--primary-style" id="month" name="month" >
-                                                    <option class="hidden" selected disabled>Month</option>
-                                                    @for (int month = 1; month <= 12; month++)
-                                                    {
-                                                        <option value="@month">Tháng @month</option>
-                                                    }
-                                                </select>
-                                                <select class="select-box select-box--primary-style" id="year" name="year" >
-                                                    <option class="hidden" selected disabled>Year</option>
-                                                    @for (int year = 1900; year <= DateTime.Now.Year; year++)
-                                                    {
-                                                        <option value="@year">@year</option>
-                                                    }
-                                                </select>
+                                            @* <div class="gl-dob" >
+                                            <select class="select-box select-box--primary-style" id="day" name="day">
+                                            <option class="hidden" selected disabled>Day</option>
+                                            @for (int day = 1; day <= 31; day++)
+                                            {
+                                            <option value="@day">@day</option>
+                                            }
+                                            </select>
+                                            <select class="select-box select-box--primary-style" id="month" name="month" >
+                                            <option class="hidden" selected disabled>Month</option>
+                                            @for (int month = 1; month <= 12; month++)
+                                            {
+                                            <option value="@month">Tháng @month</option>
+                                            }
+                                            </select>
+                                            <select class="select-box select-box--primary-style" id="year" name="year" >
+                                            <option class="hidden" selected disabled>Year</option>
+                                            @for (int year = 1900; year <= DateTime.Now.Year; year++)
+                                            {
+                                            <option value="@year">@year</option>
+                                            }
+                                            </select>
                                             </div>*@
                                             <!--====== End - Date of Birth Select-Box ======-->
                                             <!--====== End - Date of Birth Select-Box ======-->
-                                         @*   <input class="select-box select-box--primary-style u-w-100" asp-for="Input.NgaySinh" id="DateofBirth" max="@DateTime.Now.ToString("yyyy-MM-dd")">*@
-                                            <input class ="select-box select-box--primary-style u-w-100" asp-for="Input.NgaySinh" placeholder="Ngày sinh">
-                                            <span asp-validation-for="Input.NgaySinh" class="text-danger" ></span>
+                                            @*   <input class="select-box select-box--primary-style u-w-100" asp-for="Input.NgaySinh" id="DateofBirth" max="@DateTime.Now.ToString("yyyy-MM-dd")">*@
+                                            <input class="select-box select-box--primary-style u-w-100" asp-for="Input.NgaySinh" placeholder="Ngày sinh">
+                                            <span asp-validation-for="Input.NgaySinh" class="text-danger"></span>
 
                                         </div>
                                         <div class="u-s-m-b-30">
 
-                                            <label class="gl-label" >GIỚI TÍNH</label>
-                                            <select class="select-box select-box--primary-style u-w-100"  asp-for="Input.GioiTinh">
+                                            <label class="gl-label">GIỚI TÍNH</label>
+                                            <select class="select-box select-box--primary-style u-w-100" asp-for="Input.GioiTinh">
                                                 <option class="hidden" selected disabled>Giới tính</option>
                                                 <option value="@((int)GioiTinhMacDinh.Nam)">Nam</option>
                                                 <option value="@((int)GioiTinhMacDinh.Nu)">Nữ</option>
-                                               
-                                           </select>
+
+                                            </select>
                                             <span asp-validation-for="Input.GioiTinh" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -168,7 +173,7 @@
 
                                         <label class="gl-label">TÊN TÀI KHOẢN *</label>
 
-                                        <input class="input-text input-text--primary-style"  asp-for="Input.UserName" aria-required="true" placeholder="Nhập tên tài khoản">
+                                        <input class="input-text input-text--primary-style" asp-for="Input.UserName" aria-required="true" placeholder="Nhập tên tài khoản">
                                         <span asp-validation-for="Input.UserName" class="text-danger"></span>
 
                                     </div>
@@ -191,13 +196,13 @@
 
                                         <label class="gl-label">XÁC NHẬN MẬT KHẨU *</label>
                                         <input asp-for="Input.ConfirmPassword" class="input-text input-text--primary-style" placeholder="Nhập lại mật khẩu" aria-required="true">
-                                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger" ></span>
-                                    
+                                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+
 
                                     </div>
-                                   
+
                                     <div class="u-s-m-b-15">
-                                        <button class="btn btn--e-transparent-brand-b-2" id="registerSubmit" type="submit">TẠO</button>
+                                        <button class="btn btn--e-transparent-brand-b-2" id="registerSubmit" type="submit">Đăng ký</button>
                                     </div>
 
                                     <a class="gl-link" asp-area="" asp-controller="Home" asp-action="Index">Quay lại cửa hàng</a>
@@ -217,7 +222,6 @@
     <partial name="_ValidationScriptsPartial" />
 }
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Thêm thư viện jQuery -->
-
 @*<script>
     $(document).ready(function () {
         $("#day, #month, #year").on("change", function () {

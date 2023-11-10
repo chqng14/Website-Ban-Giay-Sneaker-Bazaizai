@@ -47,17 +47,44 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="/Admin/Role/GetAllRole">Danh sách chức vụ</a>
-                                <a asp-page="/Role/GetAllRole">
+                                <a asp-page="/Role/Index">
                                     Danh sách chức vụ
                                 </a>
                             </li>
                         </ul>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="/Admin/Role/Create">Thêm mới chức vụ</a>
+                                <a asp-page="/Role/Create">
+                                    Tạo mới chức vụ
+                                </a>
                             </li>
                         </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="dropdown-toggle" href="javascript:void(0);">
+                            <span class="icon-holder">
+                                <i class="fas fa-gift"></i>
+                            </span>
+                            <span class="title">Quản lý người dùng</span>
+                            <span class="arrow">
+                                <i class="arrow-icon"></i>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a asp-page="/User/Index">
+                                    Danh sách người dùng
+                                </a>
+                            </li>
+                        </ul>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a asp-page="/User/AddRole">
+                                    Phân quyền cho người dùng
+                                </a>
+                            </li>
+                        </ul>
+                        
                     </li>
                 </ul>
 
