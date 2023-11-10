@@ -6,6 +6,7 @@ using App_Data.ViewModels.HoaDonChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.ThongTinGHDTO;
 using App_View.IServices;
+using App_View.Models;
 using App_View.Models.Momo;
 using App_View.Models.Order;
 using App_View.Services;
@@ -35,7 +36,8 @@ namespace App_View.Controllers
         ThongTinGHController ThongTinGHController;
         PTThanhToanChiTietController PTThanhToanChiTietController;
         PTThanhToanController PTThanhToanController;
-        public HoaDonController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService, ThongTinGHController thongTinGHController, IMomoService momoService)
+        private IVnPayService _vnPayService;
+        public HoaDonController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService, ThongTinGHController thongTinGHController, IMomoService momoService, IVnPayService vnPayService)
         {
             _sanPhamChiTietService = sanPhamChiTietService;
             _signInManager = signInManager;
@@ -47,6 +49,7 @@ namespace App_View.Controllers
             _momoService = momoService;
             PTThanhToanChiTietController = new PTThanhToanChiTietController();
             PTThanhToanController = new PTThanhToanController();
+            _vnPayService = vnPayService;
         }
         #region User
         public async Task<IActionResult> DataBill(ThongTinGHDTO thongTinGHDTO)
@@ -135,6 +138,11 @@ namespace App_View.Controllers
                 if (hoaDonDTO.LoaiThanhToan == "Momo")
                 {
                     var url = await Momo(hoadon.IdHoaDon, mahd, tien);
+                    return Ok(new { url = url, idHoaDon = hoadon.IdHoaDon });
+                }
+                if (hoaDonDTO.LoaiThanhToan == "VnPay")
+                {
+                    var url = await VnPay(hoadon.IdHoaDon, tien);
                     return Ok(new { url = url, idHoaDon = hoadon.IdHoaDon });
                 }
                 else
@@ -293,21 +301,39 @@ namespace App_View.Controllers
             else
             {
                 var idHoaDonSession = SessionServices.GetIdFomSession(HttpContext.Session, "idHoaDon");
-                OrderInfoModel orderInfoModel = SessionServices.GetIPNFomSession(HttpContext.Session, "IPN");
-                var jsonresponse = await _momoService.IPN(orderInfoModel);
-                if (jsonresponse.ResultCode == 0)
-                {
-                    SessionServices.SetIdToSession(HttpContext.Session, "transID", Convert.ToString(jsonresponse.TransId));
-                    await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.DaThanhToan);
-                    await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.DaThanhToan);
-                    await hoaDonServices.UpdateNgayHoaDon(idHoaDonSession, DateTime.Now, null, null); ;
-                }
-                else
-                {
-                    await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.ChuaThanhToan);
-                    await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.ChuaThanhToan);
-                }
                 string payment = await hoaDonServices.GetPayMent(idHoaDonSession);
+                if (payment == "MOMO")
+                {
+                    OrderInfoModel orderInfoModel = SessionServices.GetIPNFomSession(HttpContext.Session, "IPN");
+                    var jsonresponse = await _momoService.IPN(orderInfoModel);
+                    if (jsonresponse.ResultCode == 0)
+                    {
+                        //SessionServices.SetIdToSession(HttpContext.Session, "transID", Convert.ToString(jsonresponse.TransId));
+                        await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.DaThanhToan);
+                        await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.DaThanhToan);
+                        await hoaDonServices.UpdateNgayHoaDon(idHoaDonSession, DateTime.Now, null, null);
+                    }
+                    else
+                    {
+                        await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.ChuaThanhToan);
+                        await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.ChuaThanhToan);
+                    }
+                }
+                else if (payment == "VNPAY")
+                {
+                    var response = _vnPayService.PaymentExecute(Request.Query);
+                    if (response.Result.VnPayResponseCode == "00")
+                    {
+                        await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.DaThanhToan);
+                        await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.DaThanhToan);
+                        await hoaDonServices.UpdateNgayHoaDon(idHoaDonSession, DateTime.Now, null, null);
+                    }
+                    else
+                    {
+                        await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.ChuaThanhToan);
+                        await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.ChuaThanhToan);
+                    }
+                }
                 var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDonSession);
                 order.LoaiThanhToan = payment;
                 return View(order);
@@ -370,6 +396,42 @@ namespace App_View.Controllers
         }
         #endregion
 
+        public async Task<string> VnPay(string idHoaDon, double tien)
+        {
+            var model = new PaymentInformationModel()
+            {
+                Amount = tien,
+                OrderDescription = "Thanh toán tại Bazazai Store",
+                OrderType = "200000",
+            };
+            var url = await _vnPayService.CreatePaymentUrl(model, HttpContext);
+            var Pay = await PTThanhToanController.GetPTThanhToanByName("VnPay");
+            var idPay = await PTThanhToanChiTietController.CreatePTThanhToanChiTiet(idHoaDon, Pay, tien);
+            SessionServices.SetIdToSession(HttpContext.Session, "idPay", idPay);
+            SessionServices.SetIdToSession(HttpContext.Session, "idHoaDon", idHoaDon);
+            return url;
+        }
 
+        //public async Task<IActionResult> CallBack()
+        //{
+        //    var response = _vnPayService.PaymentExecute(Request.Query);
+        //    var idpt = SessionServices.GetIdFomSession(HttpContext.Session, "idPay");
+        //    var idHoaDonSession = SessionServices.GetIdFomSession(HttpContext.Session, "idHoaDon");
+        //    if (response.Result.VnPayResponseCode == "00")
+        //    {
+        //        await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.DaThanhToan);
+        //        await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.DaThanhToan);
+        //        await hoaDonServices.UpdateNgayHoaDon(idHoaDonSession, DateTime.Now, null, null);
+        //    }
+        //    else
+        //    {
+        //        await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.ChuaThanhToan);
+        //        await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.ChuaThanhToan);
+        //    }
+        //    string payment = await hoaDonServices.GetPayMent(idHoaDonSession);
+        //    var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDonSession);
+        //    order.LoaiThanhToan = payment;
+        //    return View(order);
+        //}
     }
 }

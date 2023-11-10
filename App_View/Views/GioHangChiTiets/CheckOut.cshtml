@@ -382,7 +382,21 @@
 
                                             <span class="gl-text u-s-m-t-6">Khi bạn nhấp vào "Đặt hàng" bên dưới, chúng tôi sẽ chuyển hướng bạn đến trang web của Momo để thiết lập thông tin thanh toán của bạn.</span>
                                         </div>
-                                       
+                                        <div class="u-s-m-b-10">
+
+                                            <!--====== Radio Box ======-->
+                                            <div class="radio-box">
+
+                                                <input type="radio" value="VnPay" id="direct-bank-transfer" name="Payment">
+                                                <div class="radio-box__state radio-box__state--primary">
+
+                                                    <label class="radio-box__label" for="direct-bank-transfer">VnPay</label>
+                                                </div>
+                                            </div>
+                                            <!--====== End - Radio Box ======-->
+
+                                            <span class="gl-text u-s-m-t-6">Khi bạn nhấp vào "Đặt hàng" bên dưới, chúng tôi sẽ chuyển hướng bạn đến trang web của VnPay để thiết lập thông tin thanh toán của bạn.</span>
+                                        </div>
                                         <div class="u-s-m-b-15">
 
                                             <!--====== Check Box ======-->
@@ -530,20 +544,20 @@
             var thongtinElement = document.getElementById('thongtin');
             var editShipAddressModal = $('#edit-ship-address');
 
-            var savedAddressId = localStorage.getItem('selectedAddressId');
-            if (savedAddressId) {
-                var savedRadioButton = document.getElementById(savedAddressId);
-                if (savedRadioButton) {
-                    savedRadioButton.checked = true;
-                    selectedId = localStorage.getItem('selectedAddressId');
-                    updateThongTin(savedRadioButton);
-                }
-            } else {
+            // var savedAddressId = localStorage.getItem('selectedAddressId');
+            // if (savedAddressId) {
+            //     var savedRadioButton = document.getElementById(savedAddressId);
+            //     if (savedRadioButton) {
+            //         savedRadioButton.checked = true;
+            //         selectedId = localStorage.getItem('selectedAddressId');
+            //         updateThongTin(savedRadioButton);
+            //     }
+            // } else {
                 var selectedAddress = document.querySelector('input[name="default-address"][data-trangthai="0"]');
                 selectedAddress.checked = true;
                 selectedId = selectedAddress.id;
                 updateThongTin(selectedAddress);
-            }
+            // }
 
             form.addEventListener('submit', function (event) {
                 event.preventDefault();

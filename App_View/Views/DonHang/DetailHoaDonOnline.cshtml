@@ -426,14 +426,14 @@
                     {
                         <h3 class="manage-o__text-2 u-c-secondary" style="color:red !important">Đơn hàng đã huỷ</h3>
                     }
-                    else if (Model.LoaiThanhToan == "MOMO" && Model.TrangThaiThanhToan == 1)
+                    else if (Model.LoaiThanhToan != "COD" && Model.TrangThaiThanhToan == 1)
                     {
-                        <h3 class="manage-o__text-2 u-c-secondary">Momo</h3>
+                        <h3 class="manage-o__text-2 u-c-secondary">@Model.LoaiThanhToan</h3>
                         <h3 class="manage-o__text-2 u-c-secondary">Đã thanh toán</h3>
                     }
-                    else if (Model.LoaiThanhToan == "MOMO" && Model.TrangThaiThanhToan == 0)
+                    else if (Model.LoaiThanhToan != "COD" && Model.TrangThaiThanhToan == 0)
                     {
-                        <h3 class="manage-o__text-2 u-c-secondary">Momo</h3>
+                        <h3 class="manage-o__text-2 u-c-secondary">@Model.LoaiThanhToan</h3>
                         <h3 class="manage-o__text-2 u-c-secondary" style="color:red !important">Vui lòng thanh toán đơn hàng của bạn</h3>
                     }
                     else
@@ -481,7 +481,7 @@
             <div class="dash-l-r u-s-m-t-8">
                 @if (Model.TrangThaiGiaoHang != 5)
                 {
-                    if (Model.LoaiThanhToan == "MOMO" && Model.TrangThaiThanhToan == 0)
+                    if (Model.LoaiThanhToan != "COD" && Model.TrangThaiThanhToan == 0)
                     {
                         <a>
                             <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Thanh toán</span>

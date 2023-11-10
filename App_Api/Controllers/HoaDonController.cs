@@ -124,6 +124,7 @@ namespace App_Api.Controllers
                 var hoadonct = (await _hoaDonChiTietController.GetAllHoaDon()).Where(c => c.IdHoaDon == hoadon.IdHoaDon).ToList();
                 var loaithanhtoan = await GetPTThanhToan(hoadon.IdHoaDon);
 
+
                 var sanPhamList = new List<SanPhamTest>(); // Tạo JArray mới cho mỗi hóa đơn
 
                 foreach (var item in hoadonct)
@@ -206,8 +207,15 @@ namespace App_Api.Controllers
         public async Task<string> GetPTThanhToan(string idhoadon)
         {
             var pt = _PTThanhToanChiTietController.PhuongThucThanhToanChiTietByIdPTTT(idhoadon);
-            var idpt = _PTThanhToanController.ShowAll().FirstOrDefault(c => c.IdPhuongThucThanhToan == pt.IdThanhToan);
-            return idpt.TenPhuongThucThanhToan;
+            if (pt == null)
+            {
+                return "Không có";
+            }
+            else
+            {
+                var idpt = _PTThanhToanController.ShowAll().FirstOrDefault(c => c.IdPhuongThucThanhToan == pt.IdThanhToan);
+                return idpt.TenPhuongThucThanhToan;
+            }
         }
     }
 }

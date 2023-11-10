@@ -51,12 +51,39 @@ namespace App_View.Controllers
             var UserID = _userManager.GetUserId(User);
             var listHoaDon = await hoaDonServices.GetHoaDonOnline(UserID);
             listHoaDon = listHoaDon.OrderByDescending(dh => dh.NgayTao).ToList();
+
             if (!string.IsNullOrEmpty(trangThai))
             {
                 listHoaDon = listHoaDon.Where(dh => dh.TrangThaiGiaoHang == Convert.ToInt32(trangThai)).ToList();
             }
-            return PartialView("GetHoaDonOnline", listHoaDon);
+
+            var pageSize = 4; // Số lượng đơn hàng muốn hiển thị ban đầu
+            var initialList = listHoaDon.Take(pageSize).ToList();
+
+            return PartialView("GetHoaDonOnline", initialList);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> GetMoreHoaDonOnline(string trangThai, int page)
+        {
+            var UserID = _userManager.GetUserId(User);
+            var pageSize = 4; // Số lượng đơn hàng muốn hiển thị trong mỗi lần tải thêm
+
+            var listHoaDon = await hoaDonServices.GetHoaDonOnline(UserID);
+            listHoaDon = listHoaDon.OrderByDescending(dh => dh.NgayTao).ToList();
+
+            if (!string.IsNullOrEmpty(trangThai))
+            {
+                listHoaDon = listHoaDon.Where(dh => dh.TrangThaiGiaoHang == Convert.ToInt32(trangThai)).ToList();
+            }
+
+            var startIndex = (page - 1) * pageSize;
+            var paginatedList = listHoaDon.Skip(startIndex).Take(pageSize).ToList();
+
+            return PartialView("GetHoaDonOnline", paginatedList);
+        }
+
+
         public async Task<IActionResult> DetailHoaDonOnline(string idHoaDon)
         {
             var UserID = _userManager.GetUserId(User);
