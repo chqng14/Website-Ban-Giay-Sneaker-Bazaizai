@@ -495,7 +495,7 @@
                                                         <!--====== Radio Box ======-->
                                                         <div class="radio-box">
 
-                                                            <input type="radio" id="@item.IdThongTinGH" name="default-address" data-trangthai="@item.TrangThai" @(item == thongTinGH.First() ? "checked" : "")>
+                                                            <input type="radio" id="@item.IdThongTinGH" name="default-address" data-trangthai="@item.TrangThai" @(item.TrangThai == 0 ? "checked" : "")>
                                                             <div class="radio-box__state radio-box__state--primary">
 
                                                                 <label class="radio-box__label" for="address-1"></label>
@@ -580,8 +580,8 @@
                 var cacThanhPhan = diaChi.split(',');
                 // Đảo ngược thứ tự của các thành phần
                 var diaChiDaoNguoc = cacThanhPhan.reverse().join(',');
-                var thongtin = `${tenNguoiNhan} ${sdt} ${diaChi}`;
-                $('#thongtin').text(thongtin);
+                var thongtin = `${tenNguoiNhan}<br>${sdt}<br>${diaChi}`;
+                $('#thongtin').html(thongtin);
                 citydb = diaChiDaoNguoc.split(',')[0].trim();
                 districtdb = diaChiDaoNguoc.split(',')[1].trim();
                 wardsdb = diaChiDaoNguoc.split(',')[2].trim();

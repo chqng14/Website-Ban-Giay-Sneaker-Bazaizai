@@ -12,7 +12,7 @@
         border: 1px solid #ccc;
         overflow: hidden;
         background-color: white;
-        margin-bottom:20px;
+        margin-bottom:15px;
         border-radius: 10px;
     }
 
@@ -49,6 +49,8 @@
                 <div class="tab-item" id="tab6" data-value="5">Đã hủy</div>
                 <div class="tab-item" id="tab7" data-value="6">Trả hàng</div>
             </div>
+            <input type="text" class="input-text input-text--border-radius input-text--style-1" id="searchMaDonHang" placeholder="Tìm kiếm đơn hàng" style="
+    width: -webkit-fill-available;margin-bottom:15px">
 
             <div class="m-order__list active" id="content1">
             </div>
@@ -63,9 +65,10 @@
     var page = 2;
     var isLoading = false;
     var trangThai = $('#tab1').attr('data-value');
+    var searchMaDonHang = '';
 
     $(document).ready(function () {
-        loadOrders(trangThai);
+        loadOrders(trangThai, searchMaDonHang);
 
         const tabItems = document.querySelectorAll('.tab-item');
         const content1 = document.getElementById('content1');
@@ -76,7 +79,7 @@
                 if (newTrangThai !== trangThai) {
                     trangThai = newTrangThai;
                     page = 2;
-                    loadOrders(trangThai);
+                    loadOrders(trangThai, searchMaDonHang);
                 }
 
                 document.querySelectorAll('.m-order__list').forEach(content => {
@@ -88,6 +91,7 @@
 
                 var data = {
                     trangThai: trangThai,
+                    searchMaDonHang: searchMaDonHang
                 };
                 $.ajax({
                     url: '@Url.Action("GetHoaDonOnline", "DonHang")',
@@ -114,15 +118,21 @@
                 loadMoreOrders();
             }
         });
+
+        $('#searchMaDonHang').on('input', function () {
+            searchMaDonHang = $(this).val();
+            page = 2;
+            loadOrders(trangThai, searchMaDonHang);
+        });
     });
 
-    function loadOrders(trangThai) {
+    function loadOrders(trangThai, searchMaDonHang) {
         isLoading = true;
 
         $.ajax({
             url: '@Url.Action("GetHoaDonOnline", "DonHang")',
             type: 'GET',
-            data: { trangThai: trangThai },
+            data: { trangThai: trangThai, searchMaDonHang: searchMaDonHang },
             success: function (result) {
                 $('#content1').empty().html(result);
                 isLoading = false;
@@ -143,7 +153,7 @@
         $.ajax({
             url: '@Url.Action("GetMoreHoaDonOnline", "DonHang")',
             type: 'GET',
-            data: { trangThai: trangThai, page: page },
+            data: { trangThai: trangThai, page: page, searchMaDonHang: searchMaDonHang },
             success: function (result) {
                 if (result.trim() !== '') {
                     $('#content1').append(result);
@@ -163,6 +173,7 @@
         });
     }
 </script>
+
 
 
 @section Scripts{

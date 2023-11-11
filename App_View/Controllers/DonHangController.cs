@@ -46,7 +46,7 @@ namespace App_View.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> GetHoaDonOnline(string trangThai)
+        public async Task<IActionResult> GetHoaDonOnline(string trangThai, string searchMaDonHang)
         {
             var UserID = _userManager.GetUserId(User);
             var listHoaDon = await hoaDonServices.GetHoaDonOnline(UserID);
@@ -57,17 +57,22 @@ namespace App_View.Controllers
                 listHoaDon = listHoaDon.Where(dh => dh.TrangThaiGiaoHang == Convert.ToInt32(trangThai)).ToList();
             }
 
-            var pageSize = 4; // Số lượng đơn hàng muốn hiển thị ban đầu
+            if (!string.IsNullOrEmpty(searchMaDonHang))
+            {
+                listHoaDon = listHoaDon.Where(dh => dh.MaHoaDon.ToUpper().Contains(searchMaDonHang.ToUpper())).ToList();
+            }
+
+            var pageSize = 4;
             var initialList = listHoaDon.Take(pageSize).ToList();
 
             return PartialView("GetHoaDonOnline", initialList);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetMoreHoaDonOnline(string trangThai, int page)
+        public async Task<IActionResult> GetMoreHoaDonOnline(string trangThai, int page, string searchMaDonHang)
         {
             var UserID = _userManager.GetUserId(User);
-            var pageSize = 4; // Số lượng đơn hàng muốn hiển thị trong mỗi lần tải thêm
+            var pageSize = 4;
 
             var listHoaDon = await hoaDonServices.GetHoaDonOnline(UserID);
             listHoaDon = listHoaDon.OrderByDescending(dh => dh.NgayTao).ToList();
@@ -75,6 +80,11 @@ namespace App_View.Controllers
             if (!string.IsNullOrEmpty(trangThai))
             {
                 listHoaDon = listHoaDon.Where(dh => dh.TrangThaiGiaoHang == Convert.ToInt32(trangThai)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(searchMaDonHang))
+            {
+                listHoaDon = listHoaDon.Where(dh => dh.MaHoaDon.ToUpper().Contains(searchMaDonHang.ToUpper())).ToList();
             }
 
             var startIndex = (page - 1) * pageSize;
@@ -82,6 +92,7 @@ namespace App_View.Controllers
 
             return PartialView("GetHoaDonOnline", paginatedList);
         }
+
 
 
         public async Task<IActionResult> DetailHoaDonOnline(string idHoaDon)

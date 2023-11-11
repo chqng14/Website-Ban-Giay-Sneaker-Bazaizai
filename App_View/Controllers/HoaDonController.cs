@@ -61,7 +61,7 @@ namespace App_View.Controllers
             var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
             {
-                await ThongTinGHController.CreateThongTin(thongTinGHDTO);
+                await ThongTinGHController.CreateThongTinBill(thongTinGHDTO);
                 return Ok(new { idThongTinGH = thongTinGHDTO.IdThongTinGH });
             }
             else
@@ -182,7 +182,7 @@ namespace App_View.Controllers
             var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
             {
-                await ThongTinGHController.CreateThongTin(thongTinGHDTO);
+                await ThongTinGHController.CreateThongTinBill(thongTinGHDTO);
                 return Ok(new { idThongTinGH = thongTinGHDTO.IdThongTinGH });
             }
             else

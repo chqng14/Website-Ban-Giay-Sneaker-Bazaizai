@@ -42,6 +42,11 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<List<ThongTinGiaoHang>>("https://localhost:7038/api/ThongTinGiaoHang/GetAll");
         }
 
+        public async Task<List<ThongTinGHDTO>> GetAllThongTinDTO()
+        {
+            return await _httpClient.GetFromJsonAsync<List<ThongTinGHDTO>>("https://localhost:7038/api/ThongTinGiaoHang/GetAllDTO");
+        }
+
         public async Task<List<ThongTinGiaoHang>> GetThongTinByIdUser(string idNguoiDung)
         {
 

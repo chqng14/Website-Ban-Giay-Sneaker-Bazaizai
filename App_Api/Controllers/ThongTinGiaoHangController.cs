@@ -32,6 +32,12 @@ namespace App_Api.Controllers
             return thongTinGHRepos.GetAll();
         }
 
+        [HttpGet("GetAllDTO")]
+        public IEnumerable<ThongTinGHDTO> GetAlDTO()
+        {
+            return thongTinGHRepos.GetAllDTO();
+        }
+
         // GET api/<ThongTinGiaoHangController>/5
         [HttpGet("GetByIdUser")]
         public IEnumerable<ThongTinGiaoHang> GetByIdUser(string idNguoiDung)
@@ -50,7 +56,7 @@ namespace App_Api.Controllers
 
         // PUT api/<ThongTinGiaoHangController>/5
         [HttpPut("Edit")]
-        public async Task<bool> Edit(ThongTinGHDTO thongTinGHDTO)
+        public bool Edit(ThongTinGHDTO thongTinGHDTO)
         {
             var thongTinGiaoHang = _mapper.Map<ThongTinGiaoHang>(thongTinGHDTO);
             return thongTinGHRepos.EditThongTinGH(thongTinGiaoHang);
@@ -62,7 +68,8 @@ namespace App_Api.Controllers
         public async Task<bool> Delete(string id)
         {
             var ttgh = thongTinGHRepos.GetAll().FirstOrDefault(c => c.IdThongTinGH == id);
-            return thongTinGHRepos.RemoveThongTinGH(ttgh);
+            ttgh.TrangThai = 2;
+            return thongTinGHRepos.EditThongTinGH(ttgh);
         }
 
         [HttpPut("UpdateTrangThai")]
