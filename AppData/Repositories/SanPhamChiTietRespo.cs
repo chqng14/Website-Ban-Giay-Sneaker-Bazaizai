@@ -535,7 +535,7 @@ namespace App_Data.Repositories
         {
             var sanPhamChiTiet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == IdSanPhamChiTiet);
             sanPhamChiTiet!.SoLuongTon = sanPhamChiTiet.SoLuongTon - soLuong;
-            sanPhamChiTiet!.SoLuongDaBan = soLuong;
+            sanPhamChiTiet!.SoLuongDaBan += soLuong;
             await _context.SaveChangesAsync();
         }
 
@@ -584,7 +584,7 @@ namespace App_Data.Repositories
         public async Task<bool> ProductIsNull(SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO)
         {
             var sanPhamChiTiet = await _context.sanPhamChiTiets
-                .Where(x =>
+                .FirstOrDefaultAsync(x =>
                 x.IdSanPham == sanPhamChiTietCopyDTO.SanPhamChiTietData!.IdSanPham &&
                 x.IdChatLieu == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdChatLieu &&
                 x.IdKichCo == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdKichCo &&
@@ -593,7 +593,7 @@ namespace App_Data.Repositories
                 x.IdLoaiGiay == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdLoaiGiay &&
                 x.IdThuongHieu == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdThuongHieu &&
                 x.IdXuatXu == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdXuatXu
-                ).FirstOrDefaultAsync();
+                );
             return sanPhamChiTiet != null ? false : true;
         }
 

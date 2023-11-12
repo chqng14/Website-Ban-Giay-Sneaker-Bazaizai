@@ -290,7 +290,7 @@
                             var inputValue = $(this).val();
                             if (inputValue) {
                                 var data = {
-                                    soKichCo: inputValue,
+                                    soKichCo: $.trim(inputValue),
                                 };
                                 $.ajax({
                                     url: 'CreateTenKichCo',
