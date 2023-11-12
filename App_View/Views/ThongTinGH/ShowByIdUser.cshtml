@@ -25,7 +25,7 @@
 
                     <span class="dash__link dash__link--black u-s-m-r-8">
 
-                        <a href="/ThongTinGH/Default">Đặt làm địa chỉ mặc định</a>
+                        <a href="/ThongTinGH/Default">Đặt địa chỉ mặc định</a>
                     </span>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                             <td>
 
                                 <a class="address-book-edit btn--e-transparent-platinum-b-2" href="@Url.Action("EditThongTin","ThongTinGH",new{idThongTin = item.IdThongTinGH})">Edit</a>
-                                <a class="address-book-edit btn--e-transparent-platinum-b-2" href="@Url.Action("Delete","ThongTinGH",new{idThongTin = item.IdThongTinGH})">Xoá</a>
+                                <a class="address-book-edit btn--e-transparent-platinum-b-2" href="javascript:void(0)" onclick="confirmDelete('@Url.Action("Delete","ThongTinGH",new{idThongTin = item.IdThongTinGH})')">Xoá</a>
                             </td>
                             <td>@item.TenNguoiNhan</td>
                             <td>@item.SDT</td>
@@ -76,3 +76,33 @@
         </a>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        function confirmDelete(deleteUrl) {
+            // Thực hiện Ajax request để kiểm tra trạng thái
+            $.ajax({
+                url: deleteUrl,
+                type: 'GET',
+                success: function (data) {
+                    if (data.status === 0) {
+                        Swal.fire({
+                            title: "Vui lòng chọn địa chỉ khác làm mặc định trước khi xoá!",
+                            icon: "warning",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } 
+                    else {
+                        window.location.href = "/ThongTinGH/ShowByIdUser";
+                    }
+                },
+                error: function () {
+                    // Xử lý lỗi nếu có
+                    alert('Có lỗi xảy ra');
+                }
+            });
+        }
+    </script>
+
+}

@@ -100,8 +100,17 @@ namespace App_View.Controllers
         //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(string idThongTin)
         {
-            await thongTinGHServices.DeleteThongTin(idThongTin);
-            return RedirectToAction("ShowByIdUser");
+            var thongtin = (await GetThongTinGiaoHang()).FirstOrDefault(c => c.IdThongTinGH == idThongTin);
+            if (thongtin.TrangThai == 0)
+            {
+                return Json(new { status = 0 });
+            }
+            else
+            {
+                await thongTinGHServices.DeleteThongTin(idThongTin);
+                return RedirectToAction("ShowByIdUser");
+
+            }
         }
     }
 }

@@ -258,6 +258,11 @@ namespace App_View.Controllers
                     var url = await Momo(hoadon.IdHoaDon, mahd, tien);
                     return Ok(new { url = url, idHoaDon = hoadon.IdHoaDon });
                 }
+                if (hoaDonDTO.LoaiThanhToan == "VnPay")
+                {
+                    var url = await VnPay(hoadon.IdHoaDon, tien);
+                    return Ok(new { url = url, idHoaDon = hoadon.IdHoaDon });
+                }
                 else
                 {
                     await Cod(hoadon.IdHoaDon, tien);
@@ -364,6 +369,21 @@ namespace App_View.Controllers
             SessionServices.SetIdToSession(HttpContext.Session, "idPay", idPay);
             return Ok();
         }
+        public async Task<string> VnPay(string idHoaDon, double tien)
+        {
+            var model = new PaymentInformationModel()
+            {
+                Amount = tien,
+                OrderDescription = "Thanh toán tại Bazazai Store",
+                OrderType = "200000",
+            };
+            var url = await _vnPayService.CreatePaymentUrl(model, HttpContext);
+            var Pay = await PTThanhToanController.GetPTThanhToanByName("VnPay");
+            var idPay = await PTThanhToanChiTietController.CreatePTThanhToanChiTiet(idHoaDon, Pay, tien);
+            SessionServices.SetIdToSession(HttpContext.Session, "idPay", idPay);
+            SessionServices.SetIdToSession(HttpContext.Session, "idHoaDon", idHoaDon);
+            return url;
+        }
         private async Task<Tuple<int, int, int, List<string>>> KiemTraGioHang(IEnumerable<GioHangChiTietDTO> listcart)
         {
             var message = new List<string>();
@@ -396,21 +416,6 @@ namespace App_View.Controllers
         }
         #endregion
 
-        public async Task<string> VnPay(string idHoaDon, double tien)
-        {
-            var model = new PaymentInformationModel()
-            {
-                Amount = tien,
-                OrderDescription = "Thanh toán tại Bazazai Store",
-                OrderType = "200000",
-            };
-            var url = await _vnPayService.CreatePaymentUrl(model, HttpContext);
-            var Pay = await PTThanhToanController.GetPTThanhToanByName("VnPay");
-            var idPay = await PTThanhToanChiTietController.CreatePTThanhToanChiTiet(idHoaDon, Pay, tien);
-            SessionServices.SetIdToSession(HttpContext.Session, "idPay", idPay);
-            SessionServices.SetIdToSession(HttpContext.Session, "idHoaDon", idHoaDon);
-            return url;
-        }
 
         //public async Task<IActionResult> CallBack()
         //{

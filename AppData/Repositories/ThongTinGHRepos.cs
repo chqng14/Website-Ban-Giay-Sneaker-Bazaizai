@@ -40,8 +40,8 @@ namespace App_Data.Repositories
         {
             try
             {
-                var id = context.thongTinGiaoHangs.Find(item.IdThongTinGH);
-                context.thongTinGiaoHangs.Update(id);
+                //var id = context.thongTinGiaoHangs.Find(item.IdThongTinGH);
+                context.thongTinGiaoHangs.Update(item);
                 context.SaveChanges();
                 return true;
             }
