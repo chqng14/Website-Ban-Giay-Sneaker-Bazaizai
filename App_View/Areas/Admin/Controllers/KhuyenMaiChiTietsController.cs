@@ -29,12 +29,13 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly BazaizaiContext _context;
         private readonly IKhuyenMaiChiTietServices khuyenMaiChiTietServices;
+        private readonly IKhuyenMaiServices _khuyenMaiServices;
         private readonly ISanPhamChiTietService sanPhamChiTietService;
         private readonly IAllRepo<KhuyenMaiChiTiet> allRepo;
         private readonly IMapper _mapper;
         HttpClient httpClient;
 
-        public KhuyenMaiChiTietsController(IKhuyenMaiChiTietServices khuyenMaiChiTietServices, ISanPhamChiTietService sanPhamChiTietService, IMapper mapper)
+        public KhuyenMaiChiTietsController(IKhuyenMaiChiTietServices khuyenMaiChiTietServices, ISanPhamChiTietService sanPhamChiTietService, IMapper mapper, IKhuyenMaiServices khuyenMaiServices)
         {
             _context = new BazaizaiContext();
 
@@ -43,6 +44,7 @@ namespace App_View.Areas.Admin.Controllers
             this.khuyenMaiChiTietServices = khuyenMaiChiTietServices;
             this.sanPhamChiTietService = sanPhamChiTietService;
             _mapper = mapper;
+            _khuyenMaiServices = khuyenMaiServices;
         }
 
         // GET: Admin/KhuyenMaiChiTiets
@@ -329,6 +331,12 @@ namespace App_View.Areas.Admin.Controllers
                 throw;
             }
 
+        }
+        [HttpGet]
+        public async Task<IActionResult> viewSaleAsync(string id)
+        {
+            var km = (await _khuyenMaiServices.GetAllKhuyenMai()).FirstOrDefault(x => x.IdKhuyenMai == id);
+            return PartialView("viewSale", km);
         }
     }
 }

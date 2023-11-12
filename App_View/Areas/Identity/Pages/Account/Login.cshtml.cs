@@ -117,8 +117,9 @@ namespace App_View.Areas.Identity.Pages.Account
                     //result.
                     //ErrorMessage = "Error: Nỗ lực đăng nhập không hợp lệ.";
                     //return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
-                    ModelState.AddModelError(string.Empty, "Nỗ lực đăng nhập không hợp lệ.");
-                    return Page();
+                    ErrorMessage = "Error: Nỗ lực đăng nhập không hợp lệ.";
+                    //ModelState.AddModelError(string.Empty, "Nỗ lực đăng nhập không hợp lệ.");
+                    return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
                 }
             }
 

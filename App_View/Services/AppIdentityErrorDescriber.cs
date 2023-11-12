@@ -16,7 +16,13 @@ namespace App_View.Services
 
         public override IdentityError DuplicateEmail(string email)
         {
-            return base.DuplicateEmail(email);
+            //return base.DuplicateEmail(email);
+            var error = base.DuplicateUserName(email);
+            return new IdentityError()
+            {
+                Code = error.Code,
+                Description = $"Email {email} đã được sử dụng.",
+            };
         }
 
         public override IdentityError DuplicateRoleName(string role)
@@ -32,7 +38,13 @@ namespace App_View.Services
 
         public override IdentityError DuplicateUserName(string userName)
         {
-            return base.DuplicateUserName(userName);
+            //return base.DuplicateUserName(userName);
+            var error=base.DuplicateUserName(userName);
+            return new IdentityError()
+            {
+                Code = error.Code,
+                Description = $"Tên tài khoản {userName} đã được sử dụng.",
+            };
         }
 
         public override bool Equals(object? obj)
