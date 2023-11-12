@@ -10,16 +10,62 @@
     .checkbox_css {
         width: 20px;
         height: 20px;
+        cursor: pointer;
     }
 
     .voucher-checkbox {
         width: 20px;
         height: 20px;
+        cursor: pointer;
     }
 
+    .radio_check input[type="radio"] {
+        margin-left: 10px;
+        cursor: pointer;
+    }
+
+    .tabs {
+        display: flex;
+        border: 1px solid #ccc;
+        overflow: hidden;
+        background-color: white;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        width: 600px;
+        margin-top:50px;
+    }
+
+    .tab-item {
+        flex: 1;
+        font-size: 14px;
+        text-align: center;
+        padding: 10px 0;
+        cursor: pointer;
+        color: #333333;
+        transition: background-color 0.3s;
+    }
+
+        .tab-item.active {
+            background-color: #3F87F5;
+            color: #fff;
+        }
+
+    .d-md-flex {
+        display: flex !important;
+        margin-bottom: -15px;
+    }
+
+    header {
+        background: #3498db; /* Màu nền của tiêu đề */
+        padding: 20px;
+        color: #fff; /* Màu chữ trắng để tương phản */
+        text-align: left;
+    }
 </style>
 
-<h1>Voucher</h1>
+<header>
+    <h1 >Voucher Online</h1>
+</header>
 
 <div class="notification-toast top-right" id="notification-toast"></div>
 <div class="d-md-flex">
@@ -28,160 +74,28 @@
             <form asp-action="ShowVoucher" method="post">
                 <div class="d-md-flex">
                     <div class="m-b-10">
-                        <select id="trangThai" name="trangThai" class="custom-select">
-                            <option value="tatCa">Tất cả</option>
-                            <option value="hoatDong">Hoạt động</option>
-                            <option value="chuaBatDau">Chưa bắt đầu</option>
-                            <option value="khongHoatDong">Không hoạt động</option>
-                            <option value="DaHuy">Đã huỷ</option>
-                        </select>
-                    </div>
-                    <div class="m-b-10 ml-1">
-                        <button type="submit" class="btn btn-primary">Lọc</button>
+                        <div class="tabs">
+                            <div class="tab-item" id="tab1" name="trangThai">Tất cả</div>
+                            <div class="tab-item active" id="tab2" name="trangThai" data-value="0">Hoạt động</div>
+                            <div class="tab-item" id="tab3" name="trangThai" data-value="2">Chưa bắt đầu</div>
+                            <div class="tab-item" id="tab4" name="trangThai" data-value="1">Không hoạt động</div>
+                            <div class="tab-item" id="tab5" name="trangThai" data-value="3">Đã huỷ</div>
+                        </div>
                     </div>
                 </div>
             </form>
         </div>
-        <div class="col-lg-4 text-right">
+        <div class="col-lg-4 text-right" style="margin-top:50px">
             <h1>  <a class="btn btn-primary" asp-action="Create"><i class="anticon anticon-plus-circle"></i> Tạo mới</a></h1>
 
         </div>
     </div>
 </div>
-<table id="data-table" class="table" style="text-align:center">
 
-    <thead>
-        <tr>
-            <th>
-                Mã Voucher
-            </th>
-            <th>
-                Tên
-            </th>
-            <th>
-                Mức ưu đãi
-            </th>
-            <th>
-                Điều kiện
-            </th>
-            <th>
-                Loại hình
-            </th>
-            <th>
-                Số lượng
-            </th>
-            <th>
-                Ngày khởi tạo
-            </th>
-            <th>
-                Ngày bắt đầu
-            </th>
-            <th>
-                Ngày kết thúc
-            </th>
-            <th>
-                QR
-            </th>
-            <th>
-                Trạng thái
-            </th>
-            <th>
-                <input type="checkbox" id="select-all-checkbox" class="checkbox_css" />
-            </th>
+<div id="partialContainer">
+    <!-- Nội dung PartialView sẽ được hiển thị ở đây -->
+</div>
 
-            <th></th>
-        </tr>
-
-    </thead>
-    <tbody>
-        @foreach (var item in ViewBag.TatCa)
-        {
-            <tr>
-                <td>
-                    @item.MaVoucher
-                </td>
-                <td>
-                    @item.TenVoucher
-                </td>
-                <td>
-                    @if (item.LoaiHinhUuDai == 1)
-                    {
-                        int mucUuDai = int.Parse(item.MucUuDai.ToString());
-                        string mucUuDaiPhanTram = mucUuDai.ToString() + "%";
-                        @mucUuDaiPhanTram
-                    }
-                    else
-                    {
-                        @string.Format("{0:N0}đ", item.MucUuDai)
-                    }
-                </td>
-                <td>
-                    @string.Format("{0:N0}đ", item.DieuKien)
-                </td>
-                <td>
-                    @if (item.LoaiHinhUuDai == 0)
-                    {
-                        <span>Giảm giá theo tiền mặt</span>
-                    }
-                    @if (item.LoaiHinhUuDai == 1)
-                    {
-                        <span>Giảm giá %</span>
-                    }
-                    @if (item.LoaiHinhUuDai == 2)
-                    {
-                        <span>Miễn phí vận chuyển</span>
-                    }
-                </td>
-                <td>
-                    @item.SoLuong
-                </td>
-                <td>
-                    @item.NgayTao
-                </td>
-                <td>
-                    @item.NgayBatDau
-                </td>
-                <td>
-                    @item.NgayKetThuc
-                </td>
-                <td>
-                    QR
-                </td>
-                <td>
-                    @if (item.TrangThai == 0)
-                    {
-                        <span>Hoạt động</span>
-                    }
-                    else if (item.TrangThai == 1)
-                    {
-                        <span>Không hoạt động</span>
-                    }
-                    else if (item.TrangThai == 2)
-                    {
-                        <span>Chưa bắt đầu</span>
-                    }
-                    else if (item.TrangThai == 3)
-                    {
-                        <span>Đã huỷ</span>
-                    }
-                </td>
-                <td>
-                    <input type="checkbox" class="voucher-checkbox" data-value="@item.IdVoucher" />
-                </td>
-
-                <td>
-
-                    <a asp-action="GiveVouchersToUsers" asp-route-maVoucher="@item.MaVoucher"><i class="anticon anticon-gift"></i></a>
-              
-                    
-                    <a asp-action="Edit" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i></a>
-                    @*   <a asp-action="Details" asp-route-id="@item.IdVoucher"><i class="anticon anticon-eye"></i></a> |
-                <a asp-action="Delete" asp-route-id="@item.IdVoucher"><i class="anticon anticon-delete"></i></a> *@
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
 
 @* //Huỷ voucher đã chọn *@
 <button class="btn btn-warning mr-2" data-toggle="modal" data-target="#cancel" style="color:white">Huỷ hoạt động của voucher đã chọn</button>
@@ -229,91 +143,74 @@
     </div>
 </div>
 @* //Tặng voucher đã chọn *@
-<a class="btn btn-secondary mr-2"  asp-action="GiveVouchersToUsers">Tặng voucher</a>
+<a class="btn btn-secondary mr-2" asp-action="GiveVouchersToUsers">Tặng voucher</a>
 <script>
-    $(document).ready(function () {
-        $('#data-table').DataTable()
-        $('#select-all-checkbox').click(function () {
-            $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
-        });
+    // Hàm để load danh sách Voucher mặc định khi trang web được load
+    function loadDefaultVoucher() {
+        var trangThai = $('#tab2').data('value'); // Lấy giá trị mặc định từ tab "Hoạt động"
 
-
-        $('#delete-button').on('click', function () {
-            // Lấy danh sách id voucher đã chọn
-            var selectedIds = [];
-
-            $('.voucher-checkbox:checked').each(function () {
-                selectedIds.push($(this).data('value'));
-            });
-            // Gọi hàm để huỷ hoạt động voucher
-            huyHoatDongVoucher(selectedIds);
-        });
-        $('#restore-button').on('click', function () {
-            // Lấy danh sách id voucher đã chọn
-            var selectedIds = [];
-
-            $('.voucher-checkbox:checked').each(function () {
-                selectedIds.push($(this).data('value'));
-            });
-            // Gọi hàm để huỷ hoạt động voucher
-            KhoiPhucVoucher(selectedIds);
-        });
-
-    });
-    // Hàm để gọi Ajax và chuyển về controller để huỷ hoạt động voucher
-    function huyHoatDongVoucher(selectedIds) {
-        // Thực hiện Ajax request để chuyển selectedIds về controller
         $.ajax({
-            url: '/Admin/Vouchers/DeleteVoucherWithList', // Thay 'ControllerName' bằng tên thực tế của controller
-            type: 'POST', // Hoặc 'GET' tùy thuộc vào yêu cầu của bạn
-            data: { voucherIds: selectedIds },
-            success: function (response) {
-                // Xử lý kết quả từ controller nếu cần
-                // alert('Huỷ hoạt động voucher thành công');
-                var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                     <div class="toast-header">
-                                         <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                         <strong class="mr-auto">Thông báo</strong>
-                                         <small>1 second ago</small>
-                                         <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                             <span aria-hidden="true">&times;</span>
-                                         </button>
-                                     </div>
-                                     <div class="toast-body">
-                                         Huỷ thành công (tự load lại sau 2s)
-                                     </div>
-                             </div>`
-                $('#notification-toast').append(toastHTML)
-                $('#notification-toast .toast').toast('show');
-                setTimeout(function () {
-                    $('#notification-toast .toast:first-child').remove();
-                }, 3000);
-                $('#cancel').modal('hide');
-                taiLaiTrangSau2Giay();
-            },
-            error: function (error) {
-                var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                         <div class="toast-header">
-                                             <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                             <strong class="mr-auto">Thông báo</strong>
-                                             <small>1 second ago</small>
-                                             <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                                 <span aria-hidden="true">&times;</span>
-                                             </button>
-                                         </div>
-                                         <div class="toast-body">
-                                             ${error.responseText}
-                                         </div>
-                                 </div>`
-                $('#notification-toast').append(toastHTML)
-                $('#notification-toast .toast').toast('show');
-                setTimeout(function () {
-                    $('#notification-toast .toast:first-child').remove();
-                }, 3000);
-                $('#cancel').modal('hide');
+            url: '@Url.Action("FilterVoucherByStatus", "Vouchers")',
+            type: 'POST',
+            data: { trangThai: trangThai },
+            success: function (result) {
+                $('#partialContainer').html(result);
             }
         });
     }
+
+    // Gọi hàm khi trang web được load
+    $(document).ready(function () {
+        loadDefaultVoucher();
+    });
+    // Hàm để gọi Ajax và chuyển về controller để huỷ hoạt động voucher
+   function huyHoatDongVoucher(selectedIds) {
+    // Thực hiện Ajax request để chuyển selectedIds về controller
+    $.ajax({
+        url: '/Admin/Vouchers/DeleteVoucherWithList', // Thay 'ControllerName' bằng tên thực tế của controller
+        type: 'POST', // Hoặc 'GET' tùy thuộc vào yêu cầu của bạn
+        data: { voucherIds: selectedIds },
+        success: function (response) {
+            if (response === true) {
+                // Nếu xóa thành công, hiển thị thông báo thành công và reload trang
+                Swal.fire({
+                    title: 'Thông báo!',
+                    text: 'Huỷ hoạt động voucher thành công!',
+                    icon: 'success'
+                }).then((result) => {
+                    if (result.isConfirmed || result.isDismissed) {
+                        location.reload(); // Reload trang khi ấn OK
+                    }
+                });
+            } else {
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Huỷ hoạt động voucher thất bại!',
+                        icon: 'error'
+                    }).then((result) => {
+                        if (result.isConfirmed || result.isDismissed) {
+                            location.reload(); // Reload trang khi ấn OK
+                        }
+                    });
+            }
+            $('#cancel').modal('toggle');
+        },
+        error: function (error) {
+            // Xử lý lỗi khi request gặp vấn đề
+                Swal.fire({
+                    title: 'Thông báo!',
+                    text: 'Huỷ hoạt động voucher thất bại!',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed || result.isDismissed) {
+                        location.reload(); // Reload trang khi ấn OK
+                    }
+                });
+            $('#cancel').modal('toggle');
+        }
+    });
+}
+
     function KhoiPhucVoucher(selectedIds) {
         // Thực hiện Ajax request để chuyển selectedIds về controller
         $.ajax({
@@ -321,60 +218,71 @@
             type: 'POST', // Hoặc 'GET' tùy thuộc vào yêu cầu của bạn
             data: { voucherIds: selectedIds },
             success: function (response) {
-                // Xử lý kết quả từ controller nếu cần
-                var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                         <div class="toast-header">
-                                             <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                             <strong class="mr-auto">Thông báo</strong>
-                                             <small>1 second ago</small>
-                                             <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                                 <span aria-hidden="true">&times;</span>
-                                             </button>
-                                         </div>
-                                         <div class="toast-body">
-                                             Khôi phục thành công (tự load lại sau 2s)
-                                         </div>
-                                 </div>`
-                $('#notification-toast').append(toastHTML)
-                $('#notification-toast .toast').toast('show');
-                setTimeout(function () {
-                    $('#notification-toast .toast:first-child').remove();
-                }, 3000);
-                $('#restore').modal('hide');
-                taiLaiTrangSau2Giay();
+                if (response === true) {
+                    // Nếu xóa thành công, hiển thị thông báo thành công và reload trang
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Khôi phục động voucher thành công!',
+                        icon: 'success'
+                    }).then((result) => {
+                        if (result.isConfirmed || result.isDismissed) {
+                            location.reload(); // Reload trang khi ấn OK
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Khôi phục hoạt động voucher thất bại!',
+                        icon: 'error'
+                    }).then((result) => {
+                        if (result.isConfirmed || result.isDismissed) {
+                            location.reload(); // Reload trang khi ấn OK
+                        }
+                    });
+                }
+                $('#restore').modal('toggle');
             },
             error: function (error) {
-                var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                             <div class="toast-header">
-                                                 <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                                 <strong class="mr-auto">Thông báo</strong>
-                                                 <small>1 second ago</small>
-                                                 <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                                     <span aria-hidden="true">&times;</span>
-                                                 </button>
-                                             </div>
-                                             <div class="toast-body">
-                                                 ${error.responseText}
-                                             </div>
-                                     </div>`
-                $('#notification-toast').append(toastHTML)
-                $('#notification-toast .toast').toast('show');
-                setTimeout(function () {
-                    $('#notification-toast .toast:first-child').remove();
-                }, 3000);
+                Swal.fire({
+                    title: 'Thông báo!',
+                    text: 'Khôi phục hoạt động voucher thất bại!',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed || result.isDismissed) {
+                        location.reload(); // Reload trang khi ấn OK
+                    }
+                });
                 $('#restore').modal('hide');
             }
         });
     }
-    function taiLaiTrangSau2Giay() {
-        // Đợi 2 giây (2000 mili giây) và sau đó tải lại trang
-        setTimeout(function () {
-            window.location.reload();
-        }, 2000);
-    }
 
-                // Gọi hàm khi cần tải lại trang sau 2 giây
+    var tabs = document.querySelectorAll('.tab-item');
 
+    // Gán sự kiện click cho mỗi tab
+    tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            // Xóa class 'active' từ tất cả các tab
+            tabs.forEach(function (innerTab) {
+                innerTab.classList.remove('active');
+            });
+
+            // Thêm class 'active' cho tab được click
+            tab.classList.add('active');
+        });
+    });
+    $('.tab-item').click(function () {
+        var trangThai = $(this).data('value');
+
+        $.ajax({
+            url: '@Url.Action("FilterVoucherByStatus", "Vouchers")',
+            type: 'POST',
+            data: { trangThai: trangThai },
+            success: function (result) {
+                $('#partialContainer').html(result);
+            }
+        });
+    });
 
 </script>
 
@@ -386,4 +294,11 @@
     <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
     <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
     <script src="~/Admin/js/pages/datatables.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 }

@@ -41,46 +41,35 @@ namespace App_View.Areas.Admin.Controllers
             _context = new BazaizaiContext();
         }
         #region Online
-     
+
         // GET: Admin/Vouchers
-        public async Task<IActionResult> ShowVoucher(string trangThai)
+        public async Task<IActionResult> ShowVoucher(int? trangThai)
         {
             var lstVoucher = (await _voucherSV.GetAllVoucher()).ToList(); // Lấy tất cả Voucher và chuyển sang List
 
             // Sắp xếp danh sách ban đầu theo NgayTao, giảm dần
             lstVoucher = lstVoucher.OrderByDescending(c => c.NgayTao).ToList();
-
-            // Tiếp tục với việc lọc dựa trên trạng thái
-            if (string.IsNullOrEmpty(trangThai) || trangThai == "hoatDong")
+            if (trangThai != null)
             {
-                lstVoucher = lstVoucher.Where(v => v.TrangThai == (int)TrangThaiVoucher.HoatDong).ToList();
+                lstVoucher.Where(c => c.TrangThai == trangThai).ToList();
             }
             else
             {
-                switch (trangThai)
-                {
-                    case "tatCa":
-                        // Không cần thay đổi gì
-                        break;
-                    case "hoatDong":
-                        // Không cần thay đổi gì
-                        break;
-                    case "khongHoatDong":
-                        lstVoucher = lstVoucher.Where(v => v.TrangThai == (int)TrangThaiVoucher.KhongHoatDong).ToList();
-                        break;
-                    case "chuaBatDau":
-                        lstVoucher = lstVoucher.Where(v => v.TrangThai == (int)TrangThaiVoucher.ChuaBatDau).ToList();
-                        break;
-                    case "DaHuy":
-                        lstVoucher = lstVoucher.Where(v => v.TrangThai == (int)TrangThaiVoucher.DaHuy).ToList();
-                        break;
-                    default:
-                        break;
-                }
+                lstVoucher = lstVoucher.Where(c => c.TrangThai == (int)TrangThaiVoucher.HoatDong).ToList();
             }
-            ViewBag.TatCa = lstVoucher; // Gán danh sách lọc được vào ViewBag.TatCa
-
             return View(lstVoucher);
+        }
+        [HttpPost]
+        public async Task<IActionResult> FilterVoucherByStatus(int? trangThai)
+        {
+            var lstVoucher = await _voucherSV.GetAllVoucher();
+
+            if (trangThai != null)
+            {
+                lstVoucher = lstVoucher.Where(c => c.TrangThai == trangThai).ToList();
+            }
+
+            return PartialView("_VoucherPartial", lstVoucher);
         }
         public IActionResult Create()
         {
@@ -128,21 +117,24 @@ namespace App_View.Areas.Admin.Controllers
 
         public async Task<ActionResult> DeleteVoucherWithList(List<string> voucherIds)
         {
-            if (voucherIds != null)
+            if (voucherIds.Any())
             {
-                await _voucherSV.DeleteVoucherWithList(voucherIds);
-                return RedirectToAction("Index");
+                if (await _voucherSV.DeleteVoucherWithList(voucherIds) == true)
+                {
+                    return Ok(true);
+                }
+                return Ok(false);
             }
-            return RedirectToAction("Index");
+            return Ok(false);
         }
         public async Task<ActionResult> RestoreVoucherWithList(List<string> voucherIds)
         {
-            if (voucherIds != null)
+            if (voucherIds.Any())
             {
                 await _voucherSV.RestoreVoucherWithList(voucherIds);
-                return RedirectToAction("Index");
+                return Ok(true);
             }
-            return RedirectToAction("Index");
+            return Ok(false);
         }
 
         public async Task<ActionResult> GiveVouchersToUsers(string? maVoucher)
@@ -196,7 +188,7 @@ namespace App_View.Areas.Admin.Controllers
             return Ok(false);
         }
         [HttpPost]
-        public async Task<IActionResult> GiveVoucherForNewUser( string MaVoucher)
+        public async Task<IActionResult> GiveVoucherForNewUser(string MaVoucher)
         {
             var ketQuaThemVoucher = await _voucherND.TangVoucherNguoiDungMoi(MaVoucher);
             if (ketQuaThemVoucher == true)
@@ -270,34 +262,7 @@ namespace App_View.Areas.Admin.Controllers
 
         #endregion
 
-        public async Task<IActionResult> ShowVoucherTest(int? trangThai)
-        {
-            var lstVoucher = (await _voucherSV.GetAllVoucher()).ToList(); // Lấy tất cả Voucher và chuyển sang List
-
-            // Sắp xếp danh sách ban đầu theo NgayTao, giảm dần
-            lstVoucher = lstVoucher.OrderByDescending(c => c.NgayTao).ToList();
-            if (trangThai != null)
-            {
-                lstVoucher.Where(c => c.TrangThai == trangThai).ToList();
-            }
-            else
-            {
-                lstVoucher = lstVoucher.Where(c => c.TrangThai == (int)TrangThaiVoucher.HoatDong).ToList();
-            }
-            return View(lstVoucher);
-        }
-        [HttpPost]
-        public async Task<IActionResult> FilterVoucherByStatus(int? trangThai)
-        {
-            var lstVoucher = await _voucherSV.GetAllVoucher();
-
-            if (trangThai != null)
-            {
-                lstVoucher = lstVoucher.Where(c => c.TrangThai == trangThai).ToList();
-            }
-
-            return PartialView("_VoucherPartial", lstVoucher);
-        }
+      
 
 
     }
