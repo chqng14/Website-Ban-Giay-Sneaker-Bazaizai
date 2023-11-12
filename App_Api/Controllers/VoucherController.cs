@@ -182,7 +182,11 @@ namespace App_Api.Controllers
         #endregion
 
         #region VoucherTaiQuay
-
+        [HttpGet("GetVoucherTaiQuay")]
+        public List<Voucher> GetAllVoucherTaiQuay()
+        {
+            return allRepo.GetAll().Where(c=>c.TrangThai==(int)TrangThaiVoucher.HoatDongCung).ToList();
+        }
         [HttpPost("CreateVoucherTaiQuay")]
         public bool CreateTaiQuay(VoucherDTO voucherDTO)
         {

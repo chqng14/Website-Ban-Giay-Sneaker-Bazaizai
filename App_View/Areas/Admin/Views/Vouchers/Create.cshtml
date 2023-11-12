@@ -22,7 +22,7 @@
 
                 <button class="btn btn-primary bd-0 col-md-6" id="reload" type="submit">Có</button>
 
-                <a type="button" class="btn btn-default"  asp-action="Index">Không (Về 🏡)</a>
+                <a type="button" class="btn btn-default" asp-action="ShowVoucher">Không (Về 🏡)</a>
             </div>
         </div>
     </div>
@@ -37,7 +37,7 @@
             <h4 class="card-title ">  Create Voucher <i class="anticon anticon-gift"></i> </h4>
         </div>
         <div class="card-body">
-            <h4><a asp-action="Index">Danh sách voucher </a></h4>
+            <h4><a asp-action="ShowVoucher">Danh sách voucher </a></h4>
             @* //modal xác nhận thêm*@
             <form id="createVoucherForm" asp-action="Create">
                 <div class="modal fade" id="confirm">
