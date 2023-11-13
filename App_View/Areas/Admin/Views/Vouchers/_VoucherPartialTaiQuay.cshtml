@@ -26,9 +26,6 @@
             <th>
                 Số lượng
             </th>
-         @*    <th>
-                Ngày khởi tạo
-            </th> *@
             <th>
                 Ngày bắt đầu
             </th>
@@ -43,7 +40,7 @@
             </th>
 
             <th>
-<i class="anticon anticon-tool"></i>
+                <i class="anticon anticon-tool"></i>
             </th>
         </tr>
 
@@ -90,9 +87,6 @@
                 <td>
                     @item.SoLuong
                 </td>
-        @*         <td>
-                    @item.NgayTao
-                </td> *@
                 <td>
                     @item.NgayBatDau
                 </td>
@@ -100,19 +94,19 @@
                     @item.NgayKetThuc
                 </td>
                 <td>
-                    @if (item.TrangThai == 0)
+                    @if (item.TrangThai == 6)
                     {
                         <span>Hoạt động</span>
                     }
-                    else if (item.TrangThai == 1)
+                    else if (item.TrangThai == 7)
                     {
                         <span>Không hoạt động</span>
                     }
-                    else if (item.TrangThai == 2)
+                    else if (item.TrangThai == 8)
                     {
                         <span>Chưa bắt đầu</span>
                     }
-                    else if (item.TrangThai == 3)
+                    else if (item.TrangThai == 9)
                     {
                         <span>Đã huỷ</span>
                     }
@@ -122,13 +116,7 @@
                 </td>
 
                 <td>
-
-                    <a asp-action="GiveVouchersToUsers" asp-route-maVoucher="@item.MaVoucher"><i class="anticon anticon-gift"></i></a>
-
-
-                    <a asp-action="Edit" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i></a>
-                    @*   <a asp-action="Details" asp-route-id="@item.IdVoucher"><i class="anticon anticon-eye"></i></a> |
-                <a asp-action="Delete" asp-route-id="@item.IdVoucher"><i class="anticon anticon-delete"></i></a> *@
+                    <a asp-action="EditTaiQuay" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i></a>
                 </td>
             </tr>
         }

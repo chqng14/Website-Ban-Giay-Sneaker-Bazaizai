@@ -11,17 +11,17 @@
         <div class="header-sub-title">
             <nav class="breadcrumb breadcrumb-dash" style="background-color:white">
                 <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản trị</a>
-                <a class="breadcrumb-item" asp-action="ShowVoucher" asp-controller="Vouchers">Danh sách voucher online</a>
-                <a class="breadcrumb-item" asp-action="Edit" asp-controller="Vouchers">Chỉnh sửa</a>
+                <a class="breadcrumb-item" asp-action="ShowVoucherTaiQuay" asp-controller="Vouchers">Danh sách voucher tại quầy</a>
+                <a class="breadcrumb-item" asp-action="EditTaiQuay" asp-controller="Vouchers">Chỉnh sửa</a>
             </nav>
         </div>
     </div>
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title " style="text-align:center">  Chỉnh sửa voucher</h4>
+            <h4 class="card-title " style="text-align:center">  Edit Voucher</h4>
         </div>
         <div class="card-body">
-            <form asp-action="Edit">
+            <form asp-action="EditTaiQuay">
                 <div class="modal fade" id="confirm">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <div class="form-row">
-                
+
                     <div class="form-group col-md-6">
                         <label class="font-weight-semibold" id="inputLabel">Nhập số tiền giảm:</label>
                         <input asp-for="MucUuDai" id="MucGiam"
@@ -99,7 +99,7 @@
                         <label class="font-weight-semibold">Điều kiện:</label>
                         <input class="form-control" type="number" asp-for="DieuKien" />
                         <span asp-validation-for="DieuKien" class="text-danger"></span>
-                    </div>   
+                    </div>
                     <div class="form-group col-md-2">
                         <a class="btn btn-primary bd-0 col-md-6" data-toggle="modal" data-target="#confirm" style="margin-top:30px;color:white">Sửa</a>
                     </div>

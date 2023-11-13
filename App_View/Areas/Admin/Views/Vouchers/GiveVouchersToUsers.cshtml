@@ -27,9 +27,11 @@
             width: 20px;
             height: 20px;
         }
-        a:hover{
-            color:yellow
+
+        a:hover {
+            color: yellow
         }
+
         table.dataTable thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting, table.dataTable thead > tr > td.sorting_asc, table.dataTable thead > tr > td.sorting_desc, table.dataTable thead > tr > td.sorting {
             padding-right: 14px;
         }
@@ -54,14 +56,22 @@
             border: none; /* Loại bỏ đường viền */
         }
 
-        #Gift{
-            border-radius:20px;
+        #Gift {
+            border-radius: 20px;
         }
     </style>
 </head>
 <div class="container mt-5">
-    <div>
-        <h4><a asp-action="ShowVoucher">Danh sách voucher</a></h4>
+    <div class="page-header" >
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash" style="background-color:white">
+                <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản trị</a>
+                <a class="breadcrumb-item" asp-action="ShowVoucher" asp-controller="Vouchers">Danh sách voucher online</a>
+                <a class="breadcrumb-item" asp-action="GiveVouchersToUsers" asp-controller="Vouchers">Tặng voucher</a>
+            </nav>
+        </div>
+    </div>
+    <div class="card-body" style="background-color:#F5F7F8">
         <div class="row d-flex justify-content-center align-items-center">
             <div class="col-md-8">
 
@@ -153,7 +163,7 @@
             });
             return;
         }
-        
+
         // Thu thập danh sách UserId được chọn
         var selectedUserIds = [];
         userCheckboxes.forEach(function (checkbox) {
@@ -162,12 +172,13 @@
                 selectedUserIds.push(checkbox.getAttribute('data-userId'));
             }
         });
-     
+
         // Tạo đối tượng chứa dữ liệu để gửi đến máy chủ
         var data = {
             MaVoucher: maVoucher,
             UserId: selectedUserIds
         };
+        $('#preloader').show();
         // Sử dụng $.ajax để gửi yêu cầu AJAX
         $.ajax({
             type: "POST",
@@ -176,9 +187,11 @@
             contentType: "application/json; charset=utf-8", // Đặt loại dữ liệu gửi đi
             success: function (result) {
                 if (result) {
+                    $('#preloader').hide();
                     Swal.fire('Thông báo!', 'Tặng voucher thành công!', 'success');
 
                 } else {
+                    $('#preloader').hide();
                     Swal.fire({
                         title: 'Thông báo!',
                         text: 'Tặng voucher thất bại do người dùng đã có mã này hoặc voucher không tồn tại.',
@@ -202,18 +215,21 @@
                 confirmButtonText: 'Đóng'
             });
             return;
-        } 
+        }
+        $('#preloader').show();
         // Sử dụng $.ajax để gửi yêu cầu AJAX
         $.ajax({
             type: "POST",
             url: "@Url.Action("GiveVoucherForNewUser", "Vouchers")",
-            data:{ MaVoucher: maVoucher }, // Gửi dữ liệu dưới dạng JSON
+            data: { MaVoucher: maVoucher }, // Gửi dữ liệu dưới dạng JSON
             // contentType: "application/json; charset=utf-8", // Đặt loại dữ liệu gửi đi
             success: function (result) {
                 if (result) {
+                    $('#preloader').hide();
                     Swal.fire('Thông báo!', 'Tặng voucher thành công!', 'success');
 
                 } else {
+                    $('#preloader').hide();
                     Swal.fire({
                         title: 'Thông báo!',
                         text: 'Người dùng đã có sẵn voucher này!!!.',

@@ -22,10 +22,12 @@
 
                 <button class="btn btn-primary bd-0 col-md-6" id="reload" type="submit">Có</button>
 
-                <a type="button" class="btn btn-default" asp-action="ShowVoucher">Không (Về 🏡)</a>
+                <a type="button" class="btn btn-default" asp-action="ShowVoucherTaiQuay">Không (Về 🏡)</a>
             </div>
         </div>
     </div>
+
+
 </div>
 <!-- Css -->
 
@@ -34,18 +36,18 @@
         <div class="header-sub-title">
             <nav class="breadcrumb breadcrumb-dash" style="background-color:white">
                 <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản trị</a>
-                <a class="breadcrumb-item" asp-action="ShowVoucher" asp-controller="Vouchers">Danh sách voucher online</a>
-                <a class="breadcrumb-item" asp-action="Create" asp-controller="Vouchers">Tạo mới</a>
+                <a class="breadcrumb-item" asp-action="ShowVoucherTaiQuay" asp-controller="Vouchers">Danh sách voucher tại quầy</a>
+                <a class="breadcrumb-item" asp-action="CreateTaiQuay" asp-controller="Vouchers">Tạo mới</a>
             </nav>
         </div>
     </div>
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title" style="text-align:center"> <i class="anticon anticon-gift"></i> Tạo mới voucher <i class="anticon anticon-gift"></i> </h4>
+            <h4 class="card-title" style="text-align:center"> <i class="anticon anticon-gift"></i> Tạo mới voucher tại quầy <i class="anticon anticon-gift"></i> </h4>
         </div>
         <div class="card-body">
             @* //modal xác nhận thêm*@
-            <form id="createVoucherForm" asp-action="Create">
+            <form id="createVoucherForm" asp-action="CreateTạiQuay">
                 <div class="modal fade" id="confirm">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -94,13 +96,12 @@
                     <div class="form-group col-md-6">
                         <label class="font-weight-semibold" id="inputLabel">Nhập số tiền giảm:</label>
                         <input asp-for="MucUuDai" id="MucGiam"
-                               class="form-control formatPrice" type="text" />
+                               class="form-control" type="text" />
                         <span asp-validation-for="MucUuDai" class="text-danger"></span>
                     </div>
-
                     <div class="form-group col-md-6">
                         <label class="font-weight-semibold">Số lượng:</label>
-                        <input class="form-control formatNumber" asp-for="SoLuong" />
+                        <input class="form-control" asp-for="SoLuong" />
                         <span asp-validation-for="SoLuong"
                               class="text-danger"></span>
                     </div>
@@ -120,7 +121,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label class="font-weight-semibold">Điều kiện:</label>
-                        <input class="form-control formatNumber" type="number" asp-for="DieuKien" />
+                        <input class="form-control" type="number" asp-for="DieuKien" />
                         <span asp-validation-for="DieuKien" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
@@ -150,7 +151,7 @@
                 var form = $(this);
                 $.ajax({
                     type: "POST",
-                    url: "@Url.Action("Create","Vouchers")",
+                    url: "@Url.Action("CreateTaiQuay","Vouchers")",
                     data: form.serialize(),
                     success: function (data) {
                         var toastHTML = '';
@@ -197,30 +198,16 @@
 
                 // Thêm kiểm tra hợp lệ cho số phần trăm giảm
                 input.addEventListener("input", validatePercentage);
-            } else if (select.value === "0" || select.value === "2") {
-                $(".formatPrice").each(function () {
-                    var autoNumeric = new AutoNumeric(this, {
-                        decimalCharacter: ".",
-                        digitGroupSeparator: ",",
-                        decimalPlaces: 0,
-                        minimumValue: 0,
-                        maximumValue: 99999999
-                    });
-                });
-
+            } else {
                 inputLabel.textContent = "Nhập số tiền giảm:";
                 input.setAttribute("type", "text");
                 input.removeAttribute("min");
                 input.removeAttribute("max");
                 input.removeAttribute("step");
                 input.setCustomValidity(""); // Xóa thông báo lỗi
-
-                // Loại bỏ sự kiện kiểm tra hợp lệ cho số phần trăm giảm
                 input.removeEventListener("input", validatePercentage);
             }
         }
-
-
 
         function validatePercentage() {
             var input = document.getElementById("MucGiam");
@@ -243,10 +230,9 @@
 
         // Thêm sự kiện click vào nút để gọi hàm taiLaiTrang
         nutReload.addEventListener('click', taiLaiTrang);
-
     </script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.8.1/autoNumeric.min.js"></script>
+
     @section Scripts {
         @{
             await Html.RenderPartialAsync("_ValidationScriptsPartial");
