@@ -199,9 +199,9 @@ namespace App_Api.Controllers
 
                     var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietDTO);
                     sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
-                    sanPhamChiTiet.Ma = !(await _sanPhamChiTietRes.GetListAsync()).Any() ?
-                        "MASP1" :
-                        "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
+                    var mauSac = _mauSacRes.GetAll().FirstOrDefault(ms => ms.IdMauSac == sanPhamChiTietDTO.IdMauSac)!.TenMauSac!.Substring(0, 2);
+                    var size = _kickcoRes.GetAll().FirstOrDefault(kc => kc.IdKichCo == sanPhamChiTietDTO.IdKichCo)!.SoKichCo;
+                    sanPhamChiTiet.Ma = "SP-" + ((int)1000 + (await _sanPhamChiTietRes.GetListAsync()).Count()).ToString() + "-" + mauSac + "-" + size;
                     sanPhamChiTiet.TrangThai = 0;
                     sanPhamChiTiet.SoLuongDaBan = 0;
                     sanPhamChiTiet.NgayTao = DateTime.Now;

@@ -42,6 +42,7 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly ISanPhamChiTietService _sanPhamChiTietService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly BazaizaiContext _bazaizaiContext;
         private readonly HttpClient _httpClient;
 
         public SanPhamChiTietController(ISanPhamChiTietService sanPhamChiTietService, IWebHostEnvironment webHostEnvironment, HttpClient httpClient)
@@ -50,6 +51,7 @@ namespace App_View.Areas.Admin.Controllers
             _webHostEnvironment = webHostEnvironment;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             _httpClient = httpClient;
+            _bazaizaiContext = new BazaizaiContext();
         }
         [HttpGet]
         // GET: Admin/SanPhamChiTiet/DanhSachSanPham
@@ -782,6 +784,51 @@ namespace App_View.Areas.Admin.Controllers
             return Ok(result);
         }
 
+        public IActionResult TongQuanSanPham()
+        {
+            return View();
+        }
 
+        public class SPDanhSachViewModel
+        {
+            public string? SanPham { get; set; }
+            public int SoMau { get; set; }
+            public int SoSize { get; set; }
+            public int TongSoLuongTon { get; set; }
+            public double TongSoTien { get; set; }
+        }
+
+        //public async Task<IActionResult> GetTongQuanDanhSach(int draw, int start, int length, string searchValue)
+        //{
+        //    var danhSanSanPham = _bazaizaiContext.sanPhamChiTiets.GroupBy(gr=>new {gr.id})
+        //    var query = (await _sanPhamChiTietService.GetDanhSachGiayNgungKinhDoanhAynsc())
+        //        .Skip(start)
+        //        .Take(length)
+        //        .ToList();
+
+        //    if (!string.IsNullOrEmpty(searchValue))
+        //    {
+        //        string searchValueLower = searchValue.ToLower();
+        //        query = (await _sanPhamChiTietService.GetDanhSachGiayNgungKinhDoanhAynsc()).Where(x =>
+        //        x.SanPham!.ToLower().Contains(searchValueLower) ||
+        //        x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
+        //        x.ChatLieu!.ToLower().Contains(searchValueLower) ||
+        //        x.KieuDeGiay!.ToLower().Contains(searchValueLower)
+        //        )
+        //        .Skip(start)
+        //        .Take(length)
+        //        .ToList();
+        //    }
+
+        //    var totalRecords = (await _sanPhamChiTietService.GetDanhSachGiayNgungKinhDoanhAynsc()).Count;
+
+        //    return Json(new
+        //    {
+        //        draw = draw,
+        //        recordsTotal = totalRecords,
+        //        recordsFiltered = totalRecords,
+        //        data = query
+        //    });
+        //}
     }
 }

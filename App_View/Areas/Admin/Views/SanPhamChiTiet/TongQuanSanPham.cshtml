@@ -1,0 +1,76 @@
+﻿
+@{
+    ViewData["Title"] = "Tổng quan sản phẩm";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .tabs {
+        display: flex;
+        border: 1px solid #ccc;
+        overflow: hidden;
+        background-color: white;
+        margin-bottom: 20px;
+    }
+
+    .tab-item {
+        flex: 1;
+        width: calc(100%/6);
+        text-align: center;
+        padding: 10px 0;
+        cursor: pointer;
+        color: #333333;
+        transition: background-color 0.3s;
+    }
+
+    .tab-item.active {
+        background-color: #ff4500;
+        color: #fff;
+    }
+</style>
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>QUẢN LÝ SẢN PHẨM</a>
+            <a class="breadcrumb-item" href="#">DANH SÁCH SẢN PHẨM</a>
+        </nav>
+    </div>
+</div>
+
+<div class="card">
+    <div class="tabs">
+        <div class="tab-item active" id="tab1" data-value="">Sản phẩm</div>
+        <div class="tab-item" id="tab2" data-value="1">Top SP bán chạy</div>
+        <div class="tab-item" id="tab3" data-value="2">Top SP bán chạy/Tháng</div>
+        <div class="tab-item" id="tab4" data-value="3">Top SP yêu thích</div>
+        <div class="tab-item" id="tab4" data-value="4">SP tồn đọng</div>
+        <div class="tab-item" id="tab4" data-value="5">SP Sale</div>
+    </div>
+
+    <div class="m-order__list active" id="content1">
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    const tabItems = document.querySelectorAll('.tab-item');
+    const content1 = document.getElementById('content1');
+
+    tabItems.forEach((tabItem, index) => {
+        tabItem.addEventListener('click', () => {
+            // Ẩn tất cả các tab content và loại bỏ trạng thái active
+            document.querySelectorAll('.m-order__list').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            $('#content1').empty().html();
+
+            content1.classList.add('active');
+            tabItem.classList.add('active');
+        });
+    });
+</script>
+

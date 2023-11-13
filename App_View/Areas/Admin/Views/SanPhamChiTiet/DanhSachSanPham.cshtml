@@ -9,6 +9,11 @@
         width: 62px !important;
     }
 
+    #table-sanpham_wrapper .row:nth-child(3) {
+        margin-top: 15px;
+    }
+
+
     .cursor-image {
         cursor: pointer;
     }
@@ -432,17 +437,12 @@
                 table.rows().every(function () {
                     const data = this.data();
                     totalQuantity += data.soLuongTon;
-                    totalRevenue += data.giaBan;
-                    totalGiaNhap += data.giaNhap;
+                    totalRevenue += data.giaBan * data.soLuongTon;
                 });
                 totalRevenue = new Intl.NumberFormat('vi-VN', {
                     style: 'currency',
                     currency: 'VND'
                 }).format(totalRevenue).replace(",00", "");
-                totalGiaNhap = new Intl.NumberFormat('vi-VN', {
-                    style: 'currency',
-                    currency: 'VND'
-                }).format(totalGiaNhap).replace(",00", "");
                 // Hiển thị tổng số lượng và tổng giá bán ở cuối table
                 $('#table-sanpham').find('.total-row').remove();
                 $('#table-sanpham tbody').append(`
@@ -453,8 +453,8 @@
                     <td></td>
                     <td></td>
                     <td></td>
+                    <td></td>
                     <td>Tổng cộng</td>
-                    <td>${totalGiaNhap}</td>
                     <td>${totalRevenue}</td>
                     <td>${totalQuantity}</td>
                     <td></td>
