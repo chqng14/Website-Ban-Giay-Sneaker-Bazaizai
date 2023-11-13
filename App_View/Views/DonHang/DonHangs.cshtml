@@ -114,10 +114,12 @@
         });
 
         $(window).scroll(function () {
-            if ($(window).scrollTop() + $(window).height() >= $(document).height() - 100 && !isLoading) {
+            var footerHeight = 386;
+            if ($(window).scrollTop() + $(window).height() >= $(document).height() - footerHeight && !isLoading) {
                 loadMoreOrders();
             }
         });
+
 
         $('#searchMaDonHang').on('input', function () {
             searchMaDonHang = $(this).val();

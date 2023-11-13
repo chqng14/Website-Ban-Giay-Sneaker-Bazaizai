@@ -135,12 +135,12 @@ namespace App_View.Controllers
                     var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
                     await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                 }
-                if (hoaDonDTO.LoaiThanhToan == "Momo")
+                if (hoaDonDTO.LoaiThanhToan.ToLower() == "momo")
                 {
                     var url = await Momo(hoadon.IdHoaDon, mahd, tien);
                     return Ok(new { url = url, idHoaDon = hoadon.IdHoaDon });
                 }
-                if (hoaDonDTO.LoaiThanhToan == "VnPay")
+                if (hoaDonDTO.LoaiThanhToan.ToLower() == "VnPay")
                 {
                     var url = await VnPay(hoadon.IdHoaDon, tien);
                     return Ok(new { url = url, idHoaDon = hoadon.IdHoaDon });

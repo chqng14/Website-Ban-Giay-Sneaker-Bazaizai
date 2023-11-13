@@ -109,7 +109,7 @@
                         </div>
                         <div class="description-title" style="color:#7f7f7f">
                             <span class="o-card__name">
-                                <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = sp.IdSanPhamChiTiet })">@sp.TenThuongHieu @sp.TenSanPham</a>
+                                <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = sp.IdSanPhamChiTiet })">@sp.TenSanPham</a>
                             </span>
                             <span class="o-card__quantity">Size: @sp.TenKichCo Màu: @sp.TenMauSac</span>
                             <span class="o-card__quantity">Số lượng x @sp.SoLuong</span>
@@ -224,8 +224,8 @@
                     }
                     else if (item.TrangThaiGiaoHang == 5 || item.TrangThaiGiaoHang == 4)
                     {
-                        <a href="@Url.Action("ReBuy","DonHang",new{idHoaDon = item.IdHoaDon})">
-                            <span class="btn btn--e-transparent-brand-b-2 order">Mua lại</span>
+                        <a onclick="ReBuyAjax('@item.IdHoaDon')">
+                            <span class="btn btn--e-transparent-brand-b-2 order">Mua Lại</span>
                         </a>
                         <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
                             <span class="btn btn--e-brand-b-2 order">
@@ -261,3 +261,29 @@
 
 </script>
 
+<script>
+    function ReBuyAjax(idHoaDon) {
+        $.ajax({
+            url: '@Url.Action("ReBuy", "DonHang")',
+            type: 'POST',
+            data: { idHoaDon: idHoaDon },
+            success: function (result) {
+                // Xử lý kết quả Ajax ở đây
+                if (result.quantityError) {
+                    Swal.fire({
+                        title: 'Sản phẩm lỗi',
+                        icon: 'error',
+                        html: result.quantityError.join('<br/>'),
+                    });
+                } else {
+                    // Chuyển hướng hoặc xử lý kết quả thành công
+                    window.location.href = '@Url.Action("ShowCartUser", "GioHangChiTiets")';
+                }
+            },
+            error: function (error) {
+                // Xử lý lỗi Ajax ở đây
+                console.log(error);
+            }
+        });
+    }
+</script>
