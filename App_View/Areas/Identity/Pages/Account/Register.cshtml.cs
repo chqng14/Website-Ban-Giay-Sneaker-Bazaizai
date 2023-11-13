@@ -75,24 +75,24 @@ namespace App_View.Areas.Identity.Pages.Account
             [RegularExpression(@"^(?:(?:31(\/)(?:0[13578]|1[02]))\1|(?:(?:29|30)(\/)(?:0[1,3-9]|1[0-2])\2))(?:(?:19\d{2}|20[0-9]\d))$|^(?:29(\/)0?2\3(?:(?:(?:1[9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0[1-9]|1\d|2[0-8])(\/)(?:(?:0[1-9])|(?:1[0-2]))\4(?:(?:19\d{2}|20[0-9]\d))$", ErrorMessage = "Ngày sinh không hợp lệ. Vui lòng kiểm tra lại định dạng ( dd/MM/YYYY ) và giá trị.")]
             public string? NgaySinh { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Email không được để trống.")]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [StringLength(100, ErrorMessage = "{0} phải dài ít nhất là {2} và tối đa {1} ký tự.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Mật khẩu")]
             public string Password { get; set; }
 
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
+            [Display(Name = "Xác nhận mật khẩu")]
             [Compare("Password", ErrorMessage = "Mật khẩu và mật khẩu xác nhận không khớp.")]
             public string ConfirmPassword { get; set; }
 
             [DataType(DataType.Text)]
-            [Required]
+            [Required(ErrorMessage = "Tên tài Khoản không được để trống.")]
             [Display(Name = "Tên tài Khoản")]
             public string UserName { get; set; }
 
@@ -102,7 +102,7 @@ namespace App_View.Areas.Identity.Pages.Account
             public string Sdt { get; set; }
 
             [DataType(DataType.Text)]
-            [Required]
+            [Required(ErrorMessage = "Tên của bạn không được để trống.")]
             [NameLimit(ErrorMessage = "Tên bạn nhập không hợp lệ.")]
             [Display(Name = "Tên của bạn")]
             public string FullName { get; set; }
