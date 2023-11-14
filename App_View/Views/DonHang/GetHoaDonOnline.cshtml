@@ -224,6 +224,12 @@
                     }
                     else if (item.TrangThaiGiaoHang == 5 || item.TrangThaiGiaoHang == 4)
                     {
+                        if (item.TrangThaiGiaoHang == 4)
+                        {
+                            <a>
+                                <span class="btn btn--e-transparent-brand-b-2 order">Đánh Giá</span>
+                            </a>
+                        }
                         <a onclick="ReBuyAjax('@item.IdHoaDon')">
                             <span class="btn btn--e-transparent-brand-b-2 order">Mua Lại</span>
                         </a>

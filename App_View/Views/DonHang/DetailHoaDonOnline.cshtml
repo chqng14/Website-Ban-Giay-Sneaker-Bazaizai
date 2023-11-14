@@ -490,7 +490,16 @@
                             <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Huỷ</span>
                         </a>
                     }
-                    else
+                    else if (Model.TrangThaiGiaoHang == 4)
+                    {
+                        <a onclick="ReBuyAjax('@Model.IdHoaDon')">
+                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Mua Lại</span>
+                        </a>
+                        <a>
+                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Đánh giá</span>
+                        </a>
+                    }
+                    else if (Model.TrangThaiGiaoHang == 1 || Model.TrangThaiGiaoHang == 2)
                     {
                         <a data-modal="modal" data-modal-id="#edit-ship-address">
                             <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px;text-align: center;margin-top: 15px;">Huỷ</span>
