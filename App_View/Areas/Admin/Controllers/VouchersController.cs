@@ -59,11 +59,10 @@ namespace App_View.Areas.Admin.Controllers
         public async Task<IActionResult> FilterVoucherByStatus(int? trangThai)
         {
             var lstVoucher = (await _voucherSV.GetAllVoucher())
-                    .Where(c => c.TrangThai == 0 || c.TrangThai == 1 || c.TrangThai == 2 || c.TrangThai == 3).ToList();
-
+               .Where(c => c.TrangThai >= 0 && c.TrangThai <= 3).OrderByDescending(c => c.NgayTao).ToList();
             if (trangThai != null)
             {
-                lstVoucher = lstVoucher.Where(c => c.TrangThai == trangThai).ToList();
+                lstVoucher = lstVoucher.Where(c => c.TrangThai == trangThai).OrderByDescending(c => c.NgayTao).ToList();
             }
 
             return PartialView("_VoucherPartial", lstVoucher);
@@ -215,11 +214,12 @@ namespace App_View.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> FilterVoucherByStatusTaiQuay(int? trangThai)
         {
-            var lstVoucher = (await _voucherSV.GetAllVoucher()).Where
-                           (c => c.TrangThai == 6 || c.TrangThai == 7 || c.TrangThai == 8 || c.TrangThai == 9).ToList();
+            var lstVoucher = (await _voucherSV.GetAllVoucher())
+                .Where(c => c.TrangThai >= 6 && c.TrangThai <= 9).OrderByDescending(c => c.NgayTao).ToList();
+
             if (trangThai != null)
             {
-                lstVoucher = lstVoucher.Where(c => c.TrangThai == trangThai).ToList();
+                lstVoucher = lstVoucher.Where(c => c.TrangThai == trangThai).OrderByDescending(c => c.NgayTao).ToList();
             }
 
             return PartialView("_VoucherPartialTaiQuay", lstVoucher);

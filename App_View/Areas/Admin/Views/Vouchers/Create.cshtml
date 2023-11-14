@@ -83,7 +83,6 @@
                                 class="form-control select2"
                                 data-placeholder="Vui lòng chọn!"
                                 onchange="toggleInput()">
-                            <option label="Chọn loại hình khuyến mãi"></option>
                             <option value="@((int)TrangThaiLoaiKhuyenMai.TienMat)">Giảm giá tiền mặt</option>
                             <option value="@((int)TrangThaiLoaiKhuyenMai.PhanTram)">Giảm giá theo %</option>
                             <option value="@((int)TrangThaiLoaiKhuyenMai.Freeship)">Miễn phí ship</option>
@@ -91,18 +90,25 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6 tienMat">
                         <label class="font-weight-semibold" id="inputLabel">Nhập số tiền giảm:</label>
                         <input asp-for="MucUuDai" id="MucGiam"
                                class="form-control formatPrice" type="text" />
                         <span asp-validation-for="MucUuDai" class="text-danger"></span>
                     </div>
+                    <div class="form-group col-md-6 phantram">
+                        <label class="font-weight-semibold" id="inputLabel">Nhập số phần trăm:</label>
+                        <input asp-for="MucUuDai" id="MucGiam"
+                               class="form-control" type="number" min="0" max="100" />
+                        <span asp-validation-for="MucUuDai" class="text-danger"></span>
+                    </div>
+
 
                     <div class="form-group col-md-6">
                         <label class="font-weight-semibold">Số lượng:</label>
-                        <input class="form-control formatNumber" asp-for="SoLuong" />
+                        <input class="form-control formatPrice" asp-for="SoLuong" />
                         <span asp-validation-for="SoLuong"
-                              class="text-danger"></span>
+                              class="text-danger "></span>
                     </div>
                     <div class="form-group col-md-6">
                         <label class="font-weight-semibold">Ngày bắt đầu:</label>
@@ -120,7 +126,7 @@
                     </div>
                     <div class="form-group col-md-6">
                         <label class="font-weight-semibold">Điều kiện:</label>
-                        <input class="form-control formatNumber" type="number" asp-for="DieuKien" />
+                        <input class="form-control formatPrice" type="number" asp-for="DieuKien" />
                         <span asp-validation-for="DieuKien" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
@@ -134,16 +140,41 @@
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+        // Sử dụng biến để kiểm tra xem nút đã được click lần đầu chưa
+        var daClick = false;
+
+        // Lắng nghe sự kiện click trên nút "Thêm mới"
+        document.querySelector("#confirm .modal-footer .btn-primary").addEventListener("click", function () {
+            // Nếu nút chưa được click lần nào
+            if (!daClick) {
+                // Đặt biến daClick thành true để ngăn chặn các lần click sau này
+                daClick = true;
+                $('#confirm').modal('hide');
+            }
+        });
+        document.querySelector('.phantram').style.display = 'none';
+        $(() => {
+            $(".formatPrice").each(function () {
+                var autoNumeric = new AutoNumeric(this, {
+                    decimalCharacter: ".",
+                    digitGroupSeparator: ",",
+                    decimalPlaces: 0,
+                    currencySymbolPlacement: "s",
+                    minimumValue: 0,
+                    maximumValue: 999999999
+                });
+            });
+        })
         //function thêm
         $(document).ready(function () {
             const toastHeader = `<div class="toast-header">
-                                                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                                            <strong class="mr-auto">Thông báo</strong>
-                                                            <small>1 second ago</small>
-                                                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>`;
+                                                                    <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                                    <strong class="mr-auto">Thông báo</strong>
+                                                                    <small>1 second ago</small>
+                                                                    <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>`;
 
             $("#createVoucherForm").submit(function (e) {
                 e.preventDefault();
@@ -156,20 +187,20 @@
                         var toastHTML = '';
                         if (data.message != null) {
                             toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                                                    ${toastHeader}
-                                                                    <div class="toast-body">
-                                                                        ${data.message}
-                                                                    </div>
-                                                                </div>`;
+                                                                            ${toastHeader}
+                                                                            <div class="toast-body">
+                                                                                ${data.message}
+                                                                            </div>
+                                                                        </div>`;
                             $('#confirm').modal('hide');
                             $('#success').modal('show');
                         } else {
                             toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                                                    ${toastHeader}
-                                                                    <div class="toast-body">
-                                                                        ${data.error}
-                                                                    </div>
-                                                                </div>`;
+                                                                            ${toastHeader}
+                                                                            <div class="toast-body">
+                                                                                ${data.error}
+                                                                            </div>
+                                                                        </div>`;
                             $('#confirm').modal('hide');
                         }
                         $('#notification-toast').append(toastHTML);
@@ -181,61 +212,21 @@
                 });
             });
         });
-        //function check input
+        function taiLaiTrang() {
+            location.reload(); // Hoặc location.reload(true)
+        }
         function toggleInput() {
             var select = document.getElementById("LoaiHinhKm");
             var inputLabel = document.getElementById("inputLabel");
             var input = document.getElementById("MucGiam");
 
             if (select.value === "1") { // Nếu chọn "Giảm giá theo %"
-                inputLabel.textContent = "Nhập số % giảm:";
-                input.setAttribute("type", "number"); // Chuyển thành trường nhập số
-                input.setAttribute("min", "0");
-                input.setAttribute("max", "100");
-                input.setAttribute("step", "0.01"); // Bước nhảy 0.01 (cho phần trăm)
-                input.setCustomValidity(""); // Xóa thông báo lỗi
-
-                // Thêm kiểm tra hợp lệ cho số phần trăm giảm
-                input.addEventListener("input", validatePercentage);
-            } else if (select.value === "0" || select.value === "2") {
-                $(".formatPrice").each(function () {
-                    var autoNumeric = new AutoNumeric(this, {
-                        decimalCharacter: ".",
-                        digitGroupSeparator: ",",
-                        decimalPlaces: 0,
-                        minimumValue: 0,
-                        maximumValue: 99999999
-                    });
-                });
-
-                inputLabel.textContent = "Nhập số tiền giảm:";
-                input.setAttribute("type", "text");
-                input.removeAttribute("min");
-                input.removeAttribute("max");
-                input.removeAttribute("step");
-                input.setCustomValidity(""); // Xóa thông báo lỗi
-
-                // Loại bỏ sự kiện kiểm tra hợp lệ cho số phần trăm giảm
-                input.removeEventListener("input", validatePercentage);
-            }
-        }
-
-
-
-        function validatePercentage() {
-            var input = document.getElementById("MucGiam");
-            var value = parseFloat(input.value);
-            if (isNaN(value) || value < 0 || value > 100) {
-                input.setCustomValidity("Vui lòng nhập số phần trăm hợp lệ (từ 0 đến 100).");
+                document.querySelector('.tienMat').style.display = 'none';
+                document.querySelector('.phantram').style.display = 'block';
             } else {
-                input.setCustomValidity("");
+                document.querySelector('.tienMat').style.display = 'block';
+                document.querySelector('.phantram').style.display = 'none';
             }
-        }
-        $(document).ready(function () {
-            toggleInput();
-        });
-        function taiLaiTrang() {
-            location.reload(); // Hoặc location.reload(true)
         }
 
         // Lấy tham chiếu đến nút "Reload Trang"
