@@ -5,7 +5,7 @@
 @inject ISanPhamChiTietService sanPhamChiTietService;
 @{
     var max = (await _khuyenMaiService.GetAllKhuyenMai()).Max(x => x.MucGiam);
-    var flashSale = (await _khuyenMaiService.GetAllKhuyenMai()).FirstOrDefault(x => x.MucGiam == max);
+    var flashSale = (await _khuyenMaiService.GetAllKhuyenMai()).FirstOrDefault(x => x.MucGiam == max&&x.TrangThai==(int)TrangThaiSale.DangBatDau||x.TrangThai==(int)TrangThaiSale.ChuaBatDau);
 
     var sanPhamChiTietList = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
     var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
@@ -210,14 +210,28 @@
                                                         <div class="" style="width: 100%; padding-top: 58.33%;">
                                                             <div></div>
                                                         </div>
-                                                        <picture class="JEjj5L">
-                                                            <img data-is-lazy-load-bg-image="false"
-                                                                 data-use-image-server="false" class="lazyload RPPDP+"
-                                                                 loading="lazy"
-                                                                 src="/AnhSale/@flashSale.Url"
-                                                                 role="presentation" alt=""
-                                                                 style="position: absolute; top: 0px; height: 100%; width: 100%;">
-                                                        </picture>
+                                                         @if (flashSale!=null)
+                                                            {
+                                                            <picture class="JEjj5L">
+                                                                <img data-is-lazy-load-bg-image="false"
+                                                                     data-use-image-server="false" class="lazyload RPPDP+"
+                                                                     loading="lazy"
+                                                                     src="/AnhSale/@flashSale.Url"
+                                                                     role="presentation" alt=""
+                                                                     style="position: absolute; top: 0px; height: 100%; width: 100%;">
+                                                            </picture>
+                                                        }
+                                                        else
+                                                        {
+                                                            <picture class="JEjj5L">
+                                                                <img data-is-lazy-load-bg-image="false"
+                                                                     data-use-image-server="false" class="lazyload RPPDP+"
+                                                                     loading="lazy"
+                                                                     src="https://down-vn.img.susercontent.com/file/vn-50009109-17391dfcc256d4e7b71029eb682598c0"
+                                                                     role="presentation" alt=""
+                                                                     style="position: absolute; top: 0px; height: 100%; width: 100%;">
+                                                            </picture>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>

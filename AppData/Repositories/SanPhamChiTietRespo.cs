@@ -165,6 +165,13 @@ namespace App_Data.Repositories
         {
             var listSanPham = await _context.sanPhamChiTiets
                 .Where(sp => sp.TrangThai == 0)
+                .Include(it => it.SanPham)
+                .Include(it => it.ThuongHieu)
+                .Include(it => it.LoaiGiay)
+                .Include(it => it.KichCo)
+                .Include(it => it.LoaiGiay)
+                .Include(it => it.MauSac)
+                .Include(it => it.Anh)
                 .OrderByDescending(x => x.NgayTao)
                 .AsNoTracking()
                 .ToListAsync();
@@ -173,14 +180,15 @@ namespace App_Data.Repositories
             {
                 Anh = _context.Anh.Where(a => a.IdSanPhamChiTiet == sp.IdChiTietSp).OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
                 GiaGoc = sp.GiaBan,
+                MaSanPham = sp.Ma,
                 GiaKhuyenMai = sp.GiaThucTe,
-                MauSac = _context.mauSacs.FirstOrDefault(ms => ms.IdMauSac == sp.IdMauSac)!.TenMauSac,
-                TheLoai = _context.LoaiGiays.FirstOrDefault(lg => lg.IdLoaiGiay == sp.IdLoaiGiay)!.TenLoaiGiay,
-                KichCo = Convert.ToInt32(_context.kichCos.FirstOrDefault(kc => kc.IdKichCo == sp.IdKichCo)!.SoKichCo),
+                MauSac = sp.MauSac!.TenMauSac,
+                TheLoai = sp.LoaiGiay!.TenLoaiGiay,
+                KichCo = Convert.ToInt32(sp.KichCo.SoKichCo),
                 IdChiTietSp = sp.IdChiTietSp,
                 SoLanDanhGia = 32,
-                TenSanPham = _context.SanPhams.FirstOrDefault(sp => sp.IdSanPham == sp.IdSanPham)!.TenSanPham,
-                ThuongHieu = _context.thuongHieus.FirstOrDefault(th => th.IdThuongHieu == sp.IdThuongHieu)!.TenThuongHieu,
+                TenSanPham = sp.SanPham!.TenSanPham,
+                ThuongHieu = sp.ThuongHieu.TenThuongHieu,
                 GiaThucTe = sp.GiaThucTe,
                 IsKhuyenMai = sp.TrangThaiSale == 2 ? true : false,
                 SoLuongTon = sp.SoLuongTon,
@@ -192,6 +200,12 @@ namespace App_Data.Repositories
         {
             var listSanPham = await _context.sanPhamChiTiets
                 .Where(sp => sp.TrangThai == 0 && sp.TrangThaiSale == 2)
+                .Include(x => x.Anh)
+                .Include(x => x.SanPham)
+                .Include(x => x.ThuongHieu)
+                .Include(x => x.KichCo)
+                .Include(x => x.MauSac)
+                .Include(x => x.LoaiGiay)
                 .OrderByDescending(x => x.NgayTao)
                 .AsNoTracking()
                 .ToListAsync();
@@ -201,15 +215,14 @@ namespace App_Data.Repositories
                 Anh = _context.Anh.Where(a => a.IdSanPhamChiTiet == sp.IdChiTietSp).OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
                 GiaGoc = sp.GiaBan,
                 GiaKhuyenMai = sp.GiaThucTe,
-                MauSac = _context.mauSacs.FirstOrDefault(ms => ms.IdMauSac == sp.IdMauSac)!.TenMauSac,
-                TheLoai = _context.LoaiGiays.FirstOrDefault(lg => lg.IdLoaiGiay == sp.IdLoaiGiay)!.TenLoaiGiay,
-                KichCo = Convert.ToInt32(_context.kichCos.FirstOrDefault(kc => kc.IdKichCo == sp.IdKichCo)!.SoKichCo),
+                MauSac = sp.MauSac!.TenMauSac,
+                TheLoai = sp.LoaiGiay.TenLoaiGiay,
+                KichCo = Convert.ToInt32(sp.KichCo.SoKichCo),
                 IdChiTietSp = sp.IdChiTietSp,
                 SoLanDanhGia = 32,
-                TenSanPham = _context.SanPhams.FirstOrDefault(sp => sp.IdSanPham == sp.IdSanPham)!.TenSanPham,
-                ThuongHieu = _context.thuongHieus.FirstOrDefault(th => th.IdThuongHieu == sp.IdThuongHieu)!.TenThuongHieu,
+                TenSanPham = sp.SanPham!.TenSanPham,
+                ThuongHieu = sp.ThuongHieu.TenThuongHieu,
                 GiaThucTe = sp.GiaThucTe
-
             }).ToList();
             return itemShops;
         }
@@ -535,7 +548,7 @@ namespace App_Data.Repositories
         {
             var sanPhamChiTiet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == IdSanPhamChiTiet);
             sanPhamChiTiet!.SoLuongTon = sanPhamChiTiet.SoLuongTon - soLuong;
-            sanPhamChiTiet!.SoLuongDaBan = soLuong;
+            sanPhamChiTiet!.SoLuongDaBan += soLuong;
             await _context.SaveChangesAsync();
         }
 
@@ -584,7 +597,7 @@ namespace App_Data.Repositories
         public async Task<bool> ProductIsNull(SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO)
         {
             var sanPhamChiTiet = await _context.sanPhamChiTiets
-                .Where(x =>
+                .FirstOrDefaultAsync(x =>
                 x.IdSanPham == sanPhamChiTietCopyDTO.SanPhamChiTietData!.IdSanPham &&
                 x.IdChatLieu == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdChatLieu &&
                 x.IdKichCo == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdKichCo &&
@@ -593,7 +606,7 @@ namespace App_Data.Repositories
                 x.IdLoaiGiay == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdLoaiGiay &&
                 x.IdThuongHieu == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdThuongHieu &&
                 x.IdXuatXu == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdXuatXu
-                ).FirstOrDefaultAsync();
+                );
             return sanPhamChiTiet != null ? false : true;
         }
 

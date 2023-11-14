@@ -30,6 +30,11 @@ using Newtonsoft.Json.Serialization;
 using DocumentFormat.OpenXml;
 using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
+using static App_View.Areas.Admin.Controllers.SanPhamChiTietController;
+using DocumentFormat.OpenXml.Bibliography;
+using static App_Data.Repositories.TrangThai;
+using static Google.Apis.Requests.BatchRequest;
+using App_Data.ViewModels.SanPhamChiTietViewModel;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -38,6 +43,7 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly ISanPhamChiTietService _sanPhamChiTietService;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly BazaizaiContext _bazaizaiContext;
         private readonly HttpClient _httpClient;
 
         public SanPhamChiTietController(ISanPhamChiTietService sanPhamChiTietService, IWebHostEnvironment webHostEnvironment, HttpClient httpClient)
@@ -46,6 +52,7 @@ namespace App_View.Areas.Admin.Controllers
             _webHostEnvironment = webHostEnvironment;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             _httpClient = httpClient;
+            _bazaizaiContext = new BazaizaiContext();
         }
         [HttpGet]
         // GET: Admin/SanPhamChiTiet/DanhSachSanPham
@@ -89,14 +96,57 @@ namespace App_View.Areas.Admin.Controllers
 
         #region ImportExcel
 
+        public class ErrorRow
+        {
+            public int Row { get; set; }
+            public string? SanPham { get; set; }
+            public string? ThuongHieu { get; set; }
+            public string? XuatXu { get; set; }
+            public string? ChatLieu { get; set; }
+            public string? LoaiGiay { get; set; }
+            public string? KieuDeGiay { get; set; }
+            public string? MauSac { get; set; }
+            public string? KichCo { get; set; }
+            public string? GiaNhap { get; set; }
+            public string? GiaBan { get; set; }
+            public string? SoLuong { get; set; }
+            public string? KhoiLuong { get; set; }
+            public bool? Day { get; set; }
+            public bool? NoiBat { get; set; }
+            public bool? TrangThaiSale { get; set; }
+            public string? ListTenAnh { get; set; }
+
+            public string? ErrorMessage { get; set; }
+        }
+
+
         [HttpPost]
         public async Task<ActionResult> ImportProducts(IFormFile file)
         {
+            int slSuccess = 0;
+            int slFalse = 0;
+            List<ErrorRow> errorRows = new List<ErrorRow>();
+            var sanpham = "";
+            var thuongHieu = "";
+            var xuatXu = "";
+            var chatLieu = "";
+            var loaiGiay = "";
+            var kieuDeGiay = "";
+            var mauSac = "";
+            var kichCo = "";
+            var giaNhap = "";
+            var giaBan = "";
+            var soLuong = "";
+            var khoiLuong = "";
+            var day = "";
+            var noiBat = "";
+            var trangThaiSale = "";
+            var listTenAnh = new List<string>();
+
             if (file != null && file.Length > 0)
             {
                 try
                 {
-                    int slSuccess = 0;
                     using (var stream = file.OpenReadStream())
                     using (var package = new ExcelPackage(stream))
                     {
@@ -108,82 +158,214 @@ namespace App_View.Areas.Admin.Controllers
 
                         for (int row = 2; row <= rowCount; row++)
                         {
-                            var sanpham = worksheet.Cells[row, 1].Text;
-                            var thuongHieu = worksheet.Cells[row, 2].Text;
-                            var xuatXu = worksheet.Cells[row, 3].Text;
-                            var chatLieu = worksheet.Cells[row, 4].Text;
-                            var loaiGiay = worksheet.Cells[row, 5].Text;
-                            var kieuDeGiay = worksheet.Cells[row, 6].Text;
-                            var mauSac = worksheet.Cells[row, 7].Text;
-                            var kichCo = worksheet.Cells[row, 8].Text;
-                            var giaNhap = worksheet.Cells[row, 9].Text;
-                            var giaBan = worksheet.Cells[row, 10].Text;
-                            var soLuong = worksheet.Cells[row, 11].Text;
-                            var khoiLuong = worksheet.Cells[row, 12].Text;
-                            var day = worksheet.Cells[row, 13].Text;
-                            var noiBat = worksheet.Cells[row, 14].Text;
-                            var trangThaiSale = worksheet.Cells[row, 15].Text;
-                            var listTenAnh = worksheet.Cells[row, 16].Text.Split(',');
-
-                            var sanPhamDTO = await _sanPhamChiTietService.GetItemExcelAynsc(new BienTheDTO
+                            sanpham = worksheet.Cells[row, 1].Text;
+                            thuongHieu = worksheet.Cells[row, 2].Text;
+                            xuatXu = worksheet.Cells[row, 3].Text;
+                            chatLieu = worksheet.Cells[row, 4].Text;
+                            loaiGiay = worksheet.Cells[row, 5].Text;
+                            kieuDeGiay = worksheet.Cells[row, 6].Text;
+                            mauSac = worksheet.Cells[row, 7].Text;
+                            kichCo = worksheet.Cells[row, 8].Text;
+                            giaNhap = worksheet.Cells[row, 9].Text;
+                            giaBan = worksheet.Cells[row, 10].Text;
+                            soLuong = worksheet.Cells[row, 11].Text;
+                            khoiLuong = worksheet.Cells[row, 12].Text;
+                            day = worksheet.Cells[row, 13].Text;
+                            noiBat = worksheet.Cells[row, 14].Text;
+                            trangThaiSale = worksheet.Cells[row, 15].Text;
+                            listTenAnh = worksheet.Cells[row, 16].Text.Split(',').ToList();
+                            if (
+                                !string.IsNullOrEmpty(sanpham) &&
+                                !string.IsNullOrEmpty(thuongHieu) &&
+                                !string.IsNullOrEmpty(xuatXu) &&
+                                !string.IsNullOrEmpty(chatLieu) &&
+                                !string.IsNullOrEmpty(loaiGiay) &&
+                                !string.IsNullOrEmpty(kieuDeGiay) &&
+                                !string.IsNullOrEmpty(mauSac) &&
+                                !string.IsNullOrEmpty(kichCo) &&
+                                !string.IsNullOrEmpty(giaNhap) &&
+                                !string.IsNullOrEmpty(giaBan) &&
+                                !string.IsNullOrEmpty(soLuong) &&
+                                !string.IsNullOrEmpty(khoiLuong) &&
+                                !string.IsNullOrEmpty(noiBat) &&
+                                !string.IsNullOrEmpty(trangThaiSale) &&
+                                listTenAnh.Any()
+                                )
                             {
-                                ChatLieu = chatLieu,
-                                KichCo = kichCo,
-                                KieuDeGiay = kieuDeGiay,
-                                LoaiGiay = loaiGiay,
-                                MauSac = mauSac,
-                                SanPham = sanpham,
-                                ThuongHieu = thuongHieu,
-                                XuatXu = xuatXu,
-                            });
-
-                            sanPhamDTO.GiaNhap = Convert.ToDouble(giaNhap);
-                            sanPhamDTO.SoLuongTon = Convert.ToInt32(soLuong);
-                            sanPhamDTO.GiaBan = Convert.ToDouble(giaBan);
-                            sanPhamDTO.KhoiLuong = Convert.ToDouble(khoiLuong);
-                            sanPhamDTO.Day = day == "1" ? true : false;
-                            sanPhamDTO.TrangThaiKhuyenMai = trangThaiSale == "1" ? true : false;
-                            sanPhamDTO.NoiBat = noiBat == "1" ? true : false;
-                            var response = (await _sanPhamChiTietService.AddAysnc(sanPhamDTO));
-
-                            if (response.Success)
-                            {
-                                slSuccess++;
-
-                                var formContent = new MultipartFormDataContent();
-                                formContent.Add(new StringContent(response.IdChiTietSp!), "idProductDetail");
-                                for (int i = 0; i < listTenAnh.Count(); i++)
+                                var sanPhamDTO = await _sanPhamChiTietService.GetItemExcelAynsc(new BienTheDTO
                                 {
-                                    formContent.Add(new StringContent(listTenAnh[i]), $"lstNameImage[{i}]");
+                                    ChatLieu = chatLieu,
+                                    KichCo = kichCo,
+                                    KieuDeGiay = kieuDeGiay,
+                                    LoaiGiay = loaiGiay,
+                                    MauSac = mauSac,
+                                    SanPham = sanpham,
+                                    ThuongHieu = thuongHieu,
+                                    XuatXu = xuatXu,
+                                });
+                                sanPhamDTO.GiaNhap = string.IsNullOrEmpty(giaNhap) ? null : Convert.ToDouble(giaNhap);
+                                sanPhamDTO.SoLuongTon = string.IsNullOrEmpty(giaNhap) ? null : Convert.ToInt32(soLuong);
+                                sanPhamDTO.GiaBan = Convert.ToDouble(giaBan);
+                                sanPhamDTO.KhoiLuong = Convert.ToDouble(khoiLuong);
+                                sanPhamDTO.Day = day == "1" ? true : false;
+                                sanPhamDTO.TrangThaiKhuyenMai = trangThaiSale == "1" ? true : false;
+                                sanPhamDTO.NoiBat = noiBat == "1" ? true : false;
+                                var response = (await _sanPhamChiTietService.AddAysnc(sanPhamDTO));
+
+                                if (response.Success)
+                                {
+                                    slSuccess++;
+
+                                    var formContent = new MultipartFormDataContent();
+                                    formContent.Add(new StringContent(response.IdChiTietSp!), "idProductDetail");
+                                    for (int i = 0; i < listTenAnh.Count(); i++)
+                                    {
+                                        formContent.Add(new StringContent(listTenAnh[i]), $"lstNameImage[{i}]");
+                                    }
+                                    try
+                                    {
+                                        HttpResponseMessage responseCreate = await _httpClient.PostAsync("/api/Anh/create-list-model-image", formContent);
+                                        responseCreate.EnsureSuccessStatusCode();
+
+                                    }
+                                    catch (HttpRequestException ex)
+                                    {
+                                        slFalse++;
+                                        Console.WriteLine($"Lỗi gửi yêu cầu HTTP: {ex.Message}");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        slFalse++;
+                                        Console.WriteLine($"Lỗi khác: {ex.Message}");
+                                    }
                                 }
-                                try
+                                else
                                 {
-                                    HttpResponseMessage responseCreate = await _httpClient.PostAsync("/api/Anh/create-list-model-image", formContent);
-                                    responseCreate.EnsureSuccessStatusCode();
+                                    slFalse++;
+                                    var errorRow = new ErrorRow
+                                    {
+                                        SanPham = sanpham,
+                                        ThuongHieu = thuongHieu,
+                                        XuatXu = xuatXu,
+                                        ChatLieu = chatLieu,
+                                        LoaiGiay = loaiGiay,
+                                        KieuDeGiay = kieuDeGiay,
+                                        MauSac = mauSac,
+                                        KichCo = kichCo,
+                                        GiaNhap = giaNhap,
+                                        GiaBan = giaBan,
+                                        SoLuong = soLuong,
+                                        KhoiLuong = khoiLuong,
+                                        Day = day == "1",
+                                        NoiBat = noiBat == "1",
+                                        TrangThaiSale = trangThaiSale == "1",
+                                        ListTenAnh = string.Join(",", listTenAnh),
+                                        ErrorMessage = response.DescriptionErr
+                                    };
 
-                                }
-                                catch (HttpRequestException ex)
-                                {
-                                    Console.WriteLine($"Lỗi gửi yêu cầu HTTP: {ex.Message}");
-                                }
-                                catch (Exception ex)
-                                {
-                                    Console.WriteLine($"Lỗi khác: {ex.Message}");
+                                    errorRows.Add(errorRow);
+
                                 }
                             }
-
                         }
                     }
 
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    Console.WriteLine(ex.ToString());
+                    slFalse++;
+                    var errorRow = new ErrorRow
+                    {
+                        SanPham = sanpham,
+                        ThuongHieu = thuongHieu,
+                        XuatXu = xuatXu,
+                        ChatLieu = chatLieu,
+                        LoaiGiay = loaiGiay,
+                        KieuDeGiay = kieuDeGiay,
+                        MauSac = mauSac,
+                        KichCo = kichCo,
+                        GiaNhap = giaNhap,
+                        GiaBan = giaBan,
+                        SoLuong = soLuong,
+                        KhoiLuong = khoiLuong,
+                        Day = day == "1",
+                        NoiBat = noiBat == "1",
+                        TrangThaiSale = trangThaiSale == "1",
+                        ListTenAnh = string.Join(",", listTenAnh),
+                        ErrorMessage = "Sai định dạng hoặc để trống trường"
+                    };
+
+                    errorRows.Add(errorRow);
+                }
+            }
+            if (errorRows.Count > 0)
+            {
+                using (var errorPackage = new ExcelPackage())
+                {
+                    var errorWorksheet = errorPackage.Workbook.Worksheets.Add("Errors");
+                    using (var range = errorWorksheet.Cells[1, 1, 1, 17])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                        range.Style.Font.Size = 12;
+                    }
+
+                    errorWorksheet.Cells[1, 1].Value = "Tên SP";
+                    errorWorksheet.Cells[1, 2].Value = "Thương Hiệu";
+                    errorWorksheet.Cells[1, 3].Value = "Xuất xứ";
+                    errorWorksheet.Cells[1, 4].Value = "Chất liệu";
+                    errorWorksheet.Cells[1, 5].Value = "Loại giầy";
+                    errorWorksheet.Cells[1, 6].Value = "Kiểu đế giầy";
+                    errorWorksheet.Cells[1, 7].Value = "Màu sắc";
+                    errorWorksheet.Cells[1, 8].Value = "Kích cỡ";
+                    errorWorksheet.Cells[1, 9].Value = "Giá nhập";
+                    errorWorksheet.Cells[1, 10].Value = "Giá bán";
+                    errorWorksheet.Cells[1, 11].Value = "Số lượng";
+                    errorWorksheet.Cells[1, 12].Value = "Khối lượng";
+                    errorWorksheet.Cells[1, 13].Value = "Dây";
+                    errorWorksheet.Cells[1, 14].Value = "Nổi bật";
+                    errorWorksheet.Cells[1, 15].Value = "Trạng thái Sale";
+                    errorWorksheet.Cells[1, 16].Value = "Ảnh";
+                    errorWorksheet.Cells[1, 17].Value = "Mô tả lỗi";
+
+                    // Dữ liệu
+                    for (int i = 0; i < errorRows.Count; i++)
+                    {
+                        var errorRow = errorRows[i];
+
+                        errorWorksheet.Cells[i + 2, 1].Value = errorRow.SanPham;
+                        errorWorksheet.Cells[i + 2, 2].Value = errorRow.ThuongHieu;
+                        errorWorksheet.Cells[i + 2, 3].Value = errorRow.XuatXu;
+                        errorWorksheet.Cells[i + 2, 4].Value = errorRow.ChatLieu;
+                        errorWorksheet.Cells[i + 2, 5].Value = errorRow.LoaiGiay;
+                        errorWorksheet.Cells[i + 2, 6].Value = errorRow.KieuDeGiay;
+                        errorWorksheet.Cells[i + 2, 7].Value = errorRow.MauSac;
+                        errorWorksheet.Cells[i + 2, 8].Value = errorRow.KichCo;
+                        errorWorksheet.Cells[i + 2, 9].Value = errorRow.GiaNhap;
+                        errorWorksheet.Cells[i + 2, 10].Value = errorRow.GiaBan;
+                        errorWorksheet.Cells[i + 2, 11].Value = errorRow.SoLuong;
+                        errorWorksheet.Cells[i + 2, 12].Value = errorRow.KhoiLuong;
+                        errorWorksheet.Cells[i + 2, 13].Value = errorRow.Day;
+                        errorWorksheet.Cells[i + 2, 14].Value = errorRow.NoiBat;
+                        errorWorksheet.Cells[i + 2, 15].Value = errorRow.TrangThaiSale;
+                        errorWorksheet.Cells[i + 2, 16].Value = errorRow.ListTenAnh;
+                        errorWorksheet.Cells[i + 2, 17].Value = errorRow.ErrorMessage;
+                    }
+
+                    var errorBytes = errorPackage.GetAsByteArray();
+                    var errorFileName = "ImportErrors.xlsx";
+                    var errorFilePath = Path.Combine(_webHostEnvironment.WebRootPath, errorFileName);
+                    if (System.IO.File.Exists(errorFilePath))
+                    {
+                        System.IO.File.Delete(errorFilePath);
+                    }
+                    System.IO.File.WriteAllBytes(errorFilePath, errorBytes);
+                    return Ok(new { Success = false, ErrorFilePath = errorFilePath, slFalse, slSuccess });
                 }
             }
 
 
-            return Ok();
+            return Ok(new { slFalse, slSuccess });
 
         }
 
@@ -191,7 +373,7 @@ namespace App_View.Areas.Admin.Controllers
 
 
         #region DownLoadFile
-        public IActionResult DownloadFile()
+        public IActionResult DownloadFileTemplate()
         {
             string relativePath = "excel/template.xlsx";
             string filePath = Path.Combine(_webHostEnvironment.WebRootPath, relativePath);
@@ -208,6 +390,22 @@ namespace App_View.Areas.Admin.Controllers
             }
         }
 
+        public IActionResult DownloadFileErr()
+        {
+            string relativePath = "ImportErrors.xlsx";
+            string filePath = Path.Combine(_webHostEnvironment.WebRootPath, relativePath);
+            string fileName = "ImportErrors.xlsx";
+
+            if (System.IO.File.Exists(filePath))
+            {
+                var fileBytes = System.IO.File.ReadAllBytes(filePath);
+                return File(fileBytes, "application/octet-stream", fileName);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
         #endregion
 
         #region ExportToExcel
@@ -349,8 +547,6 @@ namespace App_View.Areas.Admin.Controllers
                 if (!(value is List<string>) && !(value is List<int>) && !(value is List<IFormFile>))
                 {
                     var stringValue = value?.ToString() ?? string.Empty;
-                    Console.WriteLine(stringValue);
-                    Console.WriteLine(property.Name);
                     multipartContent.Add(new StringContent(stringValue), $"SanPhamChiTietCopyDTO.SanPhamChiTietData.{property.Name}");
                 }
 
@@ -589,6 +785,120 @@ namespace App_View.Areas.Admin.Controllers
             return Ok(result);
         }
 
-      
+        public IActionResult TongQuanSanPham()
+        {
+            return View();
+        }
+
+        public IActionResult DanhSachTongQuanSanPham()
+        {
+            return PartialView();
+        }
+
+        public class SPDanhSachViewModel
+        {
+            public string? SumGuild { get; set; }
+            public string? SanPham { get; set; }
+            public string? ThuongHieu { get; set; }
+            public string? LoaiGiay { get; set; }
+            public string? KieuDeGiay { get; set; }
+            public string? XuatXu { get; set; }
+            public string? ChatLieu { get; set; }
+            public int SoMau { get; set; }
+            public int SoSize { get; set; }
+            public int TongSoLuongTon { get; set; }
+            public double TongSoLuongDaBan { get; set; }
+        }
+
+        public async Task<IActionResult> GetRelatedProducts(string sumGuid)
+        {
+            var listGuid = sumGuid.Split('/');
+            var idSanPham = listGuid[0];
+            var idThuongHieu = listGuid[1];
+            var idKieuDeGiay = listGuid[2];
+            var idLoaiGiay = listGuid[3];
+            var idXuatXu = listGuid[4];
+            var idChatLieu = listGuid[5];
+            var lstRelatedProducts = await _bazaizaiContext
+                .sanPhamChiTiets
+                .Where(sp =>
+                sp.IdSanPham == idSanPham &&
+                sp.IdThuongHieu == idThuongHieu &&
+                sp.IdKieuDeGiay == idKieuDeGiay &&
+                sp.IdLoaiGiay == idLoaiGiay &&
+                sp.IdXuatXu == idXuatXu &&
+                sp.IdChatLieu == idChatLieu
+                ).
+                Include(sp => sp.SanPham).
+                Include(sp => sp.MauSac).
+                Include(sp => sp.KichCo).
+                Include(sp => sp.Anh).
+                Select(sp => new RelatedProductViewModel()
+                {
+                    IdSanPham = sp.IdSanPham,
+                    MaSanPham = sp.Ma,
+                    Anh = sp.Anh.OrderBy(a=>a.NgayTao).FirstOrDefault()!.Url,
+                    MauSac = sp.MauSac.TenMauSac,
+                    GiaBan = sp.GiaBan.GetValueOrDefault(),
+                    KichCo = sp.KichCo.SoKichCo.GetValueOrDefault(),
+                    SanPham = sp.SanPham.TenSanPham,
+                    SoLuong = sp.SoLuongTon.GetValueOrDefault(),
+                    SoLuongDaBan = sp.SoLuongDaBan.GetValueOrDefault(),
+                    //TGBanGanDay = 
+                })
+                .ToListAsync();
+            return PartialView(lstRelatedProducts);
+        }
+
+        public async Task<IActionResult> GetTongQuanDanhSach(int draw, int start, int length, string searchValue)
+        {
+            var danhSanSanPham = await _bazaizaiContext
+                .sanPhamChiTiets
+                .Include(sp => sp.SanPham)
+                .Include(sp => sp.ThuongHieu)
+                .Include(sp => sp.KieuDeGiay)
+                .Include(sp => sp.LoaiGiay)
+                .Include(sp => sp.XuatXu)
+                .Include(sp => sp.ChatLieu)
+                .GroupBy(gr => new
+                {
+                    gr.IdChatLieu,
+                    gr.IdSanPham,
+                    gr.IdThuongHieu,
+                    gr.IdXuatXu,
+                    gr.IdLoaiGiay,
+                    gr.IdKieuDeGiay,
+                })
+                .Select(gr => new SPDanhSachViewModel()
+                {
+                    SumGuild = $"{gr.FirstOrDefault()!.IdSanPham}/{gr.FirstOrDefault()!.IdThuongHieu}/{gr.FirstOrDefault()!.IdKieuDeGiay}/{gr.FirstOrDefault()!.IdLoaiGiay}/{gr.FirstOrDefault()!.IdXuatXu}/{gr.FirstOrDefault()!.IdChatLieu}",
+                    SanPham = $"{gr.FirstOrDefault()!.SanPham.TenSanPham}",
+                    ChatLieu = gr.FirstOrDefault()!.ChatLieu.TenChatLieu,
+                    KieuDeGiay = gr.FirstOrDefault()!.KieuDeGiay.TenKieuDeGiay,
+                    LoaiGiay = gr.FirstOrDefault()!.LoaiGiay.TenLoaiGiay,
+                    ThuongHieu = gr.FirstOrDefault()!.ThuongHieu.TenThuongHieu,
+                    XuatXu = gr.FirstOrDefault()!.XuatXu.Ten,
+                    SoMau = gr.Select(it => it.IdMauSac).Distinct().Count(),
+                    SoSize = gr.Select(it => it.IdKichCo).Distinct().Count(),
+                    TongSoLuongTon = gr.Sum(it => it.SoLuongTon.GetValueOrDefault()),
+                    TongSoLuongDaBan = gr.Sum(it => it.SoLuongDaBan.GetValueOrDefault())
+                })
+                .ToListAsync();
+
+            var query = (danhSanSanPham)
+                .Skip(start)
+                .Take(length)
+                .ToList();
+
+            var totalRecords = (danhSanSanPham).Count;
+
+            return Json(new
+            {
+                draw = draw,
+                recordsTotal = totalRecords,
+                recordsFiltered = totalRecords,
+                data = query
+            });
+        }
     }
 }

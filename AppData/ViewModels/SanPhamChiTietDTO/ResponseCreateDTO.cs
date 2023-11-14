@@ -10,5 +10,6 @@ namespace App_Data.ViewModels.SanPhamChiTietDTO
     {
         public bool Success { get; set; }
         public string? IdChiTietSp { get; set; }
+        public string? DescriptionErr { get; set; }
     }
 }
