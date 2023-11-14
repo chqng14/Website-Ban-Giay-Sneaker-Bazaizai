@@ -175,6 +175,68 @@ namespace App_Api.Controllers
             return danhSachHoaDon;
         }
 
+        [HttpGet]
+        public async Task<List<HoaDonTest>> GetHoaDonOnlineAdmin()
+        {
+            var danhSachHoaDon = new List<HoaDonTest>();
+
+            var danhSachHoaDonGoc = await GetHoaDonOnline();
+            foreach (var hoadon in danhSachHoaDonGoc)
+            {
+                var hoadonct = (await _hoaDonChiTietController.GetAllHoaDon()).Where(c => c.IdHoaDon == hoadon.IdHoaDon).ToList();
+                var loaithanhtoan = await GetPTThanhToan(hoadon.IdHoaDon);
+
+
+                var sanPhamList = new List<SanPhamTest>(); // Tạo JArray mới cho mỗi hóa đơn
+
+                foreach (var item in hoadonct)
+                {
+                    var sp = await _sanPhamChiTietController.GetSanPhamViewModel(item.IdSanPhamChiTiet);
+                    var sanPhamObject = new SanPhamTest
+                    {
+                        IdSanPhamChiTiet = item.IdSanPhamChiTiet,
+                        SoLuong = item.SoLuong,
+                        GiaBan = item.GiaBan,
+                        //GiaGoc = item.GiaGoc,
+                        //GiaNhap = item.GiaGoc,
+                        TenSanPham = sp.SanPham,
+                        LinkAnh = sp.ListTenAnh,
+                        TenMauSac = sp.MauSac,
+                        TenKichCo = sp.KichCo,
+                        TenThuongHieu = sp.ThuongHieu,
+                        TrangThaiGiaoHang = hoadon.TrangThaiGiaoHang,
+                        TongTien = item.GiaBan * item.SoLuong,
+                    };
+                    sanPhamList.Add(sanPhamObject);
+                }
+
+                var hoadontest = new HoaDonTest()
+                {
+                    IdHoaDon = hoadon.IdHoaDon,
+                    MaHoaDon = hoadon.MaHoaDon,
+                    TienGiam = hoadon.TienGiam,
+                    TienShip = hoadon.TienShip,
+                    TongTien = hoadon.TongTien,
+                    TongGia = hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam ?? 0),
+                    SanPham = sanPhamList,
+                    NgayTao = hoadon.NgayTao,
+                    NgayGiaoDuKien = hoadon.NgayGiaoDuKien,
+                    TrangThaiGiaoHang = hoadon.TrangThaiGiaoHang,
+                    TrangThaiThanhToan = hoadon.TrangThaiThanhToan,
+                    TenNguoiNhan = hoadon.TenNguoiNhan,
+                    DiaChi = hoadon.DiaChi,
+                    SDT = hoadon.SDT,
+                    LoaiThanhToan = loaithanhtoan,
+                    MoTa = hoadon.MoTa,
+                    LiDoHuy = hoadon.LiDoHuy,
+                };
+
+                danhSachHoaDon.Add(hoadontest);
+            }
+
+            return danhSachHoaDon;
+        }
+
         [HttpPut]
         public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, int TrangThaiGiaoHang, string? Lido)
         {

@@ -629,6 +629,7 @@
         var totalAmountElement = document.getElementById("tongtien");
         var MucUuDai = "";
         var phiship = 0;
+        var loaiuudai = "";
         var tongTienSauGiamGia = 0;
         var isDefaultAddress = true;
         var selectedCityID = null;
@@ -1053,11 +1054,21 @@
                     data: ma,
                     success: function (result) {
                         $('#textvoucher').text("");
-                        MucUuDai = result.mucuidai;
-                        IdVoucher = result.idVoucher;
-                        $('input[name="IdVoucher"]').val(IdVoucher);
+                        loaiuudai = result.loaiuudai;
                         // Áp dụng giảm giá từ voucher
-                        applyDiscount(MucUuDai);
+                        if (phiship==0 && loaiuudai == 2) {
+                            Swal.fire({
+                                title: "Vui lòng nhập địa chỉ trước khi áp dụng freeship",
+                                icon: "warning",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        } else {
+                            MucUuDai = result.mucuidai;
+                            IdVoucher = result.idVoucher;
+                            $('input[name="IdVoucher"]').val(IdVoucher);
+                            applyDiscount(MucUuDai);
+                        }
                     },
                     error: function (xhr, status, error) {
                         MucUuDai = "";
@@ -1077,9 +1088,18 @@
             if (discountAmount == null || discountAmount == 0) {
                 $('#TienGiam').text(discountAmount.toLocaleString("vi-VN") + "đ");
             }
-            else { 
+            else if (loaiuudai == 0) {
                 $('#TienGiam').text("-" + discountAmount.toLocaleString("vi-VN") + "đ");
             }
+            else if (loaiuudai == 2) {
+                discountAmount = phiship;
+                $('#TienGiam').text("-" + discountAmount.toLocaleString("vi-VN") + "đ");
+            }
+            else {
+                discountAmount = tongtienSanPham * discountAmount / 100;
+                $('#TienGiam').text("-" + discountAmount.toLocaleString("vi-VN") + "đ");
+            }
+
             document.querySelector('input[name="TienGiam"]').value = discountAmount;
             // Tính tổng tiền sau khi giảm giá
             var tamTinhGiaGiam = tongtienSanPham + parseFloat(phiship);
