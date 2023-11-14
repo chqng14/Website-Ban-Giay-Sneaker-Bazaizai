@@ -2,7 +2,7 @@
 
 @foreach (var item in Model)
 {
-    <div class="col-3">
+    <div class="col-6">
         <div class="card" style="width: 16rem;">
             <div class="card-body">
                 <h5 class="card-title"> </h5>
@@ -134,7 +134,7 @@
                         isAdding = false;
                         return;
                     }
-
+                    updateTienThua();
                 },
                 error: function (error) {
                     console.error(error);

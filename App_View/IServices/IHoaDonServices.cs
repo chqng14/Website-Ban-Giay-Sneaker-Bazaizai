@@ -16,6 +16,8 @@ namespace App_View.IServices
         Task<List<HoaDonViewModel>> GetHoaDon();
         Task<List<HoaDonTest>> GetHoaDonOnline(string idNguoiDung);
         Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon);
+        Task<string> TaoKhachHang(KhachHang khachHang);
+        Task<List<KhachHang>> GetKhachHangs();
         Task<string> GetPayMent(string idHoaDon);
     }
 }

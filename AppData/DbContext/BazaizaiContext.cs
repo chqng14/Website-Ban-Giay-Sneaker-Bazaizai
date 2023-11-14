@@ -35,6 +35,7 @@ namespace App_Data.DbContextt
         public DbSet<HoaDon> HoaDons { get; set; }
         public DbSet<HoaDonChiTiet> hoaDonChiTiets { get; set; }
         public DbSet<KhuyenMai> khuyenMais { get; set; }
+        public DbSet<KhachHang> KhachHangs { get; set; }
         public DbSet<KhuyenMaiChiTiet> khuyenMaiChiTiets { get; set; }
         public DbSet<KichCo> kichCos { get; set; }
         public DbSet<KieuDeGiay> kieuDeGiays { get; set; }
@@ -75,7 +76,7 @@ namespace App_Data.DbContextt
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
 
-            optionsBuilder.UseSqlServer(@"Data Source=MI\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
+            optionsBuilder.UseSqlServer(@"Data Source=.\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
         }
 
 

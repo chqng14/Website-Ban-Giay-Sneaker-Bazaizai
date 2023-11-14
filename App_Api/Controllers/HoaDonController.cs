@@ -26,6 +26,7 @@ namespace App_Api.Controllers
         private readonly IMapper _mapper;
         private PTThanhToanController _PTThanhToanController;
         private SanPhamChiTietController _sanPhamChiTietController;
+        private readonly IKhachHangRepo _khachHangRepo;
         public HoaDonController(IMapper mapper, SanPhamChiTietController sanPhamChiTietController)
         {
             _hoaDon = new HoaDonRepos(mapper);
@@ -34,6 +35,7 @@ namespace App_Api.Controllers
             _PTThanhToanChiTietController = new PTThanhToanChiTietController();
             _PTThanhToanController = new PTThanhToanController();
             _sanPhamChiTietController = sanPhamChiTietController;
+            _khachHangRepo = new KhachHangRepo();
         }
         [HttpPost]
         public async Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon)
@@ -208,6 +210,16 @@ namespace App_Api.Controllers
             var pt = _PTThanhToanChiTietController.PhuongThucThanhToanChiTietByIdPTTT(idhoadon);
             var idpt = _PTThanhToanController.ShowAll().FirstOrDefault(c => c.IdPhuongThucThanhToan == pt.IdThanhToan);
             return idpt.TenPhuongThucThanhToan;
+        }
+        [HttpPost]
+        public async Task<string> TaoKhachHang(KhachHang khachHang)
+        {
+            return _khachHangRepo.TaoKhachHang(khachHang);
+        }
+        [HttpGet]
+        public async Task<List<KhachHang>> GetAllKhachHang()
+        {
+            return _khachHangRepo.GetKhachHangs();
         }
     }
 }

@@ -152,5 +152,12 @@ namespace App_Data.Repositories
             [Description("Đã thanh toán")]
             DaThanhToan = 1,
         }
+        public enum TrangThaiKhachHang
+        {
+            [Description("Hoạt động")]
+            HoatDong = 0,
+            [Description("Không hoạt động")]
+            KhongHoatDong = 1,
+        }
     }
 }
