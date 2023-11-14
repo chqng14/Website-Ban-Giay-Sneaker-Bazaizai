@@ -12,6 +12,7 @@ namespace App_Data.IRepositories
     public interface IThongTinGHRepos
     {
         public IEnumerable<ThongTinGiaoHang> GetAll();
+        public IEnumerable<ThongTinGHDTO> GetAllDTO();
         public bool AddThongTinGH(ThongTinGiaoHang item);
         public bool RemoveThongTinGH(ThongTinGiaoHang item);
         public bool EditThongTinGH(ThongTinGiaoHang item);

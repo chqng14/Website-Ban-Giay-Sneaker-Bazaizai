@@ -1,0 +1,98 @@
+﻿@model IEnumerable<App_Data.Models.ThongTinGiaoHang>
+
+@{
+    ViewData["Title"] = "Default";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+<style>
+    .dash__table-2 th, .dash__table-2 td {
+        min-width: 160px;
+    }
+    /* td {
+        max-width: 330px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    } */
+</style>
+<div class="col-lg-9 col-md-12">
+    <form class="dash__address-make">
+        <div class="dash__box dash__box--shadow dash__box--bg-white dash__box--radius u-s-m-b-30">
+            <h2 class="dash__h2 u-s-p-xy-20">Đặt địa chỉ mặc định</h2>
+            <div class="dash__table-2-wrap gl-scroll">
+                <table class="dash__table-2">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tên người nhận</th>
+                            <th>Số điện thoại</th>
+                            <th>Địa chỉ</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <!--====== Radio Box ======-->
+                                    <div class="radio-box">
+
+                                        <input type="radio" id="@item.IdThongTinGH" name="default-address" @(item.TrangThai == 0 ? "checked" : "")>
+                                        <div class="radio-box__state radio-box__state--primary">
+
+                                            <label class="radio-box__label" for="address-1"></label>
+                                        </div>
+                                    </div>
+                                    <!--====== End - Radio Box ======-->
+                                </td>
+                                <td>@item.TenNguoiNhan</td>
+                                <td>@item.SDT</td>
+                                <td>@item.DiaChi</td>
+                                @if (item.TrangThai == 0)
+                                {
+                                    <td>
+                                        <div class="gl-text" style="color:#ff4500;font-weight:600">Địa chỉ mặc định</div>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+
+            <button class="btn btn--e-brand-b-2" id="defaultAddress" type="submit">Lưu</button>
+        </div>
+    </form>
+</div>
+@section Scripts{
+    <script>
+        var radioButtons = document.querySelectorAll('input[type="radio"]');
+        var selectedId = "";
+        radioButtons.forEach(function (radioButton) {
+            radioButton.addEventListener('change', function () {
+                if (this.checked) {
+                    selectedId = this.id;
+                }
+            });
+        });
+        $(document).ready(function () {
+            $('#defaultAddress').click(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    type: 'PUT',
+                    url: '/ThongTinGH/UpdateTrangThai',
+                    data: { idThongTin: selectedId },
+                    success: function (Response) {
+                        window.location.reload();
+                    },
+                    error: function (Error) {
+                        console.log("Lỗi");
+                    }
+                });
+            });
+        });
+    </script>
+}
