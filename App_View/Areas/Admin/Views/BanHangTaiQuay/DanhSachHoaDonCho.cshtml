@@ -328,6 +328,10 @@ requestAnimationFrame(captureQRCode);
                         $("#MaVoucher").val("");
                         $("#ChuyenKhoan input").val("");
                         $("#TienMat input").val("");
+                        var autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputChuyenKhoan'));
+                        autoNumericInstance.set("0");
+                        autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputTienMat'));
+                        autoNumericInstance.set("0");
                         updateTienThua();
 
                         loading = false;
