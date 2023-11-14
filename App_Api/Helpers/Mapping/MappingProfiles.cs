@@ -274,6 +274,10 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => src.GiaBan)
                     )
                 .ForMember(
+                        dest => dest.MaSanPham,
+                        opt => opt.MapFrom(src => src.Ma)
+                    )
+                .ForMember(
                         dest => dest.GiaThucTe,
                         opt => opt.MapFrom(src => src.GiaThucTe)
                     )

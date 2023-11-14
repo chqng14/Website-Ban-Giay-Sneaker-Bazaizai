@@ -34,6 +34,7 @@ using static App_View.Areas.Admin.Controllers.SanPhamChiTietController;
 using DocumentFormat.OpenXml.Bibliography;
 using static App_Data.Repositories.TrangThai;
 using static Google.Apis.Requests.BatchRequest;
+using App_Data.ViewModels.SanPhamChiTietViewModel;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -126,19 +127,19 @@ namespace App_View.Areas.Admin.Controllers
             int slFalse = 0;
             List<ErrorRow> errorRows = new List<ErrorRow>();
             var sanpham = "";
-            var thuongHieu="";
-            var xuatXu="";
-            var chatLieu="";
-            var loaiGiay="";
-            var kieuDeGiay="";
-            var mauSac="";
-            var kichCo="";
-            var giaNhap="";
-            var giaBan="";
-            var soLuong="";
-            var khoiLuong="";
-            var day="";
-            var noiBat="";
+            var thuongHieu = "";
+            var xuatXu = "";
+            var chatLieu = "";
+            var loaiGiay = "";
+            var kieuDeGiay = "";
+            var mauSac = "";
+            var kichCo = "";
+            var giaNhap = "";
+            var giaBan = "";
+            var soLuong = "";
+            var khoiLuong = "";
+            var day = "";
+            var noiBat = "";
             var trangThaiSale = "";
             var listTenAnh = new List<string>();
 
@@ -174,7 +175,7 @@ namespace App_View.Areas.Admin.Controllers
                             trangThaiSale = worksheet.Cells[row, 15].Text;
                             listTenAnh = worksheet.Cells[row, 16].Text.Split(',').ToList();
                             if (
-                                !string.IsNullOrEmpty(sanpham) && 
+                                !string.IsNullOrEmpty(sanpham) &&
                                 !string.IsNullOrEmpty(thuongHieu) &&
                                 !string.IsNullOrEmpty(xuatXu) &&
                                 !string.IsNullOrEmpty(chatLieu) &&
@@ -789,46 +790,115 @@ namespace App_View.Areas.Admin.Controllers
             return View();
         }
 
+        public IActionResult DanhSachTongQuanSanPham()
+        {
+            return PartialView();
+        }
+
         public class SPDanhSachViewModel
         {
+            public string? SumGuild { get; set; }
             public string? SanPham { get; set; }
+            public string? ThuongHieu { get; set; }
+            public string? LoaiGiay { get; set; }
+            public string? KieuDeGiay { get; set; }
+            public string? XuatXu { get; set; }
+            public string? ChatLieu { get; set; }
             public int SoMau { get; set; }
             public int SoSize { get; set; }
             public int TongSoLuongTon { get; set; }
-            public double TongSoTien { get; set; }
+            public double TongSoLuongDaBan { get; set; }
         }
 
-        //public async Task<IActionResult> GetTongQuanDanhSach(int draw, int start, int length, string searchValue)
-        //{
-        //    var danhSanSanPham = _bazaizaiContext.sanPhamChiTiets.GroupBy(gr=>new {gr.id})
-        //    var query = (await _sanPhamChiTietService.GetDanhSachGiayNgungKinhDoanhAynsc())
-        //        .Skip(start)
-        //        .Take(length)
-        //        .ToList();
+        public async Task<IActionResult> GetRelatedProducts(string sumGuid)
+        {
+            var listGuid = sumGuid.Split('/');
+            var idSanPham = listGuid[0];
+            var idThuongHieu = listGuid[1];
+            var idKieuDeGiay = listGuid[2];
+            var idLoaiGiay = listGuid[3];
+            var idXuatXu = listGuid[4];
+            var idChatLieu = listGuid[5];
+            var lstRelatedProducts = await _bazaizaiContext
+                .sanPhamChiTiets
+                .Where(sp =>
+                sp.IdSanPham == idSanPham &&
+                sp.IdThuongHieu == idThuongHieu &&
+                sp.IdKieuDeGiay == idKieuDeGiay &&
+                sp.IdLoaiGiay == idLoaiGiay &&
+                sp.IdXuatXu == idXuatXu &&
+                sp.IdChatLieu == idChatLieu
+                ).
+                Include(sp => sp.SanPham).
+                Include(sp => sp.MauSac).
+                Include(sp => sp.KichCo).
+                Include(sp => sp.Anh).
+                Select(sp => new RelatedProductViewModel()
+                {
+                    IdSanPham = sp.IdSanPham,
+                    MaSanPham = sp.Ma,
+                    Anh = sp.Anh.OrderBy(a=>a.NgayTao).FirstOrDefault()!.Url,
+                    MauSac = sp.MauSac.TenMauSac,
+                    GiaBan = sp.GiaBan.GetValueOrDefault(),
+                    KichCo = sp.KichCo.SoKichCo.GetValueOrDefault(),
+                    SanPham = sp.SanPham.TenSanPham,
+                    SoLuong = sp.SoLuongTon.GetValueOrDefault(),
+                    SoLuongDaBan = sp.SoLuongDaBan.GetValueOrDefault(),
+                    //TGBanGanDay = 
+                })
+                .ToListAsync();
+            return PartialView(lstRelatedProducts);
+        }
 
-        //    if (!string.IsNullOrEmpty(searchValue))
-        //    {
-        //        string searchValueLower = searchValue.ToLower();
-        //        query = (await _sanPhamChiTietService.GetDanhSachGiayNgungKinhDoanhAynsc()).Where(x =>
-        //        x.SanPham!.ToLower().Contains(searchValueLower) ||
-        //        x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
-        //        x.ChatLieu!.ToLower().Contains(searchValueLower) ||
-        //        x.KieuDeGiay!.ToLower().Contains(searchValueLower)
-        //        )
-        //        .Skip(start)
-        //        .Take(length)
-        //        .ToList();
-        //    }
+        public async Task<IActionResult> GetTongQuanDanhSach(int draw, int start, int length, string searchValue)
+        {
+            var danhSanSanPham = await _bazaizaiContext
+                .sanPhamChiTiets
+                .Include(sp => sp.SanPham)
+                .Include(sp => sp.ThuongHieu)
+                .Include(sp => sp.KieuDeGiay)
+                .Include(sp => sp.LoaiGiay)
+                .Include(sp => sp.XuatXu)
+                .Include(sp => sp.ChatLieu)
+                .GroupBy(gr => new
+                {
+                    gr.IdChatLieu,
+                    gr.IdSanPham,
+                    gr.IdThuongHieu,
+                    gr.IdXuatXu,
+                    gr.IdLoaiGiay,
+                    gr.IdKieuDeGiay,
+                })
+                .Select(gr => new SPDanhSachViewModel()
+                {
+                    SumGuild = $"{gr.FirstOrDefault()!.IdSanPham}/{gr.FirstOrDefault()!.IdThuongHieu}/{gr.FirstOrDefault()!.IdKieuDeGiay}/{gr.FirstOrDefault()!.IdLoaiGiay}/{gr.FirstOrDefault()!.IdXuatXu}/{gr.FirstOrDefault()!.IdChatLieu}",
+                    SanPham = $"{gr.FirstOrDefault()!.SanPham.TenSanPham}",
+                    ChatLieu = gr.FirstOrDefault()!.ChatLieu.TenChatLieu,
+                    KieuDeGiay = gr.FirstOrDefault()!.KieuDeGiay.TenKieuDeGiay,
+                    LoaiGiay = gr.FirstOrDefault()!.LoaiGiay.TenLoaiGiay,
+                    ThuongHieu = gr.FirstOrDefault()!.ThuongHieu.TenThuongHieu,
+                    XuatXu = gr.FirstOrDefault()!.XuatXu.Ten,
+                    SoMau = gr.Select(it => it.IdMauSac).Distinct().Count(),
+                    SoSize = gr.Select(it => it.IdKichCo).Distinct().Count(),
+                    TongSoLuongTon = gr.Sum(it => it.SoLuongTon.GetValueOrDefault()),
+                    TongSoLuongDaBan = gr.Sum(it => it.SoLuongDaBan.GetValueOrDefault())
+                })
+                .ToListAsync();
 
-        //    var totalRecords = (await _sanPhamChiTietService.GetDanhSachGiayNgungKinhDoanhAynsc()).Count;
+            var query = (danhSanSanPham)
+                .Skip(start)
+                .Take(length)
+                .ToList();
 
-        //    return Json(new
-        //    {
-        //        draw = draw,
-        //        recordsTotal = totalRecords,
-        //        recordsFiltered = totalRecords,
-        //        data = query
-        //    });
-        //}
+            var totalRecords = (danhSanSanPham).Count;
+
+            return Json(new
+            {
+                draw = draw,
+                recordsTotal = totalRecords,
+                recordsFiltered = totalRecords,
+                data = query
+            });
+        }
     }
 }

@@ -10,7 +10,6 @@
         border: 1px solid #ccc;
         overflow: hidden;
         background-color: white;
-        margin-bottom: 20px;
     }
 
     .tab-item {
@@ -23,10 +22,10 @@
         transition: background-color 0.3s;
     }
 
-    .tab-item.active {
-        background-color: #ff4500;
-        color: #fff;
-    }
+        .tab-item.active {
+            background-color: #ff4500;
+            color: #fff;
+        }
 </style>
 
 <div class="page-header">
@@ -40,7 +39,7 @@
 
 <div class="card">
     <div class="tabs">
-        <div class="tab-item active" id="tab1" data-value="">Sản phẩm</div>
+        <div class="tab-item active" id="tab1" data-value="dssanpham">Sản phẩm</div>
         <div class="tab-item" id="tab2" data-value="1">Top SP bán chạy</div>
         <div class="tab-item" id="tab3" data-value="2">Top SP bán chạy/Tháng</div>
         <div class="tab-item" id="tab4" data-value="3">Top SP yêu thích</div>
@@ -51,7 +50,6 @@
     <div class="m-order__list active" id="content1">
     </div>
 </div>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script>
     const tabItems = document.querySelectorAll('.tab-item');
     const content1 = document.getElementById('content1');
@@ -66,11 +64,52 @@
                 item.classList.remove('active');
             });
 
+            console.log($(tabItem).data('value'));
+
+            if ($(tabItem).data('value') === "dssanpham") {
+                $.ajax({
+                    url: '/Admin/SanPhamChiTiet/DanhSachTongQuanSanPham',
+                    type: 'GET',
+                    success: function (result) {
+                        $('#content1').empty().html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+            }
             $('#content1').empty().html();
 
             content1.classList.add('active');
             tabItem.classList.add('active');
         });
     });
-</script>
 
+    $(() => {
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/DanhSachTongQuanSanPham',
+            type: 'GET',
+            success: function (result) {
+                $('#content1').empty().html(result);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+
+
+    })
+</script>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+}

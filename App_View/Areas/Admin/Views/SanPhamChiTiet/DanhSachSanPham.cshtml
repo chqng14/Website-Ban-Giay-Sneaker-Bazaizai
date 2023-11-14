@@ -348,7 +348,7 @@
     var mauSac;
     var kichCo;
     var sort;
-    var maxLength=999999;
+    var maxLength = 999999;
     $(() => {
         $('.select2_active').select2();
         $('#btn-import').click((event) => {
@@ -368,7 +368,7 @@
     $(() => checkToshowConfirm())
     const checkToshowConfirm = () => {
         const sumCheck = $('input[type="checkbox"]:checked');
-        if (sumCheck.length>0) {
+        if (sumCheck.length > 0) {
             $('#confirm-ds').show()
         } else {
             $('#confirm-ds').hide()
@@ -377,7 +377,7 @@
     $(document).on('click', '.cursor-image', function () {
         const id = $(this).data('data');
         $.ajax({
-            url: '/Admin/SanPhamChiTiet/LoadPartialView?idSanPhamChiTiet='+id,
+            url: '/Admin/SanPhamChiTiet/LoadPartialView?idSanPhamChiTiet=' + id,
             type: 'GET',
             success: function (result) {
                 const modal = $('#modalSanPham');
@@ -394,37 +394,35 @@
         });
     })
     $(() => {
-        $(document).ready(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        });
+        $('[data-toggle="tooltip"]').tooltip();
     })
 
     $(document).ready(function () {
         let selectedCheckboxes = {};
         table = $('#table-sanpham').DataTable({
-        ajax: {
-            url: '@Url.Action("GetDanhSachSanPham", "SanPhamChiTiet", new { area= "Admin" })',
-            type: 'POST',
-            dataType: 'json',
+            ajax: {
+                url: '@Url.Action("GetDanhSachSanPham", "SanPhamChiTiet", new { area= "Admin" })',
+                type: 'POST',
+                dataType: 'json',
                 data: function (e) {
-                return JSON.stringify({
-                    draw: e.draw,
-                    start: e.start,
-                    length: e.length,
-                    searchValue: e.search.value,
-                    SanPham: sanpham,
-                    MauSac: mauSac,
-                    KichCo: kichCo,
-                    ThuongHieu: thuongHieu,
-                    Sort: sort
-                });
+                    return JSON.stringify({
+                        draw: e.draw,
+                        start: e.start,
+                        length: e.length,
+                        searchValue: e.search.value,
+                        SanPham: sanpham,
+                        MauSac: mauSac,
+                        KichCo: kichCo,
+                        ThuongHieu: thuongHieu,
+                        Sort: sort
+                    });
                 },
-            contentType:'application/json',
-            cache: true
-        },
-        serverSide: true,
-        paging: true,
-        scrollX: true,
+                contentType: 'application/json',
+                cache: true
+            },
+            serverSide: true,
+            paging: true,
+            scrollX: true,
             lengthMenu: [[10, 25, 50, 100, maxLength],
             [10, 25, 50, 100, "All"]],
             pageLength: 10,
@@ -461,211 +459,211 @@
                 </tr>
             `);
             },
-        columns: [
-            {
-                data: 'idChiTietSp',
-                title: '<div class="checkbox"><input id="check-all" type="checkbox"><label for="check-all" class="m-b-0"></label></div>',
-                render: function (data, type, row, meta) {
-                    const isChecked = selectedCheckboxes[data.idChiTietSp];
-                    const checkedAttribute = isChecked ? 'checked' : '';
-                    return `
+            columns: [
+                {
+                    data: 'idChiTietSp',
+                    title: '<div class="checkbox"><input id="check-all" type="checkbox"><label for="check-all" class="m-b-0"></label></div>',
+                    render: function (data, type, row, meta) {
+                        const isChecked = selectedCheckboxes[data.idChiTietSp];
+                        const checkedAttribute = isChecked ? 'checked' : '';
+                        return `
                     <div class="checkbox" data-id="${data}"><input id="check-item-${data}" type="checkbox" class="item"><label for="check-item-${data}" "${checkedAttribute}" class="m-b-0"></label></div>
                     `;
+                    },
+                    orderable: false
                 },
-                orderable: false
-            },
-            {
-                data: null,
-                title: 'STT',
-                render: function (data, type, row, meta) {
-                    return meta.row + 1;
+                {
+                    data: null,
+                    title: 'STT',
+                    render: function (data, type, row, meta) {
+                        return meta.row + 1;
+                    },
+                    orderable: false
                 },
-                orderable: false
-            },
-            {
-                data: 'ma',
-                title: 'Mã SP',
-                orderable: false
-            },
-            {
-                data: null,
-                title: 'Sản phẩm',
-                render: function (data, type, row, meta) {
-                    if (data.anh === null) {
-                        var defaultImageUrl = '/images/NoImage.png';
-                        return `
+                {
+                    data: 'ma',
+                    title: 'Mã SP',
+                    orderable: false
+                },
+                {
+                    data: null,
+                    title: 'Sản phẩm',
+                    render: function (data, type, row, meta) {
+                        if (data.anh === null) {
+                            var defaultImageUrl = '/images/NoImage.png';
+                            return `
                                 <div class="d-flex align-items-center"><img data-data="${data.idChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sản phẩm" class="img-fluid cursor-image rounded" src="${defaultImageUrl}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.sanPham}</h6></div>
                             `;
-                    } else {
-                        return `
+                        } else {
+                            return `
                                 <div class="d-flex align-items-center"><img data-data="${data.idChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sản phẩm" class="img-fluid cursor-image rounded" src="/AnhSanPham/${data.anh}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.sanPham}</h6></div>
                             `;
+                        }
+                    },
+                    orderable: false
+                },
+                {
+                    data: 'kichCo',
+                    title: 'Size',
+                    orderable: false
+                },
+                {
+                    data: 'kieuDeGiay',
+                    title: 'Kiểu đế giầy',
+                    orderable: false
+                },
+                {
+                    data: 'chatLieu',
+                    title: 'Chất liệu',
+                    orderable: false
+                },
+                {
+                    data: 'giaNhap',
+                    title: 'Giá nhập',
+                    render: function (data, type, row, meta) {
+                        return new Intl.NumberFormat('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND'
+                        }).format(data).replace(",00", "");
+                    },
+                    orderable: false
+                },
+                {
+                    data: 'giaBan',
+                    title: 'Giá bán',
+                    render: function (data, type, row, meta) {
+                        return new Intl.NumberFormat('vi-VN', {
+                            style: 'currency',
+                            currency: 'VND'
+                        }).format(data).replace(",00", "");
+                    },
+                    orderable: false
+                },
+                {
+                    data: 'soLuongTon',
+                    title: 'Số lượng',
+                    orderable: false,
+                    render: function (data, type, row) {
+                        if (type === 'display' || type === 'filter') {
+                            return formatNumber(data);
+                        }
+                        return data;
                     }
                 },
-                orderable: false
-            },
-            {
-                data: 'kichCo',
-                title: 'Size',
-                orderable: false
-            },
-            {
-                data: 'kieuDeGiay',
-                title: 'Kiểu đế giầy',
-                orderable: false
-            },
-            {
-                data: 'chatLieu',
-                title: 'Chất liệu',
-                orderable: false
-            },
-            {
-                data: 'giaNhap',
-                title: 'Giá nhập',
-                render: function (data, type, row, meta) {
-                    return new Intl.NumberFormat('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND'
-                    }).format(data).replace(",00", "");
-                },
-                orderable: false
-            },
-            {
-                data: 'giaBan',
-                title: 'Giá bán',
-                render: function (data, type, row, meta) {
-                    return new Intl.NumberFormat('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND'
-                    }).format(data).replace(",00", "");
-                },
-                orderable: false
-            },
-            {
-                data: 'soLuongTon',
-                title: 'Số lượng',
-                orderable: false,
-                render: function (data, type, row) {
-                    if (type === 'display' || type === 'filter') {
-                        return formatNumber(data);
-                    }
-                    return data;
-                }
-            },
-            {
-                data: null,
-                title: '#',
-                render: function (data, type, row, meta) {
-                    return `
+                {
+                    data: null,
+                    title: '#',
+                    render: function (data, type, row, meta) {
+                        return `
                     <button class="btn btn-icon btn-primary btn-rounded btn-tone delete-item"><i class="far fa-trash-alt"></i></button>
                     `;
+                    },
+                    orderable: false
                 },
-                orderable: false
-            },
-        ],
-        initComplete: function (settings, json) {
-            maxLength = json.data.recordsTotal;
-            $('#table-sanpham').on('draw.dt', function () {
-                $('input[type="checkbox"]').each(function () {
-                    if ($(this).attr('id')) {
-                        const id = $(this).attr('id').replace('check-item-', '');
-                        if (selectedCheckboxes[id]) {
-                            $(this).prop('checked', true);
-                        } else {
-                            $(this).prop('checked', false);
+            ],
+            initComplete: function (settings, json) {
+                maxLength = json.data.recordsTotal;
+                $('#table-sanpham').on('draw.dt', function () {
+                    $('input[type="checkbox"]').each(function () {
+                        if ($(this).attr('id')) {
+                            const id = $(this).attr('id').replace('check-item-', '');
+                            if (selectedCheckboxes[id]) {
+                                $(this).prop('checked', true);
+                            } else {
+                                $(this).prop('checked', false);
+                            }
                         }
-                    }
+                    });
                 });
-            });
 
-            $('#check-all').on('change', function () {
-                const isCheckedAll = $(this).prop('checked');
-                $('input[type="checkbox"].item').each(function () {
-                    const id = $(this).attr('id').replace('check-item-', '');;
-                    $(this).prop('checked', isCheckedAll);
+                $('#check-all').on('change', function () {
+                    const isCheckedAll = $(this).prop('checked');
+                    $('input[type="checkbox"].item').each(function () {
+                        const id = $(this).attr('id').replace('check-item-', '');;
+                        $(this).prop('checked', isCheckedAll);
 
-                    if (isCheckedAll) {
+                        if (isCheckedAll) {
+                            selectedCheckboxes[id] = true;
+                        } else {
+                            delete selectedCheckboxes[id];
+                        }
+                        checkToshowConfirm();
+                    });
+                });
+
+                $('#table-sanpham').on('change', 'input[type="checkbox"]', function () {
+                    const id = $(this).attr('id').replace('check-item-', '');
+                    if ($(this).prop('checked')) {
                         selectedCheckboxes[id] = true;
                     } else {
                         delete selectedCheckboxes[id];
                     }
+
+                    const totalCheckboxes = $('input[type="checkbox"]').length;
+                    const totalChecked = $('input[type="checkbox"]:checked').length;
+                    $('#check-all').prop('checked', totalChecked === totalCheckboxes);
                     checkToshowConfirm();
                 });
-            });
 
-            $('#table-sanpham').on('change', 'input[type="checkbox"]', function () {
-                const id = $(this).attr('id').replace('check-item-', '');
-                if ($(this).prop('checked')) {
-                    selectedCheckboxes[id] = true;
-                } else {
-                    delete selectedCheckboxes[id];
-                }
+                $('#filterSanPham').on('change', function () {
+                    sanpham = $(this).val();
+                    table.draw();
+                });
 
-                const totalCheckboxes = $('input[type="checkbox"]').length;
-                const totalChecked = $('input[type="checkbox"]:checked').length;
-                $('#check-all').prop('checked', totalChecked === totalCheckboxes);
-                checkToshowConfirm();
-            });
+                $('#filterThuongHieu').on('change', function () {
+                    thuongHieu = $(this).val();
+                    table.draw();
+                });
 
-            $('#filterSanPham').on('change', function () {
-                sanpham = $(this).val();
-                table.draw();
-            });
+                $('#filterMauSac').on('change', function () {
+                    mauSac = $(this).val();
+                    table.draw();
+                });
 
-            $('#filterThuongHieu').on('change', function () {
-                thuongHieu = $(this).val();
-                table.draw();
-            });
+                $('#filterKichCo').on('change', function () {
+                    kichCo = $(this).val();
+                    table.draw();
+                });
 
-            $('#filterMauSac').on('change', function () {
-                mauSac = $(this).val();
-                table.draw();
-            });
+                $('#filterSort').on('change', function () {
+                    sort = $(this).val();
+                    table.draw();
+                });
+            },
 
-            $('#filterKichCo').on('change', function () {
-                kichCo = $(this).val();
-                table.draw();
-            });
-
-            $('#filterSort').on('change', function () {
-                sort = $(this).val();
-                table.draw();
-            });
-        },
-
-    });
+        });
 
 
         $(document).on("click", ".delete-item", function () {
-           $('#confirm').find('#thongBao').text("Bạn có muốn ngừng kinh doanh mặt hàng này?");
-           $('#confirm').modal('show');
-           var item = $(this).closest('tr')
-           $('#confirm').off('click', '.btn-primary');
-           $('#confirm').one('click', '.btn-primary', function () {
-               const id = item.find('.checkbox').attr('data-id');
-               $.ajax({
-                   url: '/Admin/SanPhamChiTiet/Delete/' + id,
-                   type: 'GET',
-                   success: function (result) {
-                       if (result) {
-                           delete selectedCheckboxes[id];
-                           item.remove();
-                           $('#confirm').modal('hide');
-                           showToastDeleteSucsess();
-                           checkToshowConfirm();
-                           table.draw();
-                       }
-                   },
-                   error: function (xhr, status, error) {
-                       console.log(xhr.responseText);
-                       console.log(status);
-                       console.log(error);
-                       console.log(xhr);
-                   }
-               });
-               confirmModal.modal('hide');
-           });
-       })
+            $('#confirm').find('#thongBao').text("Bạn có muốn ngừng kinh doanh mặt hàng này?");
+            $('#confirm').modal('show');
+            var item = $(this).closest('tr')
+            $('#confirm').off('click', '.btn-primary');
+            $('#confirm').one('click', '.btn-primary', function () {
+                const id = item.find('.checkbox').attr('data-id');
+                $.ajax({
+                    url: '/Admin/SanPhamChiTiet/Delete/' + id,
+                    type: 'GET',
+                    success: function (result) {
+                        if (result) {
+                            delete selectedCheckboxes[id];
+                            item.remove();
+                            $('#confirm').modal('hide');
+                            showToastDeleteSucsess();
+                            checkToshowConfirm();
+                            table.draw();
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+                confirmModal.modal('hide');
+            });
+        })
 
         $(document).on("click", '.ngung_kinh_doanh', function () {
             const keys = Object.keys(selectedCheckboxes);
@@ -718,27 +716,27 @@
         })
 
         $(document).on("click", '.thaotac', function () {
-           const keys = Object.keys(selectedCheckboxes);
-           const data = { "listGuild": keys };
-           console.log(JSON.stringify(data));
-           $('#preloader').show();
-           $.ajax({
-               url: 'GetPartialViewListUpdate',
-               type: 'POST',
-               data: JSON.stringify(data),
-               contentType: 'application/json',
-               success: function (result) {
-                   $('#body-danhsach').html(result)
-                   $('#preloader').hide();
-               },
-               error: function (xhr, status, error) {
-                   console.log(xhr.responseText);
-                   console.log(status);
-                   console.log(error);
-                   console.log(xhr);
-               }
-           });
-       })
+            const keys = Object.keys(selectedCheckboxes);
+            const data = { "listGuild": keys };
+            console.log(JSON.stringify(data));
+            $('#preloader').show();
+            $.ajax({
+                url: 'GetPartialViewListUpdate',
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                success: function (result) {
+                    $('#body-danhsach').html(result)
+                    $('#preloader').hide();
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    console.log(status);
+                    console.log(error);
+                    console.log(xhr);
+                }
+            });
+        })
     });
 
     function formatNumber(number) {
