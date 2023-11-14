@@ -130,7 +130,7 @@ else
                     if (i == Model.PagingInfo.TrangHienTai)
                     {
                         <li class="is-active">
-                            <a href="shop-grid-full.html">@i</a>
+                            <a href="javascript:void(0);">@i</a>
                         </li>
                     }
                     else
@@ -238,68 +238,71 @@ else
     });
 
     function changePage(direction) {
-        const brandParam = new URLSearchParams(window.location.search).get("brand");
-        $('.preloader').addClass('is-active');
+        if (!isTaskRuning) {
+            isTaskRuning = true;
+            const brandParam = new URLSearchParams(window.location.search).get("brand");
+            $('.preloader').addClass('is-active');
 
-        var trangHienTai = parseInt($(".shop-p__pagination li.is-active a").text());
-        var newTrangHienTai = trangHienTai + direction;
+            var trangHienTai = parseInt($(".shop-p__pagination li.is-active a").text());
+            var newTrangHienTai = trangHienTai + direction;
 
-        var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
-            return $(this).attr('id');
-        }).get();
+            var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
+                return $(this).attr('id');
+            }).get();
 
-        var lstMauSac = $('.lst-mausac input[type="checkbox"]:checked').map(function () {
-            return $(this).attr('id');
-        }).get();
+            var lstMauSac = $('.lst-mausac input[type="checkbox"]:checked').map(function () {
+                return $(this).attr('id');
+            }).get();
 
-        var lstTheLoai = $('.lst-theloai input[type="checkbox"]:checked').map(function () {
-            return $(this).closest('.list__content').find('span').text();
-        }).get();
+            var lstTheLoai = $('.lst-theloai input[type="checkbox"]:checked').map(function () {
+                return $(this).closest('.list__content').find('span').text();
+            }).get();
 
-        var data = {};
-        $('#s-price').find("input, select, textarea").each(function () {
-            var fieldType = $(this).attr("type");
-            var fieldName = $(this).attr("name");
-            var fieldValue;
+            var data = {};
+            $('#s-price').find("input, select, textarea").each(function () {
+                var fieldType = $(this).attr("type");
+                var fieldName = $(this).attr("name");
+                var fieldValue;
 
-            if (fieldType === "checkbox" || fieldType === "radio") {
-                fieldValue = $(this).is(":checked");
-            } else {
-                fieldValue = $(this).val();
-                if (!fieldValue) {
-                    fieldValue = 0;
+                if (fieldType === "checkbox" || fieldType === "radio") {
+                    fieldValue = $(this).is(":checked");
+                } else {
+                    fieldValue = $(this).val();
+                    if (!fieldValue) {
+                        fieldValue = 0;
+                    }
                 }
-            }
 
-            data[fieldName] = fieldValue;
-        });
+                data[fieldName] = fieldValue;
+            });
 
-        var filterdata = {
-            LstTheLoai: lstTheLoai,
-            LstMauSac: lstMauSac,
-            lstKichCo: lstKichCo,
-            TrangHienTai: newTrangHienTai,
-            ...data
-        };
+            var filterdata = {
+                LstTheLoai: lstTheLoai,
+                LstMauSac: lstMauSac,
+                lstKichCo: lstKichCo,
+                TrangHienTai: newTrangHienTai,
+                ...data
+            };
 
-        $.ajax({
-            url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
-            type: 'POST',
-            data: JSON.stringify(filterdata),
-            contentType: 'application/json',
-            success: function (result) {
-                $('#body-ds').empty().html(result);
-                $('.preloader').removeClass('is-active');
-                isTaskRuning = false;
-            },
-            error: function (xhr, status, error) {
-                isTaskRuning = false;
-                console.log(xhr.responseText);
-                console.log(status);
-                console.log(error);
-                console.log(xhr);
-            }
-        });
+            $.ajax({
+                url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+                type: 'POST',
+                data: JSON.stringify(filterdata),
+                contentType: 'application/json',
+                success: function (result) {
+                    $('#body-ds').empty().html(result);
+                    $('.preloader').removeClass('is-active');
+                    isTaskRuning = false;
+                },
+                error: function (xhr, status, error) {
+                    isTaskRuning = false;
+                    console.log(xhr.responseText);
+                    console.log(status);
+                    console.log(error);
+                    console.log(xhr);
+                }
+            });
+        }
     }
 
 </script>

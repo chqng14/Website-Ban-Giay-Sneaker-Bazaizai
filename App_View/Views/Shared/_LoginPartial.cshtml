@@ -9,11 +9,11 @@
     <li class="has-dropdown" data-tooltip="tooltip" data-placement="left">
         <a><i><img style="margin-bottom:-7px;width:30px;height:30px; object-fit:cover; border-radius:30px" src="@user.AnhDaiDien"></i>&nbsp;@UserManager.GetUserName(User)</a>
         <span class="js-menu-toggle"></span>
-        <ul style="width:120px">
+        <ul>
             <li>
                 <a asp-area="Identity" asp-page="/Account/my-profile">
                     <i class="fas fa-user-circle u-s-m-r-6"></i>
-                    <span>Account</span>
+                    <span>Tài khoản của tôi</span>
                 </a>
             </li>
             <li>
@@ -22,7 +22,7 @@
                     <button type="submit" class="nav-link btn btn-link text-dark" style="border: 0px;background-color:white;">
                         <a>
                             <i class="fas fa-lock-open u-s-m-r-6"></i>
-                            <span>Signout</span>
+                            <span>Đăng xuất</span>
                         </a>
                     </button>
                 </form>
@@ -43,13 +43,13 @@ else
             <li>
                 <a asp-area="Identity" asp-page="/Account/Register">
                     <i class="fas fa-user-plus u-s-m-r-6"></i>
-                    <span>Signup</span>
+                    <span>Đăng ký</span>
                 </a>
             </li>
             <li>
                 <a asp-area="Identity" asp-page="/Account/Login">
                     <i class="fas fa-lock u-s-m-r-6"></i>
-                    <span>Signin</span>
+                    <span>Đăng nhập</span>
                 </a>
             </li>
 

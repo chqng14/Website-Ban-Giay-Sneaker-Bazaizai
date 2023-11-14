@@ -180,53 +180,77 @@ namespace App_Api.Controllers
         {
             try
             {
-                string currentDirectory = Directory.GetCurrentDirectory();
-                string rootPath = Directory.GetParent(currentDirectory)!.FullName;
-                string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "QRCode");
-
-                var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietDTO);
-                sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
-                sanPhamChiTiet.Ma = !(await _sanPhamChiTietRes.GetListAsync()).Any() ?
-                    "MASP1" :
-                    "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
-                sanPhamChiTiet.TrangThai = 0;
-                sanPhamChiTiet.SoLuongDaBan = 0;
-                sanPhamChiTiet.NgayTao = DateTime.Now;
-
-                if (!string.IsNullOrEmpty(uploadDirectory) && !string.IsNullOrEmpty(sanPhamChiTiet.Ma))
+                var sanPhamChiTietCheck = (await _sanPhamChiTietRes.GetListAsync())
+                .FirstOrDefault(x =>
+                x.IdSanPham == sanPhamChiTietDTO!.IdSanPham &&
+                x.IdChatLieu == sanPhamChiTietDTO.IdChatLieu &&
+                x.IdKichCo == sanPhamChiTietDTO.IdKichCo &&
+                x.IdMauSac == sanPhamChiTietDTO.IdMauSac &&
+                x.IdKieuDeGiay == sanPhamChiTietDTO.IdKieuDeGiay &&
+                x.IdLoaiGiay == sanPhamChiTietDTO.IdLoaiGiay &&
+                x.IdThuongHieu == sanPhamChiTietDTO.IdThuongHieu &&
+                x.IdXuatXu == sanPhamChiTietDTO.IdXuatXu
+                );
+                if (sanPhamChiTietCheck == null)
                 {
-                    string qrCodeImagePath = Path.Combine(uploadDirectory, sanPhamChiTiet.Ma + ".png");
+                    string currentDirectory = Directory.GetCurrentDirectory();
+                    string rootPath = Directory.GetParent(currentDirectory)!.FullName;
+                    string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "QRCode");
 
-                    if (!Directory.Exists(uploadDirectory))
+                    var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietDTO);
+                    sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
+                    var mauSac = _mauSacRes.GetAll().FirstOrDefault(ms => ms.IdMauSac == sanPhamChiTietDTO.IdMauSac)!.TenMauSac!.Substring(0, 2);
+                    var size = _kickcoRes.GetAll().FirstOrDefault(kc => kc.IdKichCo == sanPhamChiTietDTO.IdKichCo)!.SoKichCo;
+                    sanPhamChiTiet.Ma = "SP-" + ((int)1000 + (await _sanPhamChiTietRes.GetListAsync()).Count()).ToString() + "-" + mauSac + "-" + size;
+                    sanPhamChiTiet.TrangThai = 0;
+                    sanPhamChiTiet.SoLuongDaBan = 0;
+                    sanPhamChiTiet.NgayTao = DateTime.Now;
+
+                    if (!string.IsNullOrEmpty(uploadDirectory) && !string.IsNullOrEmpty(sanPhamChiTiet.Ma))
                     {
-                        Directory.CreateDirectory(uploadDirectory);
-                    }
+                        string qrCodeImagePath = Path.Combine(uploadDirectory, sanPhamChiTiet.Ma + ".png");
 
-                    if (!System.IO.File.Exists(qrCodeImagePath))
-                    {
-                        QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                        QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
-                        QRCode qrCode = new QRCode(qrCodeData);
-
-                        Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
-
-                        using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
+                        if (!Directory.Exists(uploadDirectory))
                         {
-                            qrCodeImage.Save(stream, ImageFormat.Png);
+                            Directory.CreateDirectory(uploadDirectory);
+                        }
+
+                        if (!System.IO.File.Exists(qrCodeImagePath))
+                        {
+                            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                            QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
+                            QRCode qrCode = new QRCode(qrCodeData);
+
+                            Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
+
+                            using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
+                            {
+                                qrCodeImage.Save(stream, ImageFormat.Png);
+                            }
                         }
                     }
-                }
 
+                    return new ResponseCreateDTO()
+                    {
+                        Success = await _sanPhamChiTietRes.AddAsync(sanPhamChiTiet),
+                        IdChiTietSp = sanPhamChiTiet.IdChiTietSp
+                    };
+                }
                 return new ResponseCreateDTO()
                 {
-                    Success = await _sanPhamChiTietRes.AddAsync(sanPhamChiTiet),
-                    IdChiTietSp = sanPhamChiTiet.IdChiTietSp
+                    Success = false,
+                    DescriptionErr = "Sản phẩm đã tồn tại"
                 };
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex);
-                return new ResponseCreateDTO();
+                return new ResponseCreateDTO()
+                {
+                    Success = false,
+                    DescriptionErr = ex.Message
+                };
             }
         }
 
@@ -247,7 +271,6 @@ namespace App_Api.Controllers
                         "MASP1" :
                         "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
                     sanPhamChiTiet.TrangThai = 0;
-                    sanPhamChiTiet.TrangThaiSale = 0;
                     sanPhamChiTiet.SoLuongDaBan = 0;
                     sanPhamChiTiet.NgayTao = DateTime.Now;
 

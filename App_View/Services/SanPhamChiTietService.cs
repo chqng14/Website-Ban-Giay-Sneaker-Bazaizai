@@ -370,7 +370,14 @@ namespace App_View.Services
 
         public async Task<List<SanPhamDanhSachViewModel>> GetListSanPhamChiTietViewModelAsync()
         {
-            return (await _httpClient.GetFromJsonAsync<List<SanPhamDanhSachViewModel>>("/api/SanPhamChiTiet/Get-List-SanPhamChiTietViewModel"))!;
+            try
+            {
+                return (await _httpClient.GetFromJsonAsync<List<SanPhamDanhSachViewModel>>("/api/SanPhamChiTiet/Get-List-SanPhamChiTietViewModel"))!;
+            }
+            catch (Exception)
+            {
+                return new List<SanPhamDanhSachViewModel>();
+            }
         }
 
         public async Task<SanPhamChiTietViewModel?> GetSanPhamChiTietViewModelByKeyAsync(string id)

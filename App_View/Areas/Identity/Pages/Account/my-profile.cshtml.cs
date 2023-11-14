@@ -56,7 +56,7 @@ namespace App_View.Areas.Identity.Pages.Account
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Không thể tải người dùng có ID '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);

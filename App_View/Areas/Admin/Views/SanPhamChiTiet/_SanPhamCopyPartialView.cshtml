@@ -290,7 +290,7 @@
                             var inputValue = $(this).val();
                             if (inputValue) {
                                 var data = {
-                                    soKichCo: inputValue,
+                                    soKichCo: $.trim(inputValue),
                                 };
                                 $.ajax({
                                     url: 'CreateTenKichCo',
@@ -328,7 +328,8 @@
                         decimalPlaces: 0,
                         currencySymbol: " ₫",
                         currencySymbolPlacement: "s",
-                        minimumValue: 0
+                        minimumValue: 0,
+                        maximumValue: 99999999
                     });
                 });
                 $(".formatNumber").each(function () {
@@ -336,15 +337,17 @@
                         decimalCharacter: ".",
                         digitGroupSeparator: ",",
                         decimalPlaces: 0,
-                        minimumValue: 0
+                        minimumValue: 0,
+                        maximumValue: 99999.00
                     });
                 });
                 $(".formatKhoiLuong").each(function () {
                     var autoNumeric = new AutoNumeric(this, {
                         decimalCharacter: ".",
                         digitGroupSeparator: ",",
-                        decimalPlaces: 2, // Số thập phân
-                        minimumValue: 0
+                        decimalPlaces: 2,
+                        minimumValue: 0,
+                        maximumValue: 99999.00
                     });
                 });
             })

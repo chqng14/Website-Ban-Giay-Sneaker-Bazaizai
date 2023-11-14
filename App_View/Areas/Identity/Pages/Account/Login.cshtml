@@ -1,24 +1,20 @@
 ﻿@page "/Login/"
+@*"/Login.cshtml"*@
 @model LoginModel
 
 @{
     ViewData["Title"] = "Đăng nhập";
-    Layout = "/Views/Shared/_LayoutQMK.cshtml";
-    var thongbao =  TempData["ErrorMessage"];
+    Layout = "/Views/Shared/_Layout.cshtml";
+    var thongbao = TempData["ErrorMessage"];
 
 }
 
-<partial name="_StatusMessage" for="StatusMessage" />
-@if (TempData.ContainsKey("ErrorMessage"))
-{
-    <partial name="/Areas/Identity/Pages/Account/_StatusMessage.cshtml" model="thongbao" />
 
-}
 <!--====== App Content ======-->
 <div class="app-content">
 
     <!--====== Section 1 ======-->
-@*    <div class="u-s-p-y-60">
+    <div class="u-s-p-y-60">
 
         <!--====== Section Content ======-->
         <div class="section__content">
@@ -28,11 +24,11 @@
                         <ul class="breadcrumb__list">
                             <li class="has-separator">
 
-                                <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a asp-area="" asp-controller="Home" asp-action="Index">Trang chủ</a>
                             </li>
                             <li class="is-marked">
                                 <a asp-area="Identity" asp-page="/Account/Login">
-                                    Signin
+                                    Đăng nhập
                                 </a>
                             </li>
                         </ul>
@@ -41,22 +37,29 @@
             </div>
         </div>
     </div>
-*@    <!--====== End - Section 1 ======-->
+    @if (TempData.ContainsKey("ErrorMessage"))
+    {
+        <partial name="/Areas/Identity/Pages/Account/_StatusMessage.cshtml" model="thongbao" />
+
+    }
+    @*    <partial name="_StatusMessage" for="StatusMessage" />
+    *@
+    <!--====== End - Section 1 ======-->
     <!--====== Section 2 ======-->
     <div class="u-s-p-b-60">
 
         <!--====== Section Intro ======-->
-@*        <div class="section__intro u-s-m-b-60">
+        <div class="section__intro u-s-m-b-60">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="section__text-wrap">
-                            <h1 class="section__heading u-c-secondary">ALREADY REGISTERED?</h1>
+                            <h1 class="section__heading u-c-secondary">ĐÃ ĐĂNG KÝ?</h1>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>*@
+        </div>
         <!--====== End - Section Intro ======-->
         <!--====== Section Content ======-->
         <div class="section__content">
@@ -76,7 +79,7 @@
                                     </a>
                                 </div>
                                 <h1 class="gl-h1">ĐĂNG NHẬP</h1>
-                                 <div asp-validation-summary="All" class="text-danger"></div>
+                                @* <div asp-validation-summary="All" class="text-danger"></div>*@
                                 <span class="gl-text u-s-m-b-30">Nếu bạn đã có tài khoản, vui lòng đăng nhập.</span>
                                 @if ((Model.ExternalLogins?.Count ?? 0) != 0)
                                 {
@@ -114,7 +117,7 @@
                                     </form>
                                 }
                                 <form class="l-f-o__form" id="account" method="post">
-                                   
+
 
                                     <div class="u-s-m-b-30">
 
@@ -124,8 +127,8 @@
                                         <span asp-validation-for="Input.UserNameOrEmail" class="text-danger"></span>
                                     </div>
                                     <div class="u-s-m-b-30">
-                                        
-                                        
+
+
                                         <label class="gl-label" for="login-password">MẬT KHẨU *</label>
 
                                         <input class="input-text input-text--primary-style" asp-for="Input.Password" autocomplete="current-password" aria-required="true" placeholder="Nhập mật khẩu">
@@ -141,20 +144,20 @@
                                             <a class="gl-link" href="lost-password.html">Quên mật khẩu?</a>
                                         </div>
                                     </div>
-                                  @*  <div class="u-s-m-b-30">
+                                    @*  <div class="u-s-m-b-30">
 
-                                        <!--====== Check Box ======-->
-                                       
-                                        <div class="check-box">
-                                            <input id="remember-me" class="form-check-input" asp-for="Input.RememberMe" />
-                                            <div class="check-box__state check-box__state--primary">
-                                                <label asp-for="Input.RememberMe" class="check-box__label">
-                                                   
-                                                    @Html.DisplayNameFor(m => m.Input.RememberMe)
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <!--====== End - Check Box ======-->
+                                    <!--====== Check Box ======-->
+
+                                    <div class="check-box">
+                                    <input id="remember-me" class="form-check-input" asp-for="Input.RememberMe" />
+                                    <div class="check-box__state check-box__state--primary">
+                                    <label asp-for="Input.RememberMe" class="check-box__label">
+
+                                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                    </label>
+                                    </div>
+                                    </div>
+                                    <!--====== End - Check Box ======-->
                                     </div>*@
                                 </form>
                             </div>
@@ -168,7 +171,6 @@
     <!--====== End - Section 2 ======-->
 </div>
 <!--====== End - App Content ======-->
-
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

@@ -27,6 +27,7 @@ builder.Services.AddScoped<IMomoService, MomoService>();
 // Add services to the container.
 builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=MSI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
 
+
 builder.Services.AddHangfireServer();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BazaizaiContext>(options =>
@@ -48,7 +49,6 @@ builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 builder.Services.AddScoped<IDanhGiaService, DanhGiaService>();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //Thêm
-
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
 .AddEntityFrameworkStores<BazaizaiContext>()
 .AddDefaultTokenProviders();
@@ -71,7 +71,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
     // Cấu hình Lockout - khóa user
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1); // Khóa 1 phút
-    options.Lockout.MaxFailedAccessAttempts = 5; // Thất bại 5 lầ thì khóa
+    options.Lockout.MaxFailedAccessAttempts = 100; // Thất bại 5 lầ thì khóa
     options.Lockout.AllowedForNewUsers = true;
 
     // Cấu hình về User.
@@ -138,7 +138,7 @@ using (var scope = app.Services.CreateScope())
         var roleManager = services.GetRequiredService<RoleManager<ChucVu>>();
         await ContextdDefault.SeedRolesAsync(userManager, roleManager);
         await ContextdDefault.SeeAdminAsync(userManager, roleManager);
-        await ContextdDefault.PhuongThucThanhToan();
+
     }
     catch (Exception ex)
     {
