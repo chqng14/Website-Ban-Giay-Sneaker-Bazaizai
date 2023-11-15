@@ -810,7 +810,7 @@ namespace App_View.Areas.Admin.Controllers
             public double TongSoLuongDaBan { get; set; }
         }
 
-        public async Task<IActionResult> GetRelatedProducts(string sumGuid)
+        public IActionResult GetRelatedProducts(string sumGuid)
         {
             var listGuid = sumGuid.Split('/');
             var idSanPham = listGuid[0];
@@ -819,7 +819,7 @@ namespace App_View.Areas.Admin.Controllers
             var idLoaiGiay = listGuid[3];
             var idXuatXu = listGuid[4];
             var idChatLieu = listGuid[5];
-            var lstRelatedProducts = await _bazaizaiContext
+            var lstRelatedProducts = _bazaizaiContext
                 .sanPhamChiTiets
                 .Where(sp =>
                 sp.IdSanPham == idSanPham &&
@@ -833,20 +833,28 @@ namespace App_View.Areas.Admin.Controllers
                 Include(sp => sp.MauSac).
                 Include(sp => sp.KichCo).
                 Include(sp => sp.Anh).
+                AsEnumerable().
+                GroupBy(sp => sp.IdMauSac).
+                OrderBy(gr => gr.Key).
+                SelectMany(gr => gr).
                 Select(sp => new RelatedProductViewModel()
                 {
                     IdSanPham = sp.IdSanPham,
                     MaSanPham = sp.Ma,
-                    Anh = sp.Anh.OrderBy(a=>a.NgayTao).FirstOrDefault()!.Url,
+                    Anh = sp.Anh.OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
                     MauSac = sp.MauSac.TenMauSac,
                     GiaBan = sp.GiaBan.GetValueOrDefault(),
                     KichCo = sp.KichCo.SoKichCo.GetValueOrDefault(),
                     SanPham = sp.SanPham.TenSanPham,
                     SoLuong = sp.SoLuongTon.GetValueOrDefault(),
                     SoLuongDaBan = sp.SoLuongDaBan.GetValueOrDefault(),
-                    //TGBanGanDay = 
+                    TGBanGanDay = !_bazaizaiContext
+                    .hoaDonChiTiets
+                    .Include(it=>it.HoaDon)
+                    .Where(hdct => hdct.IdSanPhamChiTiet == sp.IdChiTietSp && hdct.HoaDon!.TrangThaiGiaoHang == 3)
+                    .Any()?"Chưa bán lần nào kể từ lúc tạo" : "NaN"
                 })
-                .ToListAsync();
+                .ToList();
             return PartialView(lstRelatedProducts);
         }
 

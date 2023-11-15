@@ -13,85 +13,132 @@
     ViewData["Title"] = "DanhSachHoaDonCho";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
-@* <link href="~/css/ban-hang-tai-quay.css" rel="stylesheet" /> *@
-<button id="toggleCamera">Bật/Tắt Camera</button>
-    <video id="video" playsinline autoplay></video>
-    <canvas id="canvas" style="display: none;"></canvas>
 
-    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+<!-- Modal -->
+<div class="modal fade" id="exampleModalScrollable" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-scrollable draggable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">QR</h5>
+                <button type="button" class="close" onclick="closeModal()">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <video id="video" playsinline autoplay style="width: 100%"></video>
+                <canvas id="canvas" style="display: none; width: 100%"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <script>
-        const video = document.getElementById('video');
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        let scanning = false; // Trạng thái ban đầu là chưa quét
-        let stream = null; // Lưu trữ đối tượng luồng video
 
-        const toggleCameraButton = document.getElementById('toggleCamera');
-        toggleCameraButton.addEventListener('click', toggleCamera);
+<!-- JSQR Library -->
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
-        function toggleCamera() {
-            if (!scanning) {
-                // Bật camera
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(function (newStream) {
-                        video.srcObject = newStream;
-                        stream = newStream;
-                    })
-                    .catch(function (err) {
-                        console.error('getUserMedia Error: ' + err);
-                    });
-            } else {
-                // Tắt camera
-                if (stream) {
-                    const tracks = stream.getTracks();
-                    tracks.forEach(track => track.stop());
-                    video.srcObject = null;
-                }
-            }
-            // Đảo ngược trạng thái quét
-            scanning = !scanning;
-            if (scanning) {
-                // Nếu đang quét, bắt đầu quét
-                requestAnimationFrame(captureQRCode);
-            }
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let scanning = false;
+    let stream = null;
+
+
+
+    $(function () {
+        $(".draggable").draggable({
+            handle: ".modal-header" // Chỉ kéo được từ phần modal-header
+        });
+    });
+
+
+
+    $(() => {
+        $('#trigger-loading-1').on('click', function (e) {
+            $(this).addClass("is-loading");
+            setTimeout(function () {
+                $("#trigger-loading-1").removeClass("is-loading");
+                $('#exampleModalScrollable').modal('show')
+                startQRCodeScanning();
+            }, 500);
+            e.preventDefault();
+        });
+    })
+
+
+    function toggleCamera() {
+        $('#exampleModalScrollable').modal('show')
+        startQRCodeScanning();
+    }
+
+    function startQRCodeScanning() {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (newStream) {
+                video.srcObject = newStream;
+                stream = newStream;
+            })
+            .catch(function (err) {
+                console.error('getUserMedia Error: ' + err);
+            });
+
+        scanning = true;
+        requestAnimationFrame(captureQRCode);
+    }
+
+    function stopQRCodeScanning() {
+        if (stream) {
+            const tracks = stream.getTracks();
+            tracks.forEach(track => track.stop());
+            video.srcObject = null;
+        }
+        scanning = false;
+    }
+
+    function captureQRCode() {
+        if (!scanning) {
+            return;
         }
 
-        function captureQRCode() {
-            if (!scanning) {
-                return;
-            }
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, imageData.width, imageData.height);
 
-            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-            const code = jsQR(imageData.data, imageData.width, imageData.height);
-
-            if (code) {
+        if (code) {
+            if (code.data) {
                 console.log('QR Code Data:', code.data);
-                alert('QR Code Data:' + code.data)
+                if (code.data.includes('SP-')) {
+                    alert('QR SP:' + code.data)
+                }
+                else {
+                    alert('QR Voucher:' + code.data)
+                }
 
-                // Dừng quét và đếm thời gian
+
                 scanning = false;
                 setTimeout(() => {
-                    // Khởi động lại quét sau khoảng thời gian cụ thể (ví dụ, 5 giây)
                     scanning = true;
                     requestAnimationFrame(captureQRCode);
-                }, 1500); // 2 giây
-            } else {
-                requestAnimationFrame(captureQRCode); // Tiếp tục quét nếu chưa tìm thấy mã QR
+                }, 1500);
             }
+        } else {
+            requestAnimationFrame(captureQRCode);
         }
+    }
 
-        video.onloadedmetadata = function () {
-            if (scanning) {
-                // Nếu đang quét khi camera được kích hoạt, bắt đầu quét
-requestAnimationFrame(captureQRCode);
-            }
-        };
-    </script>
+    video.onloadedmetadata = function () {
+        if (scanning) {
+            requestAnimationFrame(captureQRCode);
+        }
+    };
+    function closeModal() {
+        $('#exampleModalScrollable').modal('hide');
+        stopQRCodeScanning();
+    }
+</script>
+
 <div class="card">
     <div class="row">
         <div class="col-4" style="height: 800px">
@@ -110,55 +157,64 @@ requestAnimationFrame(captureQRCode);
         <div class="col-8" style="height: 400px">
             <div class="row" style="height: 400px;background-color:red">
                 <div class="card w-100 h-100">
-                    <button class="btn btn-primary" id="create-tab" style="width: 140px">Tạo tab mới</button>
+                    <div class="d-flex">
+                        <button class="btn btn-primary" id="create-tab" style="width: 140px">Tạo tab mới</button>
+                        <button id="trigger-loading-1" class="btn btn-warning m-r-5 m-l-5">
+                            <i class="anticon anticon-loading m-r-5"></i>
+                            <i class="anticon anticon-scan m-r-5"></i>
+                            <span>Scan</span>
+                        </button>
+
+                    </div>
+
                     <div id="tabs">
                         <ul>
                             @{
                                 foreach (var item in Model)
                                 {
-                                        <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a></li>
+                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a></li>
                                 }
                             }
                         </ul>
                         @{
                             foreach (var item in Model)
                             {
-                                    <div id="tab-@item.MaHoaDon" style="height:300px">
-                                        <div class="table-responsive" style=" height:250px; overflow-y: scroll; overflow-x: hidden">
+                                <div id="tab-@item.MaHoaDon" style="height:300px">
+                                    <div class="table-responsive" style=" height:250px; overflow-y: scroll; overflow-x: hidden">
 
-                                            <table class="table">
-                                                <thead>
-                                                    <tr>
-                                                        <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
-                                                        <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
-                                                        <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
-                                                        <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
-                                                        <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
-                                                        <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
-                                                        <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @{
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
+                                                    <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
+                                                    <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
+                                                    <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
+                                                    <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
+                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
+                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @{
                                                     int stt = 1;
                                                     foreach (var hoaDonChiTiet in item.hoaDonChiTietDTOs)
                                                     {
-                                                                <tr scope="col" id="hdct-@hoaDonChiTiet.IdSanPhamChiTiet">
-                                                                    <td>@stt</td>
-                                                                    <td hidden>@hoaDonChiTiet.IdSanPhamChiTiet</td>
-                                                                    <td>@hoaDonChiTiet.MaSanPham</td>
-                                                                    <td>@hoaDonChiTiet.TenSanPham</td>
-                                                                    <td>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", hoaDonChiTiet.GiaBan)</td>
-                                                                    <td><input type="number" max="1000" min="1" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onchange="suaSoLuongSanPham('@hoaDonChiTiet.IdSanPhamChiTiet',this)" value="@hoaDonChiTiet.SoLuong" /></td>
-                                                                    <td><a class="btn btn-tone" onclick="XoaSanPhamTrongHoaDon('hdct-@hoaDonChiTiet.IdSanPhamChiTiet','@hoaDonChiTiet.IdSanPhamChiTiet')">X</a></td>
-                                                                </tr>
+                                                        <tr scope="col" id="hdct-@hoaDonChiTiet.IdSanPhamChiTiet">
+                                                            <td>@stt</td>
+                                                            <td hidden>@hoaDonChiTiet.IdSanPhamChiTiet</td>
+                                                            <td>@hoaDonChiTiet.MaSanPham</td>
+                                                            <td>@hoaDonChiTiet.TenSanPham</td>
+                                                            <td>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", hoaDonChiTiet.GiaBan)</td>
+                                                            <td><input type="number" max="1000" min="1" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onchange="suaSoLuongSanPham('@hoaDonChiTiet.IdSanPhamChiTiet',this)" value="@hoaDonChiTiet.SoLuong" /></td>
+                                                            <td><a class="btn btn-tone" onclick="XoaSanPhamTrongHoaDon('hdct-@hoaDonChiTiet.IdSanPhamChiTiet','@hoaDonChiTiet.IdSanPhamChiTiet')">X</a></td>
+                                                        </tr>
                                                         stt++;
                                                     }
-                                                    }
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                                }
+                                            </tbody>
+                                        </table>
                                     </div>
+                                </div>
                             }
                         }
                     </div>
@@ -639,7 +695,7 @@ requestAnimationFrame(captureQRCode);
         if (hinhThucThanhToan == 1) {
             var autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputChuyenKhoan'));
             autoNumericInstance.set("0");
-           
+
             $("#TienMat").show();
         } else if (hinhThucThanhToan == 2) {
             var autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputTienMat'));
@@ -730,11 +786,11 @@ requestAnimationFrame(captureQRCode);
     }
     function updateTienThua() {
         // Lấy giá trị của "Tổng tiền", "Tiền mặt", và "Tiền chuyển khoản"
-        
+
         var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
         var tienMat = parseFloat($("#TienMat input").val().replace(/[^\d]/g, '')) || 0;
         var tienChuyenKhoan = parseFloat($("#ChuyenKhoan input").val().replace(/[^\d]/g, '')) || 0;
-    
+
         var tienThua = tienMat + tienChuyenKhoan - tongTien;
         if (tienThua >= 0) {
             var tienThuaDaFormat = tienThua.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
@@ -751,6 +807,7 @@ requestAnimationFrame(captureQRCode);
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="~/Admin/js/vendors.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.8.1/autoNumeric.min.js"></script>
 }
