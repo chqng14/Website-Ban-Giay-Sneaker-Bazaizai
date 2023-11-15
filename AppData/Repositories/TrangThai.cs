@@ -32,12 +32,14 @@ namespace App_Data.Repositories
             [Description("Voucher tặng cho khách hàng thân thiết")]
             VoucherThanThiet = 5,
             //Tại quầy
-            [Description("Hoạt động của bản cứng")]
-            HoatDongCung = 6,
-            [Description("Không hoạt động của bản cứng")]
-            KhongHoatDongCung = 7,
-            [Description("Chưa hoạt động của bản cứng")]    
-           ChuaHoatDongCung = 8,
+            [Description("Hoạt động của tại quầy")]
+            HoatDongTaiQuay = 6,
+            [Description("Không hoạt động của tại quầy")]
+            KhongHoatDongTaiQuay = 7,
+            [Description("Chưa hoạt động của tại quầy")]
+            ChuaHoatDongTaiQuay = 8,
+            [Description("Đã huỷ cứng")]
+            DaHuyTaiQuay = 9,
         }
         /// <summary>
         /// ở đây là voucher
@@ -152,12 +154,23 @@ namespace App_Data.Repositories
             [Description("Đã thanh toán")]
             DaThanhToan = 1,
         }
+
         public enum TrangThaiKhachHang
         {
             [Description("Hoạt động")]
             HoatDong = 0,
             [Description("Không hoạt động")]
             KhongHoatDong = 1,
+
+        }
+        public enum TrangThaiThongTinGH
+        {
+            [Description("Mặc định")]
+            MacDinh = 0,
+            [Description("Hoạt động")]
+            HoatDong = 1,
+            [Description("Không Hoạt động")]
+            KhongHoatDong = 2,
         }
     }
 }

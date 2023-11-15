@@ -20,6 +20,7 @@ using System.Globalization;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Controllers
 {
@@ -31,7 +32,6 @@ namespace App_View.Controllers
         private readonly UserManager<NguoiDung> _userManager;
         ISanPhamChiTietService _sanPhamChiTietService;
         IThongTinGHServices thongTinGHServices;
-
         public GioHangChiTietsController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService)
         {
             httpClient = new HttpClient();

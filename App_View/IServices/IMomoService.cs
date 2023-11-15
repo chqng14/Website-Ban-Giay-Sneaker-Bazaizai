@@ -6,8 +6,7 @@ namespace App_View.Services;
 public interface IMomoService
 {
     Task<MomoCreatePaymentResponseModel> CreatePaymentAsync(OrderInfoModel model, string idHoaDon);
-    Task<MomoCreatePaymentResponseModel> CreatePayment(OrderInfoModel model, string idHoaDon);
-    MomoExecuteResponseModel PaymentExecuteAsync(IQueryCollection collection);
+    Task<MomoCreatePaymentResponseModel> RePaymentAsync(OrderInfoModel model, string idHoaDon);
     Task<MomoIPNPayment> IPN(OrderInfoModel model);
     Task<MomoRefund> Refund(OrderInfoModel model);
 }
