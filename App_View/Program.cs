@@ -139,6 +139,7 @@ using (var scope = app.Services.CreateScope())
         var roleManager = services.GetRequiredService<RoleManager<ChucVu>>();
         await ContextdDefault.SeedRolesAsync(userManager, roleManager);
         await ContextdDefault.SeeAdminAsync(userManager, roleManager);
+        await ContextdDefault.PhuongThucThanhToan();
 
     }
     catch (Exception ex)
