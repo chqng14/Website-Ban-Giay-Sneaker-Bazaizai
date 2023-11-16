@@ -862,7 +862,7 @@
                 $('#phiship').text('0đ');
                 phiship = 0;
                 defaultAddressCheckbox = document.getElementById("make-default-address");
-                defaultAddressCheckbox.disabled = false;
+                // defaultAddressCheckbox.disabled = false;
                 if (MucUuDai !== null && MucUuDai !== "") {
                     totalAmountElement.innerText = tongTienSauGiamGia.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
                     totalAmountElement.value = tongTienSauGiamGia.toString();
@@ -1448,19 +1448,6 @@
             return false;
         }
 
-        function UpdateThongTin() {
-            $.ajax({
-                type: 'PUT',
-                url: '/ThongTinGH/UpdateTrangThai',
-                data: { idThongTin: selectedId },
-                success: function (Response) {
-                },
-                error: function (Error) {
-                    // Xử lý lỗi nếu cần
-                }
-            });
-        }
-
         $(document).ready(function () {
             $('#placeOrderButton').click(function (e) {
                 e.preventDefault();
@@ -1498,9 +1485,6 @@
                     // Thực hiện các chức năng liên quan đến useDefaultAddressScript
                     var paymentFormData = $('#paymentForm').serialize();
                     // Gửi dữ liệu thanh toán
-                    if (defaultAddressCheckbox.checked) {
-                        UpdateThongTin();
-                    }
 
                     $.ajax({
                         type: 'POST',
@@ -1548,7 +1532,16 @@
                             if (deliveryResponse.idThongTinGH != null) {
                                 if (defaultAddressCheckbox.checked) 
                                 {
-                                    UpdateThongTin();
+                                    $.ajax({
+                                        type: 'PUT',
+                                        url: '/ThongTinGH/UpdateTrangThai',
+                                        data: { idThongTin: deliveryResponse.idThongTinGH },
+                                        success: function (Response) {
+                                        },
+                                        error: function (Error) {
+                                            // Xử lý lỗi nếu cần
+                                        }
+                                    });
                                 }
 
                                 var moTaValue = $("#order-note").val();
