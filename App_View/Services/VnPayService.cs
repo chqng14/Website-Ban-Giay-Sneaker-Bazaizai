@@ -58,7 +58,7 @@ namespace App_View.Services
             var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);
             var tick = DateTime.Now.Ticks.ToString();
             var pay = new VnPayLibrary();
-            var urlCallBack = $"https://localhost:7214/DonHang/CallBack&idHoaDon{idHoaDon}";
+            var urlCallBack = $"https://localhost:7214/DonHang/CallBack";
 
             pay.AddRequestData("vnp_Version", _configuration["Vnpay:Version"]);
             pay.AddRequestData("vnp_Command", _configuration["Vnpay:Command"]);

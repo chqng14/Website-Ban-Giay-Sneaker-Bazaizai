@@ -71,7 +71,11 @@ public class MomoService : IMomoService
         };
         request.AddParameter("application/json", JsonConvert.SerializeObject(requestData), ParameterType.RequestBody);
 
-        var response = await client.ExecuteAsync(request);
+        int timeoutInMinutes = 30; // Thời gian timeout là 30 phút
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(TimeSpan.FromMinutes(timeoutInMinutes));
+
+        var response = await client.ExecuteAsync(request, cts.Token);
 
         #region test
         //JObject message = new JObject
@@ -232,7 +236,11 @@ public class MomoService : IMomoService
         };
         request.AddParameter("application/json", JsonConvert.SerializeObject(requestData), ParameterType.RequestBody);
 
-        var response = await client.ExecuteAsync(request);
+        int timeoutInMinutes = 30; // Thời gian timeout là 30 phút
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(TimeSpan.FromMinutes(timeoutInMinutes));
+
+        var response = await client.ExecuteAsync(request, cts.Token);
 
 
         return JsonConvert.DeserializeObject<MomoCreatePaymentResponseModel>(response.Content);

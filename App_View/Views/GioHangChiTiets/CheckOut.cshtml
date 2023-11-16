@@ -3,7 +3,8 @@
     ViewData["Title"] = "CheckOut";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var thongTinGH = ViewData["ThongTinGH"] as List<App_Data.Models.ThongTinGiaoHang>; 
-    var idnguoidung = ViewBag.idNguoiDung;
+    var voucher = ViewData["TatCaVoucher"] as List<App_Data.ViewModels.VoucherNguoiDung.VoucherNguoiDungDTO>;
+    var tongtien = ViewData["TongTien"] as double?;
 }
 @if (ViewData["QuantityErrorMessages"] != null)
 {
@@ -17,6 +18,8 @@
         })
     </script>
 }
+<link href="~/css/checkout.css" rel="stylesheet" />
+
 <div class="u-s-p-b-60" style="margin-top:20px">
 
     <!--====== Section Content ======-->
@@ -81,9 +84,9 @@
                             <span class="msg__text">
                                 Bạn có Voucher?
 
-                                <a class="gl-link" href="#have-coupon" data-toggle="collapse">Ấn vào đây để sử dụng Voucher</a>
+                                <a class="gl-link" data-modal="modal" data-modal-id="#voucher-modal" @* href="#have-coupon" *@ data-toggle="collapse">Ấn vào đây để sử dụng Voucher</a>
                             </span>
-                            <div class="collapse" id="have-coupon" data-parent="#checkout-msg-group">
+                            @* <div class="collapse" id="have-coupon" data-parent="#checkout-msg-group">
                                 <div class="c-f u-s-m-b-16">
 
                                     <form class="c-f__form" asp-action="GetVoucherByMa" asp-controller="Voucher">
@@ -95,12 +98,217 @@
                                                 <input class="input-text input-text--primary-style" type="text" id="voucherinput" placeholder="Nhập phiếu giảm giá của bạn ở đây" name="voucher">
                                             <label id="textvoucher" style="color:red"></label>
                                             </div>
-                                            <div class="u-s-m-b-15">
-
-                                                @* <button class="btn btn--e-transparent-brand-b-2" type="button" id="button-coupon" onclick="applyVoucher()">SỬ DỤNG</button> *@
-                                            </div>
                                         </div>
                                     </form>
+                                </div>
+                            </div> *@
+                            <div class="modal fade" id="voucher-modal">
+                                <div class="modal-dialog modal-dialog-centered justify-content-center" style="min-width:550px">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="checkout-modal2">
+                                                <div class="u-s-m-b-30">
+                                                    <div class="dash-l-r">
+                                                        <h1 class="gl-modal-h1">Chọn Voucher</h1>
+                                                    </div>
+                                                </div>
+                                                <div class="c-f u-s-m-b-16">
+
+                                                    <form class="c-f__form" asp-action="GetVoucherByMa" asp-controller="Voucher">
+                                                        <div class="u-s-m-b-16">
+                                                            <div class="u-s-m-b-15">
+
+                                                                <label for="coupon"></label>
+
+                                                                <input class="input-text input-text--primary-style" type="text" id="voucherinput" placeholder="Nhập phiếu giảm giá của bạn ở đây" name="voucher" style="width:200%">
+                                                                <label id="textvoucher" style="color:red"></label>
+                                                            </div>
+                                                            <div class="u-s-m-b-15">
+
+                                                                <button class="btn btn--e-transparent-brand-b-2" type="button" id="button-coupon" @* onclick="applyVoucher()" *@>SỬ DỤNG</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <form class="checkout-modal2__form" asp-action="GetVoucherByMa" asp-controller="Voucher">
+                                                    <tbody>
+                                                        @if (voucher != null)
+                                                        {
+                                                            <span class="gl-modal-h1">Voucher freeship</span>
+                                                            @foreach (var item in voucher.Take(2).Where(c => c.LoaiHinhUuDai == 2 && c.DieuKien >= tongtien))
+                                                            {
+                                                                <tr>
+                                                                    <div class="m-order__get" style="padding:12px;margin-bottom:15px">
+                                                                        <div class="manage-o__description">
+                                                                            <div class="description__container">
+                                                                                <div class="description__img-wrap">
+                                                                                    <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
+                                                                                </div>
+                                                                                <div class="description-title">
+                                                                                    <p>
+                                                                                        Giảm 100% phí ship
+                                                                                    </p>
+                                                                                    <p width:40px>Đơn tối thiểu: @string.Format("{0:N0}đ", item.DieuKien)</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="description__info-wrap">
+                                                                                <div class="body_copy">
+                                                                                    <!--====== Radio Box ======-->
+                                                                                    <div class="radio-box" style="margin-bottom: 15px;">
+                                                                                        <input type="radio" name="voucher" data-id="@item.IdVouCher" value="@item.IdVouCher">
+                                                                                        <div class="radio-box__state radio-box__state--primary">
+                                                                                            <label class="radio-box__label" for="address-1"></label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </tr>
+                                                                @if (voucher.Count > 2)
+                                                                {
+                                                                    <!-- Dấu mũi tên xuống -->
+                                                                    <div class="arrow-down-freeship" onclick="showfreeshipVoucher()"></div>
+                                                                }
+                                                                <!-- Hidden Vouchers -->
+                                                                <tr>
+                                                                    <div class="hidden-voucher-freeship">
+                                                                        @foreach (var hiddenvc in voucher.Skip(2).Where(c => c.LoaiHinhUuDai == 2 && c.DieuKien >= tongtien))
+                                                                        {
+                                                                            <div class="m-order__get" style="padding:12px;margin-bottom:15px">
+                                                                                <div class="manage-o__description">
+                                                                                    <div class="description__container">
+                                                                                        <div class="description__img-wrap">
+                                                                                            <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
+                                                                                        </div>
+                                                                                        <div class="description-title">
+                                                                                            <p>
+                                                                                                Giảm 100% phí ship
+                                                                                            </p>
+                                                                                            <p width:40px>Đơn tối thiểu: @string.Format("{0:N0}đ", hiddenvc.DieuKien)</p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="description__info-wrap">
+                                                                                        <div class="body_copy">
+                                                                                            <!--====== Radio Box ======-->
+                                                                                            <div class="radio-box" style="margin-bottom: 15px;">
+                                                                                                <input type="radio" name="voucher" data-id="@item.IdVouCher" value="@item.IdVouCher">
+                                                                                                <div class="radio-box__state radio-box__state--primary">
+                                                                                                    <label class="radio-box__label" for="address-1"></label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+                                                                </tr>
+                                                                @if (voucher.Count > 2)
+                                                                {
+                                                                    <!-- Dấu mũi tên lên -->
+                                                                    <div class="arrow-up-freeship" style="display:none" onclick="hiddenfreeshipVoucher()"></div>
+                                                                }
+                                                            }
+
+
+                                                            <span class="gl-modal-h1">Voucher Giảm giá</span>
+                                                            @foreach (var item in voucher.Take(2).Where(c => c.LoaiHinhUuDai != 2 && c.DieuKien >= tongtien))
+                                                            {
+                                                                <tr>
+                                                                    <div class="m-order__get" style="padding:12px;margin-bottom:15px">
+                                                                        <div class="manage-o__description">
+                                                                            <div class="description__container">
+                                                                                <div class="description__img-wrap">
+                                                                                    <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
+                                                                                </div>
+                                                                                <div class="description-title">
+                                                                                    <p>
+                                                                                        Giảm
+                                                                                        @if (item.LoaiHinhUuDai == 1)
+                                                                                        {
+                                                                                            <span> @item.MucUuDai %</span>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            double? mucUuDai = item.MucUuDai;
+                                                                                            @string.Format("{0:N0}đ", item.MucUuDai)
+                                                                                            // Định dạng giá trị theo định dạng tiền Việt Nam
+                                                                                        }
+                                                                                    </p>
+                                                                                    <p width:40px>Đơn tối thiểu: @string.Format("{0:N0}đ", item.DieuKien)</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="description__info-wrap">
+                                                                                <div class="body_copy">
+                                                                                    <!--====== Radio Box ======-->
+                                                                                    <div class="radio-box" style="margin-bottom: 15px;">
+                                                                                        <input type="radio" name="voucher" data-id="@item.IdVouCher" value="@item.IdVouCher">
+                                                                                        <div class="radio-box__state radio-box__state--primary">
+                                                                                            <label class="radio-box__label" for="address-1"></label>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </tr>
+                                                                @if (voucher.Count > 2)
+                                                                {
+                                                                    <!-- Dấu mũi tên xuống -->
+                                                                    <div class="arrow-down-btn" onclick="showHiddenVoucher()"></div>
+                                                                }
+                                                                <tr>
+                                                                    <div class="hidden-voucher-row">
+                                                                        @foreach (var hiddenvc in voucher.Skip(2).Where(c => c.LoaiHinhUuDai != 2 && c.DieuKien >= tongtien))
+                                                                        {
+                                                                            <div class="m-order__get" style="padding:12px;margin-bottom:15px">
+                                                                                <div class="manage-o__description">
+                                                                                    <div class="description__container">
+                                                                                        <div class="description__img-wrap">
+                                                                                            <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
+                                                                                        </div>
+                                                                                        <div class="description-title">
+                                                                                            <p>
+                                                                                                Giảm 100% phí ship
+                                                                                            </p>
+                                                                                            <p width:40px>Đơn tối thiểu: @string.Format("{0:N0}đ", hiddenvc.DieuKien)</p>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="description__info-wrap">
+                                                                                        <div class="body_copy">
+                                                                                            <!--====== Radio Box ======-->
+                                                                                            <div class="radio-box" style="margin-bottom: 15px;">
+                                                                                                <input type="radio" name="voucher" data-id="@item.IdVouCher" value="@item.IdVouCher">
+                                                                                                <div class="radio-box__state radio-box__state--primary">
+                                                                                                    <label class="radio-box__label" for="address-1"></label>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        }
+                                                                    </div>
+                                                                </tr>
+                                                                @if (voucher.Count > 2)
+                                                                {
+                                                                    <!-- Dấu mũi tên lên -->
+                                                                    <div class="arrow-up-btn" style="display:none;margin-bottom:15px" onclick="hiddenHiddenVoucher()"></div>
+                                                                }
+                                                            }
+                                                        }
+
+                                                    </tbody>
+                                                    <div class="gl-modal-btn-group">
+                                                        <button class="btn btn--e-brand-b-2" id="VoucherUserUse" type="submit">Đồng ý</button>
+                                                        <button class="btn btn--e-grey-b-2" type="button" data-dismiss="modal">Đóng</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <button class="btn dismiss-button fas fa-times" type="button" data-dismiss="modal"></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -288,7 +496,16 @@
                                                         <span class="o-card__quantity">Size: @item.TenKichCo Màu: @item.TenMauSac</span>
                                                         <span class="o-card__quantity">Số lượng x @item.SoLuong</span>
 
-                                                        <span class="o-card__price">@string.Format("{0:N0}đ", item.GiaBan)</span>
+                                                        <span class="o-card__price">
+                                                            @if (item.GiaBan != item.GiaGoc)
+                                                            {
+                                                                <del style="color:gray"> @string.Format("{0:N0}đ", item.GiaGoc)</del>  @string.Format("{0:N0}đ", item.GiaBan)
+                                                            }
+                                                            else
+                                                            {
+                                                                @string.Format("{0:N0}đ", item.GiaBan)
+                                                            }
+                                                        </span>
                                                     </div>
                                                 </div>
 
@@ -402,7 +619,7 @@
                                             <!--====== Check Box ======-->
                                             <div class="check-box">
 
-                                                <input type="checkbox" id="term-and-condition">
+                                                <input type="checkbox" id="term-and-condition" required>
                                                 <div class="check-box__state check-box__state--primary">
 
                                                     <label class="check-box__label" for="term-and-condition">Tôi Đồng ý với</label>
@@ -1057,11 +1274,10 @@
                         loaiuudai = result.loaiuudai;
                         // Áp dụng giảm giá từ voucher
                         if (phiship==0 && loaiuudai == 2) {
-                            Swal.fire({
-                                title: "Vui lòng nhập địa chỉ trước khi áp dụng freeship",
-                                icon: "warning",
-                                showConfirmButton: false,
-                                timer: 1500
+                            toast({
+                                title: "Vui lòng nhập địa chỉ trước khi áp dụng freeship!",
+                                type: "warning",
+                                duration: 2000
                             });
                         } else {
                             MucUuDai = result.mucuidai;
@@ -1082,6 +1298,58 @@
                 applyDiscount(0);
             }
         }
+
+        function VoucherUser(voucherId) {
+            if (voucherId != null && voucherId.trim() != "") {
+                $.ajax({
+                    url: '/Voucher/GetVoucherById',
+                    type: 'GET',
+                    data: { idVoucher: voucherId },
+                    success: function (result) {
+                        $('#textvoucher').text("");
+                        loaiuudai = result.loaiuudai;
+                        // Áp dụng giảm giá từ voucher
+                        if (phiship == 0 && loaiuudai == 2) {
+                            toast({
+                                title: "Vui lòng nhập địa chỉ trước khi áp dụng freeship!",
+                                type: "warning",
+                                duration: 2000
+                            });
+                        } else {
+                            MucUuDai = result.mucuidai;
+                            IdVoucher = result.idVoucher;
+                            $('input[name="IdVoucher"]').val(IdVoucher);
+                            applyDiscount(MucUuDai);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        MucUuDai = "";
+                        $('#textvoucher').text("mã không hợp lệ");
+                        applyDiscount(0);
+                    }
+                });
+            } else {
+                $('#textvoucher').text("");
+                // Nếu không có voucher, hiển thị tổng tiền không giảm giá
+                applyDiscount(0);
+            }
+        }
+
+        $('input[name="voucher"]').change(function () {
+            var voucherId = $(this).data('id');
+            // Lưu trữ voucherId để sử dụng khi người dùng nhấp vào nút đồng ý
+            $(this).data('selectedVoucherId', voucherId);
+        });
+
+        $('#VoucherUserUse').click(function (event) {
+            event.preventDefault();
+            // Lấy voucherId đã lưu trữ từ radio box đã chọn
+            var selectedVoucherId = $('input[name="voucher"]:checked').data('selectedVoucherId');
+
+            // Chạy hàm runMyJavaScript với voucher đã chọn
+            VoucherUser(selectedVoucherId);
+            // $('#voucher-modal').fadeOut();
+        });
 
         // Hàm áp dụng giảm giá
         function applyDiscount(discountAmount) {
@@ -1333,4 +1601,32 @@
             });
         });
     </script>
+
+    <!--====== ẩn hiện voucher ======-->
+    <script>
+        function showHiddenVoucher() {
+            $('.hidden-voucher-row').css('display', 'block');
+            $('.arrow-down-btn').css('display', 'none');
+            $('.arrow-up-btn').css('display', 'block');
+        }
+
+        function hiddenHiddenVoucher() {
+            $('.hidden-voucher-row').css('display', 'none');
+            $('.arrow-down-btn').css('display', 'block');
+            $('.arrow-up-btn').css('display', 'none');
+        }
+
+        function showfreeshipVoucher() {
+            $('.hidden-voucher-freeship').css('display', 'block');
+            $('.arrow-down-freeship').css('display', 'none');
+            $('.arrow-up-freeship').css('display', 'block');
+        }
+
+        function hiddenfreeshipVoucher() {
+            $('.hidden-voucher-freeship').css('display', 'none');
+            $('.arrow-down-freeship').css('display', 'block');
+            $('.arrow-up-freeship').css('display', 'none');
+        }
+    </script>
+
 }

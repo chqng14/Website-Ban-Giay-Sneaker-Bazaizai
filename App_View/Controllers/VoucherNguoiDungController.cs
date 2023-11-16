@@ -106,8 +106,9 @@ namespace App_View.Controllers
         }
         public async Task<IActionResult> TotalSpending()
         {
-            var NguoiDung=  await _userManager.GetUserAsync(User);        
+            var NguoiDung = await _userManager.GetUserAsync(User);
             return View(NguoiDung);
         }
+
     }
 }

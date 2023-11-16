@@ -1,0 +1,66 @@
+﻿.hidden-voucher-row {
+    display: none;
+}
+
+.arrow-down-btn::before {
+    content: "\25BC"; /* Unicode của mũi tên xuống */
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    color: #333; /* Màu sắc tùy chọn */
+    /*padding-bottom: 15px*/
+}
+
+/* Icon mũi tên lên */
+.arrow-up-btn::before {
+    content: '\25B2'; /* Mã Unicode của mũi tên lên */
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 15px;
+    color: #333; /* Màu sắc tùy chọn */
+    /*padding-bottom: 15px*/
+}
+
+.arrow-down-btn.active + .hidden-voucher-row {
+    display: block;
+}
+
+.arrow-up-btn.active + .hidden-voucher-row {
+    display: none;
+}
+
+
+.hidden-voucher-freeship {
+    display: none;
+}
+
+.arrow-down-freeship::before {
+    content: "\25BC"; /* Unicode của mũi tên xuống */
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 5px;
+    color: #333; /* Màu sắc tùy chọn */
+    /*padding-bottom: 15px*/
+}
+
+/* Icon mũi tên lên */
+.arrow-up-freeship::before {
+    content: '\25B2'; /* Mã Unicode của mũi tên lên */
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    color: #333; /* Màu sắc tùy chọn */
+    /*padding-bottom: 15px*/
+}
+
+.arrow-down-freeship.active + .hidden-voucher-freeship {
+    display: block;
+}
+
+.arrow-up-freeship.active + .hidden-voucher-freeship {
+    display: none;
+}
