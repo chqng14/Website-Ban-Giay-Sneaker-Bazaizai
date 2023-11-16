@@ -43,8 +43,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                var id = context.gioHangChiTiets.Find(item.IdGioHangChiTiet);
-                context.gioHangChiTiets.Update(id);
+                context.gioHangChiTiets.Update(item);
                 context.SaveChanges();
                 return true;
             }
@@ -76,7 +75,7 @@ namespace App_Data.Repositories
             try
             {
                 var id = context.gioHangChiTiets.Find(item.IdGioHangChiTiet);
-                context.gioHangChiTiets.Remove(id);
+                context.gioHangChiTiets.Remove(item);
                 context.SaveChanges();
                 return true;
             }
@@ -89,12 +88,12 @@ namespace App_Data.Repositories
         public async Task<List<SanPhamGioHangViewModel>> GetAllSanPhamGioHangWhenLoginAynsc(string idNguoiDung)
         {
             var data = await context.gioHangChiTiets
-                .Where(gh=>gh.IdNguoiDung == idNguoiDung)
-                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.Anh)
-                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.SanPham)
-                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.MauSac)
-                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.KichCo)
-                .Include(it=>it.SanPhamChiTiet).ThenInclude(it=>it.ThuongHieu)
+                .Where(gh => gh.IdNguoiDung == idNguoiDung)
+                .Include(it => it.SanPhamChiTiet).ThenInclude(it => it.Anh)
+                .Include(it => it.SanPhamChiTiet).ThenInclude(it => it.SanPham)
+                .Include(it => it.SanPhamChiTiet).ThenInclude(it => it.MauSac)
+                .Include(it => it.SanPhamChiTiet).ThenInclude(it => it.KichCo)
+                .Include(it => it.SanPhamChiTiet).ThenInclude(it => it.ThuongHieu)
                 .ToListAsync();
             var lstSanPhamGioHangVM = _mapper.Map<List<GioHangChiTiet>, List<SanPhamGioHangViewModel>>(data);
             return lstSanPhamGioHangVM.ToList();
