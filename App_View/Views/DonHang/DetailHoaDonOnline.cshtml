@@ -481,7 +481,7 @@
             <div class="dash-l-r u-s-m-t-8">
                 @if (Model.TrangThaiGiaoHang != 5)
                 {
-                    if (Model.LoaiThanhToan != "COD" && Model.TrangThaiThanhToan == 0)
+                    if (Model.LoaiThanhToan != "COD" && Model.LoaiThanhToan != "Không có" && Model.TrangThaiThanhToan == 0)
                     {
                         <a onclick="RePay('@Model.IdHoaDon')">
                             <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Thanh toán</span>
@@ -731,30 +731,4 @@
             }
         });
     }
-    $.ajax({
-        type: 'POST',
-        url: '/DonHang/Pay',
-        data: paymentFormData,
-        success: function (paymentResponse) {
-            if (paymentResponse.idHoaDon != null) {
-                if (IdVoucher != "") {
-                    UpdateVoucher();
-                }
-                if (paymentResponse.url != null) {
-                    window.location.href = paymentResponse.url;
-                } else {
-                    window.location.href = "/HoaDon/Order?idHoaDon=" + paymentResponse.idHoaDon;
-                }
-            } else {
-                Swal.fire({
-                    title: paymentResponse.title,
-                    icon: 'error',
-                    html: paymentResponse.message.join('<br/>'),
-                })
-            }
-        },
-        error: function (paymentError) {
-            // Xử lý lỗi nếu cần
-        }
-    });
 </script>

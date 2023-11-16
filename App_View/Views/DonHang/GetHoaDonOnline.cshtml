@@ -189,11 +189,11 @@
                         </span>
                     </span>
                 }
-                @if (item.LoaiThanhToan != "COD" && item.TrangThaiThanhToan == 0 && item.TrangThaiGiaoHang != 5)
+                @if (item.LoaiThanhToan != "COD" && item.LoaiThanhToan != "Không có" && item.TrangThaiThanhToan == 0 && item.TrangThaiGiaoHang != 5)
                 {
                     <span class="manage-o__text-2 u-c-silver">
                         <span class="manage-o__text-2 u-c-secondary">
-                            Vui lòng thanh toán đơn hàng
+                            Vui lòng thanh toán đơn hàng bằng @item.LoaiThanhToan
                         </span>
                     </span>
                 }
@@ -202,9 +202,9 @@
                 <div>
                     @if (item.TrangThaiGiaoHang == 1 || item.TrangThaiGiaoHang == 2)
                     {
-                        if (item.LoaiThanhToan != "COD" && item.TrangThaiThanhToan == 0)
+                        if (item.LoaiThanhToan != "COD" && item.LoaiThanhToan != "Không có" && item.TrangThaiThanhToan == 0)
                         {
-                            <a>
+                            <a onclick="RePay('@item.IdHoaDon')">
                                 <span class="btn btn--e-transparent-brand-b-2 order">Thanh toán</span>
                             </a>
                             <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
@@ -285,6 +285,23 @@
                     // Chuyển hướng hoặc xử lý kết quả thành công
                     window.location.href = '@Url.Action("ShowCartUser", "GioHangChiTiets")';
                 }
+            },
+            error: function (error) {
+                // Xử lý lỗi Ajax ở đây
+                console.log(error);
+            }
+        });
+    }
+</script>
+<script>
+    function RePay(idHoaDon) {
+        $.ajax({
+            url: '@Url.Action("RePay", "DonHang")',
+            type: 'POST',
+            data: { idHoaDon: idHoaDon },
+            success: function (result) {
+                // Xử lý kết quả Ajax ở đây
+                window.location.href = result.url;
             },
             error: function (error) {
                 // Xử lý lỗi Ajax ở đây
