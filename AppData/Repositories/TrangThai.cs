@@ -39,7 +39,7 @@ namespace App_Data.Repositories
             [Description("Chưa hoạt động của tại quầy")]
             ChuaHoatDongTaiQuay = 8,
             [Description("Đã huỷ cứng")]
-            DaHuyTaiQuay = 9,
+            DaHuyTaiQuay = 9
         }
         /// <summary>
         /// ở đây là voucher
@@ -67,8 +67,10 @@ namespace App_Data.Repositories
             DaSuDung = 1,
             [Description("Hết hiệu lực")]
             HetHieuLuc = 2,
-            [Description("Đặc biệt")]
-            DacBiet = 3
+            [Description("Đã huỷ")]
+            DaHuy = 3,
+            [Description("Chưa bắt đầu")]
+            ChuaBatDau = 4,
         }
         public enum TrangThaiHoaDon
         {

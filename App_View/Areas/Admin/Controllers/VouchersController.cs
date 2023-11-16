@@ -42,17 +42,8 @@ namespace App_View.Areas.Admin.Controllers
         }
         #region Online
 
-        // GET: Admin/Vouchers
-        //[Description("Hoạt động")]
-        //HoatDong = 0,
-        //    [Description("Không hoạt động")]
-        //KhongHoatDong = 1,
-        //    [Description("Chưa bắt đầu")]
-        //ChuaBatDau = 2,
-        //    [Description("Đã huỷ")]
-        //DaHuy = 3,
         public async Task<IActionResult> ShowVoucher(int? trangThai)
-        {          
+        {
             return View();
         }
         [HttpPost]
@@ -206,7 +197,7 @@ namespace App_View.Areas.Admin.Controllers
         //    [Description("Chưa hoạt động của tại quầy")]
         //ChuaHoatDongTaiQuay = 8,
         //    [Description("Đã huỷ cứng")]
-        //DaHuyTaiQuay = 9,
+        //DaHuyTaiQuay = 9
         public async Task<IActionResult> ShowVoucherTaiQuay(int? trangThai)
         {
             return View();
@@ -287,11 +278,53 @@ namespace App_View.Areas.Admin.Controllers
                 return Ok(true);
             }
             return Ok(false);
-        }        
+        }
+        [HttpPost]
+        public async Task<IActionResult> InVoucherTaiQuay(string idVoucher, int soLuong)
+        {
+            var IdAdmin = await _userManager.FindByEmailAsync("adminhehehe@gmail.com");
+            var VoucherKhaDung = await _voucherSV.GetVoucherDTOById(idVoucher);
+            if (IdAdmin == null || soLuong <= 0|| VoucherKhaDung == null)
+            {
+                return Ok(false);
+            }
+            else if (await _voucherSV.AddVoucherCungBanTaiQuay(idVoucher, IdAdmin.Id, soLuong))
+            {
+                return Ok(true);
+            }
+            return Ok(false);
+        }
+
+        public async Task<IActionResult> ShowVoucherTaiQuayDaIn(int? trangThai)
+        {
+            var IdAdmin = await _userManager.FindByEmailAsync("adminhehehe@gmail.com");
+            var voucherTaiQuay = (await _voucherND.GetAllVouCherNguoiDung()).Where(c => c.IdNguoiDung == IdAdmin.Id).ToList();
+            List<string> idVoucher = new List<string>();
+            foreach (var item in voucherTaiQuay.GroupBy(c => c.IdVouCher).Select(c => c.First()).ToList())
+            {
+                idVoucher.Add(item.IdVouCher);
+            }
+            List<Voucher> lstVoucherDaIn = new List<Voucher>();
+            foreach (var item in idVoucher)
+            {
+                var lstVoucher = (await _voucherSV.GetAllVoucher()).FirstOrDefault(c => c.IdVoucher == item);
+                lstVoucherDaIn.Add(lstVoucher);
+            }
+            return View(lstVoucherDaIn);
+        }
+        [HttpPost]
+        public async Task<IActionResult> FilterVoucherByStatusTaiQuayDaIn(int? trangThai)
+        {
+            var lstVoucher = (await _voucherSV.GetAllVoucher())
+                .Where(c => c.TrangThai >= 6 && c.TrangThai <= 9).OrderByDescending(c => c.NgayTao).ToList();
+
+            if (trangThai != null)
+            {
+                lstVoucher = lstVoucher.Where(c => c.TrangThai == trangThai).OrderByDescending(c => c.NgayTao).ToList();
+            }
+
+            return PartialView("_VoucherPartialTaiQuay", lstVoucher);
+        }
         #endregion
-
-
-
-
     }
 }

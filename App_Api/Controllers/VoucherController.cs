@@ -185,7 +185,7 @@ namespace App_Api.Controllers
         [HttpGet("GetVoucherTaiQuay")]
         public List<Voucher> GetAllVoucherTaiQuay()
         {
-            return allRepo.GetAll().Where(c=>c.TrangThai==(int)TrangThaiVoucher.HoatDongTaiQuay).ToList();
+            return allRepo.GetAll().Where(c => c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay).ToList();
         }
         [HttpPost("CreateVoucherTaiQuay")]
         public bool CreateTaiQuay(VoucherDTO voucherDTO)
@@ -194,6 +194,7 @@ namespace App_Api.Controllers
             var voucher = _mapper.Map<Voucher>(voucherDTO);
             voucher.MaVoucher = GenerateRandomVoucherCode();
             voucher.NgayTao = DateTime.Now;
+            voucher.SoLuong = 0;
             if (voucher.NgayBatDau > DateTime.Now)
             {
                 voucher.TrangThai = (int)TrangThaiVoucher.ChuaHoatDongTaiQuay;
@@ -201,10 +202,6 @@ namespace App_Api.Controllers
             if (voucher.NgayBatDau <= DateTime.Now)
             {
                 voucher.TrangThai = (int)TrangThaiVoucher.HoatDongTaiQuay;
-            }
-            if (voucher.SoLuong == 0)
-            {
-                voucher.TrangThai = (int)TrangThaiVoucher.KhongHoatDongTaiQuay;
             }
             if (voucher.SoLuong > 0 && voucher.NgayBatDau < DateTime.Now && voucher.NgayKetThuc > DateTime.Now)
             {
@@ -219,9 +216,9 @@ namespace App_Api.Controllers
             var VoucherGet = GetAllVoucher().FirstOrDefault(c => c.IdVoucher == id);
             if (VoucherGet != null)
             {
-                if (VoucherGet.TrangThai != (int)TrangThaiVoucher.KhongHoatDongTaiQuay)
+                if (VoucherGet.TrangThai != (int)TrangThaiVoucher.DaHuyTaiQuay)
                 {
-                    VoucherGet!.TrangThai = (int)TrangThaiVoucher.DaHuyTaiQuay;
+                    VoucherGet.TrangThai = (int)TrangThaiVoucher.DaHuyTaiQuay;
                     allRepo.EditItem(VoucherGet);
                     //sau khi huỷ hoạt động voucher sẽ xoá voucher người dùng khi họ chưa dùng
                     var VoucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCher == id && c.TrangThai != (int)TrangThaiVoucherNguoiDung.DaSuDung);
@@ -269,10 +266,6 @@ namespace App_Api.Controllers
                 {
                     voucherGet.TrangThai = (int)TrangThaiVoucher.HoatDongTaiQuay; ;
                 }
-                if (voucherGet.SoLuong == 0)
-                {
-                    voucherGet.TrangThai = (int)TrangThaiVoucher.KhongHoatDongTaiQuay;
-                }
                 if (voucherGet.SoLuong > 0 && voucherGet.NgayBatDau < DateTime.Now && voucherGet.NgayKetThuc > DateTime.Now)
                 {
                     voucherGet.TrangThai = (int)TrangThaiVoucher.HoatDongTaiQuay;
@@ -294,6 +287,39 @@ namespace App_Api.Controllers
             }
             return false;
         }
+        [HttpPost("AddVoucherCungBanTaiQuay/{idVoucher}/{idUser}/{soluong}")]
+        public bool AddVoucherCungBanTaiQuay(string idVoucher, string idUser, int soluong)
+        {
+            DateTime? ngay = DateTime.Now;
+            var voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == idVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay);
+            if (voucher != null)
+            {
+                int soLuongDaIn = 0;
+                int TrangThaiCanTao = (int)TrangThaiVoucherNguoiDung.KhaDung;
+                if (voucher.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay)
+                {
+                    TrangThaiCanTao = (int)TrangThaiVoucherNguoiDung.ChuaBatDau;
+                }
+                for (int i = 0; i < soluong; i++)
+                {
+                    VoucherNguoiDung VcNguoiDungCanThem = new VoucherNguoiDung()
+                    {
+                        IdVouCherNguoiDung=Guid.NewGuid().ToString(),
+                        IdNguoiDung = idUser,
+                        IdVouCher = voucher.IdVoucher,
+                        NgayNhan = ngay,
+                        TrangThai = TrangThaiCanTao
+                    };
+                    VcNguoiDungRepos.AddItem(VcNguoiDungCanThem);
+                    soLuongDaIn += 1;
+                }
+                voucher.SoLuong= voucher.SoLuong+soLuongDaIn;
+                allRepo.EditItem(voucher);
+                return true;
+            }
+            return false;
+        }
+
         #endregion
     }
 }
