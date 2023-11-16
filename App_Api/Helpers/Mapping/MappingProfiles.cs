@@ -161,6 +161,7 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => src.ThongTinGiaoHang.DiaChi)
                     );
             CreateMap<ThongTinGHDTO, ThongTinGiaoHang>().ReverseMap();
+            //CreateMap<ThongTinGiaoHang, ThongTinGHDTO>();
             CreateMap<HoaDonChiTietDTO, HoaDonChiTiet>().ReverseMap();
             CreateMap<HoaDonChiTiet, HoaDonChiTietViewModel>()
                 .ForMember(
@@ -272,6 +273,10 @@ namespace App_Api.Helpers.Mapping
                 .ForMember(
                         dest => dest.GiaGoc,
                         opt => opt.MapFrom(src => src.GiaBan)
+                    )
+                .ForMember(
+                        dest => dest.MaSanPham,
+                        opt => opt.MapFrom(src => src.Ma)
                     )
                 .ForMember(
                         dest => dest.GiaThucTe,

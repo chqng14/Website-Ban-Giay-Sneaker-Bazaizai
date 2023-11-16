@@ -137,7 +137,7 @@
                                                             <p>Miễn phí vận chuyển</p>
                                                         }
                                                         <div class="dash__link dash__link--brand">
-                                                            @Html.ActionLink("Chi tiết", "VoucherDetails", new {  ma=item.MaVoucher })      
+                                                            @Html.ActionLink("Chi tiết", "VoucherDetails", new {  ma=item.MaVoucher })
                                                         </div>
                                                     </div>
                                                 </div>
@@ -177,14 +177,14 @@
                                                 }
                                                 else
                                                 {
-                                                    @if (_voucherND.CheckVoucherInUser(item.MaVoucher,idNguoiDung) == true)
+                                                    @if (_voucherND.CheckVoucherInUser(item.MaVoucher, idNguoiDung) == true)
                                                     {
-                                                      @*   <form asp-action="SaveVoucher" asp-controller="VoucherNguoiDung" method="post"> *@
-                                                            <div class="description__info-wrap">
+                                                        @*   <form asp-action="SaveVoucher" asp-controller="VoucherNguoiDung" method="post"> *@
+                                                        <div class="description__info-wrap">
                                                             <a id="calmVoucher" class="manage-o__badge badge--delivered" style="border:none;">Lưu Voucher</a>
-                                                                <input class="input-text input-text--border-radius input-text--style-1"
+                                                            <input class="input-text input-text--border-radius input-text--style-1"
                                                                    type="text" value="@item.MaVoucher" name="MaVoucher" id="ma-voucher-input" hidden placeholder="Nhập mã voucher">
-                                                            </div>
+                                                        </div>
                                                     }
                                                     else
                                                     {
@@ -239,7 +239,7 @@
             duration: 5000
         });
     })
-    
+
     // Sử dụng jQuery
     $(".notlogin").on('click', function () {
         toast({
@@ -250,7 +250,7 @@
         });
     });
 
-    $("#calmVoucher").on('click',function () {
+    $("#calmVoucher").on('click', function () {
         var maVoucher = document.getElementById('ma-voucher-input').value;
         // Sử dụng $.ajax để gửi yêu cầu AJAX
         $.ajax({
@@ -260,10 +260,10 @@
             // contentType: "application/json; charset=utf-8", // Đặt loại dữ liệu gửi đi
             success: function (result) {
                 if (result) {
-                    Swal.fire('Thông báo!', 'Nhận voucher thành công (tự reload sau 3s)!', 'success');
+                    Swal.fire('Thông báo!', 'Nhận voucher thành công (tự reload sau 2s)!', 'success');
                     setTimeout(function () {
                         location.reload();
-                    }, 3000);
+                    }, 2000);
 
                 } else {
                     Swal.fire({

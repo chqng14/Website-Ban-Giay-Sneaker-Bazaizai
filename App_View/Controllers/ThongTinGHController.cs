@@ -5,6 +5,7 @@ using App_View.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Controllers
 {
@@ -20,14 +21,26 @@ namespace App_View.Controllers
             _userManager = userManager;
         }
         // GET: ThongTinGHController
-        public async Task<ActionResult> ShowByIdUser()
+
+        public async Task<IEnumerable<ThongTinGiaoHang>> GetThongTinGiaoHang()
         {
             var idNguoiDung = _userManager.GetUserId(User);
             var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
-            ViewData["ThongTinGH"] = thongTinGH;
-            return Ok();
+            return thongTinGH;
         }
 
+
+        public async Task<ActionResult> ShowByIdUser()
+        {
+            var thongTinGH = await GetThongTinGiaoHang();
+            return View(thongTinGH);
+        }
+
+        public async Task<ActionResult> Default()
+        {
+            var thongTinGH = await GetThongTinGiaoHang();
+            return View(thongTinGH);
+        }
         // GET: ThongTinGHController/Details/5
         public ActionResult Details(int id)
         {
@@ -35,59 +48,68 @@ namespace App_View.Controllers
         }
 
         // GET: ThongTinGHController/Create
-        public ActionResult Create()
+        public ActionResult CreateThongTin()
         {
             return View();
         }
-
-        // POST: ThongTinGHController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateThongTin(ThongTinGHDTO thongTinGHDTO)
         {
+            thongTinGHDTO.IdThongTinGH = Guid.NewGuid().ToString();
+            thongTinGHDTO.IdNguoiDung = _userManager.GetUserId(User);
+            thongTinGHDTO.TrangThai = (int)TrangThaiThongTinGH.HoatDong;
             await thongTinGHServices.CreateThongTin(thongTinGHDTO);
-            return RedirectToAction("CheckOut", "GioHangChiTiets");
-        }
-
-        // GET: ThongTinGHController/Edit/5
-        public ActionResult Edit(int id)
-        {
             return View();
         }
-
-        // POST: ThongTinGHController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        // POST: ThongTinGHController/Create
+        public async Task<IActionResult> CreateThongTinBill(ThongTinGHDTO thongTinGHDTO)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            await thongTinGHServices.CreateThongTin(thongTinGHDTO);
+            return Ok();
+        }
+
+        //GET: ThongTinGHController/Edit/5
+        public async Task<IActionResult> EditThongTin(string idThongTin)
+        {
+            var thongTinGH = (await thongTinGHServices.GetAllThongTinDTO()).FirstOrDefault(c => c.IdThongTinGH == idThongTin);
+            return View(thongTinGH);
+        }
+
+        //POST: ThongTinGHController/Edit/5
+        [HttpPost]
+        public async Task<IActionResult> EditThongTin(ThongTinGHDTO thongTinGHDTO)
+        {
+            await thongTinGHServices.UpdateThongTin(thongTinGHDTO);
+            return Ok(new { idThongTin = thongTinGHDTO.IdThongTinGH });
+        }
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateTrangThai(string idThongTin)
+        {
+            await thongTinGHServices.UpdateTrangThaiThongTin(idThongTin);
+            return Ok();
         }
 
         // GET: ThongTinGHController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+        //public ActionResult Delete(int id)
+        //{
+        //    return View();
+        //}
 
         // POST: ThongTinGHController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(string idThongTin)
         {
-            try
+            var thongtin = (await GetThongTinGiaoHang()).FirstOrDefault(c => c.IdThongTinGH == idThongTin);
+            if (thongtin.TrangThai == 0)
             {
-                return RedirectToAction(nameof(Index));
+                return Json(new { status = 0 });
             }
-            catch
+            else
             {
-                return View();
+                await thongTinGHServices.DeleteThongTin(idThongTin);
+                return RedirectToAction("ShowByIdUser");
+
             }
         }
     }

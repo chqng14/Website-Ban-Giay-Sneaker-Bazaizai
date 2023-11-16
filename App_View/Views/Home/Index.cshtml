@@ -9,7 +9,15 @@
 @{
     BazaizaiContext context = new BazaizaiContext();
 
-    var sanPhamChiTietList = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
+    var sanPhamChiTietList = new List<App_Data.ViewModels.SanPhamChiTietViewModel.SanPhamDanhSachViewModel>();
+    try
+    {
+        sanPhamChiTietList = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
+    }
+    catch (Exception)
+    {
+        sanPhamChiTietList = new List<App_Data.ViewModels.SanPhamChiTietViewModel.SanPhamDanhSachViewModel>();
+    }
     var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
 
     foreach (var pro in sanPhamChiTietList)
@@ -18,12 +26,12 @@
         var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
         var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
         var sanPhamSaleViewModel = new SanPhamSaleViewModel
-                {
-                    SanPhamDanhSachView = pro,
-                    TrangThaiSale = Convert.ToInt32(trangThaiSale),
-                    TrangThai = Convert.ToInt32(trangThai),
-                    GiaThucTe = giaThucTe
-                };
+        {
+            SanPhamDanhSachView = pro,
+            TrangThaiSale = Convert.ToInt32(trangThaiSale),
+            TrangThai = Convert.ToInt32(trangThai),
+            GiaThucTe = giaThucTe
+        };
 
         sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
     }

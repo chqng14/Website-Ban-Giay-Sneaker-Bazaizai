@@ -4,6 +4,7 @@ using App_Data.ViewModels.HoaDonChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_View.IServices;
 using App_View.Services;
+using DocumentFormat.OpenXml.Validation;
 using Microsoft.AspNetCore.Mvc;
 using static App_Data.Repositories.TrangThai;
 
@@ -106,6 +107,14 @@ namespace App_View.Areas.Admin.Controllers
                 return PartialView("_DanhSachSanPhamPartialView", (await _sanPhamChiTietService.GetDanhSachBienTheItemShopViewModelAsync()).Where(c => c.TenSanPham.ToLower().Replace(" ", "").Contains(tukhoa.ToLower().Replace(" ", ""))));
             else
                 return PartialView("_DanhSachSanPhamPartialView", await _sanPhamChiTietService.GetDanhSachBienTheItemShopViewModelAsync());
+        }
+        [HttpGet]
+        public async Task<IActionResult> LoadPartialViewKhachHang(string tukhoa)
+        {
+            if (!string.IsNullOrWhiteSpace(tukhoa))
+                return PartialView("_KhachHangPartialView", (await _hoaDonServices.GetKhachHangs()).Where(c => c.SDT.ToLower().Replace(" ", "").Contains(tukhoa.ToLower().Replace(" ", ""))|| c.TenKhachHang.ToLower().Replace(" ", "").Contains(tukhoa.ToLower().Replace(" ", ""))));
+            else
+                return PartialView("_KhachHangPartialView", await _hoaDonServices.GetKhachHangs());
         }
         [HttpPut]
         public async Task<IActionResult> UpdateSoLuong(string maHD, string idSanPham, int SoLuongMoi)
@@ -213,6 +222,33 @@ namespace App_View.Areas.Admin.Controllers
                 SoTienVoucherGiam = 0,
                 MaHoaDon = hoaDon.MaHoaDon,
                 NgayTao = ngayTao
+            });
+        }
+        [HttpPost] 
+        public async Task<IActionResult> ThemKhachHang(string TenKhachHang, string SDT)
+        {
+            var khachHang = new KhachHang()
+            {
+                IdKhachHang = Guid.NewGuid().ToString(),
+                SDT = SDT,
+                //IdNguoiDung = ,
+                TenKhachHang = TenKhachHang,
+                TrangThai = (int)TrangThaiKhachHang.HoatDong,
+            };
+            var ketqua = await _hoaDonServices.TaoKhachHang(khachHang);
+            if (ketqua == "Tạo khách hàng thành công")
+            {
+                return Ok(new
+                {
+                    TrangThai = true,
+                    SDT =SDT,
+                    KetQua = ketqua,    
+                });
+            }
+            return Ok(new
+            {
+                TrangThai = false,
+                KetQua = ketqua,
             });
         }
     }

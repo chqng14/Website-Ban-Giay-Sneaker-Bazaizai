@@ -1,0 +1,85 @@
+﻿@model List<App_Data.ViewModels.SanPhamChiTietViewModel.RelatedProductViewModel>
+<table id="data-table" class="table table-hover no-footer">
+    <thead>
+        <tr>
+            <th style="width: 30px">STT</th>
+            <th>Mã SP</th>
+            <th>Sản phẩm</th>
+            <th>Màu</th>
+            <th>Kích cỡ</th>
+            <th>Giá bán</th>
+            <th>SL</th>
+            <th>Đã bán</th>
+            <th>TG bán gần đây</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int Stt = 1;
+        }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width: 30px">@(Stt++)</td>
+                <td>@item.MaSanPham</td>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img class="img-fluid rounded" src="/AnhSanPham/@item.Anh" style="max-width: 60px" alt="">
+                        <h6 class="m-b-0 m-l-10">@item.SanPham</h6>
+                    </div>
+                </td>
+                <td>@item.MauSac</td>
+                <td>@item.KichCo</td>
+                <td>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaBan)</td>
+                <td>@item.SoLuong</td>
+                <td>@item.SoLuongDaBan</td>
+                <td>@item.TGBanGanDay</td>
+            </tr>
+        }
+    </tbody>
+    <tfoot style="
+    background: #6de0d8;
+">
+        <tr>
+            <td colspan="5"></td>
+            <td><strong>Tổng cộng:</strong></td>
+            <td><strong id="totalQuantity"></strong></td>
+            <td></td>
+            <td><strong id="totalSales"></strong></td>
+        </tr>
+    </tfoot>
+
+</table>
+<script>
+    $(() => {
+        $('#data-table').DataTable({
+            "pageLength": 5,
+            "lengthMenu": [5, 10, 25, 50],
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api();
+
+                var totalQuantity = api.column(6, { page: 'current' }).data().reduce(function (a, b) {
+                    return a + parseInt(b.replace(/[^\d.-]/g, ''), 10) || 0;
+                }, 0);
+
+                var totalSLDaBan = api.column(7, { page: 'current' }).data().reduce(function (a, b) {
+                    return a + parseInt(b.replace(/[^\d.-]/g, ''), 10) || 0;
+                }, 0);
+
+                var totalSales = api.column(5, { page: 'current' }).data().reduce(function (a, b) {
+                    var priceWithoutCurrency = b.replace(/[^\d]/g, '');
+                    return a + parseFloat(priceWithoutCurrency) || 0;
+                }, 0);
+
+                $(api.column(0).footer()).html('Tổng');
+                $(api.column(6).footer()).html(totalQuantity);
+                $(api.column(7).footer()).html(totalSLDaBan);
+                $(api.column(5).footer()).html(formatCurrency(totalSales));
+            }
+        });
+
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
+        }
+    });
+</script>

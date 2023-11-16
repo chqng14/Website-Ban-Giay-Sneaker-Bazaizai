@@ -9,6 +9,7 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
     public class ItemShopViewModel
     {
         public string? IdChiTietSp { get; set; }
+        public string? MaSanPham { get; set; }
         public string? ThuongHieu { get; set; }
         public string? MauSac { get; set; }
         public int KichCo { get; set; }

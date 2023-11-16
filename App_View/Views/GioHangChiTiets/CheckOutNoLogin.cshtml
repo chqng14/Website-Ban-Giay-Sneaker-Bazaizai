@@ -140,7 +140,7 @@
 
                                     <label class="gl-label" for="billing-email">EMAIL *</label>
 
-                                    <input class="input-text input-text--primary-style" type="text" id="billing-email" data-bill="">
+                                    <input class="input-text input-text--primary-style" type="email" id="billing-email" data-bill="">
                                 </div>
                                 <!--====== End - E-MAIL ======-->
                                 <!--====== PHONE ======-->
@@ -344,6 +344,21 @@
                                             <span class="gl-text u-s-m-t-6">Khi bạn nhấp vào "Đặt hàng" bên dưới, chúng tôi sẽ chuyển hướng bạn đến trang web của Momo để thiết lập thông tin thanh toán của bạn.</span>
                                         </div>
 
+                                        <div class="u-s-m-b-10">
+
+                                            <!--====== Radio Box ======-->
+                                            <div class="radio-box">
+
+                                                <input type="radio" value="VnPay" id="direct-bank-transfer" name="Payment">
+                                                <div class="radio-box__state radio-box__state--primary">
+
+                                                    <label class="radio-box__label" for="direct-bank-transfer">VnPay</label>
+                                                </div>
+                                            </div>
+                                            <!--====== End - Radio Box ======-->
+
+                                            <span class="gl-text u-s-m-t-6">Khi bạn nhấp vào "Đặt hàng" bên dưới, chúng tôi sẽ chuyển hướng bạn đến trang web của VnPay để thiết lập thông tin thanh toán của bạn.</span>
+                                        </div>
                                         <div class="u-s-m-b-15">
 
                                             <!--====== Check Box ======-->
@@ -352,12 +367,12 @@
                                                 <input type="checkbox" id="term-and-condition">
                                                 <div class="check-box__state check-box__state--primary">
 
-                                                    <label class="check-box__label" for="term-and-condition">I consent to the</label>
+                                                    <label class="check-box__label" for="term-and-condition">Tôi Đồng ý với</label>
                                                 </div>
                                             </div>
                                             <!--====== End - Check Box ======-->
 
-                                            <a class="gl-link">Terms of Service.</a>
+                                            <a class="gl-link">Điều khoản.</a>
                                         </div>
                                         <input hidden name="LoaiThanhToan" />
                                         <input hidden name="IdVoucher" />
@@ -377,65 +392,6 @@
         </div>
     </div>
     <!--====== End - Section Content ======-->
-    <!--====== Shipping Address Add Modal ======-->
-    <div class="modal fade" id="edit-ship-address">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="checkout-modal2">
-                        <div class="u-s-m-b-30">
-                            <div class="dash-l-r">
-                                <h1 class="gl-modal-h1">Địa chỉ giao hàng</h1>
-                            </div>
-                        </div>
-                        <form class="checkout-modal2__form">
-                            <div class="dash__table-2-wrap u-s-m-b-30 gl-scroll">
-                                <table class="dash__table-2">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Tên người nhận</th>
-                                            <th>SĐT</th>
-                                            <th>Địa chỉ</th>
-                                            <th>Trạng thái</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        
-                                            <tr>
-                                                <td>
-
-                                                    <!--====== Radio Box ======-->
-                                                    <div class="radio-box">
-
-                                                        <input type="radio" id="address-1" name="default-address">
-                                                        <div class="radio-box__state radio-box__state--primary">
-
-                                                            <label class="radio-box__label" for="address-1"></label>
-                                                        </div>
-                                                    </div>
-                                                    <!--====== End - Radio Box ======-->
-                                                </td>
-                                                <td>
-                                                    <div class="gl-text">Default Shipping Address</div>
-                                                    <div class="gl-text">Default Billing Address</div>
-                                                </td>
-                                            </tr>
-                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="gl-modal-btn-group">
-                                <button class="btn btn--e-brand-b-2" type="submit">LƯU</button>
-                                <button class="btn btn--e-grey-b-2" type="button" data-dismiss="modal">ĐÓNG</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--====== End - Shipping Address Add Modal ======-->
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 @section Scripts{
@@ -807,11 +763,46 @@
                 }
             });
         });
+        function kiemTraTuyChon() {
+            var cityInput = document.getElementById("city");
+            var districtInput = document.getElementById("district");
+            var wardsInput = document.getElementById("wards");
+            var billingFnameInput = document.getElementById("billing-fname");
+            var billingEmailInput = document.getElementById("billing-email");
+            var billingPhoneInput = document.getElementById("billing-phone");
+            var billingStreetInput = document.getElementById("billing-street");
+
+            var isValid = true;
+            isValid = isValid && cityInput.value !== "";
+            isValid = isValid && districtInput.value !== "";
+            isValid = isValid && wardsInput.value !== "";
+            isValid = isValid && billingFnameInput.value !== "";
+            isValid = isValid && billingEmailInput.value !== "";
+            isValid = isValid && billingPhoneInput.value !== "";
+            isValid = isValid && billingStreetInput.value !== "";
+
+            if (!isValid) {
+                Swal.fire({
+                    title: "Vui lòng nhập đầy đủ thông tin!",
+                    icon: "warning",
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            }
+            return !isValid;
+        }
         $(document).ready(function () {
             $('#placeOrderButton').click(function (e) {
                 e.preventDefault();
+                if (kiemTraTuyChon()) {
+                    return;
+                }
                 if ($('input[type=radio]:checked').length === 0) {
-                    alert('Vui lòng chọn một lựa chọn.');
+                    toast({
+                        title: "Vui lòng chọn phương thức thanh toán!",
+                        type: "warning",
+                        duration: 2000
+                    });
                     return;
                 }
                 var selectedCity, selectedDistrict, selectedWard, inputAddressBill, DiaChiFull;

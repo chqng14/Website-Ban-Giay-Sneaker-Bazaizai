@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace App_Data.ViewModels.SanPhamChiTietViewModel
+{
+    public class RelatedProductViewModel
+    {
+        public string? IdSanPham { get; set; }
+        public string? MaSanPham { get; set; }
+        public string? SanPham { get; set; }
+        public string? MauSac { get; set; }
+        public int KichCo { get; set; }
+        public double GiaBan { get; set; }
+        public int SoLuong { get; set; }
+        public int SoLuongDaBan { get; set; }
+        public string? Anh { get; set; }
+        public string? TGBanGanDay { get; set; }
+    }
+}

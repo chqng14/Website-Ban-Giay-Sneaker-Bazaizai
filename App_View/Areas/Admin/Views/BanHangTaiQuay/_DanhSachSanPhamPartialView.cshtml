@@ -2,7 +2,7 @@
 
 @foreach (var item in Model)
 {
-    <div class="col-3">
+    <div class="col-6">
         <div class="card" style="width: 16rem;">
             <div class="card-body">
                 <h5 class="card-title"> </h5>
@@ -13,6 +13,8 @@
                     <div style="height:30px">
                         <span>@item.TenSanPham/@item.MauSac/@item.KichCo</span>
                     </div>
+                    <br />
+                    <span>Mã: @item.MaSanPham</span>
                     <br />
                     @{
                         if (item.GiaGoc != item.GiaThucTe)
@@ -134,7 +136,7 @@
                         isAdding = false;
                         return;
                     }
-
+                    updateTienThua();
                 },
                 error: function (error) {
                     console.error(error);
