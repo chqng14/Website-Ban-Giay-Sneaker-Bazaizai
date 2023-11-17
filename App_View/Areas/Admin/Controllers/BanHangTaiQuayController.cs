@@ -93,6 +93,7 @@ namespace App_View.Areas.Admin.Controllers
                 GiaBan = hoaDonChiTietTraLai.GiaBan,
                 GiaGoc = hoaDonChiTietTraLai.GiaGoc,
                 TenSanPham = sanPham.TenSanPham + "/" + sanPham.MauSac + "/" + sanPham.KichCo,
+                MaSanPham = sanPham.MaSanPham,
                 TongTienThayDoi = tongTienThayDoi,
                 SoTienTraLaiThayDoi = soTienTraLaiThayDoi,
                 SoTienKhyenMaiGiam = SoTienKhyenMaiGiam,
@@ -205,6 +206,7 @@ namespace App_View.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> HoaDonDuocChon(string maHD)
         {
+
             var hoaDon = (await _hoaDonServices.GetAllHoaDonCho()).FirstOrDefault(hd => hd.MaHoaDon == maHD);
             double tongTienGoc = 0;
             double tienPhaiTra = 0;
@@ -223,6 +225,20 @@ namespace App_View.Areas.Admin.Controllers
                 MaHoaDon = hoaDon.MaHoaDon,
                 NgayTao = ngayTao
             });
+        }
+        [HttpGet]
+        public async Task<IActionResult> ChiTietHoaDonDuocChon(string maHD)
+        {
+            var hoaDonDuocChon = (await _hoaDonServices.GetAllHoaDonCho()).FirstOrDefault(c => c.MaHoaDon == maHD).hoaDonChiTietDTOs;
+            var listsanpham = await _sanPhamChiTietService.GetDanhSachBienTheItemShopViewModelAsync();
+            foreach (var item2 in hoaDonDuocChon)
+            {
+                var sanpham = listsanpham.FirstOrDefault(c => c.IdChiTietSp == item2.IdSanPhamChiTiet);
+                item2.TenSanPham = sanpham.TenSanPham + "/" + sanpham.MauSac + "/" + sanpham.KichCo;
+                item2.MaSanPham = sanpham.MaSanPham;
+            }
+            return PartialView("_HoaDonChiTietPartialView", hoaDonDuocChon);
+
         }
         [HttpPost] 
         public async Task<IActionResult> ThemKhachHang(string TenKhachHang, string SDT)

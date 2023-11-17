@@ -94,7 +94,7 @@
                             var newRow = $("<tr>").attr("id", "hdct-" + response.idSanPhamChiTiet);
                             newRow.append("<td>" + stt + "</td>");
                             newRow.append("<td hidden>" + response.idSanPhamChiTiet + "</td>");
-                            newRow.append("<td></td>");
+                            newRow.append("<td>" + response.maSanPham + "</td>");
                             newRow.append("<td>" + response.tenSanPham + "</td>");
                             var formattedCurrency = response.giaBan.toLocaleString('vi-VN', {
                                 style: 'currency',
