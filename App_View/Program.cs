@@ -26,7 +26,7 @@ builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("Mo
 builder.Services.AddScoped<IMomoService, MomoService>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 // Add services to the container.
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=LAPTOP-OF-KHAI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=MSI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
 
 
 builder.Services.AddHangfireServer();
@@ -183,6 +183,10 @@ Task.Run(() =>
         capNhatTime.CapNhatVoucherHetHanOnline();
         capNhatTime.CapNhatVoucherDenHanOnline();
         capNhatTime.CapNhatVoucherNguoiDungOnline();
+        capNhatTime.CapNhatVoucherHetHanTaiQuay();
+        capNhatTime.CapNhatVoucherDenHanTaiQuay();
+        capNhatTime.CapNhatVoucherNguoiDungTaiQuay();
+        capNhatTime.CapNhatVoucherNguoiDungTaiQuayKhiVoucherHoatDong();
         Thread.Sleep(TimeSpan.FromSeconds(5));
     }
 });

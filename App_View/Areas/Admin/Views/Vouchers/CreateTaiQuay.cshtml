@@ -85,31 +85,17 @@
                                 class="form-control select2"
                                 data-placeholder="Vui lòng chọn!"
                                 onchange="toggleInput()">
-                            <option label="Chọn loại hình khuyến mãi"></option>
                             <option value="@((int)TrangThaiLoaiKhuyenMai.TienMat)">Giảm giá tiền mặt</option>
                             <option value="@((int)TrangThaiLoaiKhuyenMai.PhanTram)">Giảm giá theo %</option>
-                            <option value="@((int)TrangThaiLoaiKhuyenMai.Freeship)">Miễn phí ship</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-6 tienMat">
+                    <div class="form-group col-md-6">
                         <label class="font-weight-semibold" id="inputLabel">Nhập số tiền giảm:</label>
                         <input asp-for="MucUuDai" id="MucGiam"
-                               class="form-control formatPrice" type="text" />
+                               class="form-control" type="text" />
                         <span asp-validation-for="MucUuDai" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-6 phantram">
-                        <label class="font-weight-semibold" id="inputLabel">Nhập số phần trăm:</label>
-                        <input asp-for="MucUuDai" id="MucGiam"
-                               class="form-control" type="number" min="0" max="100" />
-                        <span asp-validation-for="MucUuDai" class="text-danger"></span>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label class="font-weight-semibold">Số lượng:</label>
-                        <input class="form-control" asp-for="SoLuong" />
-                        <span asp-validation-for="SoLuong"
-                              class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
                         <label class="font-weight-semibold">Ngày bắt đầu:</label>
@@ -152,19 +138,6 @@
                 $('#confirm').modal('hide');
             }
         });
-        document.querySelector('.phantram').style.display = 'none';
-        $(() => {
-            $(".formatPrice").each(function () {
-                var autoNumeric = new AutoNumeric(this, {
-                    decimalCharacter: ".",
-                    digitGroupSeparator: ",",
-                    decimalPlaces: 0,
-                    currencySymbolPlacement: "s",
-                    minimumValue: 0,
-                    maximumValue: 999999999
-                });
-            });
-        })
         //function thêm
         $(document).ready(function () {
             const toastHeader = `<div class="toast-header">
@@ -219,11 +192,23 @@
             var input = document.getElementById("MucGiam");
 
             if (select.value === "1") { // Nếu chọn "Giảm giá theo %"
-                document.querySelector('.tienMat').style.display = 'none';
-                document.querySelector('.phantram').style.display = 'block';
+                inputLabel.textContent = "Nhập số % giảm:";
+                input.setAttribute("type", "number"); // Chuyển thành trường nhập số
+                input.setAttribute("min", "0");
+                input.setAttribute("max", "100");
+                input.setAttribute("step", "0.01"); // Bước nhảy 0.01 (cho phần trăm)
+                input.setCustomValidity(""); // Xóa thông báo lỗi
+
+                // Thêm kiểm tra hợp lệ cho số phần trăm giảm
+                input.addEventListener("input", validatePercentage);
             } else {
-                document.querySelector('.tienMat').style.display = 'block';
-                document.querySelector('.phantram').style.display = 'none';
+                inputLabel.textContent = "Nhập số tiền giảm:";
+                input.setAttribute("type", "text");
+                input.removeAttribute("min");
+                input.removeAttribute("max");
+                input.removeAttribute("step");
+                input.setCustomValidity(""); // Xóa thông báo lỗi
+                input.removeEventListener("input", validatePercentage);
             }
         }
 
