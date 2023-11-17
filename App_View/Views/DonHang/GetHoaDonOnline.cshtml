@@ -1,8 +1,8 @@
 ﻿@model IEnumerable<App_Data.ViewModels.HoaDon.HoaDonTest>
-@if (!Model.Any())
+@* @if (!Model.Any())
 {
     <img src="https://dacsanngon.com/extension/product/img/cart-empty.png" style="width: 100%; height: auto" />
-}
+} *@
 @{
     ViewData["Title"] = "GetHoaDonOnline";
 }
@@ -66,7 +66,7 @@
                     <div class="dash__link dash__link--brand">
                         @if (item.TrangThaiGiaoHang == 1)
                         {
-                            if (item.LoaiThanhToan == "MOMO" && item.TrangThaiThanhToan == 0)
+                            if (item.LoaiThanhToan != "COD" && item.TrangThaiThanhToan == 0)
                             {
                                 <span class="manage-o__badge badge--processing" style="width: max-content">Chờ thanh toán</span>
                             }else
@@ -109,7 +109,7 @@
                         </div>
                         <div class="description-title" style="color:#7f7f7f">
                             <span class="o-card__name">
-                                <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = sp.IdSanPhamChiTiet })">@sp.TenThuongHieu @sp.TenSanPham</a>
+                                <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = sp.IdSanPhamChiTiet })">@sp.TenSanPham</a>
                             </span>
                             <span class="o-card__quantity">Size: @sp.TenKichCo Màu: @sp.TenMauSac</span>
                             <span class="o-card__quantity">Số lượng x @sp.SoLuong</span>
@@ -189,11 +189,11 @@
                         </span>
                     </span>
                 }
-                @if (item.LoaiThanhToan == "MOMO" && item.TrangThaiThanhToan == 0 && item.TrangThaiGiaoHang != 5)
+                @if (item.LoaiThanhToan != "COD" && item.LoaiThanhToan != "Không có" && item.TrangThaiThanhToan == 0 && item.TrangThaiGiaoHang != 5)
                 {
                     <span class="manage-o__text-2 u-c-silver">
                         <span class="manage-o__text-2 u-c-secondary">
-                            Vui lòng thanh toán đơn hàng
+                            Vui lòng thanh toán đơn hàng bằng @item.LoaiThanhToan
                         </span>
                     </span>
                 }
@@ -202,9 +202,9 @@
                 <div>
                     @if (item.TrangThaiGiaoHang == 1 || item.TrangThaiGiaoHang == 2)
                     {
-                        if (item.LoaiThanhToan == "MOMO" && item.TrangThaiThanhToan == 0)
+                        if (item.LoaiThanhToan != "COD" && item.LoaiThanhToan != "Không có" && item.TrangThaiThanhToan == 0)
                         {
-                            <a>
+                            <a onclick="RePay('@item.IdHoaDon')">
                                 <span class="btn btn--e-transparent-brand-b-2 order">Thanh toán</span>
                             </a>
                             <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
@@ -224,8 +224,14 @@
                     }
                     else if (item.TrangThaiGiaoHang == 5 || item.TrangThaiGiaoHang == 4)
                     {
-                        <a href="@Url.Action("ReBuy","DonHang",new{idHoaDon = item.IdHoaDon})">
-                            <span class="btn btn--e-transparent-brand-b-2 order">Mua lại</span>
+                        if (item.TrangThaiGiaoHang == 4)
+                        {
+                            <a>
+                                <span class="btn btn--e-transparent-brand-b-2 order">Đánh Giá</span>
+                            </a>
+                        }
+                        <a onclick="ReBuyAjax('@item.IdHoaDon')">
+                            <span class="btn btn--e-transparent-brand-b-2 order">Mua Lại</span>
                         </a>
                         <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
                             <span class="btn btn--e-brand-b-2 order">
@@ -258,23 +264,49 @@
         $('.arrow-down-btn').css('display', 'block');
         $('.arrow-up-btn').css('display', 'none');
     }
-    @* $(document).ready(function () {
-        $('#placeOrderButton').click(function (e) {
-            e.preventDefault();
-            var idHoaDon = $(this).val();
-            $.ajax({
-                type: 'PUT',
-                url: '/DonHang/HuyDonHang',
-                data: { idHoaDon: idHoaDon },
-                success: function (paymentResponse) {
-                    window.location.reload();
-                },
-                error: function (paymentError) {
-                    // Xử lý lỗi nếu cần
-                }
-            });
-        });
-    }); *@
 
 </script>
 
+<script>
+    function ReBuyAjax(idHoaDon) {
+        $.ajax({
+            url: '@Url.Action("ReBuy", "DonHang")',
+            type: 'POST',
+            data: { idHoaDon: idHoaDon },
+            success: function (result) {
+                // Xử lý kết quả Ajax ở đây
+                if (result.quantityError) {
+                    Swal.fire({
+                        title: 'Sản phẩm lỗi',
+                        icon: 'error',
+                        html: result.quantityError.join('<br/>'),
+                    });
+                } else {
+                    // Chuyển hướng hoặc xử lý kết quả thành công
+                    window.location.href = '@Url.Action("ShowCartUser", "GioHangChiTiets")';
+                }
+            },
+            error: function (error) {
+                // Xử lý lỗi Ajax ở đây
+                console.log(error);
+            }
+        });
+    }
+</script>
+<script>
+    function RePay(idHoaDon) {
+        $.ajax({
+            url: '@Url.Action("RePay", "DonHang")',
+            type: 'POST',
+            data: { idHoaDon: idHoaDon },
+            success: function (result) {
+                // Xử lý kết quả Ajax ở đây
+                window.location.href = result.url;
+            },
+            error: function (error) {
+                // Xử lý lỗi Ajax ở đây
+                console.log(error);
+            }
+        });
+    }
+</script>

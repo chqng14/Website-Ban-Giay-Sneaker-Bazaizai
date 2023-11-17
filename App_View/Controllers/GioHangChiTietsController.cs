@@ -20,6 +20,7 @@ using System.Globalization;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Controllers
 {
@@ -31,8 +32,8 @@ namespace App_View.Controllers
         private readonly UserManager<NguoiDung> _userManager;
         ISanPhamChiTietService _sanPhamChiTietService;
         IThongTinGHServices thongTinGHServices;
-
-        public GioHangChiTietsController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService)
+        IVoucherNguoiDungServices _voucherND;
+        public GioHangChiTietsController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService, IVoucherNguoiDungServices voucherND)
         {
             httpClient = new HttpClient();
             GioHangChiTietServices = new GioHangChiTietServices();
@@ -40,6 +41,7 @@ namespace App_View.Controllers
             thongTinGHServices = new ThongTinGHServices();
             _signInManager = signInManager;
             _userManager = userManager;
+            _voucherND = voucherND;
         }
         public string GetIdNguoiDung()
         {
@@ -167,15 +169,19 @@ namespace App_View.Controllers
             else
             {
                 var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
-                var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(GetIdNguoiDung());
-                ViewData["ThongTinGH"] = thongTinGH;
                 if (giohang.Count == 0)
                 {
                     return View("Empty");
                 }
                 else
                 {
+                    var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(GetIdNguoiDung());
+                    ViewData["ThongTinGH"] = thongTinGH;
+                    var voucherNguoiDung = (await _voucherND.GetAllVoucherNguoiDungByID(GetIdNguoiDung())).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung).ToList();
+                    ViewData["TatCaVoucher"] = voucherNguoiDung;
                     var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(giohang);
+                    var tongtien = giohang.Sum(c => c.GiaBan * c.SoLuong);
+                    ViewData["TongTien"] = tongtien;
                     if (message.Any())
                     {
                         if (outOfStockCount > 0)

@@ -1,0 +1,222 @@
+﻿@model App_Data.ViewModels.ThongTinGHDTO.ThongTinGHDTO
+
+@{
+    ViewData["Title"] = "CreateThongTin";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<div class="col-lg-9 col-md-12">
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white">
+        <div class="dash__pad-2">
+            <h1 class="dash__h1 u-s-m-b-14">Thêm địa chỉ mới</h1>
+
+            <form class="dash-address-manipulation" id="ThongTin" asp-action="CreateThongTin">
+                <div class="gl-inline">
+                    <div class="u-s-m-b-30">
+                        <label class="gl-label" for="address-fname">Tên Người Nhận</label>
+                        <input asp-for="TenNguoiNhan" id="Ten" class="input-text input-text--primary-style" placeholder="Tên người nhận" />
+                        <span asp-validation-for="TenNguoiNhan" class="text-danger"></span>
+                    </div>
+                    <div class="u-s-m-b-30">
+                        <label class="gl-label" for="address-lname">SĐT</label>
+                        <input asp-for="SDT" id="SDT" class="input-text input-text--primary-style" placeholder="Số điện thoại" />
+                        <span asp-validation-for="SDT" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="gl-inline">
+                    <div class="u-s-m-b-30">
+                        <label class="gl-label" for="city">Thành Phố</label>
+                        <select class="select-box select-box--primary-style" id="city" required>
+                            <option selected>Chọn thành phố</option>
+                        </select>
+                    </div>
+                    <div class="u-s-m-b-30">
+                        <label class="gl-label" for="district">Huyện</label>
+                        <select class="select-box select-box--primary-style" id="district" required>
+                            <option selected>Chọn huyện</option>
+                        </select>
+                    </div>
+                    <div class="u-s-m-b-30">
+                        <label class="gl-label" for="wards">Phường/Xã</label>
+                        <select class="select-box select-box--primary-style" id="wards" required>
+                            <option selected>Chọn phường/xã</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="gl-inline">
+                    <div class="u-s-m-b-30">
+                        <label class="gl-label" for="address-phone">Địa Chỉ</label>
+                        <input asp-for="DiaChi" id="DiaChi" class="input-text input-text--primary-style" placeholder="Tên nhà,Số đường" />
+                        <span asp-validation-for="DiaChi" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <button class="btn btn--e-brand-b-2" id="CreateAddress" type="submit">Thêm</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const apiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/province';
+            const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
+
+            axios.get(apiUrl, {
+                headers: {
+                    'Token': token
+                }
+            })
+                .then(response => {
+                    var selectElement = $('#city');
+                    selectElement.empty();
+
+                    selectElement.append($('<option>').val('').text('Chọn thành phố'));
+
+                    $.each(response.data.data, function (index, item) {
+                        selectElement.append($('<option>').val(item.ProvinceID).text(item.ProvinceName));
+                    });
+
+                    selectElement.val(selectElement.val()).trigger('change');
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        });
+
+        $(document).ready(function () {
+            $('#city').on('change', function () {
+                if ($('#city').val() === null) {
+                    var selectElement = $('#district');
+                    selectElement.empty();
+                    selectElement.val('').trigger('change');
+                    selectElement.append($('<option>').val('').text('Chọn huyện'));
+                }
+                const apiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/district';
+                const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
+                axios.get(apiUrl, {
+                    headers: {
+                        'Token': token
+                    },
+                    params: {
+                        province_id: $('#city').val()
+                    }
+                })
+                    .then(response => {
+                        var selectElement = $('#district');
+                        selectElement.empty();
+                        selectElement.val('').trigger('change');
+                        selectElement.append($('<option>').val('').text('Chọn huyện'));
+                        $.each(response.data.data, function (index, item) {
+                            selectElement.append($('<option>').val(item.DistrictID).text(item.DistrictName));
+                        });
+                        selectElement.val(selectElement.val()).trigger('change');
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            });
+        });
+
+        $(document).ready(function () {
+            $('#district').on('change', function () {
+                if ($('#district').val() === null) {
+                    var selectElement = $('#wards');
+                    selectElement.empty();
+                    selectElement.val('').trigger('change');
+                    selectElement.append($('<option>').val('').text('Chọn phường/xã'));
+                }
+                const apiUrl = 'https://online-gateway.ghn.vn/shiip/public-api/master-data/ward';
+                const token = '1194852d-fde8-11ed-8a8c-6e4795e6d902';
+                axios.get(apiUrl, {
+                    headers: {
+                        'Token': token
+                    },
+                    params: {
+                        district_id: $('#district').val()
+                    }
+                })
+                    .then(response => {
+                        var selectElement = $('#wards');
+                        selectElement.empty();
+                        selectElement.val('').trigger('change');
+                        selectElement.append($('<option>').val('').text('Chọn phường/xã'));
+                        $.each(response.data.data, function (index, item) {
+                            selectElement.append($('<option>').val(item.WardCode).text(item.WardName));
+                        });
+                        selectElement.val(selectElement.val()).trigger('change');
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            });
+        });
+    </script>
+    <script>
+        function kiemTraTuyChon() {
+            
+                var cityInput = document.getElementById("city");
+                var districtInput = document.getElementById("district");
+                var wardsInput = document.getElementById("wards");
+                var billingFnameInput = document.getElementById("Ten");
+                var billingEmailInput = document.getElementById("SDT");
+                var billingStreetInput = document.getElementById("DiaChi");
+
+                var isValid = true;
+                isValid = isValid && cityInput.value !== "";
+                isValid = isValid && districtInput.value !== "";
+                isValid = isValid && wardsInput.value !== "";
+                isValid = isValid && billingFnameInput.value !== "";
+                isValid = isValid && billingEmailInput.value !== "";
+                isValid = isValid && billingStreetInput.value !== "";
+
+                if (!isValid) {
+                    Swal.fire({
+                        title: "Vui lòng nhập đầy đủ thông tin",
+                        icon: "error",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+                return !isValid;
+            
+        }
+        $(document).ready(function () {
+            $('#CreateAddress').click(function (e) {
+                e.preventDefault();
+                if (kiemTraTuyChon()) {
+                    return;
+                }
+                var selectedCity, selectedDistrict, selectedWard, inputAddressBill, DiaChiFull;
+                selectedCity = $('#city option:selected').text();
+                selectedDistrict = $('#district option:selected').text();
+                selectedWard = $('#wards option:selected').text();
+                inputAddressBill = $('#DiaChi').val();
+                DiaChiFull = inputAddressBill + ',' + selectedWard + ',' + selectedDistrict + ',' + selectedCity;
+                $('#DiaChi').val(DiaChiFull);
+                var Data = $('#ThongTin').serialize();
+                $.ajax({
+                    type: 'POST',
+                    url: '/ThongTinGH/CreateThongTin',
+                    data: Data,
+                    success: function (Response) {
+                        Swal.fire({
+                            title: "Thêm thành công",
+                            icon: "success",
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            window.location.reload();
+                        });
+
+                    },
+                    error: function (Error) {
+                        // Xử lý lỗi nếu cần
+                    }
+                });
+            });
+        });
+    </script>
+}

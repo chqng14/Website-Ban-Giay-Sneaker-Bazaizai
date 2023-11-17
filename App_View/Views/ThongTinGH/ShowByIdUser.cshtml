@@ -1,0 +1,108 @@
+﻿@model IEnumerable<App_Data.Models.ThongTinGiaoHang>
+
+@{
+    ViewData["Title"] = "ShowByIdUser";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+<style>
+    .dash__table-2 th, .dash__table-2 td {
+        min-width: 160px;
+    }
+
+    /* td {
+        max-width: 330px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    } */
+</style>
+<div class="col-lg-9 col-md-12">
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+        <div class="dash__pad-2">
+            <div class="dash__address-header">
+                <h1 class="dash__h1">Địa chỉ</h1>
+                <div>
+
+                    <span class="dash__link dash__link--black u-s-m-r-8">
+
+                        <a href="/ThongTinGH/Default">Đặt địa chỉ mặc định</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dash__box dash__box--shadow dash__box--bg-white dash__box--radius u-s-m-b-30">
+        <div class="dash__table-2-wrap gl-scroll">
+            <table class="dash__table-2">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên người nhận</th>
+                        <th>Số điện thoại</th>
+                        <th>Địa chỉ</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+
+                                <a class="address-book-edit btn--e-transparent-platinum-b-2" href="@Url.Action("EditThongTin","ThongTinGH",new{idThongTin = item.IdThongTinGH})">Edit</a>
+                                <a class="address-book-edit btn--e-transparent-platinum-b-2" href="javascript:void(0)" onclick="confirmDelete('@Url.Action("Delete","ThongTinGH",new{idThongTin = item.IdThongTinGH})')">Xoá</a>
+                            </td>
+                            <td>@item.TenNguoiNhan</td>
+                            <td>@item.SDT</td>
+                            <td>@item.DiaChi</td>
+                            @if (item.TrangThai==0)
+                            {
+                                <td>
+                                    <div class="gl-text" style="color:#ff4500;font-weight:600">Địa chỉ mặc định</div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div>
+
+        <a class="dash__custom-link btn--e-brand-b-2" href="/ThongTinGH/CreateThongTin">
+            <i class="fas fa-plus u-s-m-r-8"></i>
+
+            <span>Thêm địa chỉ mới</span>
+        </a>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function confirmDelete(deleteUrl) {
+            // Thực hiện Ajax request để kiểm tra trạng thái
+            $.ajax({
+                url: deleteUrl,
+                type: 'GET',
+                success: function (data) {
+                    if (data.status === 0) {
+                        Swal.fire({
+                            title: "Vui lòng chọn địa chỉ khác làm mặc định trước khi xoá!",
+                            icon: "warning",
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    } 
+                    else {
+                        window.location.href = "/ThongTinGH/ShowByIdUser";
+                    }
+                },
+                error: function () {
+                    // Xử lý lỗi nếu có
+                    alert('Có lỗi xảy ra');
+                }
+            });
+        }
+    </script>
+
+}

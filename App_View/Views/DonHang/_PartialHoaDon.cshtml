@@ -1,0 +1,223 @@
+﻿@model IEnumerable<App_Data.ViewModels.HoaDon.HoaDonTest>
+@if (!Model.Any())
+{
+    <img src="https://dacsanngon.com/extension/product/img/cart-empty.png" style="width: 100%; height: auto" />
+}
+@{
+    ViewData["Title"] = "_PartialHoaDon";
+}
+@foreach (var item in Model)
+{
+    <div class="m-order__get">
+        <div class="manage-o__header u-s-m-b-30">
+            <div class="dash-l-r">
+                <div>
+                    <div class="manage-o__text-2 u-c-secondary">Order #@item.MaHoaDon</div>
+                    <div class="manage-o__text u-c-silver">Ngày đặt: @item.NgayTao @* - Ngày giao dự kiến: @item.NgayGiaoDuKien *@</div>
+                </div>
+                @* <div>
+            <div class="dash__link dash__link--brand">
+
+            <a href="@Url.Action("DetailHoaDonOnline","HoaDon",new{idHoaDon = item.IdHoaDon})">MANAGE</a>
+            </div>
+            </div> *@
+                <div>
+                    <div class="dash__link dash__link--brand">
+                        @if (item.TrangThaiGiaoHang == 1)
+                        {
+                            if (item.LoaiThanhToan != "COD" && item.TrangThaiThanhToan == 0)
+                            {
+                                <span class="manage-o__badge badge--processing" style="width: max-content">Chờ thanh toán</span>
+                            }
+                            else
+                            {
+                                <span class="manage-o__badge badge--processing" style="width: max-content">Chờ xác nhận</span>
+                            }
+                        }
+                        @if (item.TrangThaiGiaoHang == 2)
+                        {
+                            <span class="manage-o__badge badge--processing" style="width: max-content">Chờ lấy hàng</span>
+                        }
+                        @if (item.TrangThaiGiaoHang == 3)
+                        {
+                            <span class="manage-o__badge badge--processing" style="width: max-content">Đang giao</span>
+                        }
+                        @if (item.TrangThaiGiaoHang == 4)
+                        {
+                            <span class="manage-o__badge badge--processing" style="width: max-content">Đã giao</span>
+                        }
+                        @if (item.TrangThaiGiaoHang == 5)
+                        {
+                            <span class="manage-o__badge badge--processing" style="background: red; color: white; width: max-content">Đã hủy</span>
+                        }
+                        @if (item.TrangThaiGiaoHang == 6)
+                        {
+                            <span class="manage-o__badge badge--processing" style="width: max-content">Trả hàng</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        @foreach (var sp in item.SanPham.Take(1))
+        {
+
+            <div class="manage-o__description" style="">
+                <!-- Hiển thị chỉ một sản phẩm -->
+                <div class="description__container">
+                    <div class="description__img-wrap">
+                        <img class="u-img-fluid" src="/AnhSanPham/@sp.LinkAnh[0]" alt="">
+                    </div>
+                    <div class="description-title" style="color:#7f7f7f">
+                        <span class="o-card__name">
+                            <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = sp.IdSanPhamChiTiet })">@sp.TenThuongHieu @sp.TenSanPham</a>
+                        </span>
+                        <span class="o-card__quantity">Size: @sp.TenKichCo Màu: @sp.TenMauSac</span>
+                        <span class="o-card__quantity">Số lượng x @sp.SoLuong</span>
+                    </div>
+                </div>
+                <div class="description__info-wrap">
+                    <div>
+                        <span class="manage-o__text-2 u-c-silver">
+                            <span class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", sp.TongTien)</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            @if (item.SanPham.Count > 1)
+            {
+                <!-- Dấu mũi tên xuống -->
+                <div class="arrow-down-btn" onclick="showHiddenProducts()"></div>
+            }
+
+            <!-- Danh sách sản phẩm ẩn -->
+            <div class="hidden-products">
+                @foreach (var hiddenSp in item.SanPham.Skip(1))
+                {
+                    <div class="manage-o__description" style="margin-top:10px;">
+                        <!-- Hiển thị sản phẩm ẩn -->
+                        <div class="description__container">
+                            <div class="description__img-wrap">
+                                <img class="u-img-fluid" src="/AnhSanPham/@hiddenSp.LinkAnh[0]" alt="">
+                            </div>
+                            <div class="description-title" style="color:#7f7f7f">
+                                <span class="o-card__name">
+
+                                    <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = hiddenSp.IdSanPhamChiTiet })">@hiddenSp.TenSanPham</a>
+                                </span>
+                                <span class="o-card__quantity">Size: @hiddenSp.TenKichCo Màu: @hiddenSp.TenMauSac</span>
+                                <span class="o-card__quantity">Số lượng x @hiddenSp.SoLuong</span>
+                            </div>
+                        </div>
+                        <div class="description__info-wrap">
+                            <div>
+                                <span class="manage-o__text-2 u-c-silver">
+                                    <span class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", hiddenSp.TongTien)</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            @if (item.SanPham.Count > 1)
+            {
+                <!-- Dấu mũi tên lên -->
+                <div class="arrow-up-btn" style="display:none;" onclick="hideHiddenProducts()"></div>
+            }
+
+        }
+        <div class="manage-o__description">
+            <div class="description__container">
+            </div>
+            <div class="description__info-wrap">
+                <div>
+                    <span class="manage-o__text-2 u-c-silver">
+                        <span class="manage-o__text-2 u-c-secondary">
+                            Tổng tiền: @string.Format("{0:N0}đ", item.TongGia)
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="manage-o__description" style="margin-top:15px">
+            <div class="description__container">
+                @if (item.LiDoHuy != null && item.TrangThaiGiaoHang == 5)
+                {
+                    <span class="manage-o__text-2 u-c-silver">
+                        <span class="manage-o__text-2 u-c-secondary">
+                            Đã huỷ bởi lí do: @item.LiDoHuy
+                        </span>
+                    </span>
+                }
+                @if (item.LoaiThanhToan != "COD" && item.TrangThaiThanhToan == 0 && item.TrangThaiGiaoHang != 5)
+                {
+                    <span class="manage-o__text-2 u-c-silver">
+                        <span class="manage-o__text-2 u-c-secondary">
+                            Vui lòng thanh toán đơn hàng
+                        </span>
+                    </span>
+                }
+            </div>
+            <div class="description__info-wrap">
+                <div>
+                    @if (item.TrangThaiGiaoHang == 1 || item.TrangThaiGiaoHang == 2)
+                    {
+                        if (item.LoaiThanhToan != "COD" && item.TrangThaiThanhToan == 0)
+                        {
+                            <a>
+                                <span class="btn btn--e-transparent-brand-b-2 order">Thanh toán</span>
+                            </a>
+                            <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
+                                <span class="btn btn--e-brand-b-2 order">
+                                    Chi tiết đơn hàng
+                                </span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
+                                <span class="btn btn--e-brand-b-2 order">
+                                    Chi tiết đơn hàng
+                                </span>
+                            </a>
+                        }
+                    }
+                    else if (item.TrangThaiGiaoHang == 5 || item.TrangThaiGiaoHang == 4)
+                    {
+                        <a href="@Url.Action("ReBuy","DonHang",new{idHoaDon = item.IdHoaDon})">
+                            <span class="btn btn--e-transparent-brand-b-2 order">Mua lại</span>
+                        </a>
+                        <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
+                            <span class="btn btn--e-brand-b-2 order">
+                                Chi tiết đơn hàng
+                            </span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("DetailHoaDonOnline","DonHang",new{idHoaDon = item.IdHoaDon})">
+                            <span class="btn btn--e-brand-b-2 order">
+                                Chi tiết đơn hàng
+                            </span>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!--====== End - Section 2 ======-->
+<script>
+    function showHiddenProducts() {
+        $('.hidden-products').css('display', 'block');
+        $('.arrow-down-btn').css('display', 'none');
+        $('.arrow-up-btn').css('display', 'block');
+    }
+    function hideHiddenProducts() {
+        $('.hidden-products').css('display', 'none');
+        $('.arrow-down-btn').css('display', 'block');
+        $('.arrow-up-btn').css('display', 'none');
+    }
+
+</script>
+
