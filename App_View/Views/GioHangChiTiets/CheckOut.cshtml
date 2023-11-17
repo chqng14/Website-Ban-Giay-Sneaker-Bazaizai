@@ -270,7 +270,17 @@
                                                                                         </div>
                                                                                         <div class="description-title">
                                                                                             <p>
-                                                                                                Giảm 100% phí ship
+                                                                                                Giảm
+                                                                                                @if (item.LoaiHinhUuDai == 1)
+                                                                                                {
+                                                                                                    <span> @item.MucUuDai %</span>
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    double? mucUuDai = item.MucUuDai;
+                                                                                                    @string.Format("{0:N0}đ", item.MucUuDai)
+                                                                                                    // Định dạng giá trị theo định dạng tiền Việt Nam
+                                                                                                }
                                                                                             </p>
                                                                                             <p width:40px>Đơn tối thiểu: @string.Format("{0:N0}đ", hiddenvc.DieuKien)</p>
                                                                                         </div>
@@ -667,7 +677,7 @@
                                 <h1 class="gl-modal-h1">Địa chỉ giao hàng</h1>
                             </div>
                         </div>
-                        <form class="checkout-modal2__form">
+                        <form class="checkout-modal2__form diachinguoidung">
                             <div class="dash__table-2-wrap u-s-m-b-30 gl-scroll">
                                 <table class="dash__table-2">
                                     <thead>
@@ -688,7 +698,7 @@
                                                     <!--====== Radio Box ======-->
                                                     <div class="radio-box">
 
-                                                        <input type="radio" id="address-1" name="default-address">
+                                                        <input type="radio" id="address-1">
                                                         <div class="radio-box__state radio-box__state--primary">
 
                                                             <label class="radio-box__label" for="address-1"></label>
@@ -757,7 +767,7 @@
         var selectedId = "";
         document.addEventListener("DOMContentLoaded", function () {
             var radioButtons = document.querySelectorAll('input[name="default-address"]');
-            var form = document.querySelector('.checkout-modal2__form');
+            var form = document.querySelector('.diachinguoidung');
             var thongtinElement = document.getElementById('thongtin');
             var editShipAddressModal = $('#edit-ship-address');
 
@@ -774,12 +784,11 @@
                 selectedAddress.checked = true;
                 selectedId = selectedAddress.id;
                 updateThongTin(selectedAddress);
-            // }
+             // }
 
             form.addEventListener('submit', function (event) {
                 event.preventDefault();
                 var selectedAddress = document.querySelector('input[name="default-address"]:checked');
-
                 if (selectedAddress) {
                     localStorage.setItem('selectedAddressId', selectedAddress.id);
                     selectedId = selectedAddress.id;
@@ -788,6 +797,8 @@
                     alert("Vui lòng chọn một địa chỉ trước khi lưu.");
                 }
             });
+
+            
 
             function updateThongTin(selectedAddress) {
                 var selectedRow = selectedAddress.closest('tr');
