@@ -1,0 +1,109 @@
+﻿@using App_Data.DbContextt;
+@using App_Data.ViewModels.VoucherNguoiDung;
+@model IEnumerable<App_Data.ViewModels.VoucherNguoiDung.VoucherNguoiDungDTO>
+
+@{
+    BazaizaiContext context = new BazaizaiContext();
+}
+<style>
+    .icon {
+        font-size: 25px;
+        color: #0F69F2;
+        cursor: pointer;
+    }
+</style>
+<!-- Modal -->
+<table id="data-table" class="table" style="text-align:center">
+    <thead>
+        <tr>
+            <th>
+                Mã vật lý
+            </th>
+            <th>
+                Mã QR
+            </th>
+            <th>
+                Tên voucher
+            </th>
+            <th>
+                Loại Hình
+            </th>
+            <th>
+                Điều kiện
+            </th>
+            <th>
+                Ngày bắt đầu
+            </th>
+            <th>
+                Ngày kết thúc
+            </th>
+            <th>
+                Trạng thái
+            </th>
+        </tr>
+
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.IdVouCherNguoiDung
+                </td>
+                <td>
+                    QR
+                </td>
+                <td>
+                  @item.TenVoucher
+                </td>
+                <td>
+                    @if (item.LoaiHinhUuDai == 0)
+                    {
+                        <span>Giảm giá theo tiền mặt</span>
+                    }
+                    @if (item.LoaiHinhUuDai == 1)
+                    {
+                        <span>Giảm giá %</span>
+                    }
+                </td>
+                <td>
+                    @string.Format("{0:N0}đ", item.DieuKien)
+                </td>
+              
+                <td>
+                    @item.NgayBatDau
+                </td>
+                <td>
+                    @item.NgayKetThuc
+                </td>
+                <td>
+                    @if (item.TrangThai == 0)
+                    {
+                        <span>Khả dụng</span>
+                    }
+                    else if (item.TrangThai == 1)
+                    {
+                        <span>Đã sửa dụng</span>
+                    }
+                    else if (item.TrangThai == 2)
+                    {
+                        <span>Hết hiệu lực</span>
+                    }
+                    else if (item.TrangThai == 3)
+                    {
+                        <span>Đã huỷ</span>
+                    }
+                    else if (item.TrangThai == 4)
+                    {
+                        <span>Chưa bắt đầu</span>
+                    }
+                </td>           
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $('#data-table').DataTable()   
+    });
+</script>
