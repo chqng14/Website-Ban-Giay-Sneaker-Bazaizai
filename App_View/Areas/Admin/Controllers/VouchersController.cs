@@ -284,7 +284,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             var IdAdmin = await _userManager.FindByEmailAsync("adminhehehe@gmail.com");
             var VoucherKhaDung = await _voucherSV.GetVoucherDTOById(idVoucher);
-            if (IdAdmin == null || soLuong <= 0|| VoucherKhaDung == null)
+            if (IdAdmin == null || soLuong <= 0 || VoucherKhaDung == null)
             {
                 return Ok(false);
             }
@@ -294,8 +294,12 @@ namespace App_View.Areas.Admin.Controllers
             }
             return Ok(false);
         }
-
         public async Task<IActionResult> ShowVoucherTaiQuayDaIn(int? trangThai)
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> FilterVoucherTaiQuayDaIn(int? trangThai)
         {
             var IdAdmin = await _userManager.FindByEmailAsync("adminhehehe@gmail.com");
             var voucherTaiQuay = (await _voucherND.GetAllVouCherNguoiDung()).Where(c => c.IdNguoiDung == IdAdmin.Id).ToList();
@@ -310,7 +314,11 @@ namespace App_View.Areas.Admin.Controllers
                 var lstVoucher = (await _voucherSV.GetAllVoucher()).FirstOrDefault(c => c.IdVoucher == item);
                 lstVoucherDaIn.Add(lstVoucher);
             }
-            return View(lstVoucherDaIn);
+            if (trangThai != null)
+            {
+                lstVoucherDaIn = lstVoucherDaIn.Where(c => c.TrangThai == trangThai).ToList();
+            }
+            return PartialView("_VoucherDaInTaiQuayPartial", lstVoucherDaIn);
         }
         [HttpPost]
         public async Task<IActionResult> FilterVoucherByStatusTaiQuayDaIn(int? trangThai)

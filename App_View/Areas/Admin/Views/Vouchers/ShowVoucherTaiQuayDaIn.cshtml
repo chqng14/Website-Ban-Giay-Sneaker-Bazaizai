@@ -1,103 +1,295 @@
 ﻿@model IEnumerable<App_Data.Models.Voucher>
 
 @{
-    ViewData["Title"] = "ShowVoucherTaiQuayDaIn";
-    ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+<style>
+    .checkbox_css {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
 
-<h1>ShowVoucherTaiQuayDaIn</h1>
+    .voucher-checkbox {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table id="data-table" class="table" style="text-align:center">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdVoucher)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaVoucher)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TenVoucher)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DieuKien)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LoaiHinhUuDai)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SoLuong)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MucUuDai)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayTao)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayBatDau)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayKetThuc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TrangThai)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdVoucher)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaVoucher)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TenVoucher)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DieuKien)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LoaiHinhUuDai)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SoLuong)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MucUuDai)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayTao)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayBatDau)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayKetThuc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TrangThai)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    .radio_check input[type="radio"] {
+        margin-left: 10px;
+        cursor: pointer;
+    }
+
+    .tabs {
+        display: flex;
+        border: 1px solid #ccc;
+        overflow: hidden;
+        background-color: white;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        width: 600px;
+        margin-top: 50px;
+    }
+
+    .tab-item {
+        flex: 1;
+        font-size: 14px;
+        text-align: center;
+        padding: 10px 0;
+        cursor: pointer;
+        color: #333333;
+        transition: background-color 0.3s;
+    }
+
+        .tab-item.active {
+            background-color: #3F87F5;
+            color: #fff;
+        }
+
+    .d-md-flex {
+        display: flex !important;
+        margin-bottom: -15px;
+    }
+
+</style>
+<header>
+    <div class="page-header">
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản trị</a>
+                <a class="breadcrumb-item" asp-action="ShowVoucherTaiQuay" asp-controller="Vouchers">Danh sách voucher tại quầy</a>
+                <a class="breadcrumb-item" asp-action="ShowVoucherTaiQuayDaIn" asp-controller="Vouchers">Voucher đã in</a>
+            </nav>
+        </div>
+    </div>
+</header>
+<div class="card-body" style="background-color:#F5F7F8">
+    <h1 style="text-align:center">Danh sách voucher tại quầy</h1>
+    <div class="d-md-flex">
+        <div class="row w-100 m-b-30">
+            <div class="col-lg-5">
+                <form asp-action="ShowVoucherTaiQuayDaIn" method="post">
+                    <div class="d-md-flex">
+                        <div class="m-b-10">
+                            <div class="tabs">
+                                <div class="tab-item" id="tab1" name="trangThai">Tất cả</div>
+                                <div class="tab-item active" id="tab2" name="trangThai" data-value="6">Hoạt động</div>
+                                <div class="tab-item" id="tab3" name="trangThai" data-value="7">Không hoạt động</div>
+                                <div class="tab-item" id="tab4" name="trangThai" data-value="8">Chưa hoạt động</div>
+                                <div class="tab-item" id="tab5" name="trangThai" data-value="9">Đã huỷ</div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="partialContainer">
+        <!-- Nội dung PartialView sẽ được hiển thị ở đây -->
+    </div>
+    @* //Huỷ voucher đã chọn *@
+    <button class="btn btn-warning mr-2" data-toggle="modal" data-target="#cancel" style="color:white">Huỷ hoạt động của voucher đã chọn</button>
+    <div class="modal fade" id="cancel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #3f87f5;">
+                    <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="background: white;">
+                    <span id="thongBao">Bạn có huỷ voucher đã chọn không ?</span>
+                </div>
+                <div class="modal-footer" style="background: white">
+
+                    <button class="btn btn-primary bd-0 col-md-6" id="delete-button">Xác nhận</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* //Khôi phục voucher đã chọn *@
+    <button class="btn btn-success mr-2" data-toggle="modal" data-target="#restore">Khôi phục voucher đã chọn</button>
+    <div class="modal fade" id="restore">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background: #3f87f5;">
+                    <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="background: white;">
+                    <span id="thongBao">Bạn có khôi phục đã chọn không ?</span>
+                </div>
+                <div class="modal-footer" style="background: white">
+
+                    <button class="btn btn-primary bd-0 col-md-6" id="restore-button">Xác nhận</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
-    $(document).ready(function () {
-        $('#data-table').DataTable()
+    // Hàm để load danh sách Voucher mặc định khi trang web được load
+    function loadDefaultVoucher() {
+        var trangThai = $('#tab1').data('value'); // Lấy giá trị mặc định từ tab "Hoạt động"
 
+        $.ajax({
+            url: '@Url.Action("FilterVoucherTaiQuayDaIn", "Vouchers")',
+            type: 'POST',
+            data: { trangThai: trangThai },
+            success: function (result) {
+                $('#partialContainer').html(result);
+            }
+        });
+    }
+
+    // Gọi hàm khi trang web được load
+    $(document).ready(function () {
+        loadDefaultVoucher();
     });
+    // Hàm để gọi Ajax và chuyển về controller để huỷ hoạt động voucher
+    function huyHoatDongVoucher(selectedIds) {
+        // Thực hiện Ajax request để chuyển selectedIds về controller
+        $.ajax({
+            url: '/Admin/Vouchers/DeleteVoucherWithListTaiQuay', // Thay 'ControllerName' bằng tên thực tế của controller
+            type: 'POST', // Hoặc 'GET' tùy thuộc vào yêu cầu của bạn
+            data: { voucherIds: selectedIds },
+            success: function (response) {
+                if (response === true) {
+                    // Nếu xóa thành công, hiển thị thông báo thành công và reload trang
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Huỷ hoạt động voucher thành công!',
+                        icon: 'success'
+                    }).then((result) => {
+                        if (result.isConfirmed || result.isDismissed) {
+                            location.reload(); // Reload trang khi ấn OK
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Huỷ hoạt động voucher thất bại!',
+                        icon: 'error'
+                    }).then((result) => {
+                        if (result.isConfirmed || result.isDismissed) {
+                            location.reload(); // Reload trang khi ấn OK
+                        }
+                    });
+                }
+                $('#cancel').modal('toggle');
+            },
+            error: function (error) {
+                // Xử lý lỗi khi request gặp vấn đề
+                Swal.fire({
+                    title: 'Thông báo!',
+                    text: 'Huỷ hoạt động voucher thất bại!',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed || result.isDismissed) {
+                        location.reload(); // Reload trang khi ấn OK
+                    }
+                });
+                $('#cancel').modal('toggle');
+            }
+        });
+    }
+
+    function KhoiPhucVoucher(selectedIds) {
+        // Thực hiện Ajax request để chuyển selectedIds về controller
+        $.ajax({
+            url: '/Admin/Vouchers/RestoreVoucherWithListTaiQuay', // Thay 'ControllerName' bằng tên thực tế của controller
+            type: 'POST', // Hoặc 'GET' tùy thuộc vào yêu cầu của bạn
+            data: { voucherIds: selectedIds },
+            success: function (response) {
+                if (response === true) {
+                    // Nếu xóa thành công, hiển thị thông báo thành công và reload trang
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Khôi phục động voucher thành công!',
+                        icon: 'success'
+                    }).then((result) => {
+                        if (result.isConfirmed || result.isDismissed) {
+                            location.reload(); // Reload trang khi ấn OK
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Khôi phục hoạt động voucher thất bại!',
+                        icon: 'error'
+                    }).then((result) => {
+                        if (result.isConfirmed || result.isDismissed) {
+                            location.reload(); // Reload trang khi ấn OK
+                        }
+                    });
+                }
+                $('#restore').modal('toggle');
+            },
+            error: function (error) {
+                Swal.fire({
+                    title: 'Thông báo!',
+                    text: 'Khôi phục hoạt động voucher thất bại!',
+                    icon: 'error'
+                }).then((result) => {
+                    if (result.isConfirmed || result.isDismissed) {
+                        location.reload(); // Reload trang khi ấn OK
+                    }
+                });
+                $('#restore').modal('hide');
+            }
+        });
+    }
+
+    var tabs = document.querySelectorAll('.tab-item');
+
+    // Gán sự kiện click cho mỗi tab
+    tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            // Xóa class 'active' từ tất cả các tab
+            tabs.forEach(function (innerTab) {
+                innerTab.classList.remove('active');
+            });
+
+            // Thêm class 'active' cho tab được click
+            tab.classList.add('active');
+        });
+    });
+    $('.tab-item').click(function () {
+        var trangThai = $(this).data('value');
+
+        $.ajax({
+            url: '@Url.Action("FilterVoucherTaiQuayDaIn", "Vouchers")',
+            type: 'POST',
+            data: { trangThai: trangThai },
+            success: function (result) {
+                $('#partialContainer').html(result);
+            }
+        });
+    });
+
 </script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+}
