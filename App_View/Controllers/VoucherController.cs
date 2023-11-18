@@ -65,6 +65,21 @@ namespace App_View.Controllers
             return Json(new { mucuidai, IdVoucher, loaiuudai });
         }
 
+        public async Task<IActionResult> GetVoucherById(string idVoucher)
+        {
+            var Voucher = await _voucherSV.GetVoucherDTOById(idVoucher);
+            double mucuidai = 0;
+            string IdVoucher = "";
+            int loaiuudai = 0;
+            if (Voucher != null)
+            {
+                mucuidai = (double)Voucher.MucUuDai;
+                IdVoucher = Voucher.IdVoucher;
+                loaiuudai = (int)Voucher.LoaiHinhUuDai;
+            }
+            return Json(new { mucuidai, IdVoucher, loaiuudai });
+        }
+
         public async Task<IActionResult> UpdateVoucherAfterUseIt(string idVoucher)
         {
             if (await _voucherSV.UpdateVoucherAfterUseIt(idVoucher))

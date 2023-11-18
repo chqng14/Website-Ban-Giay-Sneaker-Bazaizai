@@ -1,10 +1,7 @@
-﻿@using App_Data.DbContextt;
-@model IEnumerable<App_Data.Models.Voucher>
+﻿@model IEnumerable<App_Data.Models.Voucher>
 
 @{
-    ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
-    BazaizaiContext context = new BazaizaiContext();
 }
 <style>
     .checkbox_css {
@@ -56,13 +53,13 @@
     }
 
 </style>
-
 <header>
     <div class="page-header">
         <div class="header-sub-title">
             <nav class="breadcrumb breadcrumb-dash">
                 <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản trị</a>
                 <a class="breadcrumb-item" asp-action="ShowVoucherTaiQuay" asp-controller="Vouchers">Danh sách voucher tại quầy</a>
+                <a class="breadcrumb-item" asp-action="ShowVoucherTaiQuayDaIn" asp-controller="Vouchers">Voucher đã in</a>
             </nav>
         </div>
     </div>
@@ -72,7 +69,7 @@
     <div class="d-md-flex">
         <div class="row w-100 m-b-30">
             <div class="col-lg-5">
-                <form asp-action="ShowVoucherTaiQuay" method="post">
+                <form asp-action="ShowVoucherTaiQuayDaIn" method="post">
                     <div class="d-md-flex">
                         <div class="m-b-10">
                             <div class="tabs">
@@ -86,18 +83,12 @@
                     </div>
                 </form>
             </div>
-            <div class="col-lg-7 text-right" style="margin-top:50px">
-                <a class="btn btn-secondary mr-2" asp-action="ShowVoucherTaiQuayDaIn">Voucher Đã In</a>
-                <a class="btn btn-primary" asp-action="CreateTaiQuay"><i class="anticon anticon-plus-circle"></i> Tạo mới</a>
-            </div>
         </div>
     </div>
 
     <div id="partialContainer">
         <!-- Nội dung PartialView sẽ được hiển thị ở đây -->
     </div>
-
-
     @* //Huỷ voucher đã chọn *@
     <button class="btn btn-warning mr-2" data-toggle="modal" data-target="#cancel" style="color:white">Huỷ hoạt động của voucher đã chọn</button>
     <div class="modal fade" id="cancel">
@@ -147,10 +138,10 @@
 <script>
     // Hàm để load danh sách Voucher mặc định khi trang web được load
     function loadDefaultVoucher() {
-        var trangThai = $('#tab2').data('value'); // Lấy giá trị mặc định từ tab "Hoạt động"
+        var trangThai = $('#tab1').data('value'); // Lấy giá trị mặc định từ tab "Hoạt động"
 
         $.ajax({
-            url: '@Url.Action("FilterVoucherByStatusTaiQuay", "Vouchers")',
+            url: '@Url.Action("FilterVoucherTaiQuayDaIn", "Vouchers")',
             type: 'POST',
             data: { trangThai: trangThai },
             success: function (result) {
@@ -275,7 +266,7 @@
         var trangThai = $(this).data('value');
 
         $.ajax({
-            url: '@Url.Action("FilterVoucherByStatusTaiQuay", "Vouchers")',
+            url: '@Url.Action("FilterVoucherTaiQuayDaIn", "Vouchers")',
             type: 'POST',
             data: { trangThai: trangThai },
             success: function (result) {

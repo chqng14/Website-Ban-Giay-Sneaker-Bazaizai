@@ -139,6 +139,7 @@ using (var scope = app.Services.CreateScope())
         var roleManager = services.GetRequiredService<RoleManager<ChucVu>>();
         await ContextdDefault.SeedRolesAsync(userManager, roleManager);
         await ContextdDefault.SeeAdminAsync(userManager, roleManager);
+        await ContextdDefault.PhuongThucThanhToan();
 
     }
     catch (Exception ex)
@@ -182,6 +183,10 @@ Task.Run(() =>
         capNhatTime.CapNhatVoucherHetHanOnline();
         capNhatTime.CapNhatVoucherDenHanOnline();
         capNhatTime.CapNhatVoucherNguoiDungOnline();
+        capNhatTime.CapNhatVoucherHetHanTaiQuay();
+        capNhatTime.CapNhatVoucherDenHanTaiQuay();
+        capNhatTime.CapNhatVoucherNguoiDungTaiQuay();
+        capNhatTime.CapNhatVoucherNguoiDungTaiQuayKhiVoucherHoatDong();
         Thread.Sleep(TimeSpan.FromSeconds(5));
     }
 });

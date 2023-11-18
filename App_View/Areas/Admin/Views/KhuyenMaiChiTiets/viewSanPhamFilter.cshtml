@@ -1,0 +1,99 @@
+﻿@using App_Data.DbContextt;
+@using App_View.Models.ViewModels;
+@using static App_Data.Repositories.TrangThai;
+@model IEnumerable<SanPhamSaleViewModel>
+
+<table id="data-table" class="table" style="text-align:center">
+
+        <thead>
+            <tr>
+                <th>
+                    <input type="checkbox" id="select-all-checkbox" />
+                </th>
+                <th>
+                    Ảnh
+                </th>
+                <th>
+                    Tên sản phẩm
+                </th>
+                <th>
+                    Kích cỡ
+                </th>
+                <th>
+                    Loại giày
+                </th>
+                <th>
+                    Dây
+                </th>
+                <th>
+                    Chất liệu
+                </th>
+                <th>
+                    Kiểu đế giày
+                </th>
+                <th>
+                    Số lượng tồn
+                </th>
+                <th>
+                    Giá bán
+                </th>
+                <th>
+                    Giá nhập
+                </th>
+                <th>
+                    Trạng thái
+                </th>
+
+
+                <th></th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                BazaizaiContext bazaizaiContext = new BazaizaiContext();
+                var spct = bazaizaiContext.sanPhamChiTiets.Find(product.SanPhamDanhSachView.IdChiTietSp);
+                <tr>
+                    <td class="sorting_1">
+
+                        <input type="checkbox" class="voucher-checkbox" name="selectedProducts" value="@product.SanPhamDanhSachView.IdChiTietSp" />
+
+                    </td>
+                    <td><img src="/AnhSanPham/@product.SanPhamDanhSachView.Anh" style="height: 80px; width: auto" /></td>
+                    <td>@product.SanPhamDanhSachView.SanPham</td>
+                    <td>@product.SanPhamDanhSachView.KichCo</td>
+                    <td>@product.SanPhamDanhSachView.LoaiGiay</td>
+                    <td>@product.SanPhamDanhSachView.Day</td>
+                    <td>@product.SanPhamDanhSachView.ChatLieu</td>
+                    <td>@product.SanPhamDanhSachView.KieuDeGiay</td>
+                    <td>@product.SanPhamDanhSachView.SoLuongTon</td>
+                    <td>@product.SanPhamDanhSachView.GiaBan</td>
+                    <td>@product.SanPhamDanhSachView.GiaNhap</td>
+                    <td>
+                        @if (product.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale)
+                        {
+                            <div class="trangThai">
+                                <div class="d-flex align-items-center">
+                                    <div class="badge badge-success badge-dot m-r-10"></div>
+                                    <div>Được áp dụng</div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="trangThai">
+                                <div class="d-flex align-items-center">
+                                    <div class="badge badge-success badge-dot m-r-10"></div>
+                                    <div>Đã áp dụng</div>
+                                </div>
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+
+

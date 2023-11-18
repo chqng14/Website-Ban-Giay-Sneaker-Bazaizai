@@ -76,8 +76,16 @@
                                             </div>
                                         </td>
                                         <td>
-
-                                            <span class="table-p__price">@string.Format("{0:N0}đ", item.GiaBan)</span>
+                                            <span class="table-p__price">
+                                                @if (item.GiaBan != item.GiaGoc)
+                                                {
+                                                    <del style="color:gray"> @string.Format("{0:N0}đ", item.GiaGoc)</del>  @string.Format("{0:N0}đ", item.GiaBan)
+                                                }
+                                                else
+                                                {
+                                                    @string.Format("{0:N0}đ", item.GiaBan)
+                                                }
+                                            </span>
                                         </td>
                                         <td>
                                             <div class="table-p__input-counter-wrap">
