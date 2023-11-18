@@ -75,31 +75,61 @@
                         </div>
                         </div>
                         </div> *@
-                        <div class="msg">
 
+
+                        <div class="msg">
                             <span class="msg__text">
                                 Bạn có Voucher?
-
-                                <a class="gl-link" href="#have-coupon" data-toggle="collapse">Ấn vào đây để sử dụng Voucher</a>
+                                <a class="gl-link" data-modal="modal" data-modal-id="#voucher-modal" @* href="#have-coupon" *@ data-toggle="collapse">Ấn vào đây để sử dụng Voucher</a>
                             </span>
-                            <div class="collapse" id="have-coupon" data-parent="#checkout-msg-group">
-                                <div class="c-f u-s-m-b-16">
+                            @* <div class="collapse" id="have-coupon" data-parent="#checkout-msg-group">
+                            <div class="c-f u-s-m-b-16">
 
-                                    <form class="c-f__form" asp-action="GetVoucherByMa" asp-controller="Voucher">
-                                        <div class="u-s-m-b-16">
-                                            <div class="u-s-m-b-15">
+                            <form class="c-f__form" asp-action="GetVoucherByMa" asp-controller="Voucher">
+                            <div class="u-s-m-b-16">
+                            <div class="u-s-m-b-15">
 
-                                                <label for="coupon"></label>
+                            <label for="coupon"></label>
 
-                                                <input class="input-text input-text--primary-style" type="text" id="voucherinput" placeholder="Nhập phiếu giảm giá của bạn ở đây" name="voucher">
-                                                <label id="textvoucher" style="color:red"></label>
-                                            </div>
-                                            <div class="u-s-m-b-15">
+                            <input class="input-text input-text--primary-style" type="text" id="voucherinput" placeholder="Nhập phiếu giảm giá của bạn ở đây" name="voucher">
+                            <label id="textvoucher" style="color:red"></label>
+                            </div>
+                            </div>
+                            </form>
+                            </div>
+                            </div> *@
+                            <div class="modal fade" id="voucher-modal">
+                                <div class="modal-dialog modal-dialog-centered justify-content-center" style="min-width:550px">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="checkout-modal2">
+                                                <div class="u-s-m-b-30">
+                                                    <div class="dash-l-r">
+                                                        <h1 class="gl-modal-h1">Chọn Voucher</h1>
+                                                    </div>
+                                                </div>
+                                                <div class="c-f u-s-m-b-16">
 
-                                                @* <button class="btn btn--e-transparent-brand-b-2" type="button" id="button-coupon" onclick="applyVoucher()">SỬ DỤNG</button> *@
+                                                    <form class="c-f__form" asp-action="GetVoucherByMa" asp-controller="Voucher">
+                                                        <div class="u-s-m-b-16">
+                                                            <div class="u-s-m-b-15">
+
+                                                                <label for="coupon"></label>
+
+                                                                <input class="input-text input-text--primary-style" type="text" id="voucherinput" placeholder="Nhập phiếu giảm giá của bạn ở đây" name="voucher" style="width:200%">
+                                                                <label id="textvoucher" style="color:red"></label>
+                                                            </div>
+                                                            <div class="u-s-m-b-15">
+
+                                                                <button class="btn btn--e-transparent-brand-b-2" type="button" id="button-coupon">SỬ DỤNG</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
-                                    </form>
+                                        <button class="btn dismiss-button fas fa-times" type="button" data-dismiss="modal"></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -531,10 +561,10 @@
     <!--====== Tính phí ship và voucher ======-->
     <script>
         //khi ô input đc thay đổi
-        $('#voucherinput').on('change', function () {
-            MucUuDai = "";
-            voucher(this.value);
-        });
+        // $('#voucherinput').on('change', function () {
+        //     MucUuDai = "";
+        //     voucher(this.value);
+        // });
         //khi ấn enter
         $('#voucherinput').on('keydown', function (e) {
             if (e.key === 'Enter') {
@@ -686,6 +716,13 @@
         // }
 
         // Hàm xử lý voucher
+        $(document).ready(function () {
+            $('#button-coupon').click(function () {
+                var voucherValue = $('#voucherinput').val(); 
+                voucher(voucherValue);
+            });
+        });
+
         var IdVoucher = "";
         function voucher(value) {
             if (value != null && value.trim() != "") {
@@ -706,6 +743,11 @@
                                 timer: 1500
                             });
                         } else {
+                            toast({
+                                title: "Áp dụng thành công!",
+                                type: "success",
+                                duration: 2000
+                            });
                             MucUuDai = result.mucuidai;
                             IdVoucher = result.idVoucher;
                             $('input[name="IdVoucher"]').val(IdVoucher);

@@ -19,7 +19,7 @@
     </script>
 }
 <link href="~/css/checkout.css" rel="stylesheet" />
-
+@* <link href="~/css/truck.css" rel="stylesheet" /> *@
 <div class="u-s-p-b-60" style="margin-top:20px">
 
     <!--====== Section Content ======-->
@@ -758,6 +758,7 @@
     <!--====== End - Shipping Address Add Modal ======-->
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+@* <script src="~/js/truck.js"></script> *@
 @section Scripts{
     <!--====== lấy địa chỉ từ modal địa chỉ ======-->
     <script>
@@ -1327,6 +1328,11 @@
                                 duration: 2000
                             });
                         } else {
+                            toast({
+                                title: "Áp dụng thành công!",
+                                type: "success",
+                                duration: 2000
+                            });
                             MucUuDai = result.mucuidai;
                             IdVoucher = result.idVoucher;
                             $('input[name="IdVoucher"]').val(IdVoucher);
@@ -1459,13 +1465,21 @@
             return false;
         }
 
+        function showLoadingOverlay() {
+            $('<span class="loader"></span>').appendTo('#placeOrderButton');
+        }
+
+        function hideLoadingOverlay() {
+            $('.loader').remove();
+        }
+
         $(document).ready(function () {
             $('#placeOrderButton').click(function (e) {
                 e.preventDefault();
                 if (kiemTraTuyChon()) {
                     return;
-                }
-                $('#placeOrderButton').prop('disabled', true);
+                } 
+                // showLoadingOverlay();
                 if ($('input[name="Payment"]:checked').length === 0) {
                     toast({
                         title: "Vui lòng chọn phương thức thanh toán!",
@@ -1474,6 +1488,7 @@
                     });
                     return;
                 }
+                $('#placeOrderButton').prop('disabled', true);
                 var selectedCity, selectedDistrict, selectedWard, inputAddressBill, DiaChiFull;
 
                 if ($('#DefaultDropdown').is(':visible')) {
@@ -1509,6 +1524,10 @@
                                 if (paymentResponse.url != null) {
                                     window.location.href = paymentResponse.url;
                                 }else{
+                                    // $('.loader').on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function () {
+                                    //     hideLoadingOverlay(); // Ẩn hiệu ứng loading trước khi chuyển trang
+                                    //     window.location.href = "/HoaDon/Order?idHoaDon=" + paymentResponse.idHoaDon;
+                                    // });
                                     window.location.href = "/HoaDon/Order?idHoaDon=" + paymentResponse.idHoaDon;
                                 }
                             }else{
