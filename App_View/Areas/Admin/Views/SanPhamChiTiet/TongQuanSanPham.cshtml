@@ -32,20 +32,20 @@
     <div class="header-sub-title">
         <nav class="breadcrumb breadcrumb-dash">
             <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>QUẢN LÝ SẢN PHẨM</a>
-            <a class="breadcrumb-item" href="#">DANH SÁCH SẢN PHẨM</a>
+            <a class="breadcrumb-item" href="#">DANH SÁCH TỔNG QUAN SẢN PHẨM</a>
         </nav>
     </div>
 </div>
 
 <div class="card">
-    <div class="tabs">
+    @*<div class="tabs">
         <div class="tab-item active" id="tab1" data-value="dssanpham">Sản phẩm</div>
         <div class="tab-item" id="tab2" data-value="1">Top SP bán chạy</div>
         <div class="tab-item" id="tab3" data-value="2">Top SP bán chạy/Tháng</div>
         <div class="tab-item" id="tab4" data-value="3">Top SP yêu thích</div>
         <div class="tab-item" id="tab4" data-value="4">SP tồn đọng</div>
         <div class="tab-item" id="tab4" data-value="5">SP Sale</div>
-    </div>
+    </div>*@
 
     <div class="m-order__list active" id="content1">
     </div>
@@ -88,7 +88,7 @@
         });
     });
 
-    $(() => {
+    function GetDanhDachTongQuan() {
         $.ajax({
             url: '/Admin/SanPhamChiTiet/DanhSachTongQuanSanPham',
             type: 'GET',
@@ -102,9 +102,62 @@
                 console.log(xhr);
             }
         });
+    }
 
+    function thayDoiBodyDSSanPham() {
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
+            type: 'GET',
+            data: {
+                "sumGuid": keyProduct
+            },
+            success: function (result) {
+                $('#modal-dssanpham').empty().html(result);
+                $('#exampleModal').modal('show');
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    }
 
+    $(() => {
+        GetDanhDachTongQuan()
     })
+
+    $(document).off('click', '#btn-coppy');
+
+    $(document).on('click', '#btn-coppy', function () {
+        var id = $(this).closest('#form-getID').find('[name="IdChiTietSp"]').val();
+
+        var data = {
+            IdSanPhamChiTiet: id,
+        };
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/GetPartialViewSanPhamCopy',
+            type: 'Get',
+            data: data,
+            success: function (result) {
+                $('#modal-SanPham').fadeOut(30, function () {
+                    $(this).empty().html(result).css('opacity', 0);
+
+                    $(this).fadeIn(20, function () {
+                        $(this).css('opacity', 1);
+                    });
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    })
+
 </script>
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -112,4 +165,7 @@
     <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
     <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
     <script src="~/Admin/js/pages/datatables.js" defer></script>
+    <script src="~/Admin/vendors/select2/select2.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.8.1/autoNumeric.min.js"></script>
 }

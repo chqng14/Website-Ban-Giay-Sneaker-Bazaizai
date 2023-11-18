@@ -258,7 +258,7 @@
 
                                             <span class="input-counter__minus fas fa-minus"></span>
 
-                                            <input class="input-counter__text input-counter--text-primary-style" type="text" value="1" name="SoLuong" data-min="1" data-max="1000">
+                                            <input class="input-counter__text input-counter--text-primary-style" type="number" max="@Model.SoLuongTon" value="1" name="SoLuong" data-min="1" data-max="@Model.SoLuongTon">
 
                                             <span class="input-counter__plus fas fa-plus"></span>
                                         </div>
@@ -266,8 +266,14 @@
                                     </div>
                                     <input value="@Model.IdChiTietSp" name="IdSanPhamCT" hidden />
                                     <div class="u-s-m-b-15">
-
-                                        <button data-modal="modal" data-modal-id="#add-to-cart" class="btn btn--e-brand-b-2">Thêm vào giỏ hàng</button>
+                                        @if (Model.SoLuongTon > 0)
+                                        {
+                                            <button data-modal="modal" data-modal-id="#add-to-cart" class="btn btn--e-brand-b-2">Thêm vào giỏ hàng</button>
+                                        }
+                                        else
+                                        {
+                                            <button data-modal="modal" data-modal-id="#add-to-cart" class="btn btn--e-brand-b-2" style="background: red" disabled>Đã hết hàng!</button>
+                                        }
                                     </div>
                                 </div>
                             </div>
@@ -363,7 +369,7 @@
     <!--====== End - Product Detail Tab ======-->
     <div class="u-s-p-b-90">
 
-        <!--====== Section Intro ======-->
+        @*====== Section Intro ======*@
         <div class="section__intro u-s-m-b-46">
             <div class="container">
                 <div class="row">
@@ -377,8 +383,8 @@
                 </div>
             </div>
         </div>
-        <!--====== End - Section Intro ======-->
-        <!--====== Section Content ======-->
+        @*====== End - Section Intro ======
+        ====== Section Content ======*@
         <div class="section__content">
             <div class="container">
                 <div class="slider-fouc">
@@ -793,45 +799,6 @@
             },
             success: function (result) {
                 window.location.href = "/SanPhamChiTiets/Details/" + result.idChiTietSp
-                //var containerSize = $('.pd-detail__size');
-                //containerSize.empty();
-                //Array.from(result.lstKichThuoc).forEach(item => {
-                //    if (result.size == item) {
-                //        console.log(result.size);
-                //        console.log(item);
-                //        containerSize.append(`
-                //            <div class="size__radio">
-                //                <input type="radio" id="${item}" name="size" checked>
-                //                <label class="size__radio-label" for="${item}">${item}</label>
-                //            </div>
-                //        `)
-                //    } else {
-                //        containerSize.append(`
-                //            <div class="size__radio">
-                //                <input type="radio" id="${item}" name="size">
-                //                <label class="size__radio-label" for="${item}">${item}</label>y
-                //            </div>
-                //        `)
-                //    }
-
-                //})
-                //var containerAnh = $('#pd-o-thumbnail').find('.slick-track')
-                //var containerAnhInitiate = $('#pd-o-initiate')..find('.slick-track')
-                //containerAnh.empty()
-                //containerAnhInitiate.empty()
-                //Array.from(result.danhSachAnh).forEach(item => {
-                //    containerAnh.append(`
-                //    <div>
-                //        <img class="u-img-fluid" src="/AnhSanPham/${item}" alt="" style="height: 84px">
-                //    </div>
-                //    `)
-                //    containerAnhInitiate.append(`
-                //    <div class="pd-o-img-wrap" data-src="/AnhSanPham/${item}">
-                //        <img class="u-img-fluid" src="/AnhSanPham/${item}" data-zoom-image="/AnhSanPham/${item}" alt="">
-                //    </div>
-                //    `)
-                //})
-
             },
             error: function (xhr, status, error) {
                 console.log(xhr.responseText);

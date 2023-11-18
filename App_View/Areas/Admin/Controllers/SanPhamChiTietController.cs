@@ -810,6 +810,19 @@ namespace App_View.Areas.Admin.Controllers
             public double TongSoLuongDaBan { get; set; }
         }
 
+
+        public class SanPhamListDTO
+        {
+           public List<SanPhamTableDTO>? SanPhamTablesDTOs { get; set; }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateLstSanPhamTable([FromBody] SanPhamListDTO sanPhamListDTO)
+        {
+            var response = await _httpClient.PutAsJsonAsync("/api/SanPhamChiTiet/Update-List-SanPhamTable", sanPhamListDTO.SanPhamTablesDTOs);
+            return Ok(await response.Content.ReadAsAsync<bool>());
+        }
+
         public IActionResult GetRelatedProducts(string sumGuid)
         {
             var listGuid = sumGuid.Split('/');
@@ -839,8 +852,9 @@ namespace App_View.Areas.Admin.Controllers
                 SelectMany(gr => gr).
                 Select(sp => new RelatedProductViewModel()
                 {
-                    IdSanPham = sp.IdSanPham,
+                    IdSanPham = sp.IdChiTietSp,
                     MaSanPham = sp.Ma,
+                    GiaNhap = sp.GiaNhap.GetValueOrDefault(),
                     Anh = sp.Anh.OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
                     MauSac = sp.MauSac.TenMauSac,
                     GiaBan = sp.GiaBan.GetValueOrDefault(),
@@ -848,11 +862,8 @@ namespace App_View.Areas.Admin.Controllers
                     SanPham = sp.SanPham.TenSanPham,
                     SoLuong = sp.SoLuongTon.GetValueOrDefault(),
                     SoLuongDaBan = sp.SoLuongDaBan.GetValueOrDefault(),
-                    TGBanGanDay = !_bazaizaiContext
-                    .hoaDonChiTiets
-                    .Include(it=>it.HoaDon)
-                    .Where(hdct => hdct.IdSanPhamChiTiet == sp.IdChiTietSp && hdct.HoaDon!.TrangThaiGiaoHang == 3)
-                    .Any()?"Chưa bán lần nào kể từ lúc tạo" : "NaN"
+                    KhoiLuong = sp.KhoiLuong.GetValueOrDefault(),
+                    TrangThai = sp.TrangThai.GetValueOrDefault()
                 })
                 .ToList();
             return PartialView(lstRelatedProducts);
@@ -860,7 +871,7 @@ namespace App_View.Areas.Admin.Controllers
 
         public async Task<IActionResult> GetTongQuanDanhSach(int draw, int start, int length, string searchValue)
         {
-            var danhSanSanPham = await _bazaizaiContext
+            var query = await _bazaizaiContext
                 .sanPhamChiTiets
                 .Include(sp => sp.SanPham)
                 .Include(sp => sp.ThuongHieu)
@@ -893,12 +904,28 @@ namespace App_View.Areas.Admin.Controllers
                 })
                 .ToListAsync();
 
-            var query = (danhSanSanPham)
+            var totalRecords = (query).Count;
+
+            if (!string.IsNullOrEmpty(searchValue))
+            {
+                string searchValueLower = searchValue.ToLower();
+                query = query.Where(x =>
+                x.SanPham!.ToLower().Contains(searchValueLower) ||
+                x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
+                x.ChatLieu!.ToLower().Contains(searchValueLower) ||
+                x.KieuDeGiay!.ToLower().Contains(searchValueLower)
+                )
                 .Skip(start)
                 .Take(length)
                 .ToList();
-
-            var totalRecords = (danhSanSanPham).Count;
+            }
+            else
+            {
+                query = (query)
+               .Skip(start)
+               .Take(length)
+               .ToList();
+            }
 
             return Json(new
             {
@@ -908,5 +935,6 @@ namespace App_View.Areas.Admin.Controllers
                 data = query
             });
         }
+
     }
 }
