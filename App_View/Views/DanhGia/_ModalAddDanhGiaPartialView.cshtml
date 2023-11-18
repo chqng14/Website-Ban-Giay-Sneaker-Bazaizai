@@ -1,0 +1,291 @@
+﻿@model App_Data.Models.DanhGia
+
+@{
+    ViewData["Title"] = "CreateDanhGia";
+}
+@*<h1>CreateDanhGia</h1>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>DanhGia</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdDanhGia)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdDanhGia)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BinhLuan)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BinhLuan)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.NgayDanhGia)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.NgayDanhGia)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SaoSp)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SaoSp)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SaoVanChuyen)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SaoVanChuyen)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TrangThai)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TrangThai)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdNguoiDung)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdNguoiDung)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IdSanPhamChiTiet)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IdSanPhamChiTiet)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ParentId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ParentId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.MoTa)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.MoTa)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ChatLuongSanPham)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ChatLuongSanPham)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SuaDoi)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.SuaDoi)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LuotYeuThich)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LuotYeuThich)
+        </dd>
+    </dl>
+
+    <form asp-action="CreateDanhGia">
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>
+
+    *@
+
+<div class="modal-dialog modal-dialog-centered" style="min-width:800px">
+    <div class="modal-content modal--shadow">
+
+        <button class="btn dismiss-button fas fa-times" type="button" data-dismiss="modal"></button>
+        <div class="modal-body">
+            <div class="u-s-m-b-30">
+                <form class="pd-tab__rev-f2">
+                    <h3 class="gl-label">Đánh giá</h3>
+                    <div class="u-s-m-b-30">
+                        <div class="rev-f2__table-wrap gl-scroll">
+                            <table class="rev-f2__table">
+                                <thead>
+                                    <tr>
+                                       
+                                        <th colspan="1" style="width: 20%;">
+                                            <div class="gl-rating-style-2">
+                                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+
+
+                                            </div>
+                                        </th>
+                                        <th colspan="4" style="width: 80%;">
+                                            <div class="gl-rating-style-2">
+                                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+
+
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                               
+                            </table>
+                        </div>
+                    </div>
+                    <span class="gl-label">Chất lượng sản phẩm</span>
+                  @*  sao*@
+                    <div class="u-s-m-b-30">
+                        <div class="rev-f2__table-wrap gl-scroll">
+                            <table class="rev-f2__table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <div class="gl-rating-style-2">
+                                                <i class="fas fa-star"></i>
+
+                                            </div>
+                                        </th>
+                                       
+                                        <th>
+                                            <div class="gl-rating-style-2">
+                                                <i class="fas fa-star"></i><i class="fas fa-star"></i>
+
+                                               
+                                            </div>
+                                        </th>
+                                      
+                                        <th>
+                                            <div class="gl-rating-style-2">
+                                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+
+                                             
+                                            </div>
+                                        </th>
+                                     
+                                        <th>
+                                            <div class="gl-rating-style-2">
+                                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+
+                                             
+                                            </div>
+                                        </th>
+                                      
+                                        <th>
+                                            <div class="gl-rating-style-2">
+                                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+
+                                               
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+
+                                            <!--====== Radio Box ======-->
+                                            <div class="radio-box">
+
+                                                <input type="radio" id="star-1" name="rating">
+                                                <div class="radio-box__state radio-box__state--primary">
+
+                                                    <label class="radio-box__label" for="star-1"></label>
+                                                </div>
+                                            </div>
+                                            <!--====== End - Radio Box ======-->
+                                        </td>
+                                       
+                                        <td>
+
+                                            <!--====== Radio Box ======-->
+                                            <div class="radio-box">
+
+                                                <input type="radio" id="star-2" name="rating">
+                                                <div class="radio-box__state radio-box__state--primary">
+
+                                                    <label class="radio-box__label" for="star-2"></label>
+                                                </div>
+                                            </div>
+                                            <!--====== End - Radio Box ======-->
+                                        </td>
+                                       
+                                        <td>
+
+                                            <!--====== Radio Box ======-->
+                                            <div class="radio-box">
+
+                                                <input type="radio" id="star-3" name="rating">
+                                                <div class="radio-box__state radio-box__state--primary">
+
+                                                    <label class="radio-box__label" for="star-3"></label>
+                                                </div>
+                                            </div>
+                                            <!--====== End - Radio Box ======-->
+                                        </td>
+                                       
+                                        <td>
+
+                                            <!--====== Radio Box ======-->
+                                            <div class="radio-box">
+
+                                                <input type="radio" id="star-4" name="rating">
+                                                <div class="radio-box__state radio-box__state--primary">
+
+                                                    <label class="radio-box__label" for="star-4"></label>
+                                                </div>
+                                            </div>
+                                            <!--====== End - Radio Box ======-->
+                                        </td>
+                                        
+                                        <td>
+
+                                            <!--====== Radio Box ======-->
+                                            <div class="radio-box">
+
+                                                <input type="radio" id="star-5" name="rating" value="5" checked>
+                                                <div class="radio-box__state radio-box__state--primary">
+
+                                                    <label class="radio-box__label" for="star-5"></label>
+                                                </div>
+                                            </div>
+                                            <!--====== End - Radio Box ======-->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                   @* sao*@
+                    <div class="rev-f2__group">
+                        <div>
+                            <p class="u-s-m-b-30">
+
+                                <label class="gl-label" for="reviewer-name">Đúng với mô tả</label>
+
+                                @*<input class="input-text input-text--primary-style" type="text" id="reviewer-name">*@
+                                <textarea class="text-area text-area--primary-style" id="reviewer-text" style="height:75px"></textarea>
+                            </p>
+                            <p class="u-s-m-b-30">
+
+                                <label class="gl-label" for="reviewer-email">Chất lượng sản phẩm</label>
+
+                                <textarea class="text-area text-area--primary-style" id="reviewer-text" style="height:75px"></textarea>
+                            </p>
+                        </div>
+                        <div class="u-s-m-b-15">
+
+                            <label class="gl-label" for="reviewer-text"> </label>
+                            <textarea style="height:245px" class="text-area text-area--primary-style" id="reviewer-text" placeholder="Hãy chia sẻ những trải nghiệm của bạn về sản phẩm với người khác."></textarea>
+                        </div>
+                        
+                    </div>
+                    <div style="display: flex; justify-content: flex-end;">
+
+                        <button class="btn btn--e-brand-shadow" type="submit">Hoàn thành</button>
+                        <button class="btn btn--e-brand-shadow" data-dismiss="modal" type="submit">Hủy</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -81,10 +81,17 @@ namespace App_View.Areas.Identity.Pages.Account
                 ErrorMessage = "Lỗi, không lấy được thông tin từ dịch vụ ngoài.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
+            
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             if (result.Succeeded)
             {
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+                var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                bool isCustomer = await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "NhanVien");
+                if (isCustomer)
+                {
+                    return RedirectToAction("Index", "Home", new { area = "Admin" });
+                }
                 return LocalRedirect(returnUrl);
             }
             if (result.IsLockedOut)

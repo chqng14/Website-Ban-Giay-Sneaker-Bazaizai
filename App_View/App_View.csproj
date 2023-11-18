@@ -44,6 +44,8 @@
 
     <PackageReference Include="RestSharp" Version="110.2.0" />
 
+    <PackageReference Include="Twilio.AspNet.Core" Version="8.0.2" />
+
     <PackageReference Include="X.PagedList" Version="8.4.7" />
 
     <PackageReference Include="X.PagedList.Mvc.Core" Version="8.4.7" />

@@ -1,0 +1,104 @@
+﻿@page "/ChinhSuaSoDienThoai"
+@model PhoneNumberModel
+@{
+    ViewData["Title"] = "Manage PhoneNumber";
+    Layout = "/Views/Shared/_LayoutUser.cshtml";
+}
+
+<style>
+    .text-danger {
+        color: red;
+    }
+    .input-with-button {
+        display: flex;
+        position: relative;
+    }
+
+    .input-button {
+        position: absolute;
+        right: 0;
+    }
+   
+    #XacNhanButton:disabled {
+      /* Đặt màu sắc khi nút bị vô hiệu hóa */
+      background-color: #cccccc; /* Màu xám nhạt */
+      color: #666666; /* Màu chữ xám nhạt */
+      cursor: not-allowed; /* Thay đổi kiểu con trỏ khi nút bị vô hiệu hóa */
+    }
+
+    #ButtonCodeOTP:disabled {
+    
+      cursor: not-allowed;
+    }
+ 
+</style>
+<div class="col-lg-9 col-md-12">
+    <partial name="_StatusMessage" for="StatusMessage" />
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+        <form class="dash-edit-p" id="profile-form" method="post" enctype="multipart/form-data">
+            @* <div asp-validation-summary="All" class="text-danger"></div>*@
+            <div class="dash__pad-2">
+                <h1 class="dash__h1 u-s-m-b-14">Chỉnh Sửa Số Điện Thoại</h1>
+
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="gl-inline">
+
+                            <div class="u-s-m-b-30">
+
+                                <label asp-for="Input.PhoneNumber" asp-for="Input.NewEmail" class="gl-label" for="reg-fname">Thêm số điện thoại mới</label>
+
+                                <input asp-for="Input.PhoneNumber" oninput="checkInput()" class="input-text input-text--primary-style" id="InputPhone" aria-required="true" placeholder="">@*style=" width:290px;"*@
+                                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                            </div>
+
+                        </div>
+                        <div class="gl-inline">
+
+
+                            <div class="u-s-m-b-30">
+
+                                <label asp-for="Input.CodeOTPConfirmed" asp-for="Input.NewEmail" class="gl-label" for="reg-fname">Mã xác minh</label>
+                                <div class="input-with-button">
+                                    <input id="OTPInput" oninput="checkInput()" asp-for="Input.CodeOTPConfirmed" class="input-text input-text--primary-style" style=" width:150px; background-clip: padding-box;" placeholder="">
+                                    <button asp-page-handler="SendVerificationPhone" type="submit" id="ButtonCodeOTP" disabled>Gửi mã xác minh</button>
+                                </div>
+                                <span asp-validation-for="Input.CodeOTPConfirmed" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <button type="submit" asp-page-handler="ChangePhone" class="btn btn--e-brand-b-2" id="XacNhanButton" disabled>Xác nhận</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function checkInput() {
+            var OTPInputValue = document.getElementById("OTPInput").value;
+            var XacNhanButton = document.getElementById("XacNhanButton");
+
+            var InputPhoneValue = document.getElementById("InputPhone").value;
+            var ButtonCodeOTP = document.getElementById("ButtonCodeOTP");
+            if (InputPhoneValue.trim() !== ""){
+                ButtonCodeOTP.disabled = false;
+                if (OTPInputValue.trim() !== "") {
+                    XacNhanButton.disabled = false;
+                } else {
+                    XacNhanButton.disabled = true;
+                }
+            }
+            else {
+                XacNhanButton.disabled = true;
+            }
+            
+        }
+    </script>
+}

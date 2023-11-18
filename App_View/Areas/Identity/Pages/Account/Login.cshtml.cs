@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using App_Data.Models;
+using DocumentFormat.OpenXml.EMMA;
 
 namespace App_View.Areas.Identity.Pages.Account
 {
@@ -94,14 +95,19 @@ namespace App_View.Areas.Identity.Pages.Account
                     var user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
                     if (user != null)
                     {
-                        result = await _signInManager.PasswordSignInAsync(user.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: true);
-                       
+                        result = await _signInManager.PasswordSignInAsync(user.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: true);                    
                     }
                 }
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    var user = await _userManager.FindByNameAsync(Input.UserNameOrEmail);
+                    bool isCustomer = await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "NhanVien");
+                    if (isCustomer)
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "Admin" });
+                    }
+                    else return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
                 {

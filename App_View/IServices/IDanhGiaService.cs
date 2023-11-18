@@ -15,5 +15,11 @@ namespace App_View.IServices
         public Task<DanhGia?> GetDanhGiaById(string IdDanhGia);
         public Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string IdProductChiTiet);
 
+
+        public Task<int> GetTongSoDanhGia(string idspchitiet);
+        public Task<float> GetSoSaoTB(string idspchitiet);
+        public Task<List<DanhGiaResult>> TongSoDanhGiaCuaMoiSpChuaDuyet();
+        public Task<List<DanhGiaViewModel>> LstChiTietDanhGiaCuaMoiSpChuaDuyet(string idSanPham);
+        public Task<bool> DuyetDanhGia(string IdDanhGia);
     }
 }

@@ -74,9 +74,31 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             {
                 ngaySinh = user.NgaySinh.Value.ToString("dd/MM/yyyy");
             }
+            var email = await _userManager.GetEmailAsync(user);
+            string maskedEmail = email;  // Gán giá trị mặc định
 
-            Email = await _userManager.GetEmailAsync(user);
-            Phone = await _userManager.GetPhoneNumberAsync(user);
+            int atIndex = email.IndexOf('@');
+
+            if (atIndex >= 0)
+            {
+                maskedEmail = email.Substring(0, 2) + new string('*', atIndex - 1) + email.Substring(atIndex);
+            }
+
+            Email = maskedEmail;
+            var phone = await _userManager.GetPhoneNumberAsync(user);
+            // Kiểm tra xem số điện thoại có tồn tại và có đủ ký tự không
+            if (!string.IsNullOrEmpty(phone))
+            {
+                string lastTwoDigits = phone.Substring(phone.Length - 2);
+
+                // Mã hóa phần còn lại của số điện thoại
+                string maskedPhoneNumber = new string('*', phone.Length - 2);
+
+                // Gán giá trị mới cho Phone
+                Phone = maskedPhoneNumber + lastTwoDigits;
+            }
+            //Email = await _userManager.GetEmailAsync(user);
+            //Phone = await _userManager.GetPhoneNumberAsync(user);
             Input = new InputModel
             {
                 Username = userName,
@@ -92,7 +114,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Không thể tải người dùng có ID '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);
@@ -104,7 +126,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Không thể tải người dùng có ID '{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)

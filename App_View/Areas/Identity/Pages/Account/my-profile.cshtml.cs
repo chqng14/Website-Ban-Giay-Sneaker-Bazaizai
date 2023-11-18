@@ -39,14 +39,36 @@ namespace App_View.Areas.Identity.Pages.Account
         {
             Username= await _userManager.GetUserNameAsync(user);
             FullName =user.TenNguoiDung;
+          
             if (user.NgaySinh == null)
             {
                 NgaySinh = null;
             }
             else NgaySinh = user.NgaySinh.Value.ToString("dd/MM/yyyy");
+            var email = await _userManager.GetEmailAsync(user);
+            string maskedEmail = email;  // Gán giá trị mặc định
 
-            Email = await _userManager.GetEmailAsync(user);
-            Phone = await _userManager.GetPhoneNumberAsync(user);
+            int atIndex = email.IndexOf('@');
+
+            if (atIndex >= 0)
+            {
+                maskedEmail = email.Substring(0, 2) + new string('*', atIndex - 1) + email.Substring(atIndex);
+            }
+
+            Email = maskedEmail;
+            var phone= await _userManager.GetPhoneNumberAsync(user);
+            // Kiểm tra xem số điện thoại có tồn tại và có đủ ký tự không
+            if (!string.IsNullOrEmpty(phone))
+            {
+                string lastTwoDigits = phone.Substring(phone.Length - 2);
+
+                // Mã hóa phần còn lại của số điện thoại
+                string maskedPhoneNumber = new string('*', phone.Length - 2);
+
+                // Gán giá trị mới cho Phone
+                Phone = maskedPhoneNumber + lastTwoDigits;
+            }
+            
             Picture = user.AnhDaiDien;
             GioiTinh = (user.GioiTinh == 1) ? "nam" : (user.GioiTinh == 2) ? "nữ" : "";
         }

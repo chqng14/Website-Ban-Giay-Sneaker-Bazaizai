@@ -29,13 +29,44 @@ namespace App_Api.Controllers
             AllRepo<DanhGia> all = new AllRepo<DanhGia>(context, danhGias);
             repos = all;
         }
-
+        //public class DanhGiaResult
+        //{
+        //    public string SanPham { get; set; }
+        //    public int SoLuongDanhGiaChuaDuyet { get; set; }
+        //    public string IdSanPham { get;set; }
+        //}
         [HttpGet("GetDanhGiaViewModel")]
         public async Task<List<DanhGiaViewModel>> GetAllDanhGiaViewModel(string idspchitiet)
         {
             return await _danhGiaRepo.GetListAsyncViewModel(idspchitiet);
         }
+        
+        [HttpGet("GetTongSoDanhGiaCuaMoiSpChuaDuyet")]
+        public async Task<List<DanhGiaResult>> TongSoDanhGiaCuaMoiSpChuaDuyet()
+        {
+            var result = await _danhGiaRepo.TongSoDanhGiaCuaMoiSpChuaDuyet();
 
+            // Chuyển đổi từ Tuple sang DanhGiaResult
+            var danhGiaResults = result.Select(tuple => new DanhGiaResult
+            {
+                SanPham = tuple.Item1,
+                SoLuongDanhGiaChuaDuyet = tuple.Item2,
+                IdSanPham = tuple.Item3,
+                IdChiTietSp=tuple.Item4,
+            }).ToList();
+            return danhGiaResults;
+        }
+
+        //public async Task<List<Tuple<string, int>>> TongSoDanhGiaCuaMoiSpChuaDuyet()
+        //{
+        //    return await _danhGiaRepo.TongSoDanhGiaCuaMoiSpChuaDuyet();
+        //}
+
+        [HttpGet("GetLstChiTietDanhGiaCuaMoiSpChuaDuyet")]
+        public async Task<List<DanhGiaViewModel>> LstChiTietDanhGiaCuaMoiSpChuaDuyet(string idSanPham)
+        {
+            return await _danhGiaRepo.LstChiTietDanhGiaCuaMoiSpChuaDuyet(idSanPham);
+        }
         [HttpGet("GetSoSaoTB")]
         public async Task<float> GetSoSaoTB(string idspchitiet)
         {

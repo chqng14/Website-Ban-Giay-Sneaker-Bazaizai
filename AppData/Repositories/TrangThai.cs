@@ -142,7 +142,7 @@ namespace App_Data.Repositories
             DaDuyet = 0,
             [Description("Đã Ẩn")]
             DaAn = 1,
-            [Description("Chưa duyệt")]
+            [Description("Chờ duyệt")]
             ChuaDuyet = 2,
         }
         public enum PTThanhToanChiTiet

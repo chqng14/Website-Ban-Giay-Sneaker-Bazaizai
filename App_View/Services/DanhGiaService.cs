@@ -68,6 +68,12 @@ namespace App_View.Services
             {
                 return new List<DanhGia>();
             }
+            //string apiUrl = "https://localhost:7038/api/DanhGia/GetAllDanhGia";
+
+            //var response = await _httpClient.GetAsync(apiUrl);
+            //string apiData = await response.Content.ReadAsStringAsync();       
+            //var danhgias = JsonConvert.DeserializeObject<List<DanhGia>>(apiData);
+            //return danhgias;
         }
 
         public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string Idchitietsp)
@@ -138,5 +144,92 @@ namespace App_View.Services
 
 
 
+
+
+
+        public async Task<List<DanhGiaResult>> TongSoDanhGiaCuaMoiSpChuaDuyet()
+        {
+            string apiUrl = $"https://localhost:7038/api/DanhGia/GetTongSoDanhGiaCuaMoiSpChuaDuyet";
+
+            try
+            {
+                var apiData = await _httpClient.GetStringAsync(apiUrl);
+                return JsonConvert.DeserializeObject<List<DanhGiaResult>>(apiData);
+            }
+            catch (HttpRequestException)
+            {
+                return new List<DanhGiaResult>();
+            }
+        }
+        public async Task<List<DanhGiaViewModel>> LstChiTietDanhGiaCuaMoiSpChuaDuyet(string idSanPham)
+        {
+            string apiUrl = $"https://localhost:7038/api/DanhGia/GetLstChiTietDanhGiaCuaMoiSpChuaDuyet?idSanPham={idSanPham}";
+
+            try
+            {
+                var apiData = await _httpClient.GetStringAsync(apiUrl);
+                return JsonConvert.DeserializeObject<List<DanhGiaViewModel>>(apiData);
+            }
+            catch (HttpRequestException)
+            {
+                return new List<DanhGiaViewModel>();
+            }
+        }
+
+
+        public async Task<bool> DuyetDanhGia(string IdDanhGia)
+        {
+            try
+            {
+                string apiUrl = $"https://localhost:7038/api/DanhGia/DuyetDanhGia?IdDanhGia={IdDanhGia}";
+
+                var content = new StringContent(string.Empty);
+
+                var response = await _httpClient.PutAsync(apiUrl, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                return false;
+            }
+        }
+        public async Task<int> GetTongSoDanhGia(string idspchitiet)
+        {
+            string apiUrl = $"https://localhost:7038/api/DanhGia/GetTongSoDanhGia?idspchitiet={idspchitiet}";
+
+            try
+            {
+                var apiData = await _httpClient.GetStringAsync(apiUrl);
+                return JsonConvert.DeserializeObject<int>(apiData);
+            }
+            catch (HttpRequestException)
+            {
+                return 0;
+            }
+        }
+        public async Task<float> GetSoSaoTB(string IdProductChiTiet)
+        {
+            string apiUrl = $"https://localhost:7038/api/DanhGia/GetSoSaoTB?idspchitiet={IdProductChiTiet}";
+
+            try
+            {
+                var apiData = await _httpClient.GetStringAsync(apiUrl);
+                return JsonConvert.DeserializeObject<float>(apiData);
+            }
+            catch (HttpRequestException)
+            {
+                return 0;
+            }
+        }
+
+       
     }
 }

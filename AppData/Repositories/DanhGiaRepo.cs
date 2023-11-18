@@ -83,7 +83,10 @@ namespace App_Data.Repositories
                 {
                     Tong += item.SaoSp;
                 }
-                return (float)(Tong / SoSao);
+                float a = 0;
+                a = ((float)Tong / SoSao);
+                a = (float)Math.Round(a, 1);
+                return a;
             }
 
         }
@@ -91,6 +94,86 @@ namespace App_Data.Repositories
         {
             var lstdanhGia = await GetListAsyncViewModel(IdProductChiTiet);
             return lstdanhGia.Where(x => x.SaoSp != 0).Count();
+        }
+        public async Task<int> GetTongSoDanhGiaChuaDuyetCuaMotSp(string IdProductChiTiet)
+        {
+            var lstdanhGia = await GetListAsyncViewModel(IdProductChiTiet);
+            return lstdanhGia.Where(x => x.SaoSp != 0 && x.TrangThai == (int)TrangThaiDanhGia.ChuaDuyet).Count();
+        }
+        //var lstdanhGia =await _context.danhGias.ToListAsync();
+        //return lstdanhGia.Where(x => x.SaoSp != 0 && x.TrangThai == (int)TrangThaiDanhGia.ChuaDuyet).Count();
+        //var IDsanPham = _context.sanPhamChiTiets
+        //   .Where(x => x.IdChiTietSp == IdProductChiTiet)
+        //   .Select(x => x.IdSanPham)
+        //   .FirstOrDefault();
+        //public async Task<int> GetTongSoDanhGiaChuaDuyet()
+        //{
+        //    var ViewMode = await (from a in _context.danhGias                                
+        //                          join c in _context.sanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp                       
+        //                          join j in _context.SanPhams on c.IdSanPham equals j.IdSanPham
+        //                          where  a.TrangThai == (int)TrangThaiDanhGia.ChuaDuyet // Lọc đánh giá theo IdSanPham
+        //                          select new DanhGiaViewModel
+        //                          {                                                                        
+        //                              TrangThai = a.TrangThai,
+        //                              TenSanPham = j.TenSanPham,
+        //                          })
+        //       .GroupBy(x => x.TenSanPham)  // Nhóm theo tên sản phẩm
+        //            .Select(g => new DanhGiaViewModel
+        //            {
+        //                TrangThai = g.First().TrangThai, // Chọn một trạng thái bất kỳ từ nhóm
+        //                TenSanPham = g.Key,  // Key chính là tên sản phẩm
+        //            })
+        //            .ToListAsync();
+        //    return ViewMode;
+        //}
+        public async Task<List<Tuple<string, int, string, string>>> TongSoDanhGiaCuaMoiSpChuaDuyet()
+        {
+            var result = await (from a in _context.danhGias
+                                join c in _context.sanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
+                                join j in _context.SanPhams on c.IdSanPham equals j.IdSanPham
+                                where a.TrangThai == (int)TrangThaiDanhGia.ChuaDuyet // Lọc đánh giá theo IdSanPham
+                                select new DanhGiaViewModel
+                                {
+                                    TenSanPham = j.TenSanPham,
+                                    IdSanPham = c.IdSanPham,
+                                    IdSanPhamChiTiet = c.IdChiTietSp
+                                })
+                            .GroupBy(x => x.TenSanPham)  // Nhóm theo tên sản phẩm
+                              .Select(g => new Tuple<string, int, string, string>(g.Key, g.Count(), g.First().IdSanPham, g.First().IdSanPhamChiTiet))
+                            //.Select(g => new Tuple<string, int>(g.Key, g.Count())) // Tạo tuple chứa tên sản phẩm và số lượng đánh giá
+                            .ToListAsync();
+            return result;
+        }
+        public async Task<List<DanhGiaViewModel>> LstChiTietDanhGiaCuaMoiSpChuaDuyet(string idSanPham)
+        {
+            var ViewMode = await (from a in _context.danhGias
+                                  join b in _context.NguoiDungs on a.IdNguoiDung equals b.Id
+                                  join c in _context.sanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
+                                  join d in _context.mauSacs on c.IdMauSac equals d.IdMauSac
+                                  join e in _context.kichCos on c.IdKichCo equals e.IdKichCo
+                                  join j in _context.SanPhams on c.IdSanPham equals j.IdSanPham
+                                  where c.IdSanPham == idSanPham && a.TrangThai == (int)TrangThaiDanhGia.ChuaDuyet
+                                  select new DanhGiaViewModel
+                                  {
+                                      IdDanhGia = a.IdDanhGia,
+                                      ParentId = a.ParentId,
+                                      BinhLuan = a.BinhLuan,
+                                      NgayDanhGia = a.NgayDanhGia,
+                                      SaoSp = a.SaoSp,
+                                      IdSanPhamChiTiet = a.IdSanPhamChiTiet,
+                                      IdNguoiDung = a.IdNguoiDung,
+                                      TrangThai = a.TrangThai,
+                                      TenNguoiDung = b.TenNguoiDung,
+                                      AnhDaiDien = b.AnhDaiDien,
+                                      SaoVanChuyen = a.SaoVanChuyen,
+                                      SanPhamTongQuat = d.TenMauSac + "," + e.SoKichCo,
+                                      TenSanPham = j.TenSanPham,
+                                      IdSanPham = c.IdSanPham
+                                  })
+                .OrderByDescending(x => x.NgayDanhGia)
+                .ToListAsync();
+
+            return ViewMode;
         }
         public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string IdProductChiTiet)
         {
@@ -104,6 +187,7 @@ namespace App_Data.Repositories
                                   join c in _context.sanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
                                   join d in _context.mauSacs on c.IdMauSac equals d.IdMauSac
                                   join e in _context.kichCos on c.IdKichCo equals e.IdKichCo
+                                  join j in _context.SanPhams on c.IdSanPham equals j.IdSanPham
                                   where c.IdSanPham == IDsanPham && a.TrangThai == (int)TrangThaiDanhGia.DaDuyet // Lọc đánh giá theo IdSanPham
                                   select new DanhGiaViewModel
                                   {
@@ -118,9 +202,8 @@ namespace App_Data.Repositories
                                       TenNguoiDung = b.TenNguoiDung,
                                       AnhDaiDien = b.AnhDaiDien,
                                       SaoVanChuyen = a.SaoVanChuyen,
-                                      SanPhamTongQuat = "Phân loại hàng: " + d.TenMauSac + "," + e.SoKichCo,
-
-
+                                      SanPhamTongQuat = d.TenMauSac + "," + e.SoKichCo,
+                                      TenSanPham = j.TenSanPham,
                                   })
                 .OrderByDescending(x => x.NgayDanhGia)
                 .ToListAsync();

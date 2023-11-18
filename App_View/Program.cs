@@ -18,6 +18,7 @@ using Microsoft.Extensions.Hosting;
 using App_View.Controllers;
 using Hangfire;
 using App_View.Models.Momo;
+using App_View.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -71,7 +72,7 @@ builder.Services.Configure<IdentityOptions>(options =>
 
     // Cấu hình Lockout - khóa user
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1); // Khóa 1 phút
-    options.Lockout.MaxFailedAccessAttempts = 100; // Thất bại 5 lầ thì khóa
+    options.Lockout.MaxFailedAccessAttempts = 100; // Thất bại 5 lần thì khóa
     options.Lockout.AllowedForNewUsers = true;
 
     // Cấu hình về User.
@@ -87,9 +88,11 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 builder.Services.ConfigureApplicationCookie(options =>
 {
+    options.ExpireTimeSpan = TimeSpan.FromDays(14);
     options.LoginPath = "/Login/";
     options.LogoutPath = "/Lockout/";
     options.AccessDeniedPath = "/KhongDuocTruyCap.html";
+    
 });
 builder.Services.AddAuthentication()
      .AddCookie()
@@ -125,6 +128,8 @@ builder.Services.AddSession(Options =>
 {
     Options.IdleTimeout = TimeSpan.FromDays(20);
 });
+builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("TwilioSettings"));
+builder.Services.AddScoped<ISMSSenderService, SMSSenderService>();
 //thêm
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
