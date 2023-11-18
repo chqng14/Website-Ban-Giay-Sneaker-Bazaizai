@@ -259,5 +259,26 @@ namespace App_View.Services
                 return false;
             }
         }
+
+        public async Task<bool> AddVoucherCungBanTaiQuay(string idVoucher, string idUser, int soluong)
+        {
+            try
+            {
+                var reponse = await _httpClient.PostAsync($"/api/Voucher/AddVoucherCungBanTaiQuay/{idVoucher}/{idUser}/{soluong}", null);
+                if (reponse.IsSuccessStatusCode)
+                {
+                    return await reponse.Content.ReadAsAsync<bool>();
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
     }
 }

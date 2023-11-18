@@ -86,6 +86,7 @@
                             $("#SoTienPhaiTra").val(tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                             $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                             $("#VoucherGiam").val(response.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                            $("#TongGiam").val((tongTien-tienPhaiTra).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                             $("#MaVoucher").val("");
                         }
                         else {
@@ -127,6 +128,7 @@
                             $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                             $("#VoucherGiam").val(response.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                             $("#MaVoucher").val("");
+                            $("#TongGiam").val((tongTien - tienPhaiTra).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                             isAdding = false;
                         }
                     }

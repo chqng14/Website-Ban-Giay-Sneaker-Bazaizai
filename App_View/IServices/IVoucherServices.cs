@@ -23,6 +23,7 @@ namespace App_View.IServices
         Task<bool> RestoreVoucherWithListTaiQuay(List<string> Id);
         Task<bool> UpdateTaiQuay(VoucherDTO voucherDTO);
         Task<bool> UpdateVoucherAfterUseItTaiQuay(string idVoucher,string idUser);
+        Task<bool> AddVoucherCungBanTaiQuay(string idVoucher,string idUser, int soluong);
     }
 
 }

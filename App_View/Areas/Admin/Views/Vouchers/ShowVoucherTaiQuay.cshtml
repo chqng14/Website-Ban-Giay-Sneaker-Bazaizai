@@ -62,7 +62,7 @@
         <div class="header-sub-title">
             <nav class="breadcrumb breadcrumb-dash">
                 <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản trị</a>
-                <a class="breadcrumb-item" asp-action="ShowVoucher" asp-controller="Vouchers">Danh sách voucher online</a>
+                <a class="breadcrumb-item" asp-action="ShowVoucherTaiQuay" asp-controller="Vouchers">Danh sách voucher tại quầy</a>
             </nav>
         </div>
     </div>
@@ -72,14 +72,14 @@
     <div class="d-md-flex">
         <div class="row w-100 m-b-30">
             <div class="col-lg-5">
-                <form asp-action="ShowVoucher" method="post">
+                <form asp-action="ShowVoucherTaiQuay" method="post">
                     <div class="d-md-flex">
                         <div class="m-b-10">
                             <div class="tabs">
                                 <div class="tab-item" id="tab1" name="trangThai">Tất cả</div>
                                 <div class="tab-item active" id="tab2" name="trangThai" data-value="6">Hoạt động</div>
-                                <div class="tab-item" id="tab3" name="trangThai" data-value="8">Chưa bắt đầu</div>
-                                <div class="tab-item" id="tab4" name="trangThai" data-value="7">Không hoạt động</div>
+                                <div class="tab-item" id="tab3" name="trangThai" data-value="7">Không hoạt động</div>
+                                <div class="tab-item" id="tab4" name="trangThai" data-value="8">Chưa hoạt động</div>
                                 <div class="tab-item" id="tab5" name="trangThai" data-value="9">Đã huỷ</div>
                             </div>
                         </div>
@@ -87,9 +87,7 @@
                 </form>
             </div>
             <div class="col-lg-7 text-right" style="margin-top:50px">
-                @*       <button class="btn btn-warning mr-2" data-toggle="modal" data-target="#cancel" style="color:white">Huỷ hoạt động của voucher đã chọn</button>
-                <button class="btn btn-success mr-2" data-toggle="modal" data-target="#restore">Khôi phục voucher đã chọn</button>
-                <a class="btn btn-secondary mr-2" asp-action="GiveVouchersToUsers">Tặng voucher</a> *@
+                <a class="btn btn-secondary mr-2" asp-action="ShowVoucherTaiQuayDaIn">Voucher Đã In</a>
                 <a class="btn btn-primary" asp-action="CreateTaiQuay"><i class="anticon anticon-plus-circle"></i> Tạo mới</a>
             </div>
         </div>

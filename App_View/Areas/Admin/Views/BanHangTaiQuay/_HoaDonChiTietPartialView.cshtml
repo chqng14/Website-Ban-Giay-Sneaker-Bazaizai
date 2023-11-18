@@ -1,12 +1,9 @@
 ﻿@model IEnumerable<App_Data.ViewModels.HoaDonChiTietDTO.HoaDonChiTietTaiQuay>;
 @{
     int stt = 1;
-};
+}
 @foreach (var hoaDonChiTiet in Model)
 {
-
-    
-   
         <tr scope="col" id="hdct-@hoaDonChiTiet.IdSanPhamChiTiet">
             <td>@stt</td>
             <td hidden>@hoaDonChiTiet.IdSanPhamChiTiet</td>

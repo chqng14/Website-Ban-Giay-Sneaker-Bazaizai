@@ -77,8 +77,6 @@ namespace App_Data.DbContextt
         {
             //BAZAIZAI\SQLEXPRESS
             optionsBuilder.UseSqlServer(@"Data Source=BAZAIZAI\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"); 
-
-
         }
 
 
