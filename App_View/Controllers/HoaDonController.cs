@@ -318,7 +318,7 @@ namespace App_View.Controllers
                 await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.ChuaThanhToan); string payment = await hoaDonServices.GetPayMent(idHoaDon);
                 var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
                 order.LoaiThanhToan = payment;
-                await SendMail(order.MaHoaDon);
+                //await SendMail(order.MaHoaDon);
                 return View(order);
             }
             else
