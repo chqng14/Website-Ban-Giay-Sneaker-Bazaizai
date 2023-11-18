@@ -56,7 +56,7 @@
   <ItemGroup>
     <Folder Include="mailssave\" />
     <Folder Include="wwwroot\AnhSanPham\" />
-    <Folder Include="wwwroot\images\Voucher\" />
+    <Folder Include="wwwroot\images\VoucherQRCode\" />
     <Folder Include="wwwroot\images\QRCode\" />
     <Folder Include="wwwroot\AnhSale\" />
   </ItemGroup>
