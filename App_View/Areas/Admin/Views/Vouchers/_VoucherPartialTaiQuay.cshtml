@@ -180,7 +180,7 @@
         $('#voucherForm').submit(function (event) {
             // Ngăn chặn gửi form mặc định
             event.preventDefault();
-
+            $('#preloader').show();
             // Sử dụng Ajax để gửi dữ liệu form và nhận kết quả từ server
             $.ajax({
                 type: 'POST',
@@ -190,6 +190,7 @@
                     // Xử lý kết quả từ server
                     if (data) {
                         $('#printVoucher').modal('hide');
+                        $('#preloader').hide();
                         // Xử lý kết quả từ server
                         Swal.fire({
                             title: 'Thông báo!',
@@ -203,6 +204,7 @@
                     }
                     else {
                         $('#printVoucher').modal('hide');
+                        $('#preloader').hide();
                         // Xử lý kết quả từ server
                         Swal.fire({
                             title: 'Thông báo!',
