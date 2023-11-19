@@ -46,7 +46,6 @@ namespace App_View.Controllers
         public string GetIdNguoiDung()
         {
             var idNguoiDung = _userManager.GetUserId(User);
-            Console.WriteLine("GioHangChiTietsController" + idNguoiDung);
             ViewBag.idNguoiDung = idNguoiDung;
             return idNguoiDung;
         }

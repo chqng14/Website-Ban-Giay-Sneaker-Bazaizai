@@ -456,10 +456,10 @@
                                     </div>
                                     <!--====== End - Check Box ======-->
                                 </div>
-                                <div class="u-s-m-b-10">
+                                @* <div class="u-s-m-b-10">
 
                                     <a class="gl-link" href="#create-account" data-toggle="collapse">Tạo tài khoản mới?</a>
-                                </div>
+                                </div> *@
                                 <div class="collapse u-s-m-b-15" id="create-account">
 
                                     <span class="gl-text u-s-m-b-15">Tạo tài khoản mới vui lòng nhập thông tin bên dưới. Nếu bạn đã có tài khoản vui lòng đăng nhập ở góc trên.</span>
@@ -866,14 +866,12 @@
         var selectedWardCode = null;
         let hasFunctionRun = false;
         var useDefaultAddress = "";
-        var defaultAddressCheckbox = "";
         $(document).ready(function () {
             useInputAddressScript();
             $('#get-address').on('change', function () {
                 useDefaultAddress = $(this).prop('checked');
                 $('#phiship').text('0đ');
                 phiship = 0;
-                defaultAddressCheckbox = document.getElementById("make-default-address");
                 // defaultAddressCheckbox.disabled = false;
                 if (MucUuDai !== null && MucUuDai !== "") {
                     totalAmountElement.innerText = tongTienSauGiamGia.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
@@ -1472,7 +1470,8 @@
         function hideLoadingOverlay() {
             $('.loader').remove();
         }
-
+        var defaultAddressCheckbox = document.getElementById("make-default-address");
+        var agreeCheckbox = document.getElementById("term-and-condition");
         $(document).ready(function () {
             $('#placeOrderButton').click(function (e) {
                 e.preventDefault();
@@ -1480,9 +1479,17 @@
                     return;
                 } 
                 // showLoadingOverlay();
-                if ($('input[name="Payment"]:checked').length === 0) {
+                if (!paymentMethod) {
                     toast({
                         title: "Vui lòng chọn phương thức thanh toán!",
+                        type: "warning",
+                        duration: 2000
+                    });
+                    return;
+                }
+                if (!agreeCheckbox.checked) {
+                    toast({
+                        title: "Vui lòng đồng ý với điều khoản!",
                         type: "warning",
                         duration: 2000
                     });
