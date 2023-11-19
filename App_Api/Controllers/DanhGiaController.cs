@@ -79,8 +79,8 @@ namespace App_Api.Controllers
         }
 
         [HttpPost("AddDanhGia")]
-        public bool CreateDanhGia(string BinhLuan, string? ParentId,
-       int SaoSp, int SaoVanChuyen, string IdNguoiDung, string IdSanPhamChiTiet)
+        public bool CreateDanhGia(string? BinhLuan, string? ParentId,
+       int SaoSp, int SaoVanChuyen, string IdNguoiDung, string IdSanPhamChiTiet, string? MoTa, string? ChatLuongSanPham)
         {
             DanhGia danhGia = new DanhGia();
             danhGia.IdDanhGia = Guid.NewGuid().ToString();
@@ -92,6 +92,8 @@ namespace App_Api.Controllers
             danhGia.ParentId = ParentId;
             danhGia.SaoSp = SaoSp;
             danhGia.SaoVanChuyen = SaoVanChuyen;
+            danhGia.MoTa = MoTa;
+            danhGia.ChatLuongSanPham=ChatLuongSanPham;
             return repos.AddItem(danhGia);
         }
 

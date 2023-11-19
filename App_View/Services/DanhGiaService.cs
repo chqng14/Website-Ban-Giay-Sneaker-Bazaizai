@@ -20,9 +20,11 @@ namespace App_View.Services
 
         public async Task<bool> CreateDanhGia(DanhGia danhGia)
         {
+        https://localhost:7038/api/DanhGia/AddDanhGia?BinhLuan={}&ParentId={}&SaoSp={}&SaoVanChuyen={}&IdNguoiDung={}&IdSanPhamChiTiet={}
             try
             {
-                string apiUrl = $"https://localhost:7038/api/DanhGia/AddDanhGia?BinhLuan={Uri.EscapeDataString(danhGia.BinhLuan)}&ParentId={danhGia.ParentId}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}";
+                string apiUrl = $"https://localhost:7038/api/DanhGia/AddDanhGia?BinhLuan={danhGia.BinhLuan}&ParentId={danhGia.ParentId}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}&MoTa={danhGia.MoTa}&ChatLuongSanPham={danhGia.ChatLuongSanPham}";
+                //string apiUrl = $"https://localhost:7038/api/DanhGia/AddDanhGia?BinhLuan={Uri.EscapeDataString(danhGia.BinhLuan)}&ParentId={danhGia.ParentId}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}";
                 var response = await _httpClient.PostAsync(apiUrl, null);
                 if (response.IsSuccessStatusCode)
                 {

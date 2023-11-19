@@ -158,7 +158,9 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
                 HttpContext.Session.SetString("OTP", token);
                 HttpContext.Session.SetString("OTPCreationTime", DateTimeOffset.Now.ToString("O"));
 
-                //await _sMSSenderService.SendSmsAsync(phone, $"OTP: {token}");
+                string sdt = "+84" + Input.PhoneNumber.Substring(1);
+
+                await _sMSSenderService.SendSmsAsync(sdt, $"OTP: {token}");
                 StatusMessage = "Mã xác minh số điện thoại đã gửi. Vui lòng kiểm tra tin nhắn của bạn.";          
             }
             else

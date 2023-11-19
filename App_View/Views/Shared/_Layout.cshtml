@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="/css/app.css">
 
 </head>
-
+<a class="nav-link text-dark" asp-area="" asp-controller="DanhGia" asp-action="AddDanhGia">adđanhgia</a>
 <body class="config" id="js-scrollspy-trigger">
     <div class="preloader is-active">
         <div class="preloader__wrap">
@@ -86,57 +86,57 @@
                                 <ul class="ah-list ah-list--design1 ah-list--link-color-secondary">
                                     <partial name="_LoginPartial" />
                                     @*                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Account">
-                                            @if (SignInManager.IsSignedIn(User))
-                                            {
-                                                <a><i class="far fa-user-circle"></i></a>
+                                    @if (SignInManager.IsSignedIn(User))
+                                    {
+                                    <a><i class="far fa-user-circle"></i></a>
 
 
-                                                <span class="js-menu-toggle"></span>
-                                                <ul>
-                                                    <li>
-                                                        <a asp-area="Identity" asp-page="/Account/my-profile">
-                                                            <i class="fas fa-user-circle u-s-m-r-6"></i>
-                                                            <span>Account</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
+                                    <span class="js-menu-toggle"></span>
+                                    <ul>
+                                    <li>
+                                    <a asp-area="Identity" asp-page="/Account/my-profile">
+                                    <i class="fas fa-user-circle u-s-m-r-6"></i>
+                                    <span>Account</span>
+                                    </a>
+                                    </li>
+                                    <li>
 
-                                                        <form id="myForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                                            <button type="submit" class="nav-link btn btn-link text-dark">
-                                                                <a>
-                                                                    <i class="fas fa-lock-open u-s-m-r-6"></i>
-                                                                    <span>Signout</span>
-                                                                </a>
-                                                            </button>
-                                                        </form>
+                                    <form id="myForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                    <button type="submit" class="nav-link btn btn-link text-dark">
+                                    <a>
+                                    <i class="fas fa-lock-open u-s-m-r-6"></i>
+                                    <span>Signout</span>
+                                    </a>
+                                    </button>
+                                    </form>
 
-                                                    </li>
-                                                </ul>
-                                            }
-                                            else
-                                            {
-                                                <a><i class="far fa-user-circle"></i></a>
+                                    </li>
+                                    </ul>
+                                    }
+                                    else
+                                    {
+                                    <a><i class="far fa-user-circle"></i></a>
 
 
-                                                <span class="js-menu-toggle"></span>
-                                                <ul>
+                                    <span class="js-menu-toggle"></span>
+                                    <ul>
 
-                                                    <li>
-                                                        <a asp-area="Identity" asp-page="/Account/Register">
-                                                            <i class="fas fa-user-plus u-s-m-r-6"></i>
-                                                            <span>Signup</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a asp-area="Identity" asp-page="/Account/Login">
-                                                            <i class="fas fa-lock u-s-m-r-6"></i>
-                                                            <span>Signin</span>
-                                                        </a>
-                                                    </li>
+                                    <li>
+                                    <a asp-area="Identity" asp-page="/Account/Register">
+                                    <i class="fas fa-user-plus u-s-m-r-6"></i>
+                                    <span>Signup</span>
+                                    </a>
+                                    </li>
+                                    <li>
+                                    <a asp-area="Identity" asp-page="/Account/Login">
+                                    <i class="fas fa-lock u-s-m-r-6"></i>
+                                    <span>Signin</span>
+                                    </a>
+                                    </li>
 
-                                                </ul>
-                                            }
-                                        </li>
+                                    </ul>
+                                    }
+                                    </li>
                                     *@
                                     <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Settings">
 
@@ -1360,6 +1360,7 @@
         </div>
         <!--====== End - Quick Look Modal ======-->
         <!--====== Add to Cart Modal ======-->
+
         <div class="modal fade" id="add-to-cart">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content modal-radius modal-shadow" style="
@@ -1456,6 +1457,10 @@
                 </div>
             </div>
         </div>
+        @* Thêm*@
+        <div class="modal fade" id="add-danh-gia">
+@*            <partial name="_ModalAddDanhGiaPartial" />
+*@        </div>
         <!--====== End - Newsletter Subscribe Modal ======-->
         <!--====== End - Modal Section ======-->
     </div>

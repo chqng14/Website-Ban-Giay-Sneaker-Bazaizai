@@ -20,22 +20,33 @@ namespace App_View.Controllers
             _signInManager = signInManager;
             _danhGiaService = danhGiaService;
         }
-        public ActionResult _ModalAddDanhGiaPartialView(string idSanPhamChiTiet)
+        public ActionResult _ModalAddDanhGiaPartial()
         {
-
-            //var model = await _sanPhamChiTietService.GetItemDetailViewModelAynsc(idSanPhamChiTiet);
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> _ModalAddDanhGiaPartialView(DanhGia danhgia)
+        public async Task<IActionResult> _ModalAddDanhGiaPartial(DanhGia danhgia)
         {
             var user = await _userManager.GetUserAsync(User);
             danhgia.IdNguoiDung = await _userManager.GetUserIdAsync(user);
             danhgia.ParentId = null;
             await _danhGiaService.CreateDanhGia(danhgia);
-
             return View();
+        }
+        public ActionResult AddDanhGia()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddDanhGia(DanhGia danhgia)
+        {           
+            var user = await _userManager.GetUserAsync(User);
+            danhgia.IdNguoiDung = await _userManager.GetUserIdAsync(user);
+            danhgia.ParentId = null;
+            await _danhGiaService.CreateDanhGia(danhgia);
+            return RedirectToAction("Index", "Home");
         }
     }
 }
