@@ -59,6 +59,13 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<List<HoaDonTest>>($"https://localhost:7038/api/HoaDon/GetHoaDonOnlineTest?idNguoiDung={idNguoiDung}");
         }
 
+        public async Task<List<KhachHang>> GetKhachHangs()
+        {
+            var lst = await _httpClient.GetFromJsonAsync<List<KhachHang>>("https://localhost:7038/api/HoaDon/GetAllKhachHang");
+        
+            return lst; 
+        }
+
         public async Task<string> GetPayMent(string idHoaDon)
         {
             return await _httpClient.GetStringAsync($"https://localhost:7038/api/HoaDon/GetPTThanhToan?idhoadon={idHoaDon}");
@@ -72,6 +79,25 @@ namespace App_View.Services
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<HoaDon>();
+                }
+                Console.WriteLine(await res.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+
+        public async Task<string> TaoKhachHang(KhachHang khachHang)
+        {
+            try
+            {
+                var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/HoaDon/TaoKhachHang", khachHang);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsStringAsync();
                 }
                 Console.WriteLine(await res.Content.ReadAsStringAsync());
                 throw new Exception("Not IsSuccessStatusCode");

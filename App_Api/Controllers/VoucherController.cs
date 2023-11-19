@@ -65,13 +65,14 @@ namespace App_Api.Controllers
             string voucherCode = ""; // Biến lưu mã khuyến mãi ngẫu nhiên
             do
             {
-                voucherCode = new string(Enumerable.Repeat(chars, 6)
+                voucherCode = new string(Enumerable.Repeat(chars, 8)
                     .Select(s => s[random.Next(s.Length)]).ToArray()); // Tạo mã khuyến mãi ngẫu nhiên
                 isDuplicate = vouchers.Any(v => v.MaVoucher == voucherCode); // Kiểm tra xem mã khuyến mãi có trùng với mã nào trong danh sách không
             } while (isDuplicate); // Nếu trùng thì lặp lại quá trình tạo và kiểm tra
 
             return voucherCode; // Trả về mã khuyến mãi không trùng
         }
+        #region VoucherOn
         [HttpPost("CreateVoucher")]
         public bool Create(VoucherDTO voucherDTO)
         {
@@ -141,10 +142,10 @@ namespace App_Api.Controllers
             if (voucherGet != null)
             {
                 _mapper.Map(voucherDTO, voucherGet);
-                if(voucherDTO.TrangThai==null)
+                if (voucherDTO.TrangThai == null)
                 {
 
-                }    
+                }
                 if (voucherGet.NgayBatDau > DateTime.Now)
                 {
                     voucherGet.TrangThai = (int)TrangThaiVoucher.ChuaBatDau;
@@ -167,15 +168,158 @@ namespace App_Api.Controllers
             return false;
         }
         [HttpPut("UpdateVoucherAfterUseIt/{idVoucher}")]
-        public bool UpdateVoucherAfterUseIt(string idVoucher)
+        public bool UpdateVoucherAfterUseIt(string idVoucher, string idUser)
         {
-            var voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == idVoucher);
-            if (voucher.SoLuong > 0)
+            var voucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCher == idVoucher && c.IdNguoiDung == idUser);
+            if (voucherNguoiDung != null)
             {
-                voucher.SoLuong -= 1;
-                allRepo.EditItem(voucher);
+                voucherNguoiDung.TrangThai = (int)TrangThaiVoucherNguoiDung.DaSuDung;
+                VcNguoiDungRepos.EditItem(voucherNguoiDung);
+                return true;
             }
             return false;
         }
+        #endregion
+
+        #region VoucherTaiQuay
+        [HttpGet("GetVoucherTaiQuay")]
+        public List<Voucher> GetAllVoucherTaiQuay()
+        {
+            return allRepo.GetAll().Where(c => c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay).ToList();
+        }
+        [HttpPost("CreateVoucherTaiQuay")]
+        public bool CreateTaiQuay(VoucherDTO voucherDTO)
+        {
+            voucherDTO.IdVoucher = Guid.NewGuid().ToString();
+            var voucher = _mapper.Map<Voucher>(voucherDTO);
+            voucher.MaVoucher = GenerateRandomVoucherCode();
+            voucher.NgayTao = DateTime.Now;
+            voucher.SoLuong = 0;
+            if (voucher.NgayBatDau > DateTime.Now)
+            {
+                voucher.TrangThai = (int)TrangThaiVoucher.ChuaHoatDongTaiQuay;
+            }
+            if (voucher.NgayBatDau <= DateTime.Now)
+            {
+                voucher.TrangThai = (int)TrangThaiVoucher.HoatDongTaiQuay;
+            }
+            if (voucher.SoLuong > 0 && voucher.NgayBatDau < DateTime.Now && voucher.NgayKetThuc > DateTime.Now)
+            {
+                voucher.TrangThai = (int)TrangThaiVoucher.HoatDongTaiQuay;
+            }
+            return allRepo.AddItem(voucher);
+        }
+
+        [HttpPut("DeleteVoucherTaiQuay/{id}")]
+        public bool DeleteTaiQuay(string id)
+        {
+            var VoucherGet = GetAllVoucher().FirstOrDefault(c => c.IdVoucher == id);
+            if (VoucherGet != null)
+            {
+                if (VoucherGet.TrangThai != (int)TrangThaiVoucher.DaHuyTaiQuay)
+                {
+                    VoucherGet.TrangThai = (int)TrangThaiVoucher.DaHuyTaiQuay;
+                    allRepo.EditItem(VoucherGet);
+                    //sau khi huỷ hoạt động voucher sẽ xoá voucher người dùng khi họ chưa dùng
+                    var VoucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCher == id && c.TrangThai != (int)TrangThaiVoucherNguoiDung.DaSuDung);
+                    return VcNguoiDungRepos.RemoveItem(VoucherNguoiDung);
+                }
+            }
+            return false;
+        }
+        [HttpPut("RestoreVoucherTaiQuay/{id}")]
+        public bool RestoreVoucherTaiQuay(string id)
+        {
+            var VoucherGet = GetAllVoucher().FirstOrDefault(c => c.IdVoucher == id);
+            if (VoucherGet != null)
+            {
+                if (VoucherGet.NgayBatDau < DateTime.Now && VoucherGet.NgayKetThuc > DateTime.Now)
+                {
+                    VoucherGet.TrangThai = (int)TrangThaiVoucher.HoatDongTaiQuay;
+                }
+                else if (VoucherGet.NgayBatDau > DateTime.Now && VoucherGet.NgayKetThuc > DateTime.Now)
+                {
+                    VoucherGet.TrangThai = (int)TrangThaiVoucher.ChuaHoatDongTaiQuay;
+                }
+                return allRepo.EditItem(VoucherGet);
+            }
+            return false;
+        }
+        [HttpPut("UpdateVoucherTaiQuay")]
+        public bool UpdateTaiQuay(VoucherDTO voucherDTO)
+        {
+            var voucherGet = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == voucherDTO.IdVoucher);
+
+            DateTime NgayTao = voucherGet.NgayTao;
+            if (voucherGet != null)
+            {
+                _mapper.Map(voucherDTO, voucherGet);
+                if (voucherDTO.TrangThai == null)
+                {
+
+                }
+                if (voucherGet.NgayBatDau > DateTime.Now)
+                {
+                    voucherGet.TrangThai = (int)TrangThaiVoucher.ChuaHoatDongTaiQuay;
+                }
+                if (voucherGet.NgayBatDau < DateTime.Now)
+                {
+                    voucherGet.TrangThai = (int)TrangThaiVoucher.HoatDongTaiQuay; ;
+                }
+                if (voucherGet.SoLuong > 0 && voucherGet.NgayBatDau < DateTime.Now && voucherGet.NgayKetThuc > DateTime.Now)
+                {
+                    voucherGet.TrangThai = (int)TrangThaiVoucher.HoatDongTaiQuay;
+                }
+                voucherGet.NgayTao = NgayTao;
+                return allRepo.EditItem(voucherGet);
+            }
+            return false;
+        }
+        [HttpPut("UpdateVoucherAfterUseItTaiQuay/{idVoucher}/{idUser}")]
+        public bool UpdateVoucherAfterUseItTaiQuay(string idVoucher, string idUser)
+        {
+            var voucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCher == idVoucher && c.IdNguoiDung == idUser);
+            if (voucherNguoiDung != null)
+            {
+                voucherNguoiDung.TrangThai = (int)TrangThaiVoucherNguoiDung.DaSuDung;
+                VcNguoiDungRepos.EditItem(voucherNguoiDung);
+                return true;
+            }
+            return false;
+        }
+        [HttpPost("AddVoucherCungBanTaiQuay/{idVoucher}/{idUser}/{soluong}")]
+        public bool AddVoucherCungBanTaiQuay(string idVoucher, string idUser, int soluong)
+        {
+            DateTime? ngay = DateTime.Now;
+            var voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == idVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay);
+            if (voucher != null)
+            {
+                int soLuongDaIn = 0;
+                int TrangThaiCanTao = (int)TrangThaiVoucherNguoiDung.KhaDung;
+                if (voucher.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay)
+                {
+                    TrangThaiCanTao = (int)TrangThaiVoucherNguoiDung.ChuaBatDau;
+                }
+                for (int i = 0; i < soluong; i++)
+                {
+                    VoucherNguoiDung VcNguoiDungCanThem = new VoucherNguoiDung()
+                    {
+                        IdVouCherNguoiDung=Guid.NewGuid().ToString(),
+                        IdNguoiDung = idUser,
+                        IdVouCher = voucher.IdVoucher,
+                        NgayNhan = ngay,
+                        TrangThai = TrangThaiCanTao
+                    };
+                    VcNguoiDungRepos.AddItem(VcNguoiDungCanThem);
+                    soLuongDaIn += 1;
+                }
+                voucher.SoLuong= voucher.SoLuong+soLuongDaIn;
+                allRepo.EditItem(voucher);
+                return true;
+            }
+            return false;
+        }
+
+        #endregion
     }
 }

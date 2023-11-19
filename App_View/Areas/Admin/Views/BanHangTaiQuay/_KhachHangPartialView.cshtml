@@ -1,0 +1,38 @@
+﻿@model IEnumerable<App_Data.Models.KhachHang>;
+@foreach (var item in Model)
+{
+    <div class="col-12">
+        <div class="card" style="width: 14rem; border:solid 1px">
+            <div class="card-body">
+                <p class="card-text">
+
+                    <span>Tên khách hàng: @item.TenKhachHang</span>
+                    <br>
+                    <span>SDT: @item.SDT</span>
+                    <br>
+                    <button onclick="Chon('@item.SDT')" class="btn btn-success" style="float: right;"> Chọn </button>
+                </p>
+            </div>
+        </div>
+    </div>
+}
+<script>
+    function Chon(soDienThoai) {
+        $("#SoDienThoai").val(soDienThoai);
+        $("#TimKhachHang").val("");
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/LoadPartialViewKhachHang',
+            type: 'GET',
+            success: function (result) {
+
+                $('#DanhSachKhachHang').empty();
+
+                $('#DanhSachKhachHang').append(result);
+
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+    }
+</script>

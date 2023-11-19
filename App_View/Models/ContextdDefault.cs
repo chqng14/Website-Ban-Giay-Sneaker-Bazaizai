@@ -57,6 +57,7 @@ namespace App_View.Models
             IPTThanhToanServices _pTThanhToanServices = new PTThanhToanServices();
             await _pTThanhToanServices.CreatePTThanhToanAsync("COD", "COD", 0);
             await _pTThanhToanServices.CreatePTThanhToanAsync("MOMO", "MOMO", 0);
+            await _pTThanhToanServices.CreatePTThanhToanAsync("VNPAY", "VNPAY", 0);
         }
     }
 }

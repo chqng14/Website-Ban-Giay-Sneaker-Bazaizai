@@ -1,4 +1,6 @@
 using App_Data.Models;
+using App_View.IServices;
+using App_View.Services;
 using DocumentFormat.OpenXml.EMMA;
 using MailKit.Search;
 using Microsoft.AspNetCore.Authorization;
@@ -13,13 +15,16 @@ namespace App_View.Areas.Identity.Pages.Account
     {
         private readonly UserManager<NguoiDung> _userManager;
         private readonly SignInManager<NguoiDung> _signInManager;
-
+        private IHoaDonServices hoaDonServices;
+        private IThongTinGHServices thongTinGHServices;
         public ManageMyAccountModel(
             UserManager<NguoiDung> userManager,
             SignInManager<NguoiDung> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            hoaDonServices = new HoaDonServices();
+            thongTinGHServices = new ThongTinGHServices();
         }
         public string FirstName { get; set; }
         public string Username { get; set; }
@@ -61,6 +66,18 @@ namespace App_View.Areas.Identity.Pages.Account
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
             await LoadAsync(user);
+            var UserID = _userManager.GetUserId(User);
+            var listHoaDon = await hoaDonServices.GetHoaDonOnline(UserID);
+            var thongTinGH = (await thongTinGHServices.GetThongTinByIdUser(UserID)).FirstOrDefault(c => c.TrangThai == 0);
+            if (listHoaDon != null)
+            {
+                listHoaDon = listHoaDon.OrderByDescending(dh => dh.NgayTao).Take(4).ToList();
+                ViewData["listHoaDon"] = listHoaDon;
+            }
+            if (thongTinGH != null)
+            {
+                ViewData["ThongTinGH"] = thongTinGH;
+            }
             return Page();
         }
     }

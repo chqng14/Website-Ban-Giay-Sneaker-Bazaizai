@@ -1,0 +1,231 @@
+﻿@using static App_Data.Repositories.TrangThai;
+@model App_Data.ViewModels.Voucher.VoucherDTO;
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@* Modal sau khi thêm thành công ? *@
+<div class="modal fade" id="success">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: #3f87f5;">
+                <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="background: white;">
+                <span id="thongBao">Bạn có muốn thêm nữa không ?</span>
+            </div>
+            <div class="modal-footer" style="background: white">
+
+                <button class="btn btn-primary bd-0 col-md-6" id="reload" type="submit">Có</button>
+
+                <a type="button" class="btn btn-default" asp-action="ShowVoucherTaiQuay">Không (Về 🏡)</a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<!-- Css -->
+
+<div class="container">
+    <div class="page-header">
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash" style="background-color:white">
+                <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản trị</a>
+                <a class="breadcrumb-item" asp-action="ShowVoucherTaiQuay" asp-controller="Vouchers">Danh sách voucher tại quầy</a>
+                <a class="breadcrumb-item" asp-action="CreateTaiQuay" asp-controller="Vouchers">Tạo mới</a>
+            </nav>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title" style="text-align:center"> <i class="anticon anticon-gift"></i> Tạo mới voucher tại quầy <i class="anticon anticon-gift"></i> </h4>
+        </div>
+        <div class="card-body">
+            @* //modal xác nhận thêm*@
+            <form id="createVoucherForm" asp-action="CreateTạiQuay">
+                <div class="modal fade" id="confirm">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background: #3f87f5;">
+                                <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="anticon anticon-close"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body" style="background: white;">
+                                <span id="thongBao">Bạn có muốn thêm không ?</span>
+                            </div>
+                            <div class="modal-footer" style="background: white">
+
+                                <button class="btn btn-primary bd-0 col-md-6" type="submit">Thêm mới</button>
+
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label class="font-weight-semibold" asp-for="TenVoucher">
+                            Tên Voucher:
+                        </label>
+                        <input asp-for="TenVoucher" id="Ten" placeholder="Nhập tên..."
+                               class="form-control" />
+                        <span asp-validation-for="TenVoucher" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="font-weight-semibold">Loại hình KM:</label>
+                        <select id="LoaiHinhKm" asp-for="LoaiHinhUuDai"
+                                class="form-control select2"
+                                data-placeholder="Vui lòng chọn!"
+                                onchange="toggleInput()">
+                            <option value="@((int)TrangThaiLoaiKhuyenMai.TienMat)">Giảm giá tiền mặt</option>
+                            <option value="@((int)TrangThaiLoaiKhuyenMai.PhanTram)">Giảm giá theo %</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label class="font-weight-semibold" id="inputLabel">Nhập số tiền giảm:</label>
+                        <input asp-for="MucUuDai" id="MucGiam"
+                               class="form-control" type="text" />
+                        <span asp-validation-for="MucUuDai" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="font-weight-semibold">Ngày bắt đầu:</label>
+                        <input asp-for="NgayBatDau" id="NgayBatDau"
+                               class="form-control" />
+                        <span asp-validation-for="NgayBatDau"
+                              class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="font-weight-semibold">Ngày kết thúc:</label>
+                        <input asp-for="NgayKetThuc" id="NgayKetThuc"
+                               class="form-control" />
+                        <span asp-validation-for="NgayKetThuc"
+                              class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="font-weight-semibold">Điều kiện:</label>
+                        <input class="form-control" type="number" asp-for="DieuKien" />
+                        <span asp-validation-for="DieuKien" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <button type="button" class="btn btn-primary bd-0 col-md-6" style="margin-top:30px" data-toggle="modal" data-target="#confirm">
+                            Thêm mới
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        var daClick = false;
+
+        // Lắng nghe sự kiện click trên nút "Thêm mới"
+        document.querySelector("#confirm .modal-footer .btn-primary").addEventListener("click", function () {
+            // Nếu nút chưa được click lần nào
+            if (!daClick) {
+                // Đặt biến daClick thành true để ngăn chặn các lần click sau này
+                daClick = true;
+                $('#confirm').modal('hide');
+            }
+        });
+        //function thêm
+        $(document).ready(function () {
+            const toastHeader = `<div class="toast-header">
+                                                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                            <strong class="mr-auto">Thông báo</strong>
+                                                            <small>1 second ago</small>
+                                                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>`;
+
+            $("#createVoucherForm").submit(function (e) {
+                e.preventDefault();
+                var form = $(this);
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("CreateTaiQuay","Vouchers")",
+                    data: form.serialize(),
+                    success: function (data) {
+                        var toastHTML = '';
+                        if (data.message != null) {
+                            toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                                    ${toastHeader}
+                                                                    <div class="toast-body">
+                                                                        ${data.message}
+                                                                    </div>
+                                                                </div>`;
+                            $('#confirm').modal('hide');
+                            $('#success').modal('show');
+                        } else {
+                            toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                                    ${toastHeader}
+                                                                    <div class="toast-body">
+                                                                        ${data.error}
+                                                                    </div>
+                                                                </div>`;
+                            $('#confirm').modal('hide');
+                        }
+                        $('#notification-toast').append(toastHTML);
+                        $('#notification-toast .toast').toast('show');
+                        setTimeout(function () {
+                            $('#notification-toast .toast:first-child').remove();
+                        }, 3000);
+                    }
+                });
+            });
+        });
+        //function check input
+        function toggleInput() {
+            var select = document.getElementById("LoaiHinhKm");
+            var inputLabel = document.getElementById("inputLabel");
+            var input = document.getElementById("MucGiam");
+
+            if (select.value === "1") { // Nếu chọn "Giảm giá theo %"
+                inputLabel.textContent = "Nhập số % giảm:";
+                input.setAttribute("type", "number"); // Chuyển thành trường nhập số
+                input.setAttribute("min", "0");
+                input.setAttribute("max", "100");
+                input.setAttribute("step", "0.01"); // Bước nhảy 0.01 (cho phần trăm)
+                input.setCustomValidity(""); // Xóa thông báo lỗi
+
+                // Thêm kiểm tra hợp lệ cho số phần trăm giảm
+                input.addEventListener("input", validatePercentage);
+            } else {
+                inputLabel.textContent = "Nhập số tiền giảm:";
+                input.setAttribute("type", "text");
+                input.removeAttribute("min");
+                input.removeAttribute("max");
+                input.removeAttribute("step");
+                input.setCustomValidity(""); // Xóa thông báo lỗi
+                input.removeEventListener("input", validatePercentage);
+            }
+        }
+
+        function taiLaiTrang() {
+            location.reload(); // Hoặc location.reload(true)
+        }
+
+        // Lấy tham chiếu đến nút "Reload Trang"
+        var nutReload = document.getElementById('reload');
+
+        // Thêm sự kiện click vào nút để gọi hàm taiLaiTrang
+        nutReload.addEventListener('click', taiLaiTrang);
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.8.1/autoNumeric.min.js"></script>
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+    }

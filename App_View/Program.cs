@@ -25,10 +25,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.AddScoped<IMomoService, MomoService>();
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 // Add services to the container.
-
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=MI\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
-
+//BAZAIZAI\SQLEXPRESS
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=BAZAIZAI\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
 builder.Services.AddHangfireServer();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BazaizaiContext>(options =>
@@ -143,6 +143,7 @@ using (var scope = app.Services.CreateScope())
         var roleManager = services.GetRequiredService<RoleManager<ChucVu>>();
         await ContextdDefault.SeedRolesAsync(userManager, roleManager);
         await ContextdDefault.SeeAdminAsync(userManager, roleManager);
+        await ContextdDefault.PhuongThucThanhToan();
 
     }
     catch (Exception ex)
@@ -183,9 +184,13 @@ Task.Run(() =>
         capNhatTime.CheckNgayKetThuc();
         capNhatTime.CapNhatTrangThaiSaleDetail();
         capNhatTime.CapNhatGiaBanThucTe();
-        capNhatTime.CapNhatVoucherHetHan();
-        capNhatTime.CapNhatVoucherDenHan();
-        capNhatTime.CapNhatVoucherNguoiDung();
+        capNhatTime.CapNhatVoucherHetHanOnline();
+        capNhatTime.CapNhatVoucherDenHanOnline();
+        capNhatTime.CapNhatVoucherNguoiDungOnline();
+        capNhatTime.CapNhatVoucherHetHanTaiQuay();
+        capNhatTime.CapNhatVoucherDenHanTaiQuay();
+        capNhatTime.CapNhatVoucherNguoiDungTaiQuay();
+        capNhatTime.CapNhatVoucherNguoiDungTaiQuayKhiVoucherHoatDong();
         Thread.Sleep(TimeSpan.FromSeconds(5));
     }
 });

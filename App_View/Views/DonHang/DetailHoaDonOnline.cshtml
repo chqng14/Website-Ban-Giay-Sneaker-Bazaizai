@@ -426,14 +426,14 @@
                     {
                         <h3 class="manage-o__text-2 u-c-secondary" style="color:red !important">Đơn hàng đã huỷ</h3>
                     }
-                    else if (Model.LoaiThanhToan == "MOMO" && Model.TrangThaiThanhToan == 1)
+                    else if (Model.LoaiThanhToan != "COD" && Model.TrangThaiThanhToan == 1)
                     {
-                        <h3 class="manage-o__text-2 u-c-secondary">Momo</h3>
+                        <h3 class="manage-o__text-2 u-c-secondary">@Model.LoaiThanhToan</h3>
                         <h3 class="manage-o__text-2 u-c-secondary">Đã thanh toán</h3>
                     }
-                    else if (Model.LoaiThanhToan == "MOMO" && Model.TrangThaiThanhToan == 0)
+                    else if (Model.LoaiThanhToan != "COD" && Model.TrangThaiThanhToan == 0)
                     {
-                        <h3 class="manage-o__text-2 u-c-secondary">Momo</h3>
+                        <h3 class="manage-o__text-2 u-c-secondary">@Model.LoaiThanhToan</h3>
                         <h3 class="manage-o__text-2 u-c-secondary" style="color:red !important">Vui lòng thanh toán đơn hàng của bạn</h3>
                     }
                     else
@@ -481,16 +481,25 @@
             <div class="dash-l-r u-s-m-t-8">
                 @if (Model.TrangThaiGiaoHang != 5)
                 {
-                    if (Model.LoaiThanhToan == "MOMO" && Model.TrangThaiThanhToan == 0)
+                    if (Model.LoaiThanhToan != "COD" && Model.LoaiThanhToan != "Không có" && Model.TrangThaiThanhToan == 0)
                     {
-                        <a>
+                        <a onclick="RePay('@Model.IdHoaDon')">
                             <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Thanh toán</span>
                         </a>
                         <a data-modal="modal" data-modal-id="#edit-ship-address">
                             <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Huỷ</span>
                         </a>
                     }
-                    else
+                    else if (Model.TrangThaiGiaoHang == 4)
+                    {
+                        <a onclick="ReBuyAjax('@Model.IdHoaDon')">
+                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Mua Lại</span>
+                        </a>
+                        <a>
+                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Đánh giá</span>
+                        </a>
+                    }
+                    else if (Model.TrangThaiGiaoHang == 1 || Model.TrangThaiGiaoHang == 2)
                     {
                         <a data-modal="modal" data-modal-id="#edit-ship-address">
                             <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px;text-align: center;margin-top: 15px;">Huỷ</span>
@@ -499,10 +508,10 @@
                 }
                 @if (Model.TrangThaiGiaoHang == 5)
                 {
-
-                    <a href="@Url.Action("ReBuy","DonHang",new{idHoaDon = Model.IdHoaDon})">
-                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px;text-align: center;margin-top: 15px;">Mua Lại</span>
-                        </a>
+                    <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px; text-align: center; margin-top: 15px;" onclick="ReBuyAjax('@Model.IdHoaDon')">Mua Lại</span>
+                    @* <a href="@Url.Action("ReBuy","DonHang",new{idHoaDon = Model.IdHoaDon})">
+                        <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px;text-align: center;margin-top: 15px;">Mua Lại</span>
+                    </a> *@
                     
                 }
             </div>
@@ -680,3 +689,46 @@
     });
 </script>
 
+<script>
+    function ReBuyAjax(idHoaDon) {
+        $.ajax({
+            url: '@Url.Action("ReBuy", "DonHang")',
+            type: 'POST',
+            data: { idHoaDon: idHoaDon },
+            success: function (result) {
+                // Xử lý kết quả Ajax ở đây
+                if (result.quantityError) {
+                    Swal.fire({
+                        title: 'Sản phẩm lỗi',
+                        icon: 'error',
+                        html: result.quantityError.join('<br/>'),
+                    });
+                } else {
+                    // Chuyển hướng hoặc xử lý kết quả thành công
+                    window.location.href = '@Url.Action("ShowCartUser", "GioHangChiTiets")';
+                }
+            },
+            error: function (error) {
+                // Xử lý lỗi Ajax ở đây
+                console.log(error);
+            }
+        });
+    }
+</script>
+<script>
+    function RePay(idHoaDon) {
+        $.ajax({
+            url: '@Url.Action("RePay", "DonHang")',
+            type: 'POST',
+            data: { idHoaDon: idHoaDon },
+            success: function (result) {
+                // Xử lý kết quả Ajax ở đây
+                window.location.href = result.url;
+            },
+            error: function (error) {
+                // Xử lý lỗi Ajax ở đây
+                console.log(error);
+            }
+        });
+    }
+</script>

@@ -15,12 +15,11 @@ namespace App_Data.ViewModels.Voucher
         [StringLength(255, MinimumLength = 5, ErrorMessage = "Tên voucher phải có ít nhất 5 ký tự.")]
         public string? TenVoucher { get; set; }
         [Required(ErrorMessage = "Điều kiện là trường bắt buộc.")]
-        [Range(1, int.MaxValue, ErrorMessage = "Điều kiện phải là số nguyên không âm.")]
+        [Range(0, int.MaxValue, ErrorMessage = "Điều kiện phải là số nguyên không âm.")]
         public int? DieuKien { get; set; }
         [Required(ErrorMessage = "Loại hình khuyến mãi là trường bắt buộc.")]
         public int? LoaiHinhUuDai { get; set; }
-        [Required(ErrorMessage = "Số lượng là trường bắt buộc.")]
-        [Range(1, int.MaxValue, ErrorMessage = "Số lần sử dụng phải lớn hơn 0.")]
+        [Range(0, int.MaxValue, ErrorMessage = "Trường cần nhập tối đa từ 0 đến 999.999.999.")]
         public int? SoLuong { get; set; }
         [CustomMucUuDaiValidation]
         public double? MucUuDai { get; set; }

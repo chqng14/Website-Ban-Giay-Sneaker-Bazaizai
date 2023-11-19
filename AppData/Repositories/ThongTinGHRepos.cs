@@ -1,6 +1,7 @@
 ﻿using App_Data.DbContextt;
 using App_Data.IRepositories;
 using App_Data.Models;
+using App_Data.ViewModels.GioHangChiTiet;
 using App_Data.ViewModels.ThongTinGHDTO;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
@@ -39,8 +40,8 @@ namespace App_Data.Repositories
         {
             try
             {
-                var id = context.thongTinGiaoHangs.Find(item.IdThongTinGH);
-                context.thongTinGiaoHangs.Update(id);
+                //var id = context.thongTinGiaoHangs.Find(item.IdThongTinGH);
+                context.thongTinGiaoHangs.Update(item);
                 context.SaveChanges();
                 return true;
             }
@@ -68,6 +69,12 @@ namespace App_Data.Repositories
             {
                 return false;
             }
+        }
+
+        public IEnumerable<ThongTinGHDTO> GetAllDTO()
+        {
+            var thongtin = context.thongTinGiaoHangs.ToList();
+            return _mapper.Map<List<ThongTinGHDTO>>(thongtin);
         }
     }
 }

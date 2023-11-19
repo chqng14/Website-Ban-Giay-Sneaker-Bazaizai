@@ -40,46 +40,23 @@ namespace App_View.Areas.Admin.Controllers
             _emailSender = emailSender;
             _context = new BazaizaiContext();
         }
+        #region Online
 
-        // GET: Admin/Vouchers
-        public async Task<IActionResult> Index(string trangThai)
+        public async Task<IActionResult> ShowVoucher(int? trangThai)
         {
-            var lstVoucher = (await _voucherSV.GetAllVoucher()).ToList(); // Lấy tất cả Voucher và chuyển sang List
-
-            // Sắp xếp danh sách ban đầu theo NgayTao, giảm dần
-            lstVoucher = lstVoucher.OrderByDescending(c => c.NgayTao).ToList();
-
-            // Tiếp tục với việc lọc dựa trên trạng thái
-            if (string.IsNullOrEmpty(trangThai) || trangThai == "hoatDong")
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> FilterVoucherByStatus(int? trangThai)
+        {
+            var lstVoucher = (await _voucherSV.GetAllVoucher())
+               .Where(c => c.TrangThai >= 0 && c.TrangThai <= 3).OrderByDescending(c => c.NgayTao).ToList();
+            if (trangThai != null)
             {
-                lstVoucher = lstVoucher.Where(v => v.TrangThai == (int)TrangThaiVoucher.HoatDong).ToList();
+                lstVoucher = lstVoucher.Where(c => c.TrangThai == trangThai).OrderByDescending(c => c.NgayTao).ToList();
             }
-            else
-            {
-                switch (trangThai)
-                {
-                    case "tatCa":
-                        // Không cần thay đổi gì
-                        break;
-                    case "hoatDong":
-                        // Không cần thay đổi gì
-                        break;
-                    case "khongHoatDong":
-                        lstVoucher = lstVoucher.Where(v => v.TrangThai == (int)TrangThaiVoucher.KhongHoatDong).ToList();
-                        break;
-                    case "chuaBatDau":
-                        lstVoucher = lstVoucher.Where(v => v.TrangThai == (int)TrangThaiVoucher.ChuaBatDau).ToList();
-                        break;
-                    case "DaHuy":
-                        lstVoucher = lstVoucher.Where(v => v.TrangThai == (int)TrangThaiVoucher.DaHuy).ToList();
-                        break;
-                    default:
-                        break;
-                }
-            }
-            ViewBag.TatCa = lstVoucher; // Gán danh sách lọc được vào ViewBag.TatCa
 
-            return View(lstVoucher);
+            return PartialView("_VoucherPartial", lstVoucher);
         }
         public IActionResult Create()
         {
@@ -113,7 +90,7 @@ namespace App_View.Areas.Admin.Controllers
             {
                 if (await _voucherSV.UpdateVoucher(voucherDTO))
                 {
-                    return RedirectToAction("Index");
+                    return RedirectToAction("ShowVoucher");
                 }
             }
             return View();
@@ -127,21 +104,24 @@ namespace App_View.Areas.Admin.Controllers
 
         public async Task<ActionResult> DeleteVoucherWithList(List<string> voucherIds)
         {
-            if (voucherIds != null)
+            if (voucherIds.Any())
             {
-                await _voucherSV.DeleteVoucherWithList(voucherIds);
-                return RedirectToAction("Index");
+                if (await _voucherSV.DeleteVoucherWithList(voucherIds) == true)
+                {
+                    return Ok(true);
+                }
+                return Ok(false);
             }
-            return RedirectToAction("Index");
+            return Ok(false);
         }
         public async Task<ActionResult> RestoreVoucherWithList(List<string> voucherIds)
         {
-            if (voucherIds != null)
+            if (voucherIds.Any())
             {
                 await _voucherSV.RestoreVoucherWithList(voucherIds);
-                return RedirectToAction("Index");
+                return Ok(true);
             }
-            return RedirectToAction("Index");
+            return Ok(false);
         }
 
         public async Task<ActionResult> GiveVouchersToUsers(string? maVoucher)
@@ -174,15 +154,15 @@ namespace App_View.Areas.Admin.Controllers
                     {
                         var userKhachHang = await _userManager.FindByIdAsync(userId);
 
-                        var subject = "Xác nhận email của bạn";
+                        var subject = "Bạn đã nhận được Voucher từ Bazaizai Store";
                         var body = "Chào bạn,\n\n" +
-                                   "Chúng tôi có một khuyến mại đặc biệt dành cho bạn vào ngày 2/11/2023:\n" +
-                                   "Hot! Khuyến mại 100% cho tất cả khách hàng.\n" +
+                                   "Chúng tôi có một voucher đặc biệt dành cho bạn vào ngày hôm nay:\n" +
+                                   "Nhanh tay đến trang web của chúng tôi để sử dụng nó.\n" +
                                    "Đừng bỏ lỡ cơ hội này!\n\n" +
                                    "Trân trọng,\n" +
                                    "Nhóm hỗ trợ của chúng tôi";
                         string html = "<p>Hot! Khuyến mại 100% cho tất cả khách hàng trong ngày 2/11/2023</p>";
-                        html += "<img src='https://gallery.yopriceville.com/var/resizes/Free-Clipart-Pictures/Sale-Stickers-PNG/100%25_Off_Sale_PNG_Transparent_Image.png?m=1507172109' alt='Hình ảnh khuyến mại' />";
+                        html += "<img src='/images/logo.jpg' alt='Hình ảnh logo' />";
 
                         await _emailSender.SendEmailAsync(userKhachHang.Email, subject, body + html);
                     }
@@ -195,7 +175,7 @@ namespace App_View.Areas.Admin.Controllers
             return Ok(false);
         }
         [HttpPost]
-        public async Task<IActionResult> GiveVoucherForNewUser( string MaVoucher)
+        public async Task<IActionResult> GiveVoucherForNewUser(string MaVoucher)
         {
             var ketQuaThemVoucher = await _voucherND.TangVoucherNguoiDungMoi(MaVoucher);
             if (ketQuaThemVoucher == true)
@@ -207,5 +187,152 @@ namespace App_View.Areas.Admin.Controllers
                 return Ok(false);
             }
         }
+        #endregion
+        #region TaiQuay
+        //Tại quầy
+        //[Description("Hoạt động của tại quầy")]
+        //HoatDongTaiQuay = 6,
+        //    [Description("Không hoạt động của tại quầy")]
+        //KhongHoatDongTaiQuay = 7,
+        //    [Description("Chưa hoạt động của tại quầy")]
+        //ChuaHoatDongTaiQuay = 8,
+        //    [Description("Đã huỷ cứng")]
+        //DaHuyTaiQuay = 9
+        public async Task<IActionResult> ShowVoucherTaiQuay(int? trangThai)
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> FilterVoucherByStatusTaiQuay(int? trangThai)
+        {
+            var lstVoucher = (await _voucherSV.GetAllVoucher())
+                .Where(c => c.TrangThai >= 6 && c.TrangThai <= 9).OrderByDescending(c => c.NgayTao).ToList();
+
+            if (trangThai != null)
+            {
+                lstVoucher = lstVoucher.Where(c => c.TrangThai == trangThai).OrderByDescending(c => c.NgayTao).ToList();
+            }
+
+            return PartialView("_VoucherPartialTaiQuay", lstVoucher);
+        }
+        public IActionResult CreateTaiQuay()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateTaiQuay(VoucherDTO voucherDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                if (await _voucherSV.CreateTaiQuay(voucherDTO))
+                {
+                    return Ok(new { message = " Thêm mới thành công" });
+                }
+            }
+            return Ok(new { error = "Thêm voucher thất bại" });
+
+        }
+        public async Task<ActionResult> EditTaiQuay(string id)
+        {
+            var Voucher = await _voucherSV.GetVoucherDTOById(id);
+            return View(Voucher);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditTaiQuay(VoucherDTO voucherDTO)
+        {
+            if (ModelState.IsValid)
+            {
+                if (await _voucherSV.UpdateTaiQuay(voucherDTO))
+                {
+                    return RedirectToAction("ShowVoucherTaiQuay");
+                }
+            }
+            return View();
+        }
+
+        public async Task<ActionResult> DeleteTaiQuay(string id)
+        {
+            await _voucherSV.DeleteTaiQuay(id);
+            return RedirectToAction("ShowVoucherTaiQuay");
+        }
+
+        public async Task<ActionResult> DeleteVoucherWithListTaiQuay(List<string> voucherIds)
+        {
+            if (voucherIds.Any())
+            {
+                if (await _voucherSV.DeleteVoucherWithListTaiQuay(voucherIds) == true)
+                {
+                    return Ok(true);
+                }
+                return Ok(false);
+            }
+            return Ok(false);
+        }
+        public async Task<ActionResult> RestoreVoucherWithListTaiQuay(List<string> voucherIds)
+        {
+            if (voucherIds.Any())
+            {
+                await _voucherSV.RestoreVoucherWithListTaiQuay(voucherIds);
+                return Ok(true);
+            }
+            return Ok(false);
+        }
+        [HttpPost]
+        public async Task<IActionResult> InVoucherTaiQuay(string idVoucher, int soLuong)
+        {
+            var IdAdmin = await _userManager.FindByEmailAsync("adminhehehe@gmail.com");
+            var VoucherKhaDung = await _voucherSV.GetVoucherDTOById(idVoucher);
+            if (IdAdmin == null || soLuong <= 0 || VoucherKhaDung == null)
+            {
+                return Ok(false);
+            }
+            else if (await _voucherSV.AddVoucherCungBanTaiQuay(idVoucher, IdAdmin.Id, soLuong))
+            {
+                return Ok(true);
+            }
+            return Ok(false);
+        }
+        public async Task<IActionResult> ShowVoucherTaiQuayDaIn(int? trangThai)
+        {
+            return View();
+        }
+
+        public async Task<IActionResult> FilterVoucherTaiQuayDaIn(int? trangThai)
+        {
+            var IdAdmin = await _userManager.FindByEmailAsync("adminhehehe@gmail.com");
+            var voucherTaiQuay = (await _voucherND.GetAllVouCherNguoiDung()).Where(c => c.IdNguoiDung == IdAdmin.Id).ToList();
+            List<string> idVoucher = new List<string>();
+            foreach (var item in voucherTaiQuay.GroupBy(c => c.IdVouCher).Select(c => c.First()).ToList())
+            {
+                idVoucher.Add(item.IdVouCher);
+            }
+            List<Voucher> lstVoucherDaIn = new List<Voucher>();
+            foreach (var item in idVoucher)
+            {
+                var lstVoucher = (await _voucherSV.GetAllVoucher()).FirstOrDefault(c => c.IdVoucher == item);
+                lstVoucherDaIn.Add(lstVoucher);
+            }
+            if (trangThai != null)
+            {
+                lstVoucherDaIn = lstVoucherDaIn.Where(c => c.TrangThai == trangThai).ToList();
+            }
+            return PartialView("_VoucherDaInTaiQuayPartial", lstVoucherDaIn);
+        }
+        [HttpPost]
+        public async Task<IActionResult> FilterVoucherByStatusTaiQuayDaIn(int? trangThai)
+        {
+            var lstVoucher = (await _voucherSV.GetAllVoucher())
+                .Where(c => c.TrangThai >= 6 && c.TrangThai <= 9).OrderByDescending(c => c.NgayTao).ToList();
+
+            if (trangThai != null)
+            {
+                lstVoucher = lstVoucher.Where(c => c.TrangThai == trangThai).OrderByDescending(c => c.NgayTao).ToList();
+            }
+
+            return PartialView("_VoucherPartialTaiQuay", lstVoucher);
+        }
+        #endregion
     }
 }
