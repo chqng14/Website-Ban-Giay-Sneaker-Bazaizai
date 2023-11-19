@@ -43,8 +43,8 @@ namespace App_Data.Repositories
         {
             try
             {
-                var id = context.gioHangChiTiets.Find(item.IdGioHangChiTiet);
-                context.gioHangChiTiets.Update(id);
+                //var id = context.gioHangChiTiets.Find(item.IdGioHangChiTiet);
+                context.gioHangChiTiets.Update(item);
                 context.SaveChanges();
                 return true;
             }

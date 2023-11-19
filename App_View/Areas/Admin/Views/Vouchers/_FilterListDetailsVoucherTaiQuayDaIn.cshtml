@@ -5,105 +5,122 @@
 @{
     BazaizaiContext context = new BazaizaiContext();
 }
-<style>
-    .icon {
-        font-size: 25px;
-        color: #0F69F2;
-        cursor: pointer;
-    }
-</style>
-<!-- Modal -->
-<table id="data-table" class="table" style="text-align:center">
-    <thead>
-        <tr>
-            <th>
-                Mã vật lý
-            </th>
-            <th>
-                Mã QR
-            </th>
-            <th>
-                Tên voucher
-            </th>
-            <th>
-                Loại Hình
-            </th>
-            <th>
-                Điều kiện
-            </th>
-            <th>
-                Ngày bắt đầu
-            </th>
-            <th>
-                Ngày kết thúc
-            </th>
-            <th>
-                Trạng thái
-            </th>
-        </tr>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .voucher-container {
+            width: 900px;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            margin-bottom: 40px;
+            margin-left: 100px;
+            background: url('/images/background_Voucher.png') center/cover; /* Sử dụng hình nền */
+        }
 
-    </thead>
-    <tbody>
+
+        .qr-code {
+            flex: 3;
+            padding-right:50px;
+        }
+
+            .qr-code img {
+                max-width: 80%;
+                height: auto;
+                margin-left: 35.9px;
+            }
+
+        .voucher-info {
+            flex: 7;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-left: 60px;
+        }
+
+            .voucher-info table {
+                width: 100%;
+            }
+
+                .voucher-info table td {
+                    padding: 5px;
+                    border-bottom: 1px solid #ccc;
+                }
+
+        table tr {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="voucher-container-wrapper">
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @item.IdVouCherNguoiDung
-                </td>
-                <td>
-                    <img src="/images/VoucherNguoiDungQRCode/@(item.IdVouCherNguoiDung).png" width="250px" alt="VoucherQR">
-                </td>
-                <td>
-                  @item.TenVoucher
-                </td>
-                <td>
-                    @if (item.LoaiHinhUuDai == 0)
-                    {
-                        <span>Giảm giá theo tiền mặt</span>
-                    }
-                    @if (item.LoaiHinhUuDai == 1)
-                    {
-                        <span>Giảm giá %</span>
-                    }
-                </td>
-                <td>
-                    @string.Format("{0:N0}đ", item.DieuKien)
-                </td>
-              
-                <td>
-                    @item.NgayBatDau
-                </td>
-                <td>
-                    @item.NgayKetThuc
-                </td>
-                <td>
-                    @if (item.TrangThai == 0)
-                    {
-                        <span>Khả dụng</span>
-                    }
-                    else if (item.TrangThai == 1)
-                    {
-                        <span>Đã sửa dụng</span>
-                    }
-                    else if (item.TrangThai == 2)
-                    {
-                        <span>Hết hiệu lực</span>
-                    }
-                    else if (item.TrangThai == 3)
-                    {
-                        <span>Đã huỷ</span>
-                    }
-                    else if (item.TrangThai == 4)
-                    {
-                        <span>Chưa bắt đầu</span>
-                    }
-                </td>           
-            </tr>
+            <div class="voucher-container">
+                <div class="qr-code">
+                    <img src="/images/VoucherNguoiDungQRCode/@(item.IdVouCherNguoiDung).png" alt="VoucherQR">
+                </div>
+                <div class="voucher-info">
+                    <table>
+                        <tr>
+                            <td><strong>Tên voucher:</strong></td>
+                            <td colspan="2">@item.TenVoucher</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mã Cứng:</strong></td>
+                            <td>@item.IdVouCherNguoiDung</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Loại ưu đãi:</strong></td>
+                            <td>
+                                @if (item.LoaiHinhUuDai == 0)
+                                {
+                                    <span>Giảm giá theo tiền mặt</span>
+                                }
+                                else if (item.LoaiHinhUuDai == 1)
+                                {
+                                    <span>Giảm giá %</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Áp dụng cho đơn hàng tối thiểu:</strong>
+
+                            </td>
+                            <td>
+                                @string.Format("{0:N0}đ", item.DieuKien)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Thời gian:</strong>
+
+                            </td>
+                            <td>
+                                Từ @item.NgayBatDau đến @item.NgayKetThuc
+                            </td>
+                        </tr>
+                        <div class="voucher-status">                          
+                            <em>Voucher khuyến mãi được thực hiện bởi Bazaizai Store</em>
+                        </div>
+                        <!-- Thêm các thông tin khác tương tự ở đây -->
+                    </table>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+
+  
+
+</body>
+</html>
+
 <script>
     $(document).ready(function () {
-        $('#data-table').DataTable()   
+        $('#data-table').DataTable()
     });
 </script>
