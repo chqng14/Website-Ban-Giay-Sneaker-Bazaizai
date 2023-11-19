@@ -119,6 +119,7 @@ namespace App_View.Controllers
                 };
                 var mahd = await hoaDonServices.CreateHoaDon(hoadon);
                 var tien = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam ?? 0));
+                var spList = new List<SanPhamTest>();
                 foreach (var item in listcart)
                 {
                     await hoaDonChiTietServices.CreateHoaDonChiTiet(new HoaDonChiTietDTO()
@@ -136,22 +137,21 @@ namespace App_View.Controllers
                         IdChiTietSanPham = item.IdSanPhamCT,
                         SoLuong = (int)item.SoLuong
                     };
-                    var sp = new List<SanPhamTest>()
+                    var sanPhamTest = new SanPhamTest()
                     {
-                        new SanPhamTest()
-                        {
+                        TenThuongHieu = item.TenThuongHieu,
                         TenSanPham = item.TenSanPham,
                         TenMauSac = item.TenMauSac,
                         TenKichCo = item.TenKichCo,
                         SoLuong = item.SoLuong,
                         GiaBan = item.GiaBan
-                        }
                     };
-                    SessionServices.SetspToSession(HttpContext.Session, "sp", sp);
+                    spList.Add(sanPhamTest);
                     await gioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
                     var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
                     await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                 }
+                SessionServices.SetspToSession(HttpContext.Session, "sp", spList);
                 if (hoaDonDTO.LoaiThanhToan.ToLower() == "momo")
                 {
                     var url = await Momo(hoadon.IdHoaDon, mahd, tien);
@@ -318,7 +318,7 @@ namespace App_View.Controllers
                 await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.ChuaThanhToan); string payment = await hoaDonServices.GetPayMent(idHoaDon);
                 var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
                 order.LoaiThanhToan = payment;
-                //await SendMail(order.MaHoaDon);
+                await SendMail(order.MaHoaDon);
                 return View(order);
             }
             else

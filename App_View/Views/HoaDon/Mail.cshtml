@@ -371,7 +371,7 @@
 										@* <img src="images/prod-1.jpg" alt=""
 											 style="width: 100px; max-width: 600px; height: auto; margin-bottom: 20px; display: block;"> *@
 										<div class="text">
-											<h3>@item.TenSanPham</h3>
+											<h3>@item.TenThuongHieu @item.TenSanPham</h3>
 											<span>Số lượng x @item.SoLuong</span>
 											<span>Size: @item.TenKichCo</span>
 											<span>Màu sắc: @item.TenMauSac</span>
@@ -384,11 +384,21 @@
 							</tr>
 
 						}
-						@* <tr>
-							<td valign="middle" style="text-align:left; padding: 1em 2.5em;">
-								<p><a href="#" class="btn btn-primary">Continue to your order</a></p>
+						<tr>
+							<td valign="middle" width="80%" style="text-align:left; padding: 0 2.5em;">
+								<div class="product-entry">
+									@* <img src="images/prod-1.jpg" alt=""
+									style="width: 100px; max-width: 600px; height: auto; margin-bottom: 20px; display: block;"> *@
+									<div class="text">
+										<h3></h3>
+										<span></span>
+									</div>
+								</div>
 							</td>
-						</tr> *@
+							<td valign="middle" style="text-align:right; padding: 1em 2.5em;">
+								<p><a href="#" class="btn btn-primary"> @string.Format("{0:N0}đ", Model.Sum(c => c.GiaBan * c.SoLuong))</a></p>
+							</td>
+						</tr>
 					</table>
 				</tr><!-- end tr -->
 				<!-- 1 Column Text + Button : END -->
