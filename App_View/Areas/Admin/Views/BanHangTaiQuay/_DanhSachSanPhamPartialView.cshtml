@@ -14,6 +14,8 @@
                         <span>@item.TenSanPham/@item.MauSac/@item.KichCo</span>
                     </div>
                     <br />
+                    <span>Mã: @item.MaSanPham</span>
+                    <br />
                     @{
                         if (item.GiaGoc != item.GiaThucTe)
                         {
@@ -84,6 +86,7 @@
                             $("#SoTienPhaiTra").val(tienPhaiTra.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                             $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                             $("#VoucherGiam").val(response.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                            $("#TongGiam").val((tongTien-tienPhaiTra).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                             $("#MaVoucher").val("");
                         }
                         else {
@@ -92,7 +95,7 @@
                             var newRow = $("<tr>").attr("id", "hdct-" + response.idSanPhamChiTiet);
                             newRow.append("<td>" + stt + "</td>");
                             newRow.append("<td hidden>" + response.idSanPhamChiTiet + "</td>");
-                            newRow.append("<td></td>");
+                            newRow.append("<td>" + response.maSanPham + "</td>");
                             newRow.append("<td>" + response.tenSanPham + "</td>");
                             var formattedCurrency = response.giaBan.toLocaleString('vi-VN', {
                                 style: 'currency',
@@ -125,6 +128,7 @@
                             $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                             $("#VoucherGiam").val(response.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                             $("#MaVoucher").val("");
+                            $("#TongGiam").val((tongTien - tienPhaiTra).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                             isAdding = false;
                         }
                     }

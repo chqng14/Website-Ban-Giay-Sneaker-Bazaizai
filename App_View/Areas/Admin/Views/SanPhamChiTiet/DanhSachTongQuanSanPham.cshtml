@@ -2,17 +2,24 @@
     #table-sanpham tbody tr {
         cursor: pointer;
     }
+
     .modal-custom {
         max-width: 80% !important;
     }
 </style>
 
 <div class="card-body">
+    <button class="btn btn-kio" style="position: absolute;right: 24px;top: 21px;z-index:1" onclick="window.location.href = '@Url.Action("ManageSanPham", "SanPhamChiTiet")'">
+        <i class="fas fa-cog"></i>
+        <span>Quản lý sản phẩm</span>
+    </button>
+    <div class="modal fade" id="modal-SanPham"></div>
+
     <div class="modal fade" id="exampleModal">
         <div class="modal-dialog modal-dialog-scrollable modal-custom">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">DANH SÁCH SẢN PHẨM</h5>
+                <div class="modal-header" style="background: #129dc1;">
+                    <h5 class="modal-title" id="ModalLabelDanhSach">DANH SÁCH SẢN PHẨM</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <i class="anticon anticon-close"></i>
                     </button>
@@ -22,126 +29,316 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-12">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link" id="excel-tab" data-toggle="tab" href="#excel" role="tab" aria-controls="excel" aria-selected="false">Thao tác Excel</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="sanPhamNgungKinhDoanh-tab" data-toggle="tab" href="#sanPhamNgungKinhDoanh" role="tab" aria-controls="sanPhamNgungKinhDoanh" aria-selected="false">Danh sách thực thể</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" id="timKiemNangCao-tab" data-toggle="tab" href="#timKiemNangCao" role="tab" aria-controls="timKiemNangCao" aria-selected="true">Bộ lọc</a>
+        </li>
+    </ul>
+    <div class="tab-content m-t-15" id="myTabContent">
+        <div class="tab-pane fade" id="excel" style="height: auto" role="tabpanel" aria-labelledby="excel-tab">
+            <div class="row w-100">
+                <div class="col-lg-8">
+                    <div class="d-md-flex">
+                        <div class="m-b-10 ml-1">
+                            <button class="btn btn-kio btn-import" data-toggle="modal" data-target="#modal-import">
+                                <i class="anticon anticon-file-excel m-r-5"></i>
+                                <span>
+                                    Import Excel
+                                </span>
+                            </button>
+                        </div>
+                        <div class="m-b-10 ml-1">
+                            <button class="btn btn-kio" onclick="window.location.href='/admin/sanphamchitiet/ExportToExcel'">
+                                <i class="anticon anticon-file-excel m-r-5"></i>
+                                <span>
+                                    Export Excel
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-right">
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="sanPhamNgungKinhDoanh" style="height: auto" role="tabpanel" aria-labelledby="sanPhamNgungKinhDoanh-tab">
+            <div class="row w-100">
+                <div class="col-lg-8">
+                    <div class="d-md-flex">
+                        <div class="m-b-10">
+                            <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh">
+                                <span>Ngừng kinh doanh</span>
+                            </a>
+                        </div>
+                        <div class="m-b-10 m-l-10">
+                            <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/DanhSachSanPham">
+                                <span>Đang kinh doanh</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-right">
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade active show" id="timKiemNangCao" role="tabpanel" style="height: auto" aria-labelledby="timKiemNangCao-tab">
+            <div class="row w-100">
+                <div class="col-lg-8">
+                    <div class="d-md-flex">
+                        <div class="m-b-10">
+                            <select class="select2_active" style="min-width: 180px;" data-column="1" id="filterSanPham">
+                                <option value="" selected="">Sản phẩm</option>
+                                @foreach (var item in (SelectList)ViewData["IdSanPham"]!)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+
+                            </select>
+                        </div>
+                        <div class="m-b-10 ml-1">
+                            <select class="select2_active" style="min-width: 180px;" id="filterThuongHieu">
+                                <option value="" selected="">Thương hiệu</option>
+                                @foreach (var item in (SelectList)ViewData["IdThuongHieu"]!)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="m-b-10 ml-1">
+                            <select class="select2_active" style="min-width: 180px;" id="filterKieuDeGiay">
+                                <option value="" selected="">Kiểu đế giày</option>
+                                @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"]!)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="m-b-10 ml-1">
+                            <select class="select2_active" style="min-width: 180px;" id="filterChatLieu">
+                                <option value="" selected="">Chất liệu</option>
+                                @foreach (var item in (SelectList)ViewData["IdChatLieu"]!)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="m-b-10 ml-1">
+                            <select class="select2_active" style="min-width: 180px;" id="filterLoaiGiay">
+                                <option value="" selected="">Loại giày</option>
+                                @foreach (var item in (SelectList)ViewData["IdLoaiGiay"]!)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="m-b-10 ml-1">
+                            <select class="select2_active" style="min-width: 180px;" id="filterXuatXu">
+                                <option value="" selected="">Xuất xứ</option>
+                                @foreach (var item in (SelectList)ViewData["IdXuatXu"]!)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-right">
+                    <button class="btn btn-tone" onclick="window.location.href='/Admin/SanPhamChiTiet/TongQuanSanPham'">
+                        <i class="fas fa-bullseye m-r-5"></i>
+                        <span>Khôi phục mặc định</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 m-t-15">
         <table class="table table-hover no-footer w-100" id="table-sanpham">
         </table>
     </div>
 </div>
 
 <script>
-    (function () {
-        $(() => {
-            var tableDSTongQuan = $('#table-sanpham').DataTable({
-                ajax: {
-                    url: '@Url.Action("GetTongQuanDanhSach", "SanPhamChiTiet", new { area = "Admin" })',
+    var keyProduct;
+    var soLuongUpdate;
+    var idSanPham;
+    var idXuatXu;
+    var idKieuDeGiay;
+    var idChatLieu;
+    var idLoaiGiay;
+    var idThuongHieu;
+
+    $(() => {
+    $('.select2_active').select2();
+    var tableDSTongQuan = $('#table-sanpham').DataTable({
+        ajax: {
+            url: '@Url.Action("GetTongQuanDanhSach", "SanPhamChiTiet", new { area = "Admin" })',
+            type: 'GET',
+            dataType: 'json',
+            data: function (e) {
+                return {
+                    draw: e.draw,
+                    start: e.start,
+                    length: e.length,
+                    searchValue: e.search.value,
+                    idSanPham: idSanPham,
+                    idThuongHieu: idThuongHieu,
+                    idKieuDeGiay: idKieuDeGiay,
+                    idChatLieu: idChatLieu,
+                    idLoaiGiay: idLoaiGiay,
+                    idXuatXu: idXuatXu
+                };
+            },
+            contentType: 'application/json'
+        },
+        serverSide: true,
+        paging: true,
+        pageLength: 10,
+        columns: [
+            {
+                data: null,
+                title: 'STT',
+                render: function (data, type, row, meta) {
+                    return meta.row + 1;
+                },
+                orderable: false
+            },
+            {
+                data: 'sanPham',
+                title: 'Sản phẩm',
+                orderable: false
+            },
+            {
+                data: 'thuongHieu',
+                title: 'Thương hiệu',
+                orderable: false
+            },
+            {
+                data: 'kieuDeGiay',
+                title: 'Kiểu đế',
+                orderable: false
+            },
+            {
+                data: 'chatLieu',
+                title: 'Chất liệu',
+                orderable: false
+            },
+            {
+                data: 'xuatXu',
+                title: 'Xuất xứ',
+                orderable: false
+            },
+            {
+                data: 'loaiGiay',
+                title: 'Loại giày',
+                orderable: false
+            },
+            {
+                data: 'soMau',
+                title: 'Số màu',
+                orderable: false
+            },
+            {
+                data: 'soSize',
+                title: 'Số size',
+                orderable: false
+            },
+            {
+                data: 'tongSoLuongTon',
+                title: 'Số lượng',
+                orderable: false
+            },
+            {
+                data: 'tongSoLuongDaBan',
+                title: 'Số lượng đã bán',
+                orderable: false
+            },
+        ],
+        rowCallback: function (row, data, index) {
+            $(row).on("click", function () {
+                keyProduct = data.sumGuild
+                $.ajax({
+                    url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
                     type: 'GET',
-                    dataType: 'json',
-                    data: function (e) {
-                        return {
-                            draw: e.draw,
-                            start: e.start,
-                            length: e.length,
-                            searchValue: e.search.value,
-                        };
+                    data: {
+                        "sumGuid": data.sumGuild
                     },
-                    contentType: 'application/json'
-                },
-                serverSide: true,
-                paging: true,
-                pageLength: 10,
-                columns: [
-                    {
-                        data: null,
-                        title: 'STT',
-                        render: function (data, type, row, meta) {
-                            return meta.row + 1;
-                        },
-                        orderable: false
+                    success: function (result) {
+                        $('#ModalLabelDanhSach').text(`${data.thuongHieu.toUpperCase()} - ${data.sanPham.toUpperCase()} - ${data.kieuDeGiay.toUpperCase()} - ${data.chatLieu.toUpperCase()} - ${data.loaiGiay.toUpperCase()} - ${data.xuatXu.toUpperCase()}`);
+                        $('#modal-dssanpham').empty().html(result);
+                        $('#exampleModal').modal('show');
                     },
-                    {
-                        data: 'sanPham',
-                        title: 'Sản phẩm',
-                        orderable: false
-                    },
-                    {
-                        data: 'thuongHieu',
-                        title: 'Thương hiệu',
-                        orderable: false
-                    },
-                    {
-                        data: 'kieuDeGiay',
-                        title: 'Kiểu đế',
-                        orderable: false
-                    },
-                    {
-                        data: 'chatLieu',
-                        title: 'Chất liệu',
-                        orderable: false
-                    },
-                    {
-                        data: 'xuatXu',
-                        title: 'Xuất xứ',
-                        orderable: false
-                    },
-                    {
-                        data: 'loaiGiay',
-                        title: 'Loại giày',
-                        orderable: false
-                    },
-                    {
-                        data: 'soMau',
-                        title: 'Số màu',
-                        orderable: false
-                    },
-                    {
-                        data: 'soSize',
-                        title: 'Số size',
-                        orderable: false
-                    },
-                    {
-                        data: 'tongSoLuongTon',
-                        title: 'Số lượng',
-                        orderable: false
-                    },
-                    {
-                        data: 'tongSoLuongDaBan',
-                        title: 'Số lượng đã bán',
-                        orderable: false
-                    },
-                ],
-                rowCallback: function (row, data, index) {
-                    $(row).on("click", function () {
-                        $.ajax({
-                            url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
-                            type: 'GET',
-                            data: {
-                                "sumGuid": data.sumGuild
-                            },
-                            success: function (result) {
-                                $('#exampleModalLabel').empty().html(`${data.thuongHieu.toUpperCase()} - ${data.sanPham.toUpperCase()} - ${data.kieuDeGiay.toUpperCase()} - ${data.chatLieu.toUpperCase()} - ${data.loaiGiay.toUpperCase()} - ${data.xuatXu.toUpperCase()}`);
-                                $('#modal-dssanpham').empty().html(result);
-                                $('#exampleModal').modal('show');
-                            },
-                            error: function (xhr, status, error) {
-                                console.log(xhr.responseText);
-                                console.log(status);
-                                console.log(error);
-                                console.log(xhr);
-                            }
-                        });
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
 
 
-                    });
-                },
+            });
+        },
 
-                initComplete: function (settings, json) {
-                    console.log(settings);
-                    console.log(json);
-                }
+        initComplete: function (settings, json) {
+            $('#filterSanPham').on('change', function () {
+                idSanPham = $(this).val();
+                tableDSTongQuan.draw();
             });
 
-        })
-    })()
+            $('#filterThuongHieu').on('change', function () {
+                idThuongHieu = $(this).val();
+                tableDSTongQuan.draw();
+            });
 
+            $('#filterKieuDeGiay').on('change', function () {
+                idKieuDeGiay = $(this).val();
+                tableDSTongQuan.draw();
+            });
+
+            $('#filterChatLieu').on('change', function () {
+                idChatLieu = $(this).val();
+                tableDSTongQuan.draw();
+            });
+
+            $('#filterLoaiGiay').on('change', function () {
+                idLoaiGiay = $(this).val();
+                tableDSTongQuan.draw();
+            });
+
+            $('#filterXuatXu').on('change', function () {
+                idXuatXu = $(this).val();
+                tableDSTongQuan.draw();
+            });
+        }
+    });
+
+})
+
+    $('#modal-SanPham').on('hidden.bs.modal', function () {
+        $('#exampleModal').modal('show');
+    });
+
+    function showModal(value) {
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/LoadPartialView?idSanPhamChiTiet=' + value,
+            type: 'GET',
+            success: function (result) {
+                $('#exampleModal').modal('hide');
+                $('#modal-SanPham').empty().html(result).modal("show");
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    }
 </script>
 

@@ -87,9 +87,6 @@
                 </form>
             </div>
             <div class="col-lg-7 text-right" style="margin-top:50px">
-          @*       <button class="btn btn-warning mr-2" data-toggle="modal" data-target="#cancel" style="color:white">Huỷ hoạt động của voucher đã chọn</button>
-                <button class="btn btn-success mr-2" data-toggle="modal" data-target="#restore">Khôi phục voucher đã chọn</button>
-                <a class="btn btn-secondary mr-2" asp-action="GiveVouchersToUsers">Tặng voucher</a> *@
                 <a class="btn btn-primary" asp-action="Create"><i class="anticon anticon-plus-circle"></i> Tạo mới</a>
 
             </div>
@@ -148,6 +145,7 @@
     </div>
     @* //Tặng voucher đã chọn *@
     <a class="btn btn-secondary mr-2" asp-action="GiveVouchersToUsers">Tặng voucher</a>
+ 
 </div>
 <script>
     // Hàm để load danh sách Voucher mặc định khi trang web được load

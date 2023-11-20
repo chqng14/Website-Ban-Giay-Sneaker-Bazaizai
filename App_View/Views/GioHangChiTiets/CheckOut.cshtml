@@ -781,10 +781,16 @@
             //         updateThongTin(savedRadioButton);
             //     }
             // } else {
+
+            // Kiểm tra xem thongTinGH có khác null không
+            if (radioButtons.length > 0) {
                 var selectedAddress = document.querySelector('input[name="default-address"][data-trangthai="0"]');
                 selectedAddress.checked = true;
                 selectedId = selectedAddress.id;
                 updateThongTin(selectedAddress);
+
+            }
+
              // }
 
             form.addEventListener('submit', function (event) {
@@ -1111,11 +1117,17 @@
     <!--====== Tính phí ship và voucher ======-->
     <script>
         //khi ô input đc thay đổi
-        $('#voucherinput').on('change', function () {
-            MucUuDai = "";
-            voucher(this.value);
-        });
+        // $('#voucherinput').on('change', function () {
+        //     MucUuDai = "";
+        //     voucher(this.value);
+        // });
         //khi ấn enter
+        $(document).ready(function () {
+            $('#button-coupon').click(function () {
+                var voucherValue = $('#voucherinput').val();
+                voucher(voucherValue);
+            });
+        });
         $('#voucherinput').on('keydown', function (e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -1276,7 +1288,7 @@
             if (value != null && value.trim() != "") {
                 var ma = { ma: value };
                 $.ajax({
-                    url: '/Voucher/GetVoucherByMa',
+                    url: '/VoucherNguoiDung/GetVoucherByMa',
                     type: 'GET',
                     data: ma,
                     success: function (result) {

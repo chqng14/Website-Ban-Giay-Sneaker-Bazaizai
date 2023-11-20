@@ -267,9 +267,9 @@ namespace App_Api.Controllers
 
                     var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietCopyDTO.SanPhamChiTietData);
                     sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
-                    sanPhamChiTiet.Ma = !(await _sanPhamChiTietRes.GetListAsync()).Any() ?
-                        "MASP1" :
-                        "MASP" + ((await _sanPhamChiTietRes.GetListAsync()).Count() + 1);
+                    var mauSac = _mauSacRes.GetAll().FirstOrDefault(ms => ms.IdMauSac == sanPhamChiTiet.IdMauSac)!.TenMauSac!.Substring(0, 2);
+                    var size = _kickcoRes.GetAll().FirstOrDefault(kc => kc.IdKichCo == sanPhamChiTiet.IdKichCo)!.SoKichCo;
+                    sanPhamChiTiet.Ma = "SP-" + ((int)1000 + (await _sanPhamChiTietRes.GetListAsync()).Count()).ToString() + "-" + mauSac + "-" + size;
                     sanPhamChiTiet.TrangThai = 0;
                     sanPhamChiTiet.SoLuongDaBan = 0;
                     sanPhamChiTiet.NgayTao = DateTime.Now;
@@ -567,7 +567,19 @@ namespace App_Api.Controllers
         }
         #endregion
 
-
+        [HttpPut("Update-List-SanPhamTable")]
+        public async Task<bool> UpdateListSanPhamTableDTO(List<SanPhamTableDTO> lstSanPhamTableDTO)
+        {
+            try
+            {
+                await _sanPhamChiTietRes.UpdateLstSanPhamTableAynsc(lstSanPhamTableDTO);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
     }
 }

@@ -568,7 +568,16 @@
                      processData: false,
                      success: function (result) {
                          if (result) {
-                             table.draw();
+                             if (window.location.pathname.includes('SanPhamChiTiet/DanhSachSanPham')) {
+                                 $('#modalSanPham').modal('hide');
+                                 table.draw();
+                             }
+                             else {
+                                 GetDanhDachTongQuan()
+                                 thayDoiBodyDSSanPham()
+                                 $('.modal-backdrop').removeClass('show');
+                                 $('.modal-backdrop').remove();
+                             }
                              var toastHTML = `<div class="toast fade hide" data-delay="3000">
                                                  <div class="toast-header">
                                                      <i class="anticon anticon-info-circle text-primary m-r-5"></i>
@@ -584,6 +593,9 @@
                                              </div>`
                              $('#notification-toast').append(toastHTML)
                              $('#notification-toast .toast').toast('show');
+                             setTimeout(function () {
+                                 $('#notification-toast .toast:first-child').remove();
+                             }, 3000);
                          } else {
                              var toastHTML = `<div class="toast fade hide" data-delay="3000">
                                              <div class="toast-header">
@@ -694,8 +706,15 @@
                 processData: false,
                 success: function (result) {
                     if (result) {
-                        $('#modalSanPham').modal('hide');
-                        table.draw();
+                        if (window.location.pathname.includes('SanPhamChiTiet/DanhSachSanPham')) {
+                            $('#modalSanPham').modal('hide');
+                            table.draw();
+                        } else {
+                            GetDanhDachTongQuan();
+                            thayDoiBodyDSSanPham();
+                            $('.modal-backdrop').removeClass('show');
+                            $('.modal-backdrop').remove();
+                        }
                         var toastHTML = `<div class="toast fade hide" data-delay="3000">
                                             <div class="toast-header">
                                                 <i class="anticon anticon-info-circle text-primary m-r-5"></i>
@@ -711,6 +730,9 @@
                                         </div>`
                         $('#notification-toast').append(toastHTML)
                         $('#notification-toast .toast').toast('show');
+                        setTimeout(function () {
+                            $('#notification-toast .toast:first-child').remove();
+                        }, 3000);
                     } else {
                         var toastHTML = `<div class="toast fade hide" data-delay="3000">
                                         <div class="toast-header">

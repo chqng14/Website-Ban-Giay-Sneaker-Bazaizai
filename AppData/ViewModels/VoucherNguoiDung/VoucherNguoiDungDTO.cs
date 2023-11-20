@@ -17,12 +17,11 @@ namespace App_Data.ViewModels.VoucherNguoiDung
         public string? MaVoucher { get; set; }
         public string? TenVoucher { get; set; }
         public int? DieuKien { get; set; }
-        public int? LoaiHinhUuDai { get; set; }
         public int? SoLuong { get; set; }
+        public int? LoaiHinhUuDai { get; set; }
         public double? MucUuDai { get; set; }
         public DateTime NgayTao { get; set; }
         public DateTime NgayBatDau { get; set; }
         public DateTime NgayKetThuc { get; set; }
-
     }
 }

@@ -8,7 +8,30 @@ ul.MOttpc {
     padding: 0;
     margin: 0
 }
+.dongGia {
+    display: flex;
+    justify-content: center; /* Căn giữa các phần tử */
+    list-style: none; /* Loại bỏ dấu chấm tròn */
+    padding: 0; /* Loại bỏ padding mặc định của danh sách */
+}
 
+    .dongGia li {
+        color: #ffffff; /* Màu chữ cho các thẻ li */
+        margin-right: 0px;
+        width: 33.33%;
+        flex-shrink: 0;
+        flex-grow: 0;
+        background-color: blue; /* Màu nền xanh */
+    }
+.giaDongGia {
+    text-decoration: none; /* Loại bỏ gạch chân đường dưới cho các liên kết */
+}
+
+.hienThiGia {
+    display: block;
+    text-align: center; /* Căn giữa nội dung trong thẻ span */
+    padding: 10px; /* Thêm padding cho đẹp */
+}
 .ggEu9K {
     overflow-y: hidden;
     overflow-x: scroll

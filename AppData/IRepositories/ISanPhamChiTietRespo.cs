@@ -36,5 +36,6 @@ namespace App_Data.IRepositories
         Task UpdateSoLuongSanPhamChiTietAynsc(string IdSanPhamChiTiet, int soLuong);
         Task<FiltersVM> GetFiltersVMAynsc();
         Task<bool> ProductIsNull(SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO);
+        Task UpdateLstSanPhamTableAynsc(List<SanPhamTableDTO> sanPhamTableDTOs);
     }
 }

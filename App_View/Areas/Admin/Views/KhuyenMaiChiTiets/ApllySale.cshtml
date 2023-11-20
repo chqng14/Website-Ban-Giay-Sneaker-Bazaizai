@@ -39,9 +39,10 @@
     <div class="card-body">
         
         <div class="col-lg-3 text-right flex" style="max-width: max-content;">
-            <select class="form-select form-select-lg mb-3" aria-label="Large select example" id="selectSale">
+            <select class="custom-select" aria-label="Large select example" id="selectSale">
                 @foreach (var item in (SelectList)ViewData["IdSale"])
                 {
+
                     <option value="@item.Value">@item.Text</option>
                 }
             </select>
@@ -55,115 +56,21 @@
         </div>
 
         </div>
-        <div class="col-sm-12">
-            <table id="data-table1" class="table dataTable">
-               
-                <thead>
-                    <tr>
-                        <th>
-                           <input type="checkbox" id="select-all-checkbox" />
-                        </th>
-                        <th>
-                           Ảnh
-                        </th>
-                        <th>
-                            Tên sản phẩm
-                        </th>
-                        <th>
-                            Kích cỡ
-                        </th>
-                        <th>
-                            Loại giày
-                        </th>
-                        <th>
-                            Dây
-                        </th>
-                        <th>
-                            Chất liệu
-                        </th>
-                        <th>
-                            Kiểu đế giày
-                        </th>
-                        <th>
-                            Số lượng tồn
-                        </th>
-                        <th>
-                            Giá bán
-                        </th>
-                        <th>
-                            Giá nhập
-                        </th>
-                        <th>
-                            Trạng thái
-                        </th>
-                        
-
-                        <th></th>
-                    </tr>
-
-                </thead>
-                    <tbody>
-            @foreach (var product in Model)
-            {
-                BazaizaiContext bazaizaiContext = new BazaizaiContext();
-                var spct = bazaizaiContext.sanPhamChiTiets.Find(product.SanPhamDanhSachView.IdChiTietSp);
-                        <tr>
-                            <td class="sorting_1">
-
-                                <input type="checkbox" class="voucher-checkbox" name="selectedProducts" value="@product.SanPhamDanhSachView.IdChiTietSp" />
-
-                            </td>
-                            <td><img src="/AnhSanPham/@product.SanPhamDanhSachView.Anh" style="height: 80px; width: auto" /></td>
-                            <td>@product.SanPhamDanhSachView.SanPham</td>
-                            <td>@product.SanPhamDanhSachView.KichCo</td>
-                            <td>@product.SanPhamDanhSachView.LoaiGiay</td>
-                            <td>@product.SanPhamDanhSachView.Day</td>
-                            <td>@product.SanPhamDanhSachView.ChatLieu</td>
-                            <td>@product.SanPhamDanhSachView.KieuDeGiay</td>
-                            <td>@product.SanPhamDanhSachView.SoLuongTon</td>
-                            <td>@product.SanPhamDanhSachView.GiaBan</td>
-                            <td>@product.SanPhamDanhSachView.GiaNhap</td>
-                            <td>
-                        @if (product.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale)
-                        {
-                                    <div class="trangThai">
-                                        <div class="d-flex align-items-center">
-                                            <div class="badge badge-success badge-dot m-r-10"></div>
-                                            <div>Được áp dụng</div>
-                                        </div>
-                                    </div>
-                        }
-                        else
-                        {
-                                    <div class="trangThai">
-                                        <div class="d-flex align-items-center">
-                                            <div class="badge badge-success badge-dot m-r-10"></div>
-                                            <div>Đã áp dụng</div>
-                                        </div>
-                                    </div>
-                        }
-                            </td>
-                        </tr>
-            }
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <th>...</th>
-                    </tr>
-                </tfoot>
-            </table>
-
-        </div>
+    <div class="col-sm-12 " id="sanPham">
     </div>
 
 
 
 <script>
+        $(document).on('click', '#select-all-checkbox', function () {
+            $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
+        })
     $(document).ready(function () {
 
         var select = document.getElementById('selectSale');
         var selectValue = select.value;
         updateSwapContent(selectValue);
+        locSanPham(selectValue);
         $('#select-all-checkbox').click(function () {
             $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
         });
@@ -203,6 +110,7 @@
 
     document.getElementById('selectSale').addEventListener('change', function () {
         updateSwapContent(this.value);
+        locSanPham(this.value);
     });
 
     function updateSwapContent(selectedValue) {
@@ -211,8 +119,22 @@
             type: "GET",
             data: { id: selectedValue },
             success: function (partialViewHtml) {
-                // Cập nhật nội dung của "swap" với partial view trả về
                 document.getElementById('swapContainer').innerHTML = partialViewHtml;
+            },
+            error: function () {
+                console.error('Failed to load partial view.');
+            }
+        });
+    }
+    function locSanPham(selectedValue) {
+        $('#preloader').show();
+        $.ajax({
+            url: "@Url.Action("viewSanPhamFilter", "KhuyenMaiChiTiets")",
+            type: "GET",
+            data: { id: selectedValue },
+            success: function (partialViewHtml) {
+                $('#preloader').hide();
+                document.getElementById('sanPham').innerHTML = partialViewHtml;
             },
             error: function () {
                 console.error('Failed to load partial view.');
@@ -231,6 +153,7 @@
     <script src="~/Admin_assets/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
     <script src="~/Admin_assets/js/pages/datatables.js" defer></script>
 }
+
 <style>
     #swapContainer {
         display: flex;

@@ -98,6 +98,24 @@ namespace App_View.Services
             ///api/VoucherNguoiDung/GetAllVoucherNguoiDung
             return _httpClient.GetFromJsonAsync<List<VoucherNguoiDungDTO>>("/api/VoucherNguoiDung/GetAllVoucherNguoiDung");
         }
+        public async Task<VoucherTaiQuayDto> GetVocherTaiQuay(string? id)
+        {
+            ///api/VoucherNguoiDung/GetAllVoucherNguoiDung
+            try
+            {
+
+                if (id == null)
+                {
+                    await _httpClient.GetFromJsonAsync<VoucherTaiQuayDto?>("/api/VoucherNguoiDung/GetVocherTaiQuay");
+                }
+                return await _httpClient.GetFromJsonAsync<VoucherTaiQuayDto?>("/api/VoucherNguoiDung/GetVocherTaiQuay?id=" + id);
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
 
         public async Task<List<VoucherNguoiDungDTO>> GetAllVoucherNguoiDungByID(string id)
         {
