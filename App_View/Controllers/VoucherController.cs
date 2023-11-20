@@ -22,7 +22,17 @@ namespace App_View.Controllers
             _signInManager = signInManager;
             _userManager = userManager;
         }
-        public async Task<IActionResult> VoucherToCalm(string LoaiHinh)
+        public async Task<IActionResult> VoucherToCalm()
+        {
+            var idNguoiDung = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(idNguoiDung))
+            {
+                ViewBag.NguoiDung = null;
+            }
+            else ViewBag.NguoiDung = idNguoiDung;
+            return View();
+        }
+        public async Task<IActionResult> VoucherLstToCalm(string LoaiHinh)
         {
             var idNguoiDung = _userManager.GetUserId(User);
             if (string.IsNullOrEmpty(idNguoiDung))
@@ -48,7 +58,7 @@ namespace App_View.Controllers
                     break;
             }
             ViewBag.TatCaVoucher = allVouchers;
-            return View(allVouchers);
+            return PartialView("_VoucherLstToCalm", allVouchers);
         }
         public async Task<IActionResult> GetVoucherByMa(string ma)
         {
