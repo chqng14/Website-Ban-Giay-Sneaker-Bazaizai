@@ -196,6 +196,7 @@ namespace App_View.Controllers
             thongTinGHDTO.IdThongTinGH = Guid.NewGuid().ToString();
             thongTinGHDTO.TrangThai = (int)TrangThaiThongTinGH.HoatDong;
             var listcart = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+            SessionServices.SetIdToSession(HttpContext.Session, "Email", thongTinGHDTO.Email);
             var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
             {
@@ -249,6 +250,7 @@ namespace App_View.Controllers
                 };
                 var mahd = await hoaDonServices.CreateHoaDon(hoadon);
                 var tien = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam ?? 0));
+                var spList = new List<SanPhamTest>();
                 foreach (var item in listcart)
                 {
                     await hoaDonChiTietServices.CreateHoaDonChiTiet(new HoaDonChiTietDTO()
@@ -266,10 +268,22 @@ namespace App_View.Controllers
                         IdChiTietSanPham = item.IdSanPhamCT,
                         SoLuong = (int)item.SoLuong
                     };
+                    var sanPhamTest = new SanPhamTest()
+                    {
+                        TenThuongHieu = item.TenThuongHieu,
+                        TenSanPham = item.TenSanPham,
+                        TenMauSac = item.TenMauSac,
+                        TenKichCo = item.TenKichCo,
+                        SoLuong = item.SoLuong,
+                        GiaBan = item.GiaBan
+                    };
+                    spList.Add(sanPhamTest);
                     var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
                     await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                 }
+                SessionServices.SetspToSession(HttpContext.Session, "sp", spList);
                 listcart.Clear();
+                SessionServices.SetObjToSession(HttpContext.Session, "Cart", listcart);
                 if (hoaDonDTO.LoaiThanhToan == "Momo")
                 {
                     var url = await Momo(hoadon.IdHoaDon, mahd, tien);
@@ -437,12 +451,21 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> SendMail(string MaHd)
         {
-            var user = _userManager.GetUserId(User);
-            var userKhachHang = await _userManager.FindByIdAsync(user);
+            var mail = SessionServices.GetIdFomSession(HttpContext.Session, "Email");
+            var userKhachHang = "";
+            if (mail != null)
+            {
+                userKhachHang = mail;
+            }
+            else
+            {
+                var user = _userManager.GetUserId(User);
+                userKhachHang = (await _userManager.FindByIdAsync(user)).Email;
+            }
             var sp = SessionServices.GetFomSession(HttpContext.Session, "sp");
             var subject = $"Đơn hàng #{MaHd} đã đặt thành công";
             string html = await _viewRenderService.RenderToStringAsync("HoaDon/Mail", sp);
-            await _emailSender.SendEmailAsync(userKhachHang.Email, subject, html);
+            await _emailSender.SendEmailAsync(userKhachHang, subject, html);
             return Ok();
         }
         //public async Task<IActionResult> CallBack()

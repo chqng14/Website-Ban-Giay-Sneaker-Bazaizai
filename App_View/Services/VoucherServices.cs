@@ -239,11 +239,32 @@ namespace App_View.Services
                 return false;
             }
         }
-        public async Task<bool> UpdateVoucherAfterUseItTaiQuay(string idVoucher,string idUser)
+        public async Task<bool> UpdateVoucherAfterUseItTaiQuay(string idVoucher, string idUser)
         {
             try
             {
                 var reponse = await _httpClient.PutAsync($"/api/Voucher/UpdateVoucherAfterUseItTaiQuay/{idVoucher}/{idUser}", null);
+                if (reponse.IsSuccessStatusCode)
+                {
+                    return await reponse.Content.ReadAsAsync<bool>();
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
+
+        public async Task<bool> UpdateVoucherSoluong(string idVoucher)
+        {
+            try
+            {
+                var reponse = await _httpClient.PutAsync($"https://localhost:7038/api/Voucher/UpdateVoucher/{idVoucher}", null);
                 if (reponse.IsSuccessStatusCode)
                 {
                     return await reponse.Content.ReadAsAsync<bool>();

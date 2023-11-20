@@ -170,7 +170,7 @@
 
                                     <label class="gl-label" for="billing-email">EMAIL *</label>
 
-                                    <input class="input-text input-text--primary-style" type="email" id="billing-email" data-bill="">
+                                    <input class="input-text input-text--primary-style" type="email" id="billing-email" data-bill="" name="Email">
                                 </div>
                                 <!--====== End - E-MAIL ======-->
                                 <!--====== PHONE ======-->
@@ -424,6 +424,8 @@
     <!--====== End - Section Content ======-->
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://kjur.github.io/jsrsasign/jsrsasign-latest-all-min.js"></script>
+<script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
 @section Scripts{
 
     <!--====== Lấy ra địa chỉ ======-->
@@ -718,9 +720,10 @@
         // Hàm xử lý voucher
         $(document).ready(function () {
             $('#button-coupon').click(function () {
-                var voucherValue = $('#voucherinput').val(); 
+                var voucherValue = $('#voucherinput').val();
                 voucher(voucherValue);
             });
+
         });
 
         var IdVoucher = "";
@@ -735,7 +738,14 @@
                         $('#textvoucher').text("");
                         loaiuudai = result.loaiuudai;
                         // Áp dụng giảm giá từ voucher
-                        if (phiship == 0 && loaiuudai == 2) {
+                        var storedVouchers = JSON.parse(localStorage.getItem("vouchers")) || {}
+                        if (storedVouchers[result.idVoucher]) {
+                            toast({
+                                title: "Bạn đã sử dụng voucher này rồi,vui lòng sử dụng voucher khác!",
+                                type: "warning",
+                                duration: 2000
+                            });
+                        }else if (phiship == 0 && loaiuudai == 2) {
                             Swal.fire({
                                 title: "Vui lòng nhập địa chỉ trước khi áp dụng freeship",
                                 icon: "warning",
@@ -794,11 +804,11 @@
         function UpdateVoucher() {
             if (MucUuDai != null) {
                 $.ajax({
-                    url: '/Voucher/UpdateVoucherAfterUseIt',
+                    url: '/Voucher/UpdateVoucherSoluong',
                     type: 'POST',
                     data: { idVoucher: IdVoucher },
                     success: function (result) {
-                        console.log("UpdateVoucherAfterUseIt");
+                        console.log("UpdateVoucherSoluong");
                     },
                     error: function (xhr, status, error) {
                         console.log(error);
@@ -809,6 +819,35 @@
                 // Nếu không có voucher, hiển thị tổng tiền không giảm giá
                 applyDiscount(0);
             }
+        }
+
+        function createAndStoreJwt(voucherCode) {
+            // Tạo JWT khi cấp voucher
+            var secretKey = "5a25e33fd1c5b4a882d438cf93dd4ac5eef0a27b8b3c7f7d6b5a84d4fb91e4f2";
+
+            // Thời gian hết hiệu lực của JWT (ví dụ: 5 năm)
+            var expirationTime = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 * 5;
+            var storedVouchers = JSON.parse(localStorage.getItem("vouchers")) || {};
+            // Đặt giá trị cho Issuer và Audience
+            var issuer = "BazaizaiStore"; // Người phát hành
+            var audience = "User"; // Đối tượng
+
+            // Tạo payload của JWT
+            var payload = {
+                iss: issuer,
+                aud: audience,
+                exp: expirationTime, // Thời gian hết hiệu lực
+                voucherCode: voucherCode // Thông tin voucher
+            };
+
+            // Tạo JWT bằng cách ký payload với khóa bí mật
+            var jwtToken = KJUR.jws.JWS.sign(null, { alg: "HS256", cty: "JWT" }, payload, secretKey);
+
+            // Lưu JWT vào danh sách các voucher trong localStorage
+            storedVouchers[voucherCode] = true;
+            localStorage.setItem("vouchers", JSON.stringify(storedVouchers));
+
+            // Thực hiện các hành động khác nếu cần
         }
     </script>
 
@@ -918,6 +957,7 @@
                                 success: function (paymentResponse) {
                                     if (paymentResponse.idHoaDon != null) {
                                         if (IdVoucher != "") {
+                                            createAndStoreJwt(IdVoucher);
                                             UpdateVoucher()
                                         }
                                         if (paymentResponse.url != null) {

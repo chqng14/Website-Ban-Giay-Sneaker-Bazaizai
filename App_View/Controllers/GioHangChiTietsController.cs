@@ -56,7 +56,7 @@ namespace App_View.Controllers
             //var ListCart = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == IdCart);
             if (IdCart != null)
             {
-                var existing = (await GioHangChiTietServices.GetAllGioHang()).FirstOrDefault(x => x.IdSanPhamCT == product.IdChiTietSp && x.IdNguoiDung == IdCart);
+                var existing = (await GetGioHangChiTietDTOs()).FirstOrDefault(c => c.IdSanPhamCT == product.IdChiTietSp);
                 if (existing != null)
                 {
                     if (existing.SoLuong + gioHangChiTietDTOCUD.SoLuong <= product.SoLuongTon)
@@ -131,7 +131,7 @@ namespace App_View.Controllers
             }
             else
             {
-                var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
+                var giohang = await GetGioHangChiTietDTOs();
                 if (giohang.Count == 0)
                 {
                     return View("Empty");
@@ -167,7 +167,7 @@ namespace App_View.Controllers
             }
             else
             {
-                var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
+                var giohang = await GetGioHangChiTietDTOs();
                 if (giohang.Count == 0)
                 {
                     return View("Empty");
@@ -205,7 +205,7 @@ namespace App_View.Controllers
         {
 
             //var SumPrice = string.Format(CultureInfo.GetCultureInfo("vi-VN"), "{0:N0}đ", Convert.ToDouble((await _sanPhamChiTietService.GetByKeyAsync(IdSanPhamChiTiet)).GiaBan * SoLuong));
-            var giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
+            var giohang = await GetGioHangChiTietDTOs();
             var results = await Task.WhenAll(giohang.Select(async item =>
             {
                 var sanPhamChiTiet = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
@@ -251,18 +251,18 @@ namespace App_View.Controllers
             if (!outOfStockProducts.Any())
             {
                 var jsonupdate = await GioHangChiTietServices.UpdateGioHang(IdSanPhamChiTiet, SoLuong, GetIdNguoiDung());
-                var giohangupdate = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
-                double TongTien = 0;
-                foreach (var item in giohangupdate)
-                {
-                    TongTien += (double)item.GiaBan * (int)item.SoLuong;
-                }
+                var giohangupdate = await GetGioHangChiTietDTOs();
+                double TongTien = giohangupdate.Sum(item => (double)item.GiaBan * (int)item.SoLuong);
                 return Json(new { /*SumPrice = SumPrice,*/ TongTien = TongTien });
             }
             else
             {
                 return Json(new { quantityError = outOfStockProducts });
             }
+        }
+        public async Task<List<GioHangChiTietDTO>> GetGioHangChiTietDTOs()
+        {
+            return (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
         }
         public async Task<IActionResult> DeleteCart(string id)
         {
@@ -276,7 +276,7 @@ namespace App_View.Controllers
         }
         public async Task<IActionResult> DeleteAllCart()
         {
-            List<GioHangChiTietDTO> giohang = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
+            List<GioHangChiTietDTO> giohang = await GetGioHangChiTietDTOs();
             foreach (var item in giohang)
             {
                 var jsondelete = await GioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);

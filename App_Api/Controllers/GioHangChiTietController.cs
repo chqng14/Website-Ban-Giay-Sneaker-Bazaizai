@@ -59,11 +59,11 @@ namespace App_Api.Controllers
         }
 
         // GET api/<GioHangChiTietController>/5
-        [HttpGet("GetGioHangCTById")]
-        public GioHangChiTiet GetGioHangCTById(string id)
-        {
-            return allRepo.GetAll().FirstOrDefault(c => c.IdGioHangChiTiet == id);
-        }
+        //[HttpGet("GetGioHangCTById")]
+        //public GioHangChiTiet GetGioHangCTById(string id)
+        //{
+        //    return allRepo.GetAll().FirstOrDefault(c => c.IdGioHangChiTiet == id);
+        //}
 
         // POST api/<GioHangChiTietController>
         [HttpPost("Create")]

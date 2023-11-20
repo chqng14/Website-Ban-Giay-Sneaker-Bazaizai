@@ -88,6 +88,14 @@ namespace App_View.Controllers
             }
             return BadRequest();
         }
+        public async Task<IActionResult> UpdateVoucherSoluong(string idVoucher)
+        {
+            if (await _voucherSV.UpdateVoucherSoluong(idVoucher))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
         public async Task<IActionResult> VoucherDetails(string ma)
         {
             var Voucher = await _voucherSV.GetVoucherByMa(ma);
