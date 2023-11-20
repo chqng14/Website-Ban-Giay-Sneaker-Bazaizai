@@ -4,12 +4,13 @@
 @{
     BazaizaiContext context = new BazaizaiContext();
 }
+<link href="~/css/cssVoucherIn.css" rel="stylesheet" />
 <style>
     .icon {
         font-size: 25px;
         color: #0F69F2;
         cursor: pointer;
-    }
+    }   
 </style>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-xl " role="document">
@@ -21,10 +22,10 @@
                 </button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btnExportPDF">Xuất PDF</button>
+                <button type="button" class="btn btn-primary" id="btnExportPDF" onclick="PrintContent()">Xuất PDF</button>
             </div>
 
-            <div class="modal-body" id="myModalContent">
+            <div class="modal-body printContent" id="myModalContent">
                 <!-- Nội dung chi tiết sẽ được cập nhật ở đây từ partial view -->
             </div>
             <div class="modal-footer">
@@ -138,18 +139,17 @@
                     }
                 </td>
                 <td>
-              @*       <button class="btn btn-primary btn-sm" onclick="showDetails('@item.IdVoucher')">Xem chi tiết</button> *@
-                    @Html.ActionLink("Xuất voucher", "XuatVoucher", new { idVoucher = item.IdVoucher })
+                    <button class="btn btn-primary btn-sm" onclick="showDetails('@item.IdVoucher')">Xem chi tiết</button>
+       @*              @Html.ActionLink("Xuất voucher", "XuatVoucher", new { idVoucher = item.IdVoucher }) *@
                 </td>
-      
+
             </tr>
         }
     </tbody>
 </table>
+<iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
 
 <script>
- 
-
     $(document).ready(function () {
         $('#voucherForm').submit(function (event) {
             // Ngăn chặn gửi form mặc định
@@ -228,20 +228,46 @@
         $('#printVoucher').modal('show');
         $('#idVoucherPrint').val(idvoucher);
     }
-        function showDetails(idVoucher) {
-            $.ajax({
+    function showDetails(idVoucher) {
+        $.ajax({
             url: '/Admin/Vouchers/FilterListDetailsVoucherTaiQuayDaIn',
             type: 'POST',
-                data: { idVoucher: idVoucher},
-                success: function (result) {
-                    // Hiển thị modal và cập nhật nội dung partial view
-                    $('#myModalContent').html(result);
-                    $('#myModal').modal('show');
-                },
-                error: function (error) {
-                    console.error(error);
-                }
-            });
-        }
+            data: { idVoucher: idVoucher },
+            success: function (result) {
+                // Hiển thị modal và cập nhật nội dung partial view
+                $('#myModalContent').html(result);
+                $('#myModal').modal('show');
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+    // function PrintContent() {
+    //     document.getElementById("btnExportPDF").style.display = "none";
+    //     var printWindow = window.open('', '_blank');
+    //     var contentToPrint = $("#myModalContent").html();
+
+    //     printWindow.document.open();
+    //     printWindow.document.write('<html><head></head><body>' + contentToPrint + '</body></html>');
+    //     printWindow.document.close();
+
+    //     printWindow.print();
+    //     document.getElementById("btnExportPDF").style.display = "block";
+    // }
+    function PrintContent() {
+        document.getElementById("btnExportPDF").style.display = "none";
+        var contentToPrint = $("#myModalContent").html();
+
+        var printWindow = window.frames["print_frame"];
+        printWindow.document.open();
+        printWindow.document.write('<html><head></head><body>' + contentToPrint + '</body></html>');
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+
+        document.getElementById("btnExportPDF").style.display = "block";
+    }
+
 </script>
 

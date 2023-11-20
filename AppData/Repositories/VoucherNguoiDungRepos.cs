@@ -25,7 +25,7 @@ namespace App_Data.Repositories
 
         public async Task<List<NguoiDung>> GetLstNguoiDUngMoi()
         {
-            return _context.NguoiDungs.Where(c => c.TongChiTieu == 0).ToList();
+            return _context.NguoiDungs.Where(c => c.TongChiTieu == 0 && c.UserName != "Admin").ToList();
         }
 
         public async Task<bool> TangVoucherNguoiDung(AddVoucherRequestDTO addVoucherRequestDTO)
@@ -44,7 +44,7 @@ namespace App_Data.Repositories
                             IdVouCher = VoucherGet.IdVoucher,
                             IdVouCherNguoiDung = Guid.NewGuid().ToString(),
                             TrangThai = (int)TrangThaiVoucherNguoiDung.KhaDung,
-                            NgayNhan= DateTime.Now,
+                            NgayNhan = DateTime.Now,
                         };
                         await _context.AddAsync(voucherNguoiDung);
                     }
@@ -64,7 +64,7 @@ namespace App_Data.Repositories
         public async Task<bool> TangVoucherNguoiDungMoi(string ma, string idUser)
         {
             var voucher = await _context.vouchers.FirstOrDefaultAsync(c => c.MaVoucher == ma && c.TrangThai == (int)TrangThaiVoucher.HoatDong);
-         
+
             if (voucher != null)
             {
                 var voucherNguoi = new VoucherNguoiDung()
@@ -85,7 +85,7 @@ namespace App_Data.Repositories
                 }
             }
             return false;
-           
+
         }
     }
 }

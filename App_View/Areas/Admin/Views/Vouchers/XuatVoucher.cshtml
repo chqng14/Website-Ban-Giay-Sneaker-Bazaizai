@@ -8,7 +8,7 @@
 }
 <link href="~/css//cssVoucherIn.css" rel="stylesheet" />
 <header>
-    <div class="page-header">
+    <div class="page-header no-print">
         <div class="header-sub-title">
             <nav class="breadcrumb breadcrumb-dash">
                 <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản trị</a>
@@ -20,13 +20,13 @@
     </div>
 </header>
 <div class="card-body" style="background-color:#F5F7F8">
-    <h1 style="text-align:center">Xem trước voucher trước khi xuất</h1>
+    <h1 style="text-align:center" class="no-print">Xem trước voucher trước khi xuất</h1>
     <div class="d-md-flex">
         <div class="row w-100 m-b-30">
 
-            <div class="col-lg-7 text-left" style="margin-top:50px">
+            <div class="col-lg-7">
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="btnExportPDF">Xuất PDF</button>
+                    <button type="button" class="btn btn-primary no-print" id="btnExportPDF">Xuất PDF</button>
                 </div>
             </div>
             <div class="col-lg-12>
@@ -104,8 +104,6 @@
             </div>
         </div>
     </div>
-
-
 </div>
 
 
