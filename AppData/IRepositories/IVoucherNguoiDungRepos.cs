@@ -14,5 +14,6 @@ namespace App_Data.IRepositories
         Task<bool> TangVoucherNguoiDungMoi(string ma, string idUser);
 
         Task<List<NguoiDung>> GetLstNguoiDUngMoi();
+        Task<VoucherTaiQuayDto> GetVocherTaiQuay(string id);
     }
 }

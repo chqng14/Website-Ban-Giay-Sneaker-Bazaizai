@@ -105,18 +105,95 @@
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const code = jsQR(imageData.data, imageData.width, imageData.height);
-
+        var maHoaDon = $("#tabs .ui-tabs-active a").text();
         if (code) {
             if (code.data) {
-                console.log('QR Code Data:', code.data);
-                if (code.data.includes('SP-')) {
-                    alert('QR SP:' + code.data)
+                if (code.data.includes('MASP')) {
+                    if(loading){
+                        scanning = false;
+                        setTimeout(() => {
+                            scanning = true;
+                            requestAnimationFrame(captureQRCode);
+                        }, 1500);
+                    }
+                    loading = true;
+                    $.ajax({
+                        url: '/Admin/BanHangTaiQuay/QuetSanPhamVaoHoaDon?maHD=' + maHoaDon +'&maSp='+ code.data,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result) {
+                                ThemSanPhamThanhCong();
+                                CapNhapLaiTien(maHoaDon);
+                            }
+                            loading = false;
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    });
                 }
                 else {
-                    alert('QR Voucher:' + code.data)
+                    $.ajax({
+                        url: '/Admin/BanHangTaiQuay/GetVocherTaiQuay?id=' + code.data,
+                        type: 'GET',
+                        success: function (result) {
+                            if (result.trangThai) {
+                                var tongTienHoaDon = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
+                                if (result.dieuKien <= tongTienHoaDon) {
+                                    if (result.loaiHinhUuDai == 0) {
+                                        $("#VoucherGiam").val(result.mucGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                        var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                                        var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
+                                        tongTien = tongTienHoaDon - result.mucGiam - KhuyenMaiGiam;
+                                        $("#SoTienPhaiTra").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                        $("#TongGiam").val((result.mucGiam - KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+
+                                    }
+                                    else {
+                                        $("#VoucherGiam").val(result.mucGiam + "%");
+                                        var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
+                                        var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                                        tongTien = tongTienHoaDon - tongTienHoaDon / 100 * result.mucGiam - KhuyenMaiGiam;
+                                        $("#SoTienPhaiTra").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                        $("#TongGiam").val((tongTienHoaDon / 100 * result.mucGiam + KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                        $("#MaVoucher").val(result.idVoucher);
+                                    }
+                                    loading = false;
+                                    ThemVoucherThanhCong();
+                                }
+                                else {
+                                    var tienVoucher = 0;
+                                    $("#VoucherGiam").val(tienVoucher.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                    var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                                    $("#SoTienPhaiTra").val((tongTienHoaDon - KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                    $("#TongGiam").val(KhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                    $("#MaVoucher").val("");
+
+                                    KhongDuDieuKien();
+                                    loading = false;
+                                }
+                                updateTienThua();
+
+                            }
+                            else {
+                                var tienVoucher = 0;
+                                var tongTienHoaDon = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
+                                $("#VoucherGiam").val(tienVoucher.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                                $("#SoTienPhaiTra").val((tongTienHoaDon - KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                $("#TongGiam").val(KhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                $("#MaVoucher").val("");
+                                VoucherKhongHopLe();
+                                loading = false;
+                                updateTienThua();
+                            }
+                            closeModalKhiQuetVoucher();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    });
                 }
-
-
                 scanning = false;
                 setTimeout(() => {
                     scanning = true;
@@ -134,6 +211,39 @@
         }
     };
     function closeModal() {
+        var maHoaDon = $("#tabs .ui-tabs-active a").text();
+        CapNhapLaiTien(maHoaDon);
+        $('#exampleModalScrollable').modal('hide');
+        stopQRCodeScanning();
+    }
+    function CapNhapLaiTien(maHD) {
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/CapNhapThongTinTien?maHD=' + maHD,
+            type: 'GET',
+            success: function (result) {
+                if (result) {
+                    $("#TongTienHoaDon").val(result.tongTienThayDoi.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#SoTienPhaiTra").val(result.soTienTraLaiThayDoi.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#KhuyenMaiGiam").val(result.soTienKhyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#MaVoucher").val("");
+                    $("#TongGiam").val((result.tongTienThayDoi - result.soTienTraLaiThayDoi).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    var autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputChuyenKhoan'));
+                    autoNumericInstance.set("0");
+                    autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputTienMat'));
+                    autoNumericInstance.set("0");
+                    LoadChiTiet(maHD);
+                    updateTienThua();
+                }
+                loading = false;
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+        
+    }
+    function closeModalKhiQuetVoucher() {
         $('#exampleModalScrollable').modal('hide');
         stopQRCodeScanning();
     }
@@ -172,49 +282,33 @@
                             @{
                                 foreach (var item in Model)
                                 {
-                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a></li>
+                                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a></li>
                                 }
                             }
                         </ul>
                         @{
                             foreach (var item in Model)
                             {
-                                <div id="tab-@item.MaHoaDon" style="height:300px">
-                                    <div class="table-responsive" style=" height:250px; overflow-y: scroll; overflow-x: hidden">
+                                                <div id="tab-@item.MaHoaDon" style="height:300px">
+                                                    <div class="table-responsive" style=" height:250px; overflow-y: scroll; overflow-x: hidden">
 
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
-                                                    <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
-                                                    <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
-                                                    <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
-                                                    <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
-                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
-                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @{
-                                                    int stt = 1;
-                                                    foreach (var hoaDonChiTiet in item.hoaDonChiTietDTOs)
-                                                    {
-                                                        <tr scope="col" id="hdct-@hoaDonChiTiet.IdSanPhamChiTiet">
-                                                            <td>@stt</td>
-                                                            <td hidden>@hoaDonChiTiet.IdSanPhamChiTiet</td>
-                                                            <td>@hoaDonChiTiet.MaSanPham</td>
-                                                            <td>@hoaDonChiTiet.TenSanPham</td>
-                                                            <td>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", hoaDonChiTiet.GiaBan)</td>
-                                                            <td><input type="number" max="1000" min="1" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onchange="suaSoLuongSanPham('@hoaDonChiTiet.IdSanPhamChiTiet',this)" value="@hoaDonChiTiet.SoLuong" /></td>
-                                                            <td><a class="btn btn-tone" onclick="XoaSanPhamTrongHoaDon('hdct-@hoaDonChiTiet.IdSanPhamChiTiet','@hoaDonChiTiet.IdSanPhamChiTiet')">X</a></td>
-                                                        </tr>
-                                                        stt++;
-                                                    }
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
+                                                                    <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
+                                                                    <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
+                                                                    <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
+                                                                    <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
+                                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
+                                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
                             }
                         }
                     </div>
@@ -297,7 +391,7 @@
                                     </tr>
                                     <tr>
                                         <td>VouCher: </td>
-                                        <td><input class="form-control" type="text" id="MaVoucher" onchange="updateTienThua()" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
+                                        <td><input class="form-control" type="text" id="MaVoucher" oninput="GetVoucher(this.value)" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
                                     </tr>
                                     <tr>
                                         <td>Voucher giảm:</td>
@@ -306,6 +400,10 @@
                                     <tr>
                                         <td>Khuyến mãi giảm:</td>
                                         <td><input class="form-control" type="text" id="KhuyenMaiGiam" onchange="updateTienThua()" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tổng giảm:</td>
+                                        <td><input class="form-control" type="text" id="TongGiam" onchange="updateTienThua()" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                                     </tr>
                                     <tr>
                                         <td>Tổng tiền: </td>
@@ -375,6 +473,7 @@
                     url: '/Admin/BanHangTaiQuay/HoaDonDuocChon?maHD=' + maHoaDon,
                     type: 'GET',
                     success: function (result) {
+
                         $("#MaHoaDonDangChon").val(result.maHoaDon);
                         $("#NgayTaoHoaDon").val(result.ngayTao);
                         $("#TongTienHoaDon").val(result.tongTienGoc.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
@@ -382,20 +481,21 @@
                         $("#KhuyenMaiGiam").val(result.soTienKhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                         $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                         $("#MaVoucher").val("");
-                        $("#ChuyenKhoan input").val("");
-                        $("#TienMat input").val("");
+                        $("#TongGiam").val((result.tongTienGoc - result.tienPhaiTra).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                         var autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputChuyenKhoan'));
                         autoNumericInstance.set("0");
                         autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputTienMat'));
                         autoNumericInstance.set("0");
                         updateTienThua();
-
+                        LoadChiTiet(maHoaDon);
                         loading = false;
                     },
                     error: function (xhr, status, error) {
 
                     }
+
                 });
+
             }
         });
 
@@ -538,7 +638,9 @@
                 $("#KhuyenMaiGiam").val(result.soTienKhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                 $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                 $("#MaVoucher").val("");
+                $("#TongGiam").val((result.tongTienGoc - result.tienPhaiTra).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                 updateTienThua();
+                LoadChiTiet(maHoaDon);
             },
             error: function (xhr, status, error) {
 
@@ -564,6 +666,20 @@
             $("#TienMat, #ChuyenKhoan").show();
         }
     })
+    function LoadChiTiet(maHoaDon) {
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/ChiTietHoaDonDuocChon?maHD=' + maHoaDon,
+            type: 'GET',
+            success: function (repon) {
+
+                $('#tab-' + maHoaDon + ' tbody').empty();
+                $('#tab-' + maHoaDon + ' tbody').append(repon);
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+    }
     function timKiem(value) {
         if (loading) {
             return;
@@ -729,6 +845,7 @@
                     $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                     $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                     $("#MaVoucher").val("");
+                    $("#TongGiam").val((tongTien - tienPhaiTra).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
 
                     loading = false;
                 }
@@ -737,6 +854,7 @@
                     inputElement.value = result.soLuongCu;
                     loading = false;
                 }
+                CapNhapLaiTien(maHoaDon);
                 updateTienThua();
             },
             error: function (xhr, status, error) {
@@ -747,6 +865,7 @@
         if (newValue == 0 || newValue == "") {
             var foundElement = $("#tab-" + maHoaDon + " table tbody").find("tr[id='hdct-" + idsanpham + "']");
             foundElement.remove();
+            LoadChiTiet(maHoaDon);
         }
     }
     function isInteger(value) {
@@ -773,8 +892,11 @@
                 $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                 $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                 $("#MaVoucher").val("");
-                loading = false;
+                $("#TongGiam").val((tongTien - tienPhaiTra).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+
+                CapNhapLaiTien(maHoaDon);
                 updateTienThua();
+                loading = false;
             },
             error: function (xhr, status, error) {
 
@@ -794,12 +916,100 @@
         var tienThua = tienMat + tienChuyenKhoan - tongTien;
         if (tienThua >= 0) {
             var tienThuaDaFormat = tienThua.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-            $("#TienThua").val("Thừa: "+ tienThuaDaFormat);
+            $("#TienThua").val("Thừa: " + tienThuaDaFormat);
         }
         else {
             var tienThuaDaFormat = (-tienThua).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
             $("#TienThua").val("Vẫn thiếu: " + tienThuaDaFormat);
         }
+    }
+    function GetVoucher(id) {
+        if (loading) {
+            return;
+        }
+        loading = true
+        if (id != "") {
+            $.ajax({
+                url: '/Admin/BanHangTaiQuay/GetVocherTaiQuay?id=' + id,
+                type: 'GET',
+                success: function (result) {
+                    if (result.trangThai) {
+                        var tongTienHoaDon = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
+                        if (result.dieuKien <= tongTienHoaDon) {
+                            if (result.loaiHinhUuDai == 0) {
+                                $("#VoucherGiam").val(result.mucGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                                var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
+                                tongTien = tongTienHoaDon - result.mucGiam - KhuyenMaiGiam;
+                                $("#SoTienPhaiTra").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                $("#TongGiam").val((result.mucGiam - KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+
+                            }
+                            else {
+                                $("#VoucherGiam").val(result.mucGiam + "%");
+                                var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
+                                var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                                tongTien = tongTienHoaDon - tongTienHoaDon / 100 * result.mucGiam - KhuyenMaiGiam;
+                                $("#SoTienPhaiTra").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                $("#TongGiam").val((tongTienHoaDon / 100 * result.mucGiam + KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+
+                            }
+                            loading = false;
+                        }
+                        else {
+                            alert("Khong du dieu kien");
+                            var tienVoucher = 0;
+                            $("#VoucherGiam").val(tienVoucher.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                            var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                            $("#SoTienPhaiTra").val((tongTienHoaDon - KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                            $("#TongGiam").val(KhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+
+                            loading = false;
+                        }
+                        updateTienThua();
+
+                    }
+                    else {
+                        var tienVoucher = 0;
+                        var tongTienHoaDon = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
+                        $("#VoucherGiam").val(tienVoucher.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                        $("#SoTienPhaiTra").val((tongTienHoaDon - KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#TongGiam").val(KhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+
+                        alert("khong hop le");
+                        loading = false;
+                        updateTienThua();
+                    }
+                },
+                error: function (xhr, status, error) {
+
+                }
+            });
+        }
+        else {
+            loading = false;
+        }
+    }
+    function ThemSanPhamThanhCong() {
+        var audio = new Audio();
+        audio.src = '/audio/themSpThanhCong.mp3'
+        audio.play();
+    }
+    function ThemVoucherThanhCong() {
+        var audio = new Audio();
+        audio.src = '/audio/ThemVoucherThanhCong.mp3'
+        audio.play();
+    } 
+    function VoucherKhongHopLe() {
+        var audio = new Audio();
+        audio.src = '/audio/VoucherKhongHopLe.mp3'
+        audio.play();
+    } 
+    function KhongDuDieuKien() {
+        var audio = new Audio();
+        audio.src = '/audio/KhongDuDieuKien.mp3'
+        audio.play();
     }
 </script>
 @section Scripts {

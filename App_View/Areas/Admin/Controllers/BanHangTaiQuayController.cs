@@ -15,14 +15,16 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly IHoaDonServices _hoaDonServices;
         private readonly ISanPhamChiTietService _sanPhamChiTietService;
+        private readonly IVoucherNguoiDungServices _voucherNguoiDungServices;
         private readonly IHoaDonChiTietServices _hoaDonChiTietServices;
         private readonly BazaizaiContext _bazaizaiContext;
         //tesst
-        public BanHangTaiQuayController(ISanPhamChiTietService sanPhamChiTietService)
+        public BanHangTaiQuayController(ISanPhamChiTietService sanPhamChiTietService, IVoucherNguoiDungServices voucherNguoiDungServices)
         {
             HttpClient httpClient = new HttpClient();
             _hoaDonServices = new HoaDonServices();
             _sanPhamChiTietService = sanPhamChiTietService;
+            _voucherNguoiDungServices = voucherNguoiDungServices;
             _hoaDonChiTietServices = new HoaDonChiTietServices();
             _bazaizaiContext = new BazaizaiContext();
         }
@@ -93,6 +95,7 @@ namespace App_View.Areas.Admin.Controllers
                 GiaBan = hoaDonChiTietTraLai.GiaBan,
                 GiaGoc = hoaDonChiTietTraLai.GiaGoc,
                 TenSanPham = sanPham.TenSanPham + "/" + sanPham.MauSac + "/" + sanPham.KichCo,
+                MaSanPham = sanPham.MaSanPham,
                 TongTienThayDoi = tongTienThayDoi,
                 SoTienTraLaiThayDoi = soTienTraLaiThayDoi,
                 SoTienKhyenMaiGiam = SoTienKhyenMaiGiam,
@@ -112,7 +115,7 @@ namespace App_View.Areas.Admin.Controllers
         public async Task<IActionResult> LoadPartialViewKhachHang(string tukhoa)
         {
             if (!string.IsNullOrWhiteSpace(tukhoa))
-                return PartialView("_KhachHangPartialView", (await _hoaDonServices.GetKhachHangs()).Where(c => c.SDT.ToLower().Replace(" ", "").Contains(tukhoa.ToLower().Replace(" ", ""))|| c.TenKhachHang.ToLower().Replace(" ", "").Contains(tukhoa.ToLower().Replace(" ", ""))));
+                return PartialView("_KhachHangPartialView", (await _hoaDonServices.GetKhachHangs()).Where(c => c.SDT.ToLower().Replace(" ", "").Contains(tukhoa.ToLower().Replace(" ", "")) || c.TenKhachHang.ToLower().Replace(" ", "").Contains(tukhoa.ToLower().Replace(" ", ""))));
             else
                 return PartialView("_KhachHangPartialView", await _hoaDonServices.GetKhachHangs());
         }
@@ -205,6 +208,7 @@ namespace App_View.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> HoaDonDuocChon(string maHD)
         {
+
             var hoaDon = (await _hoaDonServices.GetAllHoaDonCho()).FirstOrDefault(hd => hd.MaHoaDon == maHD);
             double tongTienGoc = 0;
             double tienPhaiTra = 0;
@@ -224,7 +228,21 @@ namespace App_View.Areas.Admin.Controllers
                 NgayTao = ngayTao
             });
         }
-        [HttpPost] 
+        [HttpGet]
+        public async Task<IActionResult> ChiTietHoaDonDuocChon(string maHD)
+        {
+            var hoaDonDuocChon = (await _hoaDonServices.GetAllHoaDonCho()).FirstOrDefault(c => c.MaHoaDon == maHD).hoaDonChiTietDTOs;
+            var listsanpham = await _sanPhamChiTietService.GetDanhSachBienTheItemShopViewModelAsync();
+            foreach (var item2 in hoaDonDuocChon)
+            {
+                var sanpham = listsanpham.FirstOrDefault(c => c.IdChiTietSp == item2.IdSanPhamChiTiet);
+                item2.TenSanPham = sanpham.TenSanPham + "/" + sanpham.MauSac + "/" + sanpham.KichCo;
+                item2.MaSanPham = sanpham.MaSanPham;
+            }
+            return PartialView("_HoaDonChiTietPartialView", hoaDonDuocChon);
+
+        }
+        [HttpPost]
         public async Task<IActionResult> ThemKhachHang(string TenKhachHang, string SDT)
         {
             var khachHang = new KhachHang()
@@ -241,14 +259,90 @@ namespace App_View.Areas.Admin.Controllers
                 return Ok(new
                 {
                     TrangThai = true,
-                    SDT =SDT,
-                    KetQua = ketqua,    
+                    SDT = SDT,
+                    KetQua = ketqua,
                 });
             }
             return Ok(new
             {
                 TrangThai = false,
                 KetQua = ketqua,
+            });
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetVocherTaiQuay(string? id)
+        {
+            var voucherReturn = await _voucherNguoiDungServices.GetVocherTaiQuay(id);
+            if (voucherReturn != null && voucherReturn.LoaiHinhUuDai<=1)
+            {
+                return Ok(new
+                {
+                    IdVoucherNguoiDung = voucherReturn.IdVouCherNguoiDung,
+                    MucGiam = voucherReturn.MucUuDai,
+                    DieuKien = voucherReturn.DieuKien,
+                    LoaiHinhUuDai = voucherReturn.LoaiHinhUuDai,
+                    IdVoucher = id,
+                    TrangThai = true
+                });
+            }
+            else
+            {
+                return Ok(new
+                {
+                    TrangThai = false
+                });
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> QuetSanPhamVaoHoaDon(string maHD, string maSp)
+        {
+            var hoaDon = (await _hoaDonServices.GetAllHoaDonCho()).FirstOrDefault(hd => hd.MaHoaDon == maHD);
+            var sanPham = (await _sanPhamChiTietService.GetDanhSachBienTheItemShopViewModelAsync()).FirstOrDefault(c => c.MaSanPham == maSp);
+            if (sanPham.SoLuongTon == 0)
+            {
+                return Ok(new { TrangThai = false });
+            }
+            var hoaDonChitiet = new HoaDonChiTiet()
+            {
+                IdHoaDon = hoaDon.Id,
+                IdHoaDonChiTiet = Guid.NewGuid().ToString(),
+                IdSanPhamChiTiet = sanPham.IdChiTietSp.ToString(),
+                SoLuong = 1,
+                TrangThai = (int)TrangThaiHoaDonChiTiet.ChoTaiQuay,
+                GiaBan = sanPham.GiaThucTe,
+                GiaGoc = sanPham.GiaGoc,
+            };
+            var hoaDonChiTietTraLai = await _hoaDonChiTietServices.ThemSanPhamVaoHoaDon(hoaDonChitiet);
+
+            await _sanPhamChiTietService.UpDatSoLuongAynsc(new SanPhamSoLuongDTO()
+            {
+                IdChiTietSanPham = sanPham.IdChiTietSp,
+                SoLuong = 1
+            });
+            return Ok(new
+            {
+                TrangThai = true,
+            });
+        }
+        [HttpGet]
+        public async Task<IActionResult> CapNhapThongTinTien(string maHD)
+        {
+            var hoaDon = (await _hoaDonServices.GetAllHoaDonCho()).FirstOrDefault(hd => hd.MaHoaDon == maHD);
+            double tongTienThayDoi = 0;
+            double soTienTraLaiThayDoi = 0;
+            foreach (var item in hoaDon.hoaDonChiTietDTOs)
+            {
+                tongTienThayDoi += (double)item.GiaGoc*(double)item.SoLuong;
+                soTienTraLaiThayDoi += (double)item.GiaBan*(double)item.SoLuong;
+            }
+            var SoTienKhyenMaiGiam = tongTienThayDoi - soTienTraLaiThayDoi;
+            return Ok(new
+            {
+                TrangThai = true,
+                TongTienThayDoi = tongTienThayDoi,
+                SoTienTraLaiThayDoi = soTienTraLaiThayDoi,
+                SoTienKhyenMaiGiam = SoTienKhyenMaiGiam,
+                SoTienVoucherGiam = 0,
             });
         }
     }

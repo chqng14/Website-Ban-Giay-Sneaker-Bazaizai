@@ -36,7 +36,6 @@ namespace App_Api.Controllers
             voucherNguoiDungRep = new VoucherNguoiDungRepos();
             AllRepo<Voucher> Vc = new AllRepo<Voucher>(DbContextModel, voucher);
             VcRepos = Vc;
-
             _mapper = mapper;
         }
         // GET: api/<ChatLieuController>
@@ -174,6 +173,15 @@ namespace App_Api.Controllers
             return false;
 
         }
-     
+        [HttpGet("GetVocherTaiQuay")]
+        public async Task<VoucherTaiQuayDto> GetVocherTaiQuay(string? id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return null;
+            }
+            return await voucherNguoiDungRep.GetVocherTaiQuay(id);
+        }
+       
     }
 }
