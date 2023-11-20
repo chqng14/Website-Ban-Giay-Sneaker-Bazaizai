@@ -790,8 +790,14 @@ namespace App_View.Areas.Admin.Controllers
             return View();
         }
 
-        public IActionResult DanhSachTongQuanSanPham()
+        public async Task<IActionResult> DanhSachTongQuanSanPham()
         {
+            ViewData["IdChatLieu"] = new SelectList(await _sanPhamChiTietService.GetListModelChatLieuAsync(), "IdChatLieu", "TenChatLieu");
+            ViewData["IdKieuDeGiay"] = new SelectList(await _sanPhamChiTietService.GetListModelKieuDeGiayAsync(), "IdKieuDeGiay", "TenKieuDeGiay");
+            ViewData["IdLoaiGiay"] = new SelectList(await _sanPhamChiTietService.GetListModelLoaiGiayAsync(), "IdLoaiGiay", "TenLoaiGiay");
+            ViewData["IdSanPham"] = new SelectList(await _sanPhamChiTietService.GetListModelSanPhamAsync(), "IdSanPham", "TenSanPham");
+            ViewData["IdThuongHieu"] = new SelectList(await _sanPhamChiTietService.GetListModelThuongHieuAsync(), "IdThuongHieu", "TenThuongHieu");
+            ViewData["IdXuatXu"] = new SelectList(await _sanPhamChiTietService.GetListModelXuatXuAsync(), "IdXuatXu", "Ten");
             return PartialView();
         }
 
@@ -813,7 +819,7 @@ namespace App_View.Areas.Admin.Controllers
 
         public class SanPhamListDTO
         {
-           public List<SanPhamTableDTO>? SanPhamTablesDTOs { get; set; }
+            public List<SanPhamTableDTO>? SanPhamTablesDTOs { get; set; }
         }
 
         [HttpPost]
@@ -849,7 +855,7 @@ namespace App_View.Areas.Admin.Controllers
                 AsEnumerable().
                 GroupBy(sp => sp.IdMauSac).
                 OrderBy(gr => gr.Key).
-                SelectMany(gr => gr).
+                SelectMany(gr => gr.OrderBy(sp => sp.KichCo.SoKichCo.GetValueOrDefault())).
                 Select(sp => new RelatedProductViewModel()
                 {
                     IdSanPham = sp.IdChiTietSp,
@@ -869,16 +875,63 @@ namespace App_View.Areas.Admin.Controllers
             return PartialView(lstRelatedProducts);
         }
 
-        public async Task<IActionResult> GetTongQuanDanhSach(int draw, int start, int length, string searchValue)
+        public async Task<IActionResult> GetTongQuanDanhSach(int draw, int start, int length, string searchValue, string idSanPham, string idThuongHieu, string idKieuDeGiay, string idChatLieu, string idLoaiGiay, string idXuatXu)
         {
-            var query = await _bazaizaiContext
-                .sanPhamChiTiets
+            var query = _bazaizaiContext
+                      .sanPhamChiTiets.AsQueryable();
+
+            if (!string.IsNullOrEmpty(idSanPham))
+            {
+                query = query
+                        .Where(it=>it.IdSanPham==idSanPham)
+                        .AsQueryable();
+            }
+
+            if (!string.IsNullOrEmpty(idThuongHieu))
+            {
+                query = query
+                        .Where(it => it.IdThuongHieu == idThuongHieu)
+                        .AsQueryable();
+            }
+
+            if (!string.IsNullOrEmpty(idKieuDeGiay))
+            {
+                query = query
+                        .Where(it => it.IdKieuDeGiay == idKieuDeGiay)
+                        .AsQueryable();
+            }
+
+            if (!string.IsNullOrEmpty(idChatLieu))
+            {
+                query = query
+                        .Where(it => it.IdChatLieu == idChatLieu)
+                        .AsQueryable();
+            }
+
+            if (!string.IsNullOrEmpty(idLoaiGiay))
+            {
+                query = query
+                        .Where(it => it.IdLoaiGiay == idLoaiGiay)
+                        .AsQueryable();
+            }
+
+            if (!string.IsNullOrEmpty(idXuatXu))
+            {
+                query = query
+                        .Where(it => it.IdXuatXu == idXuatXu)
+                        .AsQueryable();
+            }
+
+            var result = await query
                 .Include(sp => sp.SanPham)
                 .Include(sp => sp.ThuongHieu)
                 .Include(sp => sp.KieuDeGiay)
                 .Include(sp => sp.LoaiGiay)
                 .Include(sp => sp.XuatXu)
                 .Include(sp => sp.ChatLieu)
+                .ToListAsync();
+
+            var viewModelResult = result
                 .GroupBy(gr => new
                 {
                     gr.IdChatLieu,
@@ -902,14 +955,14 @@ namespace App_View.Areas.Admin.Controllers
                     TongSoLuongTon = gr.Sum(it => it.SoLuongTon.GetValueOrDefault()),
                     TongSoLuongDaBan = gr.Sum(it => it.SoLuongDaBan.GetValueOrDefault())
                 })
-                .ToListAsync();
+                .ToList();
 
-            var totalRecords = (query).Count;
+            var totalRecords = viewModelResult.Count;
 
             if (!string.IsNullOrEmpty(searchValue))
             {
                 string searchValueLower = searchValue.ToLower();
-                query = query.Where(x =>
+                viewModelResult = viewModelResult.Where(x =>
                 x.SanPham!.ToLower().Contains(searchValueLower) ||
                 x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
                 x.ChatLieu!.ToLower().Contains(searchValueLower) ||
@@ -921,7 +974,7 @@ namespace App_View.Areas.Admin.Controllers
             }
             else
             {
-                query = (query)
+                viewModelResult = (viewModelResult)
                .Skip(start)
                .Take(length)
                .ToList();
@@ -932,7 +985,7 @@ namespace App_View.Areas.Admin.Controllers
                 draw = draw,
                 recordsTotal = totalRecords,
                 recordsFiltered = totalRecords,
-                data = query
+                data = viewModelResult
             });
         }
 
