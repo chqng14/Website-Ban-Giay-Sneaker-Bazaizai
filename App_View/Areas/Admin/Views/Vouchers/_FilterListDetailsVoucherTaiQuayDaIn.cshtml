@@ -10,51 +10,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        .voucher-container {
-            width: 900px;
-            height: 300px;
-            display: flex;
-            align-items: center;
-            font-family: Arial, sans-serif;
-            margin-bottom: 40px;
-            margin-left: 100px;
-            background: url('/images/background_Voucher.png') center/cover; /* Sử dụng hình nền */
-        }
-
-
-        .qr-code {
-            flex: 3;
-            padding-right:50px;
-        }
-
-            .qr-code img {
-                max-width: 80%;
-                height: auto;
-                margin-left: 35.9px;
-            }
-
-        .voucher-info {
-            flex: 7;
-            padding: 10px;
-            box-sizing: border-box;
-            margin-left: 60px;
-        }
-
-            .voucher-info table {
-                width: 100%;
-            }
-
-                .voucher-info table td {
-                    padding: 5px;
-                    border-bottom: 1px solid #ccc;
-                }
-
-        table tr {
-            border-bottom: none;
-        }
-    </style>
 </head>
+<style>
+
+    .voucher-container {
+        width: 900px;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        margin-bottom: 40px;
+        margin-left: 100px;
+        background: url('/images/background_Voucher.png') center/cover; /* Sử dụng hình nền */
+    }
+
+
+    .qr-code {
+        flex: 3;
+        padding-right: 50px;
+    }
+
+        .qr-code img {
+            max-width: 80%;
+            height: auto;
+            margin-left: 35.9px;
+        }
+
+    .voucher-info {
+        flex: 7;
+        padding: 10px;
+        box-sizing: border-box;
+        margin-left: 60px;
+    }
+
+        .voucher-info table {
+            width: 100%;
+        }
+
+            .voucher-info table td {
+                padding: 5px;
+                border-bottom: 1px solid #ccc;
+            }
+
+</style>
+
 <body>
     <div id="voucher-container-wrapper">
         @foreach (var item in Model)
@@ -118,9 +117,9 @@
 
 </body>
 </html>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#data-table').DataTable()
+        $('#data-table').DataTable();
     });
 </script>
