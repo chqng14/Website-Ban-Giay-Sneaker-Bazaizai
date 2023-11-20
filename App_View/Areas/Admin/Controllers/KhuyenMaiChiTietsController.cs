@@ -21,6 +21,7 @@ using App_Data.ViewModels.SanPhamChiTiet.SanPhamDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using static App_Data.Repositories.TrangThai;
 using App_View.Models.ViewModels;
+using System.Security.Policy;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -244,7 +245,7 @@ namespace App_View.Areas.Admin.Controllers
                 sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
             }
             var lstSpDuocApDungKhuyenMai = sanPhamSaleViewModelList.Where(x => (x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong);
-            return View(sanPhamSaleViewModelList);
+            return View(lstSpDuocApDungKhuyenMai);
         }
         [HttpPost]
         public async Task<IActionResult> ApllySale(string idSale, List<string> selectedProducts)
@@ -337,6 +338,38 @@ namespace App_View.Areas.Admin.Controllers
         {
             var km = (await _khuyenMaiServices.GetAllKhuyenMai()).FirstOrDefault(x => x.IdKhuyenMai == id);
             return PartialView("viewSale", km);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> viewSanPhamFilter(string id)
+        {
+            var km = (await _khuyenMaiServices.GetAllKhuyenMai()).FirstOrDefault(x => x.IdKhuyenMai == id);
+            var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Where(x => (x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong).Select(item => CreateSanPhamDanhSachViewModel(item));
+            var sanPhamChiTietList = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
+            var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
+
+            foreach (var pro in sanPhamChiTietList)
+            {
+                var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
+                var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
+                var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
+                var sanPhamSaleViewModel = new SanPhamSaleViewModel
+                {
+                    SanPhamDanhSachView = pro,
+                    TrangThaiSale = Convert.ToInt32(trangThaiSale),
+                    TrangThai = Convert.ToInt32(trangThai),
+                    GiaThucTe = giaThucTe
+                };
+
+                sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
+            }
+            var lstSpDuocApDungKhuyenMai = sanPhamSaleViewModelList.Where(x => (x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong);
+            if (km.LoaiHinhKM==0)
+            {
+                var kmDongGia =  lstSpDuocApDungKhuyenMai.Where(x => x.SanPhamDanhSachView.GiaBan > Convert.ToDouble(km.MucGiam));
+                return PartialView("viewSanPhamFilter", kmDongGia);
+            }
+            return PartialView("viewSanPhamFilter",lstSpDuocApDungKhuyenMai);
         }
     }
 }

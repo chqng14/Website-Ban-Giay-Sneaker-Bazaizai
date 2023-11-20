@@ -110,5 +110,21 @@ namespace App_View.Controllers
             return View(NguoiDung);
         }
 
+        public async Task<IActionResult> GetVoucherByMa(string ma)
+        {
+            var idNguoiDung = _userManager.GetUserId(User);
+            await _voucherND.AddVoucherNguoiDung(ma, idNguoiDung);
+            var Voucher = await _voucherND.GetVocherTaiQuay(ma);
+            double mucuidai = 0;
+            string IdVoucher = "";
+            int loaiuudai = 0;
+            if (Voucher != null)
+            {
+                mucuidai = (double)Voucher.MucUuDai;
+                IdVoucher = Voucher.IdVouCher;
+                loaiuudai = (int)Voucher.LoaiHinhUuDai;
+            }
+            return Json(new { mucuidai, IdVoucher, loaiuudai });
+        }
     }
 }

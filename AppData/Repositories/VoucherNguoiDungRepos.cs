@@ -28,6 +28,55 @@ namespace App_Data.Repositories
             return _context.NguoiDungs.Where(c => c.TongChiTieu == 0 && c.UserName != "Admin").ToList();
         }
 
+        public async Task<VoucherTaiQuayDto> GetVocherTaiQuay(string id)
+        {
+
+            var voucherTaiQuay = _context.voucherNguoiDungs.FirstOrDefault(c => c.IdVouCherNguoiDung == id && c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung);
+            if (voucherTaiQuay != null)
+            {
+                var voucher = _context.vouchers.FirstOrDefault(c => c.IdVoucher == voucherTaiQuay.IdVouCher && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.HoatDong));
+                if (voucher != null)
+                {
+                    return new VoucherTaiQuayDto()
+                    {
+                        IdVouCherNguoiDung = voucherTaiQuay.IdVouCherNguoiDung,
+                        IdNguoiDung = voucherTaiQuay.IdNguoiDung,
+                        IdVouCher = voucher.IdVoucher,
+                        MaVoucher = voucher.MaVoucher,
+                        DieuKien = voucher.DieuKien,
+                        LoaiHinhUuDai = voucher.LoaiHinhUuDai,
+                        MucUuDai = voucher.MucUuDai,
+                        TenVoucher = voucher.TenVoucher,
+                        TrangThai = voucher.TrangThai,
+                        HinhThuc = true,
+                    };
+                }
+            }
+            else
+            {
+                var voucher = _context.vouchers.FirstOrDefault(c => c.MaVoucher == id && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.HoatDong));
+                if (voucher != null)
+                {
+                    voucherTaiQuay = _context.voucherNguoiDungs.FirstOrDefault(c => c.IdVouCher == voucher.IdVoucher && c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung);
+                    if (voucherTaiQuay == null) { return null; }
+                    return new VoucherTaiQuayDto()
+                    {
+                        IdVouCherNguoiDung = voucherTaiQuay.IdVouCherNguoiDung,
+                        IdNguoiDung = voucherTaiQuay.IdNguoiDung,
+                        IdVouCher = voucher.IdVoucher,
+                        MaVoucher = voucher.MaVoucher,
+                        DieuKien = voucher.DieuKien,
+                        LoaiHinhUuDai = voucher.LoaiHinhUuDai,
+                        MucUuDai = voucher.MucUuDai,
+                        TenVoucher = voucher.TenVoucher,
+                        TrangThai = voucher.TrangThai,
+                        HinhThuc = false,
+                    };
+                }
+            }
+            return null;
+        }
+
         public async Task<bool> TangVoucherNguoiDung(AddVoucherRequestDTO addVoucherRequestDTO)
         {
             var VoucherGet = await _context.vouchers.FirstOrDefaultAsync(c => c.MaVoucher == addVoucherRequestDTO.MaVoucher);

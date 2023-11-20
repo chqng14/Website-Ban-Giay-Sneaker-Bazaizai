@@ -182,6 +182,19 @@ namespace App_Api.Controllers
             }
             return false;
         }
+        [HttpPut("UpdateVoucher/{idVoucher}")]
+        //trừ số lượng
+        public bool UpdateVoucher(string idVoucher)
+        {
+            var voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == idVoucher);
+            if (voucher != null)
+            {
+                voucher.SoLuong -= 1;
+                allRepo.EditItem(voucher);
+                return true;
+            }
+            return false;
+        }
         #endregion
 
         #region VoucherTaiQuay

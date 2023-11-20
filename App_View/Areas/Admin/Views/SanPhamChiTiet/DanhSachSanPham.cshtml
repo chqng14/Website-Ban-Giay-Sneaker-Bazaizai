@@ -195,7 +195,7 @@
         <div class="header-sub-title">
             <nav class="breadcrumb breadcrumb-dash">
                 <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>QUẢN LÝ SẢN PHẨM</a>
-                <a class="breadcrumb-item" href="#">DANH SÁCH SẢN PHẨM</a>
+                <a class="breadcrumb-item" href="#">DANH SÁCH THỰC THỂ SẢN PHẨM</a>
             </nav>
         </div>
     </div>
@@ -207,17 +207,17 @@
         <div class="card-body main_danh_sach">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="excel-tab" data-toggle="tab" href="#excel" role="tab" aria-controls="excel" aria-selected="true">Thao tác Excel</a>
+                    <a class="nav-link" id="excel-tab" data-toggle="tab" href="#excel" role="tab" aria-controls="excel" aria-selected="true">Thao tác Excel</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="sanPhamNgungKinhDoanh-tab" data-toggle="tab" href="#sanPhamNgungKinhDoanh" role="tab" aria-controls="sanPhamNgungKinhDoanh" aria-selected="false">Sản phẩm ngừng kinh doanh</a>
+                    <a class="nav-link" id="sanPhamNgungKinhDoanh-tab" data-toggle="tab" href="#sanPhamNgungKinhDoanh" role="tab" aria-controls="sanPhamNgungKinhDoanh" aria-selected="false">Danh sách</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" id="timKiemNangCao-tab" data-toggle="tab" href="#timKiemNangCao" role="tab" aria-controls="timKiemNangCao" aria-selected="false">Bộ lọc</a>
+                    <a class="nav-link active" id="timKiemNangCao-tab" data-toggle="tab" href="#timKiemNangCao" role="tab" aria-controls="timKiemNangCao" aria-selected="false">Bộ lọc</a>
                 </li>
             </ul>
             <div class="tab-content m-t-15" id="myTabContent">
-                <div class="tab-pane fade show active" id="excel" style="height: auto" role="tabpanel" aria-labelledby="excel-tab">
+                <div class="tab-pane fade" id="excel" style="height: auto" role="tabpanel" aria-labelledby="excel-tab">
                     <div class="row w-100">
                         <div class="col-lg-8">
                             <div class="d-md-flex">
@@ -250,7 +250,13 @@
                                 <div class="m-b-10">
                                     <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh">
                                         <i class="anticon anticon-arrow-right"></i>
-                                        <span>Đi đến danh sách sản phẩm ngừng kinh doanh</span>
+                                        <span>Thực thể ngừng kinh doanh</span>
+                                    </a>
+                                </div>
+                                <div class="m-b-10 m-l-10">
+                                    <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/TongQuanSanPham">
+                                        <i class="anticon anticon-arrow-right"></i>
+                                        <span>Tổng quan sản phẩm</span>
                                     </a>
                                 </div>
                             </div>
@@ -259,7 +265,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="timKiemNangCao" role="tabpanel" style="height: auto" aria-labelledby="timKiemNangCao-tab">
+                <div class="tab-pane fade show active" id="timKiemNangCao" role="tabpanel" style="height: auto" aria-labelledby="timKiemNangCao-tab">
                     <div class="row w-100">
                         <div class="col-lg-8">
                             <div class="d-md-flex">

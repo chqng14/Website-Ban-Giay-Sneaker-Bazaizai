@@ -60,20 +60,6 @@ namespace App_View.Controllers
             ViewBag.TatCaVoucher = allVouchers;
             return PartialView("_VoucherLstToCalm", allVouchers);
         }
-        public async Task<IActionResult> GetVoucherByMa(string ma)
-        {
-            var Voucher = await _voucherSV.GetVoucherByMa(ma);
-            double mucuidai = 0;
-            string IdVoucher = "";
-            int loaiuudai = 0;
-            if (Voucher != null)
-            {
-                mucuidai = (double)Voucher.MucUuDai;
-                IdVoucher = Voucher.IdVoucher;
-                loaiuudai = (int)Voucher.LoaiHinhUuDai;
-            }
-            return Json(new { mucuidai, IdVoucher, loaiuudai });
-        }
 
         public async Task<IActionResult> GetVoucherById(string idVoucher)
         {
@@ -98,11 +84,33 @@ namespace App_View.Controllers
             }
             return BadRequest();
         }
+        public async Task<IActionResult> UpdateVoucherSoluong(string idVoucher)
+        {
+            if (await _voucherSV.UpdateVoucherSoluong(idVoucher))
+            {
+                return Ok();
+            }
+            return BadRequest();
+        }
         public async Task<IActionResult> VoucherDetails(string ma)
         {
             var Voucher = await _voucherSV.GetVoucherByMa(ma);
             return View(Voucher);
         }
 
+        public async Task<IActionResult> GetVoucherByMa(string ma)
+        {
+            var Voucher = await _voucherSV.GetVoucherByMa(ma);
+            double mucuidai = 0;
+            string IdVoucher = "";
+            int loaiuudai = 0;
+            if (Voucher != null)
+            {
+                mucuidai = (double)Voucher.MucUuDai;
+                IdVoucher = Voucher.IdVoucher;
+                loaiuudai = (int)Voucher.LoaiHinhUuDai;
+            }
+            return Json(new { mucuidai, IdVoucher, loaiuudai });
+        }
     }
 }

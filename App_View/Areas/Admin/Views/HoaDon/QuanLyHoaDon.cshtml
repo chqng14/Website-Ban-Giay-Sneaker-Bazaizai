@@ -1,0 +1,119 @@
+﻿@using App_Data.ViewModels.HoaDon;
+@model List<HoaDonViewModel>
+@{
+    ViewData["Title"] = "QuanLyHoaDon";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<head>
+    <title>Table V01</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="icon" type="image/png" href="images/icons/favicon.ico">
+
+    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+
+    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+
+    <link rel="stylesheet" type="text/css" href="vendor/perfect-scrollbar/perfect-scrollbar.css">
+
+    <link rel="stylesheet" type="text/css" href="~/Admin/css/viewHoaDon.css">
+    <link rel="stylesheet" type="text/css" href="~/Admin/css/ulti.css">
+
+
+
+</head>
+
+    <body>
+        <div class="limiter">
+            <div class="container-table100">
+                <div class="wrap-table100">
+                    <div class="table100">
+                        <table>
+                            <thead>
+                                <tr class="table100-head">
+                                <th class="column1">Ngày tạo</th>
+                                <th class="column2">Mã hóa đơn</th>
+                                <th class="column3">Tên khách hàng</th>
+                                    <th class="column4">Tổng tiền</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                            @foreach (var hoaDon in Model.OrderByDescending(x=>x.NgayTao))
+                            {
+                                <tr class="invoice-row btnInvoiceDetail" data-invoice-id="@hoaDon.IdHoaDon" >
+                                    <td class="column1">@hoaDon.NgayTao</td>
+                                    <td class="column2">@hoaDon.MaHoaDon</td>
+                                    <td class="column3">@hoaDon.TenNguoiNhan</td>
+                                    <td class="column4">@string.Format("{0:N0}đ",hoaDon.TongTien)</td>
+
+                                </tr>
+                            }
+                               
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="vendor/jquery/jquery-3.2.1.min.js"></script>
+
+        <script src="vendor/bootstrap/js/popper.js"></script>
+        <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+        <script src="vendor/select2/select2.min.js"></script>
+
+        <script src="js/main.js"></script>
+
+        
+
+
+    </body>
+
+
+<!-- Modal để hiển thị thông tin chi tiết hóa đơn -->
+<div id="invoiceDetailModal" class="modal fade custom-modal-width" role="dialog">
+    <div class="modal-dialog custom-modal-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Chi tiết hóa đơn</h4>
+            </div>
+            <div class="modal-body" id="invoiceDetailContent">
+                <!-- Nội dung chi tiết hóa đơn sẽ được load thông qua Ajax -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script>
+        $(document).ready(function () {
+            $(".btnInvoiceDetail").on("click", function () {
+                var invoiceId = $(this).data("invoice-id");
+
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("ChiTietHoaDon", "HoaDon")",
+                data: { id: invoiceId },
+                    success: function (response) {
+                        $("#invoiceDetailContent").html(response);
+   
+                        $("#invoiceDetailModal").modal("show");
+                    },
+                    error: function (error) {
+                        // Xử lý lỗi nếu cần
+                    }
+                });
+            });
+        });
+    </script>
+
