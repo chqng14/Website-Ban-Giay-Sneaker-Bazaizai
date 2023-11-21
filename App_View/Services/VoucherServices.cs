@@ -239,11 +239,11 @@ namespace App_View.Services
                 return false;
             }
         }
-        public async Task<bool> UpdateVoucherAfterUseItTaiQuay(string idVoucher,string idUser)
+        public async Task<bool> UpdateVoucherAfterUseItTaiQuay(string idVoucherNguoiDung)
         {
             try
             {
-                var reponse = await _httpClient.PutAsync($"/api/Voucher/UpdateVoucherAfterUseItTaiQuay/{idVoucher}/{idUser}", null);
+                var reponse = await _httpClient.PutAsync($"/api/Voucher/UpdateVoucherAfterUseItTaiQuay?idVoucherNguoiDung={idVoucherNguoiDung}", null);
                 if (reponse.IsSuccessStatusCode)
                 {
                     return await reponse.Content.ReadAsAsync<bool>();

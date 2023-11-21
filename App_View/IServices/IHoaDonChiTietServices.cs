@@ -12,5 +12,7 @@ namespace App_View.IServices
         Task<HoaDonChiTiet> ThemSanPhamVaoHoaDon(HoaDonChiTiet hoaDonChiTiet);
         Task<string> UpdateSoLuong(string idHD, string idSanPham,int SoLuongMoi, string SoluongTon);
         Task<string> XoaSanPhamKhoiHoaDon(string idHD, string idSanPham);
+        Task<List<HoaDonChiTiet>> HuyHoaDon(string maHD,string lyDoHuy, string idUser);
+        Task<bool> ThanhToanHoaDonChiTiet(string maHD);
     }
 }

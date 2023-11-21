@@ -151,5 +151,56 @@ namespace App_Data.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public List<HoaDonChiTiet> HuyHoaDonChiTiet(string idHD)
+        {
+            try
+            {
+                var hoaDonChiTiet = context.hoaDonChiTiets.Where(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD).ToList();
+                if (hoaDonChiTiet.Any())
+                {
+                    foreach (var item in hoaDonChiTiet)
+                    {
+                        item.TrangThai = (int)TrangThaiHoaDonChiTiet.Huy;
+                    }
+                    context.UpdateRange(hoaDonChiTiet);
+                    context.SaveChanges();
+                    return hoaDonChiTiet;
+                }
+                return null;
+               
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+            
+        }
+
+        public bool ThanhToanHoaDonChiTiet(string idHD)
+        {
+            try
+            {
+                var hoaDonChiTiet = context.hoaDonChiTiets.Where(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD).ToList();
+                if (hoaDonChiTiet.Any())
+                {
+                    foreach (var item in hoaDonChiTiet)
+                    {
+                        item.TrangThai = (int)TrangThaiHoaDonChiTiet.DaThanhToan;
+                    }
+                    context.UpdateRange(hoaDonChiTiet);
+                    context.SaveChanges();
+                    return true;
+                }
+                return false;
+
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+        }
     }
 }

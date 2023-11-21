@@ -275,10 +275,10 @@ namespace App_Api.Controllers
             }
             return false;
         }
-        [HttpPut("UpdateVoucherAfterUseItTaiQuay/{idVoucher}/{idUser}")]
-        public bool UpdateVoucherAfterUseItTaiQuay(string idVoucher, string idUser)
+        [HttpPut("UpdateVoucherAfterUseItTaiQuay")]
+        public bool UpdateVoucherAfterUseItTaiQuay(string idVoucherNguoiDung)
         {
-            var voucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCher == idVoucher && c.IdNguoiDung == idUser);
+            var voucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCherNguoiDung == idVoucherNguoiDung);
             if (voucherNguoiDung != null)
             {
                 voucherNguoiDung.TrangThai = (int)TrangThaiVoucherNguoiDung.DaSuDung;
