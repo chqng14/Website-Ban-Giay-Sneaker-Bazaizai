@@ -567,7 +567,19 @@ namespace App_Api.Controllers
         }
         #endregion
 
-
+        [HttpPut("Update-List-SanPhamTable")]
+        public async Task<bool> UpdateListSanPhamTableDTO(List<SanPhamTableDTO> lstSanPhamTableDTO)
+        {
+            try
+            {
+                await _sanPhamChiTietRes.UpdateLstSanPhamTableAynsc(lstSanPhamTableDTO);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
     }
 }

@@ -326,7 +326,6 @@
            $('#confirm').off('click', '.btn-primary');
            $('#confirm').one('click', '.btn-primary', function () {
                const id = item.find('.checkbox').attr('data-id');
-               console.log(id);
                $.ajax({
                    url: '/Admin/SanPhamChiTiet/KhoiPhucKinhDoanh/' + id,
                    type: 'GET',

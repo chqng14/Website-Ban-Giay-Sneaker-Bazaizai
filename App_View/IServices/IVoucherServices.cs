@@ -14,6 +14,7 @@ namespace App_View.IServices
         Task<Voucher> GetVoucherByMa(string ma);
         Task<VoucherDTO> GetVoucherDTOById(string id);
         Task<bool> UpdateVoucherAfterUseIt(string idVoucher);
+        Task<bool> UpdateVoucherSoluong(string idVoucher);
 
         // TaiQuay
 

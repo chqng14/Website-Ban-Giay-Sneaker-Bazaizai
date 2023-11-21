@@ -14,9 +14,11 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
         public string? MauSac { get; set; }
         public int KichCo { get; set; }
         public double GiaBan { get; set; }
+        public double GiaNhap { get; set; }
+        public double KhoiLuong { get; set; }
         public int SoLuong { get; set; }
         public int SoLuongDaBan { get; set; }
+        public int TrangThai { get; set; }
         public string? Anh { get; set; }
-        public string? TGBanGanDay { get; set; }
     }
 }

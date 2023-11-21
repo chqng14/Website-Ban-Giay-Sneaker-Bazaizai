@@ -19,7 +19,7 @@
     </script>
 }
 <link href="~/css/checkout.css" rel="stylesheet" />
-
+@* <link href="~/css/truck.css" rel="stylesheet" /> *@
 <div class="u-s-p-b-60" style="margin-top:20px">
 
     <!--====== Section Content ======-->
@@ -270,7 +270,17 @@
                                                                                         </div>
                                                                                         <div class="description-title">
                                                                                             <p>
-                                                                                                Giảm 100% phí ship
+                                                                                                Giảm
+                                                                                                @if (item.LoaiHinhUuDai == 1)
+                                                                                                {
+                                                                                                    <span> @item.MucUuDai %</span>
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    double? mucUuDai = item.MucUuDai;
+                                                                                                    @string.Format("{0:N0}đ", item.MucUuDai)
+                                                                                                    // Định dạng giá trị theo định dạng tiền Việt Nam
+                                                                                                }
                                                                                             </p>
                                                                                             <p width:40px>Đơn tối thiểu: @string.Format("{0:N0}đ", hiddenvc.DieuKien)</p>
                                                                                         </div>
@@ -446,10 +456,10 @@
                                     </div>
                                     <!--====== End - Check Box ======-->
                                 </div>
-                                <div class="u-s-m-b-10">
+                                @* <div class="u-s-m-b-10">
 
                                     <a class="gl-link" href="#create-account" data-toggle="collapse">Tạo tài khoản mới?</a>
-                                </div>
+                                </div> *@
                                 <div class="collapse u-s-m-b-15" id="create-account">
 
                                     <span class="gl-text u-s-m-b-15">Tạo tài khoản mới vui lòng nhập thông tin bên dưới. Nếu bạn đã có tài khoản vui lòng đăng nhập ở góc trên.</span>
@@ -667,7 +677,7 @@
                                 <h1 class="gl-modal-h1">Địa chỉ giao hàng</h1>
                             </div>
                         </div>
-                        <form class="checkout-modal2__form">
+                        <form class="checkout-modal2__form diachinguoidung">
                             <div class="dash__table-2-wrap u-s-m-b-30 gl-scroll">
                                 <table class="dash__table-2">
                                     <thead>
@@ -688,7 +698,7 @@
                                                     <!--====== Radio Box ======-->
                                                     <div class="radio-box">
 
-                                                        <input type="radio" id="address-1" name="default-address">
+                                                        <input type="radio" id="address-1">
                                                         <div class="radio-box__state radio-box__state--primary">
 
                                                             <label class="radio-box__label" for="address-1"></label>
@@ -748,6 +758,7 @@
     <!--====== End - Shipping Address Add Modal ======-->
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+@* <script src="~/js/truck.js"></script> *@
 @section Scripts{
     <!--====== lấy địa chỉ từ modal địa chỉ ======-->
     <script>
@@ -757,7 +768,7 @@
         var selectedId = "";
         document.addEventListener("DOMContentLoaded", function () {
             var radioButtons = document.querySelectorAll('input[name="default-address"]');
-            var form = document.querySelector('.checkout-modal2__form');
+            var form = document.querySelector('.diachinguoidung');
             var thongtinElement = document.getElementById('thongtin');
             var editShipAddressModal = $('#edit-ship-address');
 
@@ -770,16 +781,21 @@
             //         updateThongTin(savedRadioButton);
             //     }
             // } else {
+
+            // Kiểm tra xem thongTinGH có khác null không
+            if (radioButtons.length > 0) {
                 var selectedAddress = document.querySelector('input[name="default-address"][data-trangthai="0"]');
                 selectedAddress.checked = true;
                 selectedId = selectedAddress.id;
                 updateThongTin(selectedAddress);
-            // }
+
+            }
+
+             // }
 
             form.addEventListener('submit', function (event) {
                 event.preventDefault();
                 var selectedAddress = document.querySelector('input[name="default-address"]:checked');
-
                 if (selectedAddress) {
                     localStorage.setItem('selectedAddressId', selectedAddress.id);
                     selectedId = selectedAddress.id;
@@ -788,6 +804,8 @@
                     alert("Vui lòng chọn một địa chỉ trước khi lưu.");
                 }
             });
+
+            
 
             function updateThongTin(selectedAddress) {
                 var selectedRow = selectedAddress.closest('tr');
@@ -854,15 +872,13 @@
         var selectedWardCode = null;
         let hasFunctionRun = false;
         var useDefaultAddress = "";
-        var defaultAddressCheckbox = "";
         $(document).ready(function () {
             useInputAddressScript();
             $('#get-address').on('change', function () {
                 useDefaultAddress = $(this).prop('checked');
                 $('#phiship').text('0đ');
                 phiship = 0;
-                defaultAddressCheckbox = document.getElementById("make-default-address");
-                defaultAddressCheckbox.disabled = false;
+                // defaultAddressCheckbox.disabled = false;
                 if (MucUuDai !== null && MucUuDai !== "") {
                     totalAmountElement.innerText = tongTienSauGiamGia.toLocaleString("vi-VN").replace(/\./g, ',') + "đ";
                     totalAmountElement.value = tongTienSauGiamGia.toString();
@@ -1101,11 +1117,17 @@
     <!--====== Tính phí ship và voucher ======-->
     <script>
         //khi ô input đc thay đổi
-        $('#voucherinput').on('change', function () {
-            MucUuDai = "";
-            voucher(this.value);
-        });
+        // $('#voucherinput').on('change', function () {
+        //     MucUuDai = "";
+        //     voucher(this.value);
+        // });
         //khi ấn enter
+        $(document).ready(function () {
+            $('#button-coupon').click(function () {
+                var voucherValue = $('#voucherinput').val();
+                voucher(voucherValue);
+            });
+        });
         $('#voucherinput').on('keydown', function (e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -1266,7 +1288,7 @@
             if (value != null && value.trim() != "") {
                 var ma = { ma: value };
                 $.ajax({
-                    url: '/Voucher/GetVoucherByMa',
+                    url: '/VoucherNguoiDung/GetVoucherByMa',
                     type: 'GET',
                     data: ma,
                     success: function (result) {
@@ -1316,6 +1338,11 @@
                                 duration: 2000
                             });
                         } else {
+                            toast({
+                                title: "Áp dụng thành công!",
+                                type: "success",
+                                duration: 2000
+                            });
                             MucUuDai = result.mucuidai;
                             IdVoucher = result.idVoucher;
                             $('input[name="IdVoucher"]').val(IdVoucher);
@@ -1448,27 +1475,23 @@
             return false;
         }
 
-        function UpdateThongTin() {
-            $.ajax({
-                type: 'PUT',
-                url: '/ThongTinGH/UpdateTrangThai',
-                data: { idThongTin: selectedId },
-                success: function (Response) {
-                },
-                error: function (Error) {
-                    // Xử lý lỗi nếu cần
-                }
-            });
+        function showLoadingOverlay() {
+            $('<span class="loader"></span>').appendTo('#placeOrderButton');
         }
 
+        function hideLoadingOverlay() {
+            $('.loader').remove();
+        }
+        var defaultAddressCheckbox = document.getElementById("make-default-address");
+        var agreeCheckbox = document.getElementById("term-and-condition");
         $(document).ready(function () {
             $('#placeOrderButton').click(function (e) {
                 e.preventDefault();
                 if (kiemTraTuyChon()) {
                     return;
-                }
-                $('#placeOrderButton').prop('disabled', true);
-                if ($('input[name="Payment"]:checked').length === 0) {
+                } 
+                // showLoadingOverlay();
+                if (!paymentMethod) {
                     toast({
                         title: "Vui lòng chọn phương thức thanh toán!",
                         type: "warning",
@@ -1476,6 +1499,15 @@
                     });
                     return;
                 }
+                if (!agreeCheckbox.checked) {
+                    toast({
+                        title: "Vui lòng đồng ý với điều khoản!",
+                        type: "warning",
+                        duration: 2000
+                    });
+                    return;
+                }
+                $('#placeOrderButton').prop('disabled', true);
                 var selectedCity, selectedDistrict, selectedWard, inputAddressBill, DiaChiFull;
 
                 if ($('#DefaultDropdown').is(':visible')) {
@@ -1498,9 +1530,6 @@
                     // Thực hiện các chức năng liên quan đến useDefaultAddressScript
                     var paymentFormData = $('#paymentForm').serialize();
                     // Gửi dữ liệu thanh toán
-                    if (defaultAddressCheckbox.checked) {
-                        UpdateThongTin();
-                    }
 
                     $.ajax({
                         type: 'POST',
@@ -1514,6 +1543,10 @@
                                 if (paymentResponse.url != null) {
                                     window.location.href = paymentResponse.url;
                                 }else{
+                                    // $('.loader').on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function () {
+                                    //     hideLoadingOverlay(); // Ẩn hiệu ứng loading trước khi chuyển trang
+                                    //     window.location.href = "/HoaDon/Order?idHoaDon=" + paymentResponse.idHoaDon;
+                                    // });
                                     window.location.href = "/HoaDon/Order?idHoaDon=" + paymentResponse.idHoaDon;
                                 }
                             }else{
@@ -1548,7 +1581,16 @@
                             if (deliveryResponse.idThongTinGH != null) {
                                 if (defaultAddressCheckbox.checked) 
                                 {
-                                    UpdateThongTin();
+                                    $.ajax({
+                                        type: 'PUT',
+                                        url: '/ThongTinGH/UpdateTrangThai',
+                                        data: { idThongTin: deliveryResponse.idThongTinGH },
+                                        success: function (Response) {
+                                        },
+                                        error: function (Error) {
+                                            // Xử lý lỗi nếu cần
+                                        }
+                                    });
                                 }
 
                                 var moTaValue = $("#order-note").val();

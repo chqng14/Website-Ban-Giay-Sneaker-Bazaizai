@@ -64,59 +64,6 @@ namespace App_Api.Controllers
             return _hoaDon.GetHoaDon();
         }
 
-        //[HttpGet]
-        //public async Task<string> GetHoaDonOnlineTest()
-        //{
-        //    var danhSachHoaDon = new List<HoaDonTest>();
-
-        //    var danhSachHoaDonGoc = await GetHoaDonOnline();
-        //    var sanPhamArray = new JArray();
-        //    foreach (var hoadon in danhSachHoaDonGoc)
-        //    {
-        //        var hoadonct = (await _hoaDonChiTietController.GetAllHoaDon()).Where(c => c.IdHoaDon == hoadon.IdHoaDon).ToList();
-        //        var loaithanhtoan = await GetPTThanhToan(hoadon.IdHoaDon);
-        //        foreach (var item in hoadonct)
-        //        {
-        //            var sp = await _sanPhamChiTietController.GetSanPhamViewModel(item.IdSanPhamChiTiet);
-        //            var sanPhamObject = new JObject()
-        //            {
-        //                {"IdSanPhamChiTiet", item.IdSanPhamChiTiet },
-        //                        {"SoLuong", item.SoLuong },
-        //                        {"GiaBan", item.GiaBan },
-        //                        {"GiaGoc", item.GiaGoc },
-        //                        {"GiaNhap", item.GiaGoc },
-        //                        {"TenSanPham", sp.SanPham},
-        //                        {"LinkAnh", JArray.FromObject(sp.ListTenAnh)},
-        //                        {"TenMauSac", sp.MauSac },
-        //                        {"TenKichCo",sp.KichCo },
-        //                        {"TenThuongHieu", sp.ThuongHieu }
-        //            };
-        //            sanPhamArray.Add(sanPhamObject);
-        //            var hoadontest = new HoaDonTest()
-        //            {
-        //                IdHoaDon = hoadon.IdHoaDon,
-        //                MaHoaDon = hoadon.MaHoaDon,
-        //                //TenSanPham = sp.SanPham,
-        //                //SoLuong = item.SoLuong,
-        //                TienGiam = hoadon.TienGiam,
-        //                TienShip = hoadon.TienShip,
-        //                TongTien = hoadon.TongTien,
-        //                SanPham = sanPhamArray,
-        //                //GiaBan = item.GiaBan,
-        //                NgayTao = hoadon.NgayTao,
-        //                NgayGiaoDuKien = hoadon.NgayGiaoDuKien,
-        //                TrangThaiGiaoHang = hoadon.TrangThaiGiaoHang,
-        //                TrangThaiThanhToan = hoadon.TrangThaiThanhToan,
-        //                TenNguoiNhan = hoadon.TenNguoiNhan,
-        //                DiaChi = hoadon.DiaChi,
-        //                SDT = hoadon.SDT,
-        //                LoaiThanhToan = loaithanhtoan,
-        //            };
-        //            danhSachHoaDon.Add(hoadontest);
-        //        }
-        //    }
-        //    return JsonConvert.SerializeObject(danhSachHoaDon);
-        //}
 
         [HttpGet]
         public async Task<List<HoaDonTest>> GetHoaDonOnlineTest(string idNguoiDung)
@@ -130,7 +77,7 @@ namespace App_Api.Controllers
                 var loaithanhtoan = await GetPTThanhToan(hoadon.IdHoaDon);
 
 
-                var sanPhamList = new List<SanPhamTest>(); // Tạo JArray mới cho mỗi hóa đơn
+                var sanPhamList = new List<SanPhamTest>();
 
                 foreach (var item in hoadonct)
                 {

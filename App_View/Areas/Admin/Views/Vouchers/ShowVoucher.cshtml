@@ -145,12 +145,12 @@
     </div>
     @* //Tặng voucher đã chọn *@
     <a class="btn btn-secondary mr-2" asp-action="GiveVouchersToUsers">Tặng voucher</a>
- 
+
 </div>
 <script>
     // Hàm để load danh sách Voucher mặc định khi trang web được load
     function loadDefaultVoucher() {
-        var trangThai = $('#tab2').data('value'); // Lấy giá trị mặc định từ tab "Hoạt động"        
+        var trangThai = $('#tab2').data('value'); // Lấy giá trị mặc định từ tab "Hoạt động"
         $.ajax({
             url: '@Url.Action("FilterVoucherByStatus", "Vouchers")',
             type: 'POST',
@@ -281,7 +281,7 @@
             url: '@Url.Action("FilterVoucherByStatus", "Vouchers")',
             type: 'POST',
             data: { trangThai: trangThai },
-            success: function (result) {             
+            success: function (result) {
                 $('#partialContainer').html(result);
             }
         });

@@ -1,0 +1,118 @@
+﻿@using App_Data.DbContextt;
+@using App_Data.ViewModels.VoucherNguoiDung;
+@model IEnumerable<App_Data.ViewModels.VoucherNguoiDung.VoucherNguoiDungDTO>
+
+@{
+    BazaizaiContext context = new BazaizaiContext();
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<link href="~/css//cssVoucherIn.css" rel="stylesheet" />
+<header>
+    <div class="page-header no-print">
+        <div class="header-sub-title">
+            <nav class="breadcrumb breadcrumb-dash">
+                <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản trị</a>
+                <a class="breadcrumb-item" asp-action="ShowVoucherTaiQuay" asp-controller="Vouchers">Danh sách voucher tại quầy</a>
+                <a class="breadcrumb-item" asp-action="ShowVoucherTaiQuayDaIn" asp-controller="Vouchers">Voucher đã in</a>
+                <a class="breadcrumb-item" asp-action="ShowVoucherTaiQuayDaIn" asp-controller="Vouchers">Xuất voucher</a>
+            </nav>
+        </div>
+    </div>
+</header>
+<div class="card-body" style="background-color:#F5F7F8">
+    <h1 style="text-align:center" class="no-print">Xem trước voucher trước khi xuất</h1>
+    <div class="d-md-flex">
+        <div class="row w-100 m-b-30">
+
+            <div class="col-lg-7">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary no-print" id="btnExportPDF">Xuất PDF</button>
+                </div>
+            </div>
+            <div class="col-lg-12>
+                <div id="voucher-container-wrapper">
+                @foreach (var item in Model)
+                {
+                        <div class="voucher-container">
+                            <div class="qr-code">
+                                <img src="/images/VoucherNguoiDungQRCode/@(item.IdVouCherNguoiDung).png" alt="VoucherQR">
+                            </div>
+                            <div class="voucher-info">
+                                <table>
+                                    <tr>
+                                        <td><strong>Tên voucher:</strong></td>
+                                        <td colspan="2">@item.TenVoucher</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Mã Cứng:</strong></td>
+                                        <td>@item.IdVouCherNguoiDung</td>
+                                    </tr>
+                                    <tr>
+                                        <td> <strong>Loại ưu đãi:</strong></td>
+                                        <td>
+                                        @if (item.LoaiHinhUuDai == 0)
+                                        {
+                                                <span>Giảm giá theo tiền mặt</span>
+                                        }
+                                        else if (item.LoaiHinhUuDai == 1)
+                                        {
+                                                <span>Giảm giá %</span>
+                                        }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td> <strong>Voucher giảm:</strong></td>
+                                        <td>
+                                        @if (item.LoaiHinhUuDai == 1)
+                                        {
+                                            int mucUuDai = int.Parse(item.MucUuDai.ToString());
+                                            string mucUuDaiPhanTram = mucUuDai.ToString() + "%";
+                                            @mucUuDaiPhanTram
+                                        }
+                                        else
+                                        {
+                                            @string.Format("{0:N0}đ", item.MucUuDai)
+                                        }
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Áp dụng cho đơn hàng tối thiểu:</strong>
+
+                                        </td>
+                                        <td>
+                                        @string.Format("{0:N0}đ", item.DieuKien)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <strong>Thời gian:</strong>
+
+                                        </td>
+                                        <td>
+                                            Từ @item.NgayBatDau.ToString("dd/MM/yyyy HH:mm") đến @item.NgayKetThuc.ToString("dd/MM/yyyy HH:mm")
+                                        </td>
+                                    </tr>
+                                    <div class="voucher-status">
+                                        <em>Voucher khuyến mãi được thực hiện bởi Bazaizai Store</em>
+                                    </div>
+                                </table>
+                            </div>
+                        </div>
+                }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#data-table').DataTable();
+    });
+    document.getElementById("btnExportPDF").addEventListener("click", function () {
+        window.print();
+    });
+</script>

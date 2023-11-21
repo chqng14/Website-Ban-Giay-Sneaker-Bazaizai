@@ -4,51 +4,38 @@
 @{
     BazaizaiContext context = new BazaizaiContext();
 }
+<link href="~/css/cssVoucherIn.css" rel="stylesheet" />
 <style>
     .icon {
         font-size: 25px;
         color: #0F69F2;
         cursor: pointer;
-    }
+    }   
 </style>
-
-
-<!-- Modal -->
-<div class="modal fade" id="printVoucher">
-    <div class="modal-dialog">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-xl " role="document">
         <div class="modal-content">
-            <form id="voucherForm" method="post" asp-area="Admin" asp-controller="Vouchers" asp-action="InVoucherTaiQuay">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="printVoucherLabel">Nhập số lượng để in voucher</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <i class="anticon anticon-close"></i>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon3">Số lượng</span>
-                        </div>
-                        <input type="text" class="form-control" name="soLuong" id="soLuong" />
-                    </div>
-                    <div class="input-group mb-3" hidden>
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon3">id Voucher</span>
-                        </div>
-                        <input type="text" class="form-control" name="idVoucher" id="idVoucherPrint" />
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" id="printButtonController" class="btn btn-primary">In <i class="anticon anticon-printer" style="color:white;align-content:center;font-size:20px"></i></button>
-                </div>
-            </form>
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Chi tiết Voucher</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnExportPDF" onclick="PrintContent()">Xuất PDF</button>
+            </div>
 
+            <div class="modal-body printContent" id="myModalContent">
+                <!-- Nội dung chi tiết sẽ được cập nhật ở đây từ partial view -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
         </div>
     </div>
 </div>
-<table id="data-table" class="table" style="text-align:center">
 
+<table id="data-table" class="table" style="text-align:center">
     <thead>
         <tr>
             <th>
@@ -78,10 +65,6 @@
             <th>
                 Trạng thái
             </th>
-            <th>
-                <input type="checkbox" id="select-all-checkbox" class="checkbox_css" />
-            </th>
-
             <th>
                 <i class="anticon anticon-tool icon"></i>
             </th>
@@ -137,6 +120,7 @@
                     @item.NgayKetThuc
                 </td>
                 <td>
+
                     @if (item.TrangThai == 6)
                     {
                         <span>Hoạt động</span>
@@ -155,32 +139,22 @@
                     }
                 </td>
                 <td>
-                    <input type="checkbox" class="voucher-checkbox" data-value="@item.IdVoucher" />
+                    <button class="btn btn-primary btn-sm" onclick="showDetails('@item.IdVoucher')">Xem chi tiết</button>
+       @*              @Html.ActionLink("Xuất voucher", "XuatVoucher", new { idVoucher = item.IdVoucher }) *@
                 </td>
-                @if (item.TrangThai == 6 || item.TrangThai == 8)
-                {
-                    <td>
-                        <a asp-action="EditTaiQuay" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit icon"></i></a>
-                        <a onclick="printVourcher('@item.IdVoucher')"><i class="anticon anticon-printer icon"></i></a>
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        <a asp-action="EditTaiQuay" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit icon"></i></a>
-                    </td>
-                }
 
             </tr>
         }
     </tbody>
 </table>
+<iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
+
 <script>
     $(document).ready(function () {
         $('#voucherForm').submit(function (event) {
             // Ngăn chặn gửi form mặc định
             event.preventDefault();
-
+            $('#preloader').show();
             // Sử dụng Ajax để gửi dữ liệu form và nhận kết quả từ server
             $.ajax({
                 type: 'POST',
@@ -190,6 +164,7 @@
                     // Xử lý kết quả từ server
                     if (data) {
                         $('#printVoucher').modal('hide');
+                        $('#preloader').hide();
                         // Xử lý kết quả từ server
                         Swal.fire({
                             title: 'Thông báo!',
@@ -203,6 +178,7 @@
                     }
                     else {
                         $('#printVoucher').modal('hide');
+                        $('#preloader').hide();
                         // Xử lý kết quả từ server
                         Swal.fire({
                             title: 'Thông báo!',
@@ -252,5 +228,46 @@
         $('#printVoucher').modal('show');
         $('#idVoucherPrint').val(idvoucher);
     }
+    function showDetails(idVoucher) {
+        $.ajax({
+            url: '/Admin/Vouchers/FilterListDetailsVoucherTaiQuayDaIn',
+            type: 'POST',
+            data: { idVoucher: idVoucher },
+            success: function (result) {
+                // Hiển thị modal và cập nhật nội dung partial view
+                $('#myModalContent').html(result);
+                $('#myModal').modal('show');
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+    // function PrintContent() {
+    //     document.getElementById("btnExportPDF").style.display = "none";
+    //     var printWindow = window.open('', '_blank');
+    //     var contentToPrint = $("#myModalContent").html();
+
+    //     printWindow.document.open();
+    //     printWindow.document.write('<html><head></head><body>' + contentToPrint + '</body></html>');
+    //     printWindow.document.close();
+
+    //     printWindow.print();
+    //     document.getElementById("btnExportPDF").style.display = "block";
+    // }
+    function PrintContent() {
+        document.getElementById("btnExportPDF").style.display = "none";
+        var contentToPrint = $("#myModalContent").html();
+
+        var printWindow = window.frames["print_frame"];
+        printWindow.document.open();
+        printWindow.document.write('<html><head></head><body>' + contentToPrint + '</body></html>');
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+
+        document.getElementById("btnExportPDF").style.display = "block";
+    }
 
 </script>
+

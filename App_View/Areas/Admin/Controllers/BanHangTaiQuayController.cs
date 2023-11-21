@@ -495,10 +495,10 @@ namespace App_View.Areas.Admin.Controllers
             if (!string.IsNullOrWhiteSpace(idVoucher))
             {
                 var voucherReturn = await _voucherNguoiDungServices.GetVocherTaiQuay(idVoucher);
-                if (voucherReturn != null && voucherReturn.LoaiHinhUuDai <= 1)
+                if (voucherReturn != null && voucherReturn.LoaiHinhUuDai <= 1 && voucherReturn.IdVouCherNguoiDung != null)
                 {
                     hoaDonUpdate.IdVoucher = voucherReturn.IdVouCher;
-                    if (!await _voucherServices.UpdateVoucherAfterUseIt(hoaDonUpdate.IdVoucher))
+                    if (!await _voucherServices.UpdateVoucherAfterUseItTaiQuay(voucherReturn.IdVouCherNguoiDung))
                     {
                         return Ok(new
                         {
