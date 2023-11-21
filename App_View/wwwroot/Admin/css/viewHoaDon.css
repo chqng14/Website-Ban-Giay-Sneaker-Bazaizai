@@ -301,3 +301,28 @@ tbody tr {
         padding-right: 15px
     }
 }
+.tabs {
+    display: flex;
+    border: 1px solid #ccc;
+    overflow: hidden;
+    background-color: white;
+}
+
+.tab-item {
+    flex: 1;
+    width: calc(100%/6);
+    text-align: center;
+    padding: 10px 0;
+    cursor: pointer;
+    color: #333333;
+    transition: background-color 0.3s;
+}
+
+    .tab-item.active {
+        background-color: #ff4500;
+        color: #fff;
+    }
+.input-text--border-radius {
+    width: -webkit-fill-available;
+    margin-bottom: 15px
+}

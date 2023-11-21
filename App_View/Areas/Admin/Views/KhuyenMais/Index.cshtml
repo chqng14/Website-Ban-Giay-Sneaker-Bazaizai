@@ -11,6 +11,18 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if (!string.IsNullOrEmpty(ViewBag.ThongBao))
+{
+    <script>
+        Swal.fire({
+        title: 'Thông báo!',
+        text: '@Html.Raw(Json.Serialize(ViewBag.ThongBao))',
+        icon: 'info',
+        confirmButtonText: 'Đóng'
+                    });
+    </script>
+}
 <div class="container">
         <div class="row">
             @foreach (var item in Model)
@@ -37,7 +49,7 @@
                             </label>
                         </div>
                         <div style="display:flex;align-items:center;gap:10px">
-                            <a class="btn btn-primary btn-tone m-r-5" asp-controller="KhuyenMaiChiTiets" asp-action="ApllySale" asp-route-id="@item.IdKhuyenMai">Áp dụng</a>
+                            <a class="btn btn-primary btn-tone m-r-5 apDungSale" asp-controller="KhuyenMaiChiTiets" asp-action="ApllySale" asp-route-id="@item.IdKhuyenMai" data-id="@item.IdKhuyenMai" id="apDungSale">Áp dụng</a>
                             <a class="btn btn-danger btn-tone m-r-5" asp-controller="KhuyenMais" asp-action="Edit" asp-route-id="@item.IdKhuyenMai">Chỉnh sửa</a>
                         </div>
                         </figcaption>
@@ -58,12 +70,28 @@
                 url: "@Url.Action("CapNhatTrangThai", "KhuyenMais")",
                 data: { id: id, trangThai: status },
                 success: function (response) {
+                    if(response.success==false){
+                        Swal.fire({
+                            title: 'Thông báo!',
+                            text: 'Chương trình khuyến mãi đã hết hạn',
+                            icon: 'info',
+                            confirmButtonText: 'Đóng'
+                        }).then((result) => {
+                            
+                            if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop || result.dismiss === Swal.DismissReason.esc) {
+                                location.reload();
+                            }
+                        });
+                    }
                 },
                 error: function (error) {
+
                 }
             });
         });
+    
     });
+  
 </script>
 <style>
 

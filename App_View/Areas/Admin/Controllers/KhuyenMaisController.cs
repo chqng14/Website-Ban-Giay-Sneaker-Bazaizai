@@ -18,6 +18,7 @@ using static App_Data.Repositories.TrangThai;
 using App_View.IServices;
 using App_View.Services;
 using App_Data.Repositories;
+using Google.Apis.PeopleService.v1.Data;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -43,6 +44,10 @@ namespace App_View.Areas.Admin.Controllers
         // GET: Admin/KhuyenMais
         public async Task<IActionResult> Index()
         {
+            if (TempData["ThongBao"] != null)
+            {
+                ViewBag.ThongBao = TempData["ThongBao"].ToString();
+            }
             var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("https://localhost:7038/api/KhuyenMai")).Content.ReadAsStringAsync());
             return View(KhuyenMais);
         }
@@ -364,8 +369,13 @@ namespace App_View.Areas.Admin.Controllers
             var khuyenMai = _context.khuyenMais.Find(id);
             if (trangThai == (int)TrangThaiSale.BuocDung)
             {
-                khuyenMai.TrangThai = (int)TrangThaiSale.DangBatDau;
-            }
+				if(khuyenMai.NgayKetThuc >= DateTime.Now)
+				{
+
+					khuyenMai.TrangThai = (int)TrangThaiSale.DangBatDau;
+				}
+                else return Json(new { success = false });
+			}
             else
             {
                 khuyenMai.TrangThai = (int)TrangThaiSale.BuocDung;
