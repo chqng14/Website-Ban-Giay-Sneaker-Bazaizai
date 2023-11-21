@@ -335,20 +335,20 @@
 						<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
 							<tr>
 								<td class="logo" style="text-align: left;">
-									<h1><a href="#">Bazaizai Store</a></h1>
+									<h1 style="color:#ff4500">Bazaizai Store</h1>
 								</td>
 							</tr>
 						</table>
 					</td>
 				</tr><!-- end tr -->
 				<tr>
-					<td valign="middle" class="hero bg_white" style="padding: 2em 0 2em 0;">
+					<td valign="middle" class="hero bg_white" style="padding: 0 0 2em 0;">
 						<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
 							<tr>
 								<td style="padding: 0 2.5em; text-align: left;">
 									<div class="text">
 										<h2>Cảm ơn bạn đã đặt hàng</h2>
-										<h3>Đăng nhập trên website để xem chi tiết đơn hàng</h3>
+										<h3>Vui lòng đăng nhập trên website để xem chi tiết đơn hàng</h3>
 									</div>
 								</td>
 							</tr>
@@ -359,17 +359,15 @@
 					<table class="bg_white" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
 						<tr style="border-bottom: 1px solid rgba(0,0,0,.05);">
 							<th width="80%"
-								style="text-align:left; padding: 0 2.5em; color: #000; padding-bottom: 20px">Item</th>
+								style="text-align:left; padding: 0 2.5em; color: #000; padding-bottom: 20px">Sản phẩm</th>
 							<th width="20%"
-								style="text-align:right; padding: 0 2.5em; color: #000; padding-bottom: 20px">Price</th>
+								style="text-align:right; padding: 0 2.5em; color: #000; padding-bottom: 20px">Giá</th>
 						</tr>
 						@foreach (var item in Model)
 						{
 							<tr style="border-bottom: 1px solid rgba(0,0,0,.05);">
 								<td valign="middle" width="80%" style="text-align:left; padding: 0 2.5em;">
 									<div class="product-entry">
-										@* <img src="images/prod-1.jpg" alt=""
-											 style="width: 100px; max-width: 600px; height: auto; margin-bottom: 20px; display: block;"> *@
 										<div class="text">
 											<h3>@item.TenThuongHieu @item.TenSanPham</h3>
 											<span>Số lượng x @item.SoLuong</span>
@@ -384,19 +382,17 @@
 							</tr>
 
 						}
-						<tr style="border-bottom: 1px solid rgba(0,0,0,.05);">
+						<hr>
+						<tr style="border-bottom: 1px solid rgba(0,0,0,.05);margin-bottom:15px">
 							<td valign="middle" width="80%" style="text-align:left; padding: 0 2.5em;">
 								<div class="product-entry">
-									@* <img src="images/prod-1.jpg" alt=""
-									style="width: 100px; max-width: 600px; height: auto; margin-bottom: 20px; display: block;"> *@
 									<div class="text">
-										<h3></h3>
-										<span></span>
+										<h2>Tổng tiền:</h2>
 									</div>
 								</div>
 							</td>
-							<td valign="middle" style="text-align:right; padding: 1em 2.5em;">
-								<p><a href="#" class="btn btn-primary"> @string.Format("{0:N0}đ", Model.Sum(c => c.GiaBan * c.SoLuong))</a></p>
+							<td valign="middle" width="20%" style="text-align:left; padding: 0 2.5em;">
+								<span class="price" style="color: #ff4500; font-size: 20px;font-weight:600">@string.Format("{0:N0}đ", Model.Sum(c => c.GiaBan * c.SoLuong))</span>
 							</td>
 						</tr>
 					</table>

@@ -62,6 +62,7 @@ namespace App_View.Controllers
             thongTinGHDTO.IdThongTinGH = Guid.NewGuid().ToString();
             thongTinGHDTO.IdNguoiDung = _userManager.GetUserId(User);
             thongTinGHDTO.TrangThai = (int)TrangThaiThongTinGH.HoatDong;
+            SessionServices.SetIdToSession(HttpContext.Session, "Email", thongTinGHDTO.Email);
             var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == _userManager.GetUserId(User));
             var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
@@ -468,26 +469,10 @@ namespace App_View.Controllers
             await _emailSender.SendEmailAsync(userKhachHang, subject, html);
             return Ok();
         }
-        //public async Task<IActionResult> CallBack()
-        //{
-        //    var response = _vnPayService.PaymentExecute(Request.Query);
-        //    var idpt = SessionServices.GetIdFomSession(HttpContext.Session, "idPay");
-        //    var idHoaDonSession = SessionServices.GetIdFomSession(HttpContext.Session, "idHoaDon");
-        //    if (response.Result.VnPayResponseCode == "00")
-        //    {
-        //        await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.DaThanhToan);
-        //        await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.DaThanhToan);
-        //        await hoaDonServices.UpdateNgayHoaDon(idHoaDonSession, DateTime.Now, null, null);
-        //    }
-        //    else
-        //    {
-        //        await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.ChuaThanhToan);
-        //        await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.ChuaThanhToan);
-        //    }
-        //    string payment = await hoaDonServices.GetPayMent(idHoaDonSession);
-        //    var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDonSession);
-        //    order.LoaiThanhToan = payment;
-        //    return View(order);
-        //}
+
+        public async Task<IActionResult> TrackOrder()
+        {
+            return View();
+        }
     }
 }

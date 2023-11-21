@@ -16,6 +16,7 @@
         })
     </script>
 }
+<link href="~/css/truck.css" rel="stylesheet" />
 <div class="u-s-p-b-60" style="margin-top:20px">
 
     <!--====== Section Content ======-->
@@ -888,24 +889,31 @@
             isValid = isValid && billingStreetInput.value !== "";
 
             if (!isValid) {
-                Swal.fire({
+                toast({
                     title: "Vui lòng nhập đầy đủ thông tin!",
-                    icon: "warning",
-                    showConfirmButton: false,
-                    timer: 1500
+                    type: "warning",
+                    duration: 2000
                 });
             }
             return !isValid;
         }
+        function showLoadingOverlay() {
+            $('#placeOrderButton').html('<span class="loader"></span>');
+        }
 
+        function hideLoadingOverlay() {
+            $('.loader').remove();
+        }
         var agreeCheckbox = document.getElementById("term-and-condition");
         $(document).ready(function () {
             $('#placeOrderButton').click(function (e) {
                 e.preventDefault();
                 if (kiemTraTuyChon()) {
+                    hideLoadingOverlay();
                     return;
                 }
                 if (!paymentMethod) {
+                    hideLoadingOverlay();
                     toast({
                         title: "Vui lòng chọn phương thức thanh toán!",
                         type: "warning",
@@ -914,6 +922,7 @@
                     return;
                 }
                 if (!agreeCheckbox.checked) {
+                    hideLoadingOverlay();
                     toast({
                         title: "Vui lòng đồng ý với điều khoản!",
                         type: "warning",
@@ -923,26 +932,26 @@
                 }
                 var selectedCity, selectedDistrict, selectedWard, inputAddressBill, DiaChiFull;
 
-                
-                    // Sử dụng useInputAddressScript
-                    selectedCity = $('#city option:selected').text();
-                    selectedDistrict = $('#district option:selected').text();
-                    selectedWard = $('#wards option:selected').text();
-                
-                    inputAddressBill = $('#billing-street').val();
-                    DiaChiFull = inputAddressBill + ',' + selectedWard + ',' + selectedDistrict + ',' + selectedCity;
-                    $('#billing-street').val(DiaChiFull);
-                    $('input[name="LoaiThanhToan"]').val(paymentMethod);
-                    // Thực hiện các chức năng liên quan đến useInputAddressScript
-                    var deliveryFormData = $('#deliveryForm').serialize();
 
-                    // Gửi dữ liệu DataBill
-                    $.ajax({
-                        type: 'POST',
-                        url: '/HoaDon/DataBillNologin',
-                        data: deliveryFormData,
-                        success: function (deliveryResponse) {
-                            // Thực hiện Ajax để gửi dữ liệu đến action ThanhToan trong controller TenControllerKhac
+                // Sử dụng useInputAddressScript
+                selectedCity = $('#city option:selected').text();
+                selectedDistrict = $('#district option:selected').text();
+                selectedWard = $('#wards option:selected').text();
+
+                inputAddressBill = $('#billing-street').val();
+                DiaChiFull = inputAddressBill + ',' + selectedWard + ',' + selectedDistrict + ',' + selectedCity;
+                $('#billing-street').val(DiaChiFull);
+                $('input[name="LoaiThanhToan"]').val(paymentMethod);
+                // Thực hiện các chức năng liên quan đến useInputAddressScript
+                var deliveryFormData = $('#deliveryForm').serialize();
+                showLoadingOverlay();
+                // Gửi dữ liệu DataBill
+                $.ajax({
+                    type: 'POST',
+                    url: '/HoaDon/DataBillNologin',
+                    data: deliveryFormData,
+                    success: function (deliveryResponse) {
+                        // Thực hiện Ajax để gửi dữ liệu đến action ThanhToan trong controller TenControllerKhac
                         if (deliveryResponse.idThongTinGH != null) {
                             var moTaValue = $("#order-note").val();
                             $('input[name="MoTa"]').val(moTaValue);
@@ -966,6 +975,7 @@
                                             window.location.href = "/HoaDon/Order?idHoaDon=" + paymentResponse.idHoaDon;
                                         }
                                     } else {
+                                        hideLoadingOverlay();
                                         Swal.fire({
                                             title: paymentResponse.title,
                                             icon: 'error',
@@ -974,10 +984,12 @@
                                     }
                                 },
                                 error: function (paymentError) {
+                                    hideLoadingOverlay();
                                     // Xử lý lỗi nếu cần
                                 }
                             });
                         } else {
+                            hideLoadingOverlay();
                             $('#billing-street').val(inputAddressBill);
                             Swal.fire({
                                 title: deliveryResponse.title,
@@ -985,12 +997,13 @@
                                 html: deliveryResponse.message.join('<br/>'),
                             })
                         }
-                        },
-                        error: function (deliveryError) {
-                            // Xử lý lỗi nếu cần
-                        }
-                    });
-                
+                    },
+                    error: function (deliveryError) {
+                        hideLoadingOverlay();
+                        // Xử lý lỗi nếu cần
+                    }
+                });
+
             });
         });
     </script>

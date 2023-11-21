@@ -19,7 +19,7 @@
     </script>
 }
 <link href="~/css/checkout.css" rel="stylesheet" />
-@* <link href="~/css/truck.css" rel="stylesheet" /> *@
+<link href="~/css/truck.css" rel="stylesheet" />
 <div class="u-s-p-b-60" style="margin-top:20px">
 
     <!--====== Section Content ======-->
@@ -362,7 +362,7 @@
 
                                         <label class="gl-label" for="billing-fname">TÊN NGƯỜI NHẬN *</label>
 
-                                        <input class="input-text input-text--primary-style" type="text" id="billing-fname" data-bill="" name="TenNguoiNhan" required>
+                                        <input class="input-text input-text--primary-style" type="text" id="billing-fname" data-bill="" name="TenNguoiNhan" required placeholder="Tên người nhận">
                                     </div>
                                 </div>
                                 <!--====== End - First Name, Last Name ======-->
@@ -371,7 +371,7 @@
 
                                     <label class="gl-label" for="billing-email">EMAIL *</label>
 
-                                    <input class="input-text input-text--primary-style" type="email" id="billing-email" data-bill="" required>
+                                    <input class="input-text input-text--primary-style" type="email" id="billing-email" data-bill="" name="Email" required placeholder="Địa chỉ email">
                                 </div>
                                 <!--====== End - E-MAIL ======-->
                                 <!--====== PHONE ======-->
@@ -379,7 +379,7 @@
 
                                     <label class="gl-label" for="billing-phone">SỐ ĐIỆN THOẠI *</label>
 
-                                    <input class="input-text input-text--primary-style" type="text" id="billing-phone" data-bill="" name="SDT" required>
+                                    <input class="input-text input-text--primary-style" type="text" id="billing-phone" data-bill="" name="SDT" min="10" max="10" required placeholder="Số điện thoại">
                                 </div>
                                 <!--====== End - PHONE ======-->
                                 <!--====== Street Address ======-->
@@ -642,18 +642,9 @@
                                         <input hidden name="LoaiThanhToan" />
                                         <input hidden name="IdVoucher" />
                                         <input hidden name="NgayGiaoDuKien" />
-                                        @* @if (TempData["QuantityErrorMessages"] != null)
-                                        {
-                                            <div>
-                                                <a id="placeOrderButton" class="btn btn--e-brand-b-2" href="/GioHangChiTiets/CheckOut">ĐẶT HÀNG</a>
-                                            </div>
-                                        }
-                                        else
-                                        { *@
                                             <div>
                                             <button id="placeOrderButton" class="btn btn--e-brand-b-2" type="submit">ĐẶT HÀNG</button>
                                             </div>
-                                        @* } *@
                                     
                                 </div>
                             </div>
@@ -1125,6 +1116,7 @@
         $(document).ready(function () {
             $('#button-coupon').click(function () {
                 var voucherValue = $('#voucherinput').val();
+                $('#voucher-modal').close();
                 voucher(voucherValue);
             });
         });
@@ -1452,7 +1444,7 @@
                 var billingEmailInput = document.getElementById("billing-email");
                 var billingPhoneInput = document.getElementById("billing-phone");
                 var billingStreetInput = document.getElementById("billing-street");
-
+                
                 var isValid = true;
                 isValid = isValid && cityInput.value !== "";
                 isValid = isValid && districtInput.value !== "";
@@ -1461,13 +1453,11 @@
                 isValid = isValid && billingEmailInput.value !== "";
                 isValid = isValid && billingPhoneInput.value !== "";
                 isValid = isValid && billingStreetInput.value !== "";
-
                 if (!isValid) {
-                    Swal.fire({
+                    toast({
                         title: "Vui lòng nhập đầy đủ thông tin!",
-                        icon: "warning",
-                        showConfirmButton: false,
-                        timer: 1500
+                        type: "warning",
+                        duration: 2000
                     });
                 }
                 return !isValid;
@@ -1476,7 +1466,7 @@
         }
 
         function showLoadingOverlay() {
-            $('<span class="loader"></span>').appendTo('#placeOrderButton');
+            $('#placeOrderButton').html('<span class="loader"></span>');
         }
 
         function hideLoadingOverlay() {
@@ -1488,10 +1478,11 @@
             $('#placeOrderButton').click(function (e) {
                 e.preventDefault();
                 if (kiemTraTuyChon()) {
+                    hideLoadingOverlay();
                     return;
                 } 
-                // showLoadingOverlay();
                 if (!paymentMethod) {
+                    hideLoadingOverlay();
                     toast({
                         title: "Vui lòng chọn phương thức thanh toán!",
                         type: "warning",
@@ -1500,6 +1491,7 @@
                     return;
                 }
                 if (!agreeCheckbox.checked) {
+                    hideLoadingOverlay();
                     toast({
                         title: "Vui lòng đồng ý với điều khoản!",
                         type: "warning",
@@ -1523,6 +1515,7 @@
                 }
                 // console.log(paymentMethod);
                 $('input[name="LoaiThanhToan"]').val(paymentMethod);
+                showLoadingOverlay();
                 if ($('#DefaultDropdown').is(':visible')) {
                     var moTaValue = $("#order-note").val();
                     $('input[name="MoTa"]').val(moTaValue);
@@ -1543,13 +1536,10 @@
                                 if (paymentResponse.url != null) {
                                     window.location.href = paymentResponse.url;
                                 }else{
-                                    // $('.loader').on('animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd', function () {
-                                    //     hideLoadingOverlay(); // Ẩn hiệu ứng loading trước khi chuyển trang
-                                    //     window.location.href = "/HoaDon/Order?idHoaDon=" + paymentResponse.idHoaDon;
-                                    // });
                                     window.location.href = "/HoaDon/Order?idHoaDon=" + paymentResponse.idHoaDon;
                                 }
                             }else{
+                                hideLoadingOverlay();
                                 Swal.fire({
                                     title: paymentResponse.title,
                                     icon: 'error',
@@ -1558,6 +1548,7 @@
                             }
                         },
                         error: function (paymentError) {
+                            hideLoadingOverlay();
                             // Xử lý lỗi nếu cần
                         }
                     });
@@ -1614,6 +1605,7 @@
                                                 window.location.href = "/HoaDon/Order?idHoaDon=" +                              paymentResponse.idHoaDon;
                                             }
                                         } else {
+                                            hideLoadingOverlay();
                                             Swal.fire({
                                                 title: paymentResponse.title,
                                                 icon: 'error',
@@ -1622,10 +1614,12 @@
                                         }
                                     },
                                     error: function (paymentError) {
+                                        hideLoadingOverlay();
                                         // Xử lý lỗi nếu cần
                                     }
                                 });
                             }else{
+                                hideLoadingOverlay();
                                 $('#billing-street').val(inputAddressBill);
                                 Swal.fire({
                                     title: deliveryResponse.title,
@@ -1636,6 +1630,7 @@
                             
                         },
                         error: function (deliveryError) {
+                            hideLoadingOverlay();
                             // Xử lý lỗi nếu cần
                         }
                     });
