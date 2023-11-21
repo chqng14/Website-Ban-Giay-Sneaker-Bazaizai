@@ -12,6 +12,8 @@ namespace App_Data.ViewModels.HoaDon
     {
         public string Id { get; set; }
         public string? IdNguoiDung { get; set; }
+        public string? IdVoucher { get; set; }
+        public string? IdKhachHang { get; set; }
         public string? MaHoaDon { get; set; }
         public DateTime? NgayTao { get; set; }
         public int? TrangThaiGiaoHang { get; set; }

@@ -610,6 +610,23 @@ namespace App_Data.Repositories
             return sanPhamChiTiet != null ? false : true;
         }
 
-
+        public async Task UpdateLstSanPhamTableAynsc(List<SanPhamTableDTO> sanPhamTableDTOs)
+        {
+            try
+            {
+                var lstSanPhamChiTiet = _mapper.Map<List<SanPhamTableDTO>, List<SanPhamChiTiet>>(sanPhamTableDTOs);
+                foreach (var sanPhamChiTiet in lstSanPhamChiTiet)
+                {
+                    _context.Attach(sanPhamChiTiet);
+                    _context.Entry(sanPhamChiTiet).Property(x => x.GiaBan).IsModified = true;
+                    _context.Entry(sanPhamChiTiet).Property(x => x.SoLuongTon).IsModified = true;
+                }
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
     }
 }

@@ -115,5 +115,41 @@ namespace App_View.Services
                 throw new Exception("Not IsSuccessStatusCode");
             }
         }
+
+        public async Task<List<HoaDonChiTiet>> HuyHoaDon(string maHD, string lyDoHuy, string idUser)
+        {
+            try
+            {
+                var res = await httpClient.PutAsync("https://localhost:7038/api/HoaDon/HuyHoaDon?maHD=" + maHD +"&lyDoHuy="+lyDoHuy+"&idUser="+idUser,null );
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<List<HoaDonChiTiet>>();
+                }
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        public async Task<bool> ThanhToanHoaDonChiTiet(string maHD)
+        {
+            try
+            {
+                var res = await httpClient.PutAsync("https://localhost:7038/api/HoaDon/ThanhToanHoaDonChiTiet?maHD=" + maHD, null);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<bool>();
+                }
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
     }
 }

@@ -4,6 +4,49 @@
 @{
     BazaizaiContext context = new BazaizaiContext();
 }
+<style>
+    .icon {
+        font-size: 25px;
+        color: #0F69F2;
+        cursor: pointer;
+    }
+</style>
+
+
+<!-- Modal -->
+<div class="modal fade" id="printVoucher">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="voucherForm" method="post" asp-area="Admin" asp-controller="Vouchers" asp-action="InVoucherTaiQuay">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="printVoucherLabel">Nhập số lượng để in voucher</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon3">Số lượng</span>
+                        </div>
+                        <input type="text" class="form-control" name="soLuong" id="soLuong" />
+                    </div>
+                    <div class="input-group mb-3" hidden>
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon3">id Voucher</span>
+                        </div>
+                        <input type="text" class="form-control" name="idVoucher" id="idVoucherPrint" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" id="printButtonController" class="btn btn-primary">In <i class="anticon anticon-printer" style="color:white;align-content:center;font-size:20px"></i></button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 <table id="data-table" class="table" style="text-align:center">
 
     <thead>
@@ -24,7 +67,7 @@
                 Loại hình
             </th>
             <th>
-                Số lượng
+                Số lượng đã in
             </th>
             <th>
                 Ngày bắt đầu
@@ -40,7 +83,7 @@
             </th>
 
             <th>
-                <i class="anticon anticon-tool"></i>
+                <i class="anticon anticon-tool icon"></i>
             </th>
         </tr>
 
@@ -114,22 +157,77 @@
                 <td>
                     <input type="checkbox" class="voucher-checkbox" data-value="@item.IdVoucher" />
                 </td>
+                @if (item.TrangThai == 6 || item.TrangThai == 8)
+                {
+                    <td>
+                        <a asp-action="EditTaiQuay" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit icon"></i></a>
+                        <a onclick="printVourcher('@item.IdVoucher')"><i class="anticon anticon-printer icon"></i></a>
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a asp-action="EditTaiQuay" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit icon"></i></a>
+                    </td>
+                }
 
-                <td>
-                    <a asp-action="EditTaiQuay" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i></a>
-                </td>
             </tr>
         }
     </tbody>
 </table>
 <script>
     $(document).ready(function () {
+        $('#voucherForm').submit(function (event) {
+            // Ngăn chặn gửi form mặc định
+            event.preventDefault();
+            $('#preloader').show();
+            // Sử dụng Ajax để gửi dữ liệu form và nhận kết quả từ server
+            $.ajax({
+                type: 'POST',
+                url: $('#voucherForm').attr('action'),
+                data: $('#voucherForm').serialize(),
+                success: function (data) {
+                    // Xử lý kết quả từ server
+                    if (data) {
+                        $('#printVoucher').modal('hide');
+                        $('#preloader').hide();
+                        // Xử lý kết quả từ server
+                        Swal.fire({
+                            title: 'Thông báo!',
+                            text: 'In voucher thành công!',
+                            icon: 'success'
+                        }).then((result) => {
+                            if (result.isConfirmed || result.isDismissed) {
+                                location.reload(); // Reload trang khi ấn OK
+                            }
+                        });
+                    }
+                    else {
+                        $('#printVoucher').modal('hide');
+                        $('#preloader').hide();
+                        // Xử lý kết quả từ server
+                        Swal.fire({
+                            title: 'Thông báo!',
+                            text: 'In voucher thất bại!',
+                            icon: 'error'
+                        }).then((result) => {
+                            if (result.isConfirmed || result.isDismissed) {
+                                location.reload(); // Reload trang khi ấn OK
+                            }
+                        });
+                    }
+                },
+                error: function () {
+                    // Xử lý lỗi nếu có
+                    alert('Đã xảy ra lỗi khi gửi yêu cầu.');
+                }
+            });
+        });
+
         $('#data-table').DataTable()
         $('#select-all-checkbox').click(function () {
             $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
         });
-
-
         $('#delete-button').on('click', function () {
             // Lấy danh sách id voucher đã chọn
             var selectedIds = [];
@@ -152,4 +250,8 @@
         });
 
     });
+    function printVourcher(idvoucher) {
+        $('#printVoucher').modal('show');
+        $('#idVoucherPrint').val(idvoucher);
+    }
 </script>

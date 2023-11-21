@@ -105,18 +105,119 @@
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const code = jsQR(imageData.data, imageData.width, imageData.height);
+        var maHoaDon = "";
+        if ($("#tabs .ui-tabs-active a").length > 0) {
+            maHoaDon = $("#tabs .ui-tabs-active a").text();
+        }
+        if (maHoaDon == "") {
+            toastr.error("Không tìm thấy hóa đơn", 'Lỗi');
 
+            scanning = false;
+            setTimeout(() => {
+                scanning = true;
+                requestAnimationFrame(captureQRCode);
+            }, 1500);
+        }
         if (code) {
             if (code.data) {
-                console.log('QR Code Data:', code.data);
                 if (code.data.includes('SP-')) {
-                    alert('QR SP:' + code.data)
+                    if (loading) {
+                        scanning = false;
+                        setTimeout(() => {
+                            scanning = true;
+                            requestAnimationFrame(captureQRCode);
+                        }, 1500);
+                    }
+                    loading = true;
+                    $.ajax({
+                        url: '/Admin/BanHangTaiQuay/QuetSanPhamVaoHoaDon?maHD=' + maHoaDon + '&maSp=' + code.data,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result) {
+                                if (result.trangThai) {
+                                    ThemSanPhamThanhCong();
+                                    CapNhapLaiTien(maHoaDon);
+                                }
+                                else{
+                                    toastr.error("Không thêm được sản phẩm", 'Lỗi');
+
+                                }
+                            }
+                            loading = false;
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    });
                 }
                 else {
-                    alert('QR Voucher:' + code.data)
+                    $.ajax({
+                        url: '/Admin/BanHangTaiQuay/GetVocherTaiQuay?id=' + code.data,
+                        type: 'GET',
+                        success: function (result) {
+                            if (result.trangThai) {
+                                var tongTienHoaDon = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
+                                if (result.dieuKien <= tongTienHoaDon) {
+                                    $("#MaVoucher").val(result.idVoucher);
+                                    if (result.loaiHinhUuDai == 0) {
+                                        $("#VoucherGiam").val(result.mucGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                        var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                                        var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
+                                        $("#TongGiam").val((result.mucGiam + KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                        tongTien = tongTienHoaDon - result.mucGiam - KhuyenMaiGiam;
+                                        if (tongTien < 0) {
+                                            $("#VoucherGiam").val((result.mucGiam + tongTien).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                            $("#TongGiam").val((result.mucGiam + KhuyenMaiGiam + tongTien).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                             tongTien = 0;
+                                            }
+                                        $("#SoTienPhaiTra").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                       
+
+                                    }
+                                    else {
+                                        $("#VoucherGiam").val(result.mucGiam + "%");
+                                        var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
+                                        var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                                        tongTien = tongTienHoaDon - tongTienHoaDon / 100 * result.mucGiam - KhuyenMaiGiam;
+                                        $("#SoTienPhaiTra").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                        $("#TongGiam").val((tongTienHoaDon / 100 * result.mucGiam + KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                    }
+                                    loading = false;
+                                    ThemVoucherThanhCong();
+                                }
+                                else {
+                                    var tienVoucher = 0;
+                                    $("#VoucherGiam").val(tienVoucher.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                    var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                                    $("#SoTienPhaiTra").val((tongTienHoaDon - KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                    $("#TongGiam").val(KhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                    $("#MaVoucher").val("");
+
+                                    KhongDuDieuKien();
+                                    loading = false;
+                                }
+                                updateTienThua();
+
+                            }
+                            else {
+                                var tienVoucher = 0;
+                                var tongTienHoaDon = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
+                                $("#VoucherGiam").val(tienVoucher.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                                $("#SoTienPhaiTra").val((tongTienHoaDon - KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                $("#TongGiam").val(KhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                $("#MaVoucher").val("");
+                                VoucherKhongHopLe();
+                                loading = false;
+                                updateTienThua();
+                            }
+                            closeModalKhiQuetVoucher();
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    });
                 }
-
-
                 scanning = false;
                 setTimeout(() => {
                     scanning = true;
@@ -134,6 +235,53 @@
         }
     };
     function closeModal() {
+        var maHoaDon = $("#tabs .ui-tabs-active a").text();
+        CapNhapLaiTien(maHoaDon);
+        LoadLaiSanPham();
+        $('#exampleModalScrollable').modal('hide');
+        stopQRCodeScanning();
+    }
+    function CapNhapLaiTien(maHD) {
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/CapNhapThongTinTien?maHD=' + maHD,
+            type: 'GET',
+            success: function (result) {
+                if (result) {
+                    $("#TongTienHoaDon").val(result.tongTienThayDoi.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#SoTienPhaiTra").val(result.soTienTraLaiThayDoi.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#KhuyenMaiGiam").val(result.soTienKhyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#MaVoucher").val("");
+                    $("#TongGiam").val((result.tongTienThayDoi - result.soTienTraLaiThayDoi).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    var autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputChuyenKhoan'));
+                    autoNumericInstance.set("0");
+                    autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputTienMat'));
+                    autoNumericInstance.set("0");
+                    LoadChiTiet(maHD);
+                    updateTienThua();
+                }
+                else {
+                    $("#TongTienHoaDon").val(result.tongTienThayDoi.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#SoTienPhaiTra").val(result.soTienTraLaiThayDoi.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#KhuyenMaiGiam").val(result.soTienKhyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    $("#MaVoucher").val("");
+                    $("#TongGiam").val((result.tongTienThayDoi - result.soTienTraLaiThayDoi).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    var autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputChuyenKhoan'));
+                    autoNumericInstance.set("0");
+                    autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputTienMat'));
+                    autoNumericInstance.set("0");
+                    updateTienThua();
+                }
+                loading = false;
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+
+    }
+    function closeModalKhiQuetVoucher() {
         $('#exampleModalScrollable').modal('hide');
         stopQRCodeScanning();
     }
@@ -141,21 +289,20 @@
 
 <div class="card">
     <div class="row">
-        <div class="col-4" style="height: 800px">
-
+        <div class="col-4" style="height: 800px;">
             <div class="row">
                 <div class="col-7" style="margin-left: -15px;">
-                    <input type="text" class="form-control" oninput="timKiem(this.value)" id="timKiemSanPham" placeholder="Tìm kiếm sản phẩm">
+                    <input type="text" class="form-control" oninput="timKiem(this.value)" id="timKiemSanPham" style="margin-left: 18px;" placeholder="Tìm kiếm sản phẩm">
                 </div>
                 <div class="col-5"></div>
             </div>
-            <div class="row" style="height: 775px; overflow-y: scroll; overflow-x: hidden">
+            <div class="row" style="height: 775px; overflow-y: scroll; overflow-x: hidden;margin-left: 5px;">
                 <div class="row" id="body-danhsach">
                 </div>
             </div>
         </div>
-        <div class="col-8" style="height: 400px">
-            <div class="row" style="height: 400px;background-color:red">
+        <div class="col-8" style="height: 400px ">
+            <div class="row" style="height: 400px;">
                 <div class="card w-100 h-100">
                     <div class="d-flex">
                         <button class="btn btn-primary" id="create-tab" style="width: 140px">Tạo tab mới</button>
@@ -172,57 +319,41 @@
                             @{
                                 foreach (var item in Model)
                                 {
-                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a></li>
+                                                <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a></li>
                                 }
                             }
                         </ul>
                         @{
                             foreach (var item in Model)
                             {
-                                <div id="tab-@item.MaHoaDon" style="height:300px">
-                                    <div class="table-responsive" style=" height:250px; overflow-y: scroll; overflow-x: hidden">
+                                            <div id="tab-@item.MaHoaDon" style="height:300px">
+                                                <div class="table-responsive" style=" height:250px; overflow-y: scroll; overflow-x: hidden">
 
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
-                                                    <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
-                                                    <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
-                                                    <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
-                                                    <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
-                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
-                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @{
-                                                    int stt = 1;
-                                                    foreach (var hoaDonChiTiet in item.hoaDonChiTietDTOs)
-                                                    {
-                                                        <tr scope="col" id="hdct-@hoaDonChiTiet.IdSanPhamChiTiet">
-                                                            <td>@stt</td>
-                                                            <td hidden>@hoaDonChiTiet.IdSanPhamChiTiet</td>
-                                                            <td>@hoaDonChiTiet.MaSanPham</td>
-                                                            <td>@hoaDonChiTiet.TenSanPham</td>
-                                                            <td>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", hoaDonChiTiet.GiaBan)</td>
-                                                            <td><input type="number" max="1000" min="1" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onchange="suaSoLuongSanPham('@hoaDonChiTiet.IdSanPhamChiTiet',this)" value="@hoaDonChiTiet.SoLuong" /></td>
-                                                            <td><a class="btn btn-tone" onclick="XoaSanPhamTrongHoaDon('hdct-@hoaDonChiTiet.IdSanPhamChiTiet','@hoaDonChiTiet.IdSanPhamChiTiet')">X</a></td>
-                                                        </tr>
-                                                        stt++;
-                                                    }
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
+                                                                <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
+                                                                <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
+                                                                <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
+                                                                <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
+                                                                <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
+                                                                <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                             }
                         }
                     </div>
                 </div>
             </div>
             <div class="row" style="height: 400px">
-                <div class="col-3">
-                    <div class="card" style="width: 14rem; margin: 5px; height: 400px;">
+                <div class="col-3" style="padding:0">
+                    <div class="card" style="width: 16rem;  height: 400px;">
                         <div class="card-header" style=" line-height: 50px">
                             <div class="row">
                                 <div class="col-10">Khách hàng</div><div class="col-2">
@@ -233,14 +364,14 @@
                             </div>
 
                         </div>
-                        <div class="row"><input type="text" class="form-control" oninput="timKiemKhachHang(this.value)" placeholder="Tìm kiếm khách hàng" id="TimKhachHang" style="margin: 5px;border-radius: 20px;width:200px;"></div>
-                        <div class="row" style="height: 340px; overflow-y: scroll; overflow-x: hidden">
+                        <div class="row"><input type="text" class="form-control" oninput="timKiemKhachHang(this.value)" placeholder="Tìm kiếm khách hàng" id="TimKhachHang" style="margin-left: 16px;border-radius: 20px;width:200px;"></div>
+                        <div class="row" style="height: 340px; padding-left: 20px; width: 260px; overflow-y: scroll; overflow-x: hidden">
                             <div class="row" id="DanhSachKhachHang"></div>
                         </div>
                     </div>
                 </div>
-                <div class="col-9">
-                    <div class="card" style="width: 45rem; margin: 5px; height: 400px;">
+                <div class="col-9" style="padding:0">
+                    <div class="card" style="width: 48rem; padding:0; height: 400px;">
                         <div class="card-header" style=" line-height: 50px">
                             Thông tin hóa đơn
                         </div>
@@ -252,8 +383,8 @@
                                         <td><input class="form-control" id="MaHoaDonDangChon" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                                     </tr>
                                     <tr>
-                                        <td>Mã nhân viên: </td>
-                                        <td><input class="form-control" id="IdNhanVienTaoHoaDon" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                                        <td>Tên nhân viên: </td>
+                                        <td><input class="form-control" id="TenNhanVien" type="text" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                                     </tr>
                                     <tr>
                                         <td>Ngày tạo: </td>
@@ -297,7 +428,7 @@
                                     </tr>
                                     <tr>
                                         <td>VouCher: </td>
-                                        <td><input class="form-control" type="text" id="MaVoucher" onchange="updateTienThua()" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
+                                        <td><input class="form-control" type="text" id="MaVoucher" oninput="GetVoucher(this.value)" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
                                     </tr>
                                     <tr>
                                         <td>Voucher giảm:</td>
@@ -308,12 +439,16 @@
                                         <td><input class="form-control" type="text" id="KhuyenMaiGiam" onchange="updateTienThua()" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                                     </tr>
                                     <tr>
+                                        <td>Tổng giảm:</td>
+                                        <td><input class="form-control" type="text" id="TongGiam" onchange="updateTienThua()" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
+                                    </tr>
+                                    <tr>
                                         <td>Tổng tiền: </td>
                                         <td><input class="form-control" type="text" id="SoTienPhaiTra" onchange="updateTienThua()" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                                     </tr>
                                     <tr>
                                         <td></td>
-                                        <td><button class="btn btn-success">Thanh toán</button> <button class="btn btn-danger" onclick="HuyHoaDon()">Hủy</button></td>
+                                        <td><button class="btn btn-success" onclick="showConfirmationThanhToan()">Thanh toán</button> <button class="btn btn-danger" data-toggle="modal" data-target="#modalHuyHoaDon">Hủy</button></td>
                                     </tr>
                                 </table>
                             </div>
@@ -354,7 +489,45 @@
         </div>
     </div>
 </div>
-
+<div class="modal fade" id="modalHuyHoaDon">
+    <div class="modal-dialog  modal-dialog-centered ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalHuyHoaDonTitle">Lý do hủy hóa đơn</h5>
+                <button type="button" class="close" data-dismiss="modal" onclick="KhongHuy()">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table>
+                    <tr>
+                        <td>Lý do: </td>
+                        <td><textarea class="form-control" type="text" id="LyDoHuy" aria-label="default input example" style="width:300px; margin-left:20px; border-bottom: 2px solid black;"></textarea></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" onclick="KhongHuy()">Close</button>
+                <button type="button" data-dismiss="modal" onclick="HuyHoaDon()" class="btn btn-primary">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalXacNhanThanhToan">
+    <div class="modal-dialog  modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalXacNhanTitle">Xác nhận thanh toán </h5>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Chưa</button>
+                <button type="button" data-dismiss="modal" onclick="ThanhToan()" class="btn btn-primary">Thanh toán</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     var loading = false;
     var maHoaDonChoSelect = "";
@@ -375,6 +548,7 @@
                     url: '/Admin/BanHangTaiQuay/HoaDonDuocChon?maHD=' + maHoaDon,
                     type: 'GET',
                     success: function (result) {
+
                         $("#MaHoaDonDangChon").val(result.maHoaDon);
                         $("#NgayTaoHoaDon").val(result.ngayTao);
                         $("#TongTienHoaDon").val(result.tongTienGoc.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
@@ -382,20 +556,23 @@
                         $("#KhuyenMaiGiam").val(result.soTienKhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                         $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                         $("#MaVoucher").val("");
-                        $("#ChuyenKhoan input").val("");
-                        $("#TienMat input").val("");
+                        $('#SoDienThoai').val("");
+                        $("#TenNhanVien").val(result.tenNhanVien);
+                        $("#TongGiam").val((result.tongTienGoc - result.tienPhaiTra).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                         var autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputChuyenKhoan'));
                         autoNumericInstance.set("0");
                         autoNumericInstance = AutoNumeric.getAutoNumericElement(document.getElementById('inputTienMat'));
                         autoNumericInstance.set("0");
                         updateTienThua();
-
+                        LoadChiTiet(maHoaDon);
                         loading = false;
                     },
                     error: function (xhr, status, error) {
 
                     }
+
                 });
+
             }
         });
 
@@ -538,7 +715,10 @@
                 $("#KhuyenMaiGiam").val(result.soTienKhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                 $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                 $("#MaVoucher").val("");
+                $("#TenNhanVien").val(result.tenNhanVien);
+                $("#TongGiam").val((result.tongTienGoc - result.tienPhaiTra).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                 updateTienThua();
+                LoadChiTiet(maHoaDon);
             },
             error: function (xhr, status, error) {
 
@@ -564,6 +744,20 @@
             $("#TienMat, #ChuyenKhoan").show();
         }
     })
+    function LoadChiTiet(maHoaDon) {
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/ChiTietHoaDonDuocChon?maHD=' + maHoaDon,
+            type: 'GET',
+            success: function (repon) {
+
+                $('#tab-' + maHoaDon + ' tbody').empty();
+                $('#tab-' + maHoaDon + ' tbody').append(repon);
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+    }
     function timKiem(value) {
         if (loading) {
             return;
@@ -571,6 +765,24 @@
         loading = true;
         $.ajax({
             url: '/Admin/BanHangTaiQuay/LoadPartialViewDanhSachSanPham?tukhoa=' + value,
+            type: 'GET',
+            success: function (result) {
+                $('#body-danhsach').empty();
+                $('#body-danhsach').append(result);
+                loading = false;
+            },
+            error: function (xhr, status, error) {
+
+            }
+        });
+    };
+    function LoadLaiSanPham() {
+        if (loading) {
+            return;
+        }
+        loading = true;
+        $.ajax({
+            url: '/Admin/BanHangTaiQuay/LoadPartialViewDanhSachSanPham',
             type: 'GET',
             success: function (result) {
                 $('#body-danhsach').empty();
@@ -601,10 +813,47 @@
         });
     };
     function HuyHoaDon() {
-        var selectedTabId = $("#tabs .ui-tabs-active a").attr("href"); // Lấy ID của tab đang được chọn
-        $(selectedTabId).remove(); // Xóa nội dung tab
-        $("#tabs ul li.ui-tabs-active").remove(); // Xóa tab từ danh sách tab
-        $("#tabs").tabs("refresh");
+        if (loading) {
+            return;
+        }
+        loading = true;
+        var maHoaDon = $("#tabs .ui-tabs-active a").text();
+        var lyDoHuy = $('#LyDoHuy').val();
+
+        if (lyDoHuy === null || lyDoHuy === undefined || lyDoHuy.trim() === '' || maHoaDon === null || maHoaDon === undefined || maHoaDon.trim() === '') {
+            var lyDoHuy = $('#LyDoHuy').val();
+            Swal.fire('Đã hủy bỏ', 'Hành động không được thực hiện.', 'error');
+            loading = false;
+
+        }
+        else {
+            $.ajax({
+                url: '/Admin/BanHangTaiQuay/HuyHoaDon?maHD=' + maHoaDon + '&lyDoHuy=' + lyDoHuy,
+                type: 'POST',
+                success: function (result) {
+                    if (result.trangThai) {
+                        var selectedTabId = $("#tabs .ui-tabs-active a").attr("href"); // Lấy ID của tab đang được chọn
+                        $(selectedTabId).remove(); // Xóa nội dung tab
+                        $("#tabs ul li.ui-tabs-active").remove(); // Xóa tab từ danh sách tab
+                        $("#tabs").tabs("refresh");
+                        loading = false;
+                        maHoaDon = $("#tabs .ui-tabs-active a").text();
+                        $('#LyDoHuy').val("");
+                        CapNhapLaiTien(maHoaDon);
+                        LoadLaiSanPham();
+                        Swal.fire('Đã xác nhận!', 'Hành động đã được thực hiện.', 'success');
+                    }
+                    else {
+                        $('#LyDoHuy').val("");
+                        Swal.fire('Đã hủy bỏ', 'Hành động không được thực hiện.', 'error');
+                    }
+                },
+                error: function (xhr, status, error) {
+
+                }
+            });
+        }
+
     }
     $(() => {
         $(".format-price").each(function () {
@@ -634,7 +883,7 @@
                     $('#SoDienThoai').val(result.sdt);
                     $('#TenKhachHangThem').val("");
                     $('#SoDienThoaiThem').val("");
-                    alert(result.ketQua);
+                    toastr.success(result.ketQua, 'Thành công');
                     $("#TimKhachHang").val("");
                     $.ajax({
                         url: '/Admin/BanHangTaiQuay/LoadPartialViewKhachHang',
@@ -652,7 +901,7 @@
                     });
                 }
                 else {
-                    alert(result.ketQua);
+                    toastr.error(result.ketQua, 'Lỗi');
                 }
                 loading = false;
             },
@@ -729,14 +978,18 @@
                     $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                     $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                     $("#MaVoucher").val("");
+                    $("#TongGiam").val((tongTien - tienPhaiTra).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
 
                     loading = false;
                 }
                 else {
+                    toastr.error('Số lượng không đủ', 'Lỗi');
+
                     element.textContent = result.soLuongConLai;
                     inputElement.value = result.soLuongCu;
                     loading = false;
                 }
+                CapNhapLaiTien(maHoaDon);
                 updateTienThua();
             },
             error: function (xhr, status, error) {
@@ -747,6 +1000,7 @@
         if (newValue == 0 || newValue == "") {
             var foundElement = $("#tab-" + maHoaDon + " table tbody").find("tr[id='hdct-" + idsanpham + "']");
             foundElement.remove();
+            LoadChiTiet(maHoaDon);
         }
     }
     function isInteger(value) {
@@ -773,8 +1027,11 @@
                 $("#KhuyenMaiGiam").val(khuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                 $("#VoucherGiam").val(result.soTienVoucherGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                 $("#MaVoucher").val("");
-                loading = false;
+                $("#TongGiam").val((tongTien - tienPhaiTra).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+
+                CapNhapLaiTien(maHoaDon);
                 updateTienThua();
+                loading = false;
             },
             error: function (xhr, status, error) {
 
@@ -794,12 +1051,201 @@
         var tienThua = tienMat + tienChuyenKhoan - tongTien;
         if (tienThua >= 0) {
             var tienThuaDaFormat = tienThua.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
-            $("#TienThua").val("Thừa: "+ tienThuaDaFormat);
+            $("#TienThua").val("Thừa: " + tienThuaDaFormat);
         }
         else {
             var tienThuaDaFormat = (-tienThua).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
             $("#TienThua").val("Vẫn thiếu: " + tienThuaDaFormat);
         }
+    }
+    function GetVoucher(id) {
+        if (loading) {
+            return;
+        }
+        loading = true
+        if (id != "") {
+            $.ajax({
+                url: '/Admin/BanHangTaiQuay/GetVocherTaiQuay?id=' + id,
+                type: 'GET',
+                success: function (result) {
+                    if (result.trangThai) {
+                        var tongTienHoaDon = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
+                        if (result.dieuKien <= tongTienHoaDon) {
+                            if (result.loaiHinhUuDai == 0) {
+                                $("#VoucherGiam").val(result.mucGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                                var tongTienHoaDon = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0; // Assuming there is a variable named tongTienHoaDon
+                                var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
+
+                                $("#TongGiam").val((result.mucGiam + KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+
+                                tongTien = tongTienHoaDon - result.mucGiam - KhuyenMaiGiam;
+
+                                if (tongTien < 0) {
+                                    $("#VoucherGiam").val((result.mucGiam + tongTien).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                    $("#TongGiam").val((result.mucGiam + KhuyenMaiGiam + tongTien).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                    tongTien = 0;
+                                }
+                                $("#SoTienPhaiTra").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                            }
+                            else {
+                                $("#VoucherGiam").val(result.mucGiam + "%");
+                                var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
+                                var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                                tongTien = tongTienHoaDon - tongTienHoaDon / 100 * result.mucGiam - KhuyenMaiGiam;
+                                $("#SoTienPhaiTra").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                $("#TongGiam").val((tongTienHoaDon / 100 * result.mucGiam + KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+
+                            }
+                            loading = false;
+                        }
+                        else {
+                            toastr.error('Không đủ điều kiện của voucher', 'Lỗi');
+                            var tienVoucher = 0;
+                            $("#VoucherGiam").val(tienVoucher.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                            var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                            $("#SoTienPhaiTra").val((tongTienHoaDon - KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                            $("#TongGiam").val(KhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+
+                            loading = false;
+                        }
+                        updateTienThua();
+
+                    }
+                    else {
+                        var tienVoucher = 0;
+                        var tongTienHoaDon = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
+                        $("#VoucherGiam").val(tienVoucher.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+                        $("#SoTienPhaiTra").val((tongTienHoaDon - KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        $("#TongGiam").val(KhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                        toastr.error('Voucher không hợp lệ', 'Lỗi');
+                        loading = false;
+                        updateTienThua();
+                    }
+                },
+                error: function (xhr, status, error) {
+
+                }
+            });
+        }
+        else {
+            var tienVoucher = 0;
+            var tongTienHoaDon = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
+            $("#VoucherGiam").val(tienVoucher.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+            var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
+            $("#SoTienPhaiTra").val((tongTienHoaDon - KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+            $("#TongGiam").val(KhuyenMaiGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+            toastr.error('Voucher không hợp lệ', 'Lỗi');
+            loading = false;
+        }
+    }
+    function ThemSanPhamThanhCong() {
+        var audio = new Audio();
+        audio.src = '/audio/themSpThanhCong.mp3'
+        audio.play();
+    }
+    function ThemVoucherThanhCong() {
+        var audio = new Audio();
+        audio.src = '/audio/ThemVoucherThanhCong.mp3'
+        audio.play();
+    }
+    function VoucherKhongHopLe() {
+        var audio = new Audio();
+        audio.src = '/audio/VoucherKhongHopLe.mp3'
+        audio.play();
+    }
+    function KhongDuDieuKien() {
+        var audio = new Audio();
+        audio.src = '/audio/KhongDuDieuKien.mp3'
+        audio.play();
+    }
+    function KhongHuy() {
+        $('#LyDoHuy').val("");
+    }
+    function showConfirmationHuyHoaDon() {
+        Swal.fire({
+            title: 'Bạn chắc chắn chứ?',
+            text: 'Hành động này không thể hoàn tác!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy bỏ'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Xử lý khi người dùng nhấp vào "Đồng ý"
+                HuyHoaDon();
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // Xử lý khi người dùng nhấp vào "Hủy bỏ"
+                Swal.fire('Đã hủy bỏ', 'Hành động không được thực hiện.', 'error');
+            }
+        });
+    }
+    function showConfirmationThanhToan() {
+        Swal.fire({
+            title: 'Bạn chắc chắn chứ?',
+            text: 'Hành động này không thể hoàn tác!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Đồng ý',
+            cancelButtonText: 'Hủy bỏ'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                if(loading){
+                    Swal.fire('Đã hủy bỏ', 'Hành động không được thực hiện.', 'error');
+                    return;
+                }
+                loading = true;
+                var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
+                var tienMat = parseFloat($("#TienMat input").val().replace(/[^\d]/g, '')) || 0;
+                var tienChuyenKhoan = parseFloat($("#ChuyenKhoan input").val().replace(/[^\d]/g, '')) || 0;
+                var tienThua = tienMat - tienChuyenKhoan - tongTien;
+                if (tienThua >= 0) {
+                    var maVoucher = $("#MaVoucher").val();
+                    var maHoaDon = $("#tabs .ui-tabs-active a").text();
+                    var hinhThucThanhToan = $("#PTTT").val();
+                    var SDT = $('#SoDienThoai').val();
+                    var tongTienChuaGiam = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
+                    $.ajax({
+                        url: '/Admin/BanHangTaiQuay/ThanhToan?maHD=' + maHoaDon + '&SDT=' + SDT + '&TongTien=' + tongTienChuaGiam + '&tienMat=' + tienMat + '&chuyenKhoan=' + tienChuyenKhoan + '&idVoucher=' + maVoucher + '&hinhThuc=' + hinhThucThanhToan + '&tongGiam=' + tongTien,
+                        type: 'POST',
+                        success: function (result) {
+                            if (result.trangThai) {
+                                Swal.fire('Đã xác nhận!', 'Hành động đã được thực hiện.', 'success');
+                                var selectedTabId = $("#tabs .ui-tabs-active a").attr("href"); // Lấy ID của tab đang được chọn
+                                $(selectedTabId).remove(); // Xóa nội dung tab
+                                $("#tabs ul li.ui-tabs-active").remove(); // Xóa tab từ danh sách tab
+                                $("#tabs").tabs("refresh");
+                                loading = false;
+                                maHoaDon = $("#tabs .ui-tabs-active a").text();
+                                $('#SoDienThoai').val("");
+                                $('#NgayTaoHoaDon').val("");
+                                $('#TenNhanVien').val("");
+                                $('#MaHoaDonDangChon').val("");
+                                CapNhapLaiTien(maHoaDon);
+                                LoadLaiSanPham();
+                            }
+                            else {
+                                Swal.fire('Đã hủy bỏ', 'Hành động không được thực hiện.', 'error');
+                                loading = false;
+                            }
+                            loading = false;
+                        },
+                        error: function (xhr, status, error) {
+
+                        }
+                    });
+
+                }
+                else {
+                    Swal.fire('Đã hủy bỏ', 'Hành động không được thực hiện.', 'error');
+                    loading = false;
+                }
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // Xử lý khi người dùng nhấp vào "Hủy bỏ"
+                Swal.fire('Đã hủy bỏ', 'Hành động không được thực hiện.', 'error');
+            }
+        });
     }
 </script>
 @section Scripts {
@@ -810,5 +1256,8 @@
     <script src="~/Admin/js/vendors.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.8.1/autoNumeric.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 }
 

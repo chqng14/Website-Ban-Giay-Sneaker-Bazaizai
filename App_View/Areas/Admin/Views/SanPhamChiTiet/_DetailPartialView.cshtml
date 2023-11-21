@@ -45,77 +45,86 @@
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Thông tin cơ bản</h4>
-                                <div class="table-responsive">
-                                    <table class="product-info-table m-t-20">
-                                        <tbody>
-                                            <tr>
-                                                <td>Giá bán:</td>
-                                                <td class="text-dark font-weight-semibold">
-                                                    @Model.GiaBan?.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Giá nhập:</td>
-                                                <td class="text-dark font-weight-semibold">
-                                                    @Model.GiaNhap?.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Thương hiệu:</td>
-                                                <td class="text-dark font-weight-semibold">@Model.ThuongHieu</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Loại:</td>
-                                                <td class="text-dark font-weight-semibold">@Model.LoaiGiay</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Kiểu đế giầy:</td>
-                                                <td class="text-dark font-weight-semibold">@Model.KieuDeGiay</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Màu sắc:</td>
-                                                <td class="text-dark font-weight-semibold">@Model.MauSac</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Xuất xứ:</td>
-                                                <td class="text-dark font-weight-semibold">@Model.XuatXu</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Kích cỡ:</td>
-                                                <td class="text-dark font-weight-semibold">@Model.KichCo</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Dây:</td>
-                                                <td class="text-dark font-weight-semibold">@Model.Day</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Khối lượng:</td>
-                                                <td class="text-dark font-weight-semibold">@Model.KhoiLuong</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Số lượng:</td>
-                                                <td class="text-dark font-weight-semibold">
-                                                    <span class="soLuong"></span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Số lượng đã bán:</td>
-                                                <td class="text-dark font-weight-semibold">
-                                                    @Model.SoLuongDaBan
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Ngày tạo:</td>
-                                                <td class="text-dark font-weight-semibold">@Model.NgayTao</td>
-                                            </tr>
-                                            @*<tr>
-            <td>Status:</td>
-            <td>
-                <span class="badge badge-pill badge-cyan">In Stock</span>
-            </td>
-        </tr>*@
-                                        </tbody>
-                                    </table>
+                                <div class="d-flex">
+                                    <div class="table-responsive col-6">
+                                        <table class="product-info-table m-t-20">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Giá bán:</td>
+                                                    <td class="text-dark font-weight-semibold">
+                                                        @Model.GiaBan?.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Giá nhập:</td>
+                                                    <td class="text-dark font-weight-semibold">
+                                                        @Model.GiaNhap?.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Thương hiệu:</td>
+                                                    <td class="text-dark font-weight-semibold">@Model.ThuongHieu</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Loại:</td>
+                                                    <td class="text-dark font-weight-semibold">@Model.LoaiGiay</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Kiểu đế giầy:</td>
+                                                    <td class="text-dark font-weight-semibold">@Model.KieuDeGiay</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Màu sắc:</td>
+                                                    <td class="text-dark font-weight-semibold">@Model.MauSac</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Xuất xứ:</td>
+                                                    <td class="text-dark font-weight-semibold">@Model.XuatXu</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="table-responsive col-6">
+                                        <table class="product-info-table m-t-20">
+                                            <tbody>
+                                                <tr>
+                                                    <td>Kích cỡ:</td>
+                                                    <td class="text-dark font-weight-semibold">@Model.KichCo</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Dây:</td>
+                                                    <td class="text-dark font-weight-semibold">@Model.Day</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Khối lượng:</td>
+                                                    <td class="text-dark font-weight-semibold">@Model.KhoiLuong</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Số lượng:</td>
+                                                    <td class="text-dark font-weight-semibold">
+                                                        <span class="soLuong"></span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Số lượng đã bán:</td>
+                                                    <td class="text-dark font-weight-semibold">
+                                                        @Model.SoLuongDaBan
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Ngày tạo:</td>
+                                                    <td class="text-dark font-weight-semibold">@Model.NgayTao</td>
+                                                </tr>
+                                                @*<tr>
+                        <td>Status:</td>
+                        <td>
+                            <span class="badge badge-pill badge-cyan">In Stock</span>
+                        </td>
+                    </tr>*@
+                                            </tbody>
+                                        </table>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>

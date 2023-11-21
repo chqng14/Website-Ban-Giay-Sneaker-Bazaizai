@@ -1,0 +1,83 @@
+﻿@media print {
+    .voucher-container {
+        width: 900px;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        margin-bottom: 40px;
+        margin-left: 100px;
+        background: url('/images/background_Voucher.png') center/cover; /* Sử dụng hình nền */
+    }
+
+    .qr-code {
+        flex: 3;
+        padding-right: 50px;
+    }
+
+        .qr-code img {
+            max-width: 80%;
+            height: auto;
+            margin-left: 35.9px;
+        }
+
+    .voucher-info {
+        flex: 7;
+        padding: 10px;
+        box-sizing: border-box;
+        margin-left: 60px;
+    }
+
+        .voucher-info table {
+            width: 100%;
+        }
+
+            .voucher-info table td {
+                padding: 5px;
+                border-bottom: 1px solid #ccc;
+            }
+
+    .voucher {
+        /* Các thuộc tính CSS cho voucher */
+        page-break-inside: avoid;
+    }
+}
+
+.voucher-container {
+    width: 900px;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    margin-bottom: 40px;
+    margin-left: 100px;
+    background: url('/images/background_Voucher.png') center/cover; /* Sử dụng hình nền */
+}
+
+
+.qr-code {
+    flex: 3;
+    padding-right: 50px;
+}
+
+    .qr-code img {
+        max-width: 80%;
+        height: auto;
+        margin-left: 35.9px;
+    }
+
+.voucher-info {
+    flex: 7;
+    padding: 10px;
+    box-sizing: border-box;
+    margin-left: 60px;
+}
+
+    .voucher-info table {
+        width: 100%;
+    }
+
+        .voucher-info table td {
+            padding: 5px;
+            border-bottom: 1px solid #ccc;
+        }
