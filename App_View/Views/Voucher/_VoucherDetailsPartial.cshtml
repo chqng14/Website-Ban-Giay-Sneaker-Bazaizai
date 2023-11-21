@@ -4,8 +4,6 @@
 @using App_View.IServices;
 @using App_View.Services;
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
     BazaizaiContext context = new BazaizaiContext();
 }
 <style>
@@ -31,9 +29,16 @@
             background-color: pink; /* Màu nền hồng khi hover */
             color: white; /* Màu văn bản nổi lên trắng khi hover */
         }
-        .list-group-item {
-    padding-left: 10px; /* Điều chỉnh khoảng cách bên trái */
-}
+
+    .list-group-item {
+        padding-left: 10px; /* Điều chỉnh khoảng cách bên trái */
+    }
+
+   .f-cart__pad-box {
+        width: 500px;
+        text-align: center;
+        margin: auto;
+    }
 
 </style>
 @{
@@ -61,50 +66,8 @@
 }
 
 <link href="~/css/voucherDetails.css" rel="stylesheet" />
-<div class="u-s-p-y-60">
-
-    <!--====== Section Content ======-->
-    <div class="section__content">
-        <div class="container">
-            <div class="breadcrumb">
-                <div class="breadcrumb__wrap">
-                    <ul class="breadcrumb__list">
-                        <li class="has-separator">
-
-                            <a href="/">Home</a>
-                        </li>
-                        <li class="has-separator">
-                            <a asp-action="VoucherToCalm" asp-controller="Voucher">Voucher</a>
-                        </li>
-                        <li class="is-marked">
-                            <a>Chi tiết Voucher</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="u-s-p-b-60">
-    <!--====== Section Intro ======-->
-    <div class="section__intro u-s-m-b-60" style="margin-bottom:10px;padding-top:10px">
         <div class="container">
             <div class="row">
-                <div class="col-lg-12">
-                    <div class="section__text-wrap">
-                        <h1 class="section__heading u-c-secondary" style="color:#00FF7F">Thông tin chi tiết voucher</h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--====== End - Section Intro ======-->
-    <!--====== Section Content ======-->
-    <div class="section__content">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-3 col-sm-3 u-s-m-b-30"></div>
-                <div class="col-lg-6 col-md-6 col-sm-6 u-s-m-b-30">
                     <div class="f-cart__pad-box" style="padding:20px">
                         <div class="u-s-m-b-30">
                             <h2>@Model.TenVoucher</h2>
@@ -116,7 +79,7 @@
                                 <div class="f-cart__col">
                                     <span>Hạn sử dụng: </span>
                                     <div style="color:#FF4500" class="manage-o__text u-c-silver"> 🕛@FormatDate(Model.NgayBatDau) - @FormatDate(Model.NgayKetThuc)</div>
-                                 
+
                                 </div>
                                 <div class="f-cart__col">
                                     <span>Điều kiện:</span>
@@ -132,7 +95,7 @@
                                             {
                                                 double? mucUuDai = Model.MucUuDai;
                                                 <span style="color:Red">  @string.Format("{0:N0}đ", Model.MucUuDai)</span>
-                                              
+
                                                 // Định dạng giá trị theo định dạng tiền Việt Nam
                                             }
                                             cho hoá đơn có giá trị từ <span style="color:red">@string.Format("{0:N0}đ", Model.DieuKien)</span> trở lên.
@@ -145,19 +108,18 @@
                             </div>
                             <h5>Nếu có thông tin thắc mắc có thể lên hệ hỗ trợ.</h5>
                         </div>
-                        <a class="btn btn--e-transparent-brand-b-2 order" href="#" id="quayLai">Quay lại</a>
-
                         <a class="btn btn--e-brand-b-2 order copyButton">Copy Mã</a>
-                            <textarea class="textToCopy" style="display: none;">@Model.MaVoucher</textarea>
+                        <textarea class="textToCopy" style="display: none;">@Model.MaVoucher</textarea>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-3 col-sm-3 u-s-m-b-30"></div>
             </div>
         </div>
-    </div>
-    <!--====== End - Section Content ======-->
-</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     $(document).on('click', '.copyButton', function () {
         var maVoucher = $('.textToCopy').text(); // Sử dụng .text() để lấy nội dung trong thẻ textarea
@@ -179,10 +141,6 @@
             type: "success",
             duration: 5000
         });
-    });
-
-    document.getElementById("quayLai").addEventListener("click", function () {
-        window.history.back(); // Quay trở lại trang trước đó
     });
 
 </script>

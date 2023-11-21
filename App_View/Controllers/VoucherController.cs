@@ -1,6 +1,5 @@
 ﻿using App_Data.DbContextt;
 using App_Data.Models;
-using App_Data.Repositories;
 using App_View.IServices;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +39,6 @@ namespace App_View.Controllers
                 ViewBag.NguoiDung = null;
             }
             else ViewBag.NguoiDung = idNguoiDung;
-
 
             var allVouchers = (await _voucherSV.GetAllVoucher()).Where(c => c.TrangThai == 0 && c.SoLuong > 0);
             switch (LoaiHinh)
@@ -96,6 +94,11 @@ namespace App_View.Controllers
         {
             var Voucher = await _voucherSV.GetVoucherByMa(ma);
             return View(Voucher);
+        }
+        public async Task<IActionResult> VoucherDetailsPartial(string ma)
+        {
+            var Voucher = await _voucherSV.GetVoucherByMa(ma);
+            return PartialView("_VoucherDetailsPartial", Voucher);
         }
 
         public async Task<IActionResult> GetVoucherByMa(string ma)

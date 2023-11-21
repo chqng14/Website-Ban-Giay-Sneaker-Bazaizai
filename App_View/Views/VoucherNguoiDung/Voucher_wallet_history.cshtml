@@ -4,8 +4,6 @@
 
 @{
     Layout = "/Views/Shared/_LayoutUser.cshtml";
-    //Layout = "/Views/Shared/_LayoutLogin.cshtml";
-    //Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
 <style>
@@ -20,6 +18,35 @@
         margin-left: 20px;
         box-sizing: border-box;
     }
+
+    .tabs {
+        justify-content: center;
+        display: flex;
+        border: 1px solid #ccc;
+        overflow: hidden;
+        background-color: white;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        min-width: -webkit-fill-available;
+    }
+
+
+    .tab-item {
+        flex: 1;
+        font-size: 12px;
+        text-align: center;
+        padding: 10px 0;
+        cursor: pointer;
+        color: #333333;
+        transition: background-color 0.3s;
+        font-weight: 600;
+    }
+
+        .tab-item.active {
+            background-color: #ff4500;
+            color: #fff;
+            font-weight: 600;
+        }
 
 
 </style>
@@ -50,105 +77,27 @@
             <div>
                 <h1 class="dash__h1 u-s-m-b-14" style="display: inline-block;">Lịch sử voucher</h1>
                 <a style="color:#FF4500;margin-left:32%;display: inline-block;" asp-action="VoucherToCalm" asp-controller="Voucher">Tìm thêm voucher</a> |
-                <a asp-action="Voucher_wallet" style="color:#FF4500" style="display: inline-block;">My Voucher</a>
+                <a asp-action="Voucher_wallet" style="color:#FF4500" style="display: inline-block;">My Voucher</a>|
+                <a style="color:#FF4500" style="display: inline-block;">Tìm hiểu</a>
             </div>
             <span class="dash__text u-s-m-b-30">Bạn sẽ thấy tất cả lịch sử voucher của bạn ở đây.</span>
             <!--Lưu mã voucher-->
             <!--Show mã voucher-->
-            <form class="m-order u-s-m-b-30" asp-action="Voucher_wallet_history" method="post">
-                <div class="m-order__select-wrapper">
-                    <label class="u-s-m-r-8" for="my-order-sort">Lọc voucher theo:</label>
-                    <select class="select-box select-box--primary-style" id="my-order-sort" name="TrangThai">
-                        <option value="">Tất cả</option>
-                        <option value="@((int)TrangThaiVoucherNguoiDung.DaSuDung)">Đã sử dụng</option>
-                        <option value="@((int)TrangThaiVoucherNguoiDung.HetHieuLuc)">Hết hiệu lực</option>
-                    </select>
-                    <div class="m-order__select-wrapper">
-
-                        <button type="submit" style="border-radius: 40px;margin-left:10px;color:white;border:none;background-color:#FF4500"
-                                class="btn btn-primary">
-                            Lọc
-                        </button>
+            <div class="m-order__select-wrapper">
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="tabs">
+                            <div class="tab-item active" id="tab1" name="trangThai">Tất cả</div>
+                            <div class="tab-item" id="tab2" name="TrangThai" data-value="1">Đã sử dụng</div>
+                            <div class="tab-item" id="tab3" name="TrangThai" data-value="2">Hết hiệu lực</div>
+                        </div>
                     </div>
                 </div>
-
-            </form>
-
+            </div>
             <div class="row">
             </div>
-            <div class="m-order__list">
-                @foreach (var item in ViewBag.TatCa)
-                {
-                    <div class="m-order__get">
-                        <div class="manage-o__header u-s-m-b-30">
-                            <div class="dash-l-r">
-                                <div>
-                                    <div class="manage-o__text-2 u-c-secondary">@item.TenVoucher</div>
-                                    <div style="color:#FF4500" class="manage-o__text u-c-silver"> 🕛 @FormatDate(item.NgayKetThuc)</div>
-                                </div>
-                                <div>
-                                    @if (item.LoaiHinhUuDai == 0)
-                                    {
-                                        <p>Giảm giá theo tiền mặt</p>
-                                    }
-                                    @if (item.LoaiHinhUuDai == 1)
-                                    {
-                                        <p>Giảm giá %</p>
-                                    }
-                                    @if (item.LoaiHinhUuDai == 2)
-                                    {
-                                        <p>Miễn phí vận chuyển</p>
-                                    }
-                                    <div class="dash__link dash__link--brand">
-
-                                        <a style="float:right" href="dash-manage-order.html">Chi tiết</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="manage-o__description">
-                            <div class="description__container">
-                                <div class="description__img-wrap">
-
-                                    <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
-                                </div>
-                                <div class="description-title">
-                                    <p>
-                                        Giảm:       @if (item.LoaiHinhUuDai == 1)
-                                        {
-                                            <span>Giảm @item.MucUuDai %</span>
-                                        }
-                                        else
-                                        {
-                                            double? mucUuDai = item.MucUuDai;
-                                            @string.Format("{0:N0}đ", item.MucUuDai)
-                                            // Định dạng giá trị theo định dạng tiền Việt Nam
-                                        }
-                                    </p>
-                                    <p width:40px>Đơn tối thiểu: <br> @FormatCurrency(item.DieuKien)</p>
-                                </div>
-
-                            </div>
-                            <div class="description__info-wrap">
-                                <div class="body_copy">
-                                    <a class="manage-o__badge badge--delivered ">
-                                        @if (item.TrangThai == (int)TrangThaiVoucherNguoiDung.DaSuDung)
-                                        {
-                                            <u>Đã sử dụng</u>
-                                        }
-                                        @if (item.TrangThai == (int)TrangThaiVoucherNguoiDung.HetHieuLuc)
-                                        {
-                                            <u>Hết hiệu lực</u>
-                                        }
-                                    </a>
-                                </div>
-
-                            </div>
-
-                        </div>
-                      
-                    </div>
-                }
+            <div class="m-order__list" id="voucherList">
+             
             </div>
         </div>
     </div>
@@ -156,6 +105,42 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
+    $(document).ready(function () {
+        loadDefaultVoucher();
+    });
+    var tabs = document.querySelectorAll('.tab-item');
+    function loadDefaultVoucher() {
+        $.ajax({
+            url: '@Url.Action("Voucher_wallet_historyPatial", "VoucherNguoiDung")',
+            type: 'POST',
+            success: function (result) {
+
+                $('#voucherList').html(result);
+            }
+        });
+    }
+    tabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            // Xóa class 'active' từ tất cả các tab
+            tabs.forEach(function (innerTab) {
+                innerTab.classList.remove('active');
+            });
+
+            // Thêm class 'active' cho tab được click
+            tab.classList.add('active');
+        });
+    });
+    $('.tab-item').click(function () {
+        var TrangThai = $(this).data('value');
+        $.ajax({
+            url: '@Url.Action("Voucher_wallet_historyPatial", "VoucherNguoiDung")',
+            type: 'POST',
+            data: { TrangThai: TrangThai },
+            success: function (result) {
+                $('#voucherList').html(result);
+            }
+        });
+    });
     $(document).on('click', '.copyButton', function () {
         var maVoucher = $(this).closest('.body_copy').find('.textToCopy').val()
         var tempInput = document.createElement("input");

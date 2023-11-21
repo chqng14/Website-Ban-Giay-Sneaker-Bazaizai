@@ -68,6 +68,7 @@
             background-color: pink; /* Màu nền hồng khi hover */
             color: white; /* Màu văn bản nổi lên trắng khi hover */
         }
+
 </style>
 @{
     var httpClient = new HttpClient(); // Tạo đối tượng HttpClient
@@ -97,56 +98,74 @@
 
 <!--====== App Content ======-->
 <div class="app-content">
-    <!--====== Section 1 ======-->
-    <div class="u-s-p-y-90">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="col-lg-12 col-md-12">
+        <!--====== Section Content ======-->
+        <div class="section__content">
+            <div class="container">
+                <div class="breadcrumb">
+                    <div class="breadcrumb__wrap">
+                        <ul class="breadcrumb__list">
+                            <li class="has-separator">
 
-                        <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
-
-                            <div class="dash__pad-2">
-                                <div>
-                                    <span class="shop-p__meta-text-1" style="color: #FF4500; text-align: center;"><h1 class="blinking-text">Voucher khả dụng</h1></span>
-                                </div>
-
-                                <div class="shop-p" style="margin-top:30px">
-                                    <div class="shop-p__toolbar u-s-m-b-30">
-                                        <div class="shop-p__meta-wrap u-s-m-b-60">
-                                            <div class="shop-p__meta-text-2">
-                                                <img class="u-img-fluid" src="/images/VoucherIMG/BannerForTienMat.png" width="50%" alt="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="shop-p__collection">
-                                        <div class="row is-grid-active">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                        <div class="row">
-                                            <div class="tabs">
-                                                <div class="tab-item active" id="tab1" name="trangThai" >Tất cả</div>
-                                                <div class="tab-item" id="tab2" name="trangThai" data-value="TienMat">Tiền mặt</div>
-                                                <div class="tab-item" id="tab3" name="trangThai" data-value="PhanTram">Phần trăm</div>
-                                                <div class="tab-item" id="tab4" name="trangThai" data-value="FreeShip">Free Ship</div>
-                                            </div>                                       
-                                        </div>
-                                </div>
-                                <div class="m-order__list" id="voucherList">
-                                </div>
-                                <div id="pagination">
-                                    <!-- Thanh điều hướng phân trang sẽ được thêm bằng JavaScript -->
-                                </div>
-                            </div>
-                        </div>
-
+                                <a href="/">Home</a>
+                            </li>
+                            <li class="is-marked">
+                                <a asp-action="VoucherToCalm" asp-controller="Voucher">Voucher</a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
+    <!--====== Section 1 ======-->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="col-lg-12 col-md-12">
+
+                    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+
+                        <div class="dash__pad-2">
+                              <div>
+                                <span class="shop-p__meta-text-1" style="color: #FF4500; text-align: center;"><marquee behavior="scroll" direction="left" class="blinking-text"><h3>Bạn có thể dùng những voucher dưới đây để thanh toán với nhiều ưu đãi nhất nha !!!</h3></marquee></span>
+                            </div>
+
+                            <div class="shop-p" style="margin-top:30px">
+                                <div class="shop-p__toolbar u-s-m-b-30">
+                                    <div class="shop-p__meta-wrap u-s-m-b-60">
+                                        <div class="shop-p__meta-text-2">
+                                            <img class="u-img-fluid" src="/images/VoucherIMG/BannerVoucherOnline.png" width="100%" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="shop-p__collection">
+                                    <div class="row is-grid-active">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="tabs">
+                                        <div class="tab-item active" id="tab1" name="trangThai">Tất cả</div>
+                                        <div class="tab-item" id="tab2" name="trangThai" data-value="TienMat">Tiền mặt</div>
+                                        <div class="tab-item" id="tab3" name="trangThai" data-value="PhanTram">Phần trăm</div>
+                                        <div class="tab-item" id="tab4" name="trangThai" data-value="FreeShip">Free Ship</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="m-order__list" id="voucherList">
+                            </div>
+                            <div id="pagination">
+                                <!-- Thanh điều hướng phân trang sẽ được thêm bằng JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
+
 
 
 
@@ -193,7 +212,7 @@
         });
     });
 
-  
+
 
 
 </script>
