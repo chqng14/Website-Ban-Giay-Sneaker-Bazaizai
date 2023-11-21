@@ -125,5 +125,44 @@ namespace App_Data.Repositories
             var hoadon = context.HoaDons.ToList();
             return hoadon;
         }
+
+        public string HuyHoaDon(string maHD, string lyDoHuy, string idUser)
+        {
+            try
+            {
+                var hoaDon = context.HoaDons.FirstOrDefault(c => c.MaHoaDon == maHD);
+                hoaDon.NgayThanhToan = DateTime.Now;
+                hoaDon.TrangThaiThanhToan = (int)TrangThaiHoaDon.Huy;
+                hoaDon.LiDoHuy = lyDoHuy;
+                hoaDon.IdNguoiSuaGanNhat = idUser;
+                if (hoaDon != null)
+                {
+                    context.HoaDons.Update(hoaDon);
+                    context.SaveChanges();
+                    return hoaDon.IdHoaDon;
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+          
+        }
+
+        public bool ThanhToanTaiQuay(HoaDon item)
+        {
+            try
+            {
+                context.Update(item);
+                context.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }

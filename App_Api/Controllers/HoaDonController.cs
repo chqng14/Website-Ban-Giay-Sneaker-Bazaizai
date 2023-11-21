@@ -27,6 +27,8 @@ namespace App_Api.Controllers
         private PTThanhToanController _PTThanhToanController;
         private SanPhamChiTietController _sanPhamChiTietController;
         private readonly IKhachHangRepo _khachHangRepo;
+        private readonly IHoaDonChiTietRepos _hoaDonChiTietRepos;
+
         public HoaDonController(IMapper mapper, SanPhamChiTietController sanPhamChiTietController)
         {
             _hoaDon = new HoaDonRepos(mapper);
@@ -36,6 +38,7 @@ namespace App_Api.Controllers
             _PTThanhToanController = new PTThanhToanController();
             _sanPhamChiTietController = sanPhamChiTietController;
             _khachHangRepo = new KhachHangRepo();
+            _hoaDonChiTietRepos = new HoaDonChiTietRepos(mapper);
         }
         [HttpPost]
         public async Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon)
@@ -237,6 +240,43 @@ namespace App_Api.Controllers
         public async Task<List<KhachHang>> GetAllKhachHang()
         {
             return _khachHangRepo.GetKhachHangs();
+        }
+        [HttpPut]
+        public async Task<List<HoaDonChiTiet>> HuyHoaDon(string maHD, string lyDoHuy, string idUser)
+        {
+            try
+            {
+                var idHoaDon = _hoaDon.HuyHoaDon(maHD, lyDoHuy, idUser);
+                if (idHoaDon != null)
+                {
+                    return _hoaDonChiTietRepos.HuyHoaDonChiTiet(idHoaDon);
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+            
+        }
+       
+        [HttpPut]
+        public async Task<bool> ThanhToanTaiQuay(HoaDon hoaDon)
+        {
+            try
+            {
+                if (_hoaDon.ThanhToanTaiQuay(hoaDon))
+                {
+                    return _hoaDonChiTietRepos.ThanhToanHoaDonChiTiet(hoaDon.IdHoaDon);
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
         }
     }
 }

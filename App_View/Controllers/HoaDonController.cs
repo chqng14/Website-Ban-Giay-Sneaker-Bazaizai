@@ -157,7 +157,7 @@ namespace App_View.Controllers
                     var url = await Momo(hoadon.IdHoaDon, mahd, tien);
                     return Ok(new { url = url, idHoaDon = hoadon.IdHoaDon });
                 }
-                if (hoaDonDTO.LoaiThanhToan.ToLower() == "VnPay")
+                if (hoaDonDTO.LoaiThanhToan.ToLower() == "vnpay")
                 {
                     var url = await VnPay(hoadon.IdHoaDon, tien);
                     return Ok(new { url = url, idHoaDon = hoadon.IdHoaDon });
@@ -339,7 +339,7 @@ namespace App_View.Controllers
             {
                 var idHoaDonSession = SessionServices.GetIdFomSession(HttpContext.Session, "idHoaDon");
                 string payment = await hoaDonServices.GetPayMent(idHoaDonSession);
-                if (payment == "MOMO")
+                if (payment.ToUpper() == "MOMO")
                 {
                     OrderInfoModel orderInfoModel = SessionServices.GetIPNFomSession(HttpContext.Session, "IPN");
                     var jsonresponse = await _momoService.IPN(orderInfoModel);
@@ -356,7 +356,7 @@ namespace App_View.Controllers
                         await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.ChuaThanhToan);
                     }
                 }
-                else if (payment == "VNPAY")
+                else if (payment.ToUpper() == "VNPAY")
                 {
                     var response = _vnPayService.PaymentExecute(Request.Query);
                     if (response.Result.VnPayResponseCode == "00")
@@ -373,6 +373,7 @@ namespace App_View.Controllers
                 }
                 var order = (await hoaDonServices.GetHoaDon()).FirstOrDefault(c => c.IdHoaDon == idHoaDonSession);
                 order.LoaiThanhToan = payment;
+                await SendMail(order.MaHoaDon);
                 return View(order);
             }
 
@@ -451,11 +452,10 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> SendMail(string MaHd)
         {
-            var mail = SessionServices.GetIdFomSession(HttpContext.Session, "Email");
             var userKhachHang = "";
-            if (mail != null)
+            if (SessionServices.GetIdFomSession(HttpContext.Session, "Email") != null)
             {
-                userKhachHang = mail;
+                userKhachHang = SessionServices.GetIdFomSession(HttpContext.Session, "Email");
             }
             else
             {

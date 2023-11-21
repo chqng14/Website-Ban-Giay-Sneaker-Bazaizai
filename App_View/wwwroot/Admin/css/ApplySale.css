@@ -1,0 +1,24 @@
+﻿@media(min-width: 1900px) {
+    thead {
+        position: sticky;
+        top: 550px;
+        background-color: #fff;
+        z-index: 100;
+    }
+}
+@media(min-width: 1500px) {
+    thead {
+        position: sticky;
+        top: 400px;
+        background-color: #fff;
+        z-index: 100;
+    }
+}
+@media(min-width: 1200px) {
+    thead {
+        position: sticky;
+        top: 341px;
+        background-color: #fff;
+        z-index: 100;
+    }
+}

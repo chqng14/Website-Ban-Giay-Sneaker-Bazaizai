@@ -11,34 +11,18 @@
 }
 
 <h1>Apply Sale</h1>
-
+<link rel="stylesheet" type="text/css" href="~/Admin/css/ApplySale.css">
 <style>
     .clickable-image {
         cursor: pointer;
     }
 </style>
 
-<div id="modal"></div>
-<div class="modal bd-example-modal-xl">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title h4">Extra large modal</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <i class="anticon anticon-close"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                ...
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="card">
-    <div class="card-body">
+<div class="card" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
+    <div class="card-body" style="flex-shrink: 0; z-index: 1; background-color: lightgreen; padding: 15px;">
         
-        <div class="col-lg-3 text-right flex" style="max-width: max-content;">
+        <div class="col-lg-4 text-right flex" style="max-width: max-content; display:flex;flex-direction: row;position:sticky;top:0; z-index: 1;">
             <select class="custom-select" aria-label="Large select example" id="selectSale">
                 @foreach (var item in (SelectList)ViewData["IdSale"])
                 {
@@ -46,7 +30,7 @@
                     <option value="@item.Value">@item.Text</option>
                 }
             </select>
-            <button id="applySaleButton" class="btn btn-primary">
+            <button id="applySaleButton" class="btn btn-primary" style="margin-left:15px">
                 <i class="anticon anticon-plus-circle m-r-5"></i>
                 <span>Add sale</span>
             </button>
@@ -55,10 +39,11 @@
         <div id="swapContainer" class="form-row">
         </div>
 
-        </div>
-    <div class="col-sm-12 " id="sanPham">
     </div>
-
+    <div class="col-sm-12 " id="sanPham" style="overflow: auto; flex-grow: 1;">
+       
+    </div>
+</div>
 
 
 <script>

@@ -108,12 +108,52 @@ namespace App_View.Services
                 throw new Exception("Not IsSuccessStatusCode");
             }
         }
+        public async Task<bool> TaoPTTTChiTiet(string idHoaDon,string idPTTT, double soTien, int trangThai)
+        {
+            try
+            {
+                var res = await _httpClient.PostAsync($"https://localhost:7038/api/PTThanhToanChiTiet/AddPhuongThucThanhToanChiTietTaiQuay?IdHoaDon={idHoaDon}&IdThanhToan={idPTTT}&SoTien={soTien}&TrangThai={trangThai}", null);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await res.Content.ReadAsAsync<bool>());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+        public async Task<string> GetPTTT(string ten)
+        {
+            return await _httpClient.GetStringAsync($"https://localhost:7038/api/PTThanhToan/PhuongThucThanhToanByName?ten={ten}");
+        }
 
         public async Task<bool> UpdateNgayHoaDon(string idHoaDon, DateTime? NgayThanhToan, DateTime? NgayNhan, DateTime? NgayShip)
         {
             try
             {
                 var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateNgayHoaDonOnline?idHoaDon={idHoaDon}&NgayThanhToan={NgayThanhToan}&NgayNhan={NgayNhan}&NgayShip={NgayShip}", null);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await res.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+        public async Task<bool> XoaPhuongThucThanhToanChiTietBangIdHoaDon(string idHoaDon)
+        {
+            try
+            {
+                var res = await _httpClient.DeleteAsync($"https://localhost:7038/api/HoaDon/XoaPhuongThucThanhToanChiTietBangIdHoaDon?idHoaDon={idHoaDon}");
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -163,6 +203,23 @@ namespace App_View.Services
             {
                 Console.WriteLine(ex.Message);
                 throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
+        public async Task<bool> ThanhToanTaiQuay(HoaDon hoaDon)
+        {
+            try
+            {
+                var res = await _httpClient.PutAsJsonAsync("https://localhost:7038/api/HoaDon/ThanhToanTaiQuay", hoaDon);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<bool>();
+                }
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
             }
         }
     }
