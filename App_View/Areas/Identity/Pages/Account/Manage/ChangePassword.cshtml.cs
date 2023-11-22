@@ -6,6 +6,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using App_Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace App_View.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize]
     public class ChangePasswordModel : PageModel
     {
         private readonly UserManager<NguoiDung> _userManager;

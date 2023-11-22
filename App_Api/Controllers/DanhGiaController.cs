@@ -35,8 +35,8 @@ namespace App_Api.Controllers
         //    public int SoLuongDanhGiaChuaDuyet { get; set; }
         //    public string IdSanPham { get;set; }
         //}
-        [HttpGet("GetDanhGiaViewModel")]
-        public async Task<List<DanhGiaViewModel>> GetAllDanhGiaViewModel(string idspchitiet)
+        [HttpGet("GetListAsyncViewModel")]
+        public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string idspchitiet)
         {
             return await _danhGiaRepo.GetListAsyncViewModel(idspchitiet);
         }
@@ -79,11 +79,11 @@ namespace App_Api.Controllers
         }
 
         [HttpPost("AddDanhGia")]
-        public bool CreateDanhGia(string? BinhLuan, string? ParentId,
+        public bool CreateDanhGia(string IdDanhGia, string? BinhLuan, string? ParentId,
        int SaoSp, int SaoVanChuyen, string IdNguoiDung, string IdSanPhamChiTiet, string? MoTa, string? ChatLuongSanPham)
         {
             DanhGia danhGia = new DanhGia();
-            danhGia.IdDanhGia = Guid.NewGuid().ToString();
+            danhGia.IdDanhGia = IdDanhGia;
             danhGia.TrangThai = (int)TrangThaiDanhGia.ChuaDuyet;
             danhGia.IdNguoiDung = IdNguoiDung;
             danhGia.BinhLuan = BinhLuan;
@@ -100,9 +100,9 @@ namespace App_Api.Controllers
         [HttpGet("GetDanhGiaById/{id}")]
         public DanhGia? GetDanhGiaById(string id)
         {      
-            return repos.GetAll().First(p => p.IdDanhGia == id);
+            return repos.GetAll().FirstOrDefault(p => p.IdDanhGia == id);
         }
-
+       
         [HttpGet("GetDanhGiaHienThi")]
         public  List<DanhGia> GetLstDanhGiaDaDuyet()
         {
@@ -169,28 +169,11 @@ namespace App_Api.Controllers
             }
             else return false;
         }
-
-        //[HttpPut("AddLike")]
-        //public async Task<bool> AddLike(string IdDanhGia)
-        //{
-        //    var dg = await GetDanhGia(IdDanhGia);
-        //    if (dg != null && dg.SuaDoi > 0)
-        //    {
-        //        dg.LuotYeuThich = dg.LuotYeuThich + 1;
-        //        return await _danhGiaRepo.UpdateAsync(dg);
-        //    }
-        //    else return false;
-        //}
-        //[HttpPut("BoLike")]
-        //public async Task<bool> BoLike(string IdDanhGia)
-        //{
-        //    var dg = await GetDanhGia(IdDanhGia);
-        //    if (dg != null && dg.SuaDoi > 0)
-        //    {
-        //        dg.LuotYeuThich = dg.LuotYeuThich - 1;
-        //        return await _danhGiaRepo.UpdateAsync(dg);
-        //    }
-        //    else return false;
-        //}
+        [HttpGet("GetDanhGiaViewModelById/{id}")]
+        public async Task< DanhGiaViewModel?> GetDanhGiaViewModelById(string id)
+        {
+            return await _danhGiaRepo.GetViewModelByKeyAsync(id);
+        }
+       
     }
 }

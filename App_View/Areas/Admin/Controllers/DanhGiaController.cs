@@ -4,12 +4,14 @@ using App_Data.Repositories;
 using App_Data.ViewModels.DanhGia;
 using App_View.IServices;
 using App_View.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles ="Admin, NhanVien")]
     public class DanhGiaController : Controller
     {
         private IDanhGiaService _danhGiaService;
@@ -43,61 +45,7 @@ namespace App_View.Areas.Admin.Controllers
         //    var data = lst.FirstOrDefault(s => s.ParentId == id);
         //    return PartialView("_ChildComment", data);
         //}
-        public async Task<IActionResult> DetailThuongHieu(string id)
-        {
-
-            var kichCo = JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("https://localhost:7038/api/ThuongHieu")).Content.ReadAsStringAsync()).FirstOrDefault(x => x.IdThuongHieu == id);
-            return View(kichCo);
-
-        }
-
-        public ActionResult CreateThuongHieu()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CreateThuongHieu(ThuongHieu q)
-        {
-            await httpClient.PostAsync($"https://localhost:7038/api/ThuongHieu?TrangThai={q.TrangThai}&Ten={q.TenThuongHieu}", null);
-            return RedirectToAction("GetAllThuongHieu");
-        }
-
-
-        public async Task<IActionResult> DeleteThuongHieu(string id)
-        {
-            await httpClient.DeleteAsync($"https://localhost:7038/api/ThuongHieu/{id}");
-            return RedirectToAction("GetAllThuongHieu");
-        }
-
-        public async Task<IActionResult> EditThuongHieu(string Id)
-        {
-            var kichCo = JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("https://localhost:7038/api/ThuongHieu")).Content.ReadAsStringAsync()).FirstOrDefault(x => x.IdThuongHieu == Id);
-
-            if (kichCo == null)
-            {
-                return NotFound();
-            }
-
-            return View(kichCo);
-        }
-        [HttpPost]
-
-        public async Task<IActionResult> EditThuongHieu(ThuongHieu a)
-        {
-            var apiUrl = $"https://localhost:7038/api/ThuongHieu/{a.IdThuongHieu}?TrangThai={a.TrangThai}&Ten={a.TenThuongHieu}";
-
-            var response = await httpClient.PutAsync(apiUrl, null);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return RedirectToAction("GetAllThuongHieu");
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
+      
 
 
 

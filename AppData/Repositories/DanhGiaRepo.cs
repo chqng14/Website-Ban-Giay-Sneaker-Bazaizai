@@ -138,7 +138,7 @@ namespace App_Data.Repositories
                                     IdSanPham = c.IdSanPham,
                                     IdSanPhamChiTiet = c.IdChiTietSp
                                 })
-                            .GroupBy(x => x.TenSanPham)  // Nhóm theo tên sản phẩm
+                            .GroupBy(x => x.TenSanPham)  
                               .Select(g => new Tuple<string, int, string, string>(g.Key, g.Count(), g.First().IdSanPham, g.First().IdSanPhamChiTiet))
                             //.Select(g => new Tuple<string, int>(g.Key, g.Count())) // Tạo tuple chứa tên sản phẩm và số lượng đánh giá
                             .ToListAsync();
@@ -199,11 +199,13 @@ namespace App_Data.Repositories
                                       IdSanPhamChiTiet = a.IdSanPhamChiTiet,
                                       IdNguoiDung = a.IdNguoiDung,
                                       TrangThai = a.TrangThai,
-                                      TenNguoiDung = b.TenNguoiDung,
+                                      TenNguoiDung = b.UserName,
                                       AnhDaiDien = b.AnhDaiDien,
                                       SaoVanChuyen = a.SaoVanChuyen,
                                       SanPhamTongQuat = d.TenMauSac + "," + e.SoKichCo,
                                       TenSanPham = j.TenSanPham,
+                                      MoTa = a.MoTa,
+                                      ChatLuongSanPham = a.ChatLuongSanPham
                                   })
                 .OrderByDescending(x => x.NgayDanhGia)
                 .ToListAsync();
@@ -225,7 +227,34 @@ namespace App_Data.Repositories
                 return false;
             }
         }
+        public async Task<DanhGia?> FindbyId(string id)
+        {
+            return await _context.danhGias.Where(x => x.IdDanhGia == id).FirstOrDefaultAsync();
+        }
 
-
+        public async Task<DanhGiaViewModel?> GetViewModelByKeyAsync(string id)
+        {
+            var ViewMode = await (from a in _context.danhGias
+                                  join b in _context.NguoiDungs on a.IdNguoiDung equals b.Id
+                                  join c in _context.sanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
+                                  join d in _context.mauSacs on c.IdMauSac equals d.IdMauSac
+                                  join e in _context.kichCos on c.IdKichCo equals e.IdKichCo
+                                  join j in _context.SanPhams on c.IdSanPham equals j.IdSanPham
+                                  select new DanhGiaViewModel
+                                  {
+                                      IdDanhGia=a.IdDanhGia,
+                                      BinhLuan = a.BinhLuan,
+                                      NgayDanhGia = a.NgayDanhGia,
+                                      SaoSp = a.SaoSp,
+                                      TenNguoiDung = b.UserName,
+                                      AnhDaiDien = b.AnhDaiDien,   
+                                      MoTa=a.MoTa,
+                                      ChatLuongSanPham=a.ChatLuongSanPham
+                                  })
+                
+                .ToListAsync();
+            var danhgia = ViewMode.FirstOrDefault(x=>x.IdDanhGia==id);
+            return danhgia;
+        }
     }
 }

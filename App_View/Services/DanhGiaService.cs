@@ -7,6 +7,7 @@ using App_View.IServices;
 using Newtonsoft.Json;
 using OpenXmlPowerTools;
 using System.Net.Http;
+using Twilio.TwiML.Voice;
 
 namespace App_View.Services
 {
@@ -20,10 +21,9 @@ namespace App_View.Services
 
         public async Task<bool> CreateDanhGia(DanhGia danhGia)
         {
-        https://localhost:7038/api/DanhGia/AddDanhGia?BinhLuan={}&ParentId={}&SaoSp={}&SaoVanChuyen={}&IdNguoiDung={}&IdSanPhamChiTiet={}
             try
             {
-                string apiUrl = $"https://localhost:7038/api/DanhGia/AddDanhGia?BinhLuan={danhGia.BinhLuan}&ParentId={danhGia.ParentId}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}&MoTa={danhGia.MoTa}&ChatLuongSanPham={danhGia.ChatLuongSanPham}";
+                string apiUrl = $"https://localhost:7038/api/DanhGia/AddDanhGia?IdDanhGia={danhGia.IdDanhGia}&BinhLuan={danhGia.BinhLuan}&ParentId={danhGia.ParentId}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}&MoTa={danhGia.MoTa}&ChatLuongSanPham={danhGia.ChatLuongSanPham}";
                 //string apiUrl = $"https://localhost:7038/api/DanhGia/AddDanhGia?BinhLuan={Uri.EscapeDataString(danhGia.BinhLuan)}&ParentId={danhGia.ParentId}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}";
                 var response = await _httpClient.PostAsync(apiUrl, null);
                 if (response.IsSuccessStatusCode)
@@ -31,7 +31,29 @@ namespace App_View.Services
                     return true;
                 }
                 else
-                {                  
+                {
+                    return false;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                return false;
+            }
+        }
+        public async Task<bool> CreateDanhGia(string IdDanhGia, string? BinhLuan, string? ParentId,
+       int SaoSp, int SaoVanChuyen, string IdNguoiDung, string IdSanPhamChiTiet, string? MoTa, string? ChatLuongSanPham)
+        {
+            try
+            {
+                //https://localhost:7038/api/DanhGia/AddDanhGia?IdDanhGia=&BinhLuan=&ParentId=null&SaoSp=5&SaoVanChuyen=5&IdNguoiDung=A7D7B8DE-74BB-47A0-9D98-ABD05A83A605&IdSanPhamChiTiet=42c3e91f-9b59-4ec7-836e-e46907091b1d&MoTa=%C6%A1pppppppppp&ChatLuongSanPham=ppppppppppp               
+                string apiUrl = $"https://localhost:7038/api/DanhGia/AddDanhGia?IdDanhGia={IdDanhGia}&BinhLuan={BinhLuan}&ParentId={ParentId}&SaoSp={SaoSp}&SaoVanChuyen={SaoVanChuyen}&IdNguoiDung={IdNguoiDung}&IdSanPhamChiTiet={IdSanPhamChiTiet}&MoTa={MoTa}&ChatLuongSanPham={ChatLuongSanPham}";
+                var response = await _httpClient.PostAsync(apiUrl, null);
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                else
+                {
                     return false;
                 }
             }
@@ -55,8 +77,8 @@ namespace App_View.Services
                 return false;
             }
         }
-       
-       
+
+
         public async Task<List<DanhGia>> GetAllDanhGia()
         {
             string apiUrl = "https://localhost:7038/api/DanhGia/GetAllDanhGia";
@@ -80,8 +102,7 @@ namespace App_View.Services
 
         public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string Idchitietsp)
         {
-            string apiUrl = $"https://localhost:7038/api/DanhGia/GetDanhGiaViewModel?idspchitiet={Idchitietsp}";
-
+            string apiUrl = $"https://localhost:7038/api/DanhGia/GetListAsyncViewModel?idspchitiet={Idchitietsp}";
             try
             {
                 var apiData = await _httpClient.GetStringAsync(apiUrl);
@@ -92,10 +113,46 @@ namespace App_View.Services
                 return new List<DanhGiaViewModel>();
             }
         }
+        public async Task<List<DanhGiaViewModel>> GetListAsyncViewModelbyBl(string Idchitietsp)
+        {
+            try
+            {
+                var lst = await GetListAsyncViewModel(Idchitietsp);
+                var lstWithComments = lst.Where(x => !string.IsNullOrEmpty(x.BinhLuan)).ToList();
+                return lstWithComments;
 
 
-        public async Task<DanhGia> GetDanhGiaById(string id)
-        {     
+
+            }
+            catch (HttpRequestException)
+            {
+                return new List<DanhGiaViewModel>();
+            }
+        }
+
+        public async Task<List<DanhGiaViewModel>> GetListAsyncViewModelWithSao(string Idchitietsp, int SoSao)
+        {
+
+
+            try
+            {
+                var lst = await GetListAsyncViewModel(Idchitietsp);
+                var lstbySao = lst.Where(x => x.SaoSp == SoSao).ToList();
+                if (SoSao == 0)
+                {
+                    return lst;
+                }
+
+
+                return lstbySao;
+            }
+            catch (HttpRequestException)
+            {
+                return new List<DanhGiaViewModel>();
+            }
+        }
+        public async Task<DanhGia?> GetDanhGiaById(string id)
+        {
             string apiUrl = $"https://localhost:7038/api/DanhGia/GetDanhGiaById/{id}";
             try
             {
@@ -108,12 +165,12 @@ namespace App_View.Services
                     return danhGia;
                 }
                 else
-                {              
+                {
                     return null;
                 }
             }
             catch (HttpRequestException)
-            {       
+            {
                 return null;
             }
         }
@@ -232,6 +289,28 @@ namespace App_View.Services
             }
         }
 
-       
+        public async Task<DanhGiaViewModel?> GetViewModelByKeyAsync(string id)
+        {
+            string apiUrl = $"https://localhost:7038/api/DanhGia/GetDanhGiaViewModelById/{id}";
+            try
+            {
+                var response = await _httpClient.GetAsync(apiUrl);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string apiData = await response.Content.ReadAsStringAsync();
+                    var danhGia = JsonConvert.DeserializeObject<DanhGiaViewModel>(apiData);
+                    return danhGia;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (HttpRequestException)
+            {
+                return null;
+            }
+        }
     }
 }

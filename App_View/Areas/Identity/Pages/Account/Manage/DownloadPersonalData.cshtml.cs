@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using App_Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Logging;
 
 namespace App_View.Areas.Identity.Pages.Account.Manage
 {
+    [Authorize]
     public class DownloadPersonalDataModel : PageModel
     {
         private readonly UserManager<NguoiDung> _userManager;

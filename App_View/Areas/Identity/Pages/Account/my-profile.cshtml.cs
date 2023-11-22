@@ -1,5 +1,6 @@
 ﻿using App_Data.Models;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,6 +9,7 @@ using System.Security.Claims;
 
 namespace App_View.Areas.Identity.Pages.Account
 {
+    [Authorize]
     public class my_profileModel : PageModel
     {
         private readonly UserManager<NguoiDung> _userManager;

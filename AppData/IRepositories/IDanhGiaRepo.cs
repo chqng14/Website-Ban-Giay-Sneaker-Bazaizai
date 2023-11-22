@@ -19,7 +19,7 @@ namespace App_Data.IRepositories
 
         public Task<float> SoSaoTB(string IdProductChiTiet);
         public Task<int> GetTongSoDanhGia(string IdProductChiTiet);
-
+        public Task<DanhGiaViewModel?> GetViewModelByKeyAsync(string id);
         public Task<List<Tuple<string, int,string,string>>> TongSoDanhGiaCuaMoiSpChuaDuyet();
         public Task<List<DanhGiaViewModel>> LstChiTietDanhGiaCuaMoiSpChuaDuyet(string idSanPham);
     }
