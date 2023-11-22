@@ -12,7 +12,7 @@ namespace App_Data.ViewModels.Voucher
     {
         public string? IdVoucher { get; set; }
         [Required(ErrorMessage = "Tên voucher là trường bắt buộc.")]
-        [StringLength(255, MinimumLength = 5, ErrorMessage = "Tên voucher phải có ít nhất 5 ký tự.")]
+        [StringLength(25, MinimumLength = 2, ErrorMessage = "Tên voucher phải nhập từ 2-25 kí tự")]
         public string? TenVoucher { get; set; }
         [Required(ErrorMessage = "Điều kiện là trường bắt buộc.")]
         [Range(0, int.MaxValue, ErrorMessage = "Điều kiện phải là số nguyên không âm.")]

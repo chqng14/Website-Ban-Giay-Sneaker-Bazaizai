@@ -13,7 +13,7 @@ namespace App_Data.Models
         public string? IdVoucher { get; set; }
         public string? MaVoucher { get; set; }
         [Required(ErrorMessage = "Tên voucher là trường bắt buộc.")]
-        [StringLength(255, MinimumLength = 5, ErrorMessage = "Tên voucher phải có ít nhất 5 ký tự.")]
+        [StringLength(25, MinimumLength = 2, ErrorMessage = "Tên voucher phải nhập từ 2-25 kí tự")]
         [RegularExpression(@"^[a-zA-Z0-9\s]*$", ErrorMessage = "Tên voucher không được chứa ký tự đặc biệt.")]
         public string? TenVoucher { get; set; }
         [Required(ErrorMessage = "Điều kiện là trường bắt buộc.")]

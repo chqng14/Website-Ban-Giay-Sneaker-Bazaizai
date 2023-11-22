@@ -1,12 +1,14 @@
 ﻿using App_Data.DbContextt;
 using App_Data.Models;
 using App_View.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Controllers
 {
+
     public class VoucherController : Controller
     {
         private readonly BazaizaiContext _context;
@@ -20,7 +22,7 @@ namespace App_View.Controllers
             _context = new BazaizaiContext();
             _signInManager = signInManager;
             _userManager = userManager;
-        }
+        } 
         public async Task<IActionResult> VoucherToCalm()
         {
             var idNguoiDung = _userManager.GetUserId(User);
