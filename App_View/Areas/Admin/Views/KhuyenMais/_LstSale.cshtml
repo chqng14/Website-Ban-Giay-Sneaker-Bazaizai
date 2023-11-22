@@ -1,0 +1,36 @@
+﻿﻿@using static App_Data.Repositories.TrangThai;
+@model IEnumerable<App_Data.Models.KhuyenMai>
+@foreach (var item in Model)
+{
+    <div class="col-md-3">
+        <figure>
+            <div style="width:231.25px;height: 290.42px">
+                <img src="~/AnhSale/@item.Url" alt="Ảnh khuyến mãi" style="width:231.25px;height: 290.42px">
+            </div>
+
+            <figcaption>
+                <div style="height:200px">
+                    <strong>Mã khuyến mãi:</strong> @item.MaKhuyenMai<br />
+                    <strong>Tên khuyến mãi:</strong> @item.TenKhuyenMai<br />
+                    <strong>Ngày bắt đầu:</strong> @item.NgayBatDau.ToString()<br />
+                    <strong>Ngày kết thúc:</strong> @item.NgayKetThuc.ToString()<br />
+                    <strong>Loại hình:</strong> @(item.LoaiHinhKM == 0 ? "Khuyến mại đồng giá" : "Khuyến mại giảm giá")<br />
+                    <strong>Mức giảm:</strong> @item.MucGiam<br />
+
+
+                </div>
+                <div class="label-container" style="display:flex;align-items:center;gap:10px;">
+                    <strong>Trạng thái:</strong>
+                    <label class="switch">
+                        <input type="checkbox" class="status-toggle" data-id="@item.IdKhuyenMai" data-status="@item.TrangThai" @(item.TrangThai == (int)TrangThaiSale.DangBatDau ? "checked" : "")>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px">
+                    <a class="btn btn-primary btn-tone m-r-5 apDungSale" asp-controller="KhuyenMaiChiTiets" asp-action="ApllySale" asp-route-id="@item.IdKhuyenMai" data-id="@item.IdKhuyenMai" id="apDungSale">Áp dụng</a>
+                    <a class="btn btn-danger btn-tone m-r-5" asp-controller="KhuyenMais" asp-action="Edit" asp-route-id="@item.IdKhuyenMai">Chỉnh sửa</a>
+                </div>
+            </figcaption>
+        </figure>
+    </div>
+}
