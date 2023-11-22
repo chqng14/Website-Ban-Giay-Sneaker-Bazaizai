@@ -20,5 +20,9 @@ namespace App_View.IServices
         Task<string> TaoKhachHang(KhachHang khachHang);
         Task<List<KhachHang>> GetKhachHangs();
         Task<string> GetPayMent(string idHoaDon);
+        Task<bool> TaoPTTTChiTiet(string idHoaDon, string idPTTT, double soTien, int trangThai);
+        Task<string> GetPTTT(string ten);
+        Task<bool> XoaPhuongThucThanhToanChiTietBangIdHoaDon(string idHoaDon);
+        Task<bool> ThanhToanTaiQuay(HoaDon hoaDon);
     }
 }

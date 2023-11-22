@@ -30,7 +30,6 @@
     <link rel="stylesheet" href="/css/app.css">
 
 </head>
-
 <body class="config" id="js-scrollspy-trigger">
     <div class="preloader is-active">
         <div class="preloader__wrap">
@@ -86,118 +85,119 @@
                                 <ul class="ah-list ah-list--design1 ah-list--link-color-secondary">
                                     <partial name="_LoginPartial" />
                                     @*                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Account">
-                                            @if (SignInManager.IsSignedIn(User))
-                                            {
-                                                <a><i class="far fa-user-circle"></i></a>
+                                    @if (SignInManager.IsSignedIn(User))
+                                    {
+                                    <a><i class="far fa-user-circle"></i></a>
 
 
-                                                <span class="js-menu-toggle"></span>
-                                                <ul>
-                                                    <li>
-                                                        <a asp-area="Identity" asp-page="/Account/my-profile">
-                                                            <i class="fas fa-user-circle u-s-m-r-6"></i>
-                                                            <span>Account</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-
-                                                        <form id="myForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                                            <button type="submit" class="nav-link btn btn-link text-dark">
-                                                                <a>
-                                                                    <i class="fas fa-lock-open u-s-m-r-6"></i>
-                                                                    <span>Signout</span>
-                                                                </a>
-                                                            </button>
-                                                        </form>
-
-                                                    </li>
-                                                </ul>
-                                            }
-                                            else
-                                            {
-                                                <a><i class="far fa-user-circle"></i></a>
-
-
-                                                <span class="js-menu-toggle"></span>
-                                                <ul>
-
-                                                    <li>
-                                                        <a asp-area="Identity" asp-page="/Account/Register">
-                                                            <i class="fas fa-user-plus u-s-m-r-6"></i>
-                                                            <span>Signup</span>
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a asp-area="Identity" asp-page="/Account/Login">
-                                                            <i class="fas fa-lock u-s-m-r-6"></i>
-                                                            <span>Signin</span>
-                                                        </a>
-                                                    </li>
-
-                                                </ul>
-                                            }
-                                        </li>
-                                    *@
-                                    <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Settings">
-
-                                        <a><i class="fas fa-user-cog"></i></a>
-
-
-                                        <span class="js-menu-toggle"></span>
-                                        <ul>
-                                            <li class="has-dropdown has-dropdown--ul-right-100">
-
-                                                <a>Language<i class="fas fa-angle-down u-s-m-l-6"></i></a>
-
-                                                <!--====== Dropdown ======-->
-
-                                                <span class="js-menu-toggle"></span>
-                                                <ul>
-                                                    <li>
-
-                                                        <a class="u-c-brand">ENGLISH</a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a>ARABIC</a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a>FRANCAIS</a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a>ESPANOL</a>
-                                                    </li>
-                                                </ul>
-                                                <!--====== End - Dropdown ======-->
-                                            </li>
-                                            <li class="has-dropdown has-dropdown--ul-right-100">
-
-                                                <a>Currency<i class="fas fa-angle-down u-s-m-l-6"></i></a>
-
-                                                <!--====== Dropdown ======-->
-
-                                                <span class="js-menu-toggle"></span>
-                                                <ul style="width:225px">
-                                                    <li>
-
-                                                        <a class="u-c-brand">$ - US DOLLAR</a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a>£ - BRITISH POUND STERLING</a>
-                                                    </li>
-                                                    <li>
-
-                                                        <a>€ - EURO</a>
-                                                    </li>
-                                                </ul>
-                                                <!--====== End - Dropdown ======-->
-                                            </li>
-                                        </ul>
-                                        <!--====== End - Dropdown ======-->
+                                    <span class="js-menu-toggle"></span>
+                                    <ul>
+                                    <li>
+                                    <a asp-area="Identity" asp-page="/Account/my-profile">
+                                    <i class="fas fa-user-circle u-s-m-r-6"></i>
+                                    <span>Account</span>
+                                    </a>
                                     </li>
+                                    <li>
+
+                                    <form id="myForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                    <button type="submit" class="nav-link btn btn-link text-dark">
+                                    <a>
+                                    <i class="fas fa-lock-open u-s-m-r-6"></i>
+                                    <span>Signout</span>
+                                    </a>
+                                    </button>
+                                    </form>
+
+                                    </li>
+                                    </ul>
+                                    }
+                                    else
+                                    {
+                                    <a><i class="far fa-user-circle"></i></a>
+
+
+                                    <span class="js-menu-toggle"></span>
+                                    <ul>
+
+                                    <li>
+                                    <a asp-area="Identity" asp-page="/Account/Register">
+                                    <i class="fas fa-user-plus u-s-m-r-6"></i>
+                                    <span>Signup</span>
+                                    </a>
+                                    </li>
+                                    <li>
+                                    <a asp-area="Identity" asp-page="/Account/Login">
+                                    <i class="fas fa-lock u-s-m-r-6"></i>
+                                    <span>Signin</span>
+                                    </a>
+                                    </li>
+
+                                    </ul>
+                                    }
+                                    </li>
+                                    *@
+                                   
+                                    @*<li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Settings">
+
+                                    <a><i class="fas fa-user-cog"></i></a>
+
+
+                                    <span class="js-menu-toggle"></span>
+                                    <ul>
+                                    <li class="has-dropdown has-dropdown--ul-right-100">
+
+                                    <a>Language<i class="fas fa-angle-down u-s-m-l-6"></i></a>
+
+                                    <!--====== Dropdown ======-->
+
+                                    <span class="js-menu-toggle"></span>
+                                    <ul>
+                                    <li>
+
+                                    <a class="u-c-brand">ENGLISH</a>
+                                    </li>
+                                    <li>
+
+                                    <a>ARABIC</a>
+                                    </li>
+                                    <li>
+
+                                    <a>FRANCAIS</a>
+                                    </li>
+                                    <li>
+
+                                    <a>ESPANOL</a>
+                                    </li>
+                                    </ul>
+                                    <!--====== End - Dropdown ======-->
+                                    </li>
+                                    <li class="has-dropdown has-dropdown--ul-right-100">
+
+                                    <a>Currency<i class="fas fa-angle-down u-s-m-l-6"></i></a>
+
+                                    <!--====== Dropdown ======-->
+
+                                    <span class="js-menu-toggle"></span>
+                                    <ul style="width:225px">
+                                    <li>
+
+                                    <a class="u-c-brand">$ - US DOLLAR</a>
+                                    </li>
+                                    <li>
+
+                                    <a>£ - BRITISH POUND STERLING</a>
+                                    </li>
+                                    <li>
+
+                                    <a>€ - EURO</a>
+                                    </li>
+                                    </ul>
+                                    <!--====== End - Dropdown ======-->
+                                    </li>
+                                    </ul>
+                                    <!--====== End - Dropdown ======-->
+                                    </li>*@
                                     <li data-tooltip="tooltip" data-placement="left" title="" data-original-title="Contact">
 
                                         <a href="tel:0374232108"><i class="fas fa-phone-volume"></i></a>
@@ -238,7 +238,10 @@
                                 <ul class="ah-list">
                                     <li class="has-dropdown">
 
-                                        <span class="mega-text">B</span>
+                                        <img style="
+    width: 8rem;
+    height: 3rem;
+" src="https://payload.cargocollective.com/1/7/237494/8015818/CONS_ILLUSTRATION_o.gif" class="mega-text" b-xzovs66yy5="">
 
                                         <!--====== Mega Menu ======-->
 
@@ -1360,6 +1363,7 @@
         </div>
         <!--====== End - Quick Look Modal ======-->
         <!--====== Add to Cart Modal ======-->
+
         <div class="modal fade" id="add-to-cart">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content modal-radius modal-shadow" style="
@@ -1456,6 +1460,8 @@
                 </div>
             </div>
         </div>
+        @* Thêm*@
+
         <!--====== End - Newsletter Subscribe Modal ======-->
         <!--====== End - Modal Section ======-->
     </div>

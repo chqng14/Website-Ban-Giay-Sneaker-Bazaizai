@@ -22,10 +22,12 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.ExtendedProperties;
 using PuppeteerSharp;
 using NuGet.Protocol.Core.Types;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,NhanVien")]
     public class VouchersController : Controller
     {
         private readonly BazaizaiContext _context;
@@ -96,7 +98,7 @@ namespace App_View.Areas.Admin.Controllers
                     return RedirectToAction("ShowVoucher");
                 }
             }
-            return View();
+            return RedirectToAction("ShowVoucher");
         }
 
         public async Task<ActionResult> Delete(string id)

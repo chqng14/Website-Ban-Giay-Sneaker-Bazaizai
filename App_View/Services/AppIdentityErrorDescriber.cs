@@ -74,7 +74,13 @@ namespace App_View.Services
 
         public override IdentityError InvalidUserName(string userName)
         {
-            return base.InvalidUserName(userName);
+            var error = base.DuplicateUserName(userName);
+            return new IdentityError()
+            {
+                Code = error.Code,
+                Description = $"Tên tài khoản {userName} không hợp lệ. Tên tài khoản chỉ chứa số và chữ cái.",
+            };
+            //return base.InvalidUserName(userName);
         }
 
         public override IdentityError LoginAlreadyAssociated()

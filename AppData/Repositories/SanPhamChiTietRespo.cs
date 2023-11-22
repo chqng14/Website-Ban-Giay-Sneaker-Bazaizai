@@ -628,5 +628,143 @@ namespace App_Data.Repositories
                 Console.WriteLine(ex.ToString());
             }
         }
+
+        public List<RelatedProductViewModel> GetRelatedProducts(string sumGuid)
+        {
+            try
+            {
+                var listGuid = sumGuid.Split('/');
+                var idSanPham = listGuid[0];
+                var idThuongHieu = listGuid[1];
+                var idKieuDeGiay = listGuid[2];
+                var idLoaiGiay = listGuid[3];
+                var idXuatXu = listGuid[4];
+                var idChatLieu = listGuid[5];
+                return _context
+                        .sanPhamChiTiets
+                        .Where(sp =>
+                        sp.IdSanPham == idSanPham &&
+                        sp.IdThuongHieu == idThuongHieu &&
+                        sp.IdKieuDeGiay == idKieuDeGiay &&
+                        sp.IdLoaiGiay == idLoaiGiay &&
+                        sp.IdXuatXu == idXuatXu &&
+                        sp.IdChatLieu == idChatLieu
+                        ).
+                        Include(sp => sp.SanPham).
+                        Include(sp => sp.MauSac).
+                        Include(sp => sp.KichCo).
+                        Include(sp => sp.Anh).
+                        AsEnumerable().
+                        GroupBy(sp => sp.IdMauSac).
+                        OrderBy(gr => gr.Key).
+                        SelectMany(gr => gr.OrderBy(sp => sp.KichCo.SoKichCo.GetValueOrDefault())).
+                        Select(sp => new RelatedProductViewModel()
+                        {
+                            IdSanPham = sp.IdChiTietSp,
+                            MaSanPham = sp.Ma,
+                            GiaNhap = sp.GiaNhap.GetValueOrDefault(),
+                            Anh = sp.Anh.OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
+                            MauSac = sp.MauSac.TenMauSac,
+                            GiaBan = sp.GiaBan.GetValueOrDefault(),
+                            KichCo = sp.KichCo.SoKichCo.GetValueOrDefault(),
+                            SanPham = sp.SanPham.TenSanPham,
+                            SoLuong = sp.SoLuongTon.GetValueOrDefault(),
+                            SoLuongDaBan = sp.SoLuongDaBan.GetValueOrDefault(),
+                            KhoiLuong = sp.KhoiLuong.GetValueOrDefault(),
+                            TrangThai = sp.TrangThai.GetValueOrDefault()
+                        })
+                        .ToList();
+            }
+            catch (Exception)
+            {
+
+                return new List<RelatedProductViewModel>();
+            }
+            
+        }
+
+        public async Task<List<SPDanhSachViewModel>> GetFilteredDaTaDSTongQuanAynsc(ParametersTongQuanDanhSach parametersTongQuanDanhSach)
+        {
+            var query = _context.sanPhamChiTiets.AsQueryable();
+
+            if (!string.IsNullOrEmpty(parametersTongQuanDanhSach.IdSanPham))
+            {
+                query = query.Where(it => it.IdSanPham == parametersTongQuanDanhSach.IdSanPham);
+            }
+
+            if (!string.IsNullOrEmpty(parametersTongQuanDanhSach.IdThuongHieu))
+            {
+                query = query.Where(it => it.IdThuongHieu == parametersTongQuanDanhSach.IdThuongHieu);
+            }
+
+            if (!string.IsNullOrEmpty(parametersTongQuanDanhSach.IdKieuDeGiay))
+            {
+                query = query.Where(it => it.IdKieuDeGiay == parametersTongQuanDanhSach.IdKieuDeGiay);
+            }
+
+            if (!string.IsNullOrEmpty(parametersTongQuanDanhSach.IdChatLieu))
+            {
+                query = query.Where(it => it.IdChatLieu == parametersTongQuanDanhSach.IdChatLieu);
+            }
+
+            if (!string.IsNullOrEmpty(parametersTongQuanDanhSach.IdLoaiGiay))
+            {
+                query = query.Where(it => it.IdLoaiGiay == parametersTongQuanDanhSach.IdLoaiGiay);
+            }
+
+            if (!string.IsNullOrEmpty(parametersTongQuanDanhSach.IdXuatXu))
+            {
+                query = query.Where(it => it.IdXuatXu == parametersTongQuanDanhSach.IdXuatXu);
+            }
+
+            var result = await query
+                .Include(sp => sp.SanPham)
+                .Include(sp => sp.ThuongHieu)
+                .Include(sp => sp.KieuDeGiay)
+                .Include(sp => sp.LoaiGiay)
+                .Include(sp => sp.XuatXu)
+                .Include(sp => sp.ChatLieu)
+                .ToListAsync();
+
+            var viewModelResult = result
+                .GroupBy(gr => new
+                {
+                    gr.IdChatLieu,
+                    gr.IdSanPham,
+                    gr.IdThuongHieu,
+                    gr.IdXuatXu,
+                    gr.IdLoaiGiay,
+                    gr.IdKieuDeGiay,
+                })
+                .Select(gr => new SPDanhSachViewModel
+                {
+                    SumGuild = $"{gr.Key.IdSanPham}/{gr.Key.IdThuongHieu}/{gr.Key.IdKieuDeGiay}/{gr.Key.IdLoaiGiay}/{gr.Key.IdXuatXu}/{gr.Key.IdChatLieu}",
+                    SanPham = gr.First().SanPham.TenSanPham,
+                    ChatLieu = gr.First().ChatLieu.TenChatLieu,
+                    KieuDeGiay = gr.First().KieuDeGiay.TenKieuDeGiay,
+                    LoaiGiay = gr.First().LoaiGiay.TenLoaiGiay,
+                    ThuongHieu = gr.First().ThuongHieu.TenThuongHieu,
+                    XuatXu = gr.First().XuatXu.Ten,
+                    SoMau = gr.Select(it => it.IdMauSac).Distinct().Count(),
+                    SoSize = gr.Select(it => it.IdKichCo).Distinct().Count(),
+                    TongSoLuongTon = gr.Sum(it => it.SoLuongTon.GetValueOrDefault()),
+                    TongSoLuongDaBan = gr.Sum(it => it.SoLuongDaBan.GetValueOrDefault())
+                })
+                .ToList();
+
+            if (!string.IsNullOrEmpty(parametersTongQuanDanhSach.SearchValue))
+            {
+                string searchValueLower = parametersTongQuanDanhSach.SearchValue.ToLower();
+                viewModelResult = viewModelResult
+                    .Where(x =>
+                        x.SanPham!.ToLower().Contains(searchValueLower) ||
+                        x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
+                        x.ChatLieu!.ToLower().Contains(searchValueLower) ||
+                        x.KieuDeGiay!.ToLower().Contains(searchValueLower))
+                    .ToList();
+            }
+
+            return viewModelResult;
+        }
     }
 }

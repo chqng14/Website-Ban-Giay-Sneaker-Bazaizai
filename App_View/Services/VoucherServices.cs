@@ -218,48 +218,46 @@ namespace App_View.Services
 				return false;
 			}
 		}
-
-		public async Task<bool> UpdateTaiQuay(VoucherDTO voucherDTO)
-		{
-			try
-			{
-				var reponse = await _httpClient.PutAsJsonAsync($"/api/Voucher/UpdateVoucherTaiQuay", voucherDTO);
-				if (reponse.IsSuccessStatusCode)
-				{
-					return await reponse.Content.ReadAsAsync<bool>();
-				}
-				else
-				{
-					return false;
-				}
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine($"Lỗi xảy ra: {e}");
-				return false;
-			}
-		}
-		public async Task<bool> UpdateVoucherAfterUseItTaiQuay(string idVoucher, string idUser)
-		{
-			try
-			{
-				var reponse = await _httpClient.PutAsync($"/api/Voucher/UpdateVoucherAfterUseItTaiQuay/{idVoucher}/{idUser}", null);
-				if (reponse.IsSuccessStatusCode)
-				{
-					return await reponse.Content.ReadAsAsync<bool>();
-				}
-				else
-				{
-					return false;
-				}
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine($"Lỗi xảy ra: {e}");
-				return false;
-			}
-		}
-
+        public async Task<bool> UpdateTaiQuay(VoucherDTO voucherDTO)
+        {
+            try
+            {
+                var reponse = await _httpClient.PutAsJsonAsync($"/api/Voucher/UpdateVoucherTaiQuay", voucherDTO);
+                if (reponse.IsSuccessStatusCode)
+                {
+                    return await reponse.Content.ReadAsAsync<bool>();
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
+        public async Task<bool> UpdateVoucherAfterUseItTaiQuay(string idVoucherNguoiDung)
+        {
+            try
+            {
+                var reponse = await _httpClient.PutAsync($"/api/Voucher/UpdateVoucherAfterUseItTaiQuay?idVoucherNguoiDung={idVoucherNguoiDung}", null);
+                if (reponse.IsSuccessStatusCode)
+                {
+                    return await reponse.Content.ReadAsAsync<bool>();
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
 		public async Task<bool> UpdateVoucherSoluong(string idVoucher)
 		{
 			try

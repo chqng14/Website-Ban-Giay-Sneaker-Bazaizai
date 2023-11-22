@@ -45,25 +45,35 @@ namespace App_View.Areas.Admin.Pages.User
 
         public async Task<IActionResult> OnGet()
         {
-            var qr = _userManager.Users.OrderBy(x => x.MaNguoiDung);
-            totalUsers = await qr.CountAsync();
-            countPages = (int)Math.Ceiling((double)totalUsers / ITEMS_PER_PAGE);
-            if (currentPage < 1)
-                currentPage = 1;
-            if (currentPage > countPages)
-                currentPage = countPages;
-            var qr1 = qr.Skip((currentPage - 1) * ITEMS_PER_PAGE)
-            .Take(ITEMS_PER_PAGE)
-            .Select(x => new User_Role()
+            //var qr = _userManager.Users.OrderBy(x => x.MaNguoiDung);
+            //totalUsers = await qr.CountAsync();
+            //countPages = (int)Math.Ceiling((double)totalUsers / ITEMS_PER_PAGE);
+            //if (currentPage < 1)
+            //    currentPage = 1;
+            //if (currentPage > countPages)
+            //    currentPage = countPages;
+            //var qr1 = qr.Skip((currentPage - 1) * ITEMS_PER_PAGE)
+            //.Take(ITEMS_PER_PAGE)
+            //.Select(x => new User_Role()
+            //{
+            //    Id = x.Id,
+            //    UserName = x.UserName,
+            //});
+            //users = await qr1.ToListAsync();
+
+
+
+            var lst =  _userManager.Users.OrderBy(x => x.UserName);
+            var lstUserAndRole = lst.Select(x => new User_Role()
             {
                 Id = x.Id,
                 UserName = x.UserName,
             });
-            users = await qr1.ToListAsync();
-            foreach(var user in users)
+            users = await lstUserAndRole.ToListAsync();
+            foreach (var user in users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
-                user.RoleName=string.Join(",", roles);
+                user.RoleName = string.Join(",", roles);
             }
 
             //users = await _userManager.Users.OrderBy(x => x.UserName).ToListAsync();
@@ -75,7 +85,7 @@ namespace App_View.Areas.Admin.Pages.User
             {
                 for (int i = 2; i < 500; i++)
                 {
-                    await _userManager.CreateAsync(new NguoiDung { MaNguoiDung="ND2", UserName = "user" + i, Email = "user" + i + "@gmail.com" }, "1234567");
+                    await _userManager.CreateAsync(new NguoiDung { MaNguoiDung = "ND2", UserName = "user" + i, Email = "user" + i + "@gmail.com" }, "1234567");
                 }
             }
             return Page();

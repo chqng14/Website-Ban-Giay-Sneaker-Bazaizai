@@ -1,0 +1,178 @@
+﻿@{
+    ViewData["Title"] = "Tổng quan hóa đơn";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<head>
+
+    <link href="~/css/hoadon.css" rel="stylesheet" />
+    
+</head>
+<style>
+    .input-text--style-1 {
+        color: #5c636c;
+        transition: all 0.6s linear;
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+    }
+</style>
+<body>
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+        <div class="dash__pad-2">
+        <div class="tabs">
+            <div class="tab-item active" id="tab1" data-value="hdTaiQuay">HÓA ĐƠN TẠI QUẦY</div>
+            <div class="tab-item" id="tab2" data-value="hdOnline">HÓA ĐƠN ONLINE</div>
+            <div class="tab-item" id="tab3" data-value="hdHuy">HÓA ĐƠN ĐÃ HỦY</div>
+            <div class="tab-item" id="tab4" data-value="hdDaThanhToan">HÓA ĐƠN ĐÃ THANH TOÁN</div>
+            <div class="tab-item" id="tab4" data-value="hdChuaThanhToan">HÓA ĐƠN CHƯA THANH TOÁN</div>
+        </div>
+            <input type="text" class="input-text input-text--border-radius input-text--style-1" id="searchMaDonHang" placeholder="Tìm kiếm đơn hàng" style="margin-bottom:15px;">
+        <div class="limiter active" id="content1">
+        </div>
+    </div>
+    </div>
+
+</body>
+
+
+<!-- Modal để hiển thị thông tin chi tiết hóa đơn -->
+<div id="invoiceDetailModal" class="modal fade custom-modal-width" role="dialog">
+    <div class="modal-dialog custom-modal-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Chi tiết hóa đơn</h4>
+            </div>
+            <div class="modal-body" id="invoiceDetailContent">
+                <!-- Nội dung chi tiết hóa đơn sẽ được load thông qua Ajax -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    const tabItems = document.querySelectorAll('.tab-item');
+    const content1 = document.getElementById('content1');
+   
+    tabItems.forEach((tabItem, index) => {
+        tabItem.addEventListener('click', () => {
+            // Ẩn tất cả các tab content và loại bỏ trạng thái active
+            document.querySelectorAll('.limiter').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            var trangThaiHD = $(tabItem).data('value');
+            console.log(trangThaiHD)
+            if ($(tabItem).data('value') === "hdTaiQuay") {
+                $.ajax({
+                    url: '/Admin/HoaDon/QuanLyHoaDon?trangThaiHD=' + 0,
+                    type: 'GET',
+                    success: function (result) {
+                        $('#content1').empty().html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+            }
+            else if ($(tabItem).data('value') === "hdOnline") {
+                $.ajax({
+                    url: '/Admin/HoaDon/QuanLyHoaDon?trangThaiHD=' + 1,
+                    type: 'GET',
+                    success: function (result) {
+                        $('#content1').empty().html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+            }
+            else if ($(tabItem).data('value') === "hdHuy") {
+                $.ajax({
+                    url: '/Admin/HoaDon/QuanLyHoaDon?trangThaiHD=' + 5,
+                    type: 'GET',
+                    success: function (result) {
+                        $('#content1').empty().html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+            }
+            else if ($(tabItem).data('value') === "hdDaThanhToan") {
+                $.ajax({
+                    url: '/Admin/HoaDon/QuanLyHoaDon?trangThaiHD=' + 2,
+                    type: 'GET',
+                    success: function (result) {
+                        $('#content1').empty().html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+            }
+            else if ($(tabItem).data('value') === "hdChuaThanhToan") {
+                $.ajax({
+                    url: '/Admin/HoaDon/QuanLyHoaDon?trangThaiHD=' + 3,
+                    type: 'GET',
+                    success: function (result) {
+                        $('#content1').empty().html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+            }
+            $('#content1').empty().html();
+
+            content1.classList.add('active');
+            tabItem.classList.add('active');
+        });
+    });
+
+    $(() => {
+
+        $.ajax({
+            url: '/Admin/HoaDon/QuanLyHoaDon?trangThaiHD='+0,
+            type: 'GET',
+            success: function (result) {
+                $('#content1').empty().html(result);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+
+
+    })
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+}

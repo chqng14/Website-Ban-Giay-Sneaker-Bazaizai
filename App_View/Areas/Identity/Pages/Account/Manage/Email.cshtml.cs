@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using App_Data.Models;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -52,18 +53,18 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             public string NewEmail { get; set; }
         }
 
-        private async Task LoadAsync(NguoiDung user)
-        {
-            //var email = await _userManager.GetEmailAsync(user);
-            //Email = email;
+        //private async Task LoadAsync(NguoiDung user)
+        //{
+        //    //var email = await _userManager.GetEmailAsync(user);
+        //    //Email = email;
 
-            //Input = new InputModel
-            //{
-            //    NewEmail = email,
-            //};
+        //    //Input = new InputModel
+        //    //{
+        //    //    NewEmail = email,
+        //    //};
 
-            IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
-        }
+        //    //IsEmailConfirmed = await _userManager.IsEmailConfirmedAsync(user);
+        //}
 
         public async Task<IActionResult> OnGetAsync()
         {
@@ -73,7 +74,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
-            await LoadAsync(user);
+            //await LoadAsync(user);
             return Page();
         }
 
@@ -87,7 +88,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
 
             if (!ModelState.IsValid)
             {
-                await LoadAsync(user);
+                //await LoadAsync(user);
                 return Page();
             }
 
@@ -107,12 +108,12 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
                     "Xác nhận email của bạn",
                     $"Vui lòng xác nhận tài khoản của bạn bằng cách <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Nhấn vào đây</a>.");
 
-                StatusMessage = "Liên kết xác nhận để thay đổi email đã gửi. Vui lòng kiểm tra email của bạn.";
-                return RedirectToPage();
+                StatusMessage = $"Liên kết xác nhận để thay đổi email đã gửi. Vui lòng kiểm tra email {Input.NewEmail}.";
+                return Page();
             }
 
             StatusMessage = "Email của bạn không thay đổi.";
-            return RedirectToPage();
+            return Page();
         }
 
         public async Task<IActionResult> OnPostSendVerificationEmailAsync()
@@ -125,7 +126,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
 
             if (!ModelState.IsValid)
             {
-                await LoadAsync(user);
+                //await LoadAsync(user);
                 return Page();
             }
 

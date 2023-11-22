@@ -18,7 +18,8 @@
     <div class="modal fade" id="exampleModal">
         <div class="modal-dialog modal-dialog-scrollable modal-custom">
             <div class="modal-content">
-                <div class="modal-header" style="background: #129dc1;">
+                <div class="modal-header align-items-center" style="background: #129dc1;">
+                    <i class="fas fa-user-astronaut m-r-5" style="font-size: 33px"></i>
                     <h5 class="modal-title" id="ModalLabelDanhSach">DANH SÁCH SẢN PHẨM</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <i class="anticon anticon-close"></i>
@@ -73,11 +74,13 @@
                     <div class="d-md-flex">
                         <div class="m-b-10">
                             <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh">
+                                <i class="far fa-list-alt m-r-5"></i>
                                 <span>Ngừng kinh doanh</span>
                             </a>
                         </div>
                         <div class="m-b-10 m-l-10">
                             <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/DanhSachSanPham">
+                                <i class="far fa-list-alt m-r-5"></i>
                                 <span>Đang kinh doanh</span>
                             </a>
                         </div>
@@ -89,7 +92,7 @@
         </div>
         <div class="tab-pane fade active show" id="timKiemNangCao" role="tabpanel" style="height: auto" aria-labelledby="timKiemNangCao-tab">
             <div class="row w-100">
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <div class="d-md-flex">
                         <div class="m-b-10">
                             <select class="select2_active" style="min-width: 180px;" data-column="1" id="filterSanPham">
@@ -146,13 +149,13 @@
                                 }
                             </select>
                         </div>
+                        <div class="m-b-10 ml-1">
+                            <button class="btn btn-kio" onclick="window.location.href='/Admin/SanPhamChiTiet/TongQuanSanPham'">
+                                <i class="anticon anticon-delete m-r-5"></i>
+                                <span>Xóa bộ lọc</span>
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="col-lg-4 text-right">
-                    <button class="btn btn-tone" onclick="window.location.href='/Admin/SanPhamChiTiet/TongQuanSanPham'">
-                        <i class="fas fa-bullseye m-r-5"></i>
-                        <span>Khôi phục mặc định</span>
-                    </button>
                 </div>
             </div>
         </div>
@@ -178,21 +181,23 @@
     var tableDSTongQuan = $('#table-sanpham').DataTable({
         ajax: {
             url: '@Url.Action("GetTongQuanDanhSach", "SanPhamChiTiet", new { area = "Admin" })',
-            type: 'GET',
+            type: 'POST',
             dataType: 'json',
             data: function (e) {
-                return {
-                    draw: e.draw,
-                    start: e.start,
-                    length: e.length,
-                    searchValue: e.search.value,
-                    idSanPham: idSanPham,
-                    idThuongHieu: idThuongHieu,
-                    idKieuDeGiay: idKieuDeGiay,
-                    idChatLieu: idChatLieu,
-                    idLoaiGiay: idLoaiGiay,
-                    idXuatXu: idXuatXu
-                };
+                return JSON.stringify(
+                    {
+                        Draw: e.draw,
+                        Start: e.start,
+                        Length: e.length,
+                        SearchValue: e.search.value,
+                        IdSanPham: idSanPham,
+                        IdThuongHieu: idThuongHieu,
+                        IdKieuDeGiay: idKieuDeGiay,
+                        IdChatLieu: idChatLieu,
+                        IdLoaiGiay: idLoaiGiay,
+                        IdXuatXu: idXuatXu
+                    }
+                )
             },
             contentType: 'application/json'
         },
@@ -209,67 +214,67 @@
                 orderable: false
             },
             {
-                data: 'sanPham',
+                data: 'SanPham',
                 title: 'Sản phẩm',
                 orderable: false
             },
             {
-                data: 'thuongHieu',
+                data: 'ThuongHieu',
                 title: 'Thương hiệu',
                 orderable: false
             },
             {
-                data: 'kieuDeGiay',
+                data: 'KieuDeGiay',
                 title: 'Kiểu đế',
                 orderable: false
             },
             {
-                data: 'chatLieu',
+                data: 'ChatLieu',
                 title: 'Chất liệu',
                 orderable: false
             },
             {
-                data: 'xuatXu',
+                data: 'XuatXu',
                 title: 'Xuất xứ',
                 orderable: false
             },
             {
-                data: 'loaiGiay',
+                data: 'LoaiGiay',
                 title: 'Loại giày',
                 orderable: false
             },
             {
-                data: 'soMau',
+                data: 'SoMau',
                 title: 'Số màu',
                 orderable: false
             },
             {
-                data: 'soSize',
+                data: 'SoSize',
                 title: 'Số size',
                 orderable: false
             },
             {
-                data: 'tongSoLuongTon',
+                data: 'TongSoLuongTon',
                 title: 'Số lượng',
                 orderable: false
             },
             {
-                data: 'tongSoLuongDaBan',
+                data: 'TongSoLuongDaBan',
                 title: 'Số lượng đã bán',
                 orderable: false
             },
         ],
         rowCallback: function (row, data, index) {
             $(row).on("click", function () {
-                keyProduct = data.sumGuild
+                keyProduct = data.SumGuild
                 $.ajax({
                     url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
                     type: 'GET',
                     data: {
-                        "sumGuid": data.sumGuild
+                        "sumGuid": data.SumGuild
                     },
                     success: function (result) {
-                        $('#ModalLabelDanhSach').text(`${data.thuongHieu.toUpperCase()} - ${data.sanPham.toUpperCase()} - ${data.kieuDeGiay.toUpperCase()} - ${data.chatLieu.toUpperCase()} - ${data.loaiGiay.toUpperCase()} - ${data.xuatXu.toUpperCase()}`);
+                        $('#ModalLabelDanhSach').text(`${data.ThuongHieu.toUpperCase()} - ${data.SanPham.toUpperCase()} - ${data.KieuDeGiay.toUpperCase()} - ${data.ChatLieu.toUpperCase()} - ${data.LoaiGiay.toUpperCase()} - ${data.XuatXu.toUpperCase()}`);
                         $('#modal-dssanpham').empty().html(result);
                         $('#exampleModal').modal('show');
                     },

@@ -61,10 +61,11 @@
                 <td>
                     @if (item.LoaiHinhUuDai == 1)
                     {
-                        int mucUuDai = int.Parse(item.MucUuDai.ToString());
-                        string mucUuDaiPhanTram = mucUuDai.ToString() + "%";
+                        decimal mucUuDai = decimal.Parse(item.MucUuDai.ToString());
+                        string mucUuDaiPhanTram = mucUuDai.ToString("0.0") + "%";
                         @mucUuDaiPhanTram
                     }
+
                     else
                     {
                         @string.Format("{0:N0}đ", item.MucUuDai)

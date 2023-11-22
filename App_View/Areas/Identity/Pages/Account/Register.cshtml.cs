@@ -76,7 +76,7 @@ namespace App_View.Areas.Identity.Pages.Account
             public string? NgaySinh { get; set; }
 
             [Required(ErrorMessage = "Email không được để trống.")]
-            [EmailAddress]
+            [EmailAddress(ErrorMessage ="Email không đúng định dạng.")]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
@@ -99,7 +99,7 @@ namespace App_View.Areas.Identity.Pages.Account
             [DataType(DataType.PhoneNumber)]
             [RegularExpression(@"^(0)+(3[2-9]|5[6|8|9]|7[0|6-9]|8[0-7|8|9]|9[0-4|6-9])[0-9]{7}$", ErrorMessage = "Số điện thoại không hợp lệ.")]
             [Display(Name = "Số điện thoại")]
-            public string Sdt { get; set; }
+            public string? Sdt { get; set; }
 
             [DataType(DataType.Text)]
             [Required(ErrorMessage = "Tên của bạn không được để trống.")]

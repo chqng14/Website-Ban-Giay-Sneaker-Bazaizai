@@ -65,7 +65,8 @@
     <div class="modal fade" id="modal-import">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header" style="background: #129dc1;">
+                <div class="modal-header align-items-center" style="background: #129dc1;">
+                    <i class="fas fa-user-astronaut m-r-5" style="font-size: 33px"></i>
                     <h5 class="modal-title" id="exampleModalLabel">IMPORT FILE</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <i class="anticon anticon-close"></i>
@@ -172,7 +173,8 @@
     <div class="modal fade" id="confirm">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header" style="background: #129dc1;">
+                <div class="modal-header align-items-center" style="background: #129dc1;">
+                    <i class="fas fa-user-astronaut m-r-5" style="font-size: 33px"></i>
                     <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <i class="anticon anticon-close"></i>
@@ -249,13 +251,13 @@
                             <div class="d-md-flex">
                                 <div class="m-b-10">
                                     <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh">
-                                        <i class="anticon anticon-arrow-right"></i>
+                                        <i class="far fa-list-alt m-r-5"></i>
                                         <span>Thực thể ngừng kinh doanh</span>
                                     </a>
                                 </div>
                                 <div class="m-b-10 m-l-10">
                                     <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/TongQuanSanPham">
-                                        <i class="anticon anticon-arrow-right"></i>
+                                        <i class="far fa-list-alt m-r-5"></i>
                                         <span>Tổng quan sản phẩm</span>
                                     </a>
                                 </div>
@@ -267,7 +269,7 @@
                 </div>
                 <div class="tab-pane fade show active" id="timKiemNangCao" role="tabpanel" style="height: auto" aria-labelledby="timKiemNangCao-tab">
                     <div class="row w-100">
-                        <div class="col-lg-8">
+                        <div class="col-lg-12">
                             <div class="d-md-flex">
                                 <div class="m-b-10">
                                     <select class="select2_active" style="min-width: 180px;" data-column="1" id="filterSanPham">
@@ -315,13 +317,13 @@
                                         <option value="descending_price">Giá bán giảm dần</option>
                                     </select>
                                 </div>
+                                <div class="m-b-10 ml-1">
+                                    <button class="btn btn-kio" onclick="window.location.href='/Admin/SanPhamChiTiet/DanhSachSanPham'">
+                                        <i class="anticon anticon-delete m-r-5"></i>
+                                        <span>Xóa bộ lọc</span>
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-lg-4 text-right">
-                            <button class="btn btn-tone" onclick="window.location.href='/Admin/SanPhamChiTiet/DanhSachSanPham'">
-                                <i class="fas fa-bullseye m-r-5"></i>
-                                <span>Khôi phục mặc định</span>
-                            </button>
                         </div>
                     </div>
                 </div>
