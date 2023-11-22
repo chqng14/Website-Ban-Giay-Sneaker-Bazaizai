@@ -10,99 +10,94 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
+<table class="table" id="data-table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.IdDanhGia)
+                Đánh giá
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BinhLuan)
+                Ngày
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.NgayDanhGia)
+                Sao sản phẩm
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SaoSp)
+                Sao vận chuyển
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SaoVanChuyen)
+                Trạng thái
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TrangThai)
+                Người dùng
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdNguoiDung)
+                Sản phẩm
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IdSanPhamChiTiet)
+                Trả lời
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ParentId)
+                Đúng với mô tả
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.MoTa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ChatLuongSanPham)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SuaDoi)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LuotYeuThich)
+                Chất lượng sản phẩm
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdDanhGia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BinhLuan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayDanhGia)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SaoSp)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SaoVanChuyen)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TrangThai)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdNguoiDung)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdSanPhamChiTiet)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ParentId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MoTa)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ChatLuongSanPham)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SuaDoi)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LuotYeuThich)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.BinhLuan)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NgayDanhGia)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SaoSp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SaoVanChuyen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TrangThai)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdNguoiDung)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdSanPhamChiTiet)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParentId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MoTa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChatLuongSanPham)
+                </td>
+               
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+}
