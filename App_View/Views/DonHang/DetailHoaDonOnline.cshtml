@@ -388,7 +388,7 @@
                         </div>
                     }
                 </div>
-                @foreach (var item in Model.SanPham)
+                @foreach (var item in Model.SanPham.Take(1))
                 {
                     <div class="manage-o__description" style="margin-top:10px">
                         <div class="description__container">
@@ -413,6 +413,45 @@
                             </div>
                         </div>
                     </div>
+                    @if (Model.SanPham.Count > 1)
+                    {
+                        <!-- Dấu mũi tên xuống -->
+                        <div class="arrow-down-btn" onclick="showHiddenProducts()"></div>
+                    }
+
+                    <div class="hidden-products">
+                        @foreach (var hiddenSp in Model.SanPham.Skip(1))
+                        {
+                            <div class="manage-o__description" style="margin-top:10px">
+                                <div class="description__container">
+                                    <div class="description__img-wrap">
+
+                                        <img class="u-img-fluid" src="/AnhSanPham/@hiddenSp.LinkAnh[0]" alt="">
+                                    </div>
+                                    <div class="description-title" style="color:#7f7f7f">
+                                        <span class="o-card__name">
+
+                                            <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = hiddenSp.IdSanPhamChiTiet })">@hiddenSp.TenSanPham</a>
+                                        </span>
+                                        <span class="o-card__quantity">Size: @hiddenSp.TenKichCo Màu: @hiddenSp.TenMauSac</span>
+                                        <span class="o-card__quantity">Số lượng x @hiddenSp.SoLuong</span>
+                                    </div>
+                                </div>
+                                <div class="description__info-wrap">
+                                    <div>
+                                        <span class="manage-o__text-2 u-c-silver">
+                                            <span class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", hiddenSp.TongTien)</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    @if (Model.SanPham.Count > 1)
+                    {
+                        <!-- Dấu mũi tên lên -->
+                        <div class="arrow-up-btn" style="display:none;" onclick="hideHiddenProducts()"></div>
+                    }
                 }
             </div>
         </div>
@@ -452,10 +491,9 @@
                 <div class="dash__pad-3">
                     <h2 class="dash__h2 u-s-m-b-8">Địa chỉ giao hàng:</h2>
                     <h2 class="dash__h2 u-s-m-b-8">@Model.TenNguoiNhan</h2>
-
+                    <span class="dash__text-2">@Model.SDT</span>
                     <span class="dash__text-2">@Model.DiaChi</span>
 
-                    <span class="dash__text-2">@Model.SDT</span>
                 </div>
             </div>
         </div>
@@ -743,4 +781,18 @@
             }
         });
     }
+</script>
+
+<script>
+    function showHiddenProducts() {
+        $('.hidden-products').css('display', 'block');
+        $('.arrow-down-btn').css('display', 'none');
+        $('.arrow-up-btn').css('display', 'block');
+    }
+    function hideHiddenProducts() {
+        $('.hidden-products').css('display', 'none');
+        $('.arrow-down-btn').css('display', 'block');
+        $('.arrow-up-btn').css('display', 'none');
+    }
+
 </script>

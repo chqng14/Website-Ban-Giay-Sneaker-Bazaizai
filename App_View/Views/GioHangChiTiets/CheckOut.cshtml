@@ -12,7 +12,7 @@
         var problemCountMessage = '@TempData["problemCount"]';
         var errorMessages = @Html.Raw(Json.Serialize(ViewData["QuantityErrorMessages"]));
         Swal.fire({
-            title: problemCountMessage,
+            title: "Sản phẩm lỗi",
             icon: 'error',
             html: errorMessages.join('<br/>'),
         })
@@ -1541,7 +1541,7 @@
                             }else{
                                 hideLoadingOverlay();
                                 Swal.fire({
-                                    title: paymentResponse.title,
+                                    title: "Sản phẩm lỗi",
                                     icon: 'error',
                                     html: paymentResponse.message.join('<br/>'),
                                 })
@@ -1607,7 +1607,7 @@
                                         } else {
                                             hideLoadingOverlay();
                                             Swal.fire({
-                                                title: paymentResponse.title,
+                                                title: "Sản phẩm lỗi",
                                                 icon: 'error',
                                                 html: paymentResponse.message.join('<br/>'),
                                             })
@@ -1622,7 +1622,7 @@
                                 hideLoadingOverlay();
                                 $('#billing-street').val(inputAddressBill);
                                 Swal.fire({
-                                    title: deliveryResponse.title,
+                                    title: "Sản phẩm lỗi",
                                     icon: 'error',
                                     html: deliveryResponse.message.join('<br/>'),
                                 })

@@ -59,11 +59,16 @@ namespace App_View.Services
             return await _httpClient.GetFromJsonAsync<List<HoaDonTest>>($"https://localhost:7038/api/HoaDon/GetHoaDonOnlineTest?idNguoiDung={idNguoiDung}");
         }
 
+        public async Task<HoaDonTest> GetHoaDonOnlineByMa(string Ma)
+        {
+            return await _httpClient.GetFromJsonAsync<HoaDonTest>($"https://localhost:7038/api/HoaDon/GetHoaDonOnlineByMa?Ma={Ma}");
+        }
+
         public async Task<List<KhachHang>> GetKhachHangs()
         {
             var lst = await _httpClient.GetFromJsonAsync<List<KhachHang>>("https://localhost:7038/api/HoaDon/GetAllKhachHang");
-        
-            return lst; 
+
+            return lst;
         }
 
         public async Task<string> GetPayMent(string idHoaDon)

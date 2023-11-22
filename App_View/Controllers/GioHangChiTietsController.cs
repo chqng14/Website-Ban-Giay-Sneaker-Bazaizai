@@ -283,6 +283,19 @@ namespace App_View.Controllers
             }
             return RedirectToAction("ShowCartUser");
         }
+        public async Task<IActionResult> DeleteAllProduct()
+        {
+            var giohang = await GetGioHangChiTietDTOs();
+            foreach (var item in giohang)
+            {
+                var sanpham = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                if (sanpham.TrangThai == 1 || sanpham.SoLuongTon == 0)
+                {
+                    var jsondelete = await GioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
+                }
+            }
+            return RedirectToAction("ShowCartUser");
+        }
         #endregion
 
         #region Nologin

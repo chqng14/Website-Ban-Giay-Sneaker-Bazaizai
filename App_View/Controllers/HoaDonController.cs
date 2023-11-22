@@ -470,9 +470,15 @@ namespace App_View.Controllers
             return Ok();
         }
 
-        public async Task<IActionResult> TrackOrder()
+        public IActionResult TrackOrder()
         {
             return View();
+        }
+
+        public async Task<IActionResult> TrackOrderByMa(string Ma)
+        {
+            var hoadon = await hoaDonServices.GetHoaDonOnlineByMa(Ma);
+            return PartialView("_PartialTrackOrder", hoadon);
         }
     }
 }
