@@ -5,43 +5,56 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 
 }
-<h2>@ViewData["Title"]</h2>
+<h1 style="text-align:center">@ViewData["Title"]</h1>
 <partial name="_StatusMessage" model="@Model.StatusMessage" />
+<div class="text-left" style="margin-top:50px">
+    <a class="btn btn-primary" asp-page="/User/AddAccount"><i class="anticon anticon-plus-circle"></i> Tạo tài khoản</a>
+</div>
+<div class="text-left" style="margin-top:50px">
+    <a class="btn btn-primary" asp-page=""><i class="anticon anticon-plus-circle"></i> Import Excel</a>
+</div>
+
+@*
 <form method="post">
     <button type="submit" name="addButton">Thêm 100 người dùng</button>
-</form>
+</form>*@
 
-<p><h2>Tổng số thành viên: @Model.totalUsers</h2></p>
-
-<table class="table">
-    <tr>
-        <th>Người dùng</th>
-        <th>Chức vụ</th>
-        <th>Tác vụ</th>
-    </tr>
-    @foreach (var user in @Model.users)
-    {
+@*<p><h2>Tổng số thành viên: @Model.totalUsers</h2></p>
+*@
+<table class="table" id="data-table">
+    <thead>
         <tr>
-            <td>@user.UserName</td>    
-            <td>
-                @if (string.IsNullOrEmpty(user.RoleName))
-                {
-                    <a style="text-decoration: none" class="text-dark" asp-page="./AddRole" asp-route-id="@user.Id">+ Thêm chức vụ </a>
-                }
-                else
-                {
-                    <a style="text-decoration: none" asp-page="./AddRole" asp-route-id="@user.Id">@user.RoleName</a>
-                }
-               
-            </td>    
-            <td>
-                <a class="btn btn-success btn-sm" asp-page="./AddRole" asp asp-route-id="@user.Id">Cập nhật</a>
-                <a class="btn btn-success btn-sm" asp-page="./SetPassword" asp asp-route-id="@user.Id">Đặt mật khẩu</a>
-            </td>
+            <th>Người dùng</th>
+            <th>Chức vụ</th>
+            <th>Tác vụ</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (var user in @Model.users)
+        {
+            <tr>
+                <td>@user.UserName</td>
+                <td>
+                    @if (string.IsNullOrEmpty(user.RoleName))
+                    {
+                        <a style="text-decoration: none" class="text-dark" asp-page="./AddRole" asp-route-id="@user.Id">+ Thêm chức vụ </a>
+                    }
+                    else
+                    {
+                        <a style="text-decoration: none" asp-page="./AddRole" asp-route-id="@user.Id">@user.RoleName</a>
+                    }
+
+                </td>
+                <td>
+                   @* <a class="btn btn-success btn-sm" asp-page="./AddRole" asp asp-route-id="@user.Id">Cập nhật</a>*@
+                    <a class="btn btn-success btn-sm" asp-page="./SetPassword" asp asp-route-id="@user.Id">Đặt mật khẩu</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
-@{
+
+@*@{
     var pagingmodel = new XTL.Helpers.PagingModel()
             {
                 currentpage = Model.currentPage,
@@ -52,4 +65,13 @@
 <partial name="_Paging" model="@pagingmodel" />
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+}*@
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
 }

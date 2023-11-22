@@ -1,0 +1,339 @@
+﻿@using App_View.IServices;
+@using App_View.Services;
+@model IEnumerable<App_Data.ViewModels.DanhGia.DanhGiaViewModel>
+@inject IDanhGiaService _danhGiaService
+@{
+    ViewData["Title"] = $"Danh sách đánh giá sản phẩm đang chờ";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    _danhGiaService = new DanhGiaService();
+
+    if (Model.Any())
+    {
+        var tenSp = Model.First().TenSanPham;
+        var idspct = Model.First().IdSanPhamChiTiet;
+
+        <h3>
+            Danh sách đánh giá sản phẩm <a asp-area="" asp-controller="SanPhamChiTiets" asp-action="Details" asp-route-id="@idspct" style="color:orangered">
+                @tenSp
+            </a> đang chờ duyệt <span style="color:orangered">(@Model.Count() đánh giá)</span>
+        </h3>
+    }
+    int stt = 1;
+}
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+
+@*<p>
+    <a asp-action="Create">Create New</a>
+</p>*@
+<table class="table" id="data-table">
+    <thead>
+        <tr>
+            <th>
+                STT
+            </th>
+            <th>
+                Đánh giá
+            </th>
+            <th>
+                Ngày đánh giá
+            </th>
+            <th>
+                Sao đánh giá
+            </th>
+
+            <th>
+                Người dùng
+            </th>
+            <th>
+                Phân loại Sp
+            </th>
+            <th>Tác vụ</th>
+            <th>
+                <input type="checkbox" id="select-all-checkbox" class="checkbox_css" />
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @stt
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BinhLuan)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NgayDanhGia)
+                </td>
+                <td>
+
+                    <span class="review-o__name">
+                        <div class="review-o__rating gl-rating-style u-s-m-b-8">
+                            @if (item.SaoSp == 1)
+                            {
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+
+                            }
+                            else if (item.SaoSp == 2)
+                            {
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                            }
+                            else if (item.SaoSp == 3)
+                            {
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                            }
+                            else if (item.SaoSp == 4)
+                            {
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            }
+                            else if (item.SaoSp == 5)
+                            {
+
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            }
+
+                        </div>
+                    </span>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TenNguoiDung)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SanPhamTongQuat)
+                </td>
+                <td>
+                    @Html.ActionLink("Duyệt", "DuyetDanhGia", new {  id=item.IdDanhGia ,idSanPham=item.IdSanPham }) |
+                    @Html.ActionLink("Xóa", "Delete", new {  IdDanhGia=item.IdDanhGia  })
+                </td>
+                <td>
+                    <input type="checkbox" class="voucher-checkbox" data-value="@item.IdDanhGia" />
+                </td>
+            </tr>
+            stt++;
+        }
+    </tbody>
+</table>
+
+<button id="btnNhieu"  class="btn btn-warning mr-2" data-toggle="modal" data-target="#cancel" style="color:white">Duyệt các đánh giá đã chọn</button>
+<div class="modal fade" id="cancel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: #3f87f5;">
+                <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="background: white;">
+                <span id="thongBao">Bạn có duyệt các đánh giá đã chọn không ?</span>
+            </div>
+            <div class="modal-footer" style="background: white">
+
+                <button class="btn btn-primary bd-0 col-md-6" id="delete-button" data-idSanPham="@Model.First().IdSanPham">Xác nhận </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button id="btnTatCa"  class="btn btn-warning mr-2" data-toggle="modal" data-target="#cancel2" style="color:white">Duyệt tất cả đánh giá </button>
+<div class="modal fade" id="cancel2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: #3f87f5;">
+                <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="background: white;">
+                <span id="thongBao">Bạn có duyệt tất cả đánh giá của sản phẩm này không ?</span>
+            </div>
+            <div class="modal-footer" style="background: white">
+                
+                <button class="btn btn-primary bd-0 col-md-6"><a asp-controller="DanhGia" asp-action="DuyetTatCaDanhGiaCuaMSp" asp-route-idSanPham="@Model.First().IdSanPham" style="color:white">Xác nhận</a> </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#data-table').DataTable()
+        $('#select-all-checkbox').click(function () {
+            $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
+
+        });
+        $('#btnTatCa').hide();
+        $('#btnNhieu').hide();
+        $('.voucher-checkbox').change(function () {
+            // Kiểm tra nếu tất cả các checkbox trong tbody đều được chọn
+            var allChecked = $('.voucher-checkbox:checked').length === $('.voucher-checkbox').length;
+
+            // Hiển thị hoặc ẩn button tùy thuộc vào trạng thái của checkbox
+            updateButtonVisibility();
+        });
+
+        $('#select-all-checkbox').change(function () {
+            // Lấy trạng thái của checkbox "select-all-checkbox"
+            var isChecked = $(this).prop('checked');
+
+            // Thiết lập trạng thái của tất cả các checkbox khác trong tbody giống như checkbox "select-all-checkbox"
+            $('.voucher-checkbox').prop('checked', isChecked);
+
+            // Hiển thị hoặc ẩn button tùy thuộc vào trạng thái của checkbox
+            updateButtonVisibility();
+        });
+        function updateButtonVisibility() {
+            var anyChecked = $('.voucher-checkbox:checked').length > 0;
+            var allChecked = $('.voucher-checkbox:checked').length === $('.voucher-checkbox').length;
+
+            // Hiển thị hoặc ẩn button tùy thuộc vào trạng thái của checkbox
+            if (allChecked) {
+                $('#btnTatCa').show();
+                $('#btnNhieu').hide();
+            } else if (anyChecked) {
+                $('#btnTatCa').hide();
+                $('#btnNhieu').show();
+            } else {
+                // Nếu không có trường nào được chọn, ẩn cả hai nút
+                $('#btnTatCa').hide();
+                $('#btnNhieu').hide();
+            }
+
+        }
+
+
+        $('#delete-button').on('click', function () {
+            var idSanPham = $(this).data('idSanPham');
+            // Lấy danh sách id voucher đã chọn
+            var selectedIds = [];
+
+            $('.voucher-checkbox:checked').each(function () {
+                selectedIds.push($(this).data('value'));
+            });
+            // Gọi hàm để huỷ hoạt động voucher
+            huyHoatDongVoucher(selectedIds, idSanPham);
+        });
+
+
+        $('#restore-button').on('click', function () {
+            // Lấy danh sách id voucher đã chọn
+            var selectedIds = [];
+
+            $('.voucher-checkbox:checked').each(function () {
+                selectedIds.push($(this).data('value'));
+            });
+
+        });
+
+    });
+    // Hàm để gọi Ajax và chuyển về controller để huỷ hoạt động voucher
+    function huyHoatDongVoucher(selectedIds, idSanPham) {
+        // Thực hiện Ajax request để chuyển selectedIds về controller
+        $.ajax({
+            url: '/Admin/DanhGia/DuyetNhieuDanhGia', // Thay 'ControllerName' bằng tên thực tế của controller
+            type: 'POST', // Hoặc 'GET' tùy thuộc vào yêu cầu của bạn
+            data: { Ids: selectedIds, idSanPham: idSanPham },
+            success: function (response) {
+                // Xử lý kết quả từ controller nếu cần
+                // alert('Huỷ hoạt động voucher thành công');
+                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                 <div class="toast-header">
+                                                     <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                     <strong class="mr-auto">Thông báo</strong>
+                                                     <small>1 second ago</small>
+                                                     <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                         <span aria-hidden="true">&times;</span>
+                                                     </button>
+                                                 </div>
+                                                 <div class="toast-body">
+                                                     Duyệt thành công
+                                                 </div>
+                                         </div>`
+                $('#notification-toast').append(toastHTML)
+                $('#notification-toast .toast').toast('show');
+                setTimeout(function () {
+                    $('#notification-toast .toast:first-child').remove();
+                }, 3000);
+                $('#cancel').modal('hide');
+                taiLaiTrang();
+            },
+            error: function (error) {
+                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                     <div class="toast-header">
+                                                         <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                         <strong class="mr-auto">Thông báo</strong>
+                                                         <small>1 second ago</small>
+                                                         <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                             <span aria-hidden="true">&times;</span>
+                                                         </button>
+                                                     </div>
+                                                     <div class="toast-body">
+                                                         ${error.responseText}
+                                                     </div>
+                                             </div>`
+                $('#notification-toast').append(toastHTML)
+                $('#notification-toast .toast').toast('show');
+                setTimeout(function () {
+                    $('#notification-toast .toast:first-child').remove();
+                }, 3000);
+                $('#cancel').modal('hide');
+            }
+        });
+    }
+
+    function taiLaiTrang() {
+
+
+        setTimeout(function () {
+            window.location.reload();
+        }, 1000);
+
+
+    }
+
+</script>
+@*
+  var lst = await _danhGiaService.LstChiTietDanhGiaCuaMoiSpChuaDuyet(idSanPham);
+
+        if (lst.Count() == 0) {
+            window.location.href = "/Admin/DanhGia/TongSoDanhGiaCuaMoiSpChuaDuyet";
+        }
+        else{
+*@
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+}

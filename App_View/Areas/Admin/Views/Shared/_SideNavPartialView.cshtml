@@ -154,6 +154,27 @@
 
             </li>
             <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                        <i class="fas fa-gift"></i>
+                    </span>
+                    <span class="title">Quản lý Đánh Giá</span>
+                    <span class="arrow">
+                        <i class="arrow-icon"></i>
+                    </span>
+                </a>
+               @* <ul class="dropdown-menu" style="display: none;">
+                    <li>
+                        <a href="/Admin/DanhGia/Index">Danh sách đánh giá</a>
+                    </li>
+                </ul>*@
+                <ul class="dropdown-menu" style="display: none;">
+                    <li>
+                        <a href="/Admin/DanhGia/TongSoDanhGiaCuaMoiSpChuaDuyet">Danh sách đánh giá đang chờ duyệt theo sản phẩm</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
                 <a asp-controller="BanHangTaiQuay" asp-action="DanhSachHoaDonCho">
                     <span class="icon-holder">
                         <i class="fas fa-shopping-basket"></i>

@@ -11,6 +11,7 @@ using System.Security.Claims;
 
 namespace App_View.Areas.Identity.Pages.Account
 {
+    [Authorize]
     public class ManageMyAccountModel : PageModel
     {
         private readonly UserManager<NguoiDung> _userManager;

@@ -210,17 +210,8 @@
                         }
                     }
 
-                    @if (item.TrangThaiGiaoHang is 5 or 4)
+                    @if (item.TrangThaiGiaoHang is 5)
                     {
-                        switch (item.TrangThaiGiaoHang)
-                        {
-                            case 4:
-                                <a>
-                                    <span class="btn btn--e-transparent-brand-b-2 order">Đánh Giá</span>
-                                </a>
-                            break;
-                        }
-
                         <a onclick="ReBuyAjax('@item.IdHoaDon')">
                             <span class="btn btn--e-transparent-brand-b-2 order">Mua Lại</span>
                         </a>

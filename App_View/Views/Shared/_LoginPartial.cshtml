@@ -31,6 +31,14 @@
 
 
     </li>
+    bool isCustomer = await UserManager.IsInRoleAsync(user, "Admin") || await UserManager.IsInRoleAsync(user, "NhanVien");
+    if (isCustomer)
+    {
+        <li class="has-dropdown" data-tooltip="tooltip" data-placement="left" title="" data-original-title="Trang quản trị">
+            <a asp-area="Admin" asp-action="Index" asp-controller="Home"><i class="fas fa-user-cog"></i></a>
+        </li>
+    }
+    
 }
 else
 {
