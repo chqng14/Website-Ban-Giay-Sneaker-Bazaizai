@@ -194,7 +194,7 @@
                         <input type="text" class="edit-soluong form-control" value="@item.SoLuong" style="display:none;" />
                     </div>
                 </td>
-                <td>@item.KhoiLuong (g)</td>
+                <td>@item.KhoiLuong</td>
                 <td>@item.SoLuongDaBan</td>
                 <td>
                     @if (@item.TrangThai == 1)
@@ -561,10 +561,7 @@
                 api.rows({ page: 'current' }).every(function () {
                     var data = this.data();
                     var quantity = parseInt($(data[7]).find('.display-soluong').text().replace(/[^\d.-]/g, ''), 10) || 0;
-                    console.log(quantity);
-                    var salePrice = parseFloat($(data[6]).find('.display-price').text().replace(/[^\d.-]/g, '')) || 0;
-                    console.log(salePrice);
-
+                    var salePrice = parseFloat($(data[6]).find('.display-price').text().replace(/[^\d]/g, '')) || 0;
                     totalSales += quantity * salePrice;
                 });
 
