@@ -194,7 +194,7 @@
                         <input type="text" class="edit-soluong form-control" value="@item.SoLuong" style="display:none;" />
                     </div>
                 </td>
-                <td>@item.KhoiLuong</td>
+                <td>@item.KhoiLuong (g)</td>
                 <td>@item.SoLuongDaBan</td>
                 <td>
                     @if (@item.TrangThai == 1)
@@ -555,10 +555,18 @@
                     return a + parseInt(b.replace(/[^\d.-]/g, ''), 10) || 0;
                 }, 0);
 
-                var totalSales = api.column(6, { page: 'current' }).data().reduce(function (a, b) {
-                    var priceWithoutCurrency = $(b).find('.display-price').text().replace(/[^\d]/g, '');
-                    return a + parseFloat(priceWithoutCurrency) || 0;
-                }, 0);
+                var totalSales = 0; // Khởi tạo totalSales
+
+                // Duyệt qua các hàng và tính totalSales
+                api.rows({ page: 'current' }).every(function () {
+                    var data = this.data();
+                    var quantity = parseInt($(data[7]).find('.display-soluong').text().replace(/[^\d.-]/g, ''), 10) || 0;
+                    console.log(quantity);
+                    var salePrice = parseFloat($(data[6]).find('.display-price').text().replace(/[^\d.-]/g, '')) || 0;
+                    console.log(salePrice);
+
+                    totalSales += quantity * salePrice;
+                });
 
                 $(api.column(7).footer()).html(totalQuantity);
                 $(api.column(9).footer()).html(totalSLDaBan);
