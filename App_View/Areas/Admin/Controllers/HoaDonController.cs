@@ -22,32 +22,46 @@ namespace App_View.Areas.Admin.Controllers
             context = new BazaizaiContext();
             this.sanPhamChiTietService = sanPhamChiTietService;
         }
-
-        public async Task<IActionResult> QuanLyHoaDonAsync()
+        public IActionResult TongQuanHoaDon()
         {
-            var lstHoaDon = await _hoaDonServices.GetHoaDon();
-            return View("QuanLyHoaDon",lstHoaDon);
+            return View();
         }
+        public async Task<IActionResult> QuanLyHoaDonAsync(int trangThaiHD)
+        {
+            if(trangThaiHD==1)
+            {
+                var lstHoaDonOnline = (await _hoaDonServices.GetHoaDon()).Where(x => x.TrangThaiGiaoHang != 0);
+                return PartialView("QuanLyHoaDon", lstHoaDonOnline);
+            }
+            if (trangThaiHD == 2)
+            {
+                var lstHoaDonOnline = (await _hoaDonServices.GetHoaDon()).Where(x => x.TrangThaiGiaoHang != 0&& x.TrangThaiThanhToan==1);
+                return PartialView("QuanLyHoaDon", lstHoaDonOnline);
+            }
+            if (trangThaiHD == 3)
+            {
+                var lstHoaDonOnline = (await _hoaDonServices.GetHoaDon()).Where(x => x.TrangThaiGiaoHang != 0 && x.TrangThaiThanhToan == 0);
+                return PartialView("QuanLyHoaDon", lstHoaDonOnline);
+            }
+            if (trangThaiHD == 5)
+            {
+                var lstHoaDonDaHuy = (await _hoaDonServices.GetHoaDon()).Where(x => x.TrangThaiGiaoHang == 5);
+                return PartialView("QuanLyHoaDon", lstHoaDonDaHuy);
+            }
+            var lstHoaDon = (await _hoaDonServices.GetHoaDon()).Where(x=>x.TrangThaiGiaoHang == trangThaiHD);
+            if(lstHoaDon == null)
+            {
+                lstHoaDon = await _hoaDonServices.GetHoaDon();
+                return PartialView("QuanLyHoaDon", lstHoaDon);
+            }
+            return PartialView("QuanLyHoaDon", lstHoaDon);
+        }
+
         public async Task<IActionResult> ChiTietHoaDonAsync(string id)
         {
-            var sanPhamChiTietList = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
-            var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
+           
             var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x => x.IdHoaDon == id);
-            foreach (var pro in sanPhamChiTietList)
-            {
-                var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
-                var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
-                var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
-                var sanPhamSaleViewModel = new SanPhamSaleViewModel
-                {
-                    SanPhamDanhSachView = pro,
-                    TrangThaiSale = Convert.ToInt32(trangThaiSale),
-                    TrangThai = Convert.ToInt32(trangThai),
-                    GiaThucTe = giaThucTe
-                };
-
-                sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
-            }
+            
             var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
             ViewBag.TTGH = context.thongTinGiaoHangs.FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH);
             ViewData["MAHD"] = hoaDon.MaHoaDon;
@@ -57,7 +71,6 @@ namespace App_View.Areas.Admin.Controllers
             ViewData["TIENGIAM"] = hoaDon.TienGiam;
 			var HDCT = context.hoaDonChiTiets.Where(x => x.IdHoaDon == hoaDon.IdHoaDon);
             ViewBag.HDCT= HDCT;
-            ViewBag.SPCT = sanPhamSaleViewModelList;
             return PartialView("_ChiTietHoaDon", hoaDonChiTiet);
         }
     }

@@ -1,0 +1,241 @@
+﻿@using App_Data.DbContextt;
+@using System.Globalization;
+@using App_Data.Models;
+@using App_View.IServices;
+@using App_View.Services;
+@using Microsoft.AspNetCore.Identity;
+@model IEnumerable<App_Data.Models.Voucher>
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
+
+@{
+
+    BazaizaiContext context = new BazaizaiContext();
+    var idNguoiDung = UserManager.GetUserId(User);
+}
+
+@{
+    var httpClient = new HttpClient(); // Tạo đối tượng HttpClient
+    var _voucherND = new VoucherNguoiDungServices(httpClient); // Truyền đối tượng HttpClient vào constructor của VoucherNguoiDungServices
+}
+<style>
+    .modal-content {
+        margin: auto;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        pointer-events: auto;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid rgba(0,0,0,.2);
+        border-radius: .3rem;
+        outline: 0;
+    }
+</style>
+@functions {
+    // Hàm trợ giúp để định dạng số nguyên thành tiền tệ Việt Nam
+
+    // Thay thế 'YourVoucherNguoiDungServices' bằng tên thực của dịch vụ của bạn
+    public string FormatCurrency(int? value)
+    {
+        return string.Format(new CultureInfo("vi-VN"), "{0:C0}", value);
+    }
+    public string FormatDate(DateTime? value)
+    {
+        if (value.HasValue)
+        {
+            string formattedDate = value.Value.ToString("dd.MM.yyyy HH:mm", System.Globalization.CultureInfo.CurrentCulture);
+            return formattedDate;
+        }
+        return string.Empty; // hoặc bạn có thể trả về một giá trị mặc định khác nếu cần
+    }
+}
+@* 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-xl " role="document">
+        <div class="modal-content">
+            <div class="modal-body printContent" id="myModalContent">
+                <!-- Nội dung chi tiết sẽ được cập nhật ở đây từ partial view -->
+            </div>
+        </div>
+    </div>
+</div> *@
+@foreach (var item in ViewBag.TatCaVoucher)
+{
+    <div class="m-order__get">
+        <div class="manage-o__header u-s-m-b-30">
+            <div class="dash-l-r">
+                <div>
+                    <div class="manage-o__text-2 u-c-secondary">@item.TenVoucher</div>
+                    <div style="color:#FF4500;font-size:16px" class="manage-o__text u-c-silver"> 🕛 @FormatDate(item.NgayKetThuc)</div>
+                </div>
+                <div>
+                    @if (item.LoaiHinhUuDai == 0)
+                    {
+                        <p>Giảm giá theo tiền mặt</p>
+                    }
+                    @if (item.LoaiHinhUuDai == 1)
+                    {
+                        <p>Giảm giá %</p>
+                    }
+                    @if (item.LoaiHinhUuDai == 2)
+                    {
+                        <p>Miễn phí vận chuyển</p>
+                    }
+                    <div class="dash__link dash__link--brand" style="float:right">
+                      @*   <a class="btn btn-primary btn-sm" onclick="showDetails('@item.MaVoucher')">Xem chi tiết</a> *@
+                                @Html.ActionLink("Chi tiết", "VoucherDetails", new { ma = item.MaVoucher })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="manage-o__description">
+            <div class="description__container">
+                <div class="description__img-wrap">
+
+                    <img class="u-img-fluid" src="/images/logo.jpg" alt="">
+                </div>
+                <div class="description-title">
+                    Mã: <u style="color:red">@item.MaVoucher </u>
+                    <p>
+                        Giảm
+                        @if (item.LoaiHinhUuDai == 1)
+                        {
+                            <span> @item.MucUuDai %</span>
+                        }
+                        else
+                        {
+                            double? mucUuDai = item.MucUuDai;
+                            @string.Format("{0:N0}đ", item.MucUuDai)
+                            // Định dạng giá trị theo định dạng tiền Việt Nam
+                        }
+                    </p>
+                    <p width:40px>Đơn tối thiểu: <br> @FormatCurrency(item.DieuKien)</p>
+                </div>
+
+            </div>
+            @if (idNguoiDung == null)
+            {
+                <div class="description__info-wrap">
+                    <div class="body_copy">
+                        <a class="manage-o__badge badge--delivered notlogin" id="notlogin">Đăng nhập để lưu</a>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @if (_voucherND.CheckVoucherInUser(item.MaVoucher, idNguoiDung) == true)
+                {
+                    @*   <form asp-action="SaveVoucher" asp-controller="VoucherNguoiDung" method="post"> *@
+                    <div class="description__info-wrap">
+                        <a id="calmVoucher" class="manage-o__badge badge--delivered" style="border:none;">Lưu Voucher</a>
+                        <input class="input-text input-text--border-radius input-text--style-1"
+                               type="text" value="@item.MaVoucher" name="MaVoucher" id="ma-voucher-input" hidden placeholder="Nhập mã voucher">
+                    </div>
+                }
+                else
+                {
+                    <div class="description__info-wrap">
+                        <div class="body_copy">
+                            <a class="manage-o__badge badge--delivered copyButton">Đã sở hữu 📋</a>
+                            <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+<script>
+    $(document).off('click', '.copyButton').on('click', '.copyButton', function () {
+        var maVoucher = $(this).closest('.body_copy').find('.textToCopy').val();
+        var tempInput = document.createElement("input");
+        tempInput.value = maVoucher;
+        document.body.appendChild(tempInput);
+
+        // Chọn văn bản trong phần tử input tạm thời
+        tempInput.select();
+        document.execCommand("copy");
+
+        // Xóa phần tử input tạm thời
+        document.body.removeChild(tempInput);
+
+        toast({
+            title: "Đã sao chép!",
+            message: "Đã sao chép mã vào clipboard: " + maVoucher,
+            type: "success",
+            duration: 5000
+        });
+    });
+
+    function showDetails(ma) {
+        $.ajax({
+            url: '/Voucher/VoucherDetailsPartial',
+            type: 'POST',
+            data: { ma: ma },
+            success: function (result) {
+                // Hiển thị modal và cập nhật nội dung partial view
+                $('#myModalContent').html(result);
+                $('#myModal').modal('show');
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
+
+    // Sử dụng jQuery
+    $(".notlogin").on('click', function () {
+        toast({
+            title: "Vui lòng đăng nhập!",
+            message: "Bạn có thể dùng hoặc lưu mã khi đăng nhập",
+            type: "error",
+            duration: 5000
+        });
+    });
+    function reloadPartialView() {
+        $.ajax({
+            url: '@Url.Action("VoucherLstToCalm", "Voucher")',
+            type: 'GET', // hoặc 'POST' tùy vào cách bạn cấu hình server
+            success: function (result) {
+                $('#voucherList').html(result);
+            }
+        });
+    }
+    $("#calmVoucher").on('click', function () {
+        var maVoucher = document.getElementById('ma-voucher-input').value;
+        // Sử dụng $.ajax để gửi yêu cầu AJAX
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SaveVoucher", "VoucherNguoiDung")",
+            data: { MaVoucher: maVoucher }, // Gửi dữ liệu dưới dạng JSON
+            // contentType: "application/json; charset=utf-8", // Đặt loại dữ liệu gửi đi
+            success: function (result) {
+                if (result) {
+                    Swal.fire('Thông báo!', 'Nhận voucher thành công!', 'success');
+                    setTimeout(function () {
+                        reloadPartialView();
+                    }, 1000);
+
+                } else {
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Lỗi khi nhận voucher!!!.',
+                        icon: 'error',
+                        confirmButtonText: 'Đóng'
+                    });
+                }
+            },
+            error: function (error) {
+                console.error('Lỗi: ' + error);
+            }
+        });
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

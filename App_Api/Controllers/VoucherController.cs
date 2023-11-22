@@ -11,8 +11,11 @@ using DocumentFormat.OpenXml.VariantTypes;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using QRCoder;
 using System;
 using System.Data;
+using System.Drawing.Imaging;
+using System.Drawing;
 using static App_Data.Repositories.TrangThai;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -179,6 +182,19 @@ namespace App_Api.Controllers
             }
             return false;
         }
+        [HttpPut("UpdateVoucher/{idVoucher}")]
+        //trừ số lượng
+        public bool UpdateVoucher(string idVoucher)
+        {
+            var voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == idVoucher);
+            if (voucher != null)
+            {
+                voucher.SoLuong -= 1;
+                allRepo.EditItem(voucher);
+                return true;
+            }
+            return false;
+        }
         #endregion
 
         #region VoucherTaiQuay
@@ -275,10 +291,10 @@ namespace App_Api.Controllers
             }
             return false;
         }
-        [HttpPut("UpdateVoucherAfterUseItTaiQuay/{idVoucher}/{idUser}")]
-        public bool UpdateVoucherAfterUseItTaiQuay(string idVoucher, string idUser)
+        [HttpPut("UpdateVoucherAfterUseItTaiQuay")]
+        public bool UpdateVoucherAfterUseItTaiQuay(string idVoucherNguoiDung)
         {
-            var voucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCher == idVoucher && c.IdNguoiDung == idUser);
+            var voucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCherNguoiDung == idVoucherNguoiDung);
             if (voucherNguoiDung != null)
             {
                 voucherNguoiDung.TrangThai = (int)TrangThaiVoucherNguoiDung.DaSuDung;
@@ -291,34 +307,71 @@ namespace App_Api.Controllers
         public bool AddVoucherCungBanTaiQuay(string idVoucher, string idUser, int soluong)
         {
             DateTime? ngay = DateTime.Now;
-            var voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == idVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay);
+            var voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == idVoucher && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay));
+
             if (voucher != null)
             {
                 int soLuongDaIn = 0;
                 int TrangThaiCanTao = (int)TrangThaiVoucherNguoiDung.KhaDung;
+
                 if (voucher.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay)
                 {
                     TrangThaiCanTao = (int)TrangThaiVoucherNguoiDung.ChuaBatDau;
                 }
+
                 for (int i = 0; i < soluong; i++)
                 {
                     VoucherNguoiDung VcNguoiDungCanThem = new VoucherNguoiDung()
                     {
-                        IdVouCherNguoiDung=Guid.NewGuid().ToString(),
+                        IdVouCherNguoiDung = Guid.NewGuid().ToString(),
                         IdNguoiDung = idUser,
                         IdVouCher = voucher.IdVoucher,
                         NgayNhan = ngay,
                         TrangThai = TrangThaiCanTao
                     };
+
                     VcNguoiDungRepos.AddItem(VcNguoiDungCanThem);
                     soLuongDaIn += 1;
+
+                    // Tạo và lưu hình ảnh QR nếu thêm voucher người dùng thành công
+                    string currentDirectory = Directory.GetCurrentDirectory();
+                    string rootPath = Directory.GetParent(currentDirectory)!.FullName;
+                    string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "VoucherNguoiDungQRCode");
+
+                    if (!string.IsNullOrEmpty(uploadDirectory) && !string.IsNullOrEmpty(VcNguoiDungCanThem.IdVouCherNguoiDung))
+                    {
+                        string qrCodeImagePath = Path.Combine(uploadDirectory, VcNguoiDungCanThem.IdVouCherNguoiDung + ".png");
+
+                        if (!Directory.Exists(uploadDirectory))
+                        {
+                            Directory.CreateDirectory(uploadDirectory);
+                        }
+
+                        if (!System.IO.File.Exists(qrCodeImagePath))
+                        {
+                            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                            QRCodeData qrCodeData = qrGenerator.CreateQrCode(VcNguoiDungCanThem.IdVouCherNguoiDung, QRCodeGenerator.ECCLevel.Q);
+                            QRCode qrCode = new QRCode(qrCodeData);
+
+                            Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
+
+                            using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
+                            {
+                                qrCodeImage.Save(stream, ImageFormat.Png);
+                            }
+                        }
+                    }
                 }
-                voucher.SoLuong= voucher.SoLuong+soLuongDaIn;
+
+                voucher.SoLuong = voucher.SoLuong + soLuongDaIn;
                 allRepo.EditItem(voucher);
+
                 return true;
             }
+
             return false;
         }
+
 
         #endregion
     }

@@ -15,7 +15,7 @@ namespace App_View.Models
             var rolesToSeed = new[]{
                 new ChucVu { Name = ChucVuMacDinh.KhachHang.ToString(), Id = Guid.NewGuid().ToString(),TrangThai=(int?)TrangThaiCoBan.HoatDong,MaChucVu="CV1" },
                 new ChucVu { Name = ChucVuMacDinh.Admin.ToString(), Id = Guid.NewGuid().ToString(),TrangThai=(int?)TrangThaiCoBan.HoatDong,MaChucVu="CV2" },
-                //new ChucVu { Name = ChucVuMacDinh.NhanVien.ToString(), Id = Guid.NewGuid().ToString(),TrangThai=(int?)TrangThaiCoBan.HoatDong,MaChucVu="CV3" }
+                new ChucVu { Name = ChucVuMacDinh.NhanVien.ToString(), Id = Guid.NewGuid().ToString(),TrangThai=(int?)TrangThaiCoBan.HoatDong,MaChucVu="CV3" }
             };
 
             foreach (var role in rolesToSeed)
@@ -58,6 +58,8 @@ namespace App_View.Models
             await _pTThanhToanServices.CreatePTThanhToanAsync("COD", "COD", 0);
             await _pTThanhToanServices.CreatePTThanhToanAsync("MOMO", "MOMO", 0);
             await _pTThanhToanServices.CreatePTThanhToanAsync("VNPAY", "VNPAY", 0);
+            await _pTThanhToanServices.CreatePTThanhToanAsync("TienMat", "Tai quay", 0);
+            await _pTThanhToanServices.CreatePTThanhToanAsync("ChuyenKhoan", "Tai quay", 0);
         }
     }
 }

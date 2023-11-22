@@ -20,6 +20,8 @@ namespace App_Data.IRepositories
         public HoaDonChiTiet ThemSanPhamVaoHoaDon(HoaDonChiTiet hoaDonChiTiet);
         public string UpdateSoLuong(string idHD, string idSanPham, int SoLuongMoi, string SoluongTon);
         public string XoaSanPhamKhoiHoaDon(string idHD, string idSanPham);
+        public List<HoaDonChiTiet> HuyHoaDonChiTiet(string idHD);
+        public bool ThanhToanHoaDonChiTiet(string idHD);
 
     }
 }

@@ -190,7 +190,7 @@ namespace App_View.Services
         }
         public void CapNhatVoucherDenHanOnline()
         {
-            var VoucherCanCapNhat = _dbContext.vouchers.Where(c => c.NgayBatDau == DateTime.Now && c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaBatDau).AsNoTracking().ToList();
+            var VoucherCanCapNhat = _dbContext.vouchers.Where(c => c.NgayBatDau <= DateTime.Now && c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaBatDau).AsNoTracking().ToList();
             if (VoucherCanCapNhat.Count > 0)
             {
                 foreach (var voucher in VoucherCanCapNhat)
@@ -249,7 +249,7 @@ namespace App_View.Services
 
         public void CapNhatVoucherDenHanTaiQuay()
         {
-            var VoucherNeedUpdate = _dbContext.vouchers.Where(c => c.NgayBatDau == DateTime.Now && c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay).AsNoTracking().ToList();
+            var VoucherNeedUpdate = _dbContext.vouchers.Where(c => c.NgayBatDau <= DateTime.Now && c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay).AsNoTracking().ToList();
             if (VoucherNeedUpdate.Count > 0)
             {
                 foreach (var voucher in VoucherNeedUpdate)

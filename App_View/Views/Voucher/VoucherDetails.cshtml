@@ -61,6 +61,30 @@
 }
 
 <link href="~/css/voucherDetails.css" rel="stylesheet" />
+<div class="u-s-p-y-60">
+
+    <!--====== Section Content ======-->
+    <div class="section__content">
+        <div class="container">
+            <div class="breadcrumb">
+                <div class="breadcrumb__wrap">
+                    <ul class="breadcrumb__list">
+                        <li class="has-separator">
+
+                            <a href="/">Home</a>
+                        </li>
+                        <li class="has-separator">
+                            <a asp-action="VoucherToCalm" asp-controller="Voucher">Voucher</a>
+                        </li>
+                        <li class="is-marked">
+                            <a>Chi tiết Voucher</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="u-s-p-b-60">
     <!--====== Section Intro ======-->
     <div class="section__intro u-s-m-b-60" style="margin-bottom:10px;padding-top:10px">
@@ -121,7 +145,7 @@
                             </div>
                             <h5>Nếu có thông tin thắc mắc có thể lên hệ hỗ trợ.</h5>
                         </div>
-                        <a class="btn btn--e-transparent-brand-b-2 order" id="quayLai">Quay lại</a>
+                        <a class="btn btn--e-transparent-brand-b-2 order" href="#" id="quayLai">Quay lại</a>
 
                         <a class="btn btn--e-brand-b-2 order copyButton">Copy Mã</a>
                             <textarea class="textToCopy" style="display: none;">@Model.MaVoucher</textarea>

@@ -1,0 +1,99 @@
+﻿@using App_Data.DbContextt;
+@using App_Data.ViewModels.VoucherNguoiDung;
+@model IEnumerable<App_Data.ViewModels.VoucherNguoiDung.VoucherNguoiDungDTO>
+
+@{
+    BazaizaiContext context = new BazaizaiContext();
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<link href="~/css/cssVoucherIn.css" rel="stylesheet" />
+
+<body>
+    <div id="voucher-container-wrapper">
+        @foreach (var item in Model)
+        {
+            <div class="voucher-container">
+                <div class="qr-code">
+                    <img src="/images/VoucherNguoiDungQRCode/@(item.IdVouCherNguoiDung).png" alt="VoucherQR">
+                </div>
+                <div class="voucher-info">
+                    <table>
+                        <tr>
+                            <td><strong>Tên voucher:</strong></td>
+                            <td colspan="2">@item.TenVoucher</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Mã Cứng:</strong></td>
+                            <td>@item.IdVouCherNguoiDung</td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Loại ưu đãi:</strong></td>
+                            <td>
+                                @if (item.LoaiHinhUuDai == 0)
+                                {
+                                    <span>Giảm giá theo tiền mặt</span>
+                                }
+                                else if (item.LoaiHinhUuDai == 1)
+                                {
+                                    <span>Giảm giá %</span>
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td> <strong>Voucher giảm:</strong></td>
+                            <td>
+                                @if (item.LoaiHinhUuDai == 1)
+                                {
+                                    int mucUuDai = int.Parse(item.MucUuDai.ToString());
+                                    string mucUuDaiPhanTram = mucUuDai.ToString() + "%";
+                                    @mucUuDaiPhanTram
+                                }
+                                else
+                                {
+                                    @string.Format("{0:N0}đ", item.MucUuDai)
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Áp dụng cho đơn hàng tối thiểu:</strong>
+
+                            </td>
+                            <td>
+                                @string.Format("{0:N0}đ", item.DieuKien)
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Thời gian:</strong>
+
+                            </td>
+                            <td>
+                                Từ @item.NgayBatDau.ToString("dd/MM/yyyy HH:mm") đến @item.NgayKetThuc.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+                        </tr>
+                        <div class="voucher-status">                          
+                            <em>Voucher khuyến mãi được thực hiện bởi Bazaizai Store</em>
+                        </div>
+                        <!-- Thêm các thông tin khác tương tự ở đây -->
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+
+  
+
+</body>
+</html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#data-table').DataTable();
+    });
+</script>

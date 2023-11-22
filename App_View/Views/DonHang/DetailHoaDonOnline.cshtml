@@ -57,7 +57,7 @@
                     </div>
                 </div>
                 <div class="manage-o__timeline">
-                    @if (Model.TrangThaiGiaoHang == 1)
+                    @if (Model.TrangThaiGiaoHang is 1)
 
                     {
                         <div class="timeline-row">
@@ -123,7 +123,7 @@
                             </div>
                         </div>
                     }
-                    @if (Model.TrangThaiGiaoHang == 2)
+                    @if (Model.TrangThaiGiaoHang is 2)
 
                     {
                         <div class="timeline-row">
@@ -189,7 +189,7 @@
                             </div>
                         </div>
                     }
-                    @if (Model.TrangThaiGiaoHang == 3)
+                    @if (Model.TrangThaiGiaoHang is 3)
 
                     {
                         <div class="timeline-row">
@@ -255,7 +255,7 @@
                             </div>
                         </div>
                     }
-                    @if (Model.TrangThaiGiaoHang == 4)
+                    @if (Model.TrangThaiGiaoHang is 4)
 
                     {
                         <div class="timeline-row">
@@ -321,7 +321,7 @@
                             </div>
                         </div>
                     }
-                    @if (Model.TrangThaiGiaoHang == 5)
+                    @if (Model.TrangThaiGiaoHang is 5)
 
                     {
                         <div class="timeline-row">
@@ -422,19 +422,22 @@
             <div class="dash__box dash__box--bg-white dash__box--shadow u-s-m-b-30">
                 <div class="dash__pad-2">
                     <h2 class="dash__h2 u-s-m-b-8">Thông tin thanh toán:</h2>
-                    @if (Model.TrangThaiGiaoHang == 5)
+                    @if (Model.TrangThaiGiaoHang is 5)
                     {
                         <h3 class="manage-o__text-2 u-c-secondary" style="color:red !important">Đơn hàng đã huỷ</h3>
                     }
-                    else if (Model.LoaiThanhToan != "COD" && Model.TrangThaiThanhToan == 1)
+                    else if (Model.LoaiThanhToan is not "COD" && Model.TrangThaiThanhToan is 1)
                     {
                         <h3 class="manage-o__text-2 u-c-secondary">@Model.LoaiThanhToan</h3>
                         <h3 class="manage-o__text-2 u-c-secondary">Đã thanh toán</h3>
                     }
-                    else if (Model.LoaiThanhToan != "COD" && Model.TrangThaiThanhToan == 0)
+                    else if (Model.LoaiThanhToan is not "COD" && Model.TrangThaiThanhToan is 0)
                     {
                         <h3 class="manage-o__text-2 u-c-secondary">@Model.LoaiThanhToan</h3>
-                        <h3 class="manage-o__text-2 u-c-secondary" style="color:red !important">Vui lòng thanh toán đơn hàng của bạn</h3>
+                        if (Model.LoaiThanhToan is not "Không có")
+                        {
+                            <h3 class="manage-o__text-2 u-c-secondary" style="color:red !important">Vui lòng thanh toán đơn hàng của bạn</h3>
+                        }
                     }
                     else
                     {
@@ -479,18 +482,28 @@
                 </div>
             </div>
             <div class="dash-l-r u-s-m-t-8">
-                @if (Model.TrangThaiGiaoHang != 5)
+                @if (Model.TrangThaiGiaoHang is not 5)
                 {
-                    if (Model.LoaiThanhToan != "COD" && Model.LoaiThanhToan != "Không có" && Model.TrangThaiThanhToan == 0)
+                    if (Model.LoaiThanhToan is not "COD" && Model.TrangThaiThanhToan is 0)
                     {
-                        <a onclick="RePay('@Model.IdHoaDon')">
-                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Thanh toán</span>
-                        </a>
-                        <a data-modal="modal" data-modal-id="#edit-ship-address">
-                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Huỷ</span>
-                        </a>
+                        if (Model.LoaiThanhToan is "Không có")
+                        {
+                            <a data-modal="modal" data-modal-id="#edit-ship-address">
+                                <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px;text-align: center;margin-top: 15px;">Huỷ</span>
+                            </a>
+                        }
+                        else
+                        {
+                            <a onclick="RePay('@Model.IdHoaDon')">
+                                <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Thanh toán</span>
+                            </a>
+                            <a data-modal="modal" data-modal-id="#edit-ship-address">
+                                <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Huỷ</span>
+                            </a>
+
+                        }
                     }
-                    else if (Model.TrangThaiGiaoHang == 4)
+                    else if (Model.TrangThaiGiaoHang is 4)
                     {
                         <a onclick="ReBuyAjax('@Model.IdHoaDon')">
                             <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Mua Lại</span>
@@ -499,20 +512,19 @@
                             <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Đánh giá</span>
                         </a>
                     }
-                    else if (Model.TrangThaiGiaoHang == 1 || Model.TrangThaiGiaoHang == 2)
+                    else if (Model.TrangThaiGiaoHang is 1 or 2)
                     {
                         <a data-modal="modal" data-modal-id="#edit-ship-address">
                             <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px;text-align: center;margin-top: 15px;">Huỷ</span>
                         </a>
                     }
                 }
-                @if (Model.TrangThaiGiaoHang == 5)
+                @if (Model.TrangThaiGiaoHang is 5)
                 {
                     <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px; text-align: center; margin-top: 15px;" onclick="ReBuyAjax('@Model.IdHoaDon')">Mua Lại</span>
                     @* <a href="@Url.Action("ReBuy","DonHang",new{idHoaDon = Model.IdHoaDon})">
                         <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px;text-align: center;margin-top: 15px;">Mua Lại</span>
                     </a> *@
-                    
                 }
             </div>
         </div>

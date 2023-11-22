@@ -79,5 +79,25 @@ namespace App_Api.Controllers
             var PhuongThucThanhToanChiTiet = allRepo.GetAll().FirstOrDefault(c => c.IdPhuongThucThanhToanChiTiet == id);
             return allRepo.RemoveItem(PhuongThucThanhToanChiTiet);
         }
+        [HttpPost("AddPhuongThucThanhToanChiTietTaiQuay")]
+        public bool AddPhuongThucThanhToanChiTietTaiQuay(string IdHoaDon, string IdThanhToan, double SoTien,int TrangThai)
+        {
+            var PhuongThucThanhToanChiTiet = new PhuongThucThanhToanChiTiet()
+            {
+                IdPhuongThucThanhToanChiTiet = Guid.NewGuid().ToString(),
+                IdHoaDon = IdHoaDon,
+                IdThanhToan = IdThanhToan,
+                SoTien = SoTien,
+                TrangThai = TrangThai
+            };
+            return allRepo.AddItem(PhuongThucThanhToanChiTiet);
+           
+        }
+        [HttpDelete("XoaPhuongThucThanhToanChiTietBangIdHoaDon")]
+        public bool XoaPhuongThucThanhToanChiTietBangIdHoaDon(string id)
+        {
+            var PhuongThucThanhToanChiTiet = allRepo.GetAll().FirstOrDefault(c => c.IdHoaDon == id);
+            return allRepo.RemoveItem(PhuongThucThanhToanChiTiet);
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace App_View.IServices
         Task<Voucher> GetVoucherByMa(string ma);
         Task<VoucherDTO> GetVoucherDTOById(string id);
         Task<bool> UpdateVoucherAfterUseIt(string idVoucher);
+        Task<bool> UpdateVoucherSoluong(string idVoucher);
 
         // TaiQuay
 
@@ -22,7 +23,7 @@ namespace App_View.IServices
         Task<bool> DeleteVoucherWithListTaiQuay(List<string> Id);
         Task<bool> RestoreVoucherWithListTaiQuay(List<string> Id);
         Task<bool> UpdateTaiQuay(VoucherDTO voucherDTO);
-        Task<bool> UpdateVoucherAfterUseItTaiQuay(string idVoucher,string idUser);
+        Task<bool> UpdateVoucherAfterUseItTaiQuay(string idVoucherNguoiDung);
         Task<bool> AddVoucherCungBanTaiQuay(string idVoucher,string idUser, int soluong);
     }
 

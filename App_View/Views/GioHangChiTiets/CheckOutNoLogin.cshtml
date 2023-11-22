@@ -75,31 +75,61 @@
                         </div>
                         </div>
                         </div> *@
-                        <div class="msg">
 
+
+                        <div class="msg">
                             <span class="msg__text">
                                 Bạn có Voucher?
-
-                                <a class="gl-link" href="#have-coupon" data-toggle="collapse">Ấn vào đây để sử dụng Voucher</a>
+                                <a class="gl-link" data-modal="modal" data-modal-id="#voucher-modal" @* href="#have-coupon" *@ data-toggle="collapse">Ấn vào đây để sử dụng Voucher</a>
                             </span>
-                            <div class="collapse" id="have-coupon" data-parent="#checkout-msg-group">
-                                <div class="c-f u-s-m-b-16">
+                            @* <div class="collapse" id="have-coupon" data-parent="#checkout-msg-group">
+                            <div class="c-f u-s-m-b-16">
 
-                                    <form class="c-f__form" asp-action="GetVoucherByMa" asp-controller="Voucher">
-                                        <div class="u-s-m-b-16">
-                                            <div class="u-s-m-b-15">
+                            <form class="c-f__form" asp-action="GetVoucherByMa" asp-controller="Voucher">
+                            <div class="u-s-m-b-16">
+                            <div class="u-s-m-b-15">
 
-                                                <label for="coupon"></label>
+                            <label for="coupon"></label>
 
-                                                <input class="input-text input-text--primary-style" type="text" id="voucherinput" placeholder="Nhập phiếu giảm giá của bạn ở đây" name="voucher">
-                                                <label id="textvoucher" style="color:red"></label>
-                                            </div>
-                                            <div class="u-s-m-b-15">
+                            <input class="input-text input-text--primary-style" type="text" id="voucherinput" placeholder="Nhập phiếu giảm giá của bạn ở đây" name="voucher">
+                            <label id="textvoucher" style="color:red"></label>
+                            </div>
+                            </div>
+                            </form>
+                            </div>
+                            </div> *@
+                            <div class="modal fade" id="voucher-modal">
+                                <div class="modal-dialog modal-dialog-centered justify-content-center" style="min-width:550px">
+                                    <div class="modal-content">
+                                        <div class="modal-body">
+                                            <div class="checkout-modal2">
+                                                <div class="u-s-m-b-30">
+                                                    <div class="dash-l-r">
+                                                        <h1 class="gl-modal-h1">Chọn Voucher</h1>
+                                                    </div>
+                                                </div>
+                                                <div class="c-f u-s-m-b-16">
 
-                                                @* <button class="btn btn--e-transparent-brand-b-2" type="button" id="button-coupon" onclick="applyVoucher()">SỬ DỤNG</button> *@
+                                                    <form class="c-f__form" asp-action="GetVoucherByMa" asp-controller="Voucher">
+                                                        <div class="u-s-m-b-16">
+                                                            <div class="u-s-m-b-15">
+
+                                                                <label for="coupon"></label>
+
+                                                                <input class="input-text input-text--primary-style" type="text" id="voucherinput" placeholder="Nhập phiếu giảm giá của bạn ở đây" name="voucher" style="width:200%">
+                                                                <label id="textvoucher" style="color:red"></label>
+                                                            </div>
+                                                            <div class="u-s-m-b-15">
+
+                                                                <button class="btn btn--e-transparent-brand-b-2" type="button" id="button-coupon">SỬ DỤNG</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
-                                    </form>
+                                        <button class="btn dismiss-button fas fa-times" type="button" data-dismiss="modal"></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -140,7 +170,7 @@
 
                                     <label class="gl-label" for="billing-email">EMAIL *</label>
 
-                                    <input class="input-text input-text--primary-style" type="email" id="billing-email" data-bill="">
+                                    <input class="input-text input-text--primary-style" type="email" id="billing-email" data-bill="" name="Email">
                                 </div>
                                 <!--====== End - E-MAIL ======-->
                                 <!--====== PHONE ======-->
@@ -186,7 +216,7 @@
                                         <!--====== End - Select Box ======-->
                                     </div>
                                 </div>
-                                <div class="u-s-m-b-10">
+                                @* <div class="u-s-m-b-10">
 
                                     <!--====== Check Box ======-->
                                     <div class="check-box">
@@ -198,11 +228,11 @@
                                         </div>
                                     </div>
                                     <!--====== End - Check Box ======-->
-                                </div>
-                                <div class="u-s-m-b-10">
+                                </div> *@
+                                @* <div class="u-s-m-b-10">
 
                                     <a class="gl-link" href="#create-account" data-toggle="collapse">Tạo tài khoản mới?</a>
-                                </div>
+                                </div> *@
                                 <div class="collapse u-s-m-b-15" id="create-account">
 
                                     <span class="gl-text u-s-m-b-15">Tạo tài khoản mới vui lòng nhập thông tin bên dưới. Nếu bạn đã có tài khoản vui lòng đăng nhập ở góc trên.</span>
@@ -394,6 +424,8 @@
     <!--====== End - Section Content ======-->
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script src="https://kjur.github.io/jsrsasign/jsrsasign-latest-all-min.js"></script>
+<script src="https://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
 @section Scripts{
 
     <!--====== Lấy ra địa chỉ ======-->
@@ -531,10 +563,10 @@
     <!--====== Tính phí ship và voucher ======-->
     <script>
         //khi ô input đc thay đổi
-        $('#voucherinput').on('change', function () {
-            MucUuDai = "";
-            voucher(this.value);
-        });
+        // $('#voucherinput').on('change', function () {
+        //     MucUuDai = "";
+        //     voucher(this.value);
+        // });
         //khi ấn enter
         $('#voucherinput').on('keydown', function (e) {
             if (e.key === 'Enter') {
@@ -686,6 +718,14 @@
         // }
 
         // Hàm xử lý voucher
+        $(document).ready(function () {
+            $('#button-coupon').click(function () {
+                var voucherValue = $('#voucherinput').val();
+                voucher(voucherValue);
+            });
+
+        });
+
         var IdVoucher = "";
         function voucher(value) {
             if (value != null && value.trim() != "") {
@@ -698,7 +738,14 @@
                         $('#textvoucher').text("");
                         loaiuudai = result.loaiuudai;
                         // Áp dụng giảm giá từ voucher
-                        if (phiship == 0 && loaiuudai == 2) {
+                        var storedVouchers = JSON.parse(localStorage.getItem("vouchers")) || {}
+                        if (storedVouchers[result.idVoucher]) {
+                            toast({
+                                title: "Bạn đã sử dụng voucher này rồi,vui lòng sử dụng voucher khác!",
+                                type: "warning",
+                                duration: 2000
+                            });
+                        }else if (phiship == 0 && loaiuudai == 2) {
                             Swal.fire({
                                 title: "Vui lòng nhập địa chỉ trước khi áp dụng freeship",
                                 icon: "warning",
@@ -706,6 +753,11 @@
                                 timer: 1500
                             });
                         } else {
+                            toast({
+                                title: "Áp dụng thành công!",
+                                type: "success",
+                                duration: 2000
+                            });
                             MucUuDai = result.mucuidai;
                             IdVoucher = result.idVoucher;
                             $('input[name="IdVoucher"]').val(IdVoucher);
@@ -752,11 +804,11 @@
         function UpdateVoucher() {
             if (MucUuDai != null) {
                 $.ajax({
-                    url: '/Voucher/UpdateVoucherAfterUseIt',
+                    url: '/Voucher/UpdateVoucherSoluong',
                     type: 'POST',
                     data: { idVoucher: IdVoucher },
                     success: function (result) {
-                        console.log("UpdateVoucherAfterUseIt");
+                        console.log("UpdateVoucherSoluong");
                     },
                     error: function (xhr, status, error) {
                         console.log(error);
@@ -767,6 +819,35 @@
                 // Nếu không có voucher, hiển thị tổng tiền không giảm giá
                 applyDiscount(0);
             }
+        }
+
+        function createAndStoreJwt(voucherCode) {
+            // Tạo JWT khi cấp voucher
+            var secretKey = "5a25e33fd1c5b4a882d438cf93dd4ac5eef0a27b8b3c7f7d6b5a84d4fb91e4f2";
+
+            // Thời gian hết hiệu lực của JWT (ví dụ: 5 năm)
+            var expirationTime = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 * 5;
+            var storedVouchers = JSON.parse(localStorage.getItem("vouchers")) || {};
+            // Đặt giá trị cho Issuer và Audience
+            var issuer = "BazaizaiStore"; // Người phát hành
+            var audience = "User"; // Đối tượng
+
+            // Tạo payload của JWT
+            var payload = {
+                iss: issuer,
+                aud: audience,
+                exp: expirationTime, // Thời gian hết hiệu lực
+                voucherCode: voucherCode // Thông tin voucher
+            };
+
+            // Tạo JWT bằng cách ký payload với khóa bí mật
+            var jwtToken = KJUR.jws.JWS.sign(null, { alg: "HS256", cty: "JWT" }, payload, secretKey);
+
+            // Lưu JWT vào danh sách các voucher trong localStorage
+            storedVouchers[voucherCode] = true;
+            localStorage.setItem("vouchers", JSON.stringify(storedVouchers));
+
+            // Thực hiện các hành động khác nếu cần
         }
     </script>
 
@@ -816,15 +897,25 @@
             }
             return !isValid;
         }
+
+        var agreeCheckbox = document.getElementById("term-and-condition");
         $(document).ready(function () {
             $('#placeOrderButton').click(function (e) {
                 e.preventDefault();
                 if (kiemTraTuyChon()) {
                     return;
                 }
-                if ($('input[type=radio]:checked').length === 0) {
+                if (!paymentMethod) {
                     toast({
                         title: "Vui lòng chọn phương thức thanh toán!",
+                        type: "warning",
+                        duration: 2000
+                    });
+                    return;
+                }
+                if (!agreeCheckbox.checked) {
+                    toast({
+                        title: "Vui lòng đồng ý với điều khoản!",
                         type: "warning",
                         duration: 2000
                     });
@@ -866,6 +957,7 @@
                                 success: function (paymentResponse) {
                                     if (paymentResponse.idHoaDon != null) {
                                         if (IdVoucher != "") {
+                                            createAndStoreJwt(IdVoucher);
                                             UpdateVoucher()
                                         }
                                         if (paymentResponse.url != null) {

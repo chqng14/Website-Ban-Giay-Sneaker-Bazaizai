@@ -1,14 +1,16 @@
 ﻿using App_Data.DbContextt;
 using App_Data.Models;
-using App_Data.ViewModels.Voucher;
 using App_View.IServices;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Controllers
 {
+
+
+    [Authorize]
     public class VoucherNguoiDungController : Controller
     {
 
@@ -25,13 +27,15 @@ namespace App_View.Controllers
         }
         public async Task<IActionResult> Voucher_wallet(int? loaiHinh)
         {
+            return View();
+        }
+        public async Task<IActionResult> VoucherWalletPatial(int? loaiHinh)
+        {
             var idNguoiDung = _userManager.GetUserId(User);
             if (string.IsNullOrEmpty(idNguoiDung))
             {
-                return View();
             }
-
-            var voucherNguoiDung = (await _voucherND.GetAllVoucherNguoiDungByID(idNguoiDung)).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung);
+            var voucherNguoiDung = (await _voucherND.GetAllVoucherNguoiDungByID(idNguoiDung)).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung).ToList();
 
             if (loaiHinh.HasValue)
             {
@@ -53,7 +57,7 @@ namespace App_View.Controllers
 
             ViewBag.TatCa = voucherNguoiDung; // Gán danh sách lọc được vào ViewBag.TatCa
 
-            return View(voucherNguoiDung);
+            return PartialView("_VoucherWalletPartial", voucherNguoiDung);
         }
 
         [HttpPost]
@@ -71,11 +75,15 @@ namespace App_View.Controllers
             {
                 // Nếu ID người dùng tồn tại, thì gọi phương thức AddVoucherNguoiDung để thêm Mã Voucher cho người dùng
                 if (await _voucherND.AddVoucherNguoiDung(MaVoucher, idNguoiDung) == true)
-                    return Ok(true);
+                    return RedirectToAction("Voucher_wallet");
             }
-            return Ok(false);
+            return RedirectToAction("Voucher_wallet");
         }
         public async Task<IActionResult> Voucher_wallet_history(int? TrangThai)
+        {
+            return View();
+        }
+        public async Task<IActionResult> Voucher_wallet_historyPatial(int? TrangThai)
         {
             var idNguoiDung = _userManager.GetUserId(User);
             if (string.IsNullOrEmpty(idNguoiDung))
@@ -83,7 +91,7 @@ namespace App_View.Controllers
                 return View();
             }
 
-            var voucherNguoiDung = (await _voucherND.GetAllVoucherNguoiDungByID(idNguoiDung)).Where(c => c.TrangThai != (int)TrangThaiVoucherNguoiDung.KhaDung);
+            var voucherNguoiDung = (await _voucherND.GetAllVoucherNguoiDungByID(idNguoiDung)).Where(c => c.TrangThai != (int)TrangThaiVoucherNguoiDung.KhaDung).ToList();
 
             if (TrangThai.HasValue)
             {
@@ -102,7 +110,7 @@ namespace App_View.Controllers
 
             ViewBag.TatCa = voucherNguoiDung; // Gán danh sách lọc được vào ViewBag.TatCa
 
-            return View(voucherNguoiDung);
+            return PartialView("_VoucherHistoryPatial", voucherNguoiDung);
         }
         public async Task<IActionResult> TotalSpending()
         {
@@ -110,5 +118,21 @@ namespace App_View.Controllers
             return View(NguoiDung);
         }
 
+        public async Task<IActionResult> GetVoucherByMa(string ma)
+        {
+            var idNguoiDung = _userManager.GetUserId(User);
+            await _voucherND.AddVoucherNguoiDung(ma, idNguoiDung);
+            var Voucher = await _voucherND.GetVocherTaiQuay(ma);
+            double mucuidai = 0;
+            string IdVoucher = "";
+            int loaiuudai = 0;
+            if (Voucher != null)
+            {
+                mucuidai = (double)Voucher.MucUuDai;
+                IdVoucher = Voucher.IdVouCher;
+                loaiuudai = (int)Voucher.LoaiHinhUuDai;
+            }
+            return Json(new { mucuidai, IdVoucher, loaiuudai });
+        }
     }
 }

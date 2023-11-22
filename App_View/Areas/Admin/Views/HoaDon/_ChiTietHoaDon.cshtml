@@ -54,50 +54,50 @@
 							<div class="row gutters">
 								<div class="col-lg-12 col-md-12 col-sm-12">
 									<div class="table-responsive">
-										<table class="table custom-table m-0" style="width: 100%;">
-											<thead>
-												<tr>
+										<table class="custom-table-modal m-0" style="width: 100%;border-radius: 0;border: 1px solid #e6e9f0;">
+											<thead >
+												<tr style="background-color: #659ce7;">
 													<th>Sản phẩm</th>
 													<th>Mã Sản phẩm</th>
 													<th>Số lợng</th>
 													<th>Tổng tiền</th>
 												</tr>
 											</thead>
-											<tbody>
+											<tbody style="border: 1px solid #e6e9f0;">
 												@{
 													var sanPhamChiTietList = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
-													var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
+													//var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
 
-													foreach (var pro in sanPhamChiTietList)
-													{
-														var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
-														var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
-														var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
-														var sanPhamSaleViewModel = new SanPhamSaleViewModel
-														{
-															SanPhamDanhSachView = pro,
-															TrangThaiSale = Convert.ToInt32(trangThaiSale),
-															TrangThai = Convert.ToInt32(trangThai),
-															GiaThucTe = giaThucTe
-														};
+													//foreach (var pro in sanPhamChiTietList)
+													//{
+													//	var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
+													//	var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
+													//	var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
+													//	var sanPhamSaleViewModel = new SanPhamSaleViewModel
+													//	{
+													//		SanPhamDanhSachView = pro,
+													//		TrangThaiSale = Convert.ToInt32(trangThaiSale),
+													//		TrangThai = Convert.ToInt32(trangThai),
+													//		GiaThucTe = giaThucTe
+													//	};
 
-														sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
-													}
+													//	sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
+													//}
 												}
 												@foreach (var hdct in ViewBag.HDCT)
 												{
 													
 													<tr>
-														<td>
-															<img src="~/AnhSanPham/@sanPhamSaleViewModelList.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp== hdct.IdSanPhamChiTiet).SanPhamDanhSachView.Anh" style="width:50px" />
-															@sanPhamSaleViewModelList.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp== hdct.IdSanPhamChiTiet).SanPhamDanhSachView.SanPham
+														<td style ="border: 1px solid #e6e9f0;">
+															@*<img src="~/AnhSanPham/@sanPhamSaleViewModelList.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp== hdct.IdSanPhamChiTiet).SanPhamDanhSachView.Anh" style="width:50px" id ="imgSp"/>*@
+															@sanPhamChiTietList.FirstOrDefault(x=>x.IdChiTietSp== hdct.IdSanPhamChiTiet).SanPham
 															<p class="m-0 text-muted">
-																@sanPhamSaleViewModelList.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp== hdct.IdSanPhamChiTiet).SanPhamDanhSachView.LoaiGiay
+																@sanPhamChiTietList.FirstOrDefault(x=>x.IdChiTietSp== hdct.IdSanPhamChiTiet).LoaiGiay
 															</p>
 														</td>
-														<td>@sanPhamSaleViewModelList.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp== hdct.IdSanPhamChiTiet).SanPhamDanhSachView.Ma</td>
-														<td>@hdct.SoLuong</td>
-														<td>
+														<td style="border: 1px solid #e6e9f0;">@sanPhamChiTietList.FirstOrDefault(x=>x.IdChiTietSp== hdct.IdSanPhamChiTiet).Ma</td>
+														<td style="border: 1px solid #e6e9f0;">@hdct.SoLuong</td>
+														<td style="border: 1px solid #e6e9f0;">
 															<div style="display:flex;flex-direction: column;">
 																@if (hdct.GiaBan != hdct.GiaGoc)
 																{
@@ -148,17 +148,19 @@
 		</div>
 	</div>
 </div>
+<iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
 <script>
     function printModalContent() {
         document.getElementById("printHoaDon").style.display = "none";
-        var printWindow = window.open('', '_blank');
+		var printWindow = window.frames["print_frame"];
         var contentToPrint = $("#invoiceDetailContent").html();
 
         printWindow.document.open();
-        printWindow.document.write('<html><head><title>In Hóa Đơn</title></head><body>' + contentToPrint + '</body></html>');
+        printWindow.document.write('<html><head></head><body>' + contentToPrint + '</body></html>');
         printWindow.document.close();
         
         printWindow.print();
         document.getElementById("printHoaDon").style.display = "block";
+
     }
 </script>

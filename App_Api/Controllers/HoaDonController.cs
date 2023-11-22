@@ -27,6 +27,8 @@ namespace App_Api.Controllers
         private PTThanhToanController _PTThanhToanController;
         private SanPhamChiTietController _sanPhamChiTietController;
         private readonly IKhachHangRepo _khachHangRepo;
+        private readonly IHoaDonChiTietRepos _hoaDonChiTietRepos;
+
         public HoaDonController(IMapper mapper, SanPhamChiTietController sanPhamChiTietController)
         {
             _hoaDon = new HoaDonRepos(mapper);
@@ -36,6 +38,7 @@ namespace App_Api.Controllers
             _PTThanhToanController = new PTThanhToanController();
             _sanPhamChiTietController = sanPhamChiTietController;
             _khachHangRepo = new KhachHangRepo();
+            _hoaDonChiTietRepos = new HoaDonChiTietRepos(mapper);
         }
         [HttpPost]
         public async Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon)
@@ -61,59 +64,6 @@ namespace App_Api.Controllers
             return _hoaDon.GetHoaDon();
         }
 
-        //[HttpGet]
-        //public async Task<string> GetHoaDonOnlineTest()
-        //{
-        //    var danhSachHoaDon = new List<HoaDonTest>();
-
-        //    var danhSachHoaDonGoc = await GetHoaDonOnline();
-        //    var sanPhamArray = new JArray();
-        //    foreach (var hoadon in danhSachHoaDonGoc)
-        //    {
-        //        var hoadonct = (await _hoaDonChiTietController.GetAllHoaDon()).Where(c => c.IdHoaDon == hoadon.IdHoaDon).ToList();
-        //        var loaithanhtoan = await GetPTThanhToan(hoadon.IdHoaDon);
-        //        foreach (var item in hoadonct)
-        //        {
-        //            var sp = await _sanPhamChiTietController.GetSanPhamViewModel(item.IdSanPhamChiTiet);
-        //            var sanPhamObject = new JObject()
-        //            {
-        //                {"IdSanPhamChiTiet", item.IdSanPhamChiTiet },
-        //                        {"SoLuong", item.SoLuong },
-        //                        {"GiaBan", item.GiaBan },
-        //                        {"GiaGoc", item.GiaGoc },
-        //                        {"GiaNhap", item.GiaGoc },
-        //                        {"TenSanPham", sp.SanPham},
-        //                        {"LinkAnh", JArray.FromObject(sp.ListTenAnh)},
-        //                        {"TenMauSac", sp.MauSac },
-        //                        {"TenKichCo",sp.KichCo },
-        //                        {"TenThuongHieu", sp.ThuongHieu }
-        //            };
-        //            sanPhamArray.Add(sanPhamObject);
-        //            var hoadontest = new HoaDonTest()
-        //            {
-        //                IdHoaDon = hoadon.IdHoaDon,
-        //                MaHoaDon = hoadon.MaHoaDon,
-        //                //TenSanPham = sp.SanPham,
-        //                //SoLuong = item.SoLuong,
-        //                TienGiam = hoadon.TienGiam,
-        //                TienShip = hoadon.TienShip,
-        //                TongTien = hoadon.TongTien,
-        //                SanPham = sanPhamArray,
-        //                //GiaBan = item.GiaBan,
-        //                NgayTao = hoadon.NgayTao,
-        //                NgayGiaoDuKien = hoadon.NgayGiaoDuKien,
-        //                TrangThaiGiaoHang = hoadon.TrangThaiGiaoHang,
-        //                TrangThaiThanhToan = hoadon.TrangThaiThanhToan,
-        //                TenNguoiNhan = hoadon.TenNguoiNhan,
-        //                DiaChi = hoadon.DiaChi,
-        //                SDT = hoadon.SDT,
-        //                LoaiThanhToan = loaithanhtoan,
-        //            };
-        //            danhSachHoaDon.Add(hoadontest);
-        //        }
-        //    }
-        //    return JsonConvert.SerializeObject(danhSachHoaDon);
-        //}
 
         [HttpGet]
         public async Task<List<HoaDonTest>> GetHoaDonOnlineTest(string idNguoiDung)
@@ -127,7 +77,7 @@ namespace App_Api.Controllers
                 var loaithanhtoan = await GetPTThanhToan(hoadon.IdHoaDon);
 
 
-                var sanPhamList = new List<SanPhamTest>(); // Tạo JArray mới cho mỗi hóa đơn
+                var sanPhamList = new List<SanPhamTest>();
 
                 foreach (var item in hoadonct)
                 {
@@ -290,6 +240,43 @@ namespace App_Api.Controllers
         public async Task<List<KhachHang>> GetAllKhachHang()
         {
             return _khachHangRepo.GetKhachHangs();
+        }
+        [HttpPut]
+        public async Task<List<HoaDonChiTiet>> HuyHoaDon(string maHD, string lyDoHuy, string idUser)
+        {
+            try
+            {
+                var idHoaDon = _hoaDon.HuyHoaDon(maHD, lyDoHuy, idUser);
+                if (idHoaDon != null)
+                {
+                    return _hoaDonChiTietRepos.HuyHoaDonChiTiet(idHoaDon);
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+            
+        }
+       
+        [HttpPut]
+        public async Task<bool> ThanhToanTaiQuay(HoaDon hoaDon)
+        {
+            try
+            {
+                if (_hoaDon.ThanhToanTaiQuay(hoaDon))
+                {
+                    return _hoaDonChiTietRepos.ThanhToanHoaDonChiTiet(hoaDon.IdHoaDon);
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
         }
     }
 }

@@ -50,6 +50,10 @@ namespace App_Api.Controllers
         public async Task<bool> Create(ThongTinGHDTO thongTinGHDTO)
         {
             var thongTinGiaoHang = _mapper.Map<ThongTinGiaoHang>(thongTinGHDTO);
+            if (GetAlDTO().Count() == 0)
+            {
+                thongTinGHDTO.TrangThai = 0;
+            }
             return thongTinGHRepos.AddThongTinGH(thongTinGiaoHang);
 
         }

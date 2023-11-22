@@ -75,8 +75,7 @@ namespace App_Data.DbContextt
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //BAZAIZAI\SQLEXPRESS
-            optionsBuilder.UseSqlServer(@"Data Source=BAZAIZAI\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"); 
+            optionsBuilder.UseSqlServer(@"Data Source=MSI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"); 
         }
 
 

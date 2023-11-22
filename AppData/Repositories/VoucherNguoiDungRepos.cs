@@ -25,16 +25,16 @@ namespace App_Data.Repositories
 
         public async Task<List<NguoiDung>> GetLstNguoiDUngMoi()
         {
-            return _context.NguoiDungs.Where(c => c.TongChiTieu == 0).ToList();
+            return _context.NguoiDungs.Where(c => c.TongChiTieu == 0 && c.UserName != "Admin").ToList();
         }
 
         public async Task<VoucherTaiQuayDto> GetVocherTaiQuay(string id)
         {
-            
+
             var voucherTaiQuay = _context.voucherNguoiDungs.FirstOrDefault(c => c.IdVouCherNguoiDung == id && c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung);
             if (voucherTaiQuay != null)
             {
-                var voucher = _context.vouchers.FirstOrDefault(c => c.IdVoucher == voucherTaiQuay.IdVouCher &&(c.TrangThai ==  (int)TrangThaiVoucher.HoatDongTaiQuay|| c.TrangThai == (int)TrangThaiVoucher.HoatDong));
+                var voucher = _context.vouchers.FirstOrDefault(c => c.IdVoucher == voucherTaiQuay.IdVouCher && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.HoatDong));
                 if (voucher != null)
                 {
                     return new VoucherTaiQuayDto()
@@ -55,10 +55,10 @@ namespace App_Data.Repositories
             else
             {
                 var voucher = _context.vouchers.FirstOrDefault(c => c.MaVoucher == id && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.HoatDong));
-                if (voucher != null )
+                if (voucher != null)
                 {
                     voucherTaiQuay = _context.voucherNguoiDungs.FirstOrDefault(c => c.IdVouCher == voucher.IdVoucher && c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung);
-                    if(voucherTaiQuay ==null) { return null; }
+                    if (voucherTaiQuay == null) { return null; }
                     return new VoucherTaiQuayDto()
                     {
                         IdVouCherNguoiDung = voucherTaiQuay.IdVouCherNguoiDung,
