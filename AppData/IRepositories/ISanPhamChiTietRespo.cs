@@ -37,5 +37,7 @@ namespace App_Data.IRepositories
         Task<FiltersVM> GetFiltersVMAynsc();
         Task<bool> ProductIsNull(SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO);
         Task UpdateLstSanPhamTableAynsc(List<SanPhamTableDTO> sanPhamTableDTOs);
+        List<RelatedProductViewModel> GetRelatedProducts(string sumGuid);
+        Task<List<SPDanhSachViewModel>> GetFilteredDaTaDSTongQuanAynsc(ParametersTongQuanDanhSach parametersTongQuanDanhSach);
     }
 }
