@@ -29,7 +29,15 @@ namespace App_Data.Repositories
 
         public string TaoKhachHang(KhachHang khachHang)
         {
-            if (context.KhachHangs.FirstOrDefault(c => c.SDT == khachHang.SDT) == null)
+			if(khachHang.SDT.Length>10)
+			{
+                return "Số điện thoại không hợp lệ";
+			}
+			if(string.IsNullOrWhiteSpace(khachHang.SDT) || string.IsNullOrWhiteSpace(khachHang.TenKhachHang))
+			{
+				return "Bạn chưa nhập đủ thông tin";
+			}
+			if (context.KhachHangs.FirstOrDefault(c => c.SDT == khachHang.SDT) == null)
             {
                 context.KhachHangs.Add(khachHang);
                 context.SaveChanges();
