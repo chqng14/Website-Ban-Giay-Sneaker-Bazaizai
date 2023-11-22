@@ -6,12 +6,14 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<h1>Index</h1>
+
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary " asp-action="Create">Tạo Chương Trình Khuyến Mãi</a>
 </p>
+<link rel="stylesheet" type="text/css" href="~/Admin/css/SaleIndex.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 @if (!string.IsNullOrEmpty(ViewBag.ThongBao))
 {
     <script>
@@ -24,28 +26,52 @@
     </script>
 }
 <div class="container">
-        <div class="row">
+    <div style="display:flex;flex-direction:row;gap:10px;margin-bottom: 10px;">
+        <select class="form-control" id="loaiKhuyenMai" onchange="timKiem()">
+            <option selected value="">Loại hình khuyến mại</option>
+            <option value="0">Khuyến mại đồng giá</option>
+            <option value="1">Khuyến mại giảm giá</option>
+        </select>
+
+        <select class="form-control" id="trangThai" onchange="timKiem()">
+            <option selected value="">Tất cả</option>
+            <option value="1">Hoạt động</option>
+            <option value="0">Không hoạt động</option>
+            <option value="2">Chưa bắt đầu</option>
+            <option value="3">Ngưng hoạt động</option>
+        </select>
+    </div>
+    <div class="search">
+        <div class="search-box">
+            <button class="btn-search"><i class="fas fa-search"></i></button>
+            <input type="text" class="input-search" id="tenKhuyenMai" placeholder="Tên khuyến mãi..." oninput="timKiem()">
+        </div>
+    </div>
+    <div class="row" id="row">
             @foreach (var item in Model)
             {
                 <div class="col-md-3">
                     <figure>
                     <div style="width:231.25px;height: 290.42px">
-                            <img src="~/AnhSale/@item.Url" alt="Ảnh khuyến mãi" style="width:100%">
+                        <img src="~/AnhSale/@item.Url" alt="Ảnh khuyến mãi" style="width:231.25px;height: 290.42px">
                         </div>
                         
                         <figcaption>
+                        <div style="height:200px">
                             <strong>Mã khuyến mãi:</strong> @item.MaKhuyenMai<br />
                             <strong>Tên khuyến mãi:</strong> @item.TenKhuyenMai<br />
                             <strong>Ngày bắt đầu:</strong> @item.NgayBatDau.ToString()<br />
                             <strong>Ngày kết thúc:</strong> @item.NgayKetThuc.ToString()<br />
-                            <strong>Loại hình:</strong> @(item.LoaiHinhKM == 0?"Khuyến mại đồng giá":"Khuyến mại giảm giá")<br />
+                            <strong>Loại hình:</strong> @(item.LoaiHinhKM == 0 ? "Khuyến mại đồng giá" : "Khuyến mại giảm giá")<br />
                             <strong>Mức giảm:</strong> @item.MucGiam<br />
+
                             
-                        <div class="label-container" style="display:flex;align-items:center;gap:10px">
+                        </div>
+                        <div class="label-container" style="display:flex;align-items:center;gap:10px;">
                             <strong>Trạng thái:</strong>
                             <label class="switch">
                                 <input type="checkbox" class="status-toggle" data-id="@item.IdKhuyenMai" data-status="@item.TrangThai" @(item.TrangThai == (int)TrangThaiSale.DangBatDau ? "checked" : "")>
-                                <span class="slider round" ></span>
+                                <span class="slider round"></span>
                             </label>
                         </div>
                         <div style="display:flex;align-items:center;gap:10px">
@@ -59,6 +85,25 @@
         </div>
     </div>
 <script>
+    function timKiem() {
+        var loaiKhuyenMai = document.getElementById('loaiKhuyenMai').value;
+        var trangThai = document.getElementById('trangThai').value;
+        var tenKhuyenMai = document.getElementById('tenKhuyenMai').value;
+
+        $.ajax({
+            type:"GET",
+            url: "@Url.Action("LstSale", "KhuyenMais")",
+            data: {
+                trangThaiSale:trangThai,loaiHinhKM:loaiKhuyenMai,tenKM:tenKhuyenMai
+            },
+            success: function (response) {
+                document.getElementById("row").innerHTML = response
+            },
+            error: function (error) {
+
+            }
+        });
+    }
     $(document).ready(function () {
         $(document).on("click", ".status-toggle", function () {
             var checkbox = $(this);

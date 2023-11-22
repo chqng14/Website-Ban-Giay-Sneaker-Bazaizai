@@ -59,12 +59,88 @@
         display: none;
     }
 </style>
-<div class="d-flex justify-content-end m-b-10">
-    <button id="btnUpdate" class="btn btn-outline-primary m-r-5" style="display: none;">
-        <i class="anticon anticon-loading m-r-5"></i>
-        <i class="anticon anticon-tool m-r-5"></i>
-        <span>Update</span>
-    </button>
+<div class="w-100 row m-b-10">
+    <div class="col-lg-8">
+        <div class="d-md-flex">
+            <div style="margin-top: 15px; font: caption; color: #48b148;font-weight: bold">
+                <i class="anticon anticon-filter m-r-5"></i>
+                BỘ LỌC:
+            </div>
+            <div class="m-b-10 ml-1">
+                <select onchange="Filter()" class="select2_active1" style="min-width: 180px;" data-column="1" id="filterMauSac">
+                    <option value="" selected="">Màu sắc</option>
+                    @if (string.IsNullOrEmpty(ViewData["ValueMauSac"] as string))
+                    {
+                        foreach (var item in (SelectList)ViewData["MauSac"]!)
+                        {
+                            <option value="@item.Text">@item.Text</option>
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in (SelectList)ViewData["MauSac"]!)
+                        {
+                            if (item.Text == ViewData["ValueMauSac"]!.ToString())
+                            {
+                                <option value="@item.Text" selected>@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Text">@item.Text</option>
+                            }
+                        }
+                    }
+
+                </select>
+            </div>
+            <div class="m-b-10 ml-1">
+                <select class="select2_active1" onchange="Filter()" style="min-width: 180px;" id="filterSize">
+                    <option value="" selected="">Size</option>
+                    @if (string.IsNullOrEmpty(ViewData["ValueSize"] as string))
+                    {
+                        foreach (var item in (SelectList)ViewData["Size"]!)
+                        {
+                            <option value="@item.Text">@item.Text</option>
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in (SelectList)ViewData["Size"]!)
+                        {
+                            if (item.Text == ViewData["ValueSize"]!.ToString())
+                            {
+                                <option value="@item.Text" selected>@item.Text</option>
+                            }
+                            else
+                            {
+                                <option value="@item.Text">@item.Text</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+            <div class="m-b-10 ml-1">
+                <button class="btn btn-kio" onclick="XoaBoLoc()">
+                    <i class="anticon anticon-delete m-r-5"></i>
+                    <span>Xóa bộ lọc</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 d-none" id="showActions">
+        <div class="w-100 d-flex justify-content-end" style="margin-left: 30px">
+            <button class="btn btn-kio m-r-5">
+                <i class="anticon anticon-loading m-r-5"></i>
+                <i class="anticon anticon-file-excel"></i>
+                <span>Export Excel</span>
+            </button>
+            <button class="btn btn-kio" id="btnUpdate">
+                <i class="anticon anticon-loading m-r-5"></i>
+                <i class="anticon anticon-tool m-r-5"></i>
+                <span>Update</span>
+            </button>
+        </div>
+    </div>
 </div>
 <div class="notification-toast top-right" id="notification-toast"></div>
 
@@ -72,16 +148,16 @@
     <thead>
         <tr>
             <th style="width: 30px">STT</th>
-            <th>Mã SP</th>
-            <th>Sản phẩm</th>
+            <th>MSP</th>
+            <th>Sản Phẩm</th>
             <th>Màu</th>
-            <th>Kích cỡ</th>
-            <th>Giá nhập</th>
-            <th>Giá bán</th>
+            <th>K/Cỡ</th>
+            <th>G/Nhập</th>
+            <th>G/Bán</th>
             <th>SL</th>
             <th>KL</th>
-            <th>Đã bán</th>
-            <th>Kinh Doanh</th>
+            <th>Đ/Bán</th>
+            <th>K/Doanh</th>
             <th>
                 Select
             </th>
@@ -135,6 +211,7 @@
                     <div class="btn-group dropdown" style="cursor: pointer">
                         <i class="fas fa-bars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                         <div class="dropdown-menu">
+                            <button class="dropdown-item" type="button" onclick="XemSanPham('@item.IdSanPham')"> Xem chi tiết</button>
                             @if (@item.TrangThai == 1)
                             {
                                 <button class="dropdown-item" type="button" onclick="KhoiPhucSanPham('@item.IdSanPham')">Khôi phục</button>
@@ -175,6 +252,71 @@
 </table>
 
 <script>
+    function XoaBoLoc() {
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
+            type: 'GET',
+            data: {
+                "sumGuid": keyProduct,
+            },
+            success: function (result) {
+                $('#exampleModal .modal-body').fadeOut(450, function () {
+                    $('#exampleModal .modal-body').html(result);
+
+                    $('#exampleModal .modal-body').fadeIn(450);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    }
+
+
+    function Filter() {
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
+            type: 'GET',
+            data: {
+                "sumGuid": keyProduct,
+                "mauSac": $('#filterMauSac').val(),
+                "size": $('#filterSize').val()
+            },
+            success: function (result) {
+                $('#exampleModal .modal-body').fadeOut(450, function () {
+                    $('#exampleModal .modal-body').html(result);
+
+                    $('#exampleModal .modal-body').fadeIn(450);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    }
+
+    function XemSanPham(idSanPham) {
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/LoadPartialView?idSanPhamChiTiet=' + idSanPham,
+            type: 'GET',
+            success: function (result) {
+                $('#exampleModal').modal('hide');
+                $('#modal-SanPham').empty().html(result).modal("show");
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    }
     function KhoiPhucSanPham(idSanPham) {
         Swal.fire({
             title: 'Thông báo!',
@@ -194,7 +336,9 @@
                                 url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
                                 type: 'GET',
                                 data: {
-                                    "sumGuid": keyProduct
+                                    "sumGuid": keyProduct,
+                                    "mauSac": $('#filterMauSac').val(),
+                                    "size": $('#filterSize').val(),
                                 },
                                 success: function (result) {
                                     $('#exampleModal .modal-body').fadeOut(450, function () {
@@ -224,7 +368,7 @@
                 Swal.fire('Đã hủy bỏ', 'Hành động không được thực hiện.', 'error');
             }
         });
-        
+
     }
     function NgungKinhDoanhSanPham(idSanPham) {
         Swal.fire({
@@ -245,7 +389,9 @@
                                 url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
                                 type: 'GET',
                                 data: {
-                                    "sumGuid": keyProduct
+                                    "sumGuid": keyProduct,
+                                    "mauSac": $('#filterMauSac').val(),
+                                    "size": $('#filterSize').val()
                                 },
                                 success: function (result) {
                                     $('#exampleModal .modal-body').fadeOut(450, function () {
@@ -298,6 +444,7 @@
     }
 
     $(() => {
+        $('.select2_active1').select2();
         var checkboxStates = [];
         var selectedProducts = [];
 
@@ -343,7 +490,9 @@
                                     url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
                                     type: 'GET',
                                     data: {
-                                        "sumGuid": keyProduct
+                                        "sumGuid": keyProduct,
+                                        "mauSac": $('#filterMauSac').val(),
+                                        "size": $('#filterSize').val()
                                     },
                                     success: function (result) {
                                         $('#modal-dssanpham').empty().html(result);
@@ -406,10 +555,15 @@
                     return a + parseInt(b.replace(/[^\d.-]/g, ''), 10) || 0;
                 }, 0);
 
-                var totalSales = api.column(6, { page: 'current' }).data().reduce(function (a, b) {
-                    var priceWithoutCurrency = $(b).find('.display-price').text().replace(/[^\d]/g, '');
-                    return a + parseFloat(priceWithoutCurrency) || 0;
-                }, 0);
+                var totalSales = 0; // Khởi tạo totalSales
+
+                // Duyệt qua các hàng và tính totalSales
+                api.rows({ page: 'current' }).every(function () {
+                    var data = this.data();
+                    var quantity = parseInt($(data[7]).find('.display-soluong').text().replace(/[^\d.-]/g, ''), 10) || 0;
+                    var salePrice = parseFloat($(data[6]).find('.display-price').text().replace(/[^\d]/g, '')) || 0;
+                    totalSales += quantity * salePrice;
+                });
 
                 $(api.column(7).footer()).html(totalQuantity);
                 $(api.column(9).footer()).html(totalSLDaBan);
@@ -506,8 +660,7 @@
 
         $('#data-table tbody').on('change', 'input[type="checkbox"].item', function () {
             var atLeastOneChecked = $('tbody .item:checked').length > 0;
-
-            $('#btnUpdate').toggle(atLeastOneChecked);
+            atLeastOneChecked ? $('#showActions').removeClass('d-none') : $('#showActions').addClass('d-none')
         });
 
     });

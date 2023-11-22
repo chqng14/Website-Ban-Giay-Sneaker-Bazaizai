@@ -1,0 +1,17 @@
+/* Error: Expected identifier.
+ *    ,
+ * 28 |     font-family: 'Knewave', cursive;
+ *    |                                     ^
+ *    '
+ *   wwwroot\Admin\css\SaleIndex.css 28:37  root stylesheet */
+
+body::before {
+  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
+      "Droid Sans Mono", monospace, monospace;
+  white-space: pre;
+  display: block;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid black;
+  content: "Error: Expected identifier.\a    \2577 \a 28 \2502      font-family: 'Knewave', cursive;\d\a    \2502                                      ^\a    \2575 \a   wwwroot\\Admin\\css\\SaleIndex.css 28:37  root stylesheet";
+}

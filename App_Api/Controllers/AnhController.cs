@@ -22,7 +22,7 @@ namespace App_Api.Controllers
             try
             {
                 string currentDirectory = Directory.GetCurrentDirectory();
-                string rootPath = Directory.GetParent(currentDirectory).FullName;
+                string rootPath = Directory.GetParent(currentDirectory)!.FullName;
                 string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSanPham");
 
                 foreach (var file in lstIFormFile)

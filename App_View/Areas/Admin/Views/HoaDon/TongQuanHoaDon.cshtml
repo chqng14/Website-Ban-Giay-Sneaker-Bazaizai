@@ -4,28 +4,32 @@
 }
 <head>
 
-
-    <link rel="stylesheet" type="text/css" href="~/Admin/css/viewHoaDon.css">
-    <link rel="stylesheet" type="text/css" href="~/Admin/css/ulti.css">
-
-
-
+    <link href="~/css/hoadon.css" rel="stylesheet" />
+    
 </head>
-
+<style>
+    .input-text--style-1 {
+        color: #5c636c;
+        transition: all 0.6s linear;
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+    }
+</style>
 <body>
-    <div class="card">
-        <div class="tabs" style="margin-bottom:10px">
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+        <div class="dash__pad-2">
+        <div class="tabs">
             <div class="tab-item active" id="tab1" data-value="hdTaiQuay">HÓA ĐƠN TẠI QUẦY</div>
             <div class="tab-item" id="tab2" data-value="hdOnline">HÓA ĐƠN ONLINE</div>
             <div class="tab-item" id="tab3" data-value="hdHuy">HÓA ĐƠN ĐÃ HỦY</div>
             <div class="tab-item" id="tab4" data-value="hdDaThanhToan">HÓA ĐƠN ĐÃ THANH TOÁN</div>
             <div class="tab-item" id="tab4" data-value="hdChuaThanhToan">HÓA ĐƠN CHƯA THANH TOÁN</div>
         </div>
-        
+            <input type="text" class="input-text input-text--border-radius input-text--style-1" id="searchMaDonHang" placeholder="Tìm kiếm đơn hàng" style="margin-bottom:15px;">
         <div class="limiter active" id="content1">
         </div>
     </div>
-
+    </div>
 
 </body>
 
