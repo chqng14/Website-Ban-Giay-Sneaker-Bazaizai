@@ -20,6 +20,7 @@ using System.Drawing.Imaging;
 using System.Drawing;
 using System.Reflection;
 using App_Data.ViewModels.FilterViewModel;
+using System.Management.Automation;
 
 namespace App_Api.Controllers
 {
@@ -581,5 +582,36 @@ namespace App_Api.Controllers
             }
         }
 
+        [HttpGet("Get-List-RelatedProduct")]
+        public List<RelatedProductViewModel> GetRelatedProducts(string sumGuild)
+        {
+            return _sanPhamChiTietRes.GetRelatedProducts(sumGuild);
+        }
+
+        [HttpPost("LayDanhSachTongQuan")]
+        public async Task<IActionResult> LayDanhSachDienTu([FromBody] ParametersTongQuanDanhSach parameters)
+        {
+            try
+            {
+                var viewModelResult = await _sanPhamChiTietRes.GetFilteredDaTaDSTongQuanAynsc(parameters);
+
+                var paginatedResult = viewModelResult
+                    .Skip(parameters.Start)
+                    .Take(parameters.Length)
+                    .ToList();
+
+                return new ObjectResult(new
+                {
+                    draw = parameters.Draw,
+                    recordsTotal = viewModelResult.Count,
+                    recordsFiltered = viewModelResult.Count,
+                    data = paginatedResult
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
     }
 }

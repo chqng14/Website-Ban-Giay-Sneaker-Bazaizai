@@ -35,6 +35,8 @@ using DocumentFormat.OpenXml.Bibliography;
 using static App_Data.Repositories.TrangThai;
 using static Google.Apis.Requests.BatchRequest;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
+using App_Data.ViewModels.FilterViewModel;
+using Microsoft.DotNet.MSIdentity.Shared;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -801,21 +803,6 @@ namespace App_View.Areas.Admin.Controllers
             return PartialView();
         }
 
-        public class SPDanhSachViewModel
-        {
-            public string? SumGuild { get; set; }
-            public string? SanPham { get; set; }
-            public string? ThuongHieu { get; set; }
-            public string? LoaiGiay { get; set; }
-            public string? KieuDeGiay { get; set; }
-            public string? XuatXu { get; set; }
-            public string? ChatLieu { get; set; }
-            public int SoMau { get; set; }
-            public int SoSize { get; set; }
-            public int TongSoLuongTon { get; set; }
-            public double TongSoLuongDaBan { get; set; }
-        }
-
 
         public class SanPhamListDTO
         {
@@ -829,164 +816,45 @@ namespace App_View.Areas.Admin.Controllers
             return Ok(await response.Content.ReadAsAsync<bool>());
         }
 
-        public IActionResult GetRelatedProducts(string sumGuid)
+        public async Task<IActionResult> GetRelatedProducts(string sumGuid, string? mauSac, string? size)
         {
-            var listGuid = sumGuid.Split('/');
-            var idSanPham = listGuid[0];
-            var idThuongHieu = listGuid[1];
-            var idKieuDeGiay = listGuid[2];
-            var idLoaiGiay = listGuid[3];
-            var idXuatXu = listGuid[4];
-            var idChatLieu = listGuid[5];
-            var lstRelatedProducts = _bazaizaiContext
-                .sanPhamChiTiets
-                .Where(sp =>
-                sp.IdSanPham == idSanPham &&
-                sp.IdThuongHieu == idThuongHieu &&
-                sp.IdKieuDeGiay == idKieuDeGiay &&
-                sp.IdLoaiGiay == idLoaiGiay &&
-                sp.IdXuatXu == idXuatXu &&
-                sp.IdChatLieu == idChatLieu
-                ).
-                Include(sp => sp.SanPham).
-                Include(sp => sp.MauSac).
-                Include(sp => sp.KichCo).
-                Include(sp => sp.Anh).
-                AsEnumerable().
-                GroupBy(sp => sp.IdMauSac).
-                OrderBy(gr => gr.Key).
-                SelectMany(gr => gr.OrderBy(sp => sp.KichCo.SoKichCo.GetValueOrDefault())).
-                Select(sp => new RelatedProductViewModel()
-                {
-                    IdSanPham = sp.IdChiTietSp,
-                    MaSanPham = sp.Ma,
-                    GiaNhap = sp.GiaNhap.GetValueOrDefault(),
-                    Anh = sp.Anh.OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
-                    MauSac = sp.MauSac.TenMauSac,
-                    GiaBan = sp.GiaBan.GetValueOrDefault(),
-                    KichCo = sp.KichCo.SoKichCo.GetValueOrDefault(),
-                    SanPham = sp.SanPham.TenSanPham,
-                    SoLuong = sp.SoLuongTon.GetValueOrDefault(),
-                    SoLuongDaBan = sp.SoLuongDaBan.GetValueOrDefault(),
-                    KhoiLuong = sp.KhoiLuong.GetValueOrDefault(),
-                    TrangThai = sp.TrangThai.GetValueOrDefault()
-                })
-                .ToList();
-            return PartialView(lstRelatedProducts);
+            var lstRelatedProducts = await _httpClient.GetFromJsonAsync<List<RelatedProductViewModel>>($"/api/SanPhamChiTiet/Get-List-RelatedProduct?sumGuild={sumGuid}");
+            ViewData["MauSac"] = new SelectList(lstRelatedProducts!.Select(x => x.MauSac).Distinct());
+            ViewData["Size"] = new SelectList(lstRelatedProducts!.Select(x => x.KichCo.ToString()).Distinct());
+            if (!string.IsNullOrEmpty(mauSac))
+            {
+                ViewData["ValueMauSac"] = mauSac;
+                lstRelatedProducts = lstRelatedProducts!.Where(it => it.MauSac!.ToLower() == mauSac.ToLower()).ToList();
+            }
+            if (!string.IsNullOrEmpty(size))
+            {
+                ViewData["ValueSize"] = size;
+                lstRelatedProducts = lstRelatedProducts!.Where(it => it.KichCo == Convert.ToInt32(size)).ToList();
+            }
+            return PartialView(lstRelatedProducts!);
         }
 
-        public async Task<IActionResult> GetTongQuanDanhSach(int draw, int start, int length, string searchValue, string idSanPham, string idThuongHieu, string idKieuDeGiay, string idChatLieu, string idLoaiGiay, string idXuatXu)
+        [HttpPost]
+        public async Task<IActionResult> GetTongQuanDanhSach([FromBody] ParametersTongQuanDanhSach parameters)
         {
-            var query = _bazaizaiContext
-                      .sanPhamChiTiets.AsQueryable();
-
-            if (!string.IsNullOrEmpty(idSanPham))
+            try
             {
-                query = query
-                        .Where(it=>it.IdSanPham==idSanPham)
-                        .AsQueryable();
-            }
-
-            if (!string.IsNullOrEmpty(idThuongHieu))
-            {
-                query = query
-                        .Where(it => it.IdThuongHieu == idThuongHieu)
-                        .AsQueryable();
-            }
-
-            if (!string.IsNullOrEmpty(idKieuDeGiay))
-            {
-                query = query
-                        .Where(it => it.IdKieuDeGiay == idKieuDeGiay)
-                        .AsQueryable();
-            }
-
-            if (!string.IsNullOrEmpty(idChatLieu))
-            {
-                query = query
-                        .Where(it => it.IdChatLieu == idChatLieu)
-                        .AsQueryable();
-            }
-
-            if (!string.IsNullOrEmpty(idLoaiGiay))
-            {
-                query = query
-                        .Where(it => it.IdLoaiGiay == idLoaiGiay)
-                        .AsQueryable();
-            }
-
-            if (!string.IsNullOrEmpty(idXuatXu))
-            {
-                query = query
-                        .Where(it => it.IdXuatXu == idXuatXu)
-                        .AsQueryable();
-            }
-
-            var result = await query
-                .Include(sp => sp.SanPham)
-                .Include(sp => sp.ThuongHieu)
-                .Include(sp => sp.KieuDeGiay)
-                .Include(sp => sp.LoaiGiay)
-                .Include(sp => sp.XuatXu)
-                .Include(sp => sp.ChatLieu)
-                .ToListAsync();
-
-            var viewModelResult = result
-                .GroupBy(gr => new
+                var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/LayDanhSachTongQuan", parameters);
+                
+                if (response.IsSuccessStatusCode)
                 {
-                    gr.IdChatLieu,
-                    gr.IdSanPham,
-                    gr.IdThuongHieu,
-                    gr.IdXuatXu,
-                    gr.IdLoaiGiay,
-                    gr.IdKieuDeGiay,
-                })
-                .Select(gr => new SPDanhSachViewModel()
+                    var jsonResponse = await response.Content.ReadAsStringAsync();
+                    return Content(jsonResponse, "application/json");
+                }
+                else
                 {
-                    SumGuild = $"{gr.FirstOrDefault()!.IdSanPham}/{gr.FirstOrDefault()!.IdThuongHieu}/{gr.FirstOrDefault()!.IdKieuDeGiay}/{gr.FirstOrDefault()!.IdLoaiGiay}/{gr.FirstOrDefault()!.IdXuatXu}/{gr.FirstOrDefault()!.IdChatLieu}",
-                    SanPham = $"{gr.FirstOrDefault()!.SanPham.TenSanPham}",
-                    ChatLieu = gr.FirstOrDefault()!.ChatLieu.TenChatLieu,
-                    KieuDeGiay = gr.FirstOrDefault()!.KieuDeGiay.TenKieuDeGiay,
-                    LoaiGiay = gr.FirstOrDefault()!.LoaiGiay.TenLoaiGiay,
-                    ThuongHieu = gr.FirstOrDefault()!.ThuongHieu.TenThuongHieu,
-                    XuatXu = gr.FirstOrDefault()!.XuatXu.Ten,
-                    SoMau = gr.Select(it => it.IdMauSac).Distinct().Count(),
-                    SoSize = gr.Select(it => it.IdKichCo).Distinct().Count(),
-                    TongSoLuongTon = gr.Sum(it => it.SoLuongTon.GetValueOrDefault()),
-                    TongSoLuongDaBan = gr.Sum(it => it.SoLuongDaBan.GetValueOrDefault())
-                })
-                .ToList();
-
-            var totalRecords = viewModelResult.Count;
-
-            if (!string.IsNullOrEmpty(searchValue))
-            {
-                string searchValueLower = searchValue.ToLower();
-                viewModelResult = viewModelResult.Where(x =>
-                x.SanPham!.ToLower().Contains(searchValueLower) ||
-                x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
-                x.ChatLieu!.ToLower().Contains(searchValueLower) ||
-                x.KieuDeGiay!.ToLower().Contains(searchValueLower)
-                )
-                .Skip(start)
-                .Take(length)
-                .ToList();
+                    return StatusCode((int)response.StatusCode, response.ReasonPhrase);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                viewModelResult = (viewModelResult)
-               .Skip(start)
-               .Take(length)
-               .ToList();
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
-
-            return Json(new
-            {
-                draw = draw,
-                recordsTotal = totalRecords,
-                recordsFiltered = totalRecords,
-                data = viewModelResult
-            });
         }
 
     }

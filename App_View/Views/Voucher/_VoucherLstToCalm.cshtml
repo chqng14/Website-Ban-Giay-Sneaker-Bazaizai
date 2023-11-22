@@ -18,7 +18,21 @@
     var httpClient = new HttpClient(); // Tạo đối tượng HttpClient
     var _voucherND = new VoucherNguoiDungServices(httpClient); // Truyền đối tượng HttpClient vào constructor của VoucherNguoiDungServices
 }
-
+<style>
+    .modal-content {
+        margin: auto;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        pointer-events: auto;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid rgba(0,0,0,.2);
+        border-radius: .3rem;
+        outline: 0;
+    }
+</style>
 @functions {
     // Hàm trợ giúp để định dạng số nguyên thành tiền tệ Việt Nam
 
@@ -37,6 +51,16 @@
         return string.Empty; // hoặc bạn có thể trả về một giá trị mặc định khác nếu cần
     }
 }
+@* 
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-xl " role="document">
+        <div class="modal-content">
+            <div class="modal-body printContent" id="myModalContent">
+                <!-- Nội dung chi tiết sẽ được cập nhật ở đây từ partial view -->
+            </div>
+        </div>
+    </div>
+</div> *@
 @foreach (var item in ViewBag.TatCaVoucher)
 {
     <div class="m-order__get">
@@ -59,8 +83,9 @@
                     {
                         <p>Miễn phí vận chuyển</p>
                     }
-                    <div class="dash__link dash__link--brand">
-                        @Html.ActionLink("Chi tiết", "VoucherDetails", new { ma = item.MaVoucher })
+                    <div class="dash__link dash__link--brand" style="float:right">
+                      @*   <a class="btn btn-primary btn-sm" onclick="showDetails('@item.MaVoucher')">Xem chi tiết</a> *@
+                                @Html.ActionLink("Chi tiết", "VoucherDetails", new { ma = item.MaVoucher })
                     </div>
                 </div>
             </div>
@@ -69,7 +94,7 @@
             <div class="description__container">
                 <div class="description__img-wrap">
 
-                    <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
+                    <img class="u-img-fluid" src="/images/logo.jpg" alt="">
                 </div>
                 <div class="description-title">
                     Mã: <u style="color:red">@item.MaVoucher </u>
@@ -94,7 +119,7 @@
             {
                 <div class="description__info-wrap">
                     <div class="body_copy">
-                        <a class="manage-o__badge badge--delivered notlogin" id="notlogin">Chưa đăng nhập</a>
+                        <a class="manage-o__badge badge--delivered notlogin" id="notlogin">Đăng nhập để lưu</a>
                     </div>
                 </div>
             }
@@ -144,6 +169,21 @@
         });
     });
 
+    function showDetails(ma) {
+        $.ajax({
+            url: '/Voucher/VoucherDetailsPartial',
+            type: 'POST',
+            data: { ma: ma },
+            success: function (result) {
+                // Hiển thị modal và cập nhật nội dung partial view
+                $('#myModalContent').html(result);
+                $('#myModal').modal('show');
+            },
+            error: function (error) {
+                console.error(error);
+            }
+        });
+    }
 
     // Sử dụng jQuery
     $(".notlogin").on('click', function () {
@@ -193,3 +233,9 @@
         });
     });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
