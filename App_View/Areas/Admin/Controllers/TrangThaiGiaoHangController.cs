@@ -11,12 +11,12 @@ using System.Linq;
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class HoaDonController : Controller
+    public class TrangThaiGiaoHangController : Controller
     {
         private readonly IHoaDonServices _hoaDonServices;
         private readonly ISanPhamChiTietService sanPhamChiTietService;
         BazaizaiContext context;
-        public HoaDonController(ISanPhamChiTietService sanPhamChiTietService)
+        public TrangThaiGiaoHangController(ISanPhamChiTietService sanPhamChiTietService)
         {
             _hoaDonServices = new HoaDonServices();
             context = new BazaizaiContext();
