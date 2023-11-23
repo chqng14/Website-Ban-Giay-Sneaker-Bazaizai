@@ -45,6 +45,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Display(Name = "Username")]
+            [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d)(\w|\.|_){5,32}$", ErrorMessage = "Tên đăng nhập phải từ 6-30 ký tự với ít nhất một chữ cái (A-z). Bao gồm các số (0-9), dấu chấm (.) và dấu gạch dưới (_).")]
             public string Username { get; set; }
 
             [Display(Name = "Tên")]
@@ -69,7 +70,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
 
-            string ngaySinh=null;
+            string ngaySinh = null;
             if (user.NgaySinh != null)
             {
                 ngaySinh = user.NgaySinh.Value.ToString("dd/MM/yyyy");
@@ -138,12 +139,29 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             var username = await _userManager.GetUserNameAsync(user);
             if (Input.Username != username)
             {
-                var setUserNameResult = await _userManager.SetUserNameAsync(user, Input.Username);
-                if (!setUserNameResult.Succeeded)
+                if (user.SuaDoi > 0)
                 {
-                    StatusMessage = "Lỗi không mong muốn khi cố gắng sửa tên đăng nhập.";
-                    return RedirectToPage();
+
+                    var userNameExists = await _userManager.FindByNameAsync(Input.Username);
+                    if (userNameExists != null)
+                    {
+                        StatusMessage = "Error: Tên tài khoản đã được sử dụng. Chọn một tên tài khoản khác.";
+                        return RedirectToPage();
+                    }
+                    var setUserName = await _userManager.SetUserNameAsync(user, Input.Username);
+                    if (!setUserName.Succeeded)
+                    {
+                        StatusMessage = "Error: Lỗi không mong muốn khi cố gắng sửa tên tài khoản.";
+                        return RedirectToPage();
+                    }
+                    else
+                    {
+                        user.SuaDoi -= 1;
+                        await _userManager.UpdateAsync(user);
+                    }
+
                 }
+               
             }
             var ngaySinhInput = Input.NgaySinh;
             var ngaySinhUser = user.NgaySinh?.ToString("dd/MM/yyyy");
@@ -155,13 +173,14 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
                 }
                 else
                 {
-                    StatusMessage = "Ngày sinh không hợp lệ.";
+                    StatusMessage = "Error: Ngày sinh không hợp lệ.";
                     return RedirectToPage();
                 }
             }
 
             if (Input.Name != user.TenNguoiDung)
             {
+
                 user.TenNguoiDung = Input.Name;
             }
             if (Input.GioiTinh != user.GioiTinh)
@@ -186,13 +205,13 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
                     await file.CopyToAsync(stream);
                 }
                 user.AnhDaiDien = "/user_img/" + uniqueFileName;
-               var setImgResult= await _userManager.UpdateAsync(user);
+                var setImgResult = await _userManager.UpdateAsync(user);
                 if (setImgResult.Succeeded)
-                {       
-                        if (System.IO.File.Exists(oldImagePath))
-                        {
-                            System.IO.File.Delete(oldImagePath);
-                        }                  
+                {
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
                 }
 
             }
@@ -201,7 +220,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
 
             if (!updateResult.Succeeded)
             {
-                StatusMessage = "Lỗi không mong muốn khi cố gắng cập nhật thông tin.";
+                StatusMessage = "Error: Lỗi không mong muốn khi cố gắng cập nhật thông tin.";
             }
 
 

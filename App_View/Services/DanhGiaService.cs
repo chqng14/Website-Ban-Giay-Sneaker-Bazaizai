@@ -23,7 +23,6 @@ namespace App_View.Services
             try
             {
                 string apiUrl = $"https://localhost:7038/api/DanhGia/AddDanhGia?IdDanhGia={danhGia.IdDanhGia}&BinhLuan={danhGia.BinhLuan}&ParentId={danhGia.ParentId}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}&MoTa={danhGia.MoTa}&ChatLuongSanPham={danhGia.ChatLuongSanPham}";
-                //string apiUrl = $"https://localhost:7038/api/DanhGia/AddDanhGia?BinhLuan={Uri.EscapeDataString(danhGia.BinhLuan)}&ParentId={danhGia.ParentId}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}";
                 var response = await _httpClient.PostAsync(apiUrl, null);
                 if (response.IsSuccessStatusCode)
                 {
@@ -44,7 +43,6 @@ namespace App_View.Services
         {
             try
             {
-                //https://localhost:7038/api/DanhGia/AddDanhGia?IdDanhGia=&BinhLuan=&ParentId=null&SaoSp=5&SaoVanChuyen=5&IdNguoiDung=A7D7B8DE-74BB-47A0-9D98-ABD05A83A605&IdSanPhamChiTiet=42c3e91f-9b59-4ec7-836e-e46907091b1d&MoTa=%C6%A1pppppppppp&ChatLuongSanPham=ppppppppppp               
                 string apiUrl = $"https://localhost:7038/api/DanhGia/AddDanhGia?IdDanhGia={IdDanhGia}&BinhLuan={BinhLuan}&ParentId={ParentId}&SaoSp={SaoSp}&SaoVanChuyen={SaoVanChuyen}&IdNguoiDung={IdNguoiDung}&IdSanPhamChiTiet={IdSanPhamChiTiet}&MoTa={MoTa}&ChatLuongSanPham={ChatLuongSanPham}";
                 var response = await _httpClient.PostAsync(apiUrl, null);
                 if (response.IsSuccessStatusCode)

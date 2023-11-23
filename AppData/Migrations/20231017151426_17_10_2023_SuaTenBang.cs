@@ -713,12 +713,12 @@ namespace App_Data.Migrations
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_DanhGia_DanhGia_ParentId",
-                table: "DanhGia",
-                column: "ParentId",
-                principalTable: "DanhGia",
-                principalColumn: "IdDanhGia");
+            //migrationBuilder.AddForeignKey(
+            //    name: "FK_DanhGia_DanhGia_ParentId",
+            //    table: "DanhGia",
+            //    column: "ParentId",
+            //    principalTable: "DanhGia",
+            //    principalColumn: "IdDanhGia");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_DanhGia_NguoiDung_IdNguoiDung",
@@ -947,9 +947,9 @@ namespace App_Data.Migrations
                 name: "FK_AspNetUserTokens_NguoiDung_UserId",
                 table: "AspNetUserTokens");
 
-            migrationBuilder.DropForeignKey(
-                name: "FK_DanhGia_DanhGia_ParentId",
-                table: "DanhGia");
+            //migrationBuilder.DropForeignKey(
+            //    name: "FK_DanhGia_DanhGia_ParentId",
+            //    table: "DanhGia");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_DanhGia_NguoiDung_IdNguoiDung",

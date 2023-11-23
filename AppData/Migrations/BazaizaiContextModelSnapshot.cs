@@ -115,17 +115,11 @@ namespace App_Data.Migrations
                     b.Property<string>("IdSanPhamChiTiet")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("LuotYeuThich")
-                        .HasColumnType("int");
-
                     b.Property<string>("MoTa")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("NgayDanhGia")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("ParentDanhGiaIdDanhGia")
-                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ParentId")
                         .HasColumnType("nvarchar(max)");
@@ -149,8 +143,6 @@ namespace App_Data.Migrations
                     b.HasIndex("IdNguoiDung");
 
                     b.HasIndex("IdSanPhamChiTiet");
-
-                    b.HasIndex("ParentDanhGiaIdDanhGia");
 
                     b.ToTable("DanhGia", (string)null);
                 });
@@ -842,13 +834,12 @@ namespace App_Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<int?>("SoLuong")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("TenVoucher")
                         .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<int?>("TrangThai")
                         .HasColumnType("int");
@@ -1028,13 +1019,7 @@ namespace App_Data.Migrations
                         .WithMany("DanhGias")
                         .HasForeignKey("IdSanPhamChiTiet");
 
-                    b.HasOne("App_Data.Models.DanhGia", "ParentDanhGia")
-                        .WithMany("ChildDanhGias")
-                        .HasForeignKey("ParentDanhGiaIdDanhGia");
-
                     b.Navigation("NguoiDung");
-
-                    b.Navigation("ParentDanhGia");
 
                     b.Navigation("SanPhamChiTiet");
                 });
@@ -1288,11 +1273,6 @@ namespace App_Data.Migrations
             modelBuilder.Entity("App_Data.Models.ChatLieu", b =>
                 {
                     b.Navigation("SanPhamChiTiets");
-                });
-
-            modelBuilder.Entity("App_Data.Models.DanhGia", b =>
-                {
-                    b.Navigation("ChildDanhGias");
                 });
 
             modelBuilder.Entity("App_Data.Models.GioHang", b =>
