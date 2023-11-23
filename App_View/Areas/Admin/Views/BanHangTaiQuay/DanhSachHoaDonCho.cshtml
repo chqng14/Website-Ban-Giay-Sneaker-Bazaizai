@@ -319,33 +319,33 @@
                             @{
                                 foreach (var item in Model)
                                 {
-                                                <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a></li>
+                                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a></li>
                                 }
                             }
                         </ul>
                         @{
                             foreach (var item in Model)
                             {
-                                            <div id="tab-@item.MaHoaDon" style="height:300px">
-                                                <div class="table-responsive" style=" height:250px; overflow-y: scroll; overflow-x: hidden">
+                                                <div id="tab-@item.MaHoaDon" style="height:300px">
+                                                    <div class="table-responsive" style=" height:250px; overflow-y: scroll; overflow-x: hidden">
 
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
-                                                                <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
-                                                                <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
-                                                                <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
-                                                                <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
-                                                                <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
-                                                                <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        </tbody>
-                                                    </table>
+                                                        <table class="table">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
+                                                                    <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
+                                                                    <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
+                                                                    <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
+                                                                    <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
+                                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
+                                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
                                                 </div>
-                                            </div>
                             }
                         }
                     </div>
@@ -1192,26 +1192,27 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 if(loading){
-                    Swal.fire('Đã hủy bỏ', 'Hành động không được thực hiện.', 'error');
+                    Swal.fire('Đã hủy bỏ', 'Hành động không thể thực hiện bây giờ, thử sau 5s.', 'error');
                     return;
                 }
                 loading = true;
                 var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
                 var tienMat = parseFloat($("#TienMat input").val().replace(/[^\d]/g, '')) || 0;
                 var tienChuyenKhoan = parseFloat($("#ChuyenKhoan input").val().replace(/[^\d]/g, '')) || 0;
-                var tienThua = tienMat - tienChuyenKhoan - tongTien;
+                var tienThua = tienMat + tienChuyenKhoan - tongTien;
                 if (tienThua >= 0) {
                     var maVoucher = $("#MaVoucher").val();
                     var maHoaDon = $("#tabs .ui-tabs-active a").text();
                     var hinhThucThanhToan = $("#PTTT").val();
                     var SDT = $('#SoDienThoai').val();
                     var tongTienChuaGiam = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
+                    var tongGiam = parseFloat($("#TongGiam").val().replace(/[^\d]/g, '')) || 0;
                     $.ajax({
-                        url: '/Admin/BanHangTaiQuay/ThanhToan?maHD=' + maHoaDon + '&SDT=' + SDT + '&TongTien=' + tongTienChuaGiam + '&tienMat=' + tienMat + '&chuyenKhoan=' + tienChuyenKhoan + '&idVoucher=' + maVoucher + '&hinhThuc=' + hinhThucThanhToan + '&tongGiam=' + tongTien,
+                        url: '/Admin/BanHangTaiQuay/ThanhToan?maHD=' + maHoaDon + '&SDT=' + SDT + '&TongTien=' + tongTienChuaGiam + '&tienMat=' + tienMat + '&chuyenKhoan=' + tienChuyenKhoan + '&idVoucher=' + maVoucher + '&hinhThuc=' + hinhThucThanhToan + '&tongGiam=' + tongGiam,
                         type: 'POST',
                         success: function (result) {
                             if (result.trangThai) {
-                                Swal.fire('Đã xác nhận!', 'Hành động đã được thực hiện.', 'success');
+                                Swal.fire('Đã xác nhận!', result.chuoi, 'success');
                                 var selectedTabId = $("#tabs .ui-tabs-active a").attr("href"); // Lấy ID của tab đang được chọn
                                 $(selectedTabId).remove(); // Xóa nội dung tab
                                 $("#tabs ul li.ui-tabs-active").remove(); // Xóa tab từ danh sách tab
@@ -1219,9 +1220,11 @@
                                 loading = false;
                                 maHoaDon = $("#tabs .ui-tabs-active a").text();
                                 $('#SoDienThoai').val("");
-                                $('#NgayTaoHoaDon').val("");
-                                $('#TenNhanVien').val("");
-                                $('#MaHoaDonDangChon').val("");
+                                if (maHoaDon.length == 0) {
+                                    $('#NgayTaoHoaDon').val("");
+                                    $('#TenNhanVien').val("");
+                                    $('#MaHoaDonDangChon').val("");
+                                }
                                 CapNhapLaiTien(maHoaDon);
                                 LoadLaiSanPham();
                             }
@@ -1238,7 +1241,7 @@
 
                 }
                 else {
-                    Swal.fire('Đã hủy bỏ', 'Hành động không được thực hiện.', 'error');
+                    Swal.fire('Đã hủy bỏ', 'Không thể thanh toán do thiếu tiền.', 'error');
                     loading = false;
                 }
             } else if (result.dismiss === Swal.DismissReason.cancel) {
