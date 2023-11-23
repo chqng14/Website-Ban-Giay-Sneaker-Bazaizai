@@ -2,6 +2,7 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.DanhGia;
 using App_Data.ViewModels.HoaDon;
 using App_Data.ViewModels.HoaDonChiTietDTO;
 using AutoMapper;
@@ -28,7 +29,7 @@ namespace App_Api.Controllers
         private SanPhamChiTietController _sanPhamChiTietController;
         private readonly IKhachHangRepo _khachHangRepo;
         private readonly IHoaDonChiTietRepos _hoaDonChiTietRepos;
-
+        private DanhGiaController _danhGiaController;
         public HoaDonController(IMapper mapper, SanPhamChiTietController sanPhamChiTietController)
         {
             _hoaDon = new HoaDonRepos(mapper);
@@ -39,6 +40,7 @@ namespace App_Api.Controllers
             _sanPhamChiTietController = sanPhamChiTietController;
             _khachHangRepo = new KhachHangRepo();
             _hoaDonChiTietRepos = new HoaDonChiTietRepos(mapper);
+            _danhGiaController = new DanhGiaController();
         }
         [HttpPost]
         public async Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon)
@@ -82,6 +84,15 @@ namespace App_Api.Controllers
                 foreach (var item in hoadonct)
                 {
                     var sp = await _sanPhamChiTietController.GetSanPhamViewModel(item.IdSanPhamChiTiet);
+                    var danhgia = await _danhGiaController.GetListAsyncViewModel(item.IdSanPhamChiTiet);
+                    var dg = new DanhGiaViewModel();
+                    foreach (var item2 in danhgia)
+                    {
+                        if (item2.IdSanPhamChiTiet == sp.IdChiTietSp && sp.IdChiTietSp == item.IdSanPhamChiTiet)
+                        {
+                            dg = item2;
+                        }
+                    }
                     var sanPhamObject = new SanPhamTest
                     {
                         IdSanPhamChiTiet = item.IdSanPhamChiTiet,
@@ -96,6 +107,7 @@ namespace App_Api.Controllers
                         TenThuongHieu = sp.ThuongHieu,
                         TrangThaiGiaoHang = hoadon.TrangThaiGiaoHang,
                         TongTien = item.GiaBan * item.SoLuong,
+                        DanhGia = dg,
                     };
                     sanPhamList.Add(sanPhamObject);
                 }
@@ -314,9 +326,9 @@ namespace App_Api.Controllers
 
                 return null;
             }
-            
+
         }
-       
+
         [HttpPut]
         public async Task<bool> ThanhToanTaiQuay(HoaDon hoaDon)
         {

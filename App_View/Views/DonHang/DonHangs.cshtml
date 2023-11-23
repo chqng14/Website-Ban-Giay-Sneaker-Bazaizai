@@ -47,7 +47,6 @@
                 <div class="tab-item" id="tab4" data-value="3">Đang giao</div>
                 <div class="tab-item" id="tab5" data-value="4">Đã giao</div>
                 <div class="tab-item" id="tab6" data-value="5">Đã hủy</div>
-                <div class="tab-item" id="tab7" data-value="6">Trả hàng</div>
             </div>
             <input type="text" class="input-text input-text--border-radius input-text--style-1" id="searchMaDonHang" placeholder="Tìm kiếm đơn hàng" style="
     width: -webkit-fill-available;margin-bottom:15px">
@@ -89,24 +88,24 @@
                     item.classList.remove('active');
                 });
 
-                var data = {
-                    trangThai: trangThai,
-                    searchMaDonHang: searchMaDonHang
-                };
-                $.ajax({
-                    url: '@Url.Action("GetHoaDonOnline", "DonHang")',
-                    type: 'GET',
-                    data: data,
-                    success: function (result) {
-                        $('#content1').empty().html(result);
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(xhr.responseText);
-                        console.log(status);
-                        console.log(error);
-                        console.log(xhr);
-                    }
-                });
+                // var data = {
+                //     trangThai: trangThai,
+                //     searchMaDonHang: searchMaDonHang
+                // };
+                // $.ajax({
+                //     url: '@Url.Action("GetHoaDonOnline", "DonHang")',
+                //     type: 'GET',
+                //     data: data,
+                //     success: function (result) {
+                //         $('#content1').empty().html(result);
+                //     },
+                //     error: function (xhr, status, error) {
+                //         console.log(xhr.responseText);
+                //         console.log(status);
+                //         console.log(error);
+                //         console.log(xhr);
+                //     }
+                // });
 
                 content1.classList.add('active');
                 tabItem.classList.add('active');
