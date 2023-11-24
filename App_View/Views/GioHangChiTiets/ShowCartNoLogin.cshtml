@@ -10,7 +10,7 @@
         var problemCountMessage = '@TempData["problemCount"]';
         var errorMessages = @Html.Raw(Json.Serialize(ViewData["QuantityErrorMessages"]));
         Swal.fire({
-            title: problemCountMessage,
+            title: "Sản phẩm lỗi",
             icon: 'error',
             html: errorMessages.join('<br/>'),
         })

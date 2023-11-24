@@ -120,7 +120,7 @@
                 <div class="manage-o__header u-s-m-b-30">
                     <div class="manage-o__icon">
                         <i class="fas fa-box u-s-m-r-5"></i>
-
+                        
                         <span class="manage-o__text">Thông tin đơn hàng</span>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
                     @if (Model.TrangThaiGiaoHang is 1)
 
                     {
-                        <div class="timeline-row">
+                        <div class="timeline-row" style="justify-content:space-between">
                             <div class="col-lg-2 u-s-m-b-30">
                                 <div class="timeline-step">
                                     <div class="timeline-l-i timeline-l-i--finish">
@@ -185,16 +185,6 @@
                                     </div>
 
                                     <span class="timeline-text">Đã hủy</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 u-s-m-b-30">
-                                <div class="timeline-step">
-                                    <div class="timeline-l-i">
-
-                                        <span class="timeline-circle"></span>
-                                    </div>
-
-                                    <span class="timeline-text">Trả hàng</span>
                                 </div>
                             </div>
                         </div>
@@ -202,7 +192,7 @@
                     @if (Model.TrangThaiGiaoHang is 2)
 
                     {
-                        <div class="timeline-row">
+                        <div class="timeline-row" style="justify-content:space-between">
                             <div class="col-lg-2 u-s-m-b-30">
                                 <div class="timeline-step">
                                     <div class="timeline-l-i timeline-l-i--finish">
@@ -251,16 +241,6 @@
                                     </div>
 
                                     <span class="timeline-text">Đã hủy</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 u-s-m-b-30">
-                                <div class="timeline-step">
-                                    <div class="timeline-l-i">
-
-                                        <span class="timeline-circle"></span>
-                                    </div>
-
-                                    <span class="timeline-text">Trả hàng</span>
                                 </div>
                             </div>
                         </div>
@@ -268,7 +248,7 @@
                     @if (Model.TrangThaiGiaoHang is 3)
 
                     {
-                        <div class="timeline-row">
+                        <div class="timeline-row" style="justify-content:space-between">
                             <div class="col-lg-2 u-s-m-b-30">
                                 <div class="timeline-step">
                                     <div class="timeline-l-i timeline-l-i--finish">
@@ -317,16 +297,6 @@
                                     </div>
 
                                     <span class="timeline-text">Đã hủy</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 u-s-m-b-30">
-                                <div class="timeline-step">
-                                    <div class="timeline-l-i">
-
-                                        <span class="timeline-circle"></span>
-                                    </div>
-
-                                    <span class="timeline-text">Trả hàng</span>
                                 </div>
                             </div>
                         </div>
@@ -334,7 +304,7 @@
                     @if (Model.TrangThaiGiaoHang is 4)
 
                     {
-                        <div class="timeline-row">
+                        <div class="timeline-row" style="justify-content:space-between">
                             <div class="col-lg-2 u-s-m-b-30">
                                 <div class="timeline-step">
                                     <div class="timeline-l-i timeline-l-i--finish">
@@ -383,16 +353,6 @@
                                     </div>
 
                                     <span class="timeline-text">Đã hủy</span>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 u-s-m-b-30">
-                                <div class="timeline-step">
-                                    <div class="timeline-l-i">
-
-                                        <span class="timeline-circle"></span>
-                                    </div>
-
-                                    <span class="timeline-text">Trả hàng</span>
                                 </div>
                             </div>
                         </div>
@@ -400,7 +360,7 @@
                     @if (Model.TrangThaiGiaoHang is 5)
 
                     {
-                        <div class="timeline-row">
+                        <div class="timeline-row" style="justify-content:space-between">
                             <div class="col-lg-2 u-s-m-b-30">
                                 <div class="timeline-step">
                                     <div class="timeline-l-i">
@@ -451,20 +411,10 @@
                                     <span class="timeline-text">Đã hủy</span>
                                 </div>
                             </div>
-                            <div class="col-lg-2 u-s-m-b-30">
-                                <div class="timeline-step">
-                                    <div class="timeline-l-i">
-
-                                        <span class="timeline-circle"></span>
-                                    </div>
-
-                                    <span class="timeline-text">Trả hàng</span>
-                                </div>
-                            </div>
                         </div>
                     }
                 </div>
-                @foreach (var item in Model.SanPham)
+                @foreach (var item in Model.SanPham.Take(1))
                 {
                     <div class="manage-o__description" style="margin-top:10px">
                         <div class="description__container">
@@ -488,20 +438,20 @@
                                 </span>
                                 @if (Model.TrangThaiGiaoHang == 4)
                                 {
-                                    var danhGia = await _DanhGiaService.GetViewModelByKeyAsync(item.IdSanPhamChiTiet + "*" + Model.IdHoaDon);
-                                    if (danhGia == null)
+                                    @* var danhGia = await _DanhGiaService.GetViewModelByKeyAsync(item.IdSanPhamChiTiet + "*" + Model.IdHoaDon); *@
+                                    if (item.DanhGia.SaoSp == null)
                                     {
                                         <span data-product-detail-id="@item.IdSanPhamChiTiet" data-Danhgia-detail-id="@item.IdSanPhamChiTiet*@Model.IdHoaDon" data-product-img-id="@item.LinkAnh[0]" data-product-name-id="@item.TenSanPham" data-modal="modal" data-modal-id="#add-danh-gia" class="btn btn--e-transparent-brand-b-2 order" style="width: 100px;text-align:center">Đánh giá</span>
                                     }
                                     else
                                     {
-                                        <span data-user-img-id="@danhGia.AnhDaiDien"
-                                              data-user-name-id="@danhGia.TenNguoiDung"
-                                              data-Ngay-id="@danhGia.NgayDanhGia"
-                                              data-mota-id="@danhGia.MoTa"
-                                              data-binhluan-id="@danhGia.BinhLuan"
-                                              data-sao-id="@danhGia.SaoSp"
-                                              data-chatlg-id="@danhGia.ChatLuongSanPham"
+                                        <span data-user-img-id="@item.DanhGia.AnhDaiDien"
+                                              data-user-name-id="@item.DanhGia.TenNguoiDung"
+                                              data-Ngay-id="@item.DanhGia.NgayDanhGia"
+                                              data-mota-id="@item.DanhGia.MoTa"
+                                              data-binhluan-id="@item.DanhGia.BinhLuan"
+                                              data-sao-id="@item.DanhGia.SaoSp"
+                                              data-chatlg-id="@item.DanhGia.ChatLuongSanPham"
                                               data-Sp-detail-id="@item.IdSanPhamChiTiet"
                                               data-Sp-img-id="@item.LinkAnh[0]"
                                               data-Sp-name-id="@item.TenSanPham" data-Sp-mau-id="@item.TenMauSac" data-Sp-kichco-id="@item.TenKichCo" data-modal="modal" data-modal-id="#xem-danh-gia" class="btn btn--e-transparent-brand-b-2 order" style="width: 100px;text-align:center">Xem đánh giá</span>
@@ -510,6 +460,66 @@
                             </div>
                         </div>
                     </div>
+                    @if (Model.SanPham.Count > 1)
+                    {
+                        <!-- Dấu mũi tên xuống -->
+                        <div class="arrow-down-btn" onclick="showHiddenProducts()"></div>
+                    }
+
+                    <div class="hidden-products">
+                        @foreach (var hiddenSp in Model.SanPham.Skip(1))
+                        {
+                            <div class="manage-o__description" style="margin-top:10px">
+                                <div class="description__container">
+                                    <div class="description__img-wrap">
+
+                                        <img class="u-img-fluid" src="/AnhSanPham/@hiddenSp.LinkAnh[0]" alt="">
+                                    </div>
+                                    <div class="description-title" style="color:#7f7f7f">
+                                        <span class="o-card__name">
+
+                                            <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = hiddenSp.IdSanPhamChiTiet })">@hiddenSp.TenSanPham</a>
+                                        </span>
+                                        <span class="o-card__quantity">Size: @hiddenSp.TenKichCo Màu: @hiddenSp.TenMauSac</span>
+                                        <span class="o-card__quantity">Số lượng x @hiddenSp.SoLuong</span>
+                                    </div>
+                                </div>
+                                <div class="description__info-wrap">
+                                    <div>
+                                        <span class="manage-o__text-2 u-c-silver">
+                                            <span class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", hiddenSp.TongTien)</span>
+                                        </span>
+                                        @if (Model.TrangThaiGiaoHang == 4)
+                                        {
+                                            @* var danhGia = await _DanhGiaService.GetViewModelByKeyAsync(hiddenSp.IdSanPhamChiTiet + "*" + Model.IdHoaDon); *@
+                                            if (hiddenSp.DanhGia.SaoSp == null)
+                                            {
+                                                <span data-product-detail-id="@hiddenSp.IdSanPhamChiTiet" data-Danhgia-detail-id="@hiddenSp.IdSanPhamChiTiet*@Model.IdHoaDon" data-product-img-id="@hiddenSp.LinkAnh[0]" data-product-name-id="@hiddenSp.TenSanPham" data-modal="modal" data-modal-id="#add-danh-gia" class="btn btn--e-transparent-brand-b-2 order" style="width: 100px;text-align:center">Đánh giá</span>
+                                            }
+                                            else
+                                            {
+                                                <span data-user-img-id="@item.DanhGia.AnhDaiDien"
+                                                      data-user-name-id="@item.DanhGia.TenNguoiDung"
+                                                      data-Ngay-id="@item.DanhGia.NgayDanhGia"
+                                                      data-mota-id="@item.DanhGia.MoTa"
+                                                      data-binhluan-id="@item.DanhGia.BinhLuan"
+                                                      data-sao-id="@item.DanhGia.SaoSp"
+                                                      data-chatlg-id="@item.DanhGia.ChatLuongSanPham"
+                                                      data-Sp-detail-id="@hiddenSp.IdSanPhamChiTiet"
+                                                      data-Sp-img-id="@hiddenSp.LinkAnh[0]"
+                                                      data-Sp-name-id="@hiddenSp.TenSanPham" data-Sp-mau-id="@hiddenSp.TenMauSac" data-Sp-kichco-id="@hiddenSp.TenKichCo" data-modal="modal" data-modal-id="#xem-danh-gia" class="btn btn--e-transparent-brand-b-2 order" style="width: 100px;text-align:center">Xem đánh giá</span>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    @if (Model.SanPham.Count > 1)
+                    {
+                        <!-- Dấu mũi tên lên -->
+                        <div class="arrow-up-btn" style="display:none;" onclick="hideHiddenProducts()"></div>
+                    }
                 }
             </div>
         </div>
@@ -549,10 +559,9 @@
                 <div class="dash__pad-3">
                     <h2 class="dash__h2 u-s-m-b-8">Địa chỉ giao hàng:</h2>
                     <h2 class="dash__h2 u-s-m-b-8">@Model.TenNguoiNhan</h2>
-
+                    <span class="dash__text-2">@Model.SDT</span>
                     <span class="dash__text-2">@Model.DiaChi</span>
 
-                    <span class="dash__text-2">@Model.SDT</span>
                 </div>
             </div>
         </div>
@@ -776,13 +785,7 @@
                             </div>
                             <span class="gl-label">Chất lượng sản phẩm</span>
                             @*  sao*@
-                            <div class="container" style="position: relative;
-margin-top:-60px;
-        width: 500px;
-        padding: 20px 30px;
-        border-radius: 5px;
-        display: flex;
-        flex-direction: column;">
+                            <div class="container" style="position: relative;margin-top:-60px;width: 500px;padding: 20px 30px;border-radius: 5px;display: flex;flex-direction: column;">
                                 <div class="star-widget">
                                     <input type="radio" name="rate" value="1" id="rate-1" hidden>
                                     <label for="rate-1" class="fas fa-star"></label>
@@ -831,13 +834,7 @@ margin-top:-60px;
                             <span class="gl-label">Dịch vụ vận chuyển</span>
                             @*  sao*@
 
-                            <div class="container" style="position: relative;
-margin-top:-60px;
-        width: 500px;
-        padding: 20px 30px;
-        border-radius: 5px;
-        display: flex;
-        flex-direction: column;">
+                            <div class="container" style="position: relative;margin-top:-60px;width: 500px;padding: 20px 30px;border-radius: 5px;display: flex;flex-direction: column;">
                                 <div class="starvc-widget">
                                     <input type="radio" name="ratevc" value="1" id="ratevc-1" hidden>
                                     <label for="ratevc-1" class="fas fa-star"></label>
@@ -872,6 +869,7 @@ margin-top:-60px;
     </div>
 
 </div>
+
 <div class="modal fade" id="xem-danh-gia">
     <div class="modal-dialog modal-dialog-centered" style="min-width:800px">
         <div class="modal-content modal--shadow">
@@ -955,7 +953,6 @@ margin-top:-60px;
 
 
                             </div>
-
 
                         </form>
                     </div>
@@ -1072,6 +1069,22 @@ margin-top:-60px;
         });
     }
 </script>
+
+
+<script>
+    function showHiddenProducts() {
+        $('.hidden-products').css('display', 'block');
+        $('.arrow-down-btn').css('display', 'none');
+        $('.arrow-up-btn').css('display', 'block');
+    }
+    function hideHiddenProducts() {
+        $('.hidden-products').css('display', 'none');
+        $('.arrow-down-btn').css('display', 'block');
+        $('.arrow-up-btn').css('display', 'none');
+    }
+
+</script>
+
 <script>
     // Lắng nghe sự kiện change của radio buttons
     document.querySelectorAll('input[name="rate"]').forEach(function (radio) {
