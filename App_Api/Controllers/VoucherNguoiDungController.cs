@@ -103,7 +103,7 @@ namespace App_Api.Controllers
         [HttpPut("UpdateVoucherNguoiDung{id}")]
         public bool UpdateVoucherNguoiDungSauKhiDung(VoucherNguoiDungDTO VcDTO)
         {
-            var voucherGet = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCher == VcDTO.IdVouCher);
+            var voucherGet = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCherNguoiDung == VcDTO.IdVouCherNguoiDung);
             if (voucherGet != null)
             {
                 _mapper.Map(VcDTO, voucherGet);
