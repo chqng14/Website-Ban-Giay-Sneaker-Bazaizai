@@ -26,33 +26,37 @@ namespace App_View.Areas.Admin.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> QuanLyHoaDonAsync(int trangThaiHD)
+        public async Task<IActionResult> QuanLyHoaDonAsync(int trangThaiHD, string search)
         {
-            if(trangThaiHD==1)
+            var lstHoaDon = (await _hoaDonServices.GetHoaDon()).ToList();
+            if(!string.IsNullOrEmpty(search))
             {
-                var lstHoaDonOnline = (await _hoaDonServices.GetHoaDon()).Where(x => x.TrangThaiGiaoHang != 0);
+                lstHoaDon = lstHoaDon.Where(x=>x.MaHoaDon.ToUpper().Contains(search.ToUpper())).ToList();
+            }
+            if (trangThaiHD==1)
+            {
+                var lstHoaDonOnline = lstHoaDon.Where(x => x.TrangThaiGiaoHang != 0);
                 return PartialView("QuanLyHoaDon", lstHoaDonOnline);
             }
             if (trangThaiHD == 2)
             {
-                var lstHoaDonOnline = (await _hoaDonServices.GetHoaDon()).Where(x => x.TrangThaiGiaoHang != 0&& x.TrangThaiThanhToan==1);
+                var lstHoaDonOnline = lstHoaDon.Where(x => x.TrangThaiGiaoHang != 0&& x.TrangThaiThanhToan==1);
                 return PartialView("QuanLyHoaDon", lstHoaDonOnline);
             }
             if (trangThaiHD == 3)
             {
-                var lstHoaDonOnline = (await _hoaDonServices.GetHoaDon()).Where(x => x.TrangThaiGiaoHang != 0 && x.TrangThaiThanhToan == 0);
+                var lstHoaDonOnline = lstHoaDon.Where(x => x.TrangThaiGiaoHang != 0 && x.TrangThaiThanhToan == 0);
                 return PartialView("QuanLyHoaDon", lstHoaDonOnline);
             }
             if (trangThaiHD == 5)
             {
-                var lstHoaDonDaHuy = (await _hoaDonServices.GetHoaDon()).Where(x => x.TrangThaiGiaoHang == 5);
+                var lstHoaDonDaHuy = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 5);
                 return PartialView("QuanLyHoaDon", lstHoaDonDaHuy);
             }
-            var lstHoaDon = (await _hoaDonServices.GetHoaDon()).Where(x=>x.TrangThaiGiaoHang == trangThaiHD);
-            if(lstHoaDon == null)
+            if (trangThaiHD == 0)
             {
-                lstHoaDon = await _hoaDonServices.GetHoaDon();
-                return PartialView("QuanLyHoaDon", lstHoaDon);
+                var lstHoaDonTQ = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 0);
+                return PartialView("QuanLyHoaDon", lstHoaDonTQ);
             }
             return PartialView("QuanLyHoaDon", lstHoaDon);
         }

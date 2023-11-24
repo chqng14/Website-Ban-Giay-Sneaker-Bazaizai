@@ -1,6 +1,13 @@
 ﻿@page "/EditProfile"
+@using App_Data.Models;
 @using static App_Data.Repositories.TrangThai;
 @model IndexModel
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
 @{
     //ViewData["Title"] = "Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
@@ -8,6 +15,10 @@
 
 }
 <style>
+    .text-danger {
+        color: red;
+    }
+
     .card {
         border-radius: 10px;
     }
@@ -54,11 +65,26 @@
                 <div class="row">
                     <div class="col-lg-8 u-s-m-b-30" style=" border-right: 1px solid green;">
                         <div class="row">
-                            <div class="col-lg-6 u-s-m-b-30">
-                                <label asp-for="Input.Username" class="gl-label" for="reg-fname"> Tên đăng nhập </label>
-                                <input asp-for="Input.Username" class="input-text input-text--primary-style" type="text" id="reg-fname">
-                                <span asp-validation-for="Input.Username" class="text-danger"></span>
-                            </div>
+                            @if (@user.SuaDoi > 0)
+                            {
+                                <div class="col-lg-6 u-s-m-b-30">
+
+
+                                    <label asp-for="Input.Username" class="gl-label" for="reg-fname"> Tên đăng nhập </label>
+                                    <input asp-for="Input.Username" class="input-text input-text--primary-style" type="text" id="reg-fname">
+                                    <span asp-validation-for="Input.Username" class="text-danger"></span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-lg-6 u-s-m-b-30">
+
+
+                                    <label asp-for="Input.Username" class="gl-label" for="reg-fname"> Tên đăng nhập </label>
+                                    <input asp-for="Input.Username" class="input-text input-text--primary-style" type="text" id="reg-fname" readonly>
+                                    <span asp-validation-for="Input.Username" class="text-danger"></span>
+                                </div>
+                            }
                             <div class="col-lg-6 u-s-m-b-30">
                                 <label asp-for="Input.Name" class="gl-label" for="reg-fname"> Họ và tên </label>
                                 <input asp-for="Input.Name" class="input-text input-text--primary-style" type="text" id="reg-fname">
@@ -88,7 +114,7 @@
 @*                                <h2 class="dash__h2 u-s-m-b-8">Email</h2>
 *@                                <span class="dash__text">@Model.Email</span>
                                 <div class="dash__link dash__link--secondary">
-                                    <a href="#">Thay đổi</a>
+                                    <a asp-page="./Email">Thay đổi</a>
                                 </div>
                             </div>
                             <div class="col-lg-6 u-s-m-b-30">
@@ -98,7 +124,7 @@
                                 {
                                     <span class="dash__text">@Model.Phone</span>
                                     <div class="dash__link dash__link--secondary">
-                                        <a href="#">Thay đổi</a>
+                                        <a asp-page="./PhoneNumber">Thay đổi</a>
                                     </div>
 
                                 }
@@ -107,7 +133,7 @@
                                     <span class="dash__text">Vui lòng nhập điện thoại di động của bạn</span>
                                     <div class="dash__link dash__link--secondary">
 
-                                        <a href="#">Thêm</a>
+                                        <a asp-page="./PhoneNumber">Thêm</a>
                                     </div>
                                 }
                             </div>

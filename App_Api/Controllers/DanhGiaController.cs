@@ -29,13 +29,44 @@ namespace App_Api.Controllers
             AllRepo<DanhGia> all = new AllRepo<DanhGia>(context, danhGias);
             repos = all;
         }
-
-        [HttpGet("GetDanhGiaViewModel")]
-        public async Task<List<DanhGiaViewModel>> GetAllDanhGiaViewModel(string idspchitiet)
+        //public class DanhGiaResult
+        //{
+        //    public string SanPham { get; set; }
+        //    public int SoLuongDanhGiaChuaDuyet { get; set; }
+        //    public string IdSanPham { get;set; }
+        //}
+        [HttpGet("GetListAsyncViewModel")]
+        public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string idspchitiet)
         {
             return await _danhGiaRepo.GetListAsyncViewModel(idspchitiet);
         }
+        
+        [HttpGet("GetTongSoDanhGiaCuaMoiSpChuaDuyet")]
+        public async Task<List<DanhGiaResult>> TongSoDanhGiaCuaMoiSpChuaDuyet()
+        {
+            var result = await _danhGiaRepo.TongSoDanhGiaCuaMoiSpChuaDuyet();
 
+            // Chuyển đổi từ Tuple sang DanhGiaResult
+            var danhGiaResults = result.Select(tuple => new DanhGiaResult
+            {
+                SanPham = tuple.Item1,
+                SoLuongDanhGiaChuaDuyet = tuple.Item2,
+                IdSanPham = tuple.Item3,
+                IdChiTietSp=tuple.Item4,
+            }).ToList();
+            return danhGiaResults;
+        }
+
+        //public async Task<List<Tuple<string, int>>> TongSoDanhGiaCuaMoiSpChuaDuyet()
+        //{
+        //    return await _danhGiaRepo.TongSoDanhGiaCuaMoiSpChuaDuyet();
+        //}
+
+        [HttpGet("GetLstChiTietDanhGiaCuaMoiSpChuaDuyet")]
+        public async Task<List<DanhGiaViewModel>> LstChiTietDanhGiaCuaMoiSpChuaDuyet(string idSanPham)
+        {
+            return await _danhGiaRepo.LstChiTietDanhGiaCuaMoiSpChuaDuyet(idSanPham);
+        }
         [HttpGet("GetSoSaoTB")]
         public async Task<float> GetSoSaoTB(string idspchitiet)
         {
@@ -48,11 +79,11 @@ namespace App_Api.Controllers
         }
 
         [HttpPost("AddDanhGia")]
-        public bool CreateDanhGia(string BinhLuan, string? ParentId,
-       int SaoSp, int SaoVanChuyen, string IdNguoiDung, string IdSanPhamChiTiet)
+        public bool CreateDanhGia(string IdDanhGia, string? BinhLuan, string? ParentId,
+       int SaoSp, int SaoVanChuyen, string IdNguoiDung, string IdSanPhamChiTiet, string? MoTa, string? ChatLuongSanPham)
         {
             DanhGia danhGia = new DanhGia();
-            danhGia.IdDanhGia = Guid.NewGuid().ToString();
+            danhGia.IdDanhGia = IdDanhGia;
             danhGia.TrangThai = (int)TrangThaiDanhGia.ChuaDuyet;
             danhGia.IdNguoiDung = IdNguoiDung;
             danhGia.BinhLuan = BinhLuan;
@@ -61,15 +92,17 @@ namespace App_Api.Controllers
             danhGia.ParentId = ParentId;
             danhGia.SaoSp = SaoSp;
             danhGia.SaoVanChuyen = SaoVanChuyen;
+            danhGia.MoTa = MoTa;
+            danhGia.ChatLuongSanPham=ChatLuongSanPham;
             return repos.AddItem(danhGia);
         }
 
         [HttpGet("GetDanhGiaById/{id}")]
         public DanhGia? GetDanhGiaById(string id)
         {      
-            return repos.GetAll().First(p => p.IdDanhGia == id);
+            return repos.GetAll().FirstOrDefault(p => p.IdDanhGia == id);
         }
-
+       
         [HttpGet("GetDanhGiaHienThi")]
         public  List<DanhGia> GetLstDanhGiaDaDuyet()
         {
@@ -136,28 +169,11 @@ namespace App_Api.Controllers
             }
             else return false;
         }
-
-        //[HttpPut("AddLike")]
-        //public async Task<bool> AddLike(string IdDanhGia)
-        //{
-        //    var dg = await GetDanhGia(IdDanhGia);
-        //    if (dg != null && dg.SuaDoi > 0)
-        //    {
-        //        dg.LuotYeuThich = dg.LuotYeuThich + 1;
-        //        return await _danhGiaRepo.UpdateAsync(dg);
-        //    }
-        //    else return false;
-        //}
-        //[HttpPut("BoLike")]
-        //public async Task<bool> BoLike(string IdDanhGia)
-        //{
-        //    var dg = await GetDanhGia(IdDanhGia);
-        //    if (dg != null && dg.SuaDoi > 0)
-        //    {
-        //        dg.LuotYeuThich = dg.LuotYeuThich - 1;
-        //        return await _danhGiaRepo.UpdateAsync(dg);
-        //    }
-        //    else return false;
-        //}
+        [HttpGet("GetDanhGiaViewModelById/{id}")]
+        public async Task< DanhGiaViewModel?> GetDanhGiaViewModelById(string id)
+        {
+            return await _danhGiaRepo.GetViewModelByKeyAsync(id);
+        }
+       
     }
 }

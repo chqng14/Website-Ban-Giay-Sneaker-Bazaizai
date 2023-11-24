@@ -45,6 +45,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
         public class InputModel
         {
             [Display(Name = "Username")]
+            [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d)(\w|\.|_){5,32}$", ErrorMessage = "Tên đăng nhập phải từ 6-30 ký tự với ít nhất một chữ cái (A-z). Bao gồm các số (0-9), dấu chấm (.) và dấu gạch dưới (_).")]
             public string Username { get; set; }
 
             [Display(Name = "Tên")]
@@ -69,14 +70,36 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
         {
             var userName = await _userManager.GetUserNameAsync(user);
 
-            string ngaySinh=null;
+            string ngaySinh = null;
             if (user.NgaySinh != null)
             {
                 ngaySinh = user.NgaySinh.Value.ToString("dd/MM/yyyy");
             }
+            var email = await _userManager.GetEmailAsync(user);
+            string maskedEmail = email;  // Gán giá trị mặc định
 
-            Email = await _userManager.GetEmailAsync(user);
-            Phone = await _userManager.GetPhoneNumberAsync(user);
+            int atIndex = email.IndexOf('@');
+
+            if (atIndex >= 0)
+            {
+                maskedEmail = email.Substring(0, 2) + new string('*', atIndex - 1) + email.Substring(atIndex);
+            }
+
+            Email = maskedEmail;
+            var phone = await _userManager.GetPhoneNumberAsync(user);
+            // Kiểm tra xem số điện thoại có tồn tại và có đủ ký tự không
+            if (!string.IsNullOrEmpty(phone))
+            {
+                string lastTwoDigits = phone.Substring(phone.Length - 2);
+
+                // Mã hóa phần còn lại của số điện thoại
+                string maskedPhoneNumber = new string('*', phone.Length - 2);
+
+                // Gán giá trị mới cho Phone
+                Phone = maskedPhoneNumber + lastTwoDigits;
+            }
+            //Email = await _userManager.GetEmailAsync(user);
+            //Phone = await _userManager.GetPhoneNumberAsync(user);
             Input = new InputModel
             {
                 Username = userName,
@@ -92,7 +115,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Không thể tải người dùng có ID '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);
@@ -104,7 +127,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Không thể tải người dùng có ID '{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
@@ -116,12 +139,29 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             var username = await _userManager.GetUserNameAsync(user);
             if (Input.Username != username)
             {
-                var setUserNameResult = await _userManager.SetUserNameAsync(user, Input.Username);
-                if (!setUserNameResult.Succeeded)
+                if (user.SuaDoi > 0)
                 {
-                    StatusMessage = "Lỗi không mong muốn khi cố gắng sửa tên đăng nhập.";
-                    return RedirectToPage();
+
+                    var userNameExists = await _userManager.FindByNameAsync(Input.Username);
+                    if (userNameExists != null)
+                    {
+                        StatusMessage = "Error: Tên tài khoản đã được sử dụng. Chọn một tên tài khoản khác.";
+                        return RedirectToPage();
+                    }
+                    var setUserName = await _userManager.SetUserNameAsync(user, Input.Username);
+                    if (!setUserName.Succeeded)
+                    {
+                        StatusMessage = "Error: Lỗi không mong muốn khi cố gắng sửa tên tài khoản.";
+                        return RedirectToPage();
+                    }
+                    else
+                    {
+                        user.SuaDoi -= 1;
+                        await _userManager.UpdateAsync(user);
+                    }
+
                 }
+               
             }
             var ngaySinhInput = Input.NgaySinh;
             var ngaySinhUser = user.NgaySinh?.ToString("dd/MM/yyyy");
@@ -133,13 +173,14 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
                 }
                 else
                 {
-                    StatusMessage = "Ngày sinh không hợp lệ.";
+                    StatusMessage = "Error: Ngày sinh không hợp lệ.";
                     return RedirectToPage();
                 }
             }
 
             if (Input.Name != user.TenNguoiDung)
             {
+
                 user.TenNguoiDung = Input.Name;
             }
             if (Input.GioiTinh != user.GioiTinh)
@@ -164,13 +205,13 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
                     await file.CopyToAsync(stream);
                 }
                 user.AnhDaiDien = "/user_img/" + uniqueFileName;
-               var setImgResult= await _userManager.UpdateAsync(user);
+                var setImgResult = await _userManager.UpdateAsync(user);
                 if (setImgResult.Succeeded)
-                {       
-                        if (System.IO.File.Exists(oldImagePath))
-                        {
-                            System.IO.File.Delete(oldImagePath);
-                        }                  
+                {
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
                 }
 
             }
@@ -179,7 +220,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
 
             if (!updateResult.Succeeded)
             {
-                StatusMessage = "Lỗi không mong muốn khi cố gắng cập nhật thông tin.";
+                StatusMessage = "Error: Lỗi không mong muốn khi cố gắng cập nhật thông tin.";
             }
 
 

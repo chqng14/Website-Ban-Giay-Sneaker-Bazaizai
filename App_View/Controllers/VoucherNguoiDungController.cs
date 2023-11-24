@@ -8,8 +8,6 @@ using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Controllers
 {
-
-
     [Authorize]
     public class VoucherNguoiDungController : Controller
     {
@@ -69,15 +67,15 @@ namespace App_View.Controllers
             // Kiểm tra nếu ID người dùng không tồn tại hoặc là chuỗi rỗng, thì trả về một View
             if (string.IsNullOrEmpty(idNguoiDung))
             {
-                return RedirectToAction("Voucher_wallet");
+                return Ok(false);
             }
             if (MaVoucher != null)
             {
                 // Nếu ID người dùng tồn tại, thì gọi phương thức AddVoucherNguoiDung để thêm Mã Voucher cho người dùng
                 if (await _voucherND.AddVoucherNguoiDung(MaVoucher, idNguoiDung) == true)
-                    return RedirectToAction("Voucher_wallet");
+                    return Ok(true);
             }
-            return RedirectToAction("Voucher_wallet");
+            return Ok(false);
         }
         public async Task<IActionResult> Voucher_wallet_history(int? TrangThai)
         {

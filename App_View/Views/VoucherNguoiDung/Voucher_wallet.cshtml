@@ -98,16 +98,16 @@
             <span class="dash__text u-s-m-b-30">Bạn sẽ thấy tất cả voucher đã lưu của bạn ở đây.</span>
             <!--Lưu mã voucher-->
             <div class="row">
-                <form class="m-order u-s-m-b-30" asp-action="SaveVoucher" method="post">
-                    <div class="col-lg-10 u-s-m-b-30" style="text-align:center">
-                        <input b-xzovs66yy5="" class="input-text input-text--border-radius input-text--style-1" type="text" name="MaVoucher" id="main-search" placeholder="Nhập mã voucher">
-                    </div>
-                    <div class="col-lg-2" style="text-align:center;float:right">
-                        <button class="btn btn--e-brand newsletter__btn" style="border-radius: 40px;margin-right:50px;margin-top:-50px" type="submit">
-                            Lưu
-                        </button>
-                    </div>
-                </form>
+                @*              <form class="m-order u-s-m-b-30" asp-action="SaveVoucher" method="post"> *@
+                <div class="col-lg-10 u-s-m-b-30" style="text-align:center">
+                    <input b-xzovs66yy5="" id="ma-voucher-input" class="input-text input-text--border-radius input-text--style-1" type="text" name="MaVoucher" placeholder="Nhập mã voucher" style="min-width:-webkit-fill-available">
+                </div>
+                <div class="col-lg-2" style="text-align:center;float:right">
+                    <button class="btn btn--e-brand newsletter__btn" style="border-radius: 40px;margin-right:50px;margin-top:-15px" id="Calm">
+                        Lưu
+                    </button>
+                </div>
+                @*   </form> *@
             </div>
             <!--Show mã voucher-->
             <div class="m-order__select-wrapper">
@@ -192,5 +192,48 @@
         });
     });
     // Sau khi nhận phản hồi thành công từ server
+    $("#Calm").click(function () {
+        var MaVoucher = document.getElementById('ma-voucher-input').value;
+        if (MaVoucher == '') {
+            toast({
+                title: "Không để trống!",
+                message: "Vui lòng nhập mã voucher cần lưu: ",
+                type: "warning",
+                duration: 5000
+            });
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SaveVoucher", "VoucherNguoiDung")",
+            data: "MaVoucher=" + MaVoucher, // Truyền dữ liệu dưới dạng chuỗi URL-encoded
+            success: function (result) {
+                if (result) {
+                    toast({
+                        title: "Thành công!",
+                        message: "Lưu mã thành công",
+                        type: "suscess",
+                        duration: 5000
+                    });
+                    $("#voucherList").load("/VoucherNguoidung/VoucherWalletPatial");
 
+                } else {
+                    toast({
+                        title: "Thất bại!",
+                        message: "Voucher không khả dụng hoặc đã tồn tại",
+                        type: "error",
+                        duration: 5000
+                    });
+                }
+            },
+            error: function (error) {
+                toast({
+                    title: "Thất bại!",
+                    message: "Lưu mã thất bại",
+                    type: "error",
+                    duration: 5000
+                });
+            }
+        });
+    });
 </script>

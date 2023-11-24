@@ -18,6 +18,8 @@ using Microsoft.Extensions.Hosting;
 using App_View.Controllers;
 using Hangfire;
 using App_View.Models.Momo;
+using App_View.Settings;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +29,9 @@ builder.Services.AddScoped<IMomoService, MomoService>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
 // Add services to the container.
 //BAZAIZAI\SQLEXPRESS
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=BAZAIZAI\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
+
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=MSI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
+
 builder.Services.AddHangfireServer();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BazaizaiContext>(options =>
@@ -71,12 +75,13 @@ builder.Services.Configure<IdentityOptions>(options =>
 
     // Cấu hình Lockout - khóa user
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1); // Khóa 1 phút
-    options.Lockout.MaxFailedAccessAttempts = 100; // Thất bại 5 lầ thì khóa
+    options.Lockout.MaxFailedAccessAttempts = 100; // Thất bại 5 lần thì khóa
     options.Lockout.AllowedForNewUsers = true;
 
     // Cấu hình về User.
     options.User.AllowedUserNameCharacters = // các ký tự đặt tên user
-        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.";
+  
     options.User.RequireUniqueEmail = true;  // Email là duy nhất
 
     //Cấu hình đăng nhập.
@@ -87,10 +92,66 @@ builder.Services.Configure<IdentityOptions>(options =>
 });
 builder.Services.ConfigureApplicationCookie(options =>
 {
+    options.ExpireTimeSpan = TimeSpan.FromDays(14);
     options.LoginPath = "/Login/";
     options.LogoutPath = "/Lockout/";
     options.AccessDeniedPath = "/KhongDuocTruyCap.html";
 });
+//builder.Services.ConfigureApplicationCookie(options =>
+//{
+//    options.ExpireTimeSpan = TimeSpan.FromDays(14);
+//    options.LoginPath = "/Login/";
+//    options.LogoutPath = "/Lockout/";
+//    options.AccessDeniedPath = "/KhongDuocTruyCap.html";
+//    options.ReturnUrlParameter = "/Admin/";
+//    options.Events = new CookieAuthenticationEvents
+//    {
+//        OnValidatePrincipal = context =>
+//        {
+
+//            Kiểm tra vai trò người dùng
+//            var userRoles = context.Principal.Claims
+//                .Where(c => c.Type == ClaimTypes.Role)
+//                .Select(c => c.Value)
+//                .ToList();
+
+//            Xác định thời gian hết hạn dựa trên vai trò
+//            var expireTimeSpan = userRoles.Contains("Admin")
+
+//                ? TimeSpan.FromDays(14)  // Thời gian hết hạn cho vai trò Admin là 30 ngày
+//                : userRoles.Contains("NhanVien") ? TimeSpan.FromDays(14) : TimeSpan.FromMinutes(1); // Mặc định cho các vai trò khác là 14 ngày
+
+//            Cập nhật thời gian hết hạn
+//            context.Properties.ExpiresUtc = DateTimeOffset.UtcNow.Add(expireTimeSpan);
+
+//            return Task.CompletedTask;
+
+//        },
+//        OnRedirectToReturnUrl = context =>
+//        {
+//            var userRoles = context.HttpContext.User.Claims
+//                .Where(c => c.Type == ClaimTypes.Role)
+//                .Select(c => c.Value)
+//                .ToList();
+
+//            Kiểm tra vai trò và chuyển hướng tương ứng
+//            if (userRoles.Contains("Admin"))
+//            {
+//                context.RedirectUri = "/admin";
+//            }
+//            else if (userRoles.Contains("NhanVien"))
+//            {
+//                context.RedirectUri = "/admin";
+//            }
+//            else
+//            {
+//                context.RedirectUri = "/Index";
+//            }
+
+//            return Task.CompletedTask;
+//        }
+//    };
+//});
 builder.Services.AddAuthentication()
      .AddCookie()
     .AddGoogle(googleOptions =>
@@ -125,6 +186,8 @@ builder.Services.AddSession(Options =>
 {
     Options.IdleTimeout = TimeSpan.FromDays(20);
 });
+builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("TwilioSettings"));
+builder.Services.AddScoped<ISMSSenderService, SMSSenderService>();
 //thêm
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())

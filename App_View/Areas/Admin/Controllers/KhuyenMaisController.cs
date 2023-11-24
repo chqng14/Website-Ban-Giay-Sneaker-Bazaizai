@@ -19,6 +19,7 @@ using App_View.IServices;
 using App_View.Services;
 using App_Data.Repositories;
 using Google.Apis.PeopleService.v1.Data;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -51,7 +52,23 @@ namespace App_View.Areas.Admin.Controllers
             var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("https://localhost:7038/api/KhuyenMai")).Content.ReadAsStringAsync());
             return View(KhuyenMais);
         }
-
+        public async Task<IActionResult> LstSaleAsync(string trangThaiSale,string loaiHinhKM, string tenKM)
+        {
+            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("https://localhost:7038/api/KhuyenMai")).Content.ReadAsStringAsync());
+            if(!string.IsNullOrEmpty(trangThaiSale))
+            {
+                KhuyenMais = KhuyenMais.Where(x => x.TrangThai == Convert.ToInt32(trangThaiSale)).ToList();
+            }
+            if (!string.IsNullOrEmpty(loaiHinhKM))
+            {
+                KhuyenMais = KhuyenMais.Where(x => x.LoaiHinhKM == Convert.ToInt32(loaiHinhKM)).ToList();
+            }
+            if (!string.IsNullOrEmpty(tenKM))
+            {
+                KhuyenMais = KhuyenMais.Where(x => x.TenKhuyenMai.ToUpper().Contains(tenKM.ToUpper())).ToList();
+            }
+            return PartialView("_LstSale",KhuyenMais);
+        }
         // GET: Admin/KhuyenMais/Details/5
         public async Task<IActionResult> Details(string id)
         {

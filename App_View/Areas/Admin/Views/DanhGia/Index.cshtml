@@ -1,0 +1,103 @@
+﻿@model IEnumerable<App_Data.Models.DanhGia>
+
+@{
+    ViewData["Title"] = "GetAllDanhGia";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>GetAllDanhGia</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table" id="data-table">
+    <thead>
+        <tr>
+            <th>
+                Đánh giá
+            </th>
+            <th>
+                Ngày
+            </th>
+            <th>
+                Sao sản phẩm
+            </th>
+            <th>
+                Sao vận chuyển
+            </th>
+            <th>
+                Trạng thái
+            </th>
+            <th>
+                Người dùng
+            </th>
+            <th>
+                Sản phẩm
+            </th>
+            <th>
+                Trả lời
+            </th>
+            <th>
+                Đúng với mô tả
+            </th>
+            <th>
+                Chất lượng sản phẩm
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.BinhLuan)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NgayDanhGia)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SaoSp)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SaoVanChuyen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TrangThai)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdNguoiDung)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IdSanPhamChiTiet)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParentId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MoTa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ChatLuongSanPham)
+                </td>
+               
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+}

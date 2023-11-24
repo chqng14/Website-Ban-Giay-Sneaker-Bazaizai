@@ -44,20 +44,15 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label class="control-label">Loại hình khuyến mãi</label>
                         <select asp-for="LoaiHinhKM" class="form-control" asp-items="ViewBag.ListLoaiHinh" id="LoaiHinhKMSelect"></select>
                     </div>
 
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label class="control-label">Mức giảm</label>
                         <select asp-for="MucGiam" class="form-control" asp-items="ViewBag.ListGiamGia" id="MucGiamSelect"></select>
                         <input type="text" asp-for="MucGiam" class="form-control" style="display: none" id="MucGiamInput">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label asp-for="TrangThai" class="control-label"></label>
-                        <input asp-for="TrangThai" class="form-control" />
-                        <span asp-validation-for="TrangThai" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="form-row">

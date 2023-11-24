@@ -22,10 +22,12 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.ExtendedProperties;
 using PuppeteerSharp;
 using NuGet.Protocol.Core.Types;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,NhanVien")]
     public class VouchersController : Controller
     {
         private readonly BazaizaiContext _context;
@@ -34,14 +36,16 @@ namespace App_View.Areas.Admin.Controllers
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IEmailSender _emailSender;
-        public VouchersController(IVoucherServices voucherServices, IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IEmailSender emailSender)
+		private IViewRenderService _viewRenderService;
+		public VouchersController(IVoucherServices voucherServices, IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IEmailSender emailSender, IViewRenderService viewRenderService)
         {
             _voucherND = voucherNDServices;
             _voucherSV = voucherServices;
             _signInManager = signInManager;
             _userManager = userManager;
             _emailSender = emailSender;
-            _context = new BazaizaiContext();
+			_viewRenderService = viewRenderService;
+			_context = new BazaizaiContext();
         }
         #region Online
 
@@ -96,7 +100,7 @@ namespace App_View.Areas.Admin.Controllers
                     return RedirectToAction("ShowVoucher");
                 }
             }
-            return View();
+            return RedirectToAction("ShowVoucher");
         }
 
         public async Task<ActionResult> Delete(string id)
@@ -142,7 +146,6 @@ namespace App_View.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> GiveVouchersToUsers([FromBody] AddVoucherRequestDTO addVoucherRequestDTO)
         {
-
             if (addVoucherRequestDTO.MaVoucher == null)
             {
                 return Ok(false);
@@ -158,16 +161,9 @@ namespace App_View.Areas.Admin.Controllers
                         var userKhachHang = await _userManager.FindByIdAsync(userId);
 
                         var subject = "Bạn đã nhận được Voucher từ Bazaizai Store";
-                        var body = "Chào bạn,\n\n" +
-                                   "Chúng tôi có một voucher đặc biệt dành cho bạn vào ngày hôm nay:\n" +
-                                   "Nhanh tay đến trang web của chúng tôi để sử dụng nó.\n" +
-                                   "Đừng bỏ lỡ cơ hội này!\n\n" +
-                                   "Trân trọng,\n" +
-                                   "Nhóm hỗ trợ của chúng tôi";
-                        string html = "<p>Hot! Khuyến mại 100% cho tất cả khách hàng trong ngày 2/11/2023</p>";
-                        html += "<img src='/images/logo.jpg' alt='Hình ảnh logo' />";
+						string html = await _viewRenderService.RenderToStringAsync("Voucher/MailVoucher");
 
-                        await _emailSender.SendEmailAsync(userKhachHang.Email, subject, body + html);
+                        await _emailSender.SendEmailAsync(userKhachHang.Email, subject , html);
                     }
 
                     return Ok(true);
@@ -176,6 +172,24 @@ namespace App_View.Areas.Admin.Controllers
             }
 
             return Ok(false);
+        }
+        public async Task<IActionResult> SendMail(string MaHd)
+        {
+            var userKhachHang = "";
+            if (SessionServices.GetIdFomSession(HttpContext.Session, "Email") != null)
+            {
+                userKhachHang = SessionServices.GetIdFomSession(HttpContext.Session, "Email");
+            }
+            else
+            {
+                var user = _userManager.GetUserId(User);
+                userKhachHang = (await _userManager.FindByIdAsync(user)).Email;
+            }
+            var sp = SessionServices.GetFomSession(HttpContext.Session, "sp");
+            var subject = $"Đơn hàng #{MaHd} đã đặt thành công";
+            string html = await _viewRenderService.RenderToStringAsync("HoaDon/Mail", sp);
+            await _emailSender.SendEmailAsync(userKhachHang, subject, html);
+            return Ok();
         }
         [HttpPost]
         public async Task<IActionResult> GiveVoucherForNewUser(string MaVoucher)

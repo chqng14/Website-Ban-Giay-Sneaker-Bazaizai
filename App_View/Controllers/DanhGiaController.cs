@@ -1,94 +1,49 @@
 ﻿using App_Data.Models;
+using App_View.IServices;
+using App_View.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace App_View.Controllers
 {
+    [Authorize] 
     public class DanhGiaController : Controller
     {
-        public HttpClient httpClient { get; set; }
-        public DanhGiaController()
+
+        private readonly UserManager<NguoiDung> _userManager;
+        private readonly SignInManager<NguoiDung> _signInManager;
+        private IDanhGiaService _danhGiaService;
+
+        public DanhGiaController(IDanhGiaService danhGiaService, UserManager<NguoiDung> userManager,
+            SignInManager<NguoiDung> signInManager)
         {
-            httpClient = new HttpClient();
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _danhGiaService = danhGiaService;
         }
-        public async Task<List<DanhGia>> GetAllDanhGia()
-        {
-            var lst = JsonConvert.DeserializeObject<List<DanhGia>>(await (await httpClient.GetAsync("https://localhost:7038/api/DanhGia/GetAllDanhGia")).Content.ReadAsStringAsync());
-          
-            return lst;
-        }
-        //public async Task<IActionResult> _GetAllDanhGia()
+       
+      
+        //public ActionResult AddDanhGia()
         //{
-        //    var lst = JsonConvert.DeserializeObject<List<DanhGia>>(await (await httpClient.GetAsync("https://localhost:7038/api/DanhGia")).Content.ReadAsStringAsync()).ToList();
-        //    return PartialView("_GetAllDanhGia", lst);
+        //    return View();
         //}
-        public async Task<IActionResult> GetAllDanhGiaView()
-        {
-            var lst= await GetAllDanhGia();
-            ViewBag.DanhGias = lst;
-            return View();
-        }
-        public async Task<IActionResult> _ChildComment(string id)
-        {
-            var lst = await GetAllDanhGia();
-            var data = lst.FirstOrDefault(s => s.ParentId == id);
-            return PartialView("_ChildComment", data);
-        }
-        public async Task<IActionResult> DetailThuongHieu(string id)
-        {
-
-            var kichCo = (JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("https://localhost:7038/api/ThuongHieu")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdThuongHieu == id);
-            return View(kichCo);
-
-        }
-
-        public ActionResult CreateThuongHieu()
-        {
-            return View();
-        }
 
         [HttpPost]
-        public async Task<IActionResult> CreateThuongHieu(ThuongHieu q)
+        public async Task<IActionResult> AddDanhGia(DanhGia danhgia)
         {
-            await httpClient.PostAsync($"https://localhost:7038/api/ThuongHieu?TrangThai={q.TrangThai}&Ten={q.TenThuongHieu}", null);
-            return RedirectToAction("GetAllThuongHieu");
+            var user = await _userManager.GetUserAsync(User);
+            danhgia.IdNguoiDung = await _userManager.GetUserIdAsync(user);
+            danhgia.ParentId = null;
+            await _danhGiaService.CreateDanhGia(danhgia);
+            string[] parts = danhgia.IdDanhGia.Split('*');
+            var idHoaDon= parts[1];
+            return RedirectToAction("DetailHoaDonOnline", "DonHang", new { idHoaDon = idHoaDon });
         }
 
 
-        public async Task<IActionResult> DeleteThuongHieu(string id)
-        {
-            await httpClient.DeleteAsync($"https://localhost:7038/api/ThuongHieu/{id}");
-            return RedirectToAction("GetAllThuongHieu");
-        }
 
-        public async Task<IActionResult> EditThuongHieu(string Id)
-        {
-            var kichCo = (JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("https://localhost:7038/api/ThuongHieu")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdThuongHieu == Id);
-
-            if (kichCo == null)
-            {
-                return NotFound();
-            }
-
-            return View(kichCo);
-        }
-        [HttpPost]
-
-        public async Task<IActionResult> EditThuongHieu(ThuongHieu a)
-        {
-            var apiUrl = $"https://localhost:7038/api/ThuongHieu/{a.IdThuongHieu}?TrangThai={a.TrangThai}&Ten={a.TenThuongHieu}";
-
-            var response = await httpClient.PutAsync(apiUrl, null);
-
-            if (response.IsSuccessStatusCode)
-            {
-                return RedirectToAction("GetAllThuongHieu");
-            }
-            else
-            {
-                return BadRequest();
-            }
-        }
+        
 
     }
 }

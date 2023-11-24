@@ -31,8 +31,12 @@
     }
 
 </style>
-<div class="col-lg-9 col-md-12">
 
+<div class="col-lg-9 col-md-12">
+   @* 
+   
+    <a class="nav-link text-dark" asp-area="" asp-controller="DanhGia" asp-action="CreateDanhGia">adđanhgia</a>*@
+    <partial name="_StatusMessage" for="StatusMessage" />
     <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
         <div class="dash__pad-2">
             <h1 class="dash__h1 u-s-m-b-14">Thông tin của tôi</h1>
@@ -61,7 +65,7 @@
                             <h2 class="dash__h2 u-s-m-b-8">Email</h2>
                             <span class="dash__text">@Model.Email</span>
                             <div class="dash__link dash__link--secondary">
-                                <a href="#">Thay đổi</a>
+                                <a asp-page="Manage/Email">Thay đổi</a>
                             </div>
                         </div>
                         <div class="col-lg-6 u-s-m-b-30">
@@ -70,7 +74,7 @@
                             {
                                 <span class="dash__text">@Model.Phone</span>
                                 <div class="dash__link dash__link--secondary">
-                                    <a href="#">Thay đổi</a>
+                                    <a asp-page="Manage/PhoneNumber">Thay đổi</a>
                                 </div>
 
                             }
@@ -79,7 +83,7 @@
                                 <span class="dash__text">Vui lòng nhập điện thoại di động của bạn</span>
                                 <div class="dash__link dash__link--secondary">
 
-                                    <a href="#">Thêm</a>
+                                    <a asp-page="Manage/PhoneNumber">Thêm</a>
                                 </div>
                             }
                         </div>
@@ -112,7 +116,7 @@
                     </div>
                     <div>
 
-                        <a class="dash__custom-link btn--e-brand-b-2" href="#">Đổi mật khẩu</a>
+                        <a class="dash__custom-link btn--e-brand-b-2" asp-page="Manage/ChangePassword">Đổi mật khẩu</a>
                     </div>
                 </div>
             </div>
