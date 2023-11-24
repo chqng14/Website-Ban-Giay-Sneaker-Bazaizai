@@ -45,7 +45,53 @@
           href="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/micrositefe/MDProductCollection.d6bd181badb8a51c81fa.css">
 
 </head>
+<style>
+    /* CSS cho tab */
+    .tabs {
+        display: flex;
+        border: 1px solid #ccc;
+        overflow: hidden;
+        background-color: white;
+        margin-bottom: 15px;
+        border-radius: 10px;
+    }
 
+    .tab-item {
+        flex: 1;
+        font-size: 12px;
+        text-align: center;
+        padding: 10px 0;
+        cursor: pointer;
+        color: #333333;
+        transition: background-color 0.3s;
+        font-weight: 600;
+    }
+
+        .tab-item.active {
+            background-color: #ff4500;
+            color: #fff;
+            font-weight: 600;
+        }
+
+    .input-text--style-1 {
+        color: #5c636c;
+        transition: all 0.6s linear;
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+    }
+
+    .input-text--border-radius {
+        border-radius: 25px;
+    }
+
+    .input-text {
+        font-size: 12px;
+        background-clip: padding-box;
+        padding: 0 18px;
+        height: 40px;
+    }
+
+</style>
 
 <body class="nt-s nl-t">
 
@@ -699,7 +745,7 @@
                                                     </ul>
                                                 </div>
                                             </div>
-                                            <div data-is-carousel-nav-button="next" style="display:block"
+                                            <div data-is-carousel-nav-button="prev"
                                                  class="JpPmOu oPcZ0D oDW-sh">
                                                 <svg enable-background="new 0 0 13 20"
                                                      viewBox="0 0 13 20" role="img"
@@ -755,7 +801,7 @@
             <div style="position: relative; height: 320.156px; width: 960px; left: calc((100% - 960px) / 2);">
                 <div>
                     <div class="md-container">
-                        <div class="md-component" data-component-id="1699246519376">
+                        <div class="md-component" data-component-id="16992465193745">
                             <div>
                                 <div class="HC9+PG">
                                     <div class="fX9y5D rsM6mQ"></div>
@@ -961,7 +1007,7 @@
             <div style="position: relative; height: 450.156px; width: 960px; left: calc((100% - 960px) / 2);">
                 <div>
                     <div class="md-container">
-                        <div class="md-component" data-component-id="1699246519380">
+                        <div class="md-component" data-component-id="169924651937456">
                             <div>
                                 <div class="HC9+PG">
                                     <div class="fX9y5D rsM6mQ"></div>
@@ -986,45 +1032,19 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tSMuzS" style="background-color: rgb(255, 255, 255);">
-                                    <div data-is-tab-container="true" class="w4ueEZ">
-                                        <div class="QoAOuE">
-                                            <nav data-horizontal-scroll-container="true"
-                                                 style=" line-height: 50px;font-size: 1.25rem;">
-                                                <ul class="dongGia"
-                                                    data-horizontal-scroll-wrapper="true"
-                                                    role="tablist" aria-orientation="horizontal">
-                                                    <li id="at__1699246519380"
-                                                        style="color: rgb(255, 255, 255); margin-right: 0px; width: 33.33%; flex-shrink: 0; flex-grow: 0;"
-                                                        aria-selected="true">
-                                                        <a href="#"
-                                                           class="giaDongGia">
-                                                            <span class="hienThiGia gny6En asjeIJ">
-                                                                TỪ
-                                                                9.000Đ
-                                                            </span>
-                                                        </a>
-                                                    </li>
-                                                    <li id="at__1699246519380"
-                                                        style="color: rgb(0, 0, 0); margin-right: 0px; width: 33.33%; flex-shrink: 0; flex-grow: 0;">
-                                                        <a href="#" class="giaDongGia">
-                                                            <span class="hienThiGia gny6En asjeIJ">
-                                                                TỪ
-                                                                29.000Đ
-                                                            </span>
-                                                        </a>
-                                                    </li>
-                                                    <li id="at__1699246519380"
-                                                        style="color: rgb(0, 0, 0); margin-right: 0px; width: 33.33%; flex-shrink: 0; flex-grow: 0;">
-                                                        <a href="#" class="giaDongGia">
-                                                            <span class="hienThiGia gny6En asjeIJ">
-                                                                TỪ
-                                                                59.000Đ
-                                                            </span>
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </nav>
+                                <div class="col-lg-12 col-md-12">
+                                    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+                                        <div class="dash__pad-2">
+                                            <div class="tabs">
+                                                <div class="tab-item active" id="tab1" data-value="">Tất cả</div>
+                                                <div class="tab-item" id="tab2" data-value="1">Chờ xác nhận</div>
+                                                <div class="tab-item" id="tab3" data-value="2">Chờ lấy hàng</div>
+                                                <div class="tab-item" id="tab4" data-value="3">Đang giao</div>
+                                                <div class="tab-item" id="tab5" data-value="4">Đã giao</div>
+                                                <div class="tab-item" id="tab6" data-value="5">Đã hủy</div>
+                                                <div class="tab-item" id="tab7" data-value="6">Trả hàng</div>
+                                            </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1186,7 +1206,7 @@
             <div style="position: relative; height: 320.156px; width: 960px; left: calc((100% - 960px) / 2);">
                 <div>
                     <div class="md-container">
-                        <div class="md-component" data-component-id="1699246519382">
+                        <div class="md-component" data-component-id="1699246519374567">
                             <div>
                                 <div class="HC9+PG">
                                     <div class="fX9y5D rsM6mQ"></div>
@@ -1369,41 +1389,57 @@
     </div>
 
 </body>
-@*<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var items = document.querySelectorAll('.MOttpc .mCTLtQ');
-        var prevButton = document.querySelector('.JpPmOu.oPcZ0D.oDW-sh');
-        var nextButton = document.querySelector('.JpPmOu.oPcZ0D.xP3YuH');
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Function để tạo controller cho mỗi carousel
+        function createCarouselController(carouselContainer) {
+            const prevButton = carouselContainer.querySelector('[data-is-carousel-nav-button="prev"]');
+            const nextButton = carouselContainer.querySelector('[data-is-carousel-nav-button="next"]');
+            const scrollContainer = carouselContainer.querySelector('[data-horizontal-scroll-container="true"]');
 
-        var currentIndex = 0;
-        var itemsPerPage = 6;
+            const containerWidth = scrollContainer.clientWidth;
+            const scrollStep = containerWidth / 2;
 
-        function showItems(startIndex) {
-            // Ẩn tất cả các thẻ li
-            items.forEach(function (item) {
-                item.style.display = 'none';
+            // Nút "Next"
+            nextButton.addEventListener("click", function () {
+                scrollContainer.scrollLeft += scrollStep;
+                updatePrevButtonVisibility();
             });
 
-            // Hiển thị số lượng thẻ li tương ứng với số lượng trang
-            for (var i = startIndex; i < startIndex + itemsPerPage; i++) {
-                if (items[i]) {
-                    items[i].style.display = 'block';
+            // Nút "Prev"
+            prevButton.addEventListener("click", function () {
+                scrollContainer.scrollLeft -= scrollStep;
+                updatePrevButtonVisibility();
+            });
+
+            // Cập nhật trạng thái hiển thị của nút "Prev"
+            function updatePrevButtonVisibility() {
+                const scrollLeftPosition = scrollContainer.scrollLeft;
+                const visibilityThreshold = 10;
+
+                if (scrollLeftPosition > visibilityThreshold) {
+                    prevButton.style.visibility = "visible";
+                } else {
+                    prevButton.style.visibility = "hidden";
                 }
             }
+
+            // Lắng nghe sự kiện scroll để cập nhật trạng thái hiển thị của nút "Prev"
+            scrollContainer.addEventListener("scroll", function () {
+                updatePrevButtonVisibility();
+            });
+
+            // Ẩn nút "Prev" khi trang web được tải lần đầu
+            updatePrevButtonVisibility();
         }
 
-        prevButton.addEventListener('click', function () {
-            currentIndex = Math.max(currentIndex - itemsPerPage, 0);
-            showItems(currentIndex);
+        // Lấy danh sách các carousel và áp dụng controller cho mỗi carousel
+        const carouselContainers = document.querySelectorAll('[data-component-id^="1699246519374"]');
+        carouselContainers.forEach(function (carouselContainer) {
+            createCarouselController(carouselContainer);
         });
-
-        nextButton.addEventListener('click', function () {
-            currentIndex = Math.min(currentIndex + itemsPerPage, items.length - itemsPerPage);
-            showItems(currentIndex);
-        });
-
-        // Hiển thị các sản phẩm ban đầu
-        showItems(currentIndex);
     });
-</script>*@
+
+
+</script>
 
