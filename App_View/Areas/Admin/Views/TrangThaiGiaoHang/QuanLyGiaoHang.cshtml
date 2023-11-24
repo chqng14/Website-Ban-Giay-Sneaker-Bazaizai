@@ -1,0 +1,99 @@
+﻿@{
+    ViewData["Title"] = "DonHangs";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+@{
+    var steps = new List<string> { "Start order", "Prepare gift", "Pack gift", "Decorate box", "Send gift" };
+}
+<link href="~/css/hoadon.css" rel="stylesheet" />
+<link href="~/css/SaleIndex.scss" rel="stylesheet" />
+<style>
+    /* CSS cho tab */
+    .tabs {
+        display: flex;
+        border: 1px solid #ccc;
+        overflow: hidden;
+        background-color: white;
+        margin-bottom: 15px;
+        border-radius: 10px;
+    }
+
+    .tab-item {
+        flex: 1;
+        font-size: 12px;
+        text-align: center;
+        padding: 10px 0;
+        cursor: pointer;
+        color: #333333;
+        transition: background-color 0.3s;
+        font-weight: 600;
+    }
+
+        .tab-item.active {
+            background-color: #ff4500;
+            color: #fff;
+            font-weight: 600;
+        }
+
+    .input-text--style-1 {
+        color: #5c636c;
+        transition: all 0.6s linear;
+        border: 1px solid transparent;
+        background-color: #f1f1f1;
+    }
+
+    .input-text--border-radius {
+        border-radius: 25px;
+    }
+
+    .input-text {
+        font-size: 12px;
+        background-clip: padding-box;
+        padding: 0 18px;
+        height: 40px;
+    }
+
+input {
+        overflow: visible;
+        font-family: inherit;
+        line-height: 1.15;
+        margin: 0;
+    }
+
+    button {
+        overflow: visible;
+    }
+</style>
+
+<div class="col-lg-12 col-md-12">
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+        <div class="dash__pad-2">
+            <h1 class="dash__h1 u-s-m-b-14">Đơn hàng của tôi</h1>
+
+            @* <span class="dash__text u-s-m-b-30">Here you can see all products that have been delivered.</span> *@
+            <div class="tabs">
+                <div class="tab-item active" id="tab1" data-value="">Tất cả</div>
+                <div class="tab-item" id="tab2" data-value="1">Chờ xác nhận</div>
+                <div class="tab-item" id="tab3" data-value="2">Chờ lấy hàng</div>
+                <div class="tab-item" id="tab4" data-value="3">Đang giao</div>
+                <div class="tab-item" id="tab5" data-value="4">Đã giao</div>
+                <div class="tab-item" id="tab6" data-value="5">Đã hủy</div>
+                <div class="tab-item" id="tab7" data-value="6">Trả hàng</div>
+            </div>
+            <input type="text" class="input-text input-text--border-radius input-text--style-1" id="searchMaDonHang" placeholder="Tìm kiếm đơn hàng" style="
+    width: -webkit-fill-available;margin-bottom:15px">
+
+            <div class="m-order__list active" id="content1">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+@section Scripts{
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    @* <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script> *@
+}

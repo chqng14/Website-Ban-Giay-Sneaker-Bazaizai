@@ -22,7 +22,7 @@ namespace App_View.Controllers
             _context = new BazaizaiContext();
             _signInManager = signInManager;
             _userManager = userManager;
-        } 
+        }
         public async Task<IActionResult> VoucherToCalm()
         {
             var idNguoiDung = _userManager.GetUserId(User);
@@ -78,7 +78,8 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> UpdateVoucherAfterUseIt(string idVoucher)
         {
-            if (await _voucherSV.UpdateVoucherAfterUseIt(idVoucher))
+            var idNguoiDung = _userManager.GetUserId(User);
+            if (await _voucherSV.UpdateVoucherAfterUseIt(idVoucher, idNguoiDung))
             {
                 return Ok();
             }
