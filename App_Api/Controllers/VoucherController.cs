@@ -170,7 +170,7 @@ namespace App_Api.Controllers
             }
             return false;
         }
-        [HttpPut("UpdateVoucherAfterUseIt/{idVoucher}")]
+        [HttpPut("UpdateVoucherAfterUseIt/{idVoucher}/{idUser}")]
         public bool UpdateVoucherAfterUseIt(string idVoucher, string idUser)
         {
             var voucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCher == idVoucher && c.IdNguoiDung == idUser);
