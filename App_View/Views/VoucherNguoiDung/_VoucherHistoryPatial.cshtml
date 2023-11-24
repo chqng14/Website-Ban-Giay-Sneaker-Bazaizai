@@ -35,7 +35,6 @@
         return string.Empty; // hoặc bạn có thể trả về một giá trị mặc định khác nếu cần
     }
 }
-
 @foreach (var item in ViewBag.TatCa)
 {
     <div class="m-order__get">
@@ -58,7 +57,7 @@
                     {
                         <p>Miễn phí vận chuyển</p>
                     }
-                    <div class="dash__link dash__link--brand">
+                    <div class="dash__link dash__link--brand" style="float:right">
                         @Html.ActionLink("Chi tiết", "VoucherDetails", "Voucher", new { ma = item.MaVoucher })
                     </div>
                 </div>
@@ -83,7 +82,7 @@
                             <!-- Định dạng giá trị theo định dạng tiền Việt Nam -->
                         }
                     </p>
-                    <p style="width:40px">Đơn tối thiểu: <br> @FormatCurrency(item.DieuKien)</p>
+                    <p>Đơn tối thiểu: @FormatCurrency(item.DieuKien)</p>
                 </div>
             </div>
             <div class="description__info-wrap">
@@ -103,7 +102,6 @@
         </div>
     </div>
 }
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
     $(document).on('click', '.copyButton', function () {
