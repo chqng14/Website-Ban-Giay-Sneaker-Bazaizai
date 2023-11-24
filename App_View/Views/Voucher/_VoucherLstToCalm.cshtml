@@ -129,8 +129,8 @@
                 {
                     @*   <form asp-action="SaveVoucher" asp-controller="VoucherNguoiDung" method="post"> *@
                     <div class="description__info-wrap">
-                        <a id="calmVoucher" class="manage-o__badge badge--delivered" style="border:none;">Lưu Voucher</a>
-                        <input class="input-text input-text--border-radius input-text--style-1"
+                        <a id="calmVoucher" class="manage-o__badge badge--delivered saveVoucherBtn" style="border:none;">Lưu Voucher</a>
+                        <input class="input-text input-text--border-radius input-text--style-1 maVoucher-Input"
                                type="text" value="@item.MaVoucher" name="MaVoucher" id="ma-voucher-input" hidden placeholder="Nhập mã voucher">
                     </div>
                 }
@@ -203,50 +203,48 @@
             }
         });
     }
-    var isProcessing = false; // Biến cờ để kiểm soát trạng thái xử lý
+    $(".saveVoucherBtn").on('click', function () {
 
-    $("#calmVoucher").on('click', function () {
-        // Kiểm tra xem đã đang xử lý hay không
-        if (isProcessing) {
-            return; // Nếu đã đang xử lý, không làm gì cả
-        }
+        // Lấy mã voucher tương ứng với nút được click
+        var maVoucher = $(this).closest('.description__info-wrap').find('.maVoucher-Input').val();
 
-        isProcessing = true; // Đặt biến cờ là true để đang xử lý
-
-        var maVoucher = document.getElementById('ma-voucher-input').value;
-
+        // alert(maVoucher);
+        // Gửi mã voucher đó lên server để xử lý
         $.ajax({
             type: "POST",
             url: "@Url.Action("SaveVoucher", "VoucherNguoiDung")",
             data: { MaVoucher: maVoucher },
             success: function (result) {
                 if (result) {
+                    // Xử lý khi lưu thành công
                     Swal.fire({
                         title: 'Thông báo!',
                         text: 'Nhận voucher thành công!',
                         icon: 'success',
                         didClose: () => {
-                            // reloadPartialView();
-                            location.reload();
-                            isProcessing = false;
+                            // Tải lại trang hoặc làm gì đó khác
+                            reloadPartialView();
+                            // location.reload();
                         }
                     });
                 } else {
+                    // Xử lý khi có lỗi
                     Swal.fire({
                         title: 'Thông báo!',
                         text: 'Lỗi khi nhận voucher!!!.',
                         icon: 'error',
                         confirmButtonText: 'Đóng'
                     });
-                    isProcessing = false; // Reset biến cờ khi xử lý hoàn tất
                 }
             },
             error: function (error) {
+                // Xử lý khi có lỗi trong AJAX request
                 console.error('Lỗi: ' + error);
-                isProcessing = false; // Reset biến cờ khi xử lý hoàn tất
             }
         });
     });
+
+
 
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
