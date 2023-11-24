@@ -135,7 +135,7 @@
                                                         @if (voucher != null)
                                                         {
                                                             <span class="gl-modal-h1">Voucher freeship</span>
-                                                            @foreach (var item in voucher.Take(2).Where(c => c.LoaiHinhUuDai == 2 && c.DieuKien >= tongtien))
+                                                            @foreach (var item in voucher.Take(1).Where(c => c.LoaiHinhUuDai == 2 && c.DieuKien <= tongtien))
                                                             {
                                                                 <tr>
                                                                     <div class="m-order__get" style="padding:12px;margin-bottom:15px">
@@ -213,7 +213,7 @@
 
 
                                                             <span class="gl-modal-h1">Voucher Giảm giá</span>
-                                                            @foreach (var item in voucher.Take(2).Where(c => c.LoaiHinhUuDai != 2 && c.DieuKien >= tongtien))
+                                                            @foreach (var item in voucher.Take(1).Where(c => c.LoaiHinhUuDai != 2 && c.DieuKien <= tongtien))
                                                             {
                                                                 <tr>
                                                                     <div class="m-order__get" style="padding:12px;margin-bottom:15px">
@@ -253,14 +253,14 @@
                                                                         </div>
                                                                     </div>
                                                                 </tr>
-                                                                @if (voucher.Count > 2)
+                                                                @if (voucher.Count > 1)
                                                                 {
                                                                     <!-- Dấu mũi tên xuống -->
                                                                     <div class="arrow-down-btn" onclick="showHiddenVoucher()"></div>
                                                                 }
                                                                 <tr>
                                                                     <div class="hidden-voucher-row">
-                                                                        @foreach (var hiddenvc in voucher.Skip(2).Where(c => c.LoaiHinhUuDai != 2 && c.DieuKien >= tongtien))
+                                                                        @foreach (var hiddenvc in voucher.Skip(1).Where(c => c.LoaiHinhUuDai != 2 && c.DieuKien <= tongtien))
                                                                         {
                                                                             <div class="m-order__get" style="padding:12px;margin-bottom:15px">
                                                                                 <div class="manage-o__description">
@@ -301,7 +301,7 @@
                                                                         }
                                                                     </div>
                                                                 </tr>
-                                                                @if (voucher.Count > 2)
+                                                                @if (voucher.Count > 1)
                                                                 {
                                                                     <!-- Dấu mũi tên lên -->
                                                                     <div class="arrow-up-btn" style="display:none;margin-bottom:15px" onclick="hiddenHiddenVoucher()"></div>
@@ -1116,7 +1116,6 @@
         $(document).ready(function () {
             $('#button-coupon').click(function () {
                 var voucherValue = $('#voucherinput').val();
-                $('#voucher-modal').close();
                 voucher(voucherValue);
             });
         });
@@ -1284,20 +1283,28 @@
                     type: 'GET',
                     data: ma,
                     success: function (result) {
-                        $('#textvoucher').text("");
-                        loaiuudai = result.loaiuudai;
-                        // Áp dụng giảm giá từ voucher
-                        if (phiship==0 && loaiuudai == 2) {
+                        if (result.mess) {
                             toast({
-                                title: "Vui lòng nhập địa chỉ trước khi áp dụng freeship!",
+                                title: result.mess,
                                 type: "warning",
                                 duration: 2000
                             });
                         } else {
-                            MucUuDai = result.mucuidai;
-                            IdVoucher = result.idVoucher;
-                            $('input[name="IdVoucher"]').val(IdVoucher);
-                            applyDiscount(MucUuDai);
+                            $('#textvoucher').text("");
+                            loaiuudai = result.loaiuudai;
+                            // Áp dụng giảm giá từ voucher
+                            if (phiship==0 && loaiuudai == 2) {
+                                toast({
+                                    title: "Vui lòng nhập địa chỉ trước khi áp dụng freeship!",
+                                    type: "warning",
+                                    duration: 2000
+                                });
+                            } else {
+                                MucUuDai = result.mucuidai;
+                                IdVoucher = result.idVoucher;
+                                $('input[name="IdVoucher"]').val(IdVoucher);
+                                applyDiscount(MucUuDai);
+                            }
                         }
                     },
                     error: function (xhr, status, error) {

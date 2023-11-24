@@ -34,13 +34,14 @@ namespace App_View.Controllers
         IGioHangChiTietServices gioHangChiTietServices;
         IHoaDonServices hoaDonServices;
         IHoaDonChiTietServices hoaDonChiTietServices;
-        ThongTinGHController ThongTinGHController;
         PTThanhToanChiTietController PTThanhToanChiTietController;
         PTThanhToanController PTThanhToanController;
         private IVnPayService _vnPayService;
         private IEmailSender _emailSender;
         private IViewRenderService _viewRenderService;
-        public HoaDonController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService, ThongTinGHController thongTinGHController, IMomoService momoService, IVnPayService vnPayService, IEmailSender emailSender, IViewRenderService viewRenderService)
+        private IThongTinGHServices thongTinGHServices;
+        public HoaDonController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService
+            , IMomoService momoService, IVnPayService vnPayService, IEmailSender emailSender, IViewRenderService viewRenderService)
         {
             _sanPhamChiTietService = sanPhamChiTietService;
             _signInManager = signInManager;
@@ -48,26 +49,37 @@ namespace App_View.Controllers
             gioHangChiTietServices = new GioHangChiTietServices();
             hoaDonServices = new HoaDonServices();
             hoaDonChiTietServices = new HoaDonChiTietServices();
-            ThongTinGHController = thongTinGHController;
             _momoService = momoService;
             PTThanhToanChiTietController = new PTThanhToanChiTietController();
             PTThanhToanController = new PTThanhToanController();
             _vnPayService = vnPayService;
             _emailSender = emailSender;
             _viewRenderService = viewRenderService;
+            thongTinGHServices = new ThongTinGHServices();
         }
         #region User
         public async Task<IActionResult> DataBill(ThongTinGHDTO thongTinGHDTO)
         {
+            var idNguoiDung = _userManager.GetUserId(User);
+            var thongtin = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
+            int trangthai = 0;
+            if (thongtin.Any())
+            {
+                trangthai = (int)TrangThaiThongTinGH.HoatDong;
+            }
+            else
+            {
+                trangthai = (int)TrangThaiThongTinGH.MacDinh;
+            }
             thongTinGHDTO.IdThongTinGH = Guid.NewGuid().ToString();
-            thongTinGHDTO.IdNguoiDung = _userManager.GetUserId(User);
-            thongTinGHDTO.TrangThai = (int)TrangThaiThongTinGH.HoatDong;
+            thongTinGHDTO.IdNguoiDung = idNguoiDung;
+            thongTinGHDTO.TrangThai = trangthai;
             SessionServices.SetIdToSession(HttpContext.Session, "Email", thongTinGHDTO.Email);
             var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == _userManager.GetUserId(User));
             var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
             {
-                await ThongTinGHController.CreateThongTinBill(thongTinGHDTO);
+                await thongTinGHServices.CreateThongTin(thongTinGHDTO);
                 return Ok(new { idThongTinGH = thongTinGHDTO.IdThongTinGH });
             }
             else
@@ -201,7 +213,7 @@ namespace App_View.Controllers
             var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
             {
-                await ThongTinGHController.CreateThongTinBill(thongTinGHDTO);
+                await thongTinGHServices.CreateThongTin(thongTinGHDTO);
                 return Ok(new { idThongTinGH = thongTinGHDTO.IdThongTinGH });
             }
             else
