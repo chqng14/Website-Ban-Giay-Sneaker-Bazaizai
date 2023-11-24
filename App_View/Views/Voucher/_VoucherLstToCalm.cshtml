@@ -203,21 +203,34 @@
             }
         });
     }
+    var isProcessing = false; // Biến cờ để kiểm soát trạng thái xử lý
+
     $("#calmVoucher").on('click', function () {
+        // Kiểm tra xem đã đang xử lý hay không
+        if (isProcessing) {
+            return; // Nếu đã đang xử lý, không làm gì cả
+        }
+
+        isProcessing = true; // Đặt biến cờ là true để đang xử lý
+
         var maVoucher = document.getElementById('ma-voucher-input').value;
-        // Sử dụng $.ajax để gửi yêu cầu AJAX
+
         $.ajax({
             type: "POST",
             url: "@Url.Action("SaveVoucher", "VoucherNguoiDung")",
-            data: { MaVoucher: maVoucher }, // Gửi dữ liệu dưới dạng JSON
-            // contentType: "application/json; charset=utf-8", // Đặt loại dữ liệu gửi đi
+            data: { MaVoucher: maVoucher },
             success: function (result) {
                 if (result) {
-                    Swal.fire('Thông báo!', 'Nhận voucher thành công!', 'success');
-                    setTimeout(function () {
-                        reloadPartialView();
-                    }, 1000);
-
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Nhận voucher thành công!',
+                        icon: 'success',
+                        didClose: () => {
+                            // reloadPartialView();
+                            location.reload();
+                            isProcessing = false;
+                        }
+                    });
                 } else {
                     Swal.fire({
                         title: 'Thông báo!',
@@ -225,13 +238,16 @@
                         icon: 'error',
                         confirmButtonText: 'Đóng'
                     });
+                    isProcessing = false; // Reset biến cờ khi xử lý hoàn tất
                 }
             },
             error: function (error) {
                 console.error('Lỗi: ' + error);
+                isProcessing = false; // Reset biến cờ khi xử lý hoàn tất
             }
         });
     });
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- jQuery -->
