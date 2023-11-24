@@ -111,7 +111,8 @@
                             // Định dạng giá trị theo định dạng tiền Việt Nam
                         }
                     </p>
-                    <p width:40px>Đơn tối thiểu: <br> @FormatCurrency(item.DieuKien)</p>
+                    <p>Đơn tối thiểu: @FormatCurrency(item.DieuKien)</p>
+                    <p>Số lượng: @item.SoLuong</p>
                 </div>
 
             </div>
@@ -223,8 +224,8 @@
                         icon: 'success',
                         didClose: () => {
                             // Tải lại trang hoặc làm gì đó khác
-                            reloadPartialView();
-                            // location.reload();
+                            // reloadPartialView();
+                            location.reload();
                         }
                     });
                 } else {
