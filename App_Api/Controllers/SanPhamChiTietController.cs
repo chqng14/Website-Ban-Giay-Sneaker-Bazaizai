@@ -352,10 +352,34 @@ namespace App_Api.Controllers
         public async Task<bool> Update(SanPhamChiTietDTO sanPhamChiTietDTO)
         {
             var spChiTiet = await GetSanPham(sanPhamChiTietDTO.IdChiTietSp!);
+
             if (spChiTiet != null)
             {
-                _mapper.Map(sanPhamChiTietDTO, spChiTiet);
-                return await _sanPhamChiTietRes.UpdateAsync(spChiTiet);
+                var sanPhamChiTietCheck = (await _sanPhamChiTietRes.GetListAsync())
+                .FirstOrDefault(x =>
+                x.IdSanPham == sanPhamChiTietDTO!.IdSanPham &&
+                x.IdChatLieu == sanPhamChiTietDTO.IdChatLieu &&
+                x.IdKichCo == sanPhamChiTietDTO.IdKichCo &&
+                x.IdMauSac == sanPhamChiTietDTO.IdMauSac &&
+                x.IdKieuDeGiay == sanPhamChiTietDTO.IdKieuDeGiay &&
+                x.IdLoaiGiay == sanPhamChiTietDTO.IdLoaiGiay &&
+                x.IdThuongHieu == sanPhamChiTietDTO.IdThuongHieu &&
+                x.IdXuatXu == sanPhamChiTietDTO.IdXuatXu
+                );
+                if (
+                (sanPhamChiTietDTO.IdChatLieu == spChiTiet.IdChatLieu &&
+                sanPhamChiTietDTO.IdKieuDeGiay == spChiTiet.IdKieuDeGiay &&
+                sanPhamChiTietDTO.IdXuatXu == spChiTiet.IdXuatXu &&
+                sanPhamChiTietDTO.IdLoaiGiay == spChiTiet.IdLoaiGiay &&
+                sanPhamChiTietDTO.IdThuongHieu == spChiTiet.IdThuongHieu &&
+                sanPhamChiTietDTO.IdSanPham == spChiTiet.IdSanPham &&
+                sanPhamChiTietDTO.IdMauSac == spChiTiet.IdMauSac &&
+                sanPhamChiTietDTO.IdKichCo == spChiTiet.IdKichCo) || sanPhamChiTietCheck == null
+                )
+                {
+                    _mapper.Map(sanPhamChiTietDTO, spChiTiet);
+                    return await _sanPhamChiTietRes.UpdateAsync(spChiTiet);
+                }
             }
             return false;
         }

@@ -663,7 +663,7 @@ namespace App_Data.Repositories
                             IdSanPham = sp.IdChiTietSp,
                             MaSanPham = sp.Ma,
                             GiaNhap = sp.GiaNhap.GetValueOrDefault(),
-                            Anh = sp.Anh.OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
+                            Anh = sp.Anh.Where(a=>a.TrangThai==0).OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
                             MauSac = sp.MauSac.TenMauSac,
                             GiaBan = sp.GiaBan.GetValueOrDefault(),
                             KichCo = sp.KichCo.SoKichCo.GetValueOrDefault(),
