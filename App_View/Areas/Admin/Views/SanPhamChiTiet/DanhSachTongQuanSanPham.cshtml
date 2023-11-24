@@ -167,7 +167,6 @@
 </div>
 
 <script>
-    var keyProduct;
     var soLuongUpdate;
     var idSanPham;
     var idXuatXu;
@@ -175,159 +174,164 @@
     var idChatLieu;
     var idLoaiGiay;
     var idThuongHieu;
+    var tableDSTongQuan;
+    $(() => {
+            tableDSTongQuan = $('#table-sanpham').DataTable({
+    ajax: {
+        url: '@Url.Action("GetTongQuanDanhSach", "SanPhamChiTiet", new { area = "Admin" })',
+        type: 'POST',
+        dataType: 'json',
+        data: function (e) {
+            return JSON.stringify(
+                {
+                    Draw: e.draw,
+                    Start: e.start,
+                    Length: e.length,
+                    SearchValue: e.search.value,
+                    IdSanPham: idSanPham,
+                    IdThuongHieu: idThuongHieu,
+                    IdKieuDeGiay: idKieuDeGiay,
+                    IdChatLieu: idChatLieu,
+                    IdLoaiGiay: idLoaiGiay,
+                    IdXuatXu: idXuatXu
+                }
+            )
+        },
+        contentType: 'application/json'
+    },
+    serverSide: true,
+    paging: true,
+    pageLength: 10,
+    columns: [
+        {
+            data: null,
+            title: 'STT',
+            render: function (data, type, row, meta) {
+                return meta.row + 1;
+            },
+            orderable: false
+        },
+        {
+            data: 'SanPham',
+            title: 'Sản phẩm',
+            orderable: false
+        },
+        {
+            data: 'ThuongHieu',
+            title: 'Thương hiệu',
+            orderable: false
+        },
+        {
+            data: 'KieuDeGiay',
+            title: 'Kiểu đế',
+            orderable: false
+        },
+        {
+            data: 'ChatLieu',
+            title: 'Chất liệu',
+            orderable: false
+        },
+        {
+            data: 'XuatXu',
+            title: 'Xuất xứ',
+            orderable: false
+        },
+        {
+            data: 'LoaiGiay',
+            title: 'Loại giày',
+            orderable: false
+        },
+        {
+            data: 'SoMau',
+            title: 'Số màu',
+            orderable: false
+        },
+        {
+            data: 'SoSize',
+            title: 'Số size',
+            orderable: false
+        },
+        {
+            data: 'TongSoLuongTon',
+            title: 'Số lượng',
+            orderable: false
+        },
+        {
+            data: 'TongSoLuongDaBan',
+            title: 'Số lượng đã bán',
+            orderable: false
+        },
+    ],
+    rowCallback: function (row, data, index) {
+        $(row).on("click", function () {
+            keyProduct = data.SumGuild
+            $.ajax({
+                url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
+                type: 'GET',
+                data: {
+                    "sumGuid": data.SumGuild
+                },
+                success: function (result) {
+                    $('#ModalLabelDanhSach').text(`${data.ThuongHieu.toUpperCase()} - ${data.SanPham.toUpperCase()} - ${data.KieuDeGiay.toUpperCase()} - ${data.ChatLieu.toUpperCase()} - ${data.LoaiGiay.toUpperCase()} - ${data.XuatXu.toUpperCase()}`);
+                    $('#modal-dssanpham').empty().html(result);
+                    $('#exampleModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    console.log(status);
+                    console.log(error);
+                    console.log(xhr);
+                }
+            });
+
+
+        });
+    },
+
+    initComplete: function (settings, json) {
+        $('#filterSanPham').on('change', function () {
+            idSanPham = $(this).val();
+            tableDSTongQuan.draw();
+        });
+
+        $('#filterThuongHieu').on('change', function () {
+            idThuongHieu = $(this).val();
+            tableDSTongQuan.draw();
+        });
+
+        $('#filterKieuDeGiay').on('change', function () {
+            idKieuDeGiay = $(this).val();
+            tableDSTongQuan.draw();
+        });
+
+        $('#filterChatLieu').on('change', function () {
+            idChatLieu = $(this).val();
+            tableDSTongQuan.draw();
+        });
+
+        $('#filterLoaiGiay').on('change', function () {
+            idLoaiGiay = $(this).val();
+            tableDSTongQuan.draw();
+        });
+
+        $('#filterXuatXu').on('change', function () {
+            idXuatXu = $(this).val();
+            tableDSTongQuan.draw();
+        });
+    }
+});
+    })
+ $('#modal-SanPham').on('hidden.bs.modal', function () {
+     $('#exampleModal').modal('show');
+ });
 
     $(() => {
-    $('.select2_active').select2();
-    var tableDSTongQuan = $('#table-sanpham').DataTable({
-        ajax: {
-            url: '@Url.Action("GetTongQuanDanhSach", "SanPhamChiTiet", new { area = "Admin" })',
-            type: 'POST',
-            dataType: 'json',
-            data: function (e) {
-                return JSON.stringify(
-                    {
-                        Draw: e.draw,
-                        Start: e.start,
-                        Length: e.length,
-                        SearchValue: e.search.value,
-                        IdSanPham: idSanPham,
-                        IdThuongHieu: idThuongHieu,
-                        IdKieuDeGiay: idKieuDeGiay,
-                        IdChatLieu: idChatLieu,
-                        IdLoaiGiay: idLoaiGiay,
-                        IdXuatXu: idXuatXu
-                    }
-                )
-            },
-            contentType: 'application/json'
-        },
-        serverSide: true,
-        paging: true,
-        pageLength: 10,
-        columns: [
-            {
-                data: null,
-                title: 'STT',
-                render: function (data, type, row, meta) {
-                    return meta.row + 1;
-                },
-                orderable: false
-            },
-            {
-                data: 'SanPham',
-                title: 'Sản phẩm',
-                orderable: false
-            },
-            {
-                data: 'ThuongHieu',
-                title: 'Thương hiệu',
-                orderable: false
-            },
-            {
-                data: 'KieuDeGiay',
-                title: 'Kiểu đế',
-                orderable: false
-            },
-            {
-                data: 'ChatLieu',
-                title: 'Chất liệu',
-                orderable: false
-            },
-            {
-                data: 'XuatXu',
-                title: 'Xuất xứ',
-                orderable: false
-            },
-            {
-                data: 'LoaiGiay',
-                title: 'Loại giày',
-                orderable: false
-            },
-            {
-                data: 'SoMau',
-                title: 'Số màu',
-                orderable: false
-            },
-            {
-                data: 'SoSize',
-                title: 'Số size',
-                orderable: false
-            },
-            {
-                data: 'TongSoLuongTon',
-                title: 'Số lượng',
-                orderable: false
-            },
-            {
-                data: 'TongSoLuongDaBan',
-                title: 'Số lượng đã bán',
-                orderable: false
-            },
-        ],
-        rowCallback: function (row, data, index) {
-            $(row).on("click", function () {
-                keyProduct = data.SumGuild
-                $.ajax({
-                    url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
-                    type: 'GET',
-                    data: {
-                        "sumGuid": data.SumGuild
-                    },
-                    success: function (result) {
-                        $('#ModalLabelDanhSach').text(`${data.ThuongHieu.toUpperCase()} - ${data.SanPham.toUpperCase()} - ${data.KieuDeGiay.toUpperCase()} - ${data.ChatLieu.toUpperCase()} - ${data.LoaiGiay.toUpperCase()} - ${data.XuatXu.toUpperCase()}`);
-                        $('#modal-dssanpham').empty().html(result);
-                        $('#exampleModal').modal('show');
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(xhr.responseText);
-                        console.log(status);
-                        console.log(error);
-                        console.log(xhr);
-                    }
-                });
+        $('.select2_active').select2();
+    })
 
-
-            });
-        },
-
-        initComplete: function (settings, json) {
-            $('#filterSanPham').on('change', function () {
-                idSanPham = $(this).val();
-                tableDSTongQuan.draw();
-            });
-
-            $('#filterThuongHieu').on('change', function () {
-                idThuongHieu = $(this).val();
-                tableDSTongQuan.draw();
-            });
-
-            $('#filterKieuDeGiay').on('change', function () {
-                idKieuDeGiay = $(this).val();
-                tableDSTongQuan.draw();
-            });
-
-            $('#filterChatLieu').on('change', function () {
-                idChatLieu = $(this).val();
-                tableDSTongQuan.draw();
-            });
-
-            $('#filterLoaiGiay').on('change', function () {
-                idLoaiGiay = $(this).val();
-                tableDSTongQuan.draw();
-            });
-
-            $('#filterXuatXu').on('change', function () {
-                idXuatXu = $(this).val();
-                tableDSTongQuan.draw();
-            });
-        }
-    });
-
-})
-
-    $('#modal-SanPham').on('hidden.bs.modal', function () {
-        $('#exampleModal').modal('show');
-    });
+    function GetDanhDachTongQuan() {
+        tableDSTongQuan.draw();
+    }
 
     function showModal(value) {
         $.ajax({

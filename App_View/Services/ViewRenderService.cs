@@ -60,6 +60,35 @@ namespace App_View.Services
                 return sw.ToString();
             }
         }
+		public async Task<string> RenderToStringAsync(string viewName)
+		{
+			var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
+			var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
 
-    }
+			using (var sw = new StringWriter())
+			{
+				var viewResult = _razorViewEngine.FindView(actionContext, viewName, false);
+
+				if (viewResult.View == null)
+				{
+					throw new ArgumentNullException($"{viewName} does not match any available view");
+				}
+
+				var viewDictionary = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary());
+
+				var viewContext = new ViewContext(
+					actionContext,
+					viewResult.View,
+					viewDictionary,
+					new TempDataDictionary(actionContext.HttpContext, _tempDataProvider),
+					sw,
+					new HtmlHelperOptions()
+				);
+
+				await viewResult.View.RenderAsync(viewContext);
+				return sw.ToString();
+			}
+		}
+
+	}
 }

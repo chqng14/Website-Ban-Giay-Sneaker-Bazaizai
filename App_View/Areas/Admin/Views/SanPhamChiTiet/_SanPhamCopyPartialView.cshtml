@@ -573,10 +573,23 @@
                                  table.draw();
                              }
                              else {
-                                 GetDanhDachTongQuan()
-                                 thayDoiBodyDSSanPham()
-                                 $('.modal-backdrop').removeClass('show');
-                                 $('.modal-backdrop').remove();
+                                 GetDanhDachTongQuan();
+                                 $.ajax({
+                                     url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
+                                     type: 'GET',
+                                     data: {
+                                         "sumGuid": keyProduct
+                                     },
+                                     success: function (result) {
+                                         $('#modal-dssanpham').empty().html(result);
+                                     },
+                                     error: function (xhr, status, error) {
+                                         console.log(xhr.responseText);
+                                         console.log(status);
+                                         console.log(error);
+                                         console.log(xhr);
+                                     }
+                                 });
                              }
                              var toastHTML = `<div class="toast fade hide" data-delay="3000">
                                                  <div class="toast-header">

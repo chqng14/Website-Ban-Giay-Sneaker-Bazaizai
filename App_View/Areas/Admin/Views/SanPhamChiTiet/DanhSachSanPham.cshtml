@@ -726,7 +726,6 @@
         $(document).on("click", '.thaotac', function () {
             const keys = Object.keys(selectedCheckboxes);
             const data = { "listGuild": keys };
-            console.log(JSON.stringify(data));
             $('#preloader').show();
             $.ajax({
                 url: 'GetPartialViewListUpdate',

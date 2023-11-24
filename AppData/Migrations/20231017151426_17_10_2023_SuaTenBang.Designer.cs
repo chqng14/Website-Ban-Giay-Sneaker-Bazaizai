@@ -1010,13 +1010,13 @@ namespace App_Data.Migrations
                         .WithMany("DanhGias")
                         .HasForeignKey("IdSanPhamChiTiet");
 
-                    b.HasOne("App_Data.Models.DanhGia", "ParentDanhGia")
-                        .WithMany("ChildDanhGias")
-                        .HasForeignKey("ParentId");
+                    //b.HasOne("App_Data.Models.DanhGia", "ParentDanhGia")
+                    //    .WithMany("ChildDanhGias")
+                    //    .HasForeignKey("ParentId");
 
                     b.Navigation("NguoiDung");
 
-                    b.Navigation("ParentDanhGia");
+                    //b.Navigation("ParentDanhGia");
 
                     b.Navigation("SanPhamChiTiet");
                 });
@@ -1272,10 +1272,10 @@ namespace App_Data.Migrations
                     b.Navigation("SanPhamChiTiets");
                 });
 
-            modelBuilder.Entity("App_Data.Models.DanhGia", b =>
-                {
-                    b.Navigation("ChildDanhGias");
-                });
+            //modelBuilder.Entity("App_Data.Models.DanhGia", b =>
+            //    {
+            //        b.Navigation("ChildDanhGias");
+            //    });
 
             modelBuilder.Entity("App_Data.Models.GioHang", b =>
                 {

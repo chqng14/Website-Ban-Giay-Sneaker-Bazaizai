@@ -90,7 +90,14 @@ namespace App_View.Services
 
         public override IdentityError PasswordMismatch()
         {
-            return base.PasswordMismatch();
+            
+            var error = base.PasswordMismatch();
+            return new IdentityError()
+            {
+                Code = error.Code,
+                Description = $"Mật khẩu không đúng.",
+            };
+            //return base.PasswordMismatch();
         }
 
         public override IdentityError PasswordRequiresDigit()

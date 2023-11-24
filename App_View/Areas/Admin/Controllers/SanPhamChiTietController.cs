@@ -721,9 +721,9 @@ namespace App_View.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<bool> UpdateSanPham([FromBody] SanPhamChiTietDTO sanPhamChiTietDTO)
+        public async Task<IActionResult> UpdateSanPham([FromBody] SanPhamChiTietDTO sanPhamChiTietDTO)
         {
-            return await _sanPhamChiTietService.UpdateAynsc(sanPhamChiTietDTO);
+            return Ok(await _sanPhamChiTietService.UpdateAynsc(sanPhamChiTietDTO));
         }
 
         [HttpPost]
@@ -840,7 +840,7 @@ namespace App_View.Areas.Admin.Controllers
             try
             {
                 var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/LayDanhSachTongQuan", parameters);
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     var jsonResponse = await response.Content.ReadAsStringAsync();
@@ -855,6 +855,24 @@ namespace App_View.Areas.Admin.Controllers
             {
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> LoadPartialViewUpdate(string idSanPhamChiTiet)
+        {
+            ViewData["IdChatLieu"] = new SelectList(await _sanPhamChiTietService.GetListModelChatLieuAsync(), "IdChatLieu", "TenChatLieu");
+            ViewData["IdKichCo"] = new SelectList((await _sanPhamChiTietService.GetListModelKichCoAsync()).OrderBy(kc => kc.SoKichCo), "IdKichCo", "SoKichCo");
+            ViewData["IdKieuDeGiay"] = new SelectList(await _sanPhamChiTietService.GetListModelKieuDeGiayAsync(), "IdKieuDeGiay", "TenKieuDeGiay");
+            ViewData["IdLoaiGiay"] = new SelectList(await _sanPhamChiTietService.GetListModelLoaiGiayAsync(), "IdLoaiGiay", "TenLoaiGiay");
+            ViewData["IdMauSac"] = new SelectList(await _sanPhamChiTietService.GetListModelMauSacAsync(), "IdMauSac", "TenMauSac");
+            ViewData["IdSanPham"] = new SelectList(await _sanPhamChiTietService.GetListModelSanPhamAsync(), "IdSanPham", "TenSanPham");
+            ViewData["IdThuongHieu"] = new SelectList(await _sanPhamChiTietService.GetListModelThuongHieuAsync(), "IdThuongHieu", "TenThuongHieu");
+            ViewData["IdXuatXu"] = new SelectList(await _sanPhamChiTietService.GetListModelXuatXuAsync(), "IdXuatXu", "Ten");
+            var model = await _sanPhamChiTietService.GetListSanPhamChiTietDTOAsync(new ListGuildDTO()
+            {
+                listGuild = new List<string>(){ idSanPhamChiTiet}
+            });
+            return PartialView("_SachSanPhamUpdatePartialView", model);
         }
 
     }

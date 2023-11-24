@@ -49,11 +49,11 @@ namespace App_View.Areas.Identity.Pages.Account
             //[EmailAddress]
             //public string Email { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Ô này không được để trống.")]
             [Display(Name = "Địa chỉ Email hoặc Tên tài khoản")]
             public string UserNameOrEmail { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Mật khẩu không được để trống.")]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -101,7 +101,12 @@ namespace App_View.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    var user = await _userManager.FindByNameAsync(Input.UserNameOrEmail);
+                    var user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
+                    if (user == null)
+                    {
+                        user = await _userManager.FindByNameAsync(Input.UserNameOrEmail);
+
+                    }
                     bool isCustomer = await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "NhanVien");
                     if (isCustomer)
                     {

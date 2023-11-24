@@ -2,9 +2,45 @@
 @model AccessDeniedModel
 @{
     ViewData["Title"] = "Hạn chế truy cập";
+    Layout = "/Views/Shared/_LayoutAccessDenied.cshtml";
 }
 
-<header>
-    <h1 class="text-danger">@ViewData["Title"]</h1>
-    <p class="text-danger">Bạn không có quyền truy cập vào tài nguyên này.Hãy liên lạc với quản trị viên để được cấp phép</p>
-</header>
+<style>
+  
+
+    .img-fluid {
+        max-width: 50%;
+        height: auto;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh; 
+    }
+
+    .section {
+        text-align: center; 
+    }
+
+        .section h2 {
+            margin-bottom: 10px;
+        }
+
+        .section h3 {
+            margin-bottom: 20px;
+        }
+</style>
+<main>
+    <div class="container">
+
+        <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+            <h2>Hạn chế truy cập</h2>
+            <h3>Bạn không có quyền truy cập vào tài nguyên này. Hãy liên lạc với quản trị viên để được cấp phép.</h3>
+            <img src="assets/img/not-found.svg" class="img-fluid py-5" alt="Page Not Found">
+
+        </section>
+
+    </div>
+</main>
