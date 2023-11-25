@@ -21,18 +21,18 @@ namespace App_View.Services
             var JsonData = JsonConvert.SerializeObject(value);
             session.SetString(key, JsonData);
         }
-        public static void SetspToSession(ISession session, string key, List<SanPhamTest> value)
+        public static void SetspToSession(ISession session, string key, HoaDonTest value)
         {
             var JsonData = JsonConvert.SerializeObject(value);
             session.SetString(key, JsonData);
         }
-        public static List<SanPhamTest> GetFomSession(ISession session, string key)
+        public static HoaDonTest GetFomSession(ISession session, string key)
         {
             //lấy string
             var JsonData = session.GetString(key);
-            if (JsonData == null) return new List<SanPhamTest>();
+            if (JsonData == null) return new HoaDonTest();
             //chuyển dữ liệu
-            var giohangSession = JsonConvert.DeserializeObject<List<SanPhamTest>>(JsonData);
+            var giohangSession = JsonConvert.DeserializeObject<HoaDonTest>(JsonData);
             return giohangSession;
         }
         public static void SetIdToSession(ISession session, string key, string value)

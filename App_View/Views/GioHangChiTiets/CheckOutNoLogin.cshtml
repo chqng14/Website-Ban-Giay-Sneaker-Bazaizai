@@ -81,7 +81,7 @@
                         <div class="msg">
                             <span class="msg__text">
                                 Bạn có Voucher?
-                                <a class="gl-link" data-modal="modal" data-modal-id="#voucher-modal" @* href="#have-coupon" *@ data-toggle="collapse">Ấn vào đây để sử dụng Voucher</a>
+                                <a class="gl-link" id="voucher-noLogin" @* data-modal="modal" data-modal-id="#voucher-modal" *@ @* href="#have-coupon" *@ data-toggle="collapse">Ấn vào đây để sử dụng Voucher</a>
                             </span>
                             @* <div class="collapse" id="have-coupon" data-parent="#checkout-msg-group">
                             <div class="c-f u-s-m-b-16">
@@ -720,9 +720,12 @@
 
         // Hàm xử lý voucher
         $(document).ready(function () {
-            $('#button-coupon').click(function () {
-                var voucherValue = $('#voucherinput').val();
-                voucher(voucherValue);
+            $('#voucher-noLogin').click(function () {
+                toast({
+                    title: "Vui lòng đăng nhập để sử dụng voucher!",
+                    type: "warning",
+                    duration: 2000
+                });
             });
 
         });
