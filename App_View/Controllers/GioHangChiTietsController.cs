@@ -174,13 +174,14 @@ namespace App_View.Controllers
                 }
                 else
                 {
+                    var tongtien = giohang.Sum(c => c.GiaBan * c.SoLuong);
                     var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(GetIdNguoiDung());
                     ViewData["ThongTinGH"] = thongTinGH;
-                    var voucherNguoiDung = (await _voucherND.GetAllVoucherNguoiDungByID(GetIdNguoiDung())).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung).ToList();
-                    ViewData["TatCaVoucher"] = voucherNguoiDung;
+                    var voucherNguoiDung = (await _voucherND.GetAllVoucherNguoiDungByID(GetIdNguoiDung())).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung && c.LoaiHinhUuDai == 2 && c.DieuKien <= tongtien).ToList();
+                    ViewData["VoucherFreeShip"] = voucherNguoiDung;
+                    var voucher = (await _voucherND.GetAllVoucherNguoiDungByID(GetIdNguoiDung())).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung && c.LoaiHinhUuDai != 2 && c.DieuKien <= tongtien).ToList();
+                    ViewData["Voucher"] = voucher;
                     var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(giohang);
-                    var tongtien = giohang.Sum(c => c.GiaBan * c.SoLuong);
-                    ViewData["TongTien"] = tongtien;
                     if (message.Any())
                     {
                         if (outOfStockCount > 0)
@@ -280,6 +281,19 @@ namespace App_View.Controllers
             foreach (var item in giohang)
             {
                 var jsondelete = await GioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
+            }
+            return RedirectToAction("ShowCartUser");
+        }
+        public async Task<IActionResult> DeleteAllProduct()
+        {
+            var giohang = await GetGioHangChiTietDTOs();
+            foreach (var item in giohang)
+            {
+                var sanpham = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                if (sanpham.TrangThai == 1 || sanpham.SoLuongTon == 0)
+                {
+                    var jsondelete = await GioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
+                }
             }
             return RedirectToAction("ShowCartUser");
         }

@@ -45,30 +45,24 @@
                             <h2 class="dash__h2 u-s-m-b-8">Địa chỉ giao hàng</h2>
 
                             <span class="dash__text-2 u-s-m-b-8">Địa chỉ mặc định</span>
-                            <div class="dash__link dash__link--secondary u-s-m-b-8">
+                            @if(thongTinGH != null)
+                            {
+                                <div class="dash__link dash__link--secondary u-s-m-b-8">
 
-                                <a href="@Url.Action("Default", "ThongTinGH").Replace("/Identity", "")">Chỉnh sửa</a>
-                            </div>
-                            <span class="dash__text">@thongTinGH.TenNguoiNhan</span>
-                            <span class="dash__text">@thongTinGH.DiaChi</span>
+                                    <a href="@Url.Action("Default", "ThongTinGH").Replace("/Identity", "")">Chỉnh sửa</a>
+                                </div>
+                                <span class="dash__text">@thongTinGH.TenNguoiNhan</span>
+                                <span class="dash__text">@thongTinGH.DiaChi</span>
 
-                            <span class="dash__text">@thongTinGH.SDT</span>
+                                <span class="dash__text">@thongTinGH.SDT</span>
+                            }
+                            else
+                            {
+                                <span class="dash__text">Chưa có thông tin giao hàng</span>
+                            }
                         </div>
                     </div>
                 </div>
-                @* <div class="col-lg-4 u-s-m-b-30">
-                    <div class="dash__box dash__box--bg-grey dash__box--shadow-2 u-h-100">
-                        <div class="dash__pad-3">
-                            <h2 class="dash__h2 u-s-m-b-8">BILLING ADDRESS</h2>
-
-                            <span class="dash__text-2 u-s-m-b-8">Default Billing Address</span>
-
-                            <span class="dash__text">4247 Ashford Drive Virginia - VA-20006 - USA</span>
-
-                            <span class="dash__text">(+0) 900901904</span>
-                        </div>
-                    </div>
-                </div> *@
             </div>
         </div>
     </div>

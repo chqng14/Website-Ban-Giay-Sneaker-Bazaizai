@@ -468,14 +468,15 @@ namespace App_View.Areas.Admin.Controllers
             });
         }
         [HttpPost]
-        public async Task<IActionResult> ThanhToan(string maHD, string SDT,double TongTien,double tienMat,double chuyenKhoan, string idVoucher,int hinhThuc,double tongGiam)
+        public async Task<IActionResult> ThanhToan(string maHD, string SDT,double tongTien,double tienMat,double chuyenKhoan, string idVoucher,int hinhThuc,double tongGiam)
         {
             if (string.IsNullOrEmpty(maHD))
             {
                 return Ok(new
                 {
                     TrangThai = false,
-                });
+                    Chuoi = "Vui lòng chọn hóa đơn",
+                }) ;
             }
             var hoaDon = (await _hoaDonServices.GetAllHoaDonCho()).FirstOrDefault(c => c.MaHoaDon == maHD);
             var user = await _userManager.GetUserAsync(User);
@@ -487,7 +488,8 @@ namespace App_View.Areas.Admin.Controllers
                 IdNguoiDung = hoaDon.IdNguoiDung,
                 NgayTao = hoaDon.NgayTao,
                 TrangThaiGiaoHang = hoaDon.TrangThaiGiaoHang,
-                TongTien = TongTien,
+                TrangThaiThanhToan = (int)TrangThaiHoaDon.DaThanhToan,
+                TongTien = tongTien,
                 TienGiam = tongGiam,
                 NgayThanhToan = DateTime.Now,
                 IdNguoiSuaGanNhat= idUser,
@@ -503,6 +505,7 @@ namespace App_View.Areas.Admin.Controllers
                         return Ok(new
                         {
                             TrangThai = false,
+                            Chuoi = "Lỗi khi sử dụng voucher",
                         });
                     }
                    
@@ -570,18 +573,21 @@ namespace App_View.Areas.Admin.Controllers
                             return Ok(new
                             {
                                 TrangThai = false,
+                                Chuoi = "Thanh toán không thành công"
                             });
                         }
                     }
                     return Ok(new
                     {
                         TrangThai = false,
+                        Chuoi = "Thanh toán không thành công"
                     });
                 }
             }
             return Ok(new
             {
                 TrangThai = false,
+                Chuoi = "Thanh toán không thành công"
             });
         }
        

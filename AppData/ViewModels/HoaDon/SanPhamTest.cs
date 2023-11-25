@@ -1,4 +1,5 @@
-﻿using System;
+﻿using App_Data.ViewModels.DanhGia;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,6 +18,7 @@ namespace App_Data.ViewModels.HoaDon
         public double? GiaBan { get; set; }
         public double? TongTien { get; set; }
         public int? TrangThaiGiaoHang { get; set; }
+        public DanhGiaViewModel? DanhGia { get; set; }
         public List<string?> LinkAnh { get; set; }
     }
 }

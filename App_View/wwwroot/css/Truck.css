@@ -1,44 +1,33 @@
 ﻿.loader {
-    width: 100%;
-    height: 8px;
-    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: block;
+    margin: 15px auto;
     position: relative;
-    overflow: hidden;
+    color: #FFF;
+    box-sizing: border-box;
+    animation: animloader 2s linear infinite;
 }
 
-    .loader::before {
-        content: '';
-        box-sizing: border-box;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        position: absolute;
-        background-color: rgba(255, 255, 255, 0.15);
-        background-image: linear-gradient(45deg, rgba(0, 0, 0, 0.25) 25%, transparent 25%, transparent 50%, rgba(0, 0, 0, 0.25) 50%, rgba(0, 0, 0, 0.25) 75%, transparent 75%, transparent);
-        background-size: 15px 15px;
-        z-index: 10;
-    }
-
-    .loader::after {
-        content: '';
-        box-sizing: border-box;
-        width: 100%; /* Thay đổi giá trị này */
-        height: 100%;
-        background-color: #FFF;
-        position: absolute;
-        border-radius: 0 4px 4px 0;
-        top: 0;
-        left: 0;
-        animation: animFw 10s ease-in forwards; /* Thay đổi giá trị này */
-    }
-
-@keyframes animFw {
+@keyframes animloader {
     0% {
-        width: 0;
+        box-shadow: 14px 0 0 -2px, 38px 0 0 -2px, -14px 0 0 -2px, -38px 0 0 -2px;
+    }
+
+    25% {
+        box-shadow: 14px 0 0 -2px, 38px 0 0 -2px, -14px 0 0 -2px, -38px 0 0 2px;
+    }
+
+    50% {
+        box-shadow: 14px 0 0 -2px, 38px 0 0 -2px, -14px 0 0 2px, -38px 0 0 -2px;
+    }
+
+    75% {
+        box-shadow: 14px 0 0 2px, 38px 0 0 -2px, -14px 0 0 -2px, -38px 0 0 -2px;
     }
 
     100% {
-        width: 100%;
+        box-shadow: 14px 0 0 -2px, 38px 0 0 2px, -14px 0 0 -2px, -38px 0 0 -2px;
     }
 }

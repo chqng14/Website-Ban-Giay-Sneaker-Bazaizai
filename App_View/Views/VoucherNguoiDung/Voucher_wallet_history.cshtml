@@ -7,18 +7,6 @@
 }
 
 <style>
-    .m-order__list {
-        display: flex;
-        flex-wrap: wrap; /* Cho phép các cột wrap (được xuống dòng) khi không đủ chỗ */
-    }
-
-    .m-order__get {
-        width: 45%; /* Đặt chiều rộng của mỗi cột là 50% để chúng hiển thị trong cùng một cột */
-        padding: 10px;
-        margin-left: 20px;
-        box-sizing: border-box;
-    }
-
     .tabs {
         justify-content: center;
         display: flex;
@@ -48,6 +36,33 @@
             font-weight: 600;
         }
 
+    .m-order__list {
+        min-width: -webkit-fill-available;
+        display: flex;
+        flex-wrap: wrap; /* Cho phép các cột wrap (được xuống dòng) khi không đủ chỗ */
+    }
+
+    .m-order__get {
+        width: 45%;
+        height: 210px; /* Đặt chiều rộng của mỗi cột là 50% để chúng hiển thị trong cùng một cột */
+        padding: 10px;
+        margin-left: 20px;
+        box-sizing: border-box;
+    }
+
+    .modal-content {
+        margin: auto;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        width: 50%;
+        pointer-events: auto;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid rgba(0,0,0,.2);
+        border-radius: .3rem;
+        outline: 0;
+    }
 
 </style>
 
@@ -76,9 +91,9 @@
         <div class="dash__pad-2" >
             <div>
                 <h1 class="dash__h1 u-s-m-b-14" style="display: inline-block;">Lịch sử voucher</h1>
-                <a style="color:#FF4500;margin-left:32%;display: inline-block;" asp-action="VoucherToCalm" asp-controller="Voucher">Tìm thêm voucher</a> |
-                <a asp-action="Voucher_wallet" style="color:#FF4500" style="display: inline-block;">My Voucher</a>|
-                <a style="color:#FF4500" style="display: inline-block;">Tìm hiểu</a>
+                <a style="color:#FF4500;margin-left:32%;display: inline-block;" asp-action="VoucherToCalm" asp-controller="Voucher">Tìm thêm voucher🔎</a> |
+                <a asp-action="Voucher_wallet" style="color:#FF4500" style="display: inline-block;">My Voucher📃</a>|
+                <a style="color:#FF4500" href="/" style="display: inline-block;">Trang chủ🏡</a>
             </div>
             <span class="dash__text u-s-m-b-30">Bạn sẽ thấy tất cả lịch sử voucher của bạn ở đây.</span>
             <!--Lưu mã voucher-->

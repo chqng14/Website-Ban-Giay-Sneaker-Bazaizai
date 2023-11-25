@@ -22,60 +22,10 @@ namespace App_View.Areas.Admin.Controllers
             context = new BazaizaiContext();
             this.sanPhamChiTietService = sanPhamChiTietService;
         }
-        public IActionResult TongQuanHoaDon()
+        public IActionResult QuanLyGiaoHang()
         {
             return View();
         }
-        public async Task<IActionResult> QuanLyHoaDonAsync(int trangThaiHD, string search)
-        {
-            var lstHoaDon = (await _hoaDonServices.GetHoaDon()).ToList();
-            if(!string.IsNullOrEmpty(search))
-            {
-                lstHoaDon = lstHoaDon.Where(x=>x.MaHoaDon.ToUpper().Contains(search.ToUpper())).ToList();
-            }
-            if (trangThaiHD==1)
-            {
-                var lstHoaDonOnline = lstHoaDon.Where(x => x.TrangThaiGiaoHang != 0);
-                return PartialView("QuanLyHoaDon", lstHoaDonOnline);
-            }
-            if (trangThaiHD == 2)
-            {
-                var lstHoaDonOnline = lstHoaDon.Where(x => x.TrangThaiGiaoHang != 0&& x.TrangThaiThanhToan==1);
-                return PartialView("QuanLyHoaDon", lstHoaDonOnline);
-            }
-            if (trangThaiHD == 3)
-            {
-                var lstHoaDonOnline = lstHoaDon.Where(x => x.TrangThaiGiaoHang != 0 && x.TrangThaiThanhToan == 0);
-                return PartialView("QuanLyHoaDon", lstHoaDonOnline);
-            }
-            if (trangThaiHD == 5)
-            {
-                var lstHoaDonDaHuy = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 5);
-                return PartialView("QuanLyHoaDon", lstHoaDonDaHuy);
-            }
-            if (trangThaiHD == 0)
-            {
-                var lstHoaDonTQ = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 0);
-                return PartialView("QuanLyHoaDon", lstHoaDonTQ);
-            }
-            return PartialView("QuanLyHoaDon", lstHoaDon);
-        }
-
-        public async Task<IActionResult> ChiTietHoaDonAsync(string id)
-        {
-           
-            var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x => x.IdHoaDon == id);
-            
-            var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
-            ViewBag.TTGH = context.thongTinGiaoHangs.FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH);
-            ViewData["MAHD"] = hoaDon.MaHoaDon;
-            ViewData["NGAYTAO"] = hoaDon.NgayTao;
-			ViewData["TIENSHIP"] = hoaDon.TienShip;
-            ViewData["TONGTIEN"] = hoaDon.TongTien;
-            ViewData["TIENGIAM"] = hoaDon.TienGiam;
-			var HDCT = context.hoaDonChiTiets.Where(x => x.IdHoaDon == hoaDon.IdHoaDon);
-            ViewBag.HDCT= HDCT;
-            return PartialView("_ChiTietHoaDon", hoaDonChiTiet);
-        }
+        
     }
 }
