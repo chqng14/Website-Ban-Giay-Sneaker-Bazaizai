@@ -121,13 +121,17 @@ namespace App_View.Controllers
         public async Task<IActionResult> GetVoucherByMa(string ma)
         {
             var idNguoiDung = _userManager.GetUserId(User);
-            var voucherNguoiDung = (await _voucherND.GetAllVoucherNguoiDungByID(idNguoiDung)).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung).ToList();
+            var voucherNguoiDung = await _voucherND.GetAllVoucherNguoiDungByID(idNguoiDung);
             var voucher = await _voucherSV.GetVoucherByMa(ma);
             foreach (var item in voucherNguoiDung)
             {
-                if (item.IdVouCher == voucher.IdVoucher)
+                if (item.IdVouCher == voucher.IdVoucher && item.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung)
                 {
                     return Json(new { mess = "Voucher đã có trong tài khoản của bạn!" });
+                }
+                if (item.IdVouCher == voucher.IdVoucher && item.TrangThai == (int)TrangThaiVoucherNguoiDung.DaSuDung)
+                {
+                    return Json(new { mess = "Bạn đã sử dụng voucher này!" });
                 }
             }
             await _voucherND.AddVoucherNguoiDung(ma, idNguoiDung);

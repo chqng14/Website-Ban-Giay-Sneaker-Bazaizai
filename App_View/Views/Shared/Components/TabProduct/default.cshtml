@@ -41,120 +41,155 @@
 
                 <!--====== Tab 1 ======-->
                 <div class="tab-pane fade show active" id="e-l-p">
-                    <div class="slider-fouc">
-                        <div class="owl-carousel tab-slider" data-item="4">
-                            @foreach (var item in Model.LstSanPhamMoi!)
-                            {
-                                <div class="u-s-m-b-30">
-                                    <div class="product-o product-o--hover-on" data-id="@item.IdChiTietSp">
-                                        <div class="product-o__wrap">
+                    @if (Model.LstSanPhamMoi!.Any())
 
-                                            <a class="aspect aspect--bg-grey aspect--square u-d-block">
+                    {
+                        <div class="slider-fouc">
+                            <div class="owl-carousel tab-slider" data-item="4">
+                                @foreach (var item in Model.LstSanPhamMoi!)
+                                {
+                                    <div class="u-s-m-b-30">
+                                        <div class="product-o product-o--hover-on" data-id="@item.IdChiTietSp">
+                                            <div class="product-o__wrap">
 
-                                                <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
-                                            </a>
-                                            <div class="product-o__action-wrap">
-                                                <ul class="product-o__action-list">
-                                                    <li>
+                                                <a class="aspect aspect--bg-grey aspect--square u-d-block">
 
-                                                        <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                    </li>
-                                                    @*<li>
+                                                    <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
+                                                </a>
+                                                <div class="product-o__action-wrap">
+                                                    <ul class="product-o__action-list">
+                                                        <li>
 
-                                                        <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                    </li>*@
-                                                    
-                                                </ul>
+                                                            <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
+                                                        </li>
+                                                        @*<li>
+
+                                                                <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
+                                                            </li>*@
+
+                                                    </ul>
+                                                </div>
                                             </div>
+
+                                            <span class="product-o__category">
+
+                                                <a href="/sanphamchitiets">@item.ThuongHieu</a>
+                                            </span>
+
+                                            <span class="product-o__name">
+
+                                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
+                                            </span>
+                                            <div class="product-o__rating gl-rating-style">
+                                                <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+
+                                                <span class="product-o__review">(@item.SoLanDanhGia)</span>
+                                            </div>
+
+                                            <span class="product-o__price">
+                                                @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)
+                                                @if (item.KhuyenMai == true)
+                                                {
+                                                    <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)</span>
+
+                                                }
+                                            </span>
                                         </div>
-
-                                        <span class="product-o__category">
-
-                                            <a href="/sanphamchitiets">@item.ThuongHieu</a>
-                                        </span>
-
-                                        <span class="product-o__name">
-
-                                            <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
-                                        </span>
-                                        <div class="product-o__rating gl-rating-style">
-                                            <i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-
-                                            <span class="product-o__review">(@item.SoLanDanhGia)</span>
-                                        </div>
-
-                                        <span class="product-o__price">
-                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)
-                                            @if (item.KhuyenMai == true)
-                                            {
-                                                <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)</span>
-
-                                            }
-                                        </span>
                                     </div>
-                                </div>
-                            }
+                                }
+                            </div>
                         </div>
-                    </div>
+                    }
+                    else
+
+                    {
+                        <div style="DISPLAY: flex;justify-content: center;align-items: center;margin-top: -60px;height: 200px;width: 100%;background-repeat: no-repeat;background-size: contain;background-position: center;background-image: url('https://img.pikbest.com/58pic/35/40/67/62358PIC58PICs58PICNqKPb90An6_PIC2018.gif!sw800');">
+                            <span style="
+    margin-top: 237px;
+    color: red;
+    font-weight: bold;
+">
+                                KHÔNG CÓ SẢN PHẨM!!!
+                            </span>
+                        </div>
+
+                    }
+
                 </div>
                 <!--====== End - Tab 1 ======-->
                 <!--====== Tab 2 ======-->
                 <div class="tab-pane" id="e-b-s">
-                    <div class="slider-fouc">
-                        <div class="owl-carousel tab-slider" data-item="4">
-                            @foreach (var item in Model.LstBanChay!)
-                            {
-                                <div class="u-s-m-b-30">
-                                    <div class="product-o product-o--hover-on" data-id="@item.IdChiTietSp">
-                                        <div class="product-o__wrap">
+                    @if (Model.LstBanChay!.Any())
+                    {
+                        <div class="slider-fouc">
+                            <div class="owl-carousel tab-slider" data-item="4">
+                                @foreach (var item in Model.LstBanChay!)
+                                {
+                                    <div class="u-s-m-b-30">
+                                        <div class="product-o product-o--hover-on" data-id="@item.IdChiTietSp">
+                                            <div class="product-o__wrap">
 
-                                            <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/@item.IdChiTietSp">
+                                                <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/@item.IdChiTietSp">
 
-                                                <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
-                                            </a>
-                                            <div class="product-o__action-wrap">
-                                                <ul class="product-o__action-list">
-                                                    <li>
+                                                    <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
+                                                </a>
+                                                <div class="product-o__action-wrap">
+                                                    <ul class="product-o__action-list">
+                                                        <li>
 
-                                                        <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                    </li>
-                                                    @*<li>
+                                                            <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
+                                                        </li>
+                                                        @*<li>
 
-                                                        <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                    </li>*@
-                                                    
-                                                </ul>
+                                                <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
+                                            </li>*@
+
+                                                    </ul>
+                                                </div>
                                             </div>
+
+                                            <span class="product-o__category">
+
+                                                <a href="/sanphamchitiets">@item.ThuongHieu</a>
+                                            </span>
+
+                                            <span class="product-o__name">
+
+                                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
+                                            </span>
+                                            <div class="product-o__rating gl-rating-style">
+                                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+
+                                                <span class="product-o__review">(@item.SoLanDanhGia)</span>
+                                            </div>
+
+                                            <span class="product-o__price">
+                                                @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)
+                                                @if (item.KhuyenMai == true)
+                                                {
+                                                    <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)</span>
+
+                                                }
+                                            </span>
                                         </div>
-
-                                        <span class="product-o__category">
-
-                                            <a href="/sanphamchitiets">@item.ThuongHieu</a>
-                                        </span>
-
-                                        <span class="product-o__name">
-
-                                            <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
-                                        </span>
-                                        <div class="product-o__rating gl-rating-style">
-                                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                            <span class="product-o__review">(@item.SoLanDanhGia)</span>
-                                        </div>
-
-                                        <span class="product-o__price">
-                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)
-                                            @if (item.KhuyenMai == true)
-                                            {
-                                                <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)</span>
-
-                                            }
-                                        </span>
                                     </div>
-                                </div>
-                            }
+                                }
+                            </div>
                         </div>
-                    </div>
+                    }
+                    else
+
+                    {
+                        <div style="DISPLAY: flex;justify-content: center;align-items: center;margin-top: -60px;height: 200px;width: 100%;background-repeat: no-repeat;background-size: contain;background-position: center;background-image: url('https://img.pikbest.com/58pic/35/40/67/62358PIC58PICs58PICNqKPb90An6_PIC2018.gif!sw800');">
+                            <span style="
+    margin-top: 237px;
+    color: red;
+    font-weight: bold;
+">
+                                KHÔNG CÓ SẢN PHẨM!!!
+                            </span>
+                        </div>
+                    }
                 </div>
                 <!--====== End - Tab 2 ======-->
                 <!--====== Tab 3 ======-->
@@ -162,74 +197,12 @@
                     <div class="slider-fouc">
                         <div class="owl-carousel tab-slider" data-item="4">
                             @*<div class="u-s-m-b-30">
-                                <div class="product-o product-o--hover-on">
-                                    <div class="product-o__wrap">
-
-                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/@item.IdChiTietSp">
-
-                                            <img class="aspect__img" src="images/product/electronic/product2.jpg" alt="">
-                                        </a>
-                                        <div class="product-o__action-wrap">
-                                            <ul class="product-o__action-list">
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
-                                                </li>
-                                                <li>
-
-                                                    <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                    <span class="product-o__category">
-
-                                        <a href="/sanphamchitiets">Electronics</a>
-                                    </span>
-
-                                    <span class="product-o__name">
-
-                                        <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">Red Wireless Headphone</a>
-                                    </span>
-                                    <div class="product-o__rating gl-rating-style">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                        <span class="product-o__review">(23)</span>
-                                    </div>
-
-                                    <span class="product-o__price">
-                                        $125.00
-
-                                        <span class="product-o__discount">$160.00</span>
-                                    </span>
-                                </div>
-                            </div>*@
-                        </div>
-                    </div>
-                </div>
-                <!--====== End - Tab 3 ======-->
-                <!--====== Tab 4 ======-->
-                <div class="tab-pane" id="e-f-p">
-                    <div class="slider-fouc">
-                        <div class="owl-carousel tab-slider" data-item="4">
-                            @foreach (var item in Model.LstSanPhamNoiBat!)
-                            {
-                                <div class="u-s-m-b-30">
-                                    <div class="product-o product-o--hover-on" data-id="@item.IdChiTietSp">
+                                    <div class="product-o product-o--hover-on">
                                         <div class="product-o__wrap">
 
                                             <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/@item.IdChiTietSp">
 
-                                                <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
+                                                <img class="aspect__img" src="images/product/electronic/product2.jpg" alt="">
                                             </a>
                                             <div class="product-o__action-wrap">
                                                 <ul class="product-o__action-list">
@@ -237,43 +210,122 @@
 
                                                         <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
                                                     </li>
-                                                    @*<li>
+                                                    <li>
 
                                                         <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
-                                                    </li>*@
-                                                    
+                                                    </li>
+                                                    <li>
+
+                                                        <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"><i class="fas fa-heart"></i></a>
+                                                    </li>
+                                                    <li>
+
+                                                        <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
 
                                         <span class="product-o__category">
 
-                                            <a href="/sanphamchitiets">@item.ThuongHieu</a>
+                                            <a href="/sanphamchitiets">Electronics</a>
                                         </span>
 
                                         <span class="product-o__name">
 
-                                            <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
+                                            <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">Red Wireless Headphone</a>
                                         </span>
                                         <div class="product-o__rating gl-rating-style">
                                             <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
 
-                                            <span class="product-o__review">(@item.SoLanDanhGia)</span>
+                                            <span class="product-o__review">(23)</span>
                                         </div>
 
                                         <span class="product-o__price">
-                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)
-                                            @if (item.KhuyenMai == true)
-                                            {
-                                                <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)</span>
+                                            $125.00
 
-                                            }
+                                            <span class="product-o__discount">$160.00</span>
                                         </span>
                                     </div>
-                                </div>
-                            }
+                                </div>*@
                         </div>
                     </div>
+                </div>
+                <!--====== End - Tab 3 ======-->
+                <!--====== Tab 4 ======-->
+                <div class="tab-pane" id="e-f-p">
+                    @if (Model.LstSanPhamNoiBat!.Any())
+
+                    {
+                        <div class="slider-fouc">
+                            <div class="owl-carousel tab-slider" data-item="4">
+                                @foreach (var item in Model.LstSanPhamNoiBat!)
+                                {
+                                    <div class="u-s-m-b-30">
+                                        <div class="product-o product-o--hover-on" data-id="@item.IdChiTietSp">
+                                            <div class="product-o__wrap">
+
+                                                <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/@item.IdChiTietSp">
+
+                                                    <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
+                                                </a>
+                                                <div class="product-o__action-wrap">
+                                                    <ul class="product-o__action-list">
+                                                        <li>
+
+                                                            <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
+                                                        </li>
+                                                        @*<li>
+
+                                                <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Add to Cart"><i class="fas fa-plus-circle"></i></a>
+                                            </li>*@
+
+                                                    </ul>
+                                                </div>
+                                            </div>
+
+                                            <span class="product-o__category">
+
+                                                <a href="/sanphamchitiets">@item.ThuongHieu</a>
+                                            </span>
+
+                                            <span class="product-o__name">
+
+                                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
+                                            </span>
+                                            <div class="product-o__rating gl-rating-style">
+                                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+
+                                                <span class="product-o__review">(@item.SoLanDanhGia)</span>
+                                            </div>
+
+                                            <span class="product-o__price">
+                                                @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)
+                                                @if (item.KhuyenMai == true)
+                                                {
+                                                    <span class="product-o__discount">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)</span>
+
+                                                }
+                                            </span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    else
+
+                    {
+                        <div style="DISPLAY: flex;justify-content: center;align-items: center;margin-top: -60px;height: 200px;width: 100%;background-repeat: no-repeat;background-size: contain;background-position: center;background-image: url('https://img.pikbest.com/58pic/35/40/67/62358PIC58PICs58PICNqKPb90An6_PIC2018.gif!sw800');">
+                            <span style="
+    margin-top: 237px;
+    color: red;
+    font-weight: bold;
+">
+                                KHÔNG CÓ SẢN PHẨM!!!
+                            </span>
+                        </div>
+                    }
                 </div>
                 <!--====== End - Tab 4 ======-->
             </div>

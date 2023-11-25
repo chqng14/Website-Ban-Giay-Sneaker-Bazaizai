@@ -1,4 +1,4 @@
-﻿@model List<App_Data.ViewModels.HoaDon.SanPhamTest>;
+﻿@model App_Data.ViewModels.HoaDon.HoaDonTest;
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
 	xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -322,10 +322,6 @@
 
 <body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #f1f1f1;">
 	<center style="width: 100%; background-color: #f1f1f1;">
-		<div
-			style="display: none; font-size: 1px;max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
-			&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-		</div>
 		<div style="max-width: 600px; margin: 0 auto;" class="email-container">
 			<!-- BEGIN BODY -->
 			<table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
@@ -366,7 +362,7 @@
 							<th width="20%"
 								style="text-align:right; padding: 0 2.5em; color: #000; padding-bottom: 20px">Giá</th>
 						</tr>
-						@foreach (var item in Model)
+						@foreach (var item in Model.SanPham)
 						{
 							<tr style="border-bottom: 1px solid rgba(0,0,0,.05);">
 								<td valign="middle" width="80%" style="text-align:left; padding: 0 2.5em;">
@@ -385,7 +381,31 @@
 							</tr>
 
 						}
-						<hr>
+						<hr />
+						<tr style="border-bottom: 1px solid rgba(0,0,0,.05);margin-bottom:15px">
+							<td valign="middle" width="80%" style="text-align:left; padding: 0 2.5em;">
+								<div class="product-entry">
+									<div class="text">
+										<h3 style="font-size:18px">Tiền ship:</h3>
+									</div>
+								</div>
+							</td>
+							<td valign="middle" width="20%" style="text-align:left; padding: 0 2.5em;">
+								<span class="price" style="color: #ff4500; font-size:18px;font-weight:600">@string.Format("{0:N0}đ", Model.TienShip)</span>
+							</td>
+						</tr>
+						<tr style="border-bottom: 1px solid rgba(0,0,0,.05);margin-bottom:15px">
+							<td valign="middle" width="80%" style="text-align:left; padding: 0 2.5em;">
+								<div class="product-entry">
+									<div class="text">
+										<h3 style="font-size:18px">Tiền giảm:</h3>
+									</div>
+								</div>
+							</td>
+							<td valign="middle" width="20%" style="text-align:left; padding: 0 2.5em;">
+								<span class="price" style="color: #ff4500; font-size:18px;font-weight:600">@string.Format("{0:N0}đ", Model.TienGiam)</span>
+							</td>
+						</tr>
 						<tr style="border-bottom: 1px solid rgba(0,0,0,.05);margin-bottom:15px">
 							<td valign="middle" width="80%" style="text-align:left; padding: 0 2.5em;">
 								<div class="product-entry">
@@ -395,7 +415,7 @@
 								</div>
 							</td>
 							<td valign="middle" width="20%" style="text-align:left; padding: 0 2.5em;">
-								<span class="price" style="color: #ff4500; font-size: 20px;font-weight:600">@string.Format("{0:N0}đ", Model.Sum(c => c.GiaBan * c.SoLuong))</span>
+								<span class="price" style="color: #ff4500; font-size: 20px;font-weight:600">@string.Format("{0:N0}đ", Model.TongGia)</span>
 							</td>
 						</tr>
 					</table>
@@ -405,14 +425,14 @@
 		</div>
 	</center>
 	<footer style="height: auto; width: 70%; background-color: #f1f1f1; margin: 0 auto;">
-		<div style="color: rgba(0,0,0,.05); text-align: center;">
-			<h2 style="color:rgba(0,0,0,.05)">Bazaizai Store</h2>
+		<div style="color: #000; text-align: center;">
+			<h2 style="color:#000">Bazaizai Store</h2>
 			<p>Số điện thoại: 0123 456 789</p>
 			<p>
 				Mạng xã hội:
-				<a href="https://facebook.com/bazaizaistore" style="color: rgba(0,0,0,.05);">Facebook</a>
-				<a href="https://twitter.com/bazaizaistore" style="color: rgba(0,0,0,.05);">Twitter</a>
-				<a href="https://instagram.com/bazaizaistore" style="color: rgba(0,0,0,.05);">Instagram</a>
+				<a href="https://facebook.com/bazaizaistore" style="color: #000;">Facebook</a>
+				<a href="https://twitter.com/bazaizaistore" style="color: #000;">Twitter</a>
+				<a href="https://instagram.com/bazaizaistore" style="color: #000;">Instagram</a>
 			</p>
 		</div>
 	</footer>

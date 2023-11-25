@@ -132,6 +132,7 @@ namespace App_View.Controllers
                 };
                 var mahd = await hoaDonServices.CreateHoaDon(hoadon);
                 var tien = (double)(hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam ?? 0));
+                var hdlist = new List<HoaDonTest>();
                 var spList = new List<SanPhamTest>();
                 foreach (var item in listcart)
                 {
@@ -164,7 +165,14 @@ namespace App_View.Controllers
                     var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
                     await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                 }
-                SessionServices.SetspToSession(HttpContext.Session, "sp", spList);
+                var hoadontest = new HoaDonTest()
+                {
+                    TienShip = hoadon.TienShip,
+                    TienGiam = hoadon.TienGiam,
+                    TongGia = tien,
+                    SanPham = spList,
+                };
+                SessionServices.SetspToSession(HttpContext.Session, "sp", hoadontest);
                 if (hoaDonDTO.LoaiThanhToan.ToLower() == "momo")
                 {
                     var url = await Momo(hoadon.IdHoaDon, mahd, tien);
@@ -294,7 +302,14 @@ namespace App_View.Controllers
                     var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
                     await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                 }
-                SessionServices.SetspToSession(HttpContext.Session, "sp", spList);
+                var hoadontest = new HoaDonTest()
+                {
+                    TienShip = hoadon.TienShip,
+                    TienGiam = hoadon.TienGiam,
+                    TongGia = tien,
+                    SanPham = spList,
+                };
+                SessionServices.SetspToSession(HttpContext.Session, "sp", hoadontest);
                 listcart.Clear();
                 SessionServices.SetObjToSession(HttpContext.Session, "Cart", listcart);
                 if (hoaDonDTO.LoaiThanhToan == "Momo")
@@ -339,6 +354,7 @@ namespace App_View.Controllers
         public async Task<ActionResult<HoaDonViewModel>> Order(string idHoaDon)
         {
             var idpt = SessionServices.GetIdFomSession(HttpContext.Session, "idPay");
+            ViewBag.idNguoiDung = _userManager.GetUserId(User);
             if (!string.IsNullOrEmpty(idHoaDon))
             {
                 await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDon, (int)TrangThaiHoaDon.ChuaThanhToan);
