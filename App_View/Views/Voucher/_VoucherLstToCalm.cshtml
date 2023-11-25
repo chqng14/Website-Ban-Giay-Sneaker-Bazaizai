@@ -51,7 +51,7 @@
         return string.Empty; // hoặc bạn có thể trả về một giá trị mặc định khác nếu cần
     }
 }
-@* 
+@*
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-xl " role="document">
         <div class="modal-content">
@@ -61,93 +61,111 @@
         </div>
     </div>
 </div> *@
-@foreach (var item in ViewBag.TatCaVoucher)
+@if (Model.Count() == 0)
 {
-    <div class="m-order__get">
-        <div class="manage-o__header u-s-m-b-30">
-            <div class="dash-l-r">
-                <div>
-                    <div class="manage-o__text-2 u-c-secondary">@item.TenVoucher</div>
-                    <div style="color:#FF4500;font-size:16px" class="manage-o__text u-c-silver"> 🕛 @FormatDate(item.NgayKetThuc)</div>
-                </div>
-                <div>
-                    @if (item.LoaiHinhUuDai == 0)
-                    {
-                        <p>Giảm giá theo tiền mặt</p>
-                    }
-                    @if (item.LoaiHinhUuDai == 1)
-                    {
-                        <p>Giảm giá %</p>
-                    }
-                    @if (item.LoaiHinhUuDai == 2)
-                    {
-                        <p>Miễn phí vận chuyển</p>
-                    }
-                    <div class="dash__link dash__link--brand" style="float:right">
-                      @*   <a class="btn btn-primary btn-sm" onclick="showDetails('@item.MaVoucher')">Xem chi tiết</a> *@
-                                @Html.ActionLink("Chi tiết", "VoucherDetails", new { ma = item.MaVoucher })
-                    </div>
-                </div>
-            </div>
+    <div style="text-align: center;  display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 500px;
+margin:auto">
+        <img src="/images/CatForNotThing.gif" style="width: 480px;height:360px" alt="Ảnh thông báo">
+        <div class="u-s-m-b-15" style="text-align: center;">
+            <h1 class="dash__h1 u-s-m-b-14" style="display: inline-block; margin-top: 10px;">Hiện chưa có voucher nào. </h1>
         </div>
-        <div class="manage-o__description">
-            <div class="description__container">
-                <div class="description__img-wrap">
-
-                    <img class="u-img-fluid" src="/images/logo.jpg" alt="">
-                </div>
-                <div class="description-title">
-                    Mã: <u style="color:red">@item.MaVoucher </u>
-                    <p>
-                        Giảm
+    </div>
+}
+else
+{
+    @foreach (var item in Model)
+    {
+        <div class="m-order__get">
+            <div class="manage-o__header u-s-m-b-30">
+                <div class="dash-l-r">
+                    <div>
+                        <div class="manage-o__text-2 u-c-secondary">@item.TenVoucher</div>
+                        <div style="color:#FF4500;font-size:16px" class="manage-o__text u-c-silver"> 🕛 @FormatDate(item.NgayKetThuc)</div>
+                    </div>
+                    <div>
+                        @if (item.LoaiHinhUuDai == 0)
+                        {
+                            <p>Giảm giá theo tiền mặt</p>
+                        }
                         @if (item.LoaiHinhUuDai == 1)
                         {
-                            <span> @item.MucUuDai %</span>
+                            <p>Giảm giá %</p>
                         }
-                        else
+                        @if (item.LoaiHinhUuDai == 2)
                         {
-                            double? mucUuDai = item.MucUuDai;
-                            @string.Format("{0:N0}đ", item.MucUuDai)
-                            // Định dạng giá trị theo định dạng tiền Việt Nam
+                            <p>Miễn phí vận chuyển</p>
                         }
-                    </p>
-                    <p>Đơn tối thiểu: @FormatCurrency(item.DieuKien)</p>
-                    <p>Số lượng: @item.SoLuong</p>
-                </div>
-
-            </div>
-            @if (idNguoiDung == null)
-            {
-                <div class="description__info-wrap">
-                    <div class="body_copy">
-                        <a class="manage-o__badge badge--delivered notlogin" id="notlogin">Đăng nhập để lưu</a>
+                        <div class="dash__link dash__link--brand" style="float:right">
+                            @*   <a class="btn btn-primary btn-sm" onclick="showDetails('@item.MaVoucher')">Xem chi tiết</a> *@
+                            @Html.ActionLink("Chi tiết", "VoucherDetails", new { ma = item.MaVoucher })
+                        </div>
                     </div>
                 </div>
-            }
-            else
-            {
-                @if (_voucherND.CheckVoucherInUser(item.MaVoucher, idNguoiDung) == true)
+            </div>
+            <div class="manage-o__description">
+                <div class="description__container">
+                    <div class="description__img-wrap">
+
+                        <img class="u-img-fluid" src="/images/logo.jpg" alt="">
+                    </div>
+                    <div class="description-title">
+                        Mã: <u style="color:red">@item.MaVoucher </u>
+                        <p>
+                            Giảm
+                            @if (item.LoaiHinhUuDai == 1)
+                            {
+                                <span> @item.MucUuDai %</span>
+                            }
+                            else
+                            {
+                                double? mucUuDai = item.MucUuDai;
+                                @string.Format("{0:N0}đ", item.MucUuDai)
+                                // Định dạng giá trị theo định dạng tiền Việt Nam
+                            }
+                        </p>
+                        <p>Đơn tối thiểu: @FormatCurrency(item.DieuKien)</p>
+                        <p>Số lượng: @item.SoLuong</p>
+                    </div>
+
+                </div>
+                @if (idNguoiDung == null)
                 {
-                    @*   <form asp-action="SaveVoucher" asp-controller="VoucherNguoiDung" method="post"> *@
                     <div class="description__info-wrap">
-                        <a id="calmVoucher" class="manage-o__badge badge--delivered saveVoucherBtn" style="border:none;">Lưu Voucher</a>
-                        <input class="input-text input-text--border-radius input-text--style-1 maVoucher-Input"
-                               type="text" value="@item.MaVoucher" name="MaVoucher" id="ma-voucher-input" hidden placeholder="Nhập mã voucher">
+                        <div class="body_copy">
+                            <a class="manage-o__badge badge--delivered notlogin" id="notlogin">Đăng nhập để lưu</a>
+                        </div>
                     </div>
                 }
                 else
                 {
-                    <div class="description__info-wrap">
-                        <div class="body_copy">
-                            <a class="manage-o__badge badge--delivered copyButton">Đã sở hữu 📋</a>
-                            <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                    @if (_voucherND.CheckVoucherInUser(item.MaVoucher, idNguoiDung) == true)
+                    {
+                        @*   <form asp-action="SaveVoucher" asp-controller="VoucherNguoiDung" method="post"> *@
+                        <div class="description__info-wrap">
+                            <a id="calmVoucher" class="manage-o__badge badge--delivered saveVoucherBtn" style="border:none;">Lưu Voucher</a>
+                            <input class="input-text input-text--border-radius input-text--style-1 maVoucher-Input"
+                                   type="text" value="@item.MaVoucher" name="MaVoucher" id="ma-voucher-input" hidden placeholder="Nhập mã voucher">
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <div class="description__info-wrap">
+                            <div class="body_copy">
+                                <a class="manage-o__badge badge--delivered copyButton">Đã sở hữu 📋</a>
+                                <textarea class="textToCopy" style="display: none;">@item.MaVoucher</textarea>
+                            </div>
+                        </div>
+                    }
                 }
-            }
+            </div>
         </div>
-    </div>
+    }
 }
+
 <script>
     $(document).off('click', '.copyButton').on('click', '.copyButton', function () {
         var maVoucher = $(this).closest('.body_copy').find('.textToCopy').val();

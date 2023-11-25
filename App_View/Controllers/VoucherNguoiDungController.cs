@@ -54,7 +54,6 @@ namespace App_View.Controllers
             }
 
             ViewBag.TatCa = voucherNguoiDung; // Gán danh sách lọc được vào ViewBag.TatCa
-
             return PartialView("_VoucherWalletPartial", voucherNguoiDung);
         }
 
