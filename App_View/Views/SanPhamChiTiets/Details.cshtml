@@ -416,10 +416,6 @@
                                 </li>
                                 <li class="nav-item">
 
-                                    <a class="nav-link" data-toggle="tab" href="#pd-tag">TAGS</a>
-                                </li>
-                                <li class="nav-item">
-
                                     <a class="nav-link active" id="view-review" data-toggle="tab" href="#pd-rev">
                                         ĐÁNH GIÁ
 
@@ -432,32 +428,32 @@
 
                             <!--====== Tab 1 ======-->
                             <div class="tab-pane" id="pd-desc">
-                                <div class="pd-tab__desc">
-                                    @Html.Raw(Model.MoTaSanPham)
+                                <div class="pd-tab__desc" style="max-width: none !important">
+                                    @if (string.IsNullOrEmpty(Model.MoTaSanPham))
+                                    {
+                                        <div style="DISPLAY: flex; justify-content: center; align-items: center; height: 200px; width: 100%; background-repeat: no-repeat; background-size: contain; background-position: center; background-image: url('https://i.stack.imgur.com/8yFqA.gif');">
+                                            <span style="
+    margin-top: 237px;
+    color: red;
+    font-weight: bold;
+">
+                                                Chưa có mô tả cho sản phẩm này!!!
+                                            </span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(Model.MoTaSanPham)
+                                    }
                                 </div>
                             </div>
                             <!--====== End - Tab 1 ======-->
-                            <!--====== Tab 2 ======-->
-                            <div class="tab-pane" id="pd-tag">
-                                <div class="pd-tab__tag">
-                                    <h2 class="u-s-m-b-15">ADD YOUR TAGS</h2>
-                                    <div class="u-s-m-b-15">
-                                        <form>
-
-                                            <input class="input-text input-text--primary-style" type="text">
-
-                                            <button class="btn btn--e-brand-b-2" type="submit">ADD TAGS</button>
-                                        </form>
-                                    </div>
-
-                                    <span class="gl-text">Use spaces to separate tags. Use single quotes (') for phrases.</span>
-                                </div>
+                            <div class="tab-pane active show" id="pd-rev">
+                                <partial name="_DanhGiaPartial" />
                             </div>
-                            <!--====== End - Tab 2 ======-->
-                            <partial name="_DanhGiaPartial" />
 
                         </div>
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>
