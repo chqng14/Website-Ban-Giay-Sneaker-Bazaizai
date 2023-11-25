@@ -30,7 +30,7 @@ namespace App_View.Models
             {
                 Id = Guid.NewGuid().ToString(),
                 UserName = "Admin",
-                Email = "adminhehehe@gmail.com",
+                Email = "bazaizaistore@gmail.com",
                 TenNguoiDung = "Admin",
                 PhoneNumber = "0369426223",
                 EmailConfirmed = true,
@@ -46,7 +46,7 @@ namespace App_View.Models
                 var user = await userManager.FindByEmailAsync(defaultUser.Email);
                 if (user == null)
                 {
-                    await userManager.CreateAsync(defaultUser, "uchihahaha123");
+                    await userManager.CreateAsync(defaultUser, "123456");
                     await userManager.AddToRoleAsync(defaultUser, ChucVuMacDinh.Admin.ToString());
                 }
 

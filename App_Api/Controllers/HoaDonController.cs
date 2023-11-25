@@ -84,13 +84,13 @@ namespace App_Api.Controllers
                 foreach (var item in hoadonct)
                 {
                     var sp = await _sanPhamChiTietController.GetSanPhamViewModel(item.IdSanPhamChiTiet);
-                    var danhgia = await _danhGiaController.GetListAsyncViewModel(item.IdSanPhamChiTiet);
+                    var danhgia = await _danhGiaController.GetDanhGiaViewModelById(item.IdSanPhamChiTiet + "*" + item.IdHoaDon);
                     var dg = new DanhGiaViewModel();
-                    foreach (var item2 in danhgia)
+                    if (danhgia != null)
                     {
-                        if (item2.IdSanPhamChiTiet == sp.IdChiTietSp && sp.IdChiTietSp == item.IdSanPhamChiTiet)
+                        if (danhgia.IdSanPhamChiTiet == sp.IdChiTietSp && sp.IdChiTietSp == item.IdSanPhamChiTiet)
                         {
-                            dg = item2;
+                            dg = danhgia;
                         }
                     }
                     var sanPhamObject = new SanPhamTest

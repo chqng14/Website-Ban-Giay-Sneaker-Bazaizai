@@ -12,7 +12,7 @@
                         <ul class="breadcrumb__list">
                             <li class="has-separator">
 
-                                <a href="/">Home</a>
+                                <a href="/">Gian hàng</a>
                             </li>
                             <li class="is-marked">
 
@@ -39,11 +39,11 @@
                             <div class="empty">
                                 <div class="empty__wrap">
 
-                                    <span class="empty__big-text">TRỐNG</span>
+                                    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: -60px; height: 300px; width: 100%; background-repeat: no-repeat; background-size: contain; background-position: center; background-image: url('https://www.mestores.com/assets/img/empty-wishlist@2x.png');">
+                                        <span style="margin-top: 380px">Danh sách yêu thích trống!!!</span>
+                                        <a class="nav-link btn--e-white-brand-shadow" href="/sanphamchitiets">GIAN HÀNG</a>
+                                    </div>
 
-                                    <span class="empty__text-1">Không có sản phẩm nào trong danh sách yêu thích.</span>
-
-                                    <a class="empty__redirect-link btn--e-brand" href="/sanphamchitiets">CONTINUE SHOPPING</a>
                                 </div>
                             </div>
                         </div>
@@ -114,9 +114,9 @@
                                             <form id="removeToFavoriteForm" method="post" action="/SanPhamYeuThich/Remove">
                                                 <input type="hidden" name="IdSanPhamChiTiet" value="@item.IdSanPhamChiTiet" />
                                             </form>
-                                            <a class="w-r__link btn--e-transparent-platinum-b-2" href="/sanphamchitiets/details/@item.IdSanPhamChiTiet">VIEW</a>
+                                            <a class="w-r__link btn--e-transparent-platinum-b-2" href="/sanphamchitiets/details/@item.IdSanPhamChiTiet">XEM CHI TIẾT</a>
 
-                                            <button class="w-r__link btn--e-transparent-platinum-b-2 btn-remove-sanphamyeuthich">REMOVE</button>
+                                            <button class="w-r__link btn--e-transparent-platinum-b-2 btn-remove-sanphamyeuthich">XÓA</button>
                                         </div>
                                     </div>
                                 </div>

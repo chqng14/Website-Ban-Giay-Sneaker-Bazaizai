@@ -3,8 +3,8 @@
     ViewData["Title"] = "CheckOut";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var thongTinGH = ViewData["ThongTinGH"] as List<App_Data.Models.ThongTinGiaoHang>; 
-    var voucher = ViewData["TatCaVoucher"] as List<App_Data.ViewModels.VoucherNguoiDung.VoucherNguoiDungDTO>;
-    var tongtien = ViewData["TongTien"] as double?;
+    var VoucherFreeShip = ViewData["VoucherFreeShip"] as List<App_Data.ViewModels.VoucherNguoiDung.VoucherNguoiDungDTO>;
+    var voucher = ViewData["Voucher"] as List<App_Data.ViewModels.VoucherNguoiDung.VoucherNguoiDungDTO>;
 }
 @if (ViewData["QuantityErrorMessages"] != null)
 {
@@ -132,10 +132,10 @@
                                                 </div>
                                                 <form class="checkout-modal2__form" asp-action="GetVoucherByMa" asp-controller="Voucher">
                                                     <tbody>
-                                                        @if (voucher != null)
+                                                        @if (VoucherFreeShip != null)
                                                         {
                                                             <span class="gl-modal-h1">Voucher freeship</span>
-                                                            @foreach (var item in voucher.Take(2).Where(c => c.LoaiHinhUuDai == 2 && c.DieuKien >= tongtien))
+                                                            @foreach (var item in VoucherFreeShip.Take(1))
                                                             {
                                                                 <tr>
                                                                     <div class="m-order__get" style="padding:12px;margin-bottom:15px">
@@ -145,8 +145,9 @@
                                                                                     <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
                                                                                 </div>
                                                                                 <div class="description-title">
+                                                                                    Mã: <u style="color:red">@item.MaVoucher </u>
                                                                                     <p>
-                                                                                        Giảm 100% phí ship
+                                                                                        Giảm     @string.Format("{0:N0}đ", item.MucUuDai)
                                                                                     </p>
                                                                                     <p width:40px>Đơn tối thiểu: @string.Format("{0:N0}đ", item.DieuKien)</p>
                                                                                 </div>
@@ -165,7 +166,7 @@
                                                                         </div>
                                                                     </div>
                                                                 </tr>
-                                                                @if (voucher.Count > 2)
+                                                                @if (VoucherFreeShip.Count > 1)
                                                                 {
                                                                     <!-- Dấu mũi tên xuống -->
                                                                     <div class="arrow-down-freeship" onclick="showfreeshipVoucher()"></div>
@@ -173,7 +174,7 @@
                                                                 <!-- Hidden Vouchers -->
                                                                 <tr>
                                                                     <div class="hidden-voucher-freeship">
-                                                                        @foreach (var hiddenvc in voucher.Skip(2).Where(c => c.LoaiHinhUuDai == 2 && c.DieuKien >= tongtien))
+                                                                        @foreach (var hiddenvc in VoucherFreeShip.Skip(1))
                                                                         {
                                                                             <div class="m-order__get" style="padding:12px;margin-bottom:15px">
                                                                                 <div class="manage-o__description">
@@ -182,8 +183,9 @@
                                                                                             <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
                                                                                         </div>
                                                                                         <div class="description-title">
+                                                                                            Mã: <u style="color:red">@hiddenvc.MaVoucher </u>
                                                                                             <p>
-                                                                                                Giảm 100% phí ship
+                                                                                                Giảm     @string.Format("{0:N0}đ", hiddenvc.MucUuDai)
                                                                                             </p>
                                                                                             <p width:40px>Đơn tối thiểu: @string.Format("{0:N0}đ", hiddenvc.DieuKien)</p>
                                                                                         </div>
@@ -192,7 +194,7 @@
                                                                                         <div class="body_copy">
                                                                                             <!--====== Radio Box ======-->
                                                                                             <div class="radio-box" style="margin-bottom: 15px;">
-                                                                                                <input type="radio" name="voucher" data-id="@item.IdVouCher" value="@item.IdVouCher">
+                                                                                                <input type="radio" name="voucher" data-id="@hiddenvc.IdVouCher" value="@hiddenvc.IdVouCher">
                                                                                                 <div class="radio-box__state radio-box__state--primary">
                                                                                                     <label class="radio-box__label" for="address-1"></label>
                                                                                                 </div>
@@ -204,7 +206,7 @@
                                                                         }
                                                                     </div>
                                                                 </tr>
-                                                                @if (voucher.Count > 2)
+                                                                @if (VoucherFreeShip.Count > 1)
                                                                 {
                                                                     <!-- Dấu mũi tên lên -->
                                                                     <div class="arrow-up-freeship" style="display:none" onclick="hiddenfreeshipVoucher()"></div>
@@ -213,7 +215,7 @@
 
 
                                                             <span class="gl-modal-h1">Voucher Giảm giá</span>
-                                                            @foreach (var item in voucher.Take(2).Where(c => c.LoaiHinhUuDai != 2 && c.DieuKien >= tongtien))
+                                                            @foreach (var item in voucher.Take(1))
                                                             {
                                                                 <tr>
                                                                     <div class="m-order__get" style="padding:12px;margin-bottom:15px">
@@ -223,6 +225,7 @@
                                                                                     <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
                                                                                 </div>
                                                                                 <div class="description-title">
+                                                                                    Mã: <u style="color:red">@item.MaVoucher </u>
                                                                                     <p>
                                                                                         Giảm
                                                                                         @if (item.LoaiHinhUuDai == 1)
@@ -231,9 +234,7 @@
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            double? mucUuDai = item.MucUuDai;
                                                                                             @string.Format("{0:N0}đ", item.MucUuDai)
-                                                                                            // Định dạng giá trị theo định dạng tiền Việt Nam
                                                                                         }
                                                                                     </p>
                                                                                     <p width:40px>Đơn tối thiểu: @string.Format("{0:N0}đ", item.DieuKien)</p>
@@ -253,14 +254,14 @@
                                                                         </div>
                                                                     </div>
                                                                 </tr>
-                                                                @if (voucher.Count > 2)
+                                                                @if (voucher.Count > 1)
                                                                 {
                                                                     <!-- Dấu mũi tên xuống -->
                                                                     <div class="arrow-down-btn" onclick="showHiddenVoucher()"></div>
                                                                 }
                                                                 <tr>
                                                                     <div class="hidden-voucher-row">
-                                                                        @foreach (var hiddenvc in voucher.Skip(2).Where(c => c.LoaiHinhUuDai != 2 && c.DieuKien >= tongtien))
+                                                                        @foreach (var hiddenvc in voucher.Skip(1))
                                                                         {
                                                                             <div class="m-order__get" style="padding:12px;margin-bottom:15px">
                                                                                 <div class="manage-o__description">
@@ -269,17 +270,15 @@
                                                                                             <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
                                                                                         </div>
                                                                                         <div class="description-title">
+                                                                                            Mã: <u style="color:red">@hiddenvc.MaVoucher </u>
                                                                                             <p>
                                                                                                 Giảm
-                                                                                                @if (item.LoaiHinhUuDai == 1)
+                                                                                                @if (hiddenvc.LoaiHinhUuDai == 1)
                                                                                                 {
-                                                                                                    <span> @item.MucUuDai %</span>
+                                                                                                    <span> @hiddenvc.MucUuDai %</span>
                                                                                                 }
                                                                                                 else
-                                                                                                {
-                                                                                                    double? mucUuDai = item.MucUuDai;
-                                                                                                    @string.Format("{0:N0}đ", item.MucUuDai)
-                                                                                                    // Định dạng giá trị theo định dạng tiền Việt Nam
+                                                                                                {@string.Format("{0:N0}đ", hiddenvc.MucUuDai)
                                                                                                 }
                                                                                             </p>
                                                                                             <p width:40px>Đơn tối thiểu: @string.Format("{0:N0}đ", hiddenvc.DieuKien)</p>
@@ -289,7 +288,7 @@
                                                                                         <div class="body_copy">
                                                                                             <!--====== Radio Box ======-->
                                                                                             <div class="radio-box" style="margin-bottom: 15px;">
-                                                                                                <input type="radio" name="voucher" data-id="@item.IdVouCher" value="@item.IdVouCher">
+                                                                                                <input type="radio" name="voucher" data-id="@hiddenvc.IdVouCher" value="@hiddenvc.IdVouCher">
                                                                                                 <div class="radio-box__state radio-box__state--primary">
                                                                                                     <label class="radio-box__label" for="address-1"></label>
                                                                                                 </div>
@@ -301,7 +300,7 @@
                                                                         }
                                                                     </div>
                                                                 </tr>
-                                                                @if (voucher.Count > 2)
+                                                                @if (voucher.Count > 1)
                                                                 {
                                                                     <!-- Dấu mũi tên lên -->
                                                                     <div class="arrow-up-btn" style="display:none;margin-bottom:15px" onclick="hiddenHiddenVoucher()"></div>
@@ -1116,7 +1115,6 @@
         $(document).ready(function () {
             $('#button-coupon').click(function () {
                 var voucherValue = $('#voucherinput').val();
-                $('#voucher-modal').close();
                 voucher(voucherValue);
             });
         });
@@ -1246,7 +1244,8 @@
                     $('#phiship').text(parseInt(phiship).toLocaleString("vi-VN").replace(/\./g, ',') + "đ");
 
                     // Lấy ra tổng tiền của sản phẩm có trong giỏ hàng
-                    if (MucUuDai !== null && MucUuDai !== "") {
+                    if (MucUuDai !== null || MucUuDai !== "") {
+                        console.log(MucUuDai);
                         var tongTien = tongtienSanPham-MucUuDai + phiship;
                         document.querySelector('input[name="TongTien"]').value = tongtienSanPham;
                     }
@@ -1284,20 +1283,28 @@
                     type: 'GET',
                     data: ma,
                     success: function (result) {
-                        $('#textvoucher').text("");
-                        loaiuudai = result.loaiuudai;
-                        // Áp dụng giảm giá từ voucher
-                        if (phiship==0 && loaiuudai == 2) {
+                        if (result.mess) {
                             toast({
-                                title: "Vui lòng nhập địa chỉ trước khi áp dụng freeship!",
+                                title: result.mess,
                                 type: "warning",
                                 duration: 2000
                             });
                         } else {
-                            MucUuDai = result.mucuidai;
-                            IdVoucher = result.idVoucher;
-                            $('input[name="IdVoucher"]').val(IdVoucher);
-                            applyDiscount(MucUuDai);
+                            $('#textvoucher').text("");
+                            loaiuudai = result.loaiuudai;
+                            // Áp dụng giảm giá từ voucher
+                            if (phiship==0 && loaiuudai == 2) {
+                                toast({
+                                    title: "Vui lòng nhập địa chỉ trước khi áp dụng freeship!",
+                                    type: "warning",
+                                    duration: 2000
+                                });
+                            } else {
+                                MucUuDai = result.mucuidai;
+                                IdVoucher = result.idVoucher;
+                                $('input[name="IdVoucher"]').val(IdVoucher);
+                                applyDiscount(MucUuDai);
+                            }
                         }
                     },
                     error: function (xhr, status, error) {
@@ -1379,14 +1386,16 @@
                 $('#TienGiam').text("-" + discountAmount.toLocaleString("vi-VN") + "đ");
             }
             else if (loaiuudai == 2) {
-                discountAmount = phiship;
+                if (discountAmount > phiship) {
+                    discountAmount = phiship;
+                }
                 $('#TienGiam').text("-" + discountAmount.toLocaleString("vi-VN") + "đ");
             }
             else {
                 discountAmount = tongtienSanPham * discountAmount / 100;
                 $('#TienGiam').text("-" + discountAmount.toLocaleString("vi-VN") + "đ");
             }
-
+            MucUuDai = discountAmount;
             document.querySelector('input[name="TienGiam"]').value = discountAmount;
             // Tính tổng tiền sau khi giảm giá
             var tamTinhGiaGiam = tongtienSanPham + parseFloat(phiship);

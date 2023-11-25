@@ -10,6 +10,7 @@ using App_View.Models.Components;
 using App_View.Models.Order;
 using App_View.Services;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Controllers
 {
+    [Authorize]
     public class DonHangController : Controller
     {
         private readonly HttpClient _httpclient;
@@ -52,8 +54,13 @@ namespace App_View.Controllers
         }
         public async Task<IActionResult> GetHoaDonOnline(string trangThai, string searchMaDonHang)
         {
-            var UserID = _userManager.GetUserId(User);
-            var listHoaDon = await hoaDonServices.GetHoaDonOnline(UserID);
+            var user = await _userManager.GetUserAsync(User);
+            var role = await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "NhanVien");
+            if (role)
+            {
+                return Json(new { mess = "Vui lòng dùng tài khoản khách!" });
+            }
+            var listHoaDon = await hoaDonServices.GetHoaDonOnline(user.Id);
             listHoaDon = listHoaDon.OrderByDescending(dh => dh.NgayTao).ToList();
 
             if (!string.IsNullOrEmpty(trangThai))
@@ -68,17 +75,26 @@ namespace App_View.Controllers
 
             var pageSize = 4;
             var initialList = listHoaDon.Take(pageSize).ToList();
+            if (!initialList.Any())
+            {
+                return Json(new { error = "Không có đơn hàng!" });
 
+            }
             return PartialView("GetHoaDonOnline", initialList);
         }
 
         [HttpGet]
         public async Task<IActionResult> GetMoreHoaDonOnline(string trangThai, int page, string searchMaDonHang)
         {
-            var UserID = _userManager.GetUserId(User);
+            var user = await _userManager.GetUserAsync(User);
+            var role = await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "NhanVien");
+            if (role)
+            {
+                return Json(new { mess = "Vui lòng dùng tài khoản khách!" });
+            }
             var pageSize = 4;
 
-            var listHoaDon = await hoaDonServices.GetHoaDonOnline(UserID);
+            var listHoaDon = await hoaDonServices.GetHoaDonOnline(user.Id);
             listHoaDon = listHoaDon.OrderByDescending(dh => dh.NgayTao).ToList();
 
             if (!string.IsNullOrEmpty(trangThai))

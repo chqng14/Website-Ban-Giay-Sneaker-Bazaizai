@@ -135,7 +135,15 @@
             type: 'GET',
             data: { trangThai: trangThai, searchMaDonHang: searchMaDonHang },
             success: function (result) {
-                $('#content1').empty().html(result);
+                if (result.mess) {
+                    $('#content1').empty().html('<h1 class="dash__h1 u-s-m-b-14">' + result.mess + '</h1>');
+                } else if (result.error) {
+
+                    // Nếu không có đơn hàng, thay thế nội dung bằng hình ảnh
+                    $('#content1').empty().html('<img src="https://dacsanngon.com/extension/product/img/cart-empty.png" style="width: 100%; height: auto" />');
+                }else {
+                    $('#content1').empty().html(result);
+                }
                 isLoading = false;
             },
             error: function (xhr, status, error) {
