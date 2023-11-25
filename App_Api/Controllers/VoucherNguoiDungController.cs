@@ -69,7 +69,7 @@ namespace App_Api.Controllers
             var VoucherKhaDung = VcRepos.GetAll().FirstOrDefault(c => c.MaVoucher == MaVoucher && c.TrangThai == (int)TrangThaiVoucher.HoatDong && c.SoLuong > 0);
             if (VoucherKhaDung != null)
             {
-                var existsInVoucherNguoiDung = VcNguoiDungRepos.GetAll().Any(vnd => vnd.IdVouCher == VoucherKhaDung.IdVoucher);
+                var existsInVoucherNguoiDung = VcNguoiDungRepos.GetAll().Any(vnd => vnd.IdVouCher == VoucherKhaDung.IdVoucher && vnd.IdNguoiDung == idNguoiDung);
 
                 if (existsInVoucherNguoiDung)
                 {
@@ -162,13 +162,13 @@ namespace App_Api.Controllers
             {
                 foreach (var item in lstNguoidungNew)
                 {
-                    if (await voucherNguoiDungRep.TangVoucherNguoiDungMoi(ma, item.Id)==true)
+                    if (await voucherNguoiDungRep.TangVoucherNguoiDungMoi(ma, item.Id) == true)
                     {
                         i++;
-                    }             
+                    }
                 }
-                if(i >0)
-                return true;
+                if (i > 0)
+                    return true;
             }
             return false;
 
@@ -182,6 +182,6 @@ namespace App_Api.Controllers
             }
             return await voucherNguoiDungRep.GetVocherTaiQuay(id);
         }
-       
+
     }
 }
