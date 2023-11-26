@@ -98,15 +98,9 @@ namespace App_View.Areas.Admin.Pages.User
 
         }
 
-        //public async Task OnGetAsync(string returnUrl = null)
-        //{
-        //    ReturnUrl = returnUrl;
-        //}
-
+ 
         public async Task<IActionResult> OnPostAsync(/*string returnUrl = null*/)
         {
-
-            //returnUrl ??= Url.Content("~/");
             if (ModelState.IsValid)
             {
                 var user = CreateUser();

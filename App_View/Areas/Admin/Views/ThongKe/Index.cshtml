@@ -2,92 +2,195 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 
-<!-- Content Header (Page header) -->
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="row mb-2">
-            <div class="col-sm-6">
-                <h1>Thống kê</h1>
-            </div>
-            <div class="col-sm-6">
-                <ol class="breadcrumb float-sm-right">
-                    <li class="breadcrumb-item"><a href="#">Home</a></li>
-                    <li class="breadcrumb-item active">Thống kê</li>
-                </ol>
-            </div>
-        </div>
-    </div><!-- /.container-fluid -->
-</section>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+    }
 
-<!-- Main content -->
-<section class="content">
+    .chartMenu {
+        width: 100vw;
+        height: 40px;
+        background: #1A1A1A;
+        color: rgba(54, 162, 235, 1);
+    }
 
-    <!-- Default box -->
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Thống kê danh thu</h3>
+        .chartMenu p {
+            padding: 10px;
+            font-size: 20px;
+        }
 
-            <div class="card-tools">
-                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
-                    <i class="fas fa-minus"></i>
-                </button>
-                <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+    .chartCard {
+        width: 100vw;
+        height: calc(100vh - 40px);
+        background: rgba(54, 162, 235, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chartBox {
+        width: 80%;
+        padding: 20px;
+        border-radius: 20px;
+        border: solid 3px rgba(54, 162, 235, 1);
+        background: white;
+    }
+
+    /*    .custom-scroll-table {
+            max-height: 10px;
+            overflow-y: auto;
+        }
+    */
+
+</style>
+
+<h1 style="text-align:center">Thống kê</h1>
+<div class="row">
+    <div class="chartCard">
+
+        <div class="chartBox">
+            <canvas id="myChart" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"></canvas>
+            <input type="date" id="fromDate">
+            <input type="date" id="toDate">
         </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="chart">
-                        <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Ngày</th>
-                                <th>Doanh thu</th>
-                                <th>Lợi nhuận</th>
-                            </tr>
-                        </thead>
-                        <tbody id="load_data"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- /.card-body -->
-        <div class="card-footer">
-            Footer
-        </div>
-        <!-- /.card-footer-->
     </div>
-    <!-- /.card -->
+</div>
 
-</section>
-<!-- /.content -->
+<table class="table table-bordered custom-scroll-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Ngày</th>
+            <th>Doanh thu</th>
+            <th>Lợi nhuận</th>
+
+        </tr>
+    </thead>
+    <tbody id="load_data">
+    </tbody>
+</table>
+
+
 @section scripts{
-    <script src="~/chart.js/Chart.min.js"></script>
-    <script src="~/moment/moment.min.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <!-- Thêm liên kết DataTables CSS và JS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="~/Admin/moment/moment.min.js"></script>
     <script>
-        $(function () {
-            
-            var arrDoanhThu = [];
-            var arrLoiNhuan = [];
-            var arrDate = [];
+
+        var dates = [];
+        var arrDoanhThu = [];
+        var arrLoiNhuan = [];
+        var myChart;
+
+        function updateChart(fromDate, toDate) {
             $.ajax({
-                url: '/Admin/ThongKe/GetStatistical',
-                type: 'GET',
-                data: { fromDate: '', toDate: '' },
+                type: "GET",
+                url: "@Url.Action("GetStatistical", "ThongKe")",
+                data: { fromDate: fromDate, toDate: toDate },
                 success: function (rs) {
-                    console.log(rs.Data)
+                    console.log(rs.data);
+                    dates = [];
+                    arrDoanhThu = [];
+                    arrLoiNhuan = [];
+
+                    $.each(rs.data, function (i, item) {
+                        console.log("Hi, chào cậu ");
+                        var strDate = moment(item.date).format('DD/MM/yyyy');
+                        arrDoanhThu.push(item.doanhThu);
+                        arrLoiNhuan.push(item.loiNhuan);
+                        dates.push(strDate);
+                        console.log(dates);
+                    });
+
+                    // Cập nhật dữ liệu cho biểu đồ hiện tại
+                    myChart.data.labels = dates;
+                    myChart.data.datasets[0].data = arrLoiNhuan;
+                    myChart.data.datasets[1].data = arrDoanhThu;
+
+                    // Cập nhật biểu đồ
+                    myChart.update();
+                    load_data(rs.data);
                 }
             });
+        }
 
+        // Khởi tạo biểu đồ ban đầu
+        $(document).ready(function () {
+            const data = {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Lợi nhuận',
+                        backgroundColor: 'rgba(60,141,188,0.9)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: []
+                    },
+                    {
+                        label: 'Danh thu',
+                        backgroundColor: 'rgba(210, 214, 222, 1)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                        data: []
+                    }
+                ]
+            };
 
-        })
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    datasetFill: false
+                }
+            };
+
+            myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+
+            updateChart('', '');
+
+        });
+
+        // Xử lý sự kiện khi ngày thay đổi
+        $('#fromDate, #toDate').change(function () {
+            var fromDate = $('#fromDate').val();
+            var toDate = $('#toDate').val();
+            updateChart(fromDate, toDate);
+        });
+        function load_data(data) {
+            var strHtml = "";
+            $.each(data, function (i, item) {
+                var strDate = moment(item.date).format('DD/MM/yyyy');
+                strHtml += "<tr>";
+                strHtml += "<td>" + (i + 1) + "</td>";
+                strHtml += "<td>" + strDate + "</td>";
+                strHtml += "<td>" + item.doanhThu + "</td>";
+                strHtml += "<td>" + item.loiNhuan + "</td>";
+                strHtml += "</tr>";
+            });
+            $('#load_data').html(strHtml);
+        }
 
     </script>
 }

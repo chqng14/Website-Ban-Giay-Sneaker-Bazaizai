@@ -5,36 +5,48 @@
     ViewData["Title"] = "Danh sách chức vụ";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
-<h2>@ViewData["Title"]</h2>
+<h1 style="text-align:center">@ViewData["Title"]</h1>
+
 <partial name="_StatusMessage" model="@Model.StatusMessage" />
 
 <div class="mb-2">
-    <a class="btn btn-secondary" asp-area="Admin" asp-page="/Role/Create"> Tạo role mới</a>
-    <a class="btn btn-secondary" asp-page="../User/Index">Quản lý thành viên</a>
+    <a class="btn btn-primary" asp-area="Admin" asp-page="/Role/Create"> Tạo role mới</a>
+    <a class="btn btn-primary" asp-page="../User/Index">Quản lý thành viên</a>
 </div>
-<table class="table">
-    <tr>
-        <th>Tên role</th>
-       <th>Tác vụ</th>
-    </tr>
+<table class="table" id="data-table">
+    <thead>
+        <tr>
+            <th>Tên role</th>
+            <th>Tác vụ</th>
+        </tr>
+    </thead>
+    <tbody>
     @foreach (var role in @Model.roles)
     {
         <tr>
-            <td>@role.Name</td>    
+            <td>@role.Name</td>
             <td>
-                @if (role.Name==ChucVuMacDinh.KhachHang.ToString()||role.Name==ChucVuMacDinh.Admin.ToString())
+                @if (role.Name == ChucVuMacDinh.KhachHang.ToString() || role.Name == ChucVuMacDinh.Admin.ToString() ||
+               role.Name == ChucVuMacDinh.NhanVien.ToString()
+               )
                 {
                     <p>Chức vụ mặc định</p>
                 }
                 else
                 {
-                    <a class="btn btn-success btn-sm" asp-page="./Edit" asp asp-route-roleid="@role.Id">Cập nhật</a>
-                    <a class="btn btn-success btn-sm" asp-page="./Delete" asp asp-route-roleid="@role.Id">Xóa</a>
+                        <a class="btn btn-primary" asp-page="./Edit" asp asp-route-roleid="@role.Id">Cập nhật</a>
+                        <a class="btn btn-primary" asp-page="./Delete" asp asp-route-roleid="@role.Id">Xóa</a>
                 }
             </td>
         </tr>
     }
+    </tbody>
 </table>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+
 }

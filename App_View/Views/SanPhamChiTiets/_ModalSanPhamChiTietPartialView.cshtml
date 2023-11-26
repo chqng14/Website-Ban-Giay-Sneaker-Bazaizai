@@ -1,4 +1,12 @@
 ﻿@model App_Data.ViewModels.SanPhamChiTietViewModel.ItemDetailViewModel
+@using App_View.IServices;
+@using App_View.Services;
+@inject IDanhGiaService _DanhGiaService
+@{
+    _DanhGiaService = new DanhGiaService();
+    var TongSoDanhGia = await _DanhGiaService.GetTongSoDanhGia(Model.IdChiTietSp);
+    var SaoTb = await _DanhGiaService.GetSoSaoTB(Model.IdChiTietSp);
+}
 <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content modal--shadow">
 
@@ -71,11 +79,105 @@
                         </div>
                         <div class="u-s-m-b-15">
                             <div class="pd-detail__rating gl-rating-style">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                               @* <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
 
                                 <span class="pd-detail__review u-s-m-l-4">
 
                                     <a href="product-detail.html">@Model.SoLanDanhGia Đánh giá</a>
+                                </span>*@
+                                @if (SaoTb < 0.3)
+                                {
+
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 0.8)
+                                {
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 1.3)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 1.8)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 2.3)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 2.8)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 3.3)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 3.8)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 4.3)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+
+                                else if (SaoTb < 4.8)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                }
+                                <span class="pd-detail__review u-s-m-l-4">
+
+                                    <a href="">@TongSoDanhGia Đánh giá</a>
                                 </span>
                             </div>
                         </div>

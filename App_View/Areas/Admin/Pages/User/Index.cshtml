@@ -7,12 +7,12 @@
 }
 <h1 style="text-align:center">@ViewData["Title"]</h1>
 <partial name="_StatusMessage" model="@Model.StatusMessage" />
-<div class="text-left" style="margin-top:50px">
-    <a class="btn btn-primary" asp-page="/User/AddAccount"><i class="anticon anticon-plus-circle"></i> Tạo tài khoản</a>
+<div class="mb-2">
+    <a class="btn btn-primary" asp-page="/User/AddAccount"> Tạo tài khoản</a>
+   @* <a class="btn btn-primary" asp-page="">Import Excel</a>*@
 </div>
-<div class="text-left" style="margin-top:50px">
-    <a class="btn btn-primary" asp-page=""><i class="anticon anticon-plus-circle"></i> Import Excel</a>
-</div>
+
+
 
 @*
 <form method="post">
@@ -47,7 +47,7 @@
                 </td>
                 <td>
                    @* <a class="btn btn-success btn-sm" asp-page="./AddRole" asp asp-route-id="@user.Id">Cập nhật</a>*@
-                    <a class="btn btn-success btn-sm" asp-page="./SetPassword" asp asp-route-id="@user.Id">Đặt mật khẩu</a>
+                    <a class="btn btn-primary" asp-page="./SetPassword" asp asp-route-id="@user.Id">Đặt mật khẩu</a>
                 </td>
             </tr>
         }
