@@ -51,16 +51,7 @@
         return string.Empty; // hoặc bạn có thể trả về một giá trị mặc định khác nếu cần
     }
 }
-@*
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-xl " role="document">
-        <div class="modal-content">
-            <div class="modal-body printContent" id="myModalContent">
-                <!-- Nội dung chi tiết sẽ được cập nhật ở đây từ partial view -->
-            </div>
-        </div>
-    </div>
-</div> *@
+
 @if (Model.Count() == 0)
 {
     <div style="text-align: center;  display: flex;
@@ -167,42 +158,6 @@ else
 }
 
 <script>
-    $(document).off('click', '.copyButton').on('click', '.copyButton', function () {
-        var maVoucher = $(this).closest('.body_copy').find('.textToCopy').val();
-        var tempInput = document.createElement("input");
-        tempInput.value = maVoucher;
-        document.body.appendChild(tempInput);
-
-        // Chọn văn bản trong phần tử input tạm thời
-        tempInput.select();
-        document.execCommand("copy");
-
-        // Xóa phần tử input tạm thời
-        document.body.removeChild(tempInput);
-
-        toast({
-            title: "Đã sao chép!",
-            message: "Đã sao chép mã vào clipboard: " + maVoucher,
-            type: "success",
-            duration: 5000
-        });
-    });
-
-    function showDetails(ma) {
-        $.ajax({
-            url: '/Voucher/VoucherDetailsPartial',
-            type: 'POST',
-            data: { ma: ma },
-            success: function (result) {
-                // Hiển thị modal và cập nhật nội dung partial view
-                $('#myModalContent').html(result);
-                $('#myModal').modal('show');
-            },
-            error: function (error) {
-                console.error(error);
-            }
-        });
-    }
 
     // Sử dụng jQuery
     $(".notlogin").on('click', function () {
@@ -226,7 +181,6 @@ else
 
         // Lấy mã voucher tương ứng với nút được click
         var maVoucher = $(this).closest('.description__info-wrap').find('.maVoucher-Input').val();
-
         // alert(maVoucher);
         // Gửi mã voucher đó lên server để xử lý
         $.ajax({
@@ -236,24 +190,22 @@ else
             success: function (result) {
                 if (result) {
                     // Xử lý khi lưu thành công
-                    Swal.fire({
-                        title: 'Thông báo!',
-                        text: 'Nhận voucher thành công!',
-                        icon: 'success',
-                        didClose: () => {
-                            // Tải lại trang hoặc làm gì đó khác
-                            // reloadPartialView();
-                            location.reload();
-                        }
-                    });
+                     toast({
+                            title: "Thành công!",
+                            message: "Lưu voucher thành công",
+                            type: "success",
+                            duration: 5000
+                            });
+                            reloadPartialView();         
+                              // location.reload();
                 } else {
                     // Xử lý khi có lỗi
-                    Swal.fire({
-                        title: 'Thông báo!',
-                        text: 'Lỗi khi nhận voucher!!!.',
-                        icon: 'error',
-                        confirmButtonText: 'Đóng'
-                    });
+                   toast({
+                            title: "Lỗi!",
+                            message: "Lỗi khi lưu voucher",
+                            type: "error",
+                            duration: 5000
+                            });  
                 }
             },
             error: function (error) {
@@ -262,9 +214,6 @@ else
             }
         });
     });
-
-
-
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- jQuery -->
