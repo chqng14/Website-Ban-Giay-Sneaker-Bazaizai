@@ -24,7 +24,7 @@ namespace App_Api.Controllers
         DbSet<DanhGia> danhGias;
         public DanhGiaController()
         {
-            _danhGiaRepo= new DanhGiaRepo();
+            _danhGiaRepo = new DanhGiaRepo();
             danhGias = context.danhGias;
             AllRepo<DanhGia> all = new AllRepo<DanhGia>(context, danhGias);
             repos = all;
@@ -40,7 +40,7 @@ namespace App_Api.Controllers
         {
             return await _danhGiaRepo.GetListAsyncViewModel(idspchitiet);
         }
-        
+
         [HttpGet("GetTongSoDanhGiaCuaMoiSpChuaDuyet")]
         public async Task<List<DanhGiaResult>> TongSoDanhGiaCuaMoiSpChuaDuyet()
         {
@@ -52,7 +52,7 @@ namespace App_Api.Controllers
                 SanPham = tuple.Item1,
                 SoLuongDanhGiaChuaDuyet = tuple.Item2,
                 IdSanPham = tuple.Item3,
-                IdChiTietSp=tuple.Item4,
+                IdChiTietSp = tuple.Item4,
             }).ToList();
             return danhGiaResults;
         }
@@ -80,7 +80,7 @@ namespace App_Api.Controllers
 
         [HttpPost("AddDanhGia")]
         public bool CreateDanhGia(string IdDanhGia, string? BinhLuan, string? ParentId,
-       int SaoSp, int SaoVanChuyen, string IdNguoiDung, string IdSanPhamChiTiet, string? MoTa, string? ChatLuongSanPham)
+       int SaoSp, int? SaoVanChuyen, string IdNguoiDung, string IdSanPhamChiTiet, string? MoTa, string? ChatLuongSanPham)
         {
             DanhGia danhGia = new DanhGia();
             danhGia.IdDanhGia = IdDanhGia;
@@ -93,18 +93,18 @@ namespace App_Api.Controllers
             danhGia.SaoSp = SaoSp;
             danhGia.SaoVanChuyen = SaoVanChuyen;
             danhGia.MoTa = MoTa;
-            danhGia.ChatLuongSanPham=ChatLuongSanPham;
+            danhGia.ChatLuongSanPham = ChatLuongSanPham;
             return repos.AddItem(danhGia);
         }
 
         [HttpGet("GetDanhGiaById/{id}")]
         public DanhGia? GetDanhGiaById(string id)
-        {      
+        {
             return repos.GetAll().FirstOrDefault(p => p.IdDanhGia == id);
         }
-       
+
         [HttpGet("GetDanhGiaHienThi")]
-        public  List<DanhGia> GetLstDanhGiaDaDuyet()
+        public List<DanhGia> GetLstDanhGiaDaDuyet()
         {
             return repos.GetAll().Where(x => x.TrangThai == (int?)TrangThaiDanhGia.DaDuyet).ToList();
         }
@@ -161,7 +161,7 @@ namespace App_Api.Controllers
         [HttpPut("DuyetDanhGia")]
         public bool DuyetDanhGia(string IdDanhGia)
         {
-            var dg =  GetDanhGiaById(IdDanhGia);
+            var dg = GetDanhGiaById(IdDanhGia);
             if (dg != null)
             {
                 dg.TrangThai = (int)TrangThaiDanhGia.DaDuyet;
@@ -170,10 +170,10 @@ namespace App_Api.Controllers
             else return false;
         }
         [HttpGet("GetDanhGiaViewModelById/{id}")]
-        public async Task< DanhGiaViewModel?> GetDanhGiaViewModelById(string id)
+        public async Task<DanhGiaViewModel?> GetDanhGiaViewModelById(string id)
         {
             return await _danhGiaRepo.GetViewModelByKeyAsync(id);
         }
-       
+
     }
 }

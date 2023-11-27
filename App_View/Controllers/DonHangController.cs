@@ -186,19 +186,12 @@ namespace App_View.Controllers
             return RedirectToAction("ShowCartUser", "GioHangChiTiets");
         }
 
-        //public async Task<int> ReFund(string maHoaDon, double Tien, string Lido)
-        //{
-        //    var transID = SessionServices.GetIdFomSession(HttpContext.Session, "transID");
-        //    var model = new OrderInfoModel()
-        //    {
-        //        OrderId = maHoaDon,
-        //        Amount = Tien,
-        //        description = Lido,
-        //        transId = long.Parse(transID),
-        //    };
-        //    var response = await _momoService.Refund(model);
-        //    return response.ResultCode;
-        //}
+        public async Task<IActionResult> DanhGia(string idHoaDon)
+        {
+            var UserID = _userManager.GetUserId(User);
+            var HoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            return PartialView("_PatialDanhGia", HoaDon);
+        }
 
         public async Task<IActionResult> RePay(string idHoaDon)
         {
