@@ -17,15 +17,6 @@
     }
 </style>
 
-@* <div class="modal fade" id="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog modal-xl " role="document">
-        <div class="modal-content">
-            <div class="modal-body printContent" id="myModalContent">
-                <!-- Nội dung chi tiết sẽ được cập nhật ở đây từ partial view -->
-            </div>
-        </div>
-    </div>
-</div> *@
 @functions {
     // Hàm trợ giúp để định dạng số nguyên thành tiền tệ Việt Nam
     public string FormatCurrency(int? value)
@@ -129,21 +120,8 @@ else
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    // function showDetails(ma) {
-    //     $.ajax({
-    //         url: '/Voucher/VoucherDetailsPartial',
-    //         type: 'POST',
-    //         data: { ma: ma },
-    //         success: function (result) {
-    //             // Hiển thị modal và cập nhật nội dung partial view
-    //             $('#myModalContent').html(result);
-    //             $('#myModal').modal('show');
-    //         },
-    //         error: function (error) {
-    //             console.error(error);
-    //         }
-    //     });
-    // }
+ 
+
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <!-- jQuery -->
