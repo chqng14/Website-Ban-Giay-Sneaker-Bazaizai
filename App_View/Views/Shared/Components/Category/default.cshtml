@@ -1,5 +1,5 @@
 ﻿@model List<App_Data.Models.ThuongHieu>
-<div class="u-s-p-y-60" id="electronic-01">
+<div class="u-s-p-y-60" id="electronic-02">
 
     <!--====== Section Intro ======-->
     <div class="section__intro u-s-m-b-46">
@@ -7,7 +7,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="block">
-                        <span class="block__title">DANH MỤC THƯƠNG HIỆU GIÀY HÀNG ĐẦU</span>
+                        <span class="block__title">DANH MỤC THƯƠNG HIỆU GIÀY</span>
                     </div>
                 </div>
             </div>
@@ -17,23 +17,38 @@
     <!--====== Section Content ======-->
     <div class="section__content">
         <div class="container">
-            <div class="row">
-                @foreach (var item in Model)
-                {
-                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
-                        <div class="category-o">
-                            <div class="aspect aspect--bg-grey aspect--square category-o__img-wrap">
+            @if (Model.Any())
+            {
+                <div class="row">
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
+                            <div class="category-o">
+                                <div class="aspect aspect--bg-grey aspect--square category-o__img-wrap">
 
-                                <img class="aspect__img category-o__img" src="/images/logo.jpg" alt="">
-                            </div>
-                            <div class="category-o__info">
+                                    <img class="aspect__img category-o__img" src="https://i.gifer.com/embedded/download/EP0U.gif" alt="">
+                                </div>
+                                <div class="category-o__info">
 
-                                <a class="category-o__shop-now btn--e-white-brand" href="/sanphamchitiets?brand=@item.TenThuongHieu" style=" background: #ff000099; color: white;">@item.TenThuongHieu</a>
+                                    <a class="category-o__shop-now btn--e-white-brand" href="/sanphamchitiets?brand=@item.TenThuongHieu" style=" background: #180303e6; color: white;">@item.TenThuongHieu</a>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                }
-            </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div style="DISPLAY: flex;justify-content: center;align-items: center;margin-top: -60px;height: 200px;width: 100%;background-repeat: no-repeat;background-size: contain;background-position: center;background-image: url('https://img.pikbest.com/58pic/35/40/67/62358PIC58PICs58PICNqKPb90An6_PIC2018.gif!sw800');">
+                    <span style="
+    margin-top: 237px;
+    color: red;
+    font-weight: bold;
+">
+                        CHƯA CÓ THƯƠNG HIỆU!!!
+                    </span>
+                </div>
+            }
         </div>
     </div>
     <!--====== End - Section Content ======-->

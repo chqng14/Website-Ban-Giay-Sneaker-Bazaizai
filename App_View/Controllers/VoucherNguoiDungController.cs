@@ -4,6 +4,7 @@ using App_View.IServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Twilio.Rest.Api.V2010.Account;
 using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Controllers
@@ -16,12 +17,14 @@ namespace App_View.Controllers
         private readonly IVoucherNguoiDungServices _voucherND;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
-        public VoucherNguoiDungController(IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
+        private readonly IVoucherServices _voucherSV;
+        public VoucherNguoiDungController(IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IVoucherServices voucherServices)
         {
             _voucherND = voucherNDServices;
             _context = new BazaizaiContext();
             _signInManager = signInManager;
             _userManager = userManager;
+            _voucherSV = voucherServices;
         }
         public async Task<IActionResult> Voucher_wallet(int? loaiHinh)
         {
@@ -54,7 +57,6 @@ namespace App_View.Controllers
             }
 
             ViewBag.TatCa = voucherNguoiDung; // Gán danh sách lọc được vào ViewBag.TatCa
-
             return PartialView("_VoucherWalletPartial", voucherNguoiDung);
         }
 
@@ -119,6 +121,19 @@ namespace App_View.Controllers
         public async Task<IActionResult> GetVoucherByMa(string ma)
         {
             var idNguoiDung = _userManager.GetUserId(User);
+            var voucherNguoiDung = await _voucherND.GetAllVoucherNguoiDungByID(idNguoiDung);
+            var voucher = await _voucherSV.GetVoucherByMa(ma);
+            foreach (var item in voucherNguoiDung)
+            {
+                if (item.IdVouCher == voucher.IdVoucher && item.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung)
+                {
+                    return Json(new { mess = "Voucher đã có trong tài khoản của bạn!" });
+                }
+                if (item.IdVouCher == voucher.IdVoucher && item.TrangThai == (int)TrangThaiVoucherNguoiDung.DaSuDung)
+                {
+                    return Json(new { mess = "Bạn đã sử dụng voucher này!" });
+                }
+            }
             await _voucherND.AddVoucherNguoiDung(ma, idNguoiDung);
             var Voucher = await _voucherND.GetVocherTaiQuay(ma);
             double mucuidai = 0;

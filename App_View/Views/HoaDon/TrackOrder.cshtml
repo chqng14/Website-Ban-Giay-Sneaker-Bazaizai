@@ -1,0 +1,97 @@
+﻿@{
+    ViewData["Title"] = "TrackOrder";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/truck.css" rel="stylesheet" />
+<link href="~/css/hoadon.css" rel="stylesheet" />
+<!--====== Section 3 ======-->
+<div class="u-s-p-b-60" style="padding-top: 3.75rem;">
+
+    <!--====== Section Content ======-->
+    <div class="section__content">
+        <div class="container">
+            <div class="checkout-f">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="u-s-m-b-30">
+                            <div class="u-s-m-b-15" id="content1">
+                                <!-- Ẩn ảnh ban đầu -->
+                                <img src="https://cdn.tgdd.vn/2022/10/banner/TGDD-540x270-1.png" id="bannerImage" style="display:none;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="o-summary">
+                            <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30" style="height: 250px;">
+                                <form id="traCuuForm">
+                                    <div class="o-summary__box">
+                                        <h1 class="checkout-f__h1" style="text-align: center;font-size:28px;margin-bottom:15px">
+                                            Tra cứu thông tin đơn hàng
+                                        </h1>
+                                        <!-- Thêm id cho input để có thể truy cập giá trị later -->
+                                        <input type="text" id="traCuuInput" class="input-text input-text--border-radius input-text--style-1" placeholder="Theo dõi đơn hàng" style="margin-bottom:15px">
+                                    </div>
+                                    <button class="btn btn--e-brand-b-2" id="Tracuu" type="submit" style="width:498px;margin-left:20px">Tra cứu</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script>
+    // Biến để theo dõi trạng thái của Ajax
+    var isAjaxExecuted = false;
+
+    // Ẩn ảnh khi trang web được tải lần đầu
+    $(document).ready(function () {
+        // Kiểm tra xem có thực hiện Ajax chưa
+        if (!isAjaxExecuted) {
+            $('#bannerImage').show();
+        } else {
+            $('#bannerImage').hide();
+        }
+    });
+    function showLoadingOverlay() {
+        $('#Tracuu').html('<span class="loader"></span>');
+    }
+
+    function hideLoadingOverlay() {
+        $('.loader').remove();
+        $('#Tracuu').html('Tra cứu');
+    }
+    $('#traCuuForm').submit(function (e) {
+        e.preventDefault();
+        showLoadingOverlay()
+        // Lấy giá trị từ ô input
+        var Ma = $('#traCuuInput').val();
+
+        // Tạo data object để gửi lên server
+
+        $.ajax({
+            url: '@Url.Action("TrackOrderByMa", "HoaDon")',
+            type: 'GET',
+            data: { Ma: Ma },
+            success: function (result) {
+                hideLoadingOverlay()
+                // Ẩn ảnh và hiển thị nội dung mới
+                $('#bannerImage').hide();
+                $('#content1').empty().html(result);
+
+                // Cập nhật trạng thái của Ajax
+                isAjaxExecuted = true;
+            },
+            error: function (xhr, status, error) {
+                toast({
+                    title: "Không có đơn hàng trên hệ thống!",
+                    type: "error",
+                    duration: 3000
+                });
+                hideLoadingOverlay()
+            }
+        });
+    });
+</script>

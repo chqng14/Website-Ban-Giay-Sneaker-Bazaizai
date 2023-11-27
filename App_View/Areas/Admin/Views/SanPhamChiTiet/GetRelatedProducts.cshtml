@@ -221,7 +221,7 @@
                                 <button class="dropdown-item" type="button" onclick="NgungKinhDoanhSanPham('@item.IdSanPham')">Ngừng KDoanh</button>
                             }
 
-                            <button class="dropdown-item" type="button">Chỉnh sửa</button>
+                            <button class="dropdown-item" type="button" onclick="EditSanPham('@item.IdSanPham')">Chỉnh sửa</button>
                             <button class="dropdown-item" type="button" onclick="CoppySanPham('@item.IdSanPham')">Coppy</button>
                         </div>
                     </div>
@@ -252,6 +252,27 @@
 </table>
 
 <script>
+    function EditSanPham(idSanPhamEdit) {
+        var data = {
+            idSanPhamChiTiet: idSanPhamEdit,
+        };
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/LoadPartialViewUpdate',
+            type: 'GET',
+            data: data,
+            success: function (result) {
+                $('#exampleModal').modal('hide');
+                $('#modal-SanPham').empty().append(result).modal('show');
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    }
+
     function XoaBoLoc() {
         $.ajax({
             url: '/Admin/SanPhamChiTiet/GetRelatedProducts',

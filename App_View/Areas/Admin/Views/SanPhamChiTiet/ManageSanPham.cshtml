@@ -32,6 +32,41 @@
     .card-body {
         /*        background: #a0c5e85e !important;*/
     }
+
+    .checkbox input[type="checkbox"] {
+        display: none;
+    }
+
+    /* Thiết lập kiểu checkbox tùy chỉnh sử dụng giả lập (pseudo-elements) */
+    .checkbox label::before {
+        content: "\2714"; /* Unicode ký tự checkmark */
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #000;
+        text-align: center;
+        vertical-align: middle;
+        margin-right: 5px;
+        font-size: 18px;
+        line-height: 18px;
+        cursor: pointer;
+    }
+
+    /* Định dạng khi checkbox được chọn */
+    .checkbox input[type="checkbox"]:checked + label::before {
+        background-color: #00FF00; /* Màu nền khi đã chọn */
+    }
+
+    /* Định dạng khi checkbox chưa được chọn */
+    .checkbox input[type="checkbox"]:not(:checked) + label::before {
+        background-color: #c4d0d9; /* Màu nền khi chưa chọn */
+    }
+
+    .checkbox input[type=checkbox] + label {
+        padding-left: 0px;
+        margin-top: 11px;
+        margin-left: 18px;
+    }
 </style>
 
 <div class="modal fade" id="cauHinh">
@@ -253,8 +288,10 @@
 
 <div id="confirm" class="mt-2 mb-2" style="display: none">
     <div class="d-flex justify-content-end">
+        <input type="file" multiple hidden id="ChonAnh" accept="image/*" />
+        <button onclick="ChonAnh()" class="btn btn-kio mr-2" id="ChoseImage">Chọn Ảnh</button>
+        <button onclick="CapNhat()" class="btn btn-kio mr-2">Cập nhật</button>
         <button onclick="Huy()" class="btn btn-warning mr-2">Hủy</button>
-        <button onclick="CapNhat()" class="btn btn-primary">Cập nhật</button>
     </div>
 </div>
 
@@ -262,10 +299,91 @@
 </div>
 
 <script>
+    function ChonAnh() {
+        $('#ChonAnh').trigger('click');
+    }
+
+    $(document).on('change', '#ChonAnh', function () {
+
+        $('.item_checkbox:checked').closest('.item-accordion').each((index, item) => {
+
+            const imageList = $(item).find('.container-file');
+
+            imageList.empty();
+
+            var fileInputs = $(item).find('.fileInput');
+
+            fileInputs.val('');
+
+            fileInputs.prop("files", null);
+
+            $(item).find('.fileInput').prop("files", $(this).prop("files"));
+
+            const key = imageList.closest('.collapse').attr('id');
+
+            selectedFiles[key] = []
+
+            Array.from(this.files).map((file) => {
+                if (file.type.startsWith("image")) {
+                    const wrapper = $('<div>').addClass('wrapper-file');
+                    const image = $('<div>').addClass('image');
+                    const imageElement = $('<img>').addClass('file-image').attr('src', URL.createObjectURL(file));
+
+                    if (!selectedFiles[key]) {
+                        selectedFiles[key] = []
+                    }
+                    selectedFiles[key].push({ key: file.name, data: file });
+
+                    imageElement.on('click', () =>
+                        changeImage(imageElement, file, key)
+                    );
+
+                    const closeIcon = $('<i>').addClass('fas fa-times close-icon');
+
+
+                    image.append(imageElement);
+                    image.append(closeIcon);
+
+                    const content = $('<div>').addClass('content');
+                    const icon = $('<div>').addClass('icon');
+                    icon.html('<i class="fas fa-cloud-upload-alt"></i>');
+                    content.append(icon);
+
+                    var cancelBtn = $('<div>').addClass('cancel-btn');
+                    cancelBtn.html('<i class="fas fa-times"></i>');
+
+                    wrapper.append(image);
+                    wrapper.append(content);
+                    wrapper.append(cancelBtn);
+                    imageList.append(wrapper);
+
+                    closeIcon.on('click', function () {
+                        const fileInput = wrapper.find('input');
+                        if (fileInput.length == 0) {
+                            const indexDelete = selectedFiles[key].findIndex(item => item.data.name === file.name);
+                            selectedFiles[key].splice(indexDelete, 1);
+                        } else {
+                            const indexDelete = selectedFiles[key].findIndex(item => item.data.name === fileInput.name);
+                            selectedFiles[key].splice(indexDelete, 1);
+                        }
+                        wrapper.remove();
+                    });
+
+                    return;
+                }
+                this.files = "";
+            });
+
+            $('.item_checkbox').prop('checked', false);
+
+        });
+
+    })
+
     $(() => {
         $(".select2-active").select2();
         $('#thuonghieu').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
+            if (e.key === 'Enter') {
                 var inputValue = $(this).val();
                 if (inputValue) {
                     var data = {
@@ -300,7 +418,7 @@
         });
         $('#xuatxu').find('input.select2-input').on('keyup', function (e) {
             console.log('xuatxu');
-            if (e.keyCode === 13) {
+            if (e.key === 'Enter') {
                 var inputValue = $(this).val();
                 if (inputValue) {
                     var data = {
@@ -335,7 +453,7 @@
             }
         });
         $('#sanpham').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
+            if (e.key === 'Enter') {
                 var inputValue = $(this).val();
                 if (inputValue) {
                     var data = {
@@ -369,7 +487,7 @@
             }
         });
         $('#loaigiay').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
+            if (e.key === 'Enter') {
                 var inputValue = $(this).val();
                 if (inputValue) {
                     var data = {
@@ -403,7 +521,7 @@
             }
         });
         $('#chatlieu').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
+            if (e.key === 'Enter') {
                 var inputValue = $(this).val();
                 if (inputValue) {
                     var data = {
@@ -437,7 +555,7 @@
             }
         });
         $('#kieudegiay').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
+            if (e.key === 'Enter') {
                 var inputValue = $(this).val();
                 if (inputValue) {
                     var data = {
@@ -471,7 +589,7 @@
             }
         });
         $('#mausac').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
+            if (e.key === 'Enter') {
                 var inputValue = $(this).val();
                 if (inputValue) {
                     var data = {
@@ -502,7 +620,7 @@
             }
         });
         $('#kichco').find('input.select2-input').on('keyup', function (e) {
-            if (e.keyCode === 13) {
+            if (e.key === 'Enter') {
                 var inputValue = $(this).val();
                 if (inputValue) {
                     var data = {
@@ -586,14 +704,15 @@
     }
 
     //itemTemplate
-    const ItemTemplate = (index, isUpdate, idProduct, idcolor, idsize, Title, giaNhap, giaBan, soLuong, moTa, khoiLuong) => {
+    const ItemTemplate = (index, isUpdate, idProduct, idcolor, idsize, Title, giaNhap, giaBan, soLuong, moTa, khoiLuong, message) => {
         return `
 <div class="card item-accordion" data-update="${isUpdate}" data-idproductdetail="${idProduct}">
         <div class="card-header">
             <h5 class="card-title d-flex">
-                <a data-toggle="collapse" class="w-100" data-IdMauSac="${idcolor}" data-IdKichCo="${idsize}"
+                <div class="checkbox" data-id="${index}"><input id="check-item-${index}" type="checkbox" class="item_checkbox"><label for="check-item-${index}" class="m-b-0"></label></div>
+                <a data-toggle="collapse" class="w-100 collapsed" data-IdMauSac="${idcolor}" data-IdKichCo="${idsize}"
                    href="#collapseOneBorderless${index}">
-                    <span>${Title}</span>
+                    <span>${Title} ${message}</span>
                 </a>
                 <button class="btn btn-waring btnn-close">
                     <i class="anticon anticon-close"></i>
@@ -688,7 +807,7 @@
                                 <button name="choseFile" class="custom-btn btn-tone mb-2">
                                     Choose file
                                 </button>
-                                <input type="file" class="fileInput default-btn 1" multiple hidden>
+                                <input type="file" accept="image/*" class="fileInput default-btn 1" multiple hidden>
                                 <div class="container-file" style="display: flex;">
                                 </div>
                             </div>
@@ -771,9 +890,8 @@
                 const data = { ...GetDataMain(), ...{ 'IdKichCo': lstSize[j].value, 'IdMauSac': lstColor[i].value } }
                 const promise = getProductDetail(data);
                 promise.then((respose) => {
-                    console.log(respose);
                     if (respose.success) {
-                        const itemAppend = $(ItemTemplate(index, true, respose.data.idChiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa, respose.data.khoiLuong))
+                        const itemAppend = $(ItemTemplate(index, true, respose.data.idChiTietSp, lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, respose.data.giaNhap, respose.data.giaBan, respose.data.soLuongTon, respose.data.moTa, respose.data.khoiLuong, "           <<---BIẾN THỂ ĐÃ TỒN TẠI. MỌI THAY ĐỔI SẼ ĐƯỢC LƯU KHI CẬP NHẬT!!!--->>"))
                         container.append(itemAppend)
                         if (respose.data.day = "true") {
                             itemAppend.find('.switch-2-day').prop('checked', true);
@@ -828,7 +946,7 @@
                         });
 
                     } else {
-                        const item = $(ItemTemplate(index, false, "", lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, $('#giaNhap').val().replace(/₫|,|\s/g, ''), $('#giaBan').val().replace(/₫|,|\s/g, ''), $('#soLuongTon').val().replace(/₫|,|\s/g, ''), $('#MoTaCauHinh').summernote('code'), $('#khoiLuong').val().replace(/₫|,|\s/g, '')))
+                        const item = $(ItemTemplate(index, false, "", lstColor[i].value, lstSize[j].value, lstColor[i].text + ' - ' + lstSize[j].text, $('#giaNhap').val().replace(/₫|,|\s/g, ''), $('#giaBan').val().replace(/₫|,|\s/g, ''), $('#soLuongTon').val().replace(/₫|,|\s/g, ''), $('#MoTaCauHinh').summernote('code'), $('#khoiLuong').val().replace(/₫|,|\s/g, ''), ''))
 
                         item.find('.switch-2-day').prop('checked', $('#switch-1-day').prop('checked'))
                         item.find('.switch-2-noibat').prop('checked', $('#switch-1-noibat').prop('checked'))
@@ -893,7 +1011,7 @@
 
     //Creat event click for file input
     $(document).on('click', '[name= "choseFile"]', function () {
-        $(this).closest('.upload').find('.fileInput').click()
+        $(this).closest('.upload').find('.fileInput').trigger('click')
     })
 
     //change for file element click current
@@ -939,13 +1057,14 @@
                 }
             }
         })
-        newInputFile.click()
+        newInputFile.trigger('click')
     }
 
     //When file change
     $(document).on('change', '.fileInput', function () {
         const imageList = $(this).closest('.upload').find('.container-file');
         const key = imageList.closest('.collapse').attr('id');
+        debugger
 
         Array.from(this.files).map((file) => {
             if (file.type.startsWith("image")) {

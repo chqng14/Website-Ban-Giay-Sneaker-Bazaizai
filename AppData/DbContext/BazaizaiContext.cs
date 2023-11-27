@@ -75,7 +75,9 @@ namespace App_Data.DbContextt
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+
             optionsBuilder.UseSqlServer(@"Data Source=MI\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"); 
+
         }
 
 

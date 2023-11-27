@@ -10,12 +10,36 @@
         var problemCountMessage = '@TempData["problemCount"]';
         var errorMessages = @Html.Raw(Json.Serialize(ViewData["QuantityErrorMessages"]));
         Swal.fire({
-            title: problemCountMessage,
+            title: "Sản phẩm lỗi",
             icon: 'error',
             html: errorMessages.join('<br/>'),
         })
     </script>
 }
+
+<div class="u-s-p-y-10">
+
+    <!--====== Section Content ======-->
+    <div class="section__content">
+        <div class="container">
+            <div class="breadcrumb">
+                <div class="breadcrumb__wrap">
+                    <ul class="breadcrumb__list">
+                        <li class="has-separator">
+
+                            <a href="/">Trang chủ</a>
+                        </li>
+                        <li class="is-marked">
+
+                            <a>Giỏ hàng</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!--====== End - Section 1 ======-->
 <!--====== Section 2 ======-->
 <div class="u-s-p-b-60">
@@ -121,7 +145,7 @@
                             <a class="route-box__link" href="/sanphamchitiets">
                                 <i class="fas fa-long-arrow-alt-left"></i>
 
-                                <span>CONTINUE SHOPPING</span>
+                                <span>TIẾP TỤC MUA SẮM</span>
                             </a>
                         </div>
                         <div class="route-box__g2">
@@ -129,6 +153,10 @@
                             <a class="route-box__link" href="@Url.Action("DeleteAllCart", "GioHangChiTiets")">
                                 <i class="fas fa-trash"></i>
                                 <span >XOÁ GIỎ HÀNG</span>
+                            </a>
+                            <a class="route-box__link" href="@Url.Action("DeleteAllProduct", "GioHangChiTiets")">
+                                <i class="fas fa-trash"></i>
+                                <span>XOÁ SẢN PHẨM NGỪNG BÁN/HẾT HÀNG </span>
                             </a>
                         </div>
                     </div>
@@ -182,8 +210,6 @@
                                         <!--====== End - Select Box ======-->
                                     </div>
                                     
-
-                                    <span class="gl-text" style="color:red">Lưu ý: Có một số thành phố áp dụng miễn phí vận chuyển, nếu không phí vận chuyển sẽ được tính theo địa chỉ của bạn.</span>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-6 u-s-m-b-30">

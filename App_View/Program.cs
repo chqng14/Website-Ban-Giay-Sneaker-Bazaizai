@@ -30,7 +30,9 @@ builder.Services.AddScoped<IVnPayService, VnPayService>();
 // Add services to the container.
 //BAZAIZAI\SQLEXPRESS
 
+
 builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=MI\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
+
 
 builder.Services.AddHangfireServer();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -81,7 +83,7 @@ builder.Services.Configure<IdentityOptions>(options =>
     // Cấu hình về User.
     options.User.AllowedUserNameCharacters = // các ký tự đặt tên user
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.";
-  
+
     options.User.RequireUniqueEmail = true;  // Email là duy nhất
 
     //Cấu hình đăng nhập.

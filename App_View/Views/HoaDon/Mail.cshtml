@@ -1,4 +1,4 @@
-﻿@model List<App_Data.ViewModels.HoaDon.SanPhamTest>;
+﻿@model App_Data.ViewModels.HoaDon.HoaDonTest;
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml"
 	xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -322,10 +322,6 @@
 
 <body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #f1f1f1;">
 	<center style="width: 100%; background-color: #f1f1f1;">
-		<div
-			style="display: none; font-size: 1px;max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; mso-hide: all; font-family: sans-serif;">
-			&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;&zwnj;&nbsp;
-		</div>
 		<div style="max-width: 600px; margin: 0 auto;" class="email-container">
 			<!-- BEGIN BODY -->
 			<table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
@@ -335,20 +331,23 @@
 						<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
 							<tr>
 								<td class="logo" style="text-align: left;">
-									<h1><a href="#">Bazaizai Store</a></h1>
+									<div style="display:inline-flex">
+										<img src='https://i.postimg.cc/vDtbjBmv/d5491dcf-2e64-4a76-9184-b255919297a1.png' border='0' />
+										<h1 style="color:#ff4500;margin-top:70px">Bazaizai Store</h1>
+									</div>
 								</td>
 							</tr>
 						</table>
 					</td>
 				</tr><!-- end tr -->
 				<tr>
-					<td valign="middle" class="hero bg_white" style="padding: 2em 0 2em 0;">
+					<td valign="middle" class="hero bg_white" style="padding: 0 0 2em 0;">
 						<table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
 							<tr>
 								<td style="padding: 0 2.5em; text-align: left;">
 									<div class="text">
 										<h2>Cảm ơn bạn đã đặt hàng</h2>
-										<h3>Đăng nhập trên website để xem chi tiết đơn hàng</h3>
+										<h3>Vui lòng truy cập website để xem chi tiết đơn hàng</h3>
 									</div>
 								</td>
 							</tr>
@@ -359,17 +358,15 @@
 					<table class="bg_white" role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
 						<tr style="border-bottom: 1px solid rgba(0,0,0,.05);">
 							<th width="80%"
-								style="text-align:left; padding: 0 2.5em; color: #000; padding-bottom: 20px">Item</th>
+								style="text-align:left; padding: 0 2.5em; color: #000; padding-bottom: 20px">Sản phẩm</th>
 							<th width="20%"
-								style="text-align:right; padding: 0 2.5em; color: #000; padding-bottom: 20px">Price</th>
+								style="text-align:right; padding: 0 2.5em; color: #000; padding-bottom: 20px">Giá</th>
 						</tr>
-						@foreach (var item in Model)
+						@foreach (var item in Model.SanPham)
 						{
 							<tr style="border-bottom: 1px solid rgba(0,0,0,.05);">
 								<td valign="middle" width="80%" style="text-align:left; padding: 0 2.5em;">
 									<div class="product-entry">
-										@* <img src="images/prod-1.jpg" alt=""
-											 style="width: 100px; max-width: 600px; height: auto; margin-bottom: 20px; display: block;"> *@
 										<div class="text">
 											<h3>@item.TenThuongHieu @item.TenSanPham</h3>
 											<span>Số lượng x @item.SoLuong</span>
@@ -384,85 +381,61 @@
 							</tr>
 
 						}
-						<tr style="border-bottom: 1px solid rgba(0,0,0,.05);">
+						<hr />
+						<tr style="border-bottom: 1px solid rgba(0,0,0,.05);margin-bottom:15px">
 							<td valign="middle" width="80%" style="text-align:left; padding: 0 2.5em;">
 								<div class="product-entry">
-									@* <img src="images/prod-1.jpg" alt=""
-									style="width: 100px; max-width: 600px; height: auto; margin-bottom: 20px; display: block;"> *@
 									<div class="text">
-										<h3></h3>
-										<span></span>
+										<h3 style="font-size:18px">Tiền ship:</h3>
 									</div>
 								</div>
 							</td>
-							<td valign="middle" style="text-align:right; padding: 1em 2.5em;">
-								<p><a href="#" class="btn btn-primary"> @string.Format("{0:N0}đ", Model.Sum(c => c.GiaBan * c.SoLuong))</a></p>
+							<td valign="middle" width="20%" style="text-align:left; padding: 0 2.5em;">
+								<span class="price" style="color: #ff4500; font-size:18px;font-weight:600">@string.Format("{0:N0}đ", Model.TienShip)</span>
+							</td>
+						</tr>
+						<tr style="border-bottom: 1px solid rgba(0,0,0,.05);margin-bottom:15px">
+							<td valign="middle" width="80%" style="text-align:left; padding: 0 2.5em;">
+								<div class="product-entry">
+									<div class="text">
+										<h3 style="font-size:18px">Tiền giảm:</h3>
+									</div>
+								</div>
+							</td>
+							<td valign="middle" width="20%" style="text-align:left; padding: 0 2.5em;">
+								<span class="price" style="color: #ff4500; font-size:18px;font-weight:600">@string.Format("{0:N0}đ", Model.TienGiam)</span>
+							</td>
+						</tr>
+						<tr style="border-bottom: 1px solid rgba(0,0,0,.05);margin-bottom:15px">
+							<td valign="middle" width="80%" style="text-align:left; padding: 0 2.5em;">
+								<div class="product-entry">
+									<div class="text">
+										<h2>Tổng tiền:</h2>
+									</div>
+								</div>
+							</td>
+							<td valign="middle" width="20%" style="text-align:left; padding: 0 2.5em;">
+								<span class="price" style="color: #ff4500; font-size: 20px;font-weight:600">@string.Format("{0:N0}đ", Model.TongGia)</span>
 							</td>
 						</tr>
 					</table>
 				</tr><!-- end tr -->
 				<!-- 1 Column Text + Button : END -->
 			</table>
-			@* <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%"
-				style="margin: auto;">
-				<tr>
-					<td valign="middle" class="bg_light footer email-section">
-						<table>
-							<tr>
-								<td valign="top" width="33.333%" style="padding-top: 20px;">
-									<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-										<tr>
-											<td style="text-align: left; padding-right: 10px;">
-												<h3 class="heading">About</h3>
-												<p>A small river named Duden flows by their place and supplies it with
-													the necessary regelialia.</p>
-											</td>
-										</tr>
-									</table>
-								</td>
-								<td valign="top" width="33.333%" style="padding-top: 20px;">
-									<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-										<tr>
-											<td style="text-align: left; padding-left: 5px; padding-right: 5px;">
-												<h3 class="heading">Contact Info</h3>
-												<ul>
-													<li><span class="text">203 Fake St. Mountain View, San Francisco,
-															California, USA</span></li>
-													<li><span class="text">+2 392 3929 210</span></a></li>
-												</ul>
-											</td>
-										</tr>
-									</table>
-								</td>
-								<td valign="top" width="33.333%" style="padding-top: 20px;">
-									<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-										<tr>
-											<td style="text-align: left; padding-left: 10px;">
-												<h3 class="heading">Useful Links</h3>
-												<ul>
-													<li><a href="#">Home</a></li>
-													<li><a href="#">Account</a></li>
-													<li><a href="#">Wishlist</a></li>
-													<li><a href="#">Order</a></li>
-												</ul>
-											</td>
-										</tr>
-									</table>
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr><!-- end: tr -->
-				<tr>
-					<td class="bg_white" style="text-align: center;">
-						<p>No longer want to receive these email? You can <a href="#"
-								style="color: rgba(0,0,0,.8);">Unsubscribe here</a></p>
-					</td>
-				</tr>
-			</table> *@
-
 		</div>
 	</center>
+	<footer style="height: auto; width: 70%; background-color: #f1f1f1; margin: 0 auto;">
+		<div style="color: #000; text-align: center;">
+			<h2 style="color:#000">Bazaizai Store</h2>
+			<p>Số điện thoại: 0123 456 789</p>
+			<p>
+				Mạng xã hội:
+				<a href="https://facebook.com/bazaizaistore" style="color: #000;">Facebook</a>
+				<a href="https://twitter.com/bazaizaistore" style="color: #000;">Twitter</a>
+				<a href="https://instagram.com/bazaizaistore" style="color: #000;">Instagram</a>
+			</p>
+		</div>
+	</footer>
 </body>
 
 </html>

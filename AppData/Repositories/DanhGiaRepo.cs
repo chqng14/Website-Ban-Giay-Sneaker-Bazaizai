@@ -138,7 +138,7 @@ namespace App_Data.Repositories
                                     IdSanPham = c.IdSanPham,
                                     IdSanPhamChiTiet = c.IdChiTietSp
                                 })
-                            .GroupBy(x => x.TenSanPham)  
+                            .GroupBy(x => x.TenSanPham)
                               .Select(g => new Tuple<string, int, string, string>(g.Key, g.Count(), g.First().IdSanPham, g.First().IdSanPhamChiTiet))
                             //.Select(g => new Tuple<string, int>(g.Key, g.Count())) // Tạo tuple chứa tên sản phẩm và số lượng đánh giá
                             .ToListAsync();
@@ -242,18 +242,19 @@ namespace App_Data.Repositories
                                   join j in _context.SanPhams on c.IdSanPham equals j.IdSanPham
                                   select new DanhGiaViewModel
                                   {
-                                      IdDanhGia=a.IdDanhGia,
+                                      IdDanhGia = a.IdDanhGia,
                                       BinhLuan = a.BinhLuan,
                                       NgayDanhGia = a.NgayDanhGia,
                                       SaoSp = a.SaoSp,
                                       TenNguoiDung = b.UserName,
-                                      AnhDaiDien = b.AnhDaiDien,   
-                                      MoTa=a.MoTa,
-                                      ChatLuongSanPham=a.ChatLuongSanPham
+                                      AnhDaiDien = b.AnhDaiDien,
+                                      MoTa = a.MoTa,
+                                      ChatLuongSanPham = a.ChatLuongSanPham,
+                                      IdSanPhamChiTiet = a.IdSanPhamChiTiet,
                                   })
-                
+
                 .ToListAsync();
-            var danhgia = ViewMode.FirstOrDefault(x=>x.IdDanhGia==id);
+            var danhgia = ViewMode.FirstOrDefault(x => x.IdDanhGia == id);
             return danhgia;
         }
     }
