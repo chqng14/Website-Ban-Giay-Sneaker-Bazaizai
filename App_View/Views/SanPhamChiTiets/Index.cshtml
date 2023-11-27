@@ -38,20 +38,6 @@
                 <div class="col-lg-12">
                     <div class="shop-p">
                         <div class="shop-p__toolbar u-s-m-b-30">
-                            @*<div class="shop-p__meta-wrap u-s-m-b-60">
-
-                                    <span class="shop-p__meta-text-1">FOUND 18 RESULTS</span>
-                                    <div class="shop-p__meta-text-2">
-
-                                        <span>Related Searches:</span>
-
-                                        <a class="gl-tag btn--e-brand-shadow" href="#">men's clothing</a>
-
-                                        <a class="gl-tag btn--e-brand-shadow" href="#">mobiles & tablets</a>
-
-                                        <a class="gl-tag btn--e-brand-shadow" href="#">books & audible</a>
-                                    </div>
-                                </div>*@
                             <div class="shop-p__tool-style">
                                 <div class="tool-style__group u-s-m-b-8">
 
@@ -62,22 +48,11 @@
                                 </div>
                                 <form>
                                     <div class="tool-style__form-wrap">
-                                        @*<div class="u-s-m-b-8">
-                                                <select class="select-box select-box--transparent-b-2">
-                                                    <option>Show: 8</option>
-                                                    <option selected>Show: 12</option>
-                                                    <option>Show: 16</option>
-                                                    <option>Show: 28</option>
-                                                </select>
-                                            </div>*@
                                         <div class="u-s-m-b-8">
-                                            <select class="select-box select-box--transparent-b-2">
-                                                <option selected>Sort By: Newest Items</option>
-                                                <option>Sort By: Latest Items</option>
-                                                <option>Sort By: Best Selling</option>
-                                                <option>Sort By: Best Rating</option>
-                                                <option>Sort By: Lowest Price</option>
-                                                <option>Sort By: Highest Price</option>
+                                            <select class="select-box select-box--transparent-b-2" id="select_price">
+                                                <option value="">Sắp xếp</option>
+                                                <option value="price_asc">Theo giá tăng dần</option>
+                                                <option value="price_desc">Theo giá giảm dần</option>
                                             </select>
                                         </div>
                                     </div>
@@ -96,3 +71,68 @@
     <!--====== End - Section 1 ======-->
 </div>
 <!--====== End - App Content ======-->
+<script>
+    $(document).on('change', '#select_price', function () {
+        const brandParam = new URLSearchParams(window.location.search).get("brand");
+
+        $('.preloader').addClass('is-active');
+
+        var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
+            return $(this).attr('id')
+        }).get();
+
+        var lstMauSac = $('.lst-mausac input[type="checkbox"]:checked').map(function () {
+            return $(this).attr('id')
+        }).get();
+
+        var lstTheLoai = $('.lst-theloai input[type="checkbox"]:checked').map(function () {
+            return $(this).closest('.list__content').find('span').text()
+        }).get();
+
+        var data = {};
+        $('#s-price').find("input, select, textarea").each(function () {
+
+            var fieldType = $(this).attr("type");
+            var fieldName = $(this).attr("name");
+            var fieldValue;
+
+            if (fieldType === "checkbox" || fieldType === "radio") {
+                fieldValue = $(this).is(":checked");
+            } else {
+                fieldValue = $(this).val();
+                if (!fieldValue) {
+                    fieldValue = 0;
+                }
+            }
+
+            data[fieldName] = fieldValue;
+
+        });
+
+        var filterdata = {
+            LstTheLoai: lstTheLoai,
+            LstMauSac: lstMauSac,
+            lstKichCo: lstKichCo,
+            Sort: $('#select_price').val(),
+            ...data
+        };
+
+        $.ajax({
+            url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+            type: 'POST',
+            data: JSON.stringify(filterdata),
+            contentType: 'application/json',
+            success: function (result) {
+                $('#body-ds').empty().html(result)
+                $('.preloader').removeClass('is-active');
+                isTaskRuning = false;
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    })
+</script>

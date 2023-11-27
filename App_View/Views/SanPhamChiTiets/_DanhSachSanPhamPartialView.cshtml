@@ -49,21 +49,18 @@ else
 
                                 <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
                             </div>
-                            <div class="gl-rating-style">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                            <div>
+                                <div style="color: #0d0f0d;border-radius: 8px;background: #d8e9d7;width: fit-content;padding: 0px 5px;margin: 6px 0px;border: 1px #f86666 solid;">@item.SoMauSac màu</div>
+                                @if (item.GiaMin == item.GiaMax)
+                                {
+                                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
 
-                                <span class="product-m__review">(@item.SoLanDanhGia)</span>
+                                }
+                                else
+                                {
+                                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
+                                }
                             </div>
-                            <span style="color: orangered; margin-bottom: 10px">@item.SoMauSac màu</span>
-                            @if (item.GiaMin == item.GiaMax)
-                            {
-                                <div class="product-m__price" style="color: red">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
-
-                            }
-                            else
-                            {
-                                <div class="product-m__price" style="color: red">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
-                            }
                             <div class="product-m__hover">
                                 <div class="product-m__preview-description">
 
@@ -169,6 +166,7 @@ else
                 LstMauSac: lstMauSac,
                 lstKichCo: lstKichCo,
                 TrangHienTai: trangHienTai,
+                Sort: $('#select_price').val(),
                 ...data
             };
 
@@ -251,6 +249,7 @@ else
                 LstMauSac: lstMauSac,
                 lstKichCo: lstKichCo,
                 TrangHienTai: newTrangHienTai,
+                Sort: $('#select_price').val(),
                 ...data
             };
 

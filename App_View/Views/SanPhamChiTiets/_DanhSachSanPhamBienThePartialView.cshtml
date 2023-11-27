@@ -76,13 +76,35 @@ else
 
                                 <span class="product-m__review">(@item.SoLanDanhGia)</span>
                             </div>
+                            <div style="display: flex">
+                                @if (item.IsNoiBat)
+
+                                {
+                                    <div style="color: #0d0f0d;border-radius: 8px;background: #d8e9d7;width: fit-content;padding: 0px 5px;margin: 6px 0px;border: 1px #f86666 solid;margin-right: 5px">Hot</div>
+
+                                }
+
+                                @if (item.IsKhuyenMai)
+
+                                {
+                                    <div style="color: #0d0f0d; border-radius: 8px; background: #d8e9d7; width: fit-content; padding: 0px 5px; margin: 6px 0px; border: 1px #f86666 solid; margin-right: 5px ">Sale</div>
+
+                                }
+
+                                @if (item.IsNew)
+
+                                {
+                                    <div style="color: #0d0f0d; border-radius: 8px; background: #d8e9d7; width: fit-content; padding: 0px 5px; margin: 6px 0px; border: 1px #f86666 solid; margin-right: 5px">New</div>
+
+                                }
+                            </div>
                             @if (item.IsKhuyenMai)
                             {
                                 <div class="product-m__price" style="color: red">
                                     <span class="product-o__price">
-                                        @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)
+                                        Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaKhuyenMai)
                                         <span class="product-o__discount">
-                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)
+                                           @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)
                                         </span>
                                     </span>
                                 </div>
@@ -91,7 +113,7 @@ else
                             {
                                 <div class="product-m__price" style="color: red">
                                     <span class="product-o__price">
-                                        @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)
+                                        Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @item.GiaGoc)
                                     </span>
                                 </div>
                             }
@@ -99,10 +121,6 @@ else
                                 <div class="product-m__preview-description">
 
                                     <span>@item.MoTaNgan</span>
-                                </div>
-                                <div class="product-m__wishlist">
-
-                                    <a class="far fa-heart" href="#" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"></a>
                                 </div>
                             </div>
                         </div>
@@ -199,6 +217,7 @@ else
             LstMauSac: lstMauSac,
             lstKichCo: lstKichCo,
             TrangHienTai: trangHienTai,
+            Sort: $('#select_price').val(),
             ...data
         };
 
@@ -233,7 +252,7 @@ else
         if (!isTaskRuning) {
             isTaskRuning = true;
             changePage(1);
-    
+
         }
     });
 
@@ -281,6 +300,7 @@ else
                 LstMauSac: lstMauSac,
                 lstKichCo: lstKichCo,
                 TrangHienTai: newTrangHienTai,
+                Sort: $('#select_price').val(),
                 ...data
             };
 
