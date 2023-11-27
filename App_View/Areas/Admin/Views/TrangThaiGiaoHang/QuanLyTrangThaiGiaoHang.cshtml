@@ -1,0 +1,156 @@
+﻿@using App_Data.ViewModels.HoaDon;
+@model IEnumerable<HoaDonViewModel>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="~/Admin/css/viewHoaDon.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100">
+                <table>
+                    <thead>
+                        <tr class="table100-head">
+                            <th class="column1">Ngày tạo</th>
+                            <th class="column2">Mã hóa đơn</th>
+                            <th class="column3">Tên khách hàng</th>
+                            <th class="column4">Tổng tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var hoaDon in Model.OrderByDescending(x => x.NgayTao))
+                        {
+                            <tr class="invoice-row btnInvoiceDetail" data-invoice-id="@hoaDon.IdHoaDon">
+                                <td class="column1">@hoaDon.NgayTao</td>
+                                <td class="column2">@hoaDon.MaHoaDon</td>
+                                <td class="column3">@hoaDon.TenNguoiNhan</td>
+                                <td class="column4">@string.Format("{0:N0}đ",hoaDon.TongTien)</td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+<!-- Modal để hiển thị thông tin chi tiết hóa đơn -->
+<div id="invoiceDetailModal" class="modal fade custom-modal-width" role="dialog">
+    <div class="modal-dialog custom-modal-width">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Chi tiết hóa đơn</h4>
+            </div>
+            <div class="modal-body" id="invoiceDetailContent">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    
+    $(document).ready(function () {
+        $(".btnInvoiceDetail").on("click", function () {
+            var invoiceId = $(this).data("invoice-id");
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ChiTietGiaoHang", "TrangThaiGiaoHang")",
+                data: { id: invoiceId },
+                success: function (response) {
+                    $("#invoiceDetailContent").html(response);
+
+                    $("#invoiceDetailModal").modal("show");
+                },
+                error: function (error) {
+                    // Xử lý lỗi nếu cần
+                }
+            });
+        });
+    });
+    function updateStatusPrompt() {
+
+        Swal.fire({
+            title: 'Chọn trạng thái mới',
+            input: 'select',
+            inputOptions: {
+                '1': 'Chờ xác nhận',
+                '2': 'Chờ lấy hàng',
+                '3': 'Đang giao',
+                '4': 'Đã giao',
+                '5': 'Đã hủy'
+            },
+            inputPlaceholder: 'Chọn trạng thái',
+            showCancelButton: true,
+            confirmButtonText: 'Cập nhật',
+            cancelButtonText: 'Đóng',
+            showLoaderOnConfirm: true,
+            preConfirm: (selectedStatus) => {
+                return new Promise((resolve) => {
+                    Swal.fire({
+                        title: 'Xác nhận cập nhật trạng thái?',
+                        text: 'Bạn có chắc muốn cập nhật trạng thái hóa đơn không?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Có',
+                        cancelButtonText: 'Không'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            resolve(updateStatus(selectedStatus));
+                        } else {
+                            resolve(false);
+                        }
+                    });
+                });
+            }
+        });
+    }
+
+    function updateStatus(selectedStatus) {
+        var idHoaDon = $('.btn-primary').data('id');
+        console.log(selectedStatus);
+        console.log(idHoaDon);
+        if (selectedStatus == "" || selectedStatus==null) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Bạn chưa chọn trạng thái!',
+                text: 'Vui lòng chọn trạng thái.',
+                showConfirmButton: false,
+                timer: 1500 
+            });
+        }
+        else {
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("CapNhatTrangThai", "TrangThaiGiaoHang")",
+                data: { trangThaiGH: selectedStatus, id: idHoaDon },
+                success: function (result) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Cập nhật thành công!',
+                        showConfirmButton: false,
+                        timer: 1500  
+                    });
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1500);
+                },
+                error: function (error) {
+  
+                    console.error('Error updating status:', error);
+                   
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Đã xảy ra lỗi!',
+                        text: 'Vui lòng thử lại sau.',
+                        showConfirmButton: false,
+                        timer: 1500  
+                    });
+                }
+            });
+        }
+      
+    }
+</script>
