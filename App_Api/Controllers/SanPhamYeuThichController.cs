@@ -42,9 +42,17 @@ namespace App_Api.Controllers
         [HttpPost("add-sanphamyeuthich")]
         public void AddSanPhamYeuThich(SanPhamYeuThichDTO sanPhamYeuThichDTO)
         {
-            var sanPhamYeuThich = _mapper.Map<SanPhamYeuThich>(sanPhamYeuThichDTO);
-            sanPhamYeuThich.IdSanPhamYeuThich = Guid.NewGuid().ToString();
-            _allRepoSanPhamYeuThich.AddItem(sanPhamYeuThich);
+            var exists = _bazaizaiContext.sanPhamYeuThiches
+                 .Any(spyt =>
+                 spyt.IdNguoiDung == sanPhamYeuThichDTO.IdNguoiDung &&
+                 spyt.IdSanPhamChiTiet == sanPhamYeuThichDTO.IdSanPhamChiTiet
+                 );
+            if (!exists)
+            {
+                var sanPhamYeuThich = _mapper.Map<SanPhamYeuThich>(sanPhamYeuThichDTO);
+                sanPhamYeuThich.IdSanPhamYeuThich = Guid.NewGuid().ToString();
+                _allRepoSanPhamYeuThich.AddItem(sanPhamYeuThich);
+            }
         }
 
         [HttpDelete("Remove-sanphamyeuthich")]

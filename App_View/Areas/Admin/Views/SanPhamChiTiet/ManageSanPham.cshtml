@@ -67,17 +67,21 @@
         margin-top: 11px;
         margin-left: 18px;
     }
+
+    .swal2-title {
+        font-family: 'Arial', sans-serif; /* Chọn font bạn muốn sử dụng cho alert */
+    }
+
 </style>
 
-<div class="modal fade" id="cauHinh">
+<div class="modal fade" id="cauHinh" data-backdrop="static">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header align-items-center" style="background: #129dc1;">
                 <i class="fas fa-user-astronaut m-r-5" style="font-size: 33px"></i>
                 <h5 class="modal-title" id="exampleModalLabel">CẤU HÌNH MẶC ĐỊNH CHO CÁC BIẾN THỂ</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <i class="anticon anticon-close"></i>
-                </button>
+                <div>
+                </div>
             </div>
             <div class="modal-body" style="background: #d3f6ff;">
                 <div class="card-body">
@@ -110,19 +114,19 @@
                                 <input id="khoiLuong" class="form-control formatNumber" value="250" name="KhoiLuong">(g)
                             </div>
                         </div>
-                        <div class="form-group d-flex align-items-center col-2">
+                        <div class="form-group d-flex align-items-center col-3">
                             <div class="switch m-r-10">
                                 <input type="checkbox" id="switch-1-day" class="switch-2-day" checked>
                                 <label class="font-weight-semibold" for="switch-1-day"></label>
                             </div>
-                            <label class="font-weight-semibold">Dây</label>
+                            <label class="font-weight-semibold">Dây(Có/Không)</label>
                         </div>
-                        <div class="form-group d-flex align-items-center col-2">
+                        <div class="form-group d-flex align-items-center col-4">
                             <div class="switch m-r-10">
                                 <input type="checkbox" id="switch-1-noibat" class="switch-2-noibat">
                                 <label class="font-weight-semibold" for="switch-1-noibat"></label>
                             </div>
-                            <label class="font-weight-semibold">Nổi bật</label>
+                            <label class="font-weight-semibold">Hiển thị ở danh dách nổi bật</label>
                         </div>
 
                         <div class="form-group col-12">
@@ -137,7 +141,7 @@
                 </div>
             </div>
             <div class="modal-footer" style="background: #d0dae3">
-                <button type="button" class="btn btn-warning" data-dismiss="modal">
+                <button type="button" class="btn btn-warning" onclick="generate()">
                     <i class="far fa-calendar-check"></i>
                     <span>Áp dụng</span>
                 </button>
@@ -161,10 +165,7 @@
         <div style="display: flex; align-items: center; justify-content: space-between;">
             <h5 style="margin: 0;">QUẢN LÝ SẢN PHẨM</h5>
             <div class="d-flex">
-                <button class="btn btn-icon btn-danger btn-rounded btn-kio mr-1" data-toggle="modal" data-target="#cauHinh">
-                    <i class="fab fa-whmcs"></i>
-                </button>
-                <button onclick="generate()" class="btn btn-primary">
+                <button onclick="generate_confirm()" class="btn btn-kio">
                     <i class="fas fa-plus-circle"></i>
                     <span>Tạo các biến thể</span>
                 </button>
@@ -289,9 +290,18 @@
 <div id="confirm" class="mt-2 mb-2" style="display: none">
     <div class="d-flex justify-content-end">
         <input type="file" multiple hidden id="ChonAnh" accept="image/*" />
-        <button onclick="ChonAnh()" class="btn btn-kio mr-2" id="ChoseImage">Chọn Ảnh</button>
-        <button onclick="CapNhat()" class="btn btn-kio mr-2">Cập nhật</button>
-        <button onclick="Huy()" class="btn btn-warning mr-2">Hủy</button>
+        <button onclick="ChonAnh()" class="btn btn-kio mr-2" id="ChoseImage" style="display: none">
+            <i class="far fa-file-image m-r-5"></i>
+            Chọn Ảnh
+        </button>
+        <button onclick="CapNhat()" class="btn btn-kio mr-2">
+            <i class="far fa-save m-r-5"></i>
+            Cập nhật
+        </button>
+        <button onclick="Huy()" class="btn btn-warning mr-2">
+            <i class="far fa-window-close m-r-5"></i>
+            Hủy
+        </button>
     </div>
 </div>
 
@@ -299,8 +309,65 @@
 </div>
 
 <script>
+    function generate_confirm() {
+        const lstColor = Array.from($('#IdColor option:checked')).map(option => ({ text: option.text, value: option.value }))
+
+        const lstSize = Array.from($('#IdSize option:checked')).map(option => ({ text: option.text, value: option.value }))
+
+        if (!lstSize.length || !lstColor.length) {
+            var toastHTML = `<div class="toast fade hide" data-delay="3000">
+              <div class="toast-header">
+                  <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                  <strong class="mr-auto">Thông báo</strong>
+                  <small>1 second ago</small>
+                  <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                  </button>
+              </div>
+              <div class="toast-body">
+                  Một vài thực thể dữ liệu chưa được nhập/chọn.
+                  Vui lòng nhập/chọn các trường cần thiết để tiếp tục!
+              </div>
+          </div>`
+            $('#notification-toast').append(toastHTML)
+            $('#notification-toast .toast').toast('show');
+            setTimeout(function () {
+                $('#notification-toast .toast:first-child').remove();
+            }, 3000);
+            return;
+        }
+
+        Swal.fire({
+            title: 'Bạn có muốn cấu hình giá trị mặc định cho các biến thể không?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Có',
+            cancelButtonText: 'Bỏ qua',
+            customClass: {
+                confirmButton: 'custom-alert',
+                cancelButton: 'custom-alert',
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('#cauHinh').modal('show');
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                generate();
+                Swal.close();
+            }
+        });
+    }
+
+
     function ChonAnh() {
         $('#ChonAnh').trigger('click');
+    }
+
+    function CheckConfirm() {
+        $('.item_checkbox:checked').length > 0 ? $('#ChoseImage').show() : $('#ChoseImage').hide()
+    }
+
+    function CheckboxChange() {
+        CheckConfirm();
     }
 
     $(document).on('change', '#ChonAnh', function () {
@@ -375,7 +442,7 @@
             });
 
             $('.item_checkbox').prop('checked', false);
-
+            CheckConfirm();
         });
 
     })
@@ -709,7 +776,7 @@
 <div class="card item-accordion" data-update="${isUpdate}" data-idproductdetail="${idProduct}">
         <div class="card-header">
             <h5 class="card-title d-flex">
-                <div class="checkbox" data-id="${index}"><input id="check-item-${index}" type="checkbox" class="item_checkbox"><label for="check-item-${index}" class="m-b-0"></label></div>
+                <div class="checkbox" data-id="${index}"><input id="check-item-${index}" onchange="CheckboxChange()" type="checkbox" class="item_checkbox"><label for="check-item-${index}" class="m-b-0"></label></div>
                 <a data-toggle="collapse" class="w-100 collapsed" data-IdMauSac="${idcolor}" data-IdKichCo="${idsize}"
                    href="#collapseOneBorderless${index}">
                     <span>${Title} ${message}</span>
@@ -773,21 +840,21 @@
                                         <input type="checkbox" id="switch-${index}" class="switch-2-day">
                                         <label class="font-weight-semibold" for="switch-${index}"></label>
                                     </div>
-                                    <label class="font-weight-semibold">Dây</label>
+                                    <label class="font-weight-semibold">Dây(Có/Không)</label>
                                 </div>
                                 <div class="form-group d-flex align-items-center col-3">
                                     <div class="switch m-r-10">
                                         <input type="checkbox" id="switch-${index}-1" class="switch-2-noibat">
                                         <label class="font-weight-semibold" for="switch-${index}-1"></label>
                                     </div>
-                                    <label class="font-weight-semibold">Nổi bật</label>
+                                    <label class="font-weight-semibold">Hiển thị ở danh sách nổi bật</label>
                                 </div>
                                  <div class="form-group d-flex align-items-center col-3">
                                      <div class="switch m-r-10">
                                          <input type="checkbox" id="switch-${index}-2" class="switch-2-trangthaikhuyenmai" name="TrangThaiKhuyenMai" checked>
                                          <label class="font-weight-semibold" for="switch-${index}-2"></label>
                                      </div>
-                                     <label class="font-weight-semibold">Áp dụng khuyến mãi</label>
+                                     <label class="font-weight-semibold">Cho phép áp dụng khuyến mại</label>
                                  </div>
                                 <div class="form-group col-12">
                                     <div class="m-b-5" style="margin-top: 10px;">
@@ -804,8 +871,9 @@
                          aria-labelledby="profile-tab-vertical${index}">
                         <div class="card-body">
                             <div class="upload mt-2">
-                                <button name="choseFile" class="custom-btn btn-tone mb-2">
-                                    Choose file
+                                <button name="choseFile" class="btn btn-kio mb-2">
+                                    <i class="far fa-file-image m-r-5"></i>
+                                    Chọn Ảnh
                                 </button>
                                 <input type="file" accept="image/*" class="fileInput default-btn 1" multiple hidden>
                                 <div class="container-file" style="display: flex;">
@@ -866,15 +934,11 @@
 
     //Check Update or Add to gen Item template
     async function generate() {
+        $('#cauHinh').modal('hide');
 
         const lstColor = Array.from($('#IdColor option:checked')).map(option => ({ text: option.text, value: option.value }))
 
         const lstSize = Array.from($('#IdSize option:checked')).map(option => ({ text: option.text, value: option.value }))
-
-        if (!lstSize.length || !lstColor.length) {
-            alert('Vui lòng chọn đủ thực thể để bắt đầu gen')
-            return;
-        }
 
         disabledFormMain();
         $('#preloader').show();
@@ -1404,5 +1468,6 @@
     <script src="~/Admin/js/pages/form-elements.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.8.1/autoNumeric.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 }
 

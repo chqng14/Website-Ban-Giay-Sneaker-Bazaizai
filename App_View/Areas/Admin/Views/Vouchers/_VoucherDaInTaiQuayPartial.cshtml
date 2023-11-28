@@ -10,7 +10,7 @@
         font-size: 25px;
         color: #0F69F2;
         cursor: pointer;
-    }   
+    }
 </style>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-xl " role="document">
@@ -22,7 +22,7 @@
                 </button>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btnExportPDF" onclick="PrintContent()">Xuất PDF</button>
+                <button type="button" class="btn btn-primary" id="btnExportPDF" onclick="PrintContent()"><i class="anticon anticon-file-pdf"></i> Xuất PDF</button>
             </div>
 
             <div class="modal-body printContent" id="myModalContent">
@@ -139,8 +139,16 @@
                     }
                 </td>
                 <td>
-                    <button class="btn btn-primary btn-sm" onclick="showDetails('@item.IdVoucher')">Xem chi tiết</button>
-       @*              @Html.ActionLink("Xuất voucher", "XuatVoucher", new { idVoucher = item.IdVoucher }) *@
+                    @if (item.TrangThai == 9 || item.TrangThai == 7)
+                    {
+                        <i class="anticon anticon-stop"></i>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary btn-sm" onclick="showDetails('@item.IdVoucher')"> Chi tiết <i class="anticon anticon-export"></i></button>
+                        @*              @Html.ActionLink("Xuất voucher", "XuatVoucher", new { idVoucher = item.IdVoucher }) *@
+                    }
+             
                 </td>
 
             </tr>

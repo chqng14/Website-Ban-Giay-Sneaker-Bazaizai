@@ -82,7 +82,7 @@ namespace App_View.Controllers
                 data = data!.Where(sp => sp.ThuongHieu!.ToLower() == brand.ToLower()).ToList();
             }
 
-            if (filterData.LstKichCo!.Any() || filterData.LstMauSac!.Any() || (filterData.GiaMin != 0 && filterData.GiaMax != 0))
+            if (filterData.LstKichCo!.Any() || filterData.LstMauSac!.Any() || (filterData.GiaMin != 0 && filterData.GiaMax != 0) || !string.IsNullOrEmpty(filterData.Sort))
             {
                 data = await _sanPhamChiTietService.GetDanhSachBienTheItemShopViewModelAsync();
 
@@ -117,6 +117,16 @@ namespace App_View.Controllers
                         .ToList();
                 }
 
+                if (!string.IsNullOrEmpty(filterData.Sort))
+                {
+                    if (filterData.Sort == "price_asc")
+                    {
+                        data = data!.OrderBy(it => it.GiaThucTe).ToList();
+                    }else
+                    {
+                        data = data!.OrderByDescending(it => it.GiaThucTe).ToList();
+                    }
+                }
                 var dataBienThe = new FilterDataVM()
                 {
                     Items = data!.Skip((filterData.TrangHienTai - 1) * 12).Take(12).ToList(),

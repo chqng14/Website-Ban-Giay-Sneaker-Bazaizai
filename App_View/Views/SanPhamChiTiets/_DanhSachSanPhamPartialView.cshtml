@@ -1,4 +1,11 @@
-﻿@model App_Data.ViewModels.FilterViewModel.FilterDataVM
+﻿@using App_View.IServices;
+@using App_View.Services;
+@model App_Data.ViewModels.FilterViewModel.FilterDataVM
+@inject IDanhGiaService _DanhGiaService
+@{
+    _DanhGiaService = new DanhGiaService();
+
+}
 @if (Model.Items!.Count() == 0)
 {
 
@@ -12,11 +19,10 @@
                         <div class="empty">
                             <div class="empty__wrap">
 
-                                <span class="empty__big-text">EMPTY</span>
-
-                                <span class="empty__text-1">Không sản phẩm nào được tìm thấy.</span>
-
-                                <a class="empty__redirect-link btn--e-brand" href="/SanPhamchiTiets">Xóa bộ lọc</a>
+                                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: -60px; height: 300px; width: 100%; background-repeat: no-repeat; background-size: contain; background-position: center; background-image: url('https://www.beevidhya.com/assets/images/no_result.gif');">
+                                        <span style="margin-top: 380px">Không tìm thấy sản phẩm!!!</span>
+                                        <a class="nav-link btn--e-white-brand-shadow" href="/sanphamchitiets">XÓA BỘ LỌC</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -32,6 +38,8 @@ else
         <div class="row is-grid-active">
             @foreach (var item in Model.Items!)
             {
+                var TongSoDanhGia = await _DanhGiaService.GetTongSoDanhGia(item.IdChiTietSp);
+                var SaoTb = await _DanhGiaService.GetSoSaoTB(item.IdChiTietSp);
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="product-m">
                         <div class="product-m__thumb" data-id="@item.IdChiTietSp">
@@ -51,9 +59,101 @@ else
                                 <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
                             </div>
                             <div class="gl-rating-style">
-                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                @*<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
 
-                                <span class="product-m__review">(@item.SoLanDanhGia)</span>
+                                <span class="product-m__review">(@item.SoLanDanhGia)</span>*@
+
+                                @if (SaoTb < 0.3)
+                                {
+
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 0.8)
+                                {
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 1.3)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 1.8)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 2.3)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 2.8)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 3.3)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 3.8)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <i class="far fa-star"></i>
+                                }
+                                else if (SaoTb < 4.3)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                }
+
+                                else if (SaoTb < 4.8)
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                }
+                                <span class="product-m__review">(@TongSoDanhGia)</span>
                             </div>
                             <span style="color: orangered; margin-bottom: 10px">@item.SoMauSac màu</span>
                             @if (item.GiaMin == item.GiaMax)

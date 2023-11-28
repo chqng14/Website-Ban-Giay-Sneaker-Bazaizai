@@ -1,6 +1,30 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<div class="u-s-p-y-10">
+
+    <!--====== Section Content ======-->
+    <div class="section__content">
+        <div class="container">
+            <div class="breadcrumb">
+                <div class="breadcrumb__wrap">
+                    <ul class="breadcrumb__list">
+                        <li class="has-separator">
+
+                            <a href="/">Trang chủ</a>
+                        </li>
+                        <li class="is-marked">
+
+                            <a>Giỏ hàng</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="u-s-p-y-60">
 
     <!--====== Section Content ======-->
@@ -11,11 +35,11 @@
                     <div class="empty">
                         <div class="empty__wrap">
 
-                            <span class="empty__big-text">TRỐNG</span>
+                            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: -60px; height: 250px; width: 100%; background-repeat: no-repeat; background-size: contain; background-position: center; background-image: url('https://media.baamboozle.com/uploads/images/46623/1648839924_225397_gif-url.gif');">
+                                <span style="margin-top: 275px">Không có sản phẩm nào trong giỏ hàng!!!</span>
+                                <a class="nav-link btn--e-white-brand-shadow" href="/sanphamchitiets">ĐI ĐẾN GIAN HÀNG!!!</a>
+                            </div>
 
-                            <span class="empty__text-1">Không có sản phẩm nào trong giỏ hàng của bạn.</span>
-
-                            <a class="empty__redirect-link btn--e-brand" href="@Url.Action("Index", "SanPhamChiTiets")">TIẾP TỤC MUA SẮM</a>
                         </div>
                     </div>
                 </div>

@@ -26,8 +26,8 @@
             <th>
                 Số lượng
             </th>
-         @*    <th>
-                Ngày khởi tạo
+            @*    <th>
+            Ngày khởi tạo
             </th> *@
             <th>
                 Ngày bắt đầu
@@ -39,11 +39,10 @@
                 Trạng thái
             </th>
             <th>
-                <input type="checkbox" id="select-all-checkbox" class="checkbox_css" />
+                <i class="anticon anticon-tool"></i>
             </th>
-
             <th>
-<i class="anticon anticon-tool"></i>
+                <input type="checkbox" id="select-all-checkbox" class="checkbox_css" />
             </th>
         </tr>
 
@@ -91,9 +90,9 @@
                 <td>
                     @item.SoLuong
                 </td>
-        @*         <td>
-                    @item.NgayTao
-                </td> *@
+                @*         <td>
+            @item.NgayTao
+            </td> *@
                 <td>
                     @item.NgayBatDau
                 </td>
@@ -119,18 +118,21 @@
                     }
                 </td>
                 <td>
+                    <div class="btn-group dropdown" style="cursor: pointer">
+                        <i class="fas fa-bars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                        <div class="dropdown-menu">
+                            <a asp-action="GiveVouchersToUsers" class="dropdown-item" asp-route-maVoucher="@item.MaVoucher">
+                                <i class="anticon anticon-gift"></i>
+                                Tặng voucher
+                            </a>
+                            <a asp-action="Edit" class="dropdown-item" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i> Chỉnh sửa</a>
+                        </div>
+                    </div>
+                </td>
+                <td>
                     <input type="checkbox" class="voucher-checkbox" data-value="@item.IdVoucher" />
                 </td>
 
-                <td>
-
-                    <a asp-action="GiveVouchersToUsers" asp-route-maVoucher="@item.MaVoucher"><i class="anticon anticon-gift"></i></a>
-
-
-                    <a asp-action="Edit" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i></a>
-                    @*   <a asp-action="Details" asp-route-id="@item.IdVoucher"><i class="anticon anticon-eye"></i></a> |
-                <a asp-action="Delete" asp-route-id="@item.IdVoucher"><i class="anticon anticon-delete"></i></a> *@
-                </td>
             </tr>
         }
     </tbody>

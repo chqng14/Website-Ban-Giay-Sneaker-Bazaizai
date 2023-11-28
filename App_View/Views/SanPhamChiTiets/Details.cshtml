@@ -26,11 +26,11 @@
                         <ul class="pd-breadcrumb__list">
                             <li class="has-separator">
 
-                                <a href="/">HOME</a>
+                                <a href="/">TRANG CHỦ</a>
                             </li>
                             <li class="has-separator">
 
-                                <a href="/sanphamchitiets">SHOP</a>
+                                <a href="/sanphamchitiets">GIAN HÀNG</a>
                             </li>
                             <li class="is-marked">
 
@@ -416,10 +416,6 @@
                                 </li>
                                 <li class="nav-item">
 
-                                    <a class="nav-link" data-toggle="tab" href="#pd-tag">TAGS</a>
-                                </li>
-                                <li class="nav-item">
-
                                     <a class="nav-link active" id="view-review" data-toggle="tab" href="#pd-rev">
                                         ĐÁNH GIÁ
 
@@ -432,377 +428,38 @@
 
                             <!--====== Tab 1 ======-->
                             <div class="tab-pane" id="pd-desc">
-                                <div class="pd-tab__desc">
-                                    @Html.Raw(Model.MoTaSanPham)
+                                <div class="pd-tab__desc" style="max-width: none !important">
+                                    @if (string.IsNullOrEmpty(Model.MoTaSanPham))
+                                    {
+                                        <div style="DISPLAY: flex; justify-content: center; align-items: center; height: 200px; width: 100%; background-repeat: no-repeat; background-size: contain; background-position: center; background-image: url('https://i.stack.imgur.com/8yFqA.gif');">
+                                            <span style="
+    margin-top: 237px;
+    color: red;
+    font-weight: bold;
+">
+                                                Chưa có mô tả cho sản phẩm này!!!
+                                            </span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw(Model.MoTaSanPham)
+                                    }
                                 </div>
                             </div>
                             <!--====== End - Tab 1 ======-->
-                            <!--====== Tab 2 ======-->
-                            <div class="tab-pane" id="pd-tag">
-                                <div class="pd-tab__tag">
-                                    <h2 class="u-s-m-b-15">ADD YOUR TAGS</h2>
-                                    <div class="u-s-m-b-15">
-                                        <form>
-
-                                            <input class="input-text input-text--primary-style" type="text">
-
-                                            <button class="btn btn--e-brand-b-2" type="submit">ADD TAGS</button>
-                                        </form>
-                                    </div>
-
-                                    <span class="gl-text">Use spaces to separate tags. Use single quotes (') for phrases.</span>
-                                </div>
+                            <div class="tab-pane active show" id="pd-rev">
+                                <partial name="_DanhGiaPartial" />
                             </div>
-                            <!--====== End - Tab 2 ======-->
-                            <partial name="_DanhGiaPartial" />
 
                         </div>
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>
     </div>
     <!--====== End - Product Detail Tab ======-->
-    <div class="u-s-p-b-90">
-
-        @*====== Section Intro ======*@
-        <div class="section__intro u-s-m-b-46">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="section__text-wrap">
-                            <h1 class="section__heading u-c-secondary u-s-m-b-12">CUSTOMER ALSO VIEWED</h1>
-
-                            <span class="section__span u-c-grey">PRODUCTS THAT CUSTOMER VIEWED</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @*====== End - Section Intro ======
-        ====== Section Content ======*@
-        <div class="section__content">
-            <div class="container">
-                <div class="slider-fouc">
-                    <div class="owl-carousel product-slider" data-item="4">
-                        <div class="u-s-m-b-30">
-                            <div class="product-o product-o--hover-on">
-                                <div class="product-o__wrap">
-
-                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/">
-
-                                        <img class="aspect__img" src="/images/product/electronic/product1.jpg" alt="">
-                                    </a>
-                                    <div class="product-o__action-wrap">
-                                        <ul class="product-o__action-list">
-                                            <li>
-
-                                                <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Thêm vào giỏ hàng"><i class="fas fa-plus-circle"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Thêm vào danh sách yêu thích"><i class="fas fa-heart"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <span class="product-o__category">
-
-                                    <a href="/sanphamchitiets">Electronics</a>
-                                </span>
-
-                                <span class="product-o__name">
-
-                                    <a href="product-detail.html">Beats Bomb Wireless Headphone</a>
-                                </span>
-                                <div class="product-o__rating gl-rating-style">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                    <span class="product-o__review">(20)</span>
-                                </div>
-
-                                <span class="product-o__price">
-                                    $125.00
-
-                                    <span class="product-o__discount">$160.00</span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="u-s-m-b-30">
-                            <div class="product-o product-o--hover-on">
-                                <div class="product-o__wrap">
-
-                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                        <img class="aspect__img" src="/images/product/electronic/product2.jpg" alt="">
-                                    </a>
-                                    <div class="product-o__action-wrap">
-                                        <ul class="product-o__action-list">
-                                            <li>
-
-                                                <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Thêm vào giỏ hàng"><i class="fas fa-plus-circle"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Thêm vào danh sách yêu thích"><i class="fas fa-heart"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <span class="product-o__category">
-
-                                    <a href="/sanphamchitiets">Electronics</a>
-                                </span>
-
-                                <span class="product-o__name">
-
-                                    <a href="product-detail.html">Red Wireless Headphone</a>
-                                </span>
-                                <div class="product-o__rating gl-rating-style">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                    <span class="product-o__review">(20)</span>
-                                </div>
-
-                                <span class="product-o__price">
-                                    $125.00
-
-                                    <span class="product-o__discount">$160.00</span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="u-s-m-b-30">
-                            <div class="product-o product-o--hover-on">
-                                <div class="product-o__wrap">
-
-                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                        <img class="aspect__img" src="/images/product/electronic/product3.jpg" alt="">
-                                    </a>
-                                    <div class="product-o__action-wrap">
-                                        <ul class="product-o__action-list">
-                                            <li>
-
-                                                <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Thêm vào giỏ hàng"><i class="fas fa-plus-circle"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Thêm vào danh sách yêu thích"><i class="fas fa-heart"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <span class="product-o__category">
-
-                                    <a href="/sanphamchitiets">Electronics</a>
-                                </span>
-
-                                <span class="product-o__name">
-
-                                    <a href="product-detail.html">Yellow Wireless Headphone</a>
-                                </span>
-                                <div class="product-o__rating gl-rating-style">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                    <span class="product-o__review">(20)</span>
-                                </div>
-
-                                <span class="product-o__price">
-                                    $125.00
-
-                                    <span class="product-o__discount">$160.00</span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="u-s-m-b-30">
-                            <div class="product-o product-o--hover-on">
-                                <div class="product-o__wrap">
-
-                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                        <img class="aspect__img" src="/images/product/electronic/product23.jpg" alt="">
-                                    </a>
-                                    <div class="product-o__action-wrap">
-                                        <ul class="product-o__action-list">
-                                            <li>
-
-                                                <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Thêm vào giỏ hàng"><i class="fas fa-plus-circle"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Thêm vào danh sách yêu thích"><i class="fas fa-heart"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <span class="product-o__category">
-
-                                    <a href="/sanphamchitiets">Electronics</a>
-                                </span>
-
-                                <span class="product-o__name">
-
-                                    <a href="product-detail.html">Razor Gear Ultra Slim 8GB Ram</a>
-                                </span>
-                                <div class="product-o__rating gl-rating-style">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                    <span class="product-o__review">(20)</span>
-                                </div>
-
-                                <span class="product-o__price">
-                                    $125.00
-
-                                    <span class="product-o__discount">$160.00</span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="u-s-m-b-30">
-                            <div class="product-o product-o--hover-on">
-                                <div class="product-o__wrap">
-
-                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                        <img class="aspect__img" src="/images/product/electronic/product26.jpg" alt="">
-                                    </a>
-                                    <div class="product-o__action-wrap">
-                                        <ul class="product-o__action-list">
-                                            <li>
-
-                                                <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Thêm vào giỏ hàng"><i class="fas fa-plus-circle"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Thêm vào danh sách yêu thích"><i class="fas fa-heart"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <span class="product-o__category">
-
-                                    <a href="/sanphamchitiets">Electronics</a>
-                                </span>
-
-                                <span class="product-o__name">
-
-                                    <a href="product-detail.html">Razor Gear Ultra Slim 12GB Ram</a>
-                                </span>
-                                <div class="product-o__rating gl-rating-style">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                    <span class="product-o__review">(20)</span>
-                                </div>
-
-                                <span class="product-o__price">
-                                    $125.00
-
-                                    <span class="product-o__discount">$160.00</span>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="u-s-m-b-30">
-                            <div class="product-o product-o--hover-on">
-                                <div class="product-o__wrap">
-
-                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="product-detail.html">
-
-                                        <img class="aspect__img" src="/images/product/electronic/product30.jpg" alt="">
-                                    </a>
-                                    <div class="product-o__action-wrap">
-                                        <ul class="product-o__action-list">
-                                            <li>
-
-                                                <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a data-modal="modal" data-modal-id="#add-to-cart" data-tooltip="tooltip" data-placement="top" title="Thêm vào giỏ hàng"><i class="fas fa-plus-circle"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Thêm vào danh sách yêu thích"><i class="fas fa-heart"></i></a>
-                                            </li>
-                                            <li>
-
-                                                <a href="signin.html" data-tooltip="tooltip" data-placement="top" title="Email me When the price drops"><i class="fas fa-envelope"></i></a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <span class="product-o__category">
-
-                                    <a href="/sanphamchitiets">Electronics</a>
-                                </span>
-
-                                <span class="product-o__name">
-
-                                    <a href="product-detail.html">Razor Gear Ultra Slim 16GB Ram</a>
-                                </span>
-                                <div class="product-o__rating gl-rating-style">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-
-                                    <span class="product-o__review">(20)</span>
-                                </div>
-
-                                <span class="product-o__price">
-                                    $125.00
-
-                                    <span class="product-o__discount">$160.00</span>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--====== End - Section Content ======-->
-    </div>
+    
     <!--====== End - Section 1 ======-->
 </div>
 
