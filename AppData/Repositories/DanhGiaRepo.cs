@@ -69,7 +69,7 @@ namespace App_Data.Repositories
         public async Task<float> SoSaoTB(string IdProductChiTiet)
         {
             var danhGias = await GetListAsyncViewModel(IdProductChiTiet);
-            var lstdanhGia = danhGias.Where(x => x.SaoSp != 0);
+            var lstdanhGia = danhGias.Where(x => x.SaoSp != 0 && x.TrangThai == (int)TrangThaiDanhGia.DaDuyet);
             var SoSao = lstdanhGia.Count();
             int? Tong = 0;
             if (SoSao == 0)
@@ -93,7 +93,7 @@ namespace App_Data.Repositories
         public async Task<int> GetTongSoDanhGia(string IdProductChiTiet)
         {
             var lstdanhGia = await GetListAsyncViewModel(IdProductChiTiet);
-            return lstdanhGia.Where(x => x.SaoSp != 0).Count();
+            return lstdanhGia.Where(x => x.SaoSp != 0&&x.TrangThai==(int)TrangThaiDanhGia.DaDuyet).Count();
         }
         public async Task<int> GetTongSoDanhGiaChuaDuyetCuaMotSp(string IdProductChiTiet)
         {
