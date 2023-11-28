@@ -32,6 +32,7 @@
 
     .chartBox {
         width: 80%;
+        height: 70%;
         padding: 20px;
         border-radius: 20px;
         border: solid 3px rgba(54, 162, 235, 1);
@@ -46,14 +47,18 @@
 
 </style>
 
-<h1 style="text-align:center">Thống kê</h1>
+<h1 style="text-align:center">Thống kê doanh thu theo thời gian</h1>
 <div class="row">
+    <input type="date" id="fromDate">
+    <input type="date" id="toDate">
+    <button> Hôm nay</button>
+    <button> Hôm qua</button>
+    <button> Tuần này</button>
     <div class="chartCard">
 
         <div class="chartBox">
             <canvas id="myChart" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"></canvas>
-            <input type="date" id="fromDate">
-            <input type="date" id="toDate">
+          
         </div>
     </div>
 </div>
