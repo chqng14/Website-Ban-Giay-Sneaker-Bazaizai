@@ -129,15 +129,15 @@
     </div>
     <div class="col-lg-4 d-none" id="showActions">
         <div class="w-100 d-flex justify-content-end" style="margin-left: 30px">
-            <button class="btn btn-kio m-r-5">
+            <button class="btn btn-kio m-r-5" id="export-relatedProducts">
                 <i class="anticon anticon-loading m-r-5"></i>
                 <i class="anticon anticon-file-excel"></i>
                 <span>Export Excel</span>
             </button>
             <button class="btn btn-kio" id="btnUpdate">
                 <i class="anticon anticon-loading m-r-5"></i>
-                <i class="anticon anticon-tool m-r-5"></i>
-                <span>Update</span>
+                <i class="anticon anticon-save m-r-5"></i>
+                <span>Lưu</span>
             </button>
         </div>
     </div>
@@ -252,6 +252,46 @@
 </table>
 
 <script>
+    $(document).on('click', '#export-relatedProducts', function () {
+        var danhSachId = $('.item:checked').map(function () {
+            return $(this).closest('.checkbox').attr('data-id')
+        }).get();
+
+        var data = {
+            listGuild: danhSachId,
+        };
+        $.ajax({
+            url: '/admin/sanphamchitiet/ExportListProductRelateFromListGuild',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (result) {
+
+                var url = window.URL.createObjectURL(result);
+
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = 'ProductList.xlsx';
+                document.body.appendChild(a);
+                a.click();
+
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+
+
+    })
     function EditSanPham(idSanPhamEdit) {
         var data = {
             idSanPhamChiTiet: idSanPhamEdit,

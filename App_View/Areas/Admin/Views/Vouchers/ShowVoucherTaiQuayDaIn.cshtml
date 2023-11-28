@@ -90,51 +90,7 @@
     <div id="partialContainer">
         <!-- Nội dung PartialView sẽ được hiển thị ở đây -->
     </div>
-    @* //Huỷ voucher đã chọn *@
-    <button class="btn btn-warning mr-2" data-toggle="modal" data-target="#cancel" style="color:white">Huỷ hoạt động của voucher đã chọn</button>
-    <div class="modal fade" id="cancel">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header" style="background: #3f87f5;">
-                    <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <i class="anticon anticon-close"></i>
-                    </button>
-                </div>
-                <div class="modal-body" style="background: white;">
-                    <span id="thongBao">Bạn có huỷ voucher đã chọn không ?</span>
-                </div>
-                <div class="modal-footer" style="background: white">
 
-                    <button class="btn btn-primary bd-0 col-md-6" id="delete-button">Xác nhận</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @* //Khôi phục voucher đã chọn *@
-    <button class="btn btn-success mr-2" data-toggle="modal" data-target="#restore">Khôi phục voucher đã chọn</button>
-    <div class="modal fade" id="restore">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header" style="background: #3f87f5;">
-                    <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <i class="anticon anticon-close"></i>
-                    </button>
-                </div>
-                <div class="modal-body" style="background: white;">
-                    <span id="thongBao">Bạn có khôi phục đã chọn không ?</span>
-                </div>
-                <div class="modal-footer" style="background: white">
-
-                    <button class="btn btn-primary bd-0 col-md-6" id="restore-button">Xác nhận</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 <script>
     // Hàm để load danh sách Voucher mặc định khi trang web được load
@@ -189,15 +145,16 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
-    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
-    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
-    <script src="~/Admin/js/pages/datatables.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
-    <!-- Bootstrap JS -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 }
+<script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+<script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+<script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+<script src="~/Admin/js/pages/datatables.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+<!-- Bootstrap JS -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

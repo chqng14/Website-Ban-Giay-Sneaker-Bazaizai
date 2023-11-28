@@ -568,7 +568,7 @@
                      processData: false,
                      success: function (result) {
                          if (result) {
-                             if (window.location.pathname.includes('SanPhamChiTiet/DanhSachSanPham')) {
+                             if (window.location.pathname.toLowerCase().includes('sanPhamChiTiet/danhSachSanPham')) {
                                  $('#modalSanPham').modal('hide');
                                  table.draw();
                              }
@@ -719,7 +719,7 @@
                 processData: false,
                 success: function (result) {
                     if (result) {
-                        if (window.location.pathname.includes('SanPhamChiTiet/DanhSachSanPham')) {
+                        if (window.location.pathname.toLowerCase().includes('sanPhamChiTiet/danhSachSanPham')) {
                             $('#modalSanPham').modal('hide');
                             table.draw();
                         } else {

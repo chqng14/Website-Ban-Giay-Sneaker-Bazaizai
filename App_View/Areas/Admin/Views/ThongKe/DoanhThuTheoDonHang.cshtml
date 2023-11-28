@@ -1,0 +1,289 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+    }
+
+    .chartMenu {
+        width: 100vw;
+        height: 40px;
+        background: #1A1A1A;
+        color: rgba(54, 162, 235, 1);
+    }
+
+        .chartMenu p {
+            padding: 10px;
+            font-size: 20px;
+        }
+
+    .chartCard {
+        width: 100vw;
+        height: calc(100vh - 40px);
+        background: rgba(54, 162, 235, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chartBox {
+        width: 80%;
+        height: 70%;
+        padding: 20px;
+        border-radius: 20px;
+        border: solid 3px rgba(54, 162, 235, 1);
+        background: white;
+    }
+
+    /*    .custom-scroll-table {
+                        max-height: 10px;
+                        overflow-y: auto;
+                    }
+                */
+
+</style>
+
+<h1 style="text-align:center">Thống kê doanh thu theo sản phẩm</h1>
+<div class="row">
+    <input type="date" id="fromDate">
+    <input type="date" id="toDate">
+    <button> Hôm nay</button>
+    <button> Hôm qua</button>
+    <button> Tuần này</button>
+    <div class="chartCard">
+
+        <div class="chartBox">
+            <canvas id="myChart" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"></canvas>
+
+        </div>
+    </div>
+</div>
+<table class="table table-bordered custom-scroll-table">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Mã đơn hàng</th>
+            <th>Mã SKU</th>
+            <th>SL đơn hàng</th>
+           
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>SL hàng bán</th>
+            <th>Tổng chiết khấu</th>
+       
+            
+            <th>Tiền hàng</th>
+          
+            <th>Phí giao hàng</th>
+            <th>Doanh thu</th>
+
+        </tr>
+    </thead>
+   @* <th>Chiết khấu sản phẩm</th>
+    <th>Chiết khấu hóa đơn</th>*@
+    <tbody id="load_data">
+    </tbody>
+</table>
+@section scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <!-- Thêm liên kết DataTables CSS và JS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.js"></script>
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="~/Admin/moment/moment.min.js"></script>
+    <script>
+
+        var arrSanPham = [];
+        var arrDoanhThu = [];
+        var myChart;
+        //const colors = [
+        //    'rgba(60,141,188,0.9)',
+        //    'rgba(255,87,34,0.9)',
+        //    'rgba(0,128,0,0.9)',
+        //    'rgba(255,193,7,0.9)',
+        //    'rgba(138,43,226,0.9)',
+        //    // Thêm màu khác nếu cần
+        //];
+        function generateRandomColors(count) {
+            const colors = [];
+            for (let i = 0; i < count; i++) {
+                const color = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.9)`;
+                colors.push(color);
+            }
+            return colors;
+        }
+
+        const colors = generateRandomColors(20);
+        function updateChart(fromDate, toDate) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("ThongKeTheoHoaDonOnline", "ThongKe")",
+                data: { fromDate: fromDate, toDate: toDate },
+                success: function (rs) {
+                    console.log(rs.data);
+                    arrSanPham = [];
+                    arrDoanhThu = [];
+
+                    $.each(rs.data, function (i, item) {
+                        console.log("Hi, chào cậu ");
+                        arrDoanhThu.push(item.doanhThu);
+                        arrSanPham.push(item.sanPham);
+                    });
+
+                    // Cập nhật dữ liệu cho biểu đồ hiện tại
+                    myChart.data.labels = arrSanPham;
+                    myChart.data.datasets[0].data = arrDoanhThu;
+                    console.log(arrDoanhThu);
+                    // Cập nhật biểu đồ
+                    myChart.update();
+                    load_data(rs.data);
+                }
+            });
+        }
+
+        // Khởi tạo biểu đồ ban đầu
+        $(document).ready(function () {
+            const data = {
+                labels: [],
+                datasets: [
+                    {
+                        label: '',
+                        backgroundColor: colors,
+                        borderColor: colors,
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: []
+                    }
+                ]
+            };
+
+            const config = {
+                type: 'line',//pie
+                data: data,
+                options: {
+                    layout: {
+                        padding: 10
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'right',
+                            padding: 30
+                        },
+                        datalabels: {
+                            formatter: (value, ctx) => {
+                                console.log(value);
+                                console.log(ctx);
+                                const total = ctx.chart.data.datasets[0].data.reduce((acc, val) => acc + val, 0);
+                                console.log("Hi, chúng ta lại gặp nhau rồi ");
+                                console.log(total);
+                                const percentage = total !== 0 ? ((value / total) * 100).toFixed(2) + '%' : '0.00%';
+
+                                return percentage;
+                            },
+                            anchor: 'center',
+                            align: 'end',
+                            color: 'white',
+
+                        },
+                    },
+                },
+                plugins: [ChartDataLabels]
+            };
+
+            myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+
+            updateChart('', '');
+
+        });
+
+        // Xử lý sự kiện khi ngày thay đổi
+        $('#fromDate, #toDate').change(function () {
+            var fromDate = $('#fromDate').val();
+            var toDate = $('#toDate').val();
+            updateChart(fromDate, toDate);
+        });
+
+
+
+        //function load_data(data) {
+        //    var strHtml = "";
+        //    $.each(data, function (i, item) {
+        //        strHtml += "<tr>";
+        //        strHtml += "<td>" + (i + 1) + "</td>";
+        //        strHtml += "<td>" + item.sanPham + "</td>";
+        //        strHtml += "<td>" + item.soLuongKhachHang + "</td>";
+        //        strHtml += "<td>" + item.soLuongHangBan + "</td>";
+        //        strHtml += "<td>" + item.soLuongDonHang + "</td>";
+        //        strHtml += "<td>" + item.tienHang + "</td>";
+        //        strHtml += "<td>" + item.chietKhauSanPham + "</td>";
+        //        strHtml += "<td>" + item.doanhThu + "</td>";
+        //        strHtml += "</tr>";
+        //    });
+        //    $('#load_data').html(strHtml);
+        //}
+        function load_data(data) {
+            var strHtml = "";
+            var totalSoLuongKhachHang = 0;
+            var totalSoLuongHangBan = 0;
+            var totalSoLuongDonHang = 0;
+            var totalTienHang = 0;
+            var totalChietKhauSanPham = 0;
+            var totalDoanhThu = 0;
+
+            $.each(data, function (i, item) {
+                strHtml += "<tr>";
+                strHtml += "<td>" + (i + 1) + "</td>";
+                strHtml += "<td>" + item.sanPham + "</td>";
+                strHtml += "<td>" + item.soLuongKhachHang + "</td>";
+                strHtml += "<td>" + item.soLuongHangBan + "</td>";
+                strHtml += "<td>" + item.soLuongDonHang + "</td>";
+                strHtml += "<td>" + item.tienHang + "</td>";
+                strHtml += "<td>" + item.chietKhauSanPham + "</td>";
+                strHtml += "<td>" + "</td>";
+                strHtml += "<td>" + item.doanhThu + "</td>";
+                strHtml += "</tr>";
+
+                // Tính toán tổng
+                totalSoLuongKhachHang += item.soLuongKhachHang;
+                totalSoLuongHangBan += item.soLuongHangBan;
+                totalSoLuongDonHang += item.soLuongDonHang;
+                totalTienHang += item.tienHang;
+                totalChietKhauSanPham += item.chietKhauSanPham;
+                totalChietKhauHoaDon = item.chietKhauHoaDon;
+                totalDoanhThu += item.doanhThu;
+            });
+
+            // Thêm ô cuối cùng chứa tổng
+            strHtml += "<tr>";
+            strHtml += "<td colspan='2'><strong>Tổng</strong></td>";
+            strHtml += "<td><strong>" + totalSoLuongKhachHang + "</strong></td>";
+            strHtml += "<td><strong>" + totalSoLuongHangBan + "</strong></td>";
+            strHtml += "<td><strong>" + totalSoLuongDonHang + "</strong></td>";
+            strHtml += "<td><strong>" + totalTienHang + "</strong></td>";
+            strHtml += "<td><strong>" + totalChietKhauSanPham + "</strong></td>";
+            strHtml += "<td><strong>" + totalChietKhauHoaDon + "</strong></td>";
+            strHtml += "<td><strong>" + totalDoanhThu + "</strong></td>";
+            strHtml += "</tr>";
+
+            $('#load_data').html(strHtml);
+        }
+
+    </script>
+}

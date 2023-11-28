@@ -1,8 +1,12 @@
 ﻿@page "/Admin/tạo tài khoản"
 @using static App_Data.Repositories.TrangThai;
 @model App_View.Areas.Admin.Pages.User.AddAccountModel
+@using App_Data.Models;
+@inject RoleManager<ChucVu> _roleManager
+
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    var roles = _roleManager.Roles.ToList();
 }
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
@@ -14,8 +18,8 @@
     }
 
     .register {
-        background: -webkit-linear-gradient(left, #3931af, #00c6ff);
-        margin-top: 3%;
+        background: -webkit-linear-gradient(left, #886cff, #00c6ff);
+        margin-top: 1%;
         padding: 3%;
     }
 
@@ -85,7 +89,7 @@
     }
 
     .register .register-form {
-        padding: 10%;
+        padding: 7%;
         margin-top: 10%;
     }
 
@@ -134,27 +138,29 @@
 
     .register-heading {
         text-align: center;
-        margin-top: 8%;
+        margin-top: 2%;
         margin-bottom: -15%;
         color: #495057;
     }
 </style>
+
+
 <partial name="_StatusMessage" for="StatusMessage" />
 <div class="container register">
+    <div class="mb-2">
+        <a class="btn btn-primary" asp-page="../User/Index">Danh sách thành viên</a>
+    </div>
     <div class="row">
-
         <div class="col-md-12 register-right">
-
-
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" style="overflow-y: visible;height: 450px;">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab" style="overflow-y: visible;height: 400px;">
                     <h3 class="register-heading">Tạo tài khoản</h3>
                     <form method="post">
-                        
+
                         <div class="row register-form">
                             <div class="col-md-12 text-danger" asp-validation-summary="ModelOnly"></div>
                             <div class="col-md-6">
-                              
+
                                 <div class="form-group">
                                     <input asp-for="Input.FullName" type="text" class="form-control" aria-required="true" placeholder="Họ và tên *" value="" />
                                     <span asp-validation-for="Input.FullName" class="text-danger"></span>
@@ -178,8 +184,11 @@
                                 <div class="form-group">
                                     <select class="form-control" asp-for="Input.ChucVu">
                                         <option class="hidden" selected disabled>Chức vụ</option>
-                                        <option value="NhanVien">Nhân viên</option>
-                                        <option value="Admin">Admin</option>
+                                        @foreach(var item in roles)
+                                        {
+                                            <option value="@item">@item</option>
+                                        }
+                                       
                                     </select>
                                 </div>
                             </div>
