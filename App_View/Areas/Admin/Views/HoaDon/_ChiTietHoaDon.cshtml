@@ -23,6 +23,11 @@
 										<button class="btn btn-secondary" onclick="printModalContent()" id="printHoaDon">
 											<i class="icon-printer"></i> Print
 										</button>
+										@if (Model.TrangThaiGiaoHang == 0)
+										{
+											<button class="btn btn-danger m-r-5" onclick="HuyHoaDon()" id="HuyHoaDon">Hủy</button>
+										}
+
 									</div>
 								</div>
 							</div>
@@ -34,7 +39,7 @@
 								<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12" style="flex: 0 0 75%;max-width: 75%;">
 									<div class="invoice-details">
 										<address>
-											@(ViewBag.TTGH==null?"":ViewBag.TTGH)
+											@(ViewBag.TTGH == null ? "" : ViewBag.TTGH.DiaChi)
 										</address>
 									</div>
 								</div>
@@ -152,6 +157,7 @@
 <script>
     function printModalContent() {
         document.getElementById("printHoaDon").style.display = "none";
+		document.getElementById("HuyHoaDon").style.display = "none";
 		var printWindow = window.frames["print_frame"];
         var contentToPrint = $("#invoiceDetailContent").html();
 
@@ -161,6 +167,6 @@
         
         printWindow.print();
         document.getElementById("printHoaDon").style.display = "block";
-
+		document.getElementById("HuyHoaDon").style.display = "block";
     }
 </script>

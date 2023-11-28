@@ -13,7 +13,10 @@
     ViewData["Title"] = "DanhSachHoaDonCho";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
-
+<head>
+    
+</head>
+<body></body>
 <!-- Modal -->
 <div class="modal fade" id="exampleModalScrollable" data-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable draggable">
@@ -32,7 +35,7 @@
     </div>
 </div>
 
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 <!-- JSQR Library -->
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
@@ -1207,12 +1210,57 @@
                     var SDT = $('#SoDienThoai').val();
                     var tongTienChuaGiam = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
                     var tongGiam = parseFloat($("#TongGiam").val().replace(/[^\d]/g, '')) || 0;
+                    
                     $.ajax({
                         url: '/Admin/BanHangTaiQuay/ThanhToan?maHD=' + maHoaDon + '&SDT=' + SDT + '&TongTien=' + tongTienChuaGiam + '&tienMat=' + tienMat + '&chuyenKhoan=' + tienChuyenKhoan + '&idVoucher=' + maVoucher + '&hinhThuc=' + hinhThucThanhToan + '&tongGiam=' + tongGiam,
                         type: 'POST',
                         success: function (result) {
                             if (result.trangThai) {
-                                Swal.fire('Đã xác nhận!', result.chuoi, 'success');
+                                console.log(maHoaDon);
+                                var maHd = $("#tabs .ui-tabs-active a").text();
+                                console.log(maHd);
+                                Swal.fire({
+                                    title: 'In hóa đơn?',
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Có',
+                                    cancelButtonText: 'Không'
+                                }).then((printResult) => {
+                                    if (printResult.isConfirmed) {
+                                        $.ajax({
+                                            url: '@Url.Action("InHoaDonTaiQuay", "HoaDon")',
+                                            type: 'GET',
+                                            data: { MaHD: maHd },
+                                            success: function (result) {
+                                                var printWindow = window.open('', '_blank');
+                                                printWindow.document.write('<html><head><title>In Hóa Đơn</title></head><body>');
+
+                                                // Thêm nội dung của hóa đơn vào trang in
+                                                printWindow.document.write(result);
+
+                                                // Đóng thẻ body và html
+                                                printWindow.document.write('</body></html>');
+                                                printWindow.document.close();
+
+                                                // Chờ cho nội dung được load hoàn tất trước khi kích hoạt hộp thoại in
+                                                printWindow.onload = function () {
+                                                    printWindow.print();
+                                                    printWindow.onafterprint = function () {
+                                                        // Đóng cửa sổ trang in sau khi in xong
+                                                        printWindow.close();
+                                                    };
+                                                };
+                                            },
+                                            error: function (xhr, status, error) {
+                                                console.log(xhr.responseText);
+                                                console.log(status);
+                                                console.log(error);
+                                                console.log(xhr);
+                                                isLoading = false;
+                                            }
+                                        });
+                                    }
+                                });
                                 var selectedTabId = $("#tabs .ui-tabs-active a").attr("href"); // Lấy ID của tab đang được chọn
                                 $(selectedTabId).remove(); // Xóa nội dung tab
                                 $("#tabs ul li.ui-tabs-active").remove(); // Xóa tab từ danh sách tab
