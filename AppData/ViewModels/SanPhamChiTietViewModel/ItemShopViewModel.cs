@@ -28,5 +28,7 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
         public int SoMauSac { get; set; }
         public string? Anh { get; set; }
         public bool IsKhuyenMai { get; set; }
+        public bool IsNoiBat { get; set; }
+        public bool IsNew { get; set; }
     }
 }

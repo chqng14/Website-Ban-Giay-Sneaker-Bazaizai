@@ -192,6 +192,9 @@ namespace App_Data.Repositories
                 GiaThucTe = sp.GiaThucTe,
                 IsKhuyenMai = sp.TrangThaiSale == 2 ? true : false,
                 SoLuongTon = sp.SoLuongTon,
+                MoTaNgan = "Sản phẩm chính hãng",
+                IsNew = (DateTime.Now - sp.NgayTao.GetValueOrDefault()).Days < 7,
+                IsNoiBat = sp.NoiBat.GetValueOrDefault()
             }).ToList();
             return itemShops;
         }
@@ -222,7 +225,9 @@ namespace App_Data.Repositories
                 SoLanDanhGia = 32,
                 TenSanPham = sp.SanPham!.TenSanPham,
                 ThuongHieu = sp.ThuongHieu.TenThuongHieu,
-                GiaThucTe = sp.GiaThucTe
+                GiaThucTe = sp.GiaThucTe,
+                IsNew = (DateTime.Now - sp.NgayTao.GetValueOrDefault()).Days < 7,
+                IsNoiBat = sp.NoiBat.GetValueOrDefault()
             }).ToList();
             return itemShops;
         }
@@ -663,7 +668,7 @@ namespace App_Data.Repositories
                             IdSanPham = sp.IdChiTietSp,
                             MaSanPham = sp.Ma,
                             GiaNhap = sp.GiaNhap.GetValueOrDefault(),
-                            Anh = sp.Anh.Where(a=>a.TrangThai==0).OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
+                            Anh = sp.Anh.Where(a => a.TrangThai == 0).OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
                             MauSac = sp.MauSac.TenMauSac,
                             GiaBan = sp.GiaBan.GetValueOrDefault(),
                             KichCo = sp.KichCo.SoKichCo.GetValueOrDefault(),
@@ -680,7 +685,7 @@ namespace App_Data.Repositories
 
                 return new List<RelatedProductViewModel>();
             }
-            
+
         }
 
         public async Task<List<SPDanhSachViewModel>> GetFilteredDaTaDSTongQuanAynsc(ParametersTongQuanDanhSach parametersTongQuanDanhSach)

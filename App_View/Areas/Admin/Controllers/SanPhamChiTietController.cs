@@ -411,6 +411,57 @@ namespace App_View.Areas.Admin.Controllers
         #endregion
 
         #region ExportToExcel
+        [HttpPost]
+        public async Task<IActionResult> ExportListProductRelateFromListGuild([FromBody]ListGuildDTO listGuildDTO)
+        {
+            var listSanPhamChiTietViewModel = new List<SanPhamChiTietViewModel>();
+            foreach (var guild in listGuildDTO.listGuild!)
+            {
+                listSanPhamChiTietViewModel.Add((await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(guild))!);
+            }
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("ProductList");
+
+                using (var range = worksheet.Cells[1, 1, 1, 10])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    range.Style.Font.Size = 12;
+                }
+
+                worksheet.Cells[1, 1].Value = "MSP";
+                worksheet.Cells[1, 2].Value = "Sản phẩm";
+                worksheet.Cells[1, 3].Value = "Màu";
+                worksheet.Cells[1, 4].Value = "K/Cỡ";
+                worksheet.Cells[1, 5].Value = "G/Nhập";
+                worksheet.Cells[1, 6].Value = "G/Bán";
+                worksheet.Cells[1, 7].Value = "Số lượng";
+                worksheet.Cells[1, 8].Value = "Khối lượng";
+                worksheet.Cells[1, 9].Value = "Số lượng đã bán";
+                worksheet.Cells[1, 10].Value = "Kinh doanh";
+
+                for (int i = 0; i < listSanPhamChiTietViewModel.Count(); i++)
+                {
+                    worksheet.Cells[i + 2, 1].Value = listSanPhamChiTietViewModel[i].Ma;
+                    worksheet.Cells[i + 2, 2].Value = listSanPhamChiTietViewModel[i].SanPham;
+                    worksheet.Cells[i + 2, 3].Value = listSanPhamChiTietViewModel[i].MauSac;
+                    worksheet.Cells[i + 2, 4].Value = listSanPhamChiTietViewModel[i].KichCo;
+                    worksheet.Cells[i + 2, 5].Value = listSanPhamChiTietViewModel[i].GiaNhap;
+                    worksheet.Cells[i + 2, 6].Value = listSanPhamChiTietViewModel[i].GiaBan;
+                    worksheet.Cells[i + 2, 7].Value = listSanPhamChiTietViewModel[i].SoLuongTon;
+                    worksheet.Cells[i + 2, 8].Value = listSanPhamChiTietViewModel[i].KhoiLuong;
+                    worksheet.Cells[i + 2, 9].Value = listSanPhamChiTietViewModel[i].SoLuongDaBan;
+                    worksheet.Cells[i + 2, 10].Value = listSanPhamChiTietViewModel[i].TrangThai == 0 ? "Đang kinh doanh" : "Ngừng kinh doanh";
+                }
+
+                byte[] excelBytes = package.GetAsByteArray();
+
+                string fileName = $"ProductList_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+
+                return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+        }
         public async Task<IActionResult> ExportToExcel()
         {
             var lstProduct = await _sanPhamChiTietService.GetListSanPhamExcelAynsc();
@@ -870,7 +921,7 @@ namespace App_View.Areas.Admin.Controllers
             ViewData["IdXuatXu"] = new SelectList(await _sanPhamChiTietService.GetListModelXuatXuAsync(), "IdXuatXu", "Ten");
             var model = await _sanPhamChiTietService.GetListSanPhamChiTietDTOAsync(new ListGuildDTO()
             {
-                listGuild = new List<string>(){ idSanPhamChiTiet}
+                listGuild = new List<string>() { idSanPhamChiTiet }
             });
             return PartialView("_SachSanPhamUpdatePartialView", model);
         }

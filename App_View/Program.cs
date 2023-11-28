@@ -34,6 +34,8 @@ builder.Services.AddScoped<IVnPayService, VnPayService>();
 builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=MI\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
 
 
+
+
 builder.Services.AddHangfireServer();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BazaizaiContext>(options =>
