@@ -113,7 +113,7 @@ namespace App_View.Services
                 throw new Exception("Not IsSuccessStatusCode");
             }
         }
-        public async Task<bool> TaoPTTTChiTiet(string idHoaDon,string idPTTT, double soTien, int trangThai)
+        public async Task<bool> TaoPTTTChiTiet(string idHoaDon, string idPTTT, double soTien, int trangThai)
         {
             try
             {
@@ -173,11 +173,11 @@ namespace App_View.Services
             }
         }
 
-        public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, int TrangThai, string? Lido)
+        public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, string? idNguoiDung, int TrangThai, string? Lido)
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateTrangThaiGiaoHangHoaDon?idHoaDon={idHoaDon}&TrangThaiGiaoHang={TrangThai}&Lido={Lido}", null);
+                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateTrangThaiGiaoHangHoaDon?idHoaDon={idHoaDon}&idNguoiDung={idNguoiDung}&TrangThaiGiaoHang={TrangThai}&Lido={Lido}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();

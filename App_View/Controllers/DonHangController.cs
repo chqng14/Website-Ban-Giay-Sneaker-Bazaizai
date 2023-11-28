@@ -126,13 +126,26 @@ namespace App_View.Controllers
             var HoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
             if (HoaDon.LoaiThanhToan == "MOMO" && HoaDon.TrangThaiThanhToan == 1)
             {
-                //var mess = await ReFund(HoaDon.MaHoaDon, (double)HoaDon.TongTien, Lido);
-                await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, 5, Lido);
+                if (HoaDon.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.ChoXacNhan)
+                {
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.DaHuy, Lido);
+                }
+                else
+                {
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.ChoHuy, Lido);
+                }
                 return Ok(new { idHoaDon = idHoaDon/*, mess = mess*/ });
             }
             else
             {
-                await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, 5, Lido);
+                if (HoaDon.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.ChoXacNhan)
+                {
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.DaHuy, Lido);
+                }
+                else
+                {
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.ChoHuy, Lido);
+                }
                 return Ok(new { idHoaDon = idHoaDon });
             }
         }

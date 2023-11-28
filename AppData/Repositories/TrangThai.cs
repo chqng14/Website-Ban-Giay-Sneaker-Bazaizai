@@ -97,6 +97,8 @@ namespace App_Data.Repositories
             DaHuy = 5,
             [Description("Trả hàng")]
             TraHang = 6,
+            [Description("Chờ huỷ")]
+            ChoHuy = 7,
         }
         public enum TrangThaiSaleInProductDetail
         {
@@ -137,7 +139,7 @@ namespace App_Data.Repositories
             [Description("Chưa thanh toán")]
             ChuaThanhToan = 1,
             [Description("Đã  thanh toán")]
-            DaThanhToan = 2, 
+            DaThanhToan = 2,
             [Description("Hủy")]
             Huy = 3,
 
