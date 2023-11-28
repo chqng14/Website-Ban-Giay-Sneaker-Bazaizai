@@ -58,6 +58,10 @@
     .editable-soluong .edit-soluong {
         display: none;
     }
+
+    .swal2-title {
+        font-family: 'Arial', sans-serif; /* Chọn font bạn muốn sử dụng cho alert */
+    }
 </style>
 <div class="w-100 row m-b-10">
     <div class="col-lg-8">
@@ -252,6 +256,7 @@
 </table>
 
 <script>
+    $(document).off('click', '#export-relatedProducts');
     $(document).on('click', '#export-relatedProducts', function () {
         var danhSachId = $('.item:checked').map(function () {
             return $(this).closest('.checkbox').attr('data-id')
@@ -281,6 +286,28 @@
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
 
+                $.ajax({
+                    url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
+                    type: 'GET',
+                    data: {
+                        "sumGuid": keyProduct,
+                        "mauSac": $('#filterMauSac').val(),
+                        "size": $('#filterSize').val(),
+                    },
+                    success: function (result) {
+                        $('#exampleModal .modal-body').fadeOut(450, function () {
+                            $('#exampleModal .modal-body').html(result);
+
+                            $('#exampleModal .modal-body').fadeIn(450);
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
             },
             error: function (xhr, status, error) {
                 console.log(xhr.responseText);
