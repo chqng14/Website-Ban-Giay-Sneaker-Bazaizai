@@ -213,8 +213,25 @@
             }
         });
     });
+    $(document).off('click', '.copyButton').on('click', '.copyButton', function () {
+        var maVoucher = $(this).closest('.body_copy').find('.textToCopy').val();
+        var tempInput = document.createElement("input");
+        tempInput.value = maVoucher;
+        document.body.appendChild(tempInput);
+        console.log('Click event triggered');
+        // Chọn văn bản trong phần tử input tạm thời
+        tempInput.select();
+        document.execCommand("copy");
+        // Xóa phần tử input tạm thời
+        document.body.removeChild(tempInput);
+        toast({
+            title: "Đã sao chép!",
+            message: "Đã sao chép mã vào clipboard: " + maVoucher,
+            type: "success",
+            duration: 5000
+        });
+
+    });
+
   
-
-
-
 </script>

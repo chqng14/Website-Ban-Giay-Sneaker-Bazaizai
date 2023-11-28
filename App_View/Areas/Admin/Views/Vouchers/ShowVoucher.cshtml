@@ -67,8 +67,8 @@
         </div>
     </div>
 </header>
-<div class="card-body" style="background-color:#F5F7F8">
-    <h1 style="text-align:center">Danh Sách Voucher</h1>
+<div class="card-body" style="background-color:#F5F7F8;width: 95%;margin: auto;">
+    <h1 style="text-align:center;font-family:Arial">Danh Sách Voucher Online</h1>
     <div class="d-md-flex">
         <div class="row w-100 m-b-30">
             <div class="col-lg-5">
@@ -88,7 +88,7 @@
             </div>
             <div class="col-lg-7 text-right" style="margin-top:50px">
                 <a class="btn btn-primary" asp-action="GiveVouchersToUsers" asp-controller="Vouchers">Tặng voucher</a>
-                <a class="btn btn-primary" asp-action="Create"><i class="anticon anticon-plus-circle"></i> Tạo mới</a>
+                <a class="btn btn-secondary mr-2" asp-action="Create"><i class="anticon anticon-plus-circle"></i> Tạo mới</a>
             </div>
         </div>
     </div>
@@ -144,10 +144,13 @@
         </div>
     </div>
     @* //Tặng voucher đã chọn *@
-    <a class="btn btn-secondary mr-2" asp-action="GiveVouchersToUsers">Tặng voucher</a>
 
 </div>
 <script>
+    // Gọi hàm khi trang web được load
+    $(document).ready(function () {
+        loadDefaultVoucher();
+    });
     // Hàm để load danh sách Voucher mặc định khi trang web được load
     function loadDefaultVoucher() {
         var trangThai = $('#tab2').data('value'); // Lấy giá trị mặc định từ tab "Hoạt động"
@@ -161,11 +164,6 @@
             }
         });
     }
-
-    // Gọi hàm khi trang web được load
-    $(document).ready(function () {
-        loadDefaultVoucher();
-    });
     // Hàm để gọi Ajax và chuyển về controller để huỷ hoạt động voucher
     function huyHoatDongVoucher(selectedIds) {
         // Thực hiện Ajax request để chuyển selectedIds về controller
@@ -293,7 +291,9 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+   
+}
+ <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
     <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
     <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
     <script src="~/Admin/js/pages/datatables.js" defer></script>
@@ -303,5 +303,3 @@
 
     <!-- Bootstrap JS -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-}
