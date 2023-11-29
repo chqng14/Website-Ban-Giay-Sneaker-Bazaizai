@@ -128,7 +128,7 @@ namespace App_View.Controllers
             {
                 if (item.IdVouCher == voucher.IdVoucher && item.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung)
                 {
-                    return Json(new { mess = "Voucher đã có trong tài khoản của bạn!" });
+                    return Json(new { mess = "Voucher đã có trong tài khoản của bạn và đã được áp dụng!", idvoucher = item.IdVouCher });
                 }
                 else if (item.IdVouCher == voucher.IdVoucher && item.TrangThai == (int)TrangThaiVoucherNguoiDung.DaSuDung)
                 {

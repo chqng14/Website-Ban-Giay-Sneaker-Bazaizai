@@ -31,7 +31,11 @@ builder.Services.AddScoped<IVnPayService, VnPayService>();
 //BAZAIZAI\SQLEXPRESS
 
 
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=LAPTOP-OF-KHAI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True")); //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
+
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=.\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"));
+//cái này là db online
+//builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Server = tcp:bazaizaidb.database.windows.net,1433; Initial Catalog = bazaizaidb; Persist Security Info = False; User ID = bazaizai; Password = Trinhanh0311; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30;"));
+//Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
 
 
 builder.Services.AddHangfireServer();
@@ -54,6 +58,7 @@ builder.Services.AddScoped<GioHangChiTietsController, GioHangChiTietsController>
 builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 builder.Services.AddScoped<IDanhGiaService, DanhGiaService>();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
+//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://bazaizaiapi.azurewebsites.net/") });
 //Thêm
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
 .AddEntityFrameworkStores<BazaizaiContext>()
