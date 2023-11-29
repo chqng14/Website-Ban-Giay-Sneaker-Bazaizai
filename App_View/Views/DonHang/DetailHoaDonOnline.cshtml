@@ -10,6 +10,9 @@
 <link href="~/css/hoadon.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
 <style>
+    #myToast {
+        z-index: 999999;
+    }
 
     .star-widget label {
         font-size: 25px;
@@ -436,27 +439,6 @@
                                 <span class="manage-o__text-2 u-c-silver">
                                     <span class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", item.TongTien)</span>
                                 </span>
-                                @if (Model.TrangThaiGiaoHang == 4)
-                                {
-                                    @* var danhGia = await _DanhGiaService.GetViewModelByKeyAsync(item.IdSanPhamChiTiet + "*" + Model.IdHoaDon); *@
-                                    if (item.DanhGia.SaoSp == null)
-                                    {
-                                        <span data-product-detail-id="@item.IdSanPhamChiTiet" data-Danhgia-detail-id="@item.IdSanPhamChiTiet*@Model.IdHoaDon" data-product-img-id="@item.LinkAnh[0]" data-product-name-id="@item.TenSanPham" data-modal="modal" data-modal-id="#add-danh-gia" class="btn btn--e-transparent-brand-b-2 order" style="width: 100px;text-align:center">Đánh giá</span>
-                                    }
-                                    else
-                                    {
-                                        <span data-user-img-id="@item.DanhGia.AnhDaiDien"
-                                              data-user-name-id="@item.DanhGia.TenNguoiDung"
-                                              data-Ngay-id="@item.DanhGia.NgayDanhGia"
-                                              data-mota-id="@item.DanhGia.MoTa"
-                                              data-binhluan-id="@item.DanhGia.BinhLuan"
-                                              data-sao-id="@item.DanhGia.SaoSp"
-                                              data-chatlg-id="@item.DanhGia.ChatLuongSanPham"
-                                              data-Sp-detail-id="@item.IdSanPhamChiTiet"
-                                              data-Sp-img-id="@item.LinkAnh[0]"
-                                              data-Sp-name-id="@item.TenSanPham" data-Sp-mau-id="@item.TenMauSac" data-Sp-kichco-id="@item.TenKichCo" data-modal="modal" data-modal-id="#xem-danh-gia" class="btn btn--e-transparent-brand-b-2 order" style="width: 100px;text-align:center">Xem đánh giá</span>
-                                    }
-                                }
                             </div>
                         </div>
                     </div>
@@ -489,27 +471,6 @@
                                         <span class="manage-o__text-2 u-c-silver">
                                             <span class="manage-o__text-2 u-c-secondary">@string.Format("{0:N0}đ", hiddenSp.TongTien)</span>
                                         </span>
-                                        @if (Model.TrangThaiGiaoHang == 4)
-                                        {
-                                            @* var danhGia = await _DanhGiaService.GetViewModelByKeyAsync(hiddenSp.IdSanPhamChiTiet + "*" + Model.IdHoaDon); *@
-                                            if (hiddenSp.DanhGia.SaoSp == null)
-                                            {
-                                                <span data-product-detail-id="@hiddenSp.IdSanPhamChiTiet" data-Danhgia-detail-id="@hiddenSp.IdSanPhamChiTiet*@Model.IdHoaDon" data-product-img-id="@hiddenSp.LinkAnh[0]" data-product-name-id="@hiddenSp.TenSanPham" data-modal="modal" data-modal-id="#add-danh-gia" class="btn btn--e-transparent-brand-b-2 order" style="width: 100px;text-align:center">Đánh giá</span>
-                                            }
-                                            else
-                                            {
-                                                <span data-user-img-id="@item.DanhGia.AnhDaiDien"
-                                                      data-user-name-id="@item.DanhGia.TenNguoiDung"
-                                                      data-Ngay-id="@item.DanhGia.NgayDanhGia"
-                                                      data-mota-id="@item.DanhGia.MoTa"
-                                                      data-binhluan-id="@item.DanhGia.BinhLuan"
-                                                      data-sao-id="@item.DanhGia.SaoSp"
-                                                      data-chatlg-id="@item.DanhGia.ChatLuongSanPham"
-                                                      data-Sp-detail-id="@hiddenSp.IdSanPhamChiTiet"
-                                                      data-Sp-img-id="@hiddenSp.LinkAnh[0]"
-                                                      data-Sp-name-id="@hiddenSp.TenSanPham" data-Sp-mau-id="@hiddenSp.TenMauSac" data-Sp-kichco-id="@hiddenSp.TenKichCo" data-modal="modal" data-modal-id="#xem-danh-gia" class="btn btn--e-transparent-brand-b-2 order" style="width: 100px;text-align:center">Xem đánh giá</span>
-                                            }
-                                        }
                                     </div>
                                 </div>
                             </div>
@@ -611,12 +572,12 @@
                     }
                     else if (Model.TrangThaiGiaoHang is 4)
                     {
-                        <a onclick="ReBuyAjax('@Model.IdHoaDon')">
-                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 397.5px;text-align:center">Mua Lại</span>
+                        <a data-modal="modal" data-modal-id="#danh-gia" data-idhoadon="@Model.IdHoaDon">
+                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Đánh giá</span>
                         </a>
-                        @* <a>
-                <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Đánh giá</span>
-                </a>*@
+                        <a onclick="ReBuyAjax('@Model.IdHoaDon')">
+                            <span class="btn btn--e-transparent-brand-b-2 order" style="width: 195px;text-align:center">Mua Lại</span>
+                        </a>
                     }
                     else if (Model.TrangThaiGiaoHang is 1 or 2)
                     {
@@ -743,126 +704,147 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="add-danh-gia">
-    <div class="modal-dialog modal-dialog-centered" style="min-width:900px">
-        <div class="modal-content modal--shadow">
-
-            <button class="btn dismiss-button fas fa-times" type="button" data-dismiss="modal"></button>
-            <div class="modal-body" style="margin-left:20px;margin-right:20px; margin-top:10px;">
-                <div class="row">
+<div class="modal fade" id="danh-gia">
+    <div class="modal-dialog modal-dialog-centered justify-content-center" style="max-width:500px">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="checkout-modal2">
                     <div class="u-s-m-b-30">
-
-                        <form asp-action="AddDanhGia" asp-controller="DanhGia" class="pd-tab__rev-f2" method="post" id="AddDanhGia">
-                            <h2 class="gl-label">Đánh giá sản phẩm</h2>
-                            <input name="IdSanPhamChiTiet" value="" class="form-control" id="inputIdSanPhamChiTiet" hidden />
-                            <input name="IdDanhGia" value="" class="form-control" id="inputIdDanhGia" hidden />
-
-
-                            <div class="u-s-m-b-30" style="margin-top:20px;">
-                                <div class="rev-f2__table-wrap gl-scroll">
-                                    <table class="rev-f2__table" style="border: none;">
-                                        <thead>
-                                            <tr>
-                                                <th colspan="1" style="width: 20%; border: none;">
-                                                    <a id="product-detaillink" href="#">
-                                                        <img id="productImg" style="height:100px;width:100px;" src="" />
-                                                    </a>
-
-                                                </th>
-                                                <th colspan="4" style="width: 80%; border: none;">
-                                                    <a id="product-detail-link" href="#">
-                                                        <span id="productname" style=" text-align: left;">
-                                                        </span>
-                                                    </a>
-
-
-                                                </th>
-                                            </tr>
-                                        </thead>
-
-                                    </table>
-                                </div>
-                            </div>
-                            <span class="gl-label">Chất lượng sản phẩm</span>
-                            @*  sao*@
-                            <div class="container" style="position: relative;margin-top:-60px;width: 500px;padding: 20px 30px;border-radius: 5px;display: flex;flex-direction: column;">
-                                <div class="star-widget">
-                                    <input type="radio" name="rate" value="1" id="rate-1" hidden>
-                                    <label for="rate-1" class="fas fa-star"></label>
-                                    <input type="radio" value="2" name="rate" id="rate-2" hidden>
-                                    <label for="rate-2" class="fas fa-star"></label>
-                                    <input value="3" type="radio" name="rate" id="rate-3" hidden>
-                                    <label for="rate-3" class="fas fa-star"></label>
-                                    <input type="radio" name="rate" id="rate-4" value="4" hidden>
-                                    <label for="rate-4" class="fas fa-star"></label>
-                                    <input type="radio" name="rate" id="rate-5" value="5" checked hidden>
-                                    <label for="rate-5" class="fas fa-star"></label>
-                                    <header style="margin-top: 10px;"></header>
-                                </div>
-                                <input value="5" id="saoSpInput" name="SaoSp" class="form-control" hidden />
-                            </div>
-
-                            @* sao*@
-                            <div class="rev-f2__group">
-                                <div>
-                                    <p class="u-s-m-b-30">
-
-                                        <label class="gl-label" for="reviewer-name">Đúng với mô tả:</label>
-
-                                        <textarea name="MoTa" class="text-area text-area--primary-style" id="reviewer-text" style="height:53px" maxlength="200"></textarea>
-
-                                    </p>
-                                    <p class="u-s-m-b-30">
-
-                                        <label class="gl-label" for="reviewer-email">Chất lượng sản phẩm:</label>
-
-                                        <textarea name="ChatLuongSanPham" class="text-area text-area--primary-style" id="reviewer-text" style="height:53px" maxlength="200"></textarea>
-
-
-                                    </p>
-                                </div>
-                                <div class="u-s-m-b-15">
-
-                                    <label class="gl-label" for="reviewer-text"> </label>
-                                    <textarea name="BinhLuan" style="height:201px" class="text-area text-area--primary-style" id="reviewer-text" placeholder="Hãy chia sẻ những trải nghiệm của bạn về sản phẩm với người khác." maxlength="300"></textarea>
-
-
-                                </div>
-
-                            </div>
-                            <h3 class="gl-label" style="font-size: 18px;">Về dịch vụ</h3>
-                            <span class="gl-label">Dịch vụ vận chuyển</span>
-                            @*  sao*@
-
-                            <div class="container" style="position: relative;margin-top:-60px;width: 500px;padding: 20px 30px;border-radius: 5px;display: flex;flex-direction: column;">
-                                <div class="starvc-widget">
-                                    <input type="radio" name="ratevc" value="1" id="ratevc-1" hidden>
-                                    <label for="ratevc-1" class="fas fa-star"></label>
-                                    <input type="radio" value="2" name="ratevc" id="ratevc-2" hidden>
-                                    <label for="ratevc-2" class="fas fa-star"></label>
-                                    <input value="3" type="radio" name="ratevc" id="ratevc-3" hidden>
-                                    <label for="ratevc-3" class="fas fa-star"></label>
-                                    <input type="radio" name="ratevc" id="ratevc-4" value="4" hidden>
-                                    <label for="ratevc-4" class="fas fa-star"></label>
-                                    <input type="radio" name="ratevc" id="ratevc-5" value="5" checked hidden>
-                                    <label for="ratevc-5" class="fas fa-star"></label>
-                                    <header style="margin-top: 10px;"></header>
-                                </div>
-                                <input value="5" id="saoVcInput" name="SaoVanChuyen" class="form-control" hidden />
-                            </div>
-
-                            @* sao*@
-
-                            <div style="display: flex; justify-content: flex-end; ">
-                                <button class="btn btn--e-brand-shadow" style="background-color:white; color:black" data-dismiss="modal" type="submit">Trở lại</button>
-                                <div style="width:10px;"></div>
-                                <input style=" color:black" type="submit" value="Hoàn Thành" class="btn btn--e-brand-shadow" />
-
-                            </div>
-
-
-                        </form>
+                        <div class="dash-l-r">
+                            <h1 class="gl-modal-h1">Chọn sản phẩm để đánh giá</h1>
+                        </div>
                     </div>
+                    @foreach (var item in Model.SanPham.Where(c=>c.DanhGia.SaoSp==null))
+                    {
+                        <div class="manage-o__description" style="margin-top:10px">
+                            <div class="description__container">
+                                <div class="description__img-wrap">
+
+                                    <img class="u-img-fluid" src="/AnhSanPham/@item.LinkAnh[0]" alt="">
+                                </div>
+                                <div class="description-title" style="color:#7f7f7f">
+                                    <span class="o-card__name">
+
+                                        <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = item.IdSanPhamChiTiet })">@item.TenSanPham</a>
+                                    </span>
+                                    <span class="o-card__quantity">Size: @item.TenKichCo Màu: @item.TenMauSac</span>
+                                    <span class="o-card__quantity">Số lượng x @item.SoLuong</span>
+                                </div>
+                            </div>
+                            <div class="description__info-wrap">
+                                <div>
+                                    @if (item.DanhGia.SaoSp == null)
+                                    {
+                                        <span data-product-id="@item.IdSanPhamChiTiet"
+                                              data-Danhgia-detail-id="@item.IdSanPhamChiTiet*@Model.IdHoaDon"
+                                              data-product-img="@item.LinkAnh[0]"
+                                              data-product-name="@item.TenSanPham"
+                                              data-product-size-color="@item.TenKichCo*@item.TenMauSac"
+                                              data-product-quantity="@item.SoLuong"
+                                              data-modal="modal"
+                                              data-modal-id="#add-danh-gia"
+                                              class="btn btn--e-transparent-brand-b-2 order"
+                                              style="width: 100px; text-align:center">
+                                            Đánh giá
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <h1 class="gl-modal-h1">Không còn sản phẩm nào cần đánh giá</h1>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <button class="btn dismiss-button fas fa-times" type="button" data-dismiss="modal"></button>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="add-danh-gia">
+    <div class="modal-dialog modal-dialog-centered justify-content-center" style="min-width:900px">
+        <div class="modal-content">
+            <button class="btn dismiss-button fas fa-times" type="button" data-dismiss="modal"></button>
+            <div class="modal-body">
+                <div class="u-s-m-b-30">
+                    <div class="dash-l-r">
+                        <h1 class="gl-modal-h1">Đánh giá</h1>
+                    </div>
+                    <form asp-action="AddDanhGia" asp-controller="DanhGia" class="pd-tab__rev-f2" method="post" id="AddDanhGia">
+                        <h2 class="gl-label"></h2>
+                        <input name="IdSanPhamChiTiet" value="" class="form-control" id="inputIdSanPhamChiTiet" hidden />
+                        <input name="IdDanhGia" value="" class="form-control" id="inputIdDanhGia" hidden />
+
+                        <div class="description__container">
+                            <div class="description__img-wrap">
+                                <img class="u-img-fluid" id="productImage" src="" alt="">
+                            </div>
+                            <div class="description-title" style="color:#7f7f7f">
+                                <span class="o-card__name">
+                                    <a id="productName"></a>
+                                </span>
+                                <span class="o-card__quantity" id="productSizeColor"></span>
+                                <span class="o-card__quantity" id="productQuantity"></span>
+                            </div>
+                        </div>
+                        <br />
+                        <span class="gl-label">Chất lượng sản phẩm</span>
+                        @*  sao*@
+                        <div class="container" style="position: relative;margin-top:-60px;width: 500px;padding: 20px 30px;border-radius: 5px;display: flex;flex-direction: column;">
+                            <div class="star-widget">
+                                <input type="radio" name="rate" value="1" id="rate-1" hidden>
+                                <label for="rate-1" class="fas fa-star"></label>
+                                <input type="radio" value="2" name="rate" id="rate-2" hidden>
+                                <label for="rate-2" class="fas fa-star"></label>
+                                <input value="3" type="radio" name="rate" id="rate-3" hidden>
+                                <label for="rate-3" class="fas fa-star"></label>
+                                <input type="radio" name="rate" id="rate-4" value="4" hidden>
+                                <label for="rate-4" class="fas fa-star"></label>
+                                <input type="radio" name="rate" id="rate-5" value="5" checked hidden>
+                                <label for="rate-5" class="fas fa-star"></label>
+                                <header style="margin-top: 10px;"></header>
+                            </div>
+                            <input value="5" id="saoSpInput" name="SaoSp" class="form-control" hidden />
+                        </div>
+
+                        @* sao*@
+                        <div class="rev-f2__group">
+                            <div>
+                                <p class="u-s-m-b-30">
+
+                                    <label class="gl-label" for="reviewer-name">Đúng với mô tả:</label>
+
+                                    <textarea name="MoTa" class="text-area text-area--primary-style" id="reviewer-text" style="height:53px" maxlength="200"></textarea>
+
+                                </p>
+                                <p class="u-s-m-b-30">
+
+                                    <label class="gl-label" for="reviewer-email">Chất lượng sản phẩm:</label>
+
+                                    <textarea name="ChatLuongSanPham" class="text-area text-area--primary-style" id="reviewer-text" style="height:53px" maxlength="200"></textarea>
+
+
+                                </p>
+                            </div>
+                            <div class="u-s-m-b-15">
+
+                                <label class="gl-label" for="reviewer-text"> </label>
+                                <textarea name="BinhLuan" style="height:201px" class="text-area text-area--primary-style" id="reviewer-text" placeholder="Hãy chia sẻ những trải nghiệm của bạn về sản phẩm với người khác." maxlength="300"></textarea>
+
+
+                            </div>
+
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; ">
+                            <button type="button" class="btn btn--e-transparent-brand-b-2 order tatmodal" style="text-align:center;margin-right: 15px;" data-dismiss="modal">Trở lại</button>
+
+                            <button type="submit" class="btn btn--e-transparent-brand-b-2 order" style="text-align:center">Hoàn Thành</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -962,297 +944,380 @@
     </div>
 
 </div>
-
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script>
-    var radioButtons = document.querySelectorAll('input[type=radio]');
-    var id = null;
-    let lidoElement = "";
-    radioButtons.forEach((radioButton) => {
-        radioButton.addEventListener('change', function () {
-            if (this.checked) {
-                id = this.id;
-                lidoElement = document.getElementById('lido' + id).innerHTML;
-            }
+<script src="https://kjur.github.io/jsrsasign/jsrsasign-latest-all-min.js"></script>
+@section Scripts{
+    <!--====== huỷ đơn hàng ======-->
+    <script>
+        var radioButtons = document.querySelectorAll('input[type=radio]');
+        var id = null;
+        let lidoElement = "";
+        radioButtons.forEach((radioButton) => {
+            radioButton.addEventListener('change', function () {
+                if (this.checked) {
+                    id = this.id;
+                    lidoElement = document.getElementById('lido' + id).innerHTML;
+                }
+            });
         });
-    });
-    $(document).ready(function () {
-        $('#Lido').click(function (e) {
-            e.preventDefault();
+        $(document).ready(function () {
+            $('#Lido').click(function (e) {
+                e.preventDefault();
 
-            // Kiểm tra xem có radio nào được chọn không
-            if ($('input[type=radio]:checked').length === 0) {
-                alert('Vui lòng chọn một lựa chọn.');
-                return;
-            }
+                // Kiểm tra xem có radio nào được chọn không
+                if ($('input[type=radio]:checked').length === 0) {
+                    alert('Vui lòng chọn một lựa chọn.');
+                    return;
+                }
 
-            // Gửi dữ liệu qua Ajax
-            $.ajax({
-                type: 'PUT',
-                url: '/DonHang/HuyDonHang', // Điều chỉnh đúng đường dẫn của controller và action của bạn
-                data: {
-                    Lido: lidoElement,
-                    IdHoaDon: '@Model.IdHoaDon'
-                },
-                success: function (data) {
-                    if (data.mess != null) {
-                        Swal.fire({
-                            position: "top-end",
-                            title: "Huỷ đơn hàng thành công",
-                            text: "Tiền sẽ được hoàn vào ví Momo của bạn trong 24h",
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(function () {
-                            window.location.reload();
-                        });
+                // Gửi dữ liệu qua Ajax
+                $.ajax({
+                    type: 'PUT',
+                    url: '/DonHang/HuyDonHang', // Điều chỉnh đúng đường dẫn của controller và action của bạn
+                    data: {
+                        Lido: lidoElement,
+                        IdHoaDon: '@Model.IdHoaDon'
+                    },
+                    success: function (data) {
+                        if (data.mess != null) {
+                            Swal.fire({
+                                position: "top-end",
+                                title: "Huỷ đơn hàng thành công",
+                                text: "Tiền sẽ được hoàn vào ví Momo của bạn trong 24h",
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(function () {
+                                window.location.reload();
+                            });
+                        }
+                        else {
+                            Swal.fire({
+                                position: "top-end",
+                                title: "Huỷ đơn hàng thành công",
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(function () {
+                                window.location.reload();
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        // Xử lý lỗi nếu có
+                        console.error('Lỗi Ajax request:', error);
                     }
-                    else {
+                });
+            });
+        });
+    </script>
+    <!--====== mua lại ======-->
+    <script>
+        function ReBuyAjax(idHoaDon) {
+            $.ajax({
+                url: '@Url.Action("ReBuy", "DonHang")',
+                type: 'POST',
+                data: { idHoaDon: idHoaDon },
+                success: function (result) {
+                    // Xử lý kết quả Ajax ở đây
+                    if (result.quantityError) {
                         Swal.fire({
-                            position: "top-end",
-                            title: "Huỷ đơn hàng thành công",
-                            showConfirmButton: false,
-                            timer: 1500
-                        }).then(function () {
-                            window.location.reload();
+                            title: 'Sản phẩm lỗi',
+                            icon: 'error',
+                            html: result.quantityError.join('<br/>'),
                         });
+                    } else {
+                        // Chuyển hướng hoặc xử lý kết quả thành công
+                        window.location.href = '@Url.Action("ShowCartUser", "GioHangChiTiets")';
                     }
                 },
                 error: function (error) {
-                    // Xử lý lỗi nếu có
-                    console.error('Lỗi Ajax request:', error);
+                    // Xử lý lỗi Ajax ở đây
+                    console.log(error);
                 }
             });
-        });
-    });
-</script>
+        }
+    </script>
+    <!--====== thanh toán lại ======-->
+    <script>
+        function RePay(idHoaDon) {
+            $.ajax({
+                url: '@Url.Action("RePay", "DonHang")',
+                type: 'POST',
+                data: { idHoaDon: idHoaDon },
+                success: function (result) {
+                    // Xử lý kết quả Ajax ở đây
+                    window.location.href = result.url;
+                },
+                error: function (error) {
+                    // Xử lý lỗi Ajax ở đây
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+    <!--====== ẩn hiện sản phẩm ======-->
+    <script>
+        function showHiddenProducts() {
+            $('.hidden-products').css('display', 'block');
+            $('.arrow-down-btn').css('display', 'none');
+            $('.arrow-up-btn').css('display', 'block');
+        }
+        function hideHiddenProducts() {
+            $('.hidden-products').css('display', 'none');
+            $('.arrow-down-btn').css('display', 'block');
+            $('.arrow-up-btn').css('display', 'none');
+        }
 
-<script>
-    function ReBuyAjax(idHoaDon) {
+    </script>
+    <!--====== lấy sao sp ======-->
+    <script>
+        // Lắng nghe sự kiện change của radio buttons
+        document.querySelectorAll('input[name="rate"]').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                // Lấy giá trị của radio button đã chọn
+                var selectedValue = document.querySelector('input[name="rate"]:checked').value;
+
+                // Gán giá trị cho input
+                document.getElementById('saoSpInput').value = selectedValue;
+            });
+        });
+    </script>
+    <!--====== đánh giá ======-->
+    <script>
+        var isLoading = false;
+        isLoading = true;
+        var idHoaDon = $('a[data-modal-id="#danh-gia"]').data('idhoadon');
         $.ajax({
-            url: '@Url.Action("ReBuy", "DonHang")',
-            type: 'POST',
+            url: '@Url.Action("DanhGia", "DonHang")',
+            type: 'GET',
             data: { idHoaDon: idHoaDon },
             success: function (result) {
-                // Xử lý kết quả Ajax ở đây
-                if (result.quantityError) {
-                    Swal.fire({
-                        title: 'Sản phẩm lỗi',
-                        icon: 'error',
-                        html: result.quantityError.join('<br/>'),
-                    });
-                } else {
-                    // Chuyển hướng hoặc xử lý kết quả thành công
-                    window.location.href = '@Url.Action("ShowCartUser", "GioHangChiTiets")';
-                }
+                $('#content1').empty().html(result);
+                isLoading = false;
             },
-            error: function (error) {
-                // Xử lý lỗi Ajax ở đây
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
                 console.log(error);
+                console.log(xhr);
+                isLoading = false;
             }
         });
-    }
-</script>
-<script>
-    function RePay(idHoaDon) {
-        $.ajax({
-            url: '@Url.Action("RePay", "DonHang")',
-            type: 'POST',
-            data: { idHoaDon: idHoaDon },
-            success: function (result) {
-                // Xử lý kết quả Ajax ở đây
-                window.location.href = result.url;
-            },
-            error: function (error) {
-                // Xử lý lỗi Ajax ở đây
-                console.log(error);
+    </script>
+    <!--====== truyền qua sp ======-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var danhGiaButtons = document.querySelectorAll('[data-modal-id="#add-danh-gia"]');
+            danhGiaButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var storedDanhgias = JSON.parse(localStorage.getItem("danhgias")) || {}
+                    if (storedDanhgias[button.dataset.productId]) {
+                        toast({
+                            title: "Bạn đã đánh giá sản phẩm này rồi!",
+                            type: "warning",
+                            duration: 2000,
+                            id: "myToast"
+                        });
+                        $('#add-danh-gia .tatmodal').click();
+                    }
+                    var productId = button.dataset.productId;
+                    var danhGiaId = button.dataset.danhgiaDetailId;
+                    var productImg = button.dataset.productImg;
+                    var productName = button.dataset.productName;
+                    var productSizeColor = button.dataset.productSizeColor;
+                    var productQuantity = button.dataset.productQuantity;
+
+                    var sizeColorArray = productSizeColor.split('*');
+                    var size = sizeColorArray[0];
+                    var color = sizeColorArray[1];
+                    var imgElement = "/AnhSanPham/" + productImg;
+                    // Cập nhật thông tin sản phẩm trong modal dưới
+                    document.getElementById('inputIdSanPhamChiTiet').value = productId;
+                    document.getElementById('inputIdDanhGia').value = danhGiaId;
+                    document.getElementById('productImage').src = imgElement;
+                    document.getElementById('productName').innerText = productName;
+                    document.getElementById('productQuantity').innerText = 'Số lượng x ' + productQuantity;
+                    document.getElementById('productSizeColor').innerText = 'Size: ' + size + ' Màu: ' + color;
+                });
+            });
+        });
+    </script>
+    <!--====== đánh giá ======-->
+    <script>
+        $(document).ready(function () {
+            function createAndStoreJwt(danhGiaCode) {
+                // Tạo JWT khi cấp danhgia
+                var secretKey = "5a25e33fd1c5b4a882d438cf93dd4ac5eef0a27b8b3c7f7d6b5a84d4fb91e4f2";
+
+                // Thời gian hết hiệu lực của JWT (ví dụ: 5 năm)
+                var expirationTime = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 * 5;
+                var storedDanhgias = JSON.parse(localStorage.getItem("danhgias")) || {};
+                // Đặt giá trị cho Issuer và Audience
+                var issuer = "BazaizaiStore"; // Người phát hành
+                var audience = "User"; // Đối tượng
+
+                // Tạo payload của JWT
+                var payload = {
+                    iss: issuer,
+                    aud: audience,
+                    exp: expirationTime, // Thời gian hết hiệu lực
+                    danhGiaCode: danhGiaCode // Thông tin danhgia
+                };
+
+                // Tạo JWT bằng cách ký payload với khóa bí mật
+                var jwtToken = KJUR.jws.JWS.sign(null, { alg: "HS256", cty: "JWT" }, payload, secretKey);
+
+                // Lưu JWT vào danh sách các danhgia trong localStorage
+                storedDanhgias[danhGiaCode] = true;
+                localStorage.setItem("danhgias", JSON.stringify(storedDanhgias));
+
+                // Thực hiện các hành động khác nếu cần
             }
-        });
-    }
-</script>
+            $('#AddDanhGia').submit(function (e) {
+                e.preventDefault(); // Ngăn chặn form submit mặc định
 
+                // Lấy dữ liệu từ form
+                var formData = $(this).serialize();
 
-<script>
-    function showHiddenProducts() {
-        $('.hidden-products').css('display', 'block');
-        $('.arrow-down-btn').css('display', 'none');
-        $('.arrow-up-btn').css('display', 'block');
-    }
-    function hideHiddenProducts() {
-        $('.hidden-products').css('display', 'none');
-        $('.arrow-down-btn').css('display', 'block');
-        $('.arrow-up-btn').css('display', 'none');
-    }
-
-</script>
-
-<script>
-    // Lắng nghe sự kiện change của radio buttons
-    document.querySelectorAll('input[name="rate"]').forEach(function (radio) {
-        radio.addEventListener('change', function () {
-            // Lấy giá trị của radio button đã chọn
-            var selectedValue = document.querySelector('input[name="rate"]:checked').value;
-
-            // Gán giá trị cho input
-            document.getElementById('saoSpInput').value = selectedValue;
-        });
-    });
-</script>
-<script>
-    // Lắng nghe sự kiện change của radio buttons
-    document.querySelectorAll('input[name="ratevc"]').forEach(function (radio) {
-        radio.addEventListener('change', function () {
-            // Lấy giá trị của radio button đã chọn
-            var selectedValue = document.querySelector('input[name="ratevc"]:checked').value;
-
-            // Gán giá trị cho input
-            document.getElementById('saoVcInput').value = selectedValue;
-        });
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Lắng nghe sự kiện click trên thẻ span
-        var buttons = document.querySelectorAll('[data-modal-id="#add-danh-gia"]');
-        buttons.forEach(function (button) {
-            button.addEventListener('click', function () {
-
-                var productId = button.getAttribute('data-product-detail-id');
-                var productName = button.getAttribute('data-product-name-id');
-                var imageUrl = button.getAttribute('data-product-img-id');
-                var iddanhgia = button.getAttribute('data-Danhgia-detail-id');
-                // Gán giá trị vào ô input trong modal
-                var inputIdSanPhamChiTiet = document.getElementById("inputIdSanPhamChiTiet");
-                inputIdSanPhamChiTiet.value = productId;
-                var inputIdDanhGia = document.getElementById("inputIdDanhGia");
-                inputIdDanhGia.value = iddanhgia;
-
-
-                // link
-                var detailsLink = document.getElementById("product-detail-link");
-                var detailsLink1 = document.getElementById("product-detaillink");
-                detailsLink.href = "/SanPhamChiTiets/Details/" + productId;
-                detailsLink1.href = "/SanPhamChiTiets/Details/" + productId;
-
-                //ảnh
-
-                var imgElement = "/AnhSanPham/" + imageUrl;
-
-                document.images['productImg'].src = imgElement;
-                // tên
-                var span = document.getElementById('productname');
-                span.innerHTML = productName;
+                $.ajax({
+                    type: 'POST',
+                    url: $(this).attr('action'), // Lấy action từ attribute của form
+                    data: formData,
+                    success: function (response) {
+                        if (response.mess){
+                            toast({
+                                title: response.mess,
+                                type: "warning",
+                                duration: 2000
+                            });
+                        } else {
+                            createAndStoreJwt(response.iddanhgia)
+                            toast({
+                                title: "Đánh giá thành công",
+                                type: "success",
+                                duration: 2000,
+                                id: "myToast"
+                            });
+                            $('#add-danh-gia .tatmodal').click();
+                        }
+                    },
+                    error: function (error) {
+                        // Xử lý lỗi (nếu có)
+                        console.log(error);
+                    }
+                });
             });
         });
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Lắng nghe sự kiện click trên thẻ span
-        var buttons = document.querySelectorAll('[data-modal-id="#xem-danh-gia"]');
-        buttons.forEach(function (button) {
-            button.addEventListener('click', function () {
+    </script>
 
-                var productName = button.getAttribute('data-Sp-name-id');
-                var productId = button.getAttribute('data-Sp-detail-id');
-                var imageUrl = button.getAttribute('data-Sp-img-id');
-                var kichco = button.getAttribute('data-Sp-kichCo-id');
-                var mausac = button.getAttribute('data-Sp-mau-id');
-                var username = button.getAttribute('data-user-name-id');
-                var ngay = button.getAttribute('data-Ngay-id');
-                var dungmota = button.getAttribute('data-mota-id');
-                var binhluan = button.getAttribute('data-binhluan-id');
-                var sao = button.getAttribute('data-sao-id');
-                var chatlg = button.getAttribute('data-chatlg-id');
-                var userimg = button.getAttribute('data-user-img-id');                // Gán giá trị vào ô input trong modal
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Lắng nghe sự kiện click trên thẻ span
+            var buttons = document.querySelectorAll('[data-modal-id="#xem-danh-gia"]');
+            buttons.forEach(function (button) {
+                button.addEventListener('click', function () {
 
-
+                    var productName = button.getAttribute('data-Sp-name-id');
+                    var productId = button.getAttribute('data-Sp-detail-id');
+                    var imageUrl = button.getAttribute('data-Sp-img-id');
+                    var kichco = button.getAttribute('data-Sp-kichCo-id');
+                    var mausac = button.getAttribute('data-Sp-mau-id');
+                    var username = button.getAttribute('data-user-name-id');
+                    var ngay = button.getAttribute('data-Ngay-id');
+                    var dungmota = button.getAttribute('data-mota-id');
+                    var binhluan = button.getAttribute('data-binhluan-id');
+                    var sao = button.getAttribute('data-sao-id');
+                    var chatlg = button.getAttribute('data-chatlg-id');
+                    var userimg = button.getAttribute('data-user-img-id');                // Gán giá trị vào ô input trong modal
 
 
-                var detailsLink = document.getElementById("Sp-detail-link");
-                var detailsLink1 = document.getElementById("Sp-detaillink");
-                detailsLink.href = "/SanPhamChiTiets/Details/" + productId;
-                detailsLink1.href = "/SanPhamChiTiets/Details/" + productId;
-
-                var imgElement = "/AnhSanPham/" + imageUrl;
-
-                document.images['anhSp'].src = imgElement;
-
-                document.images['anhUser'].src = userimg;
-
-                var spantenSp = document.getElementById('tenSp');
-                spantenSp.innerHTML = productName;
-                var spanPhanLoaiHang = document.getElementById('PhanLoaiHang');
-                spanPhanLoaiHang.innerHTML = "Màu " + mausac + " | Size " + kichco;
-                var spantenNguoiDung = document.getElementById('tenNguoiDung');
-                spantenNguoiDung.innerHTML = username;
-                var spanngaydanhgia = document.getElementById('ngaydanhgia');
-                spanngaydanhgia.innerHTML = ngay;
-                var spanchatlgSp = document.getElementById('chatlgSp');
-                if (chatlg) {
-                    spanchatlgSp.innerHTML = "Chất lượng sản phẩm: " + chatlg;
-                }
-                var spanmota = document.getElementById('dungmota');
-                if (dungmota) {
-                    spanmota.innerHTML = "Đúng với mô tả: " + dungmota;
-                }
-            
-
-                var LoidanhGia = document.getElementById('LoidanhGia');
-
-                LoidanhGia.innerHTML = binhluan;
-                var sao = button.getAttribute('data-sao-id');
-                var SaoSp = document.getElementById('saoSp');
-                if (sao == 1) {
-                    SaoSp.innerHTML = '<i class="fas fa-star"></i>' +
-                        '<i class="far fa-star"></i>' +
-                        '<i class="far fa-star"></i>' +
-                        '<i class="far fa-star"></i>' +
-                        '<i class="far fa-star"></i>';
-
-                }
-                else if (sao == 2) {
-                    SaoSp.innerHTML = '<i class="fas fa-star"></i>' +
-                        '<i class="fas fa-star"></i>' +
-                        '<i class="far fa-star"></i>' +
-                        '<i class="far fa-star"></i>' +
-                        '<i class="far fa-star"></i>';
 
 
-                }
-                else if (sao == 3) {
-                    SaoSp.innerHTML = '<i class="fas fa-star"></i>' +
-                        '<i class="fas fa-star"></i>' +
-                        '<i class="fas fa-star"></i>' +
-                        '<i class="far fa-star"></i>' +
-                        '<i class="far fa-star"></i>';
+                    var detailsLink = document.getElementById("Sp-detail-link");
+                    var detailsLink1 = document.getElementById("Sp-detaillink");
+                    detailsLink.href = "/SanPhamChiTiets/Details/" + productId;
+                    detailsLink1.href = "/SanPhamChiTiets/Details/" + productId;
+
+                    var imgElement = "/AnhSanPham/" + imageUrl;
+
+                    document.images['anhSp'].src = imgElement;
+
+                    document.images['anhUser'].src = userimg;
+
+                    var spantenSp = document.getElementById('tenSp');
+                    spantenSp.innerHTML = productName;
+                    var spanPhanLoaiHang = document.getElementById('PhanLoaiHang');
+                    spanPhanLoaiHang.innerHTML = "Màu " + mausac + " | Size " + kichco;
+                    var spantenNguoiDung = document.getElementById('tenNguoiDung');
+                    spantenNguoiDung.innerHTML = username;
+                    var spanngaydanhgia = document.getElementById('ngaydanhgia');
+                    spanngaydanhgia.innerHTML = ngay;
+                    var spanchatlgSp = document.getElementById('chatlgSp');
+                    if (chatlg) {
+                        spanchatlgSp.innerHTML = "Chất lượng sản phẩm: " + chatlg;
+                    }
+                    var spanmota = document.getElementById('dungmota');
+                    if (dungmota) {
+                        spanmota.innerHTML = "Đúng với mô tả: " + dungmota;
+                    }
 
 
-                }
-                else if (sao == 4) {
-                    SaoSp.innerHTML = '<i class="fas fa-star"></i>' +
-                        '<i class="fas fa-star"></i>' +
-                        '<i class="fas fa-star"></i>' +
-                        '<i class="fas fa-star"></i>' +
-                        '<i class="far fa-star"></i>';
+                    var LoidanhGia = document.getElementById('LoidanhGia');
+
+                    LoidanhGia.innerHTML = binhluan;
+                    var sao = button.getAttribute('data-sao-id');
+                    var SaoSp = document.getElementById('saoSp');
+                    if (sao == 1) {
+                        SaoSp.innerHTML = '<i class="fas fa-star"></i>' +
+                            '<i class="far fa-star"></i>' +
+                            '<i class="far fa-star"></i>' +
+                            '<i class="far fa-star"></i>' +
+                            '<i class="far fa-star"></i>';
+
+                    }
+                    else if (sao == 2) {
+                        SaoSp.innerHTML = '<i class="fas fa-star"></i>' +
+                            '<i class="fas fa-star"></i>' +
+                            '<i class="far fa-star"></i>' +
+                            '<i class="far fa-star"></i>' +
+                            '<i class="far fa-star"></i>';
 
 
-                }
-                else if (sao == 5) {
-                    SaoSp.innerHTML = '<i class="fas fa-star"></i>' +
-                        '<i class="fas fa-star"></i>' +
-                        '<i class="fas fa-star"></i>' +
-                        '<i class="fas fa-star"></i>' +
-                        '<i class="fas fa-star"></i>';
+                    }
+                    else if (sao == 3) {
+                        SaoSp.innerHTML = '<i class="fas fa-star"></i>' +
+                            '<i class="fas fa-star"></i>' +
+                            '<i class="fas fa-star"></i>' +
+                            '<i class="far fa-star"></i>' +
+                            '<i class="far fa-star"></i>';
 
 
-                }
-                else {
-                    SaoSp.innerHTML = '';
-                }
+                    }
+                    else if (sao == 4) {
+                        SaoSp.innerHTML = '<i class="fas fa-star"></i>' +
+                            '<i class="fas fa-star"></i>' +
+                            '<i class="fas fa-star"></i>' +
+                            '<i class="fas fa-star"></i>' +
+                            '<i class="far fa-star"></i>';
 
 
+                    }
+                    else if (sao == 5) {
+                        SaoSp.innerHTML = '<i class="fas fa-star"></i>' +
+                            '<i class="fas fa-star"></i>' +
+                            '<i class="fas fa-star"></i>' +
+                            '<i class="fas fa-star"></i>' +
+                            '<i class="fas fa-star"></i>';
+
+
+                    }
+                    else {
+                        SaoSp.innerHTML = '';
+                    }
+
+
+                });
             });
         });
-    });
-</script>
+    </script>
+}
 

@@ -1,6 +1,7 @@
 ﻿using App_Data.DbContextt;
 using App_Data.Models;
 using App_View.IServices;
+using App_View.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -129,23 +130,30 @@ namespace App_View.Controllers
                 {
                     return Json(new { mess = "Voucher đã có trong tài khoản của bạn!" });
                 }
-                if (item.IdVouCher == voucher.IdVoucher && item.TrangThai == (int)TrangThaiVoucherNguoiDung.DaSuDung)
+                else if (item.IdVouCher == voucher.IdVoucher && item.TrangThai == (int)TrangThaiVoucherNguoiDung.DaSuDung)
                 {
                     return Json(new { mess = "Bạn đã sử dụng voucher này!" });
                 }
+            }
+            var tongtien = SessionServices.GetIdFomSession(HttpContext.Session, "TongTien");
+            if (voucher.DieuKien > Convert.ToDouble(tongtien))
+            {
+                return Json(new { mess = "Đơn hàng của bạn không đủ điều kiện để dùng Voucher này!" });
             }
             await _voucherND.AddVoucherNguoiDung(ma, idNguoiDung);
             var Voucher = await _voucherND.GetVocherTaiQuay(ma);
             double mucuidai = 0;
             string IdVoucher = "";
             int loaiuudai = 0;
+            double dieukien = 0;
             if (Voucher != null)
             {
                 mucuidai = (double)Voucher.MucUuDai;
                 IdVoucher = Voucher.IdVouCher;
                 loaiuudai = (int)Voucher.LoaiHinhUuDai;
+                dieukien = (double)Voucher.DieuKien;
             }
-            return Json(new { mucuidai, IdVoucher, loaiuudai });
+            return Json(new { mucuidai, IdVoucher, loaiuudai, dieukien });
         }
     }
 }

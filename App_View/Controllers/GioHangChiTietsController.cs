@@ -175,6 +175,7 @@ namespace App_View.Controllers
                 else
                 {
                     var tongtien = giohang.Sum(c => c.GiaBan * c.SoLuong);
+                    SessionServices.SetIdToSession(HttpContext.Session, "TongTien", Convert.ToString(tongtien));
                     var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(GetIdNguoiDung());
                     ViewData["ThongTinGH"] = thongTinGH;
                     var voucherNguoiDung = (await _voucherND.GetAllVoucherNguoiDungByID(GetIdNguoiDung())).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung && c.LoaiHinhUuDai == 2 && c.DieuKien <= tongtien).ToList();
