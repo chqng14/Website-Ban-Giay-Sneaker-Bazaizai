@@ -4,6 +4,7 @@ using App_Data.ViewModels.DonHang;
 using App_Data.ViewModels.DonHangChiTiet;
 using App_Data.ViewModels.GioHangChiTiet;
 using App_Data.ViewModels.HoaDon;
+using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_View.IServices;
 using App_View.Models;
 using App_View.Models.Components;
@@ -129,6 +130,15 @@ namespace App_View.Controllers
                 if (HoaDon.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.ChoXacNhan)
                 {
                     await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.DaHuy, Lido);
+                    foreach (var item in HoaDon.SanPham)
+                    {
+                        var sanphamupdate = new SanPhamSoLuongDTO()
+                        {
+                            IdChiTietSanPham = item.IdSanPhamChiTiet,
+                            SoLuong = -(int)item.SoLuong
+                        };
+                        await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
+                    }
                 }
                 else
                 {
@@ -140,6 +150,15 @@ namespace App_View.Controllers
             {
                 if (HoaDon.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.ChoXacNhan)
                 {
+                    foreach (var item in HoaDon.SanPham)
+                    {
+                        var sanphamupdate = new SanPhamSoLuongDTO()
+                        {
+                            IdChiTietSanPham = item.IdSanPhamChiTiet,
+                            SoLuong = -(int)item.SoLuong
+                        };
+                        await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
+                    }
                     await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.DaHuy, Lido);
                 }
                 else

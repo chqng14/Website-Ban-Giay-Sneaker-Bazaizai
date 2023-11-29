@@ -89,6 +89,10 @@
             return $(this).closest('.list__content').find('span').text()
         }).get();
 
+        var lstRating = $('.rating__check input[type="checkbox"]:checked').map(function () {
+            return $(this).val()
+        }).get();
+
         var data = {};
         $('#s-price').find("input, select, textarea").each(function () {
 
@@ -114,6 +118,7 @@
             LstMauSac: lstMauSac,
             lstKichCo: lstKichCo,
             Sort: $('#select_price').val(),
+            LstRating: lstRating,
             ...data
         };
 

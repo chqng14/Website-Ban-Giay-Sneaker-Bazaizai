@@ -24,10 +24,12 @@ namespace App_Data.Repositories
     {
 
         private readonly BazaizaiContext _context;
+        private readonly DanhGiaRepo _danhGiaRespo;
         private readonly IMapper _mapper;
         public SanPhamChiTietRespo(IMapper mapper)
         {
             _context = new BazaizaiContext();
+            _danhGiaRespo = new DanhGiaRepo();
             _mapper = mapper;
         }
         public async Task<bool> AddAsync(SanPhamChiTiet entity)
@@ -186,7 +188,8 @@ namespace App_Data.Repositories
                 TheLoai = sp.LoaiGiay!.TenLoaiGiay,
                 KichCo = Convert.ToInt32(sp.KichCo.SoKichCo),
                 IdChiTietSp = sp.IdChiTietSp,
-                SoLanDanhGia = 32,
+                SoLanDanhGia = _danhGiaRespo.GetTongSoDanhGia(sp.IdChiTietSp!).Result,
+                SoSao = _danhGiaRespo.SoSaoTB(sp.IdChiTietSp!).Result,
                 TenSanPham = sp.SanPham!.TenSanPham,
                 ThuongHieu = sp.ThuongHieu.TenThuongHieu,
                 GiaThucTe = sp.GiaThucTe,
@@ -222,7 +225,8 @@ namespace App_Data.Repositories
                 TheLoai = sp.LoaiGiay.TenLoaiGiay,
                 KichCo = Convert.ToInt32(sp.KichCo.SoKichCo),
                 IdChiTietSp = sp.IdChiTietSp,
-                SoLanDanhGia = 32,
+                SoLanDanhGia = _danhGiaRespo.GetTongSoDanhGia(sp.IdChiTietSp!).Result,
+                SoSao = _danhGiaRespo.SoSaoTB(sp.IdChiTietSp!).Result,
                 TenSanPham = sp.SanPham!.TenSanPham,
                 ThuongHieu = sp.ThuongHieu.TenThuongHieu,
                 GiaThucTe = sp.GiaThucTe,
