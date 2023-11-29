@@ -19,7 +19,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PostAsJsonAsync("https://bazaizaiview.azurewebsites.net/api/HoaDon/TaoHoaDonOnlineDTO", hoaDonDTO);
+                var res = await _httpClient.PostAsJsonAsync("https://bazaizaiapi.azurewebsites.net/api/HoaDon/TaoHoaDonOnlineDTO", hoaDonDTO);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsStringAsync();
@@ -46,41 +46,41 @@ namespace App_View.Services
 
         public async Task<List<HoaDonChoDTO>> GetAllHoaDonCho()
         {
-            return await _httpClient.GetFromJsonAsync<List<HoaDonChoDTO>>("https://bazaizaiview.azurewebsites.net/api/HoaDon/GetAllHoaDonCho");
+            return await _httpClient.GetFromJsonAsync<List<HoaDonChoDTO>>("https://bazaizaiapi.azurewebsites.net/api/HoaDon/GetAllHoaDonCho");
         }
 
         public async Task<List<HoaDonViewModel>> GetHoaDon()
         {
-            return await _httpClient.GetFromJsonAsync<List<HoaDonViewModel>>("https://bazaizaiview.azurewebsites.net/api/HoaDon/GetHoaDonOnline");
+            return await _httpClient.GetFromJsonAsync<List<HoaDonViewModel>>("https://bazaizaiapi.azurewebsites.net/api/HoaDon/GetHoaDonOnline");
         }
 
         public async Task<List<HoaDonTest>> GetHoaDonOnline(string idNguoiDung)
         {
-            return await _httpClient.GetFromJsonAsync<List<HoaDonTest>>($"https://bazaizaiview.azurewebsites.net/api/HoaDon/GetHoaDonOnlineTest?idNguoiDung={idNguoiDung}");
+            return await _httpClient.GetFromJsonAsync<List<HoaDonTest>>($"https://bazaizaiapi.azurewebsites.net/api/HoaDon/GetHoaDonOnlineTest?idNguoiDung={idNguoiDung}");
         }
 
         public async Task<HoaDonTest> GetHoaDonOnlineByMa(string Ma)
         {
-            return await _httpClient.GetFromJsonAsync<HoaDonTest>($"https://bazaizaiview.azurewebsites.net/api/HoaDon/GetHoaDonOnlineByMa?Ma={Ma}");
+            return await _httpClient.GetFromJsonAsync<HoaDonTest>($"https://bazaizaiapi.azurewebsites.net/api/HoaDon/GetHoaDonOnlineByMa?Ma={Ma}");
         }
 
         public async Task<List<KhachHang>> GetKhachHangs()
         {
-            var lst = await _httpClient.GetFromJsonAsync<List<KhachHang>>("https://bazaizaiview.azurewebsites.net/api/HoaDon/GetAllKhachHang");
+            var lst = await _httpClient.GetFromJsonAsync<List<KhachHang>>("https://bazaizaiapi.azurewebsites.net/api/HoaDon/GetAllKhachHang");
 
             return lst;
         }
 
         public async Task<string> GetPayMent(string idHoaDon)
         {
-            return await _httpClient.GetStringAsync($"https://bazaizaiview.azurewebsites.net/api/HoaDon/GetPTThanhToan?idhoadon={idHoaDon}");
+            return await _httpClient.GetStringAsync($"https://bazaizaiapi.azurewebsites.net/api/HoaDon/GetPTThanhToan?idhoadon={idHoaDon}");
         }
 
         public async Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon)
         {
             try
             {
-                var res = await _httpClient.PostAsJsonAsync("https://bazaizaiview.azurewebsites.net/api/HoaDon/TaoHoaDonTaiQuay", hoaDon);
+                var res = await _httpClient.PostAsJsonAsync("https://bazaizaiapi.azurewebsites.net/api/HoaDon/TaoHoaDonTaiQuay", hoaDon);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<HoaDon>();
@@ -99,7 +99,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PostAsJsonAsync("https://bazaizaiview.azurewebsites.net/api/HoaDon/TaoKhachHang", khachHang);
+                var res = await _httpClient.PostAsJsonAsync("https://bazaizaiapi.azurewebsites.net/api/HoaDon/TaoKhachHang", khachHang);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsStringAsync();
@@ -117,7 +117,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PostAsync($"https://bazaizaiview.azurewebsites.net/api/PTThanhToanChiTiet/AddPhuongThucThanhToanChiTietTaiQuay?IdHoaDon={idHoaDon}&IdThanhToan={idPTTT}&SoTien={soTien}&TrangThai={trangThai}", null);
+                var res = await _httpClient.PostAsync($"https://bazaizaiapi.azurewebsites.net/api/PTThanhToanChiTiet/AddPhuongThucThanhToanChiTietTaiQuay?IdHoaDon={idHoaDon}&IdThanhToan={idPTTT}&SoTien={soTien}&TrangThai={trangThai}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -133,14 +133,14 @@ namespace App_View.Services
         }
         public async Task<string> GetPTTT(string ten)
         {
-            return await _httpClient.GetStringAsync($"https://bazaizaiview.azurewebsites.net/api/PTThanhToan/PhuongThucThanhToanByName?ten={ten}");
+            return await _httpClient.GetStringAsync($"https://bazaizaiapi.azurewebsites.net/api/PTThanhToan/PhuongThucThanhToanByName?ten={ten}");
         }
 
         public async Task<bool> UpdateNgayHoaDon(string idHoaDon, DateTime? NgayThanhToan, DateTime? NgayNhan, DateTime? NgayShip)
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://bazaizaiview.azurewebsites.net/api/HoaDon/UpdateNgayHoaDonOnline?idHoaDon={idHoaDon}&NgayThanhToan={NgayThanhToan}&NgayNhan={NgayNhan}&NgayShip={NgayShip}", null);
+                var res = await _httpClient.PutAsync($"https://bazaizaiapi.azurewebsites.net/api/HoaDon/UpdateNgayHoaDonOnline?idHoaDon={idHoaDon}&NgayThanhToan={NgayThanhToan}&NgayNhan={NgayNhan}&NgayShip={NgayShip}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -158,7 +158,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.DeleteAsync($"https://bazaizaiview.azurewebsites.net/api/HoaDon/XoaPhuongThucThanhToanChiTietBangIdHoaDon?idHoaDon={idHoaDon}");
+                var res = await _httpClient.DeleteAsync($"https://bazaizaiapi.azurewebsites.net/api/HoaDon/XoaPhuongThucThanhToanChiTietBangIdHoaDon?idHoaDon={idHoaDon}");
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -177,7 +177,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://bazaizaiview.azurewebsites.net/api/HoaDon/UpdateTrangThaiGiaoHangHoaDon?idHoaDon={idHoaDon}&idNguoiDung={idNguoiDung}&TrangThaiGiaoHang={TrangThai}&Lido={Lido}", null);
+                var res = await _httpClient.PutAsync($"https://bazaizaiapi.azurewebsites.net/api/HoaDon/UpdateTrangThaiGiaoHangHoaDon?idHoaDon={idHoaDon}&idNguoiDung={idNguoiDung}&TrangThaiGiaoHang={TrangThai}&Lido={Lido}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -196,7 +196,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://bazaizaiview.azurewebsites.net/api/HoaDon/UpdateTrangThaiHoaDonOnline?idHoaDon={idHoaDon}&TrangThaiThanhToan={TrangThai}", null);
+                var res = await _httpClient.PutAsync($"https://bazaizaiapi.azurewebsites.net/api/HoaDon/UpdateTrangThaiHoaDonOnline?idHoaDon={idHoaDon}&TrangThaiThanhToan={TrangThai}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -214,7 +214,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PutAsJsonAsync("https://bazaizaiview.azurewebsites.net/api/HoaDon/ThanhToanTaiQuay", hoaDon);
+                var res = await _httpClient.PutAsJsonAsync("https://bazaizaiapi.azurewebsites.net/api/HoaDon/ThanhToanTaiQuay", hoaDon);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();

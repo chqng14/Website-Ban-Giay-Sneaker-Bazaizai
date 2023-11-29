@@ -16,7 +16,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PostAsJsonAsync("https://bazaizaiview.azurewebsites.net/api/ThongTinGiaoHang/Create", thongTinGHDTO);
+                var res = await _httpClient.PostAsJsonAsync("https://bazaizaiapi.azurewebsites.net/api/ThongTinGiaoHang/Create", thongTinGHDTO);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -33,31 +33,31 @@ namespace App_View.Services
 
         public async Task<bool> DeleteThongTin(string id)
         {
-            var res = await _httpClient.DeleteAsync($"https://bazaizaiview.azurewebsites.net/api/ThongTinGiaoHang/Delete?id={id}");
+            var res = await _httpClient.DeleteAsync($"https://bazaizaiapi.azurewebsites.net/api/ThongTinGiaoHang/Delete?id={id}");
             return res.IsSuccessStatusCode;
         }
 
         public async Task<List<ThongTinGiaoHang>> GetAllThongTin()
         {
-            return await _httpClient.GetFromJsonAsync<List<ThongTinGiaoHang>>("https://bazaizaiview.azurewebsites.net/api/ThongTinGiaoHang/GetAll");
+            return await _httpClient.GetFromJsonAsync<List<ThongTinGiaoHang>>("https://bazaizaiapi.azurewebsites.net/api/ThongTinGiaoHang/GetAll");
         }
 
         public async Task<List<ThongTinGHDTO>> GetAllThongTinDTO()
         {
-            return await _httpClient.GetFromJsonAsync<List<ThongTinGHDTO>>("https://bazaizaiview.azurewebsites.net/api/ThongTinGiaoHang/GetAllDTO");
+            return await _httpClient.GetFromJsonAsync<List<ThongTinGHDTO>>("https://bazaizaiapi.azurewebsites.net/api/ThongTinGiaoHang/GetAllDTO");
         }
 
         public async Task<List<ThongTinGiaoHang>> GetThongTinByIdUser(string idNguoiDung)
         {
 
-            return await _httpClient.GetFromJsonAsync<List<ThongTinGiaoHang>>($"https://bazaizaiview.azurewebsites.net/api/ThongTinGiaoHang/GetByIdUser?idNguoiDung={idNguoiDung}");
+            return await _httpClient.GetFromJsonAsync<List<ThongTinGiaoHang>>($"https://bazaizaiapi.azurewebsites.net/api/ThongTinGiaoHang/GetByIdUser?idNguoiDung={idNguoiDung}");
         }
 
         public async Task<bool> UpdateThongTin(ThongTinGHDTO thongTinGHDTO)
         {
             try
             {
-                var res = await _httpClient.PutAsJsonAsync("https://bazaizaiview.azurewebsites.net/api/ThongTinGiaoHang/Edit", thongTinGHDTO);
+                var res = await _httpClient.PutAsJsonAsync("https://bazaizaiapi.azurewebsites.net/api/ThongTinGiaoHang/Edit", thongTinGHDTO);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -76,7 +76,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://bazaizaiview.azurewebsites.net/api/ThongTinGiaoHang/UpdateTrangThai?idThongTin={idThongTin}", null);
+                var res = await _httpClient.PutAsync($"https://bazaizaiapi.azurewebsites.net/api/ThongTinGiaoHang/UpdateTrangThai?idThongTin={idThongTin}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();

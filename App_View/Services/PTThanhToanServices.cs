@@ -17,7 +17,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PostAsync($"https://bazaizaiview.azurewebsites.net/api/PTThanhToan?ten={ten}&mota={mota}&trangthai={trangthai}", null);
+                var res = await _httpClient.PostAsync($"https://bazaizaiapi.azurewebsites.net/api/PTThanhToan?ten={ten}&mota={mota}&trangthai={trangthai}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -39,7 +39,7 @@ namespace App_View.Services
 
         public async Task<List<PhuongThucThanhToan>> GetAllPTThanhToanAsync()
         {
-            return await _httpClient.GetFromJsonAsync<List<PhuongThucThanhToan>>("https://bazaizaiview.azurewebsites.net/api/PTThanhToan");
+            return await _httpClient.GetFromJsonAsync<List<PhuongThucThanhToan>>("https://bazaizaiapi.azurewebsites.net/api/PTThanhToan");
         }
 
         public Task<PhuongThucThanhToan> GetPTThanhToanByIDAsync(string idPhuongThucThanhToan)
@@ -49,7 +49,7 @@ namespace App_View.Services
 
         public async Task<string> GetPTThanhToanByNameAsync(string ten)
         {
-            return await _httpClient.GetStringAsync($"https://bazaizaiview.azurewebsites.net/api/PTThanhToan/PhuongThucThanhToanByName?ten={ten}");
+            return await _httpClient.GetStringAsync($"https://bazaizaiapi.azurewebsites.net/api/PTThanhToan/PhuongThucThanhToanByName?ten={ten}");
         }
 
         public Task<bool> UpdatePTThanhToanAsync(string idPhuongThucThanhToan, string ten, string mota, int trangthai)

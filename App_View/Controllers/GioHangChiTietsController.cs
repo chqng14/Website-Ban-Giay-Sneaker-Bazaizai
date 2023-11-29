@@ -264,7 +264,8 @@ namespace App_View.Controllers
         }
         public async Task<List<GioHangChiTietDTO>> GetGioHangChiTietDTOs()
         {
-            return (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
+            var idNguoiDung = _userManager.GetUserId(User);
+            return (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == idNguoiDung).ToList();
         }
         public async Task<IActionResult> DeleteCart(string id)
         {
@@ -487,7 +488,7 @@ namespace App_View.Controllers
             var data = new List<SanPhamGioHangViewModel>();
             if (idNguoiDung != null)
             {
-                data = await httpClient.GetFromJsonAsync<List<SanPhamGioHangViewModel>>($"https://bazaizaiview.azurewebsites.net/api/GioHangChiTiet/Get-List-SanPhamGioHangVM/{idNguoiDung}");
+                data = await httpClient.GetFromJsonAsync<List<SanPhamGioHangViewModel>>($"https://bazaizaiapi.azurewebsites.net/api/GioHangChiTiet/Get-List-SanPhamGioHangVM/{idNguoiDung}");
             }
             else
             {
