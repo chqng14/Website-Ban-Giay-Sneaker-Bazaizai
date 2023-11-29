@@ -14,6 +14,7 @@ using App_Data.ViewModels.SanPhamChiTietViewModel;
 using App_Data.ViewModels.FilterViewModel;
 using Microsoft.AspNetCore.Identity;
 using App_Data.ViewModels.SanPhamYeuThichDTO;
+using DocumentFormat.OpenXml.Drawing.Diagrams;
 
 namespace App_View.Controllers
 {
@@ -103,6 +104,18 @@ namespace App_View.Controllers
                         .ToList();
                 }
 
+                if (filterData.LstRating!.Any())
+                {
+                    data = data!
+                        .Where(sp =>
+                            filterData.LstRating!.Any(item =>
+                                sp.SoSao >= item && sp.SoSao <= item + 1
+                            )
+                        )
+                        .ToList();
+                }
+
+
                 if (filterData.LstKichCo!.Any())
                 {
                     data = data!
@@ -145,6 +158,17 @@ namespace App_View.Controllers
             {
                 data = data!
                     .Where(sp => filterData.LstTheLoai!.Contains(sp.TheLoai!))
+                    .ToList();
+            }
+
+            if (filterData.LstRating!.Any())
+            {
+                data = data!
+                    .Where(sp =>
+                        filterData.LstRating!.Any(item =>
+                            sp.SoSao >= item && sp.SoSao <= item + 1
+                        )
+                    )
                     .ToList();
             }
 
