@@ -76,7 +76,7 @@ namespace App_View.Areas.Identity.Pages.Account
             public string? NgaySinh { get; set; }
 
             [Required(ErrorMessage = "Email không được để trống.")]
-            [EmailAddress(ErrorMessage ="Email không đúng định dạng.")]
+            [EmailAddress(ErrorMessage = "Email không đúng định dạng.")]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
