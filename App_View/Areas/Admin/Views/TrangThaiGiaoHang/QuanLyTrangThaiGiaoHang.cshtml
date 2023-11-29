@@ -69,45 +69,95 @@
         });
     });
     function updateStatusPrompt() {
+        var trangThaiHienTai = $('.btn-primary').data('trangthai');
+
+        var tenTrangThai = {
+            1: 'Chờ xác nhận',
+            2: 'Chờ lấy hàng',
+            3: 'Đang giao',
+            4: 'Đã giao',
+            5: 'Đã hủy'
+        };
+
+        var tenTrangThaiHienTai = tenTrangThai[trangThaiHienTai+1];
 
         Swal.fire({
-            title: 'Chọn trạng thái mới',
-            input: 'select',
-            inputOptions: {
-                '1': 'Chờ xác nhận',
-                '2': 'Chờ lấy hàng',
-                '3': 'Đang giao',
-                '4': 'Đã giao',
-                '5': 'Đã hủy'
-            },
-            inputPlaceholder: 'Chọn trạng thái',
+            title: 'Xác nhận chuyển trạng thái?',
+            text: 'Bạn có chắc muốn chuyển đến trạng thái ' + tenTrangThaiHienTai + ' không?',
+            icon: 'question',
             showCancelButton: true,
-            confirmButtonText: 'Cập nhật',
-            cancelButtonText: 'Đóng',
-            showLoaderOnConfirm: true,
-            preConfirm: (selectedStatus) => {
-                return new Promise((resolve) => {
-                    Swal.fire({
-                        title: 'Xác nhận cập nhật trạng thái?',
-                        text: 'Bạn có chắc muốn cập nhật trạng thái hóa đơn không?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Có',
-                        cancelButtonText: 'Không'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            resolve(updateStatus(selectedStatus));
-                        } else {
-                            resolve(false);
-                        }
-                    });
-                });
+            confirmButtonText: 'Có',
+            cancelButtonText: 'Không'
+        }).then((result) => {
+            if (result.isConfirmed) {
+ 
+                updateStatus(trangThaiHienTai + 1);
+            } else {
+                Swal.fire('Hủy bỏ', 'Chuyển trạng thái đã được hủy bỏ.', 'info');
             }
         });
+        
     }
+    function HuyHoaDon() {
+        var trangThaiHienTai = $('.btn-danger').data('trangthai');
+        var maHD = $('.btn-danger').data('maHoaDon');
 
+        // Kiểm tra trạng thái hóa đơn
+        if (trangThaiHienTai == 1) {
+            Swal.fire({
+                title: 'Xác nhận hủy hóa đơn',
+                input: 'text',
+                inputPlaceholder: 'Nhập lý do hủy...',
+                showCancelButton: true,
+                confirmButtonText: 'Xác nhận',
+                cancelButtonText: 'Hủy bỏ',
+                showLoaderOnConfirm: true,
+                preConfirm: (lyDoHuy) => {
+                    return new Promise((resolve) => {
+                        // Kiểm tra nếu lý do không được nhập
+                        if (!lyDoHuy) {
+                            Swal.showValidationMessage('Vui lòng nhập lý do hủy.');
+                            resolve();
+                        } else {
+                            // Gửi yêu cầu AJAX để hủy hóa đơn
+                            $.ajax({
+                                type: 'POST',
+                                url: "@Url.Action("HuyHoaDon", "TrangThaiGiaoHang")",
+                                data: { maHD: maHD, lyDoHuy: lyDoHuy },
+                                success: function (result) {
+                                    // Hiển thị SweetAlert thông báo thành công
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Hủy thành công!',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    // Reload trang sau 1.5 giây
+                                    setTimeout(function () {
+                                        location.reload();
+                                    }, 1500);
+                                    resolve();
+                                },
+                                error: function (error) {
+                                    // Xử lý lỗi nếu có
+                                    console.error('Error updating status:', error);
+                                    // Hiển thị SweetAlert thông báo lỗi
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Đã xảy ra lỗi!',
+                                        text: 'Vui lòng thử lại sau.',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    resolve();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    }
     function updateStatus(selectedStatus) {
         var idHoaDon = $('.btn-primary').data('id');
         console.log(selectedStatus);

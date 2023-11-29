@@ -103,44 +103,6 @@ namespace App_View.Areas.Admin.Controllers
             ViewBag.HDCT = HDCT;
             return PartialView("InHoaDonTaiQuay", hoaDonChiTiet);
         }
-        [HttpPost]
-		public async Task<IActionResult> HuyHoaDon(string maHD, string lyDoHuy)
-		{
-			if (string.IsNullOrEmpty(maHD))
-			{
-				return Ok(new
-				{
-					TrangThai = false,
-				});
-			}
-			var hoaDon = (await _hoaDonServices.GetAllHoaDonCho()).FirstOrDefault(c => c.MaHoaDon == maHD);
-			var user = await _userManager.GetUserAsync(User);
-			var idUser = await _userManager.GetUserIdAsync(user);
-			var hoadonchitiet = await _hoaDonChiTietServices.HuyHoaDon(maHD, lyDoHuy, idUser);
-			if (hoaDon.hoaDonChiTietDTOs.Count() == 0)
-			{
-				return Ok(
-				  new { TrangThai = true, }
-				  );
-			}
-			if (hoadonchitiet.Any())
-			{
-				foreach (var item in hoadonchitiet)
-				{
-					await sanPhamChiTietService.UpDatSoLuongAynsc(new SanPhamSoLuongDTO()
-					{
-						IdChiTietSanPham = item.IdSanPhamChiTiet,
-						SoLuong = -(int)item.SoLuong,
-					});
-				}
-				return Ok(
-					new { TrangThai = true, }
-					);
-			}
-			return Ok(new
-			{
-				TrangThai = false,
-			});
-		}
-	}
+        
+    }
 }

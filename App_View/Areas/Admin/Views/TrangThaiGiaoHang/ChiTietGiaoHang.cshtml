@@ -57,7 +57,8 @@
 
             </div>
             <div style="text-align:center">
-                <button class="btn btn-primary m-r-5" onclick="updateStatusPrompt()" data-id="@Model.IdHoaDon">Cập nhật trạng thái hóa đơn</button>
+                <button class="btn btn-danger m-r-5" onclick="HuyDonHang()" data-maHoaDon="@Model.MaHoaDon" data-trangthai="@Model.TrangThaiGiaoHang">Hủy đơn</button>
+                <button class="btn btn-primary m-r-5" onclick="updateStatusPrompt()" data-id="@Model.IdHoaDon" data-trangthai="@Model.TrangThaiGiaoHang">Cập nhật trạng thái hóa đơn</button>
             </div>
         </div>
     </div>
@@ -67,6 +68,9 @@
     var trangThai = @Model.TrangThaiGiaoHang;
 
     $(document).ready(function () {
+        if (trangThai==5) {
+            $('.btn-primary').hide();
+        }
         var timelineClass = '';
         if (trangThai === 1) {
             timelineClass = 'c0';
