@@ -178,7 +178,7 @@ namespace App_View.Areas.Admin.Pages.User
         public async Task<bool> AddCart(string idUser, int trangThai)
         {
             var httpClient = new HttpClient();
-            await httpClient.PostAsync($"https://localhost:7038/api/GioHang?id={idUser}&trangthai={trangThai}", null);
+            await httpClient.PostAsync($"https://bazaizaiview.azurewebsites.net/api/GioHang?id={idUser}&trangthai={trangThai}", null);
             return true;
         }
     }

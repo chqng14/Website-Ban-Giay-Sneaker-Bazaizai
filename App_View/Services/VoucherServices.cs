@@ -262,7 +262,7 @@ namespace App_View.Services
         {
             try
             {
-                var reponse = await _httpClient.PutAsync($"https://localhost:7038/api/Voucher/UpdateVoucher/{idVoucher}", null);
+                var reponse = await _httpClient.PutAsync($"https://bazaizaiview.azurewebsites.net/api/Voucher/UpdateVoucher/{idVoucher}", null);
                 if (reponse.IsSuccessStatusCode)
                 {
                     return await reponse.Content.ReadAsAsync<bool>();
