@@ -63,7 +63,7 @@ namespace App_View.Controllers
             var idNguoiDung = _userManager.GetUserId(User);
             var thongtin = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
             int trangthai = 0;
-            if (thongtin.Any())
+            if (thongtin != null)
             {
                 trangthai = (int)TrangThaiThongTinGH.HoatDong;
             }
@@ -349,7 +349,7 @@ namespace App_View.Controllers
         #endregion
 
         #region Chung
-        public async Task<ActionResult<HoaDonViewModel>> Order(string idHoaDon)
+        public async Task<ActionResult<HoaDonViewModel>> Order(string? idHoaDon)
         {
             var idpt = SessionServices.GetIdFomSession(HttpContext.Session, "idPay");
             ViewBag.idNguoiDung = _userManager.GetUserId(User);

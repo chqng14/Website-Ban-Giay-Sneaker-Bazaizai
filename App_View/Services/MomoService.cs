@@ -196,7 +196,8 @@ public class MomoService : IMomoService
         //model.OrderInfo = "Khách hàng: " + model.FullName + ". Nội dung: " + model.OrderInfo;
 
         //Thêm idHoaDon vào returnUrl
-        var returnUrl = $"https://localhost:7214/DonHang/CallBack&idHoaDon{idHoaDon}";
+        var returnUrl = $"https://bazaizaiview.azurewebsites.net/DonHang/CallBack";
+        //var returnUrl = $"https://localhost:7214/DonHang/CallBack";
 
         //var rawData =
         //    $"partnerCode={_options.Value.PartnerCode}&accessKey={_options.Value.AccessKey}&requestId={model.OrderId}&amount={model.Amount}&orderId={model.OrderId}&orderInfo={model.OrderInfo}&returnUrl={returnUrlWithIdHoaDon}&notifyUrl={_options.Value.ipnUrl}&extraData=";

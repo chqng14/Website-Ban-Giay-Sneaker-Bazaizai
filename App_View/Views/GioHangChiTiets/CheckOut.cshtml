@@ -278,35 +278,7 @@
     <!--====== End - Section Content ======-->
 </div>
 <!-- Messenger Plugin chat Code -->
-<div id="fb-root"></div>
 
-<!-- Your Plugin chat code -->
-<div id="fb-customer-chat" class="fb-customerchat">
-</div>
-
-<script>
-    var chatbox = document.getElementById('fb-customer-chat');
-    chatbox.setAttribute("page_id", "203879542798005");
-    chatbox.setAttribute("attribution", "biz_inbox");
-</script>
-
-<!-- Your SDK code -->
-<script>
-    window.fbAsyncInit = function () {
-        FB.init({
-            xfbml: true,
-            version: 'v18.0'
-        });
-    };
-
-    (function (d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-</script>
 <!--====== End - Section 2 ======-->
 <!--====== Section 3 ======-->
 <div class="u-s-p-b-60">
@@ -715,7 +687,6 @@
                                 </table>
                             </div>
                             <div class="gl-modal-btn-group">
-                                <button class="btn btn--e-brand-b-2" type="submit">LƯU</button>
                                 <button class="btn btn--e-grey-b-2" type="button" data-dismiss="modal">ĐÓNG</button>
                             </div>
                         </form>
@@ -762,17 +733,25 @@
 
              // }
 
-            form.addEventListener('submit', function (event) {
-                event.preventDefault();
-                var selectedAddress = document.querySelector('input[name="default-address"]:checked');
-                if (selectedAddress) {
-                    localStorage.setItem('selectedAddressId', selectedAddress.id);
-                    selectedId = selectedAddress.id;
-                    updateThongTin(selectedAddress);
-                } else {
-                    alert("Vui lòng chọn một địa chỉ trước khi lưu.");
-                }
+            var inputs = document.querySelectorAll('input[name="default-address"]');
+            inputs.forEach(function (input) {
+                input.addEventListener('change', function (event) {
+                    var selectedAddress = document.querySelector('input[name="default-address"]:checked');
+                    if (selectedAddress) {
+                        localStorage.setItem('selectedAddressId', selectedAddress.id);
+                        selectedId = selectedAddress.id;
+                        updateThongTin(selectedAddress);
+                        toast({
+                            title: "Đổi địa chỉ thành công!",
+                            type: "success",
+                            duration: 2000
+                        });
+                    } else {
+                        alert("Vui lòng chọn một địa chỉ trước khi lưu.");
+                    }
+                });
             });
+
 
             
 
