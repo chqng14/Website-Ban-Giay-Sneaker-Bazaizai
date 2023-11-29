@@ -1,0 +1,289 @@
+﻿@model App_Data.ViewModels.HoaDon.HoaDonTest
+@foreach (var item in Model.SanPham.Where(c => c.DanhGia.SaoSp == null))
+{
+    <div class="manage-o__description" style="margin-top:10px">
+        <div class="description__container">
+            <div class="description__img-wrap">
+
+                <img class="u-img-fluid" src="/AnhSanPham/@item.LinkAnh[0]" alt="">
+            </div>
+            <div class="description-title" style="color:#7f7f7f">
+                <span class="o-card__name">
+
+                    <a href="@Url.Action("Details", "SanPhamChiTiets", new { id = item.IdSanPhamChiTiet })">@item.TenSanPham</a>
+                </span>
+                <span class="o-card__quantity">Size: @item.TenKichCo Màu: @item.TenMauSac</span>
+                <span class="o-card__quantity">Số lượng x @item.SoLuong</span>
+            </div>
+        </div>
+        <div class="description__info-wrap">
+            <div>
+                @if (item.DanhGia.SaoSp == null)
+                {
+                    <span data-product-id="@item.IdSanPhamChiTiet"
+                          data-Danhgia-detail-id="@item.IdSanPhamChiTiet*@Model.IdHoaDon"
+                          data-product-img="@item.LinkAnh[0]"
+                          data-product-name="@item.TenSanPham"
+                          data-product-size-color="@item.TenKichCo*@item.TenMauSac"
+                          data-product-quantity="@item.SoLuong"
+                          data-modal="modal"
+                          data-modal-id="#add-danh-gia"
+                          class="btn btn--e-transparent-brand-b-2 order"
+                          style="width: 100px; text-align:center" onclick="DanhgiaSanPham()">
+                        Đánh giá
+                    </span>
+                }
+                @* else
+            {
+            <span data-user-img-id="@item.DanhGia.AnhDaiDien"
+            data-user-name-id="@item.DanhGia.TenNguoiDung"
+            data-Ngay-id="@item.DanhGia.NgayDanhGia"
+            data-mota-id="@item.DanhGia.MoTa"
+            data-binhluan-id="@item.DanhGia.BinhLuan"
+            data-sao-id="@item.DanhGia.SaoSp"
+            data-chatlg-id="@item.DanhGia.ChatLuongSanPham"
+            data-Sp-detail-id="@item.IdSanPhamChiTiet"
+            data-Sp-img-id="@item.LinkAnh[0]"
+            data-Sp-name-id="@item.TenSanPham" data-Sp-mau-id="@item.TenMauSac" data-Sp-kichco-id="@item.TenKichCo" data-modal="modal" data-modal-id="#xem-danh-gia" class="btn btn--e-transparent-brand-b-2 order" style="width: 100px;text-align:center">Xem đánh giá</span>
+            } *@
+            </div>
+        </div>
+    </div>
+}
+
+<div class="modal fade" id="add-danh-gia">
+    <div class="modal-dialog modal-dialog-centered justify-content-center" style="min-width:900px">
+        <div class="modal-content">
+            <button class="btn dismiss-button fas fa-times" type="button" data-dismiss="modal"></button>
+            <div class="modal-body">
+                <div class="u-s-m-b-30">
+                    <div class="dash-l-r">
+                        <h1 class="gl-modal-h1">Đánh giá</h1>
+                    </div>
+                    <form asp-action="AddDanhGia" asp-controller="DonHang" class="pd-tab__rev-f2" method="post" id="AddDanhGia">
+                        <h2 class="gl-label"></h2>
+                        <input name="IdSanPhamChiTiet" value="" class="form-control" id="inputIdSanPhamChiTiet" hidden />
+                        <input name="IdDanhGia" value="" class="form-control" id="inputIdDanhGia" hidden />
+
+                        <div class="description__container">
+                            <div class="description__img-wrap">
+                                <img class="u-img-fluid" id="productImage" src="" alt="">
+                            </div>
+                            <div class="description-title" style="color:#7f7f7f">
+                                <span class="o-card__name">
+                                    <a id="productName"></a>
+                                </span>
+                                <span class="o-card__quantity" id="productSizeColor"></span>
+                                <span class="o-card__quantity" id="productQuantity"></span>
+                            </div>
+                        </div>
+                        <br />
+                        <span class="gl-label">Chất lượng sản phẩm</span>
+                        @*  sao*@
+                        <div class="container" style="position: relative;margin-top:-60px;width: 500px;padding: 20px 30px;border-radius: 5px;display: flex;flex-direction: column;">
+                            <div class="star-widget">
+                                <input type="radio" name="rate" value="1" id="rate-1" hidden>
+                                <label for="rate-1" class="fas fa-star"></label>
+                                <input type="radio" value="2" name="rate" id="rate-2" hidden>
+                                <label for="rate-2" class="fas fa-star"></label>
+                                <input value="3" type="radio" name="rate" id="rate-3" hidden>
+                                <label for="rate-3" class="fas fa-star"></label>
+                                <input type="radio" name="rate" id="rate-4" value="4" hidden>
+                                <label for="rate-4" class="fas fa-star"></label>
+                                <input type="radio" name="rate" id="rate-5" value="5" checked hidden>
+                                <label for="rate-5" class="fas fa-star"></label>
+                                <header style="margin-top: 10px;"></header>
+                            </div>
+                            <input value="5" id="saoSpInput" name="SaoSp" class="form-control" hidden />
+                        </div>
+
+                        @* sao*@
+                        <div class="rev-f2__group">
+                            <div>
+                                <p class="u-s-m-b-30">
+
+                                    <label class="gl-label" for="reviewer-name">Đúng với mô tả:</label>
+
+                                    <textarea name="MoTa" class="text-area text-area--primary-style" id="reviewer-text" style="height:53px" maxlength="200"></textarea>
+
+                                </p>
+                                <p class="u-s-m-b-30">
+
+                                    <label class="gl-label" for="reviewer-email">Chất lượng sản phẩm:</label>
+
+                                    <textarea name="ChatLuongSanPham" class="text-area text-area--primary-style" id="reviewer-text" style="height:53px" maxlength="200"></textarea>
+
+
+                                </p>
+                            </div>
+                            <div class="u-s-m-b-15">
+
+                                <label class="gl-label" for="reviewer-text"> </label>
+                                <textarea name="BinhLuan" style="height:201px" class="text-area text-area--primary-style" id="reviewer-text" placeholder="Hãy chia sẻ những trải nghiệm của bạn về sản phẩm với người khác." maxlength="300"></textarea>
+
+
+                            </div>
+
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; ">
+                            <button type="button" class="btn btn--e-transparent-brand-b-2 order tatmodal" style="text-align:center;margin-right: 15px;" data-dismiss="modal">Trở lại</button>
+
+                            <button type="submit" class="btn btn--e-transparent-brand-b-2 order" style="text-align:center">Hoàn Thành</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal fade" id="xem-danh-gia">
+    <div class="modal-dialog modal-dialog-centered" style="min-width:800px">
+        <div class="modal-content modal--shadow">
+
+
+            <div class="modal-body" style="margin-left:20px;margin-right:20px; margin-top:10px;">
+                <div class="row">
+                    <div class="review-o u-s-m-b-30">
+
+                        <form class="pd-tab__rev-f2">
+                            <h2 class="gl-label">Đánh giá sản phẩm</h2>
+
+                            <div class="review-o u-s-m-b-30" style="margin-top:20px;">
+                                <div class="rev-f2__table-wrap gl-scroll">
+                                    <table class="rev-f2__table" style="border: none;">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="1" style="width: 20%; border: none; background-color: white;">
+                                                    <a id="Sp-detaillink" href="#">
+                                                        <img id="anhSp" style="height:100px;width:100px;margin-left: -60px;" src="" />
+                                                    </a>
+
+                                                </th>
+                                                <th colspan="4" style="width: 80%; border: none; background-color: white;">
+                                                    <a id="Sp-detail-link" href="#">
+                                                        <span class="review-o__name" id="tenSp" style=" text-align: left; font-size: 14px;">
+
+                                                        </span>
+
+                                                    </a>
+                                                    <div style="display: flex;">
+                                                        <span class="review-o__name" style=" text-align: left;font-size: 14px;">Phân loại hàng:&nbsp </span>
+                                                        <span style="font-size: 14px;" class="review-o__name" id="PhanLoaiHang"></span>
+                                                    </div>
+
+
+                                                </th>
+                                            </tr>
+                                        </thead>
+
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="review-o u-s-m-b-15">
+                                <div class="review-o__info u-s-m-b-8">
+
+
+                                    <img style="margin-bottom:-35px;width:50px;height:50px; object-fit:cover; border-radius:30px" src="" id="anhUser">
+
+
+                                    <span class="review-o__name" id="tenNguoiDung" style="margin-left:5px"></span>
+                                    <span class="review-o__name">
+                                        <div class="review-o__rating gl-rating-style u-s-m-b-8" style="margin-left:60px" id="saoSp">
+                                        </div>
+                                    </span>
+
+                                </div>
+
+
+
+                                <p class="review-o__name" style="margin-left:60px" id="chatlgSp"></p>
+
+
+                                <p class="review-o__name" id="dungmota" style="margin-left:60px"></p>
+
+
+                                <p class="review-o__name" id="LoidanhGia" style="margin-left:60px"></p>
+
+
+                                <p class="review-o__text" id="ngaydanhgia" style="margin-left:60px">
+
+                                </p>
+
+
+
+                            </div>
+
+                            <div style="display: flex; justify-content: flex-end; ">
+                                <button class="btn btn--e-brand-shadow" style="background-color:white; color:black" data-dismiss="modal" type="submit">OK</button>
+                                <div style="width:10px;"></div>
+
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function DanhgiaSanPham() {
+        var danhGiaButtons = document.querySelectorAll('[data-modal-id="#add-danh-gia"]');
+        danhGiaButtons.forEach(function (button) {
+            var productId = button.dataset.productId;
+            var danhGiaId = button.dataset.danhgiaDetailId;
+            var productImg = button.dataset.productImg;
+            var productName = button.dataset.productName;
+            var productSizeColor = button.dataset.productSizeColor;
+            var productQuantity = button.dataset.productQuantity;
+
+            var sizeColorArray = productSizeColor.split('*');
+            var size = sizeColorArray[0];
+            var color = sizeColorArray[1];
+            var imgElement = "/AnhSanPham/" + productImg;
+            // Cập nhật thông tin sản phẩm trong modal dưới
+            document.getElementById('inputIdSanPhamChiTiet').value = productId;
+            document.getElementById('inputIdDanhGia').value = danhGiaId;
+            document.getElementById('productImage').src = imgElement;
+            document.getElementById('productName').innerText = productName;
+            document.getElementById('productQuantity').innerText = 'Số lượng x ' + productQuantity;
+            document.getElementById('productSizeColor').innerText = 'Size: ' + size + ' Màu: ' + color;
+            $('#add-danh-gia').modal('show');
+            });
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $('#AddDanhGia').submit(function (e) {
+            e.preventDefault(); // Ngăn chặn form submit mặc định
+
+            // Lấy dữ liệu từ form
+            var formData = $(this).serialize();
+
+            $.ajax({
+                type: 'POST',
+                url: $(this).attr('action'), // Lấy action từ attribute của form
+                data: formData,
+                success: function (response) {
+                    toast({
+                        title: "Đánh giá thành công",
+                        type: "success",
+                        duration: 2000
+                    });
+                    $('#add-danh-gia .tatmodal').click();
+                    $('#danh-gia').modal('show');
+                },
+                error: function (error) {
+                    // Xử lý lỗi (nếu có)
+                    console.log(error);
+                }
+            });
+        });
+    });
+</script>

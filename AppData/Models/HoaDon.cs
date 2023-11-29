@@ -21,6 +21,7 @@ namespace App_Data.Models
         public DateTime? NgayShip { get; set; }
         public DateTime? NgayNhan { get; set; }
         public DateTime? NgayGiaoDuKien { get; set; }
+        public DateTime? NgayCapNhatGanNhat { get; set; }
         public double? TienShip { get; set; }
         public double? TienGiam { get; set; }
         public double? TongTien { get; set; }

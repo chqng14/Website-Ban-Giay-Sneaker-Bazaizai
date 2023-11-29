@@ -7388,7 +7388,7 @@ input::-ms-clear {
 --------------------------------------------------------------*/
 /* Modal styles */
 .modal {
-    z-index: 999999;
+    z-index: 999998;
 }
 
 .modal-content {

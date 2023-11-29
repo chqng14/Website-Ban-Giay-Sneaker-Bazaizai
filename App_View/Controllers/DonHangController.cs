@@ -126,13 +126,26 @@ namespace App_View.Controllers
             var HoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
             if (HoaDon.LoaiThanhToan == "MOMO" && HoaDon.TrangThaiThanhToan == 1)
             {
-                //var mess = await ReFund(HoaDon.MaHoaDon, (double)HoaDon.TongTien, Lido);
-                await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, 5, Lido);
+                if (HoaDon.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.ChoXacNhan)
+                {
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.DaHuy, Lido);
+                }
+                else
+                {
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.ChoHuy, Lido);
+                }
                 return Ok(new { idHoaDon = idHoaDon/*, mess = mess*/ });
             }
             else
             {
-                await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, 5, Lido);
+                if (HoaDon.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.ChoXacNhan)
+                {
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.DaHuy, Lido);
+                }
+                else
+                {
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.ChoHuy, Lido);
+                }
                 return Ok(new { idHoaDon = idHoaDon });
             }
         }
@@ -186,19 +199,12 @@ namespace App_View.Controllers
             return RedirectToAction("ShowCartUser", "GioHangChiTiets");
         }
 
-        //public async Task<int> ReFund(string maHoaDon, double Tien, string Lido)
-        //{
-        //    var transID = SessionServices.GetIdFomSession(HttpContext.Session, "transID");
-        //    var model = new OrderInfoModel()
-        //    {
-        //        OrderId = maHoaDon,
-        //        Amount = Tien,
-        //        description = Lido,
-        //        transId = long.Parse(transID),
-        //    };
-        //    var response = await _momoService.Refund(model);
-        //    return response.ResultCode;
-        //}
+        public async Task<IActionResult> DanhGia(string idHoaDon)
+        {
+            var UserID = _userManager.GetUserId(User);
+            var HoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            return PartialView("_PatialDanhGia", HoaDon);
+        }
 
         public async Task<IActionResult> RePay(string idHoaDon)
         {
