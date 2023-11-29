@@ -27,7 +27,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin,NhanVien")]
+    [Authorize(Roles = "Admin")]
     public class VouchersController : Controller
     {
         private readonly BazaizaiContext _context;
