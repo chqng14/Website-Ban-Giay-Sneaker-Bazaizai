@@ -55,16 +55,15 @@
                                     <li>
                                         <div class="rating__check">
 
-                                            <input type="checkbox">
+                                            <input type="checkbox" value="5">
                                             <div class="rating__check-star-wrap"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                                         </div>
 
-                                        <span class="shop-w__total-text">(2)</span>
                                     </li>
                                     <li>
                                         <div class="rating__check">
 
-                                            <input type="checkbox">
+                                            <input type="checkbox" value="4">
                                             <div class="rating__check-star-wrap">
                                                 <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
 
@@ -72,12 +71,11 @@
                                             </div>
                                         </div>
 
-                                        <span class="shop-w__total-text">(8)</span>
                                     </li>
                                     <li>
                                         <div class="rating__check">
 
-                                            <input type="checkbox">
+                                            <input type="checkbox" value="3">
                                             <div class="rating__check-star-wrap">
                                                 <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
 
@@ -85,12 +83,11 @@
                                             </div>
                                         </div>
 
-                                        <span class="shop-w__total-text">(10)</span>
                                     </li>
                                     <li>
                                         <div class="rating__check">
 
-                                            <input type="checkbox">
+                                            <input type="checkbox" value="2">
                                             <div class="rating__check-star-wrap">
                                                 <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
 
@@ -98,12 +95,11 @@
                                             </div>
                                         </div>
 
-                                        <span class="shop-w__total-text">(12)</span>
                                     </li>
                                     <li>
                                         <div class="rating__check">
 
-                                            <input type="checkbox">
+                                            <input type="checkbox" value="1">
                                             <div class="rating__check-star-wrap">
                                                 <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
 
@@ -111,7 +107,6 @@
                                             </div>
                                         </div>
 
-                                        <span class="shop-w__total-text">(1)</span>
                                     </li>
                                 </ul>
                             </div>
@@ -271,6 +266,10 @@
             return $(this).closest('.list__content').find('span').text()
         }).get();
 
+        var lstRating = $('.rating__check input[type="checkbox"]:checked').map(function () {
+            return $(this).val()
+        }).get();
+
         var data = {};
         $('#s-price').find("input, select, textarea").each(function () {
 
@@ -295,6 +294,7 @@
             LstTheLoai: lstTheLoai,
             LstMauSac: lstMauSac,
             lstKichCo: lstKichCo,
+            LstRating: lstRating,
             Sort: $('#select_price').val(),
             ...data
         };

@@ -21,7 +21,7 @@
     },
     "resourceName": {
       "type": "string",
-      "defaultValue": "BazaizaiAPI",
+      "defaultValue": "bazaizaiStoreAPI",
       "metadata": {
         "description": "Name of the main resource to be created by this template."
       }

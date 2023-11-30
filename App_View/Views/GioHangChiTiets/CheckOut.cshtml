@@ -91,7 +91,7 @@
                                                                         <div class="manage-o__description">
                                                                             <div class="description__container">
                                                                                 <div class="description__img-wrap">
-                                                                                    <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
+                                                                                    <img class="u-img-fluid" src="/images/logo.jpg" alt="">
                                                                                 </div>
                                                                                 <div class="description-title">
                                                                                     Mã: <u style="color:red">@item.MaVoucher </u>
@@ -129,7 +129,7 @@
                                                                                 <div class="manage-o__description">
                                                                                     <div class="description__container">
                                                                                         <div class="description__img-wrap">
-                                                                                            <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
+                                                                                            <img class="u-img-fluid" src="/images/logo.jpg" alt="">
                                                                                         </div>
                                                                                         <div class="description-title">
                                                                                             Mã: <u style="color:red">@hiddenvc.MaVoucher </u>
@@ -171,7 +171,7 @@
                                                                         <div class="manage-o__description">
                                                                             <div class="description__container">
                                                                                 <div class="description__img-wrap">
-                                                                                    <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
+                                                                                    <img class="u-img-fluid" src="/images/logo.jpg" alt="">
                                                                                 </div>
                                                                                 <div class="description-title">
                                                                                     Mã: <u style="color:red">@item.MaVoucher </u>
@@ -216,7 +216,7 @@
                                                                                 <div class="manage-o__description">
                                                                                     <div class="description__container">
                                                                                         <div class="description__img-wrap">
-                                                                                            <img class="u-img-fluid" src="/images/VoucherIMG/Logo.png" alt="">
+                                                                                            <img class="u-img-fluid" src="/images/logo.jpg" alt="">
                                                                                         </div>
                                                                                         <div class="description-title">
                                                                                             Mã: <u style="color:red">@hiddenvc.MaVoucher </u>
@@ -1244,20 +1244,36 @@
                     data: ma,
                     success: function (result) {
                         if (result.mess) {
-                            if(result.idvoucher){
-                                $('input[name="voucher"]').each(function () {
-                                    // So sánh giá trị của radio button với result.idvoucher
-                                    if ($(this).val() == result.idvoucher) {
-                                        // Nếu trùng khớp, đặt checked cho radio button đó
-                                        $(this).prop('checked', true);
-                                    }
+                            loaiuudai = result.loaiuudai;
+                            if (result.idvoucher) {
+                                if (phiship == 0 && loaiuudai == 2) {
+                                    toast({
+                                        title: "Vui lòng nhập địa chỉ trước khi áp dụng freeship!",
+                                        type: "warning",
+                                        duration: 2000
+                                    });
+                                } else {
+                                    $('input[name="voucher"]').each(function () {
+                                        // So sánh giá trị của radio button với result.idvoucher
+                                        if ($(this).val() == result.idvoucher) {
+                                            // Nếu trùng khớp, đặt checked cho radio button đó
+                                            $(this).prop('checked', true);
+                                            $('#textvoucher').text("");
+                                            MucUuDai = result.mucuudai;
+                                            IdVoucher = result.idvoucher;
+                                            $('input[name="IdVoucher"]').val(IdVoucher);
+                                            applyDiscount(MucUuDai);
+                                        }
+                                    });
+                                }
+                            } 
+                            if (loaiuudai != 2) {
+                                toast({
+                                    title: result.mess,
+                                    type: "warning",
+                                    duration: 2000
                                 });
                             }
-                            toast({
-                                title: result.mess,
-                                type: "warning",
-                                duration: 2000
-                            });
                         } else {
                             $('#textvoucher').text("");
                             loaiuudai = result.loaiuudai;
