@@ -11,6 +11,7 @@ using App_View.Models.Components;
 using App_View.Models.Order;
 using App_View.Services;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Google.Apis.PeopleService.v1.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -125,11 +126,12 @@ namespace App_View.Controllers
         {
             var UserID = _userManager.GetUserId(User);
             var HoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            var ngayCapNhatGanNhat = DateTime.Now;
             if (HoaDon.LoaiThanhToan == "MOMO" && HoaDon.TrangThaiThanhToan == 1)
             {
                 if (HoaDon.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.ChoXacNhan)
                 {
-                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.DaHuy, Lido);
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.DaHuy, Lido, ngayCapNhatGanNhat);
                     foreach (var item in HoaDon.SanPham)
                     {
                         var sanphamupdate = new SanPhamSoLuongDTO()
@@ -142,7 +144,7 @@ namespace App_View.Controllers
                 }
                 else
                 {
-                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.ChoHuy, Lido);
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.ChoHuy, Lido, ngayCapNhatGanNhat);
                 }
                 return Ok(new { idHoaDon = idHoaDon/*, mess = mess*/ });
             }
@@ -159,11 +161,11 @@ namespace App_View.Controllers
                         };
                         await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                     }
-                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.DaHuy, Lido);
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.DaHuy, Lido, ngayCapNhatGanNhat);
                 }
                 else
                 {
-                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.ChoHuy, Lido);
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.ChoHuy, Lido, ngayCapNhatGanNhat);
                 }
                 return Ok(new { idHoaDon = idHoaDon });
             }

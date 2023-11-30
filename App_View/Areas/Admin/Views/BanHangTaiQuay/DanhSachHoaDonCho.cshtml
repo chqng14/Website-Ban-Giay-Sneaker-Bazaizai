@@ -14,7 +14,7 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <head>
-    
+    	<link rel="stylesheet" type="text/css" href="~/Admin/css/banHangTaiQuay">
 </head>
 <body></body>
 <!-- Modal -->
@@ -1244,6 +1244,7 @@
 
                                                 // Chờ cho nội dung được load hoàn tất trước khi kích hoạt hộp thoại in
                                                 printWindow.onload = function () {
+                                                   
                                                     printWindow.print();
                                                     printWindow.onafterprint = function () {
                                                         // Đóng cửa sổ trang in sau khi in xong

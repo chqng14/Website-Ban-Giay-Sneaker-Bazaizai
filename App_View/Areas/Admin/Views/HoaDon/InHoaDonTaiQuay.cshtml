@@ -130,11 +130,11 @@
 														<td>
 															<p>
 																@string.Format("{0:N0}đ",ViewData["TONGTIEN"])<br>
-																@((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] == "") ? string.Format("{0:N0}đ", ViewData["TIENSHIP"]) : string.Format("{0:N0}đ", "0"))<br>
-																@((ViewData["TIENGIAM"] != null && ViewData["TIENGIAM"] == "") ? string.Format("{0:N0}đ", ViewData["TIENGIAM"]) : string.Format("{0:N0}đ", "0"))
+																@((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] != "") ? string.Format("{0:N0}đ", ViewData["TIENSHIP"]) : string.Format("{0:N0}đ", "0"))<br>
+															@((ViewData["TIENGIAM"] != null && ViewData["TIENGIAM"] != "") ? string.Format("{0:N0}đ", ViewData["TIENGIAM"]) : string.Format("{0:N0}đ", "0"))
 
 															</p>@{
-																var tongTien = Convert.ToDouble(ViewData["TONGTIEN"]) + Convert.ToDouble((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] == "") ? ViewData["TIENSHIP"] : "0") - Convert.ToDouble((ViewData["TIENSHIP"] != null && ViewData["TIENGIAM"] == "") ? ViewData["TIENGIAM"] : "0");
+															var tongTien = Convert.ToDouble(ViewData["TONGTIEN"]) + Convert.ToDouble((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] != "") ? ViewData["TIENSHIP"] : "0") - Convert.ToDouble((ViewData["TIENGIAM"] != null && ViewData["TIENGIAM"] != "") ? ViewData["TIENGIAM"] : "0");
 															}
 															<h5 class="text-success"><strong>@string.Format("{0:N0}đ",tongTien)</strong></h5>
 														</td>

@@ -25,7 +25,12 @@
                                 <td class="column1">@hoaDon.NgayTao</td>
                                 <td class="column2">@hoaDon.MaHoaDon</td>
                                 <td class="column3">@hoaDon.TenNguoiNhan</td>
-                                <td class="column4">@string.Format("{0:N0}đ",hoaDon.TongTien)</td>
+                                <td class="column4">@string.Format("{0:N0}đ",hoaDon.TongTien)
+                                    @if (hoaDon.TrangThaiGiaoHang == 7)
+                                    {
+                                        <button class="btn btn-danger m-r-5 huyXacNhan" data-id="@hoaDon.IdHoaDon" onclick="XacNhanHuy()" style="float:right">Xác nhận hủy</button>
+                                    }
+                                </td>
 
                             </tr>
                         }
@@ -80,7 +85,6 @@
         };
 
         var tenTrangThaiHienTai = tenTrangThai[trangThaiHienTai+1];
-
         Swal.fire({
             title: 'Xác nhận chuyển trạng thái?',
             text: 'Bạn có chắc muốn chuyển đến trạng thái ' + tenTrangThaiHienTai + ' không?',
@@ -98,9 +102,9 @@
         });
         
     }
-    function HuyHoaDon() {
+    function HuyDonHang() {
         var trangThaiHienTai = $('.btn-danger').data('trangthai');
-        var maHD = $('.btn-danger').data('maHoaDon');
+        var idHD = $('.btn-danger').data('id');
 
         // Kiểm tra trạng thái hóa đơn
         if (trangThaiHienTai == 1) {
@@ -122,8 +126,63 @@
                             // Gửi yêu cầu AJAX để hủy hóa đơn
                             $.ajax({
                                 type: 'POST',
-                                url: "@Url.Action("HuyHoaDon", "TrangThaiGiaoHang")",
-                                data: { maHD: maHD, lyDoHuy: lyDoHuy },
+                                url: "@Url.Action("HuyDonHangCho", "TrangThaiGiaoHang")",
+                                data: { id: idHD, lyDoHuy: lyDoHuy, trangthai :5},
+                                success: function (result) {
+                                    // Hiển thị SweetAlert thông báo thành công
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Hủy thành công!',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    // Reload trang sau 1.5 giây
+                                    setTimeout(function () {
+                                        location.reload();
+                                    }, 1500);
+                                    resolve();
+                                },
+                                error: function (error) {
+                                    // Xử lý lỗi nếu có
+                                    console.error('Error updating status:', error);
+                                    // Hiển thị SweetAlert thông báo lỗi
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Đã xảy ra lỗi!',
+                                        text: 'Vui lòng thử lại sau.',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    resolve();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        else 
+        { 
+            Swal.fire({
+                title: 'Xác nhận hủy hóa đơn',
+                input: 'text',
+                inputPlaceholder: 'Nhập lý do hủy...',
+                showCancelButton: true,
+                confirmButtonText: 'Xác nhận',
+                cancelButtonText: 'Hủy bỏ',
+                showLoaderOnConfirm: true,
+                preConfirm: (lyDoHuy) => {
+                    return new Promise((resolve) => {
+                        // Kiểm tra nếu lý do không được nhập
+                        if (!lyDoHuy) {
+                            Swal.showValidationMessage('Vui lòng nhập lý do hủy.');
+                            resolve();
+                        } else {
+                            // Gửi yêu cầu AJAX để hủy hóa đơn
+                            $.ajax({
+                                type: 'POST',
+                                url: "@Url.Action("HuyDonHangCho", "TrangThaiGiaoHang")",
+                                data: { id: idHD, lyDoHuy: lyDoHuy, trangthai: 7 },
                                 success: function (result) {
                                     // Hiển thị SweetAlert thông báo thành công
                                     Swal.fire({
@@ -160,47 +219,80 @@
     }
     function updateStatus(selectedStatus) {
         var idHoaDon = $('.btn-primary').data('id');
+        var trangthai = $('.btn-primary').data('trangthai');
         console.log(selectedStatus);
         console.log(idHoaDon);
-        if (selectedStatus == "" || selectedStatus==null) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Bạn chưa chọn trạng thái!',
-                text: 'Vui lòng chọn trạng thái.',
-                showConfirmButton: false,
-                timer: 1500 
-            });
-        }
-        else {
-            $.ajax({
-                type: 'POST',
-                url: "@Url.Action("CapNhatTrangThai", "TrangThaiGiaoHang")",
-                data: { trangThaiGH: selectedStatus, id: idHoaDon },
-                success: function (result) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Cập nhật thành công!',
-                        showConfirmButton: false,
-                        timer: 1500  
-                    });
-                    setTimeout(function () {
-                        location.reload();
-                    }, 1500);
-                },
-                error: function (error) {
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Action("CapNhatTrangThai", "TrangThaiGiaoHang")",
+            data: { trangThaiGH: selectedStatus, id: idHoaDon, lyDoHuy :""},
+            success: function (result) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Cập nhật thành công!',
+                    showConfirmButton: false,
+                    timer: 1500  
+                });
+                setTimeout(function () {
+                    location.reload();
+                }, 1500);
+            },
+            error: function (error) {
   
-                    console.error('Error updating status:', error);
+                console.error('Error updating status:', error);
                    
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Đã xảy ra lỗi!',
-                        text: 'Vui lòng thử lại sau.',
-                        showConfirmButton: false,
-                        timer: 1500  
-                    });
-                }
-            });
-        }
-      
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Đã xảy ra lỗi!',
+                    text: 'Vui lòng thử lại sau.',
+                    showConfirmButton: false,
+                    timer: 1500  
+                });
+            }
+        });
+    }
+    function XacNhanHuy() {
+        Swal.fire({
+            title: 'Xác nhận hủy đơn?',
+            text: 'Bạn có chắc muốn hủy đơn hàng này không?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Có',
+            cancelButtonText: 'Không'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var idHD = $('.huyXacNhan').data('id')
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("XacNhanHuy", "TrangThaiGiaoHang")",
+                    data: { id: idHD },
+                    success: function (result) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Hủy thành công!',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1500);
+                    },
+                    error: function (error) {
+
+                        console.error('Error updating status:', error);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Đã xảy ra lỗi!',
+                            text: 'Vui lòng thử lại sau.',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                });
+            } else {
+                Swal.fire('Hủy bỏ', 'Hành động hủy hóa đơn đã được hủy.', 'info');
+            }
+        });
     }
 </script>

@@ -1,10 +1,12 @@
 ﻿using App_Data.DbContextt;
 using App_Data.Models;
+using App_Data.Repositories;
 using App_Data.ViewModels.HoaDon;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_View.IServices;
 using App_View.Models.ViewModels;
 using App_View.Services;
+using Google.Apis.PeopleService.v1.Data;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -22,15 +24,16 @@ namespace App_View.Areas.Admin.Controllers
         private readonly IHoaDonServices _hoaDonServices;
         private readonly ISanPhamChiTietService sanPhamChiTietService;
         BazaizaiContext context;
-        public TrangThaiGiaoHangController(ISanPhamChiTietService sanPhamChiTietService, IVoucherNguoiDungServices voucherNguoiDungServices, IVoucherServices voucherServices, IHoaDonChiTietServices hoaDonChiTietServices, SignInManager<NguoiDung> signInManager)
+        public TrangThaiGiaoHangController(ISanPhamChiTietService sanPhamChiTietService, IVoucherNguoiDungServices voucherNguoiDungServices, IVoucherServices voucherServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
         {
             _hoaDonServices = new HoaDonServices();
             context = new BazaizaiContext();
             this.sanPhamChiTietService = sanPhamChiTietService;
             _voucherNguoiDungServices = voucherNguoiDungServices;
             _voucherServices = voucherServices;
-            _hoaDonChiTietServices = hoaDonChiTietServices;
+            _hoaDonChiTietServices = new HoaDonChiTietServices();
             _signInManager = signInManager;
+            _userManager = userManager;
         }
         public IActionResult QuanLyGiaoHang()
         {
@@ -75,6 +78,11 @@ namespace App_View.Areas.Admin.Controllers
                 var lstHoaDonDaHuy = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 5);
                 return PartialView("QuanLyTrangThaiGiaoHang", lstHoaDonDaHuy);
             }
+            if (trangThaiHD == 7)
+            {
+                var lstHoaDonDaHuy = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 7);
+                return PartialView("QuanLyTrangThaiGiaoHang", lstHoaDonDaHuy);
+            }
             return PartialView("QuanLyHoaDon", lstHoaDon);
         }
         [HttpPost]
@@ -88,77 +96,87 @@ namespace App_View.Areas.Admin.Controllers
             return PartialView("ChiTietGiaoHang", hoaDonChiTiet);
         }
         [HttpPost]
-        public IActionResult CapNhatTrangThai(string trangThaiGH,string id)
+        public async Task<IActionResult> CapNhatTrangThaiAsync(string trangThaiGH,string id,string? lyDoHuy)
         {
-            var hoaDon = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == id);
-            hoaDon.TrangThaiGiaoHang = Convert.ToInt32(trangThaiGH);
-            context.HoaDons.Update(hoaDon);
-            context.SaveChanges();
-            return Ok();
+            var hoaDon1 = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == id);
+            if(Convert.ToInt32(trangThaiGH) == 2)
+            {
+                var ngayCapNhatGanNhat = DateTime.Now;
+                var user = await _userManager.GetUserAsync(User);
+                var idUser = await _userManager.GetUserIdAsync(user);
+                var updateTrangThaiHoaDon = await _hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(id, idUser, Convert.ToInt32(trangThaiGH), lyDoHuy, ngayCapNhatGanNhat);
+                var hoadonchitiet =  context.hoaDonChiTiets.Where(x=>x.IdHoaDon== id);
+                
+                if (hoadonchitiet.Any())
+                {
+                    foreach (var item in hoadonchitiet)
+                    {
+                        await sanPhamChiTietService.UpDatSoLuongAynsc(new SanPhamSoLuongDTO()
+                        {
+                            IdChiTietSanPham = item.IdSanPhamChiTiet,
+                            SoLuong = (int)item.SoLuong,
+                        });
+                    }
+                    return Ok(
+                        new { TrangThai = true, }
+                        );
+                }
+                return Ok(new
+                {
+                    TrangThai = false,
+                });
+            }
+            else
+            {
+                DateTime newUpdate = DateTime.Now;
+                var user = await _userManager.GetUserAsync(User);
+                var idUser = await _userManager.GetUserIdAsync(user);
+                var hoadonchitiet = await _hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(id, idUser, Convert.ToInt32(trangThaiGH), lyDoHuy, newUpdate);
+                return Ok();
+            }
+            
         }
         [HttpPost]
-        public async Task<IActionResult> HuyHoaDon(string maHD, string lyDoHuy)
+        public async Task<IActionResult> HuyDonHangCho(string id, string lyDoHuy,int trangthai)
         {
-            if (string.IsNullOrEmpty(maHD))
+            if (string.IsNullOrEmpty(id))
             {
                 return Ok(new
                 {
                     TrangThai = false,
                 });
             }
-            var hoaDon = (await _hoaDonServices.GetAllHoaDonCho()).FirstOrDefault(c => c.MaHoaDon == maHD);
+            DateTime newUpdate = DateTime.Now;
             var user = await _userManager.GetUserAsync(User);
             var idUser = await _userManager.GetUserIdAsync(user);
-            var hoadonchitiet = await _hoaDonChiTietServices.HuyHoaDon(maHD, lyDoHuy, idUser);
-            if (hoaDon.hoaDonChiTietDTOs.Count() == 0)
+            var hoadonchitiet = await _hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(id, idUser, trangthai, lyDoHuy, newUpdate);
+            return Ok();
+        }
+        public async Task<IActionResult> XacNhanHuy(string id)
+        {
+            var hoadonchitiet = context.hoaDonChiTiets.Where(x => x.IdHoaDon == id);
+            var hoadon = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == id);
+            hoadon.TrangThaiGiaoHang = 5;
+            context.Update(hoadon);
+            context.SaveChanges();
+            if (hoadonchitiet.Any())
             {
+                foreach (var item in hoadonchitiet)
+                {
+                    await sanPhamChiTietService.UpDatSoLuongAynsc(new SanPhamSoLuongDTO()
+                    {
+                        IdChiTietSanPham = item.IdSanPhamChiTiet,
+                        SoLuong = -(int)item.SoLuong,
+                    });
+                }
                 return Ok(
-                  new { TrangThai = true, }
-                  );
+                    new { TrangThai = true, }
+                    );
             }
-            
             return Ok(new
             {
                 TrangThai = false,
             });
         }
-        //public async Task<IActionResult> HuyHoaDon(string maHD, string lyDoHuy)
-        //{
-        //    if (string.IsNullOrEmpty(maHD))
-        //    {
-        //        return Ok(new
-        //        {
-        //            TrangThai = false,
-        //        });
-        //    }
-        //    var hoaDon = (await _hoaDonServices.GetAllHoaDonCho()).FirstOrDefault(c => c.MaHoaDon == maHD);
-        //    var user = await _userManager.GetUserAsync(User);
-        //    var idUser = await _userManager.GetUserIdAsync(user);
-        //    var hoadonchitiet = await _hoaDonChiTietServices.HuyHoaDon(maHD, lyDoHuy, idUser);
-        //    if (hoaDon.hoaDonChiTietDTOs.Count() == 0)
-        //    {
-        //        return Ok(
-        //          new { TrangThai = true, }
-        //          );
-        //    }
-        //    if (hoadonchitiet.Any())
-        //    {
-        //        foreach (var item in hoadonchitiet)
-        //        {
-        //            await sanPhamChiTietService.UpDatSoLuongAynsc(new SanPhamSoLuongDTO()
-        //            {
-        //                IdChiTietSanPham = item.IdSanPhamChiTiet,
-        //                SoLuong = -(int)item.SoLuong,
-        //            });
-        //        }
-        //        return Ok(
-        //            new { TrangThai = true, }
-        //            );
-        //    }
-        //    return Ok(new
-        //    {
-        //        TrangThai = false,
-        //    });
-        //}
     }
 }
