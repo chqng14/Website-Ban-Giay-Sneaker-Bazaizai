@@ -47,11 +47,11 @@
                                 </div>
                                 <div class="f-cart__col">
                                     <span>Ngày mua:</span>
-                                    <p>@Model.NgayTao</p>
+                                    <p>@string.Format("{0:dd/MM/yyyy}", Model.NgayTao)</p>
                                 </div>
                                 <div class="f-cart__col">
                                     <span>Ngày giao dự kiến:</span>
-                                    <p>@Model.NgayGiaoDuKien</p>
+                                    <p>@string.Format("{0:dd/MM/yyyy}", Model.NgayGiaoDuKien)</p>
                                 </div>
                                 <div class="f-cart__col">
                                     <span>Tổng cộng:</span>

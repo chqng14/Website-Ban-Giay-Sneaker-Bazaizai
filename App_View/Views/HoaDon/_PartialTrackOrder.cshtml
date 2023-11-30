@@ -12,7 +12,7 @@
         <div class="dash-l-r">
             <div>
                 <div class="manage-o__text-2 u-c-secondary">Order #@Model.MaHoaDon</div>
-                <div class="manage-o__text u-c-silver">Ngày đặt: @Model.NgayTao</div>
+                <div class="manage-o__text u-c-silver">Ngày đặt: @string.Format("{0:dd/MM/yyyy}", Model.NgayTao)</div>
             </div>
             <div>
                 <div class="manage-o__text-2 u-c-silver">
@@ -33,7 +33,14 @@
                 </div>
             </div>
             <div class="dash-l-r">
-                <div class="manage-o__text u-c-secondary">Ngày giao dự kiến: @Model.NgayGiaoDuKien</div>
+                @if (Model.TrangThaiGiaoHang is 4)
+                {
+                    <div class="manage-o__text u-c-secondary">Đã nhận vào ngày: @string.Format("{0:dd/MM/yyyy}", Model.NgayNhan)</div>
+                }
+                else
+                {
+                    <div class="manage-o__text u-c-secondary">Ngày giao dự kiến: @string.Format("{0:dd/MM/yyyy}", Model.NgayGiaoDuKien)</div>
+                }
                 <div class="manage-o__icon">
                     <i class="fas fa-truck u-s-m-r-5"></i>
 
@@ -44,7 +51,7 @@
                 @if (Model.TrangThaiGiaoHang is 1)
 
                 {
-                    <div class="timeline-row">
+                    <div class="timeline-row" style="justify-content:space-between">
                         <div class="col-lg-2 u-s-m-b-30">
                             <div class="timeline-step">
                                 <div class="timeline-l-i timeline-l-i--finish">
@@ -93,16 +100,6 @@
                                 </div>
 
                                 <span class="timeline-text">Đã hủy</span>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 u-s-m-b-30">
-                            <div class="timeline-step">
-                                <div class="timeline-l-i">
-
-                                    <span class="timeline-circle"></span>
-                                </div>
-
-                                <span class="timeline-text">Trả hàng</span>
                             </div>
                         </div>
                     </div>
@@ -110,7 +107,7 @@
                 @if (Model.TrangThaiGiaoHang is 2)
 
                 {
-                    <div class="timeline-row">
+                    <div class="timeline-row" style="justify-content:space-between">
                         <div class="col-lg-2 u-s-m-b-30">
                             <div class="timeline-step">
                                 <div class="timeline-l-i timeline-l-i--finish">
@@ -159,16 +156,6 @@
                                 </div>
 
                                 <span class="timeline-text">Đã hủy</span>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 u-s-m-b-30">
-                            <div class="timeline-step">
-                                <div class="timeline-l-i">
-
-                                    <span class="timeline-circle"></span>
-                                </div>
-
-                                <span class="timeline-text">Trả hàng</span>
                             </div>
                         </div>
                     </div>
@@ -176,7 +163,7 @@
                 @if (Model.TrangThaiGiaoHang is 3)
 
                 {
-                    <div class="timeline-row">
+                    <div class="timeline-row" style="justify-content:space-between">
                         <div class="col-lg-2 u-s-m-b-30">
                             <div class="timeline-step">
                                 <div class="timeline-l-i timeline-l-i--finish">
@@ -225,16 +212,6 @@
                                 </div>
 
                                 <span class="timeline-text">Đã hủy</span>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 u-s-m-b-30">
-                            <div class="timeline-step">
-                                <div class="timeline-l-i">
-
-                                    <span class="timeline-circle"></span>
-                                </div>
-
-                                <span class="timeline-text">Trả hàng</span>
                             </div>
                         </div>
                     </div>
@@ -242,7 +219,7 @@
                 @if (Model.TrangThaiGiaoHang is 4)
 
                 {
-                    <div class="timeline-row">
+                    <div class="timeline-row" style="justify-content:space-between">
                         <div class="col-lg-2 u-s-m-b-30">
                             <div class="timeline-step">
                                 <div class="timeline-l-i timeline-l-i--finish">
@@ -291,16 +268,6 @@
                                 </div>
 
                                 <span class="timeline-text">Đã hủy</span>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 u-s-m-b-30">
-                            <div class="timeline-step">
-                                <div class="timeline-l-i">
-
-                                    <span class="timeline-circle"></span>
-                                </div>
-
-                                <span class="timeline-text">Trả hàng</span>
                             </div>
                         </div>
                     </div>
@@ -308,7 +275,7 @@
                 @if (Model.TrangThaiGiaoHang is 5)
 
                 {
-                    <div class="timeline-row">
+                    <div class="timeline-row" style="justify-content:space-between">
                         <div class="col-lg-2 u-s-m-b-30">
                             <div class="timeline-step">
                                 <div class="timeline-l-i">
@@ -357,16 +324,6 @@
                                 </div>
 
                                 <span class="timeline-text">Đã hủy</span>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 u-s-m-b-30">
-                            <div class="timeline-step">
-                                <div class="timeline-l-i">
-
-                                    <span class="timeline-circle"></span>
-                                </div>
-
-                                <span class="timeline-text">Trả hàng</span>
                             </div>
                         </div>
                     </div>

@@ -260,7 +260,7 @@
                                                     </tbody>
                                                     <div class="gl-modal-btn-group">
                                                         <button class="btn btn--e-brand-b-2" id="VoucherUserUse" type="submit">Đồng ý</button>
-                                                        <button class="btn btn--e-grey-b-2" type="button" data-dismiss="modal">Đóng</button>
+                                                        <button class="btn btn--e-grey-b-2 tatmodal" type="button" data-dismiss="modal">Đóng</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -1074,6 +1074,7 @@
             $('#button-coupon').click(function () {
                 var voucherValue = $('#voucherinput').val();
                 voucher(voucherValue);
+                $('#voucher-modal .tatmodal').click();
             });
         });
         $('#voucherinput').on('keydown', function (e) {
@@ -1081,6 +1082,7 @@
                 e.preventDefault();
                 MucUuDai = "";
                 voucher(this.value);
+                $('#voucher-modal .tatmodal').click();
             }
         });
         // Khi chọn ship sau
@@ -1341,6 +1343,7 @@
 
             // Chạy hàm runMyJavaScript với voucher đã chọn
             VoucherUser(selectedVoucherId);
+            $('#voucher-modal .tatmodal').click();
             // $('#voucher-modal').fadeOut();
         });
 

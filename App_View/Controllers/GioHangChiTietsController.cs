@@ -180,7 +180,13 @@ namespace App_View.Controllers
                     ViewData["ThongTinGH"] = thongTinGH;
                     var voucherNguoiDung = (await _voucherND.GetAllVoucherNguoiDungByID(GetIdNguoiDung())).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung && c.LoaiHinhUuDai == 2 && c.DieuKien <= tongtien).ToList();
                     ViewData["VoucherFreeShip"] = voucherNguoiDung;
-                    var voucher = (await _voucherND.GetAllVoucherNguoiDungByID(GetIdNguoiDung())).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung && c.LoaiHinhUuDai != 2 && c.DieuKien <= tongtien).ToList();
+
+                    var voucher = (await _voucherND.GetAllVoucherNguoiDungByID(GetIdNguoiDung()))
+                        .Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung && c.LoaiHinhUuDai != 2 && c.DieuKien <= tongtien)
+                        .OrderByDescending(c => c.LoaiHinhUuDai)
+                        .ThenByDescending(c => c.MucUuDai)
+                        .ToList();
+
                     ViewData["Voucher"] = voucher;
                     var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(giohang);
                     if (message.Any())
