@@ -26,12 +26,14 @@ using App_Data.ViewModels.ThongTinGHDTO;
 using App_Data.ViewModels.HoaDon;
 using App_Data.DbContextt;
 using App_Data.ViewModels.SanPhamYeuThichDTO;
+using App_Data.Repositories;
 
 namespace App_Api.Helpers.Mapping
 {
     public class MappingProfiles : Profile
     {
         private readonly BazaizaiContext bazaizaiContext = new BazaizaiContext();
+        private readonly DanhGiaRepo _danhGiaRepo = new DanhGiaRepo();
         public MappingProfiles()
         {
             CreateMap<HoaDon, HoaDonDTO>();
@@ -295,10 +297,6 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => src.GiaThucTe)
                     )
                 .ForMember(
-                        dest => dest.SoSao,
-                        opt => opt.MapFrom(src => 5)
-                    )
-                .ForMember(
                         dest => dest.ThuongHieu,
                         opt => opt.MapFrom(src => src.ThuongHieu.TenThuongHieu)
                     )
@@ -311,10 +309,6 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => "Sản phẩm chính hãng")
                     )
                 .ForMember(
-                        dest => dest.SoLanDanhGia,
-                        opt => opt.MapFrom(src => 32)
-                    )
-                .ForMember(
                         dest => dest.TheLoai,
                         opt => opt.MapFrom(src => src.LoaiGiay.TenLoaiGiay)
                     )
@@ -325,6 +319,14 @@ namespace App_Api.Helpers.Mapping
                 .ForMember(
                         dest => dest.MauSac,
                         opt => opt.MapFrom(src => src.MauSac.TenMauSac)
+                    )
+                .ForMember(
+                        dest => dest.SoSao,
+                        opt => opt.MapFrom(src => _danhGiaRepo.SoSaoTB(src.IdChiTietSp!).Result)
+                    )
+                .ForMember(
+                        dest => dest.SoLanDanhGia,
+                        opt => opt.MapFrom(src => _danhGiaRepo.GetTongSoDanhGia(src.IdChiTietSp!).Result)
                     )
                 .ForMember(
                         dest => dest.GiaMin,
