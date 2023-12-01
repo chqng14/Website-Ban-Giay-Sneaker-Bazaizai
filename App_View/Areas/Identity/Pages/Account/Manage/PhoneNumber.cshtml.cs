@@ -58,8 +58,8 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             public string? CodeOTPConfirmed { get; set; }
         }
 
-      
-      
+
+
         //public async Task<IActionResult> OnGetAsync()
         //{
         //    var user = await _userManager.GetUserAsync(User);
@@ -84,7 +84,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             }
 
             var phone = await _userManager.GetPhoneNumberAsync(user);
-            
+
             if (Input.PhoneNumber != phone)
             {
                 string storedOTP = HttpContext.Session.GetString("OTP");
@@ -127,7 +127,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
                 //    CodeOTP = null;
                 //}
                 //else CodeOTP = JsonData;
-                if(CodeOTP==Input.CodeOTPConfirmed)
+                if (CodeOTP == Input.CodeOTPConfirmed)
                 {
                     var setPhoneNumberResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
                     if (!setPhoneNumberResult.Succeeded)
@@ -147,27 +147,45 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             StatusMessage = "Số điện thoại của bạn không thay đổi.";
             return Page();
         }
-        
+
         public async Task OnPostSendVerificationPhoneAsync()
-        {         
-                var user = await _userManager.GetUserAsync(User);        
+        {
+            var user = await _userManager.GetUserAsync(User);
             var phone = await _userManager.GetPhoneNumberAsync(user);
             if (Input.PhoneNumber != phone)
             {
-                var token = await _userManager.GenerateChangePhoneNumberTokenAsync(user, Input.PhoneNumber);
-                HttpContext.Session.SetString("OTP", token);
-                HttpContext.Session.SetString("OTPCreationTime", DateTimeOffset.Now.ToString("O"));
+                // var token = await _userManager.GenerateChangePhoneNumberTokenAsync(user, Input.PhoneNumber);
+                // HttpContext.Session.SetString("OTP", token);
+                // HttpContext.Session.SetString("OTPCreationTime", DateTimeOffset.Now.ToString("O"));
 
-                string sdt = "+84" + Input.PhoneNumber.Substring(1);
+                // string sdt = "+84" + Input.PhoneNumber.Substring(1);
 
-                await _sMSSenderService.SendSmsAsync(sdt, $"OTP: {token}");
-                StatusMessage = "Mã xác minh số điện thoại đã gửi. Vui lòng kiểm tra tin nhắn của bạn.";          
+                //await _sMSSenderService.SendSmsAsync(sdt, $"OTP: {token}");
+
+                // StatusMessage = "Mã xác minh số điện thoại đã gửi. Vui lòng kiểm tra tin nhắn của bạn.";
+                try
+                {
+                    var token = await _userManager.GenerateChangePhoneNumberTokenAsync(user, Input.PhoneNumber);
+                    HttpContext.Session.SetString("OTP", token);
+                    HttpContext.Session.SetString("OTPCreationTime", DateTimeOffset.Now.ToString("O"));
+
+                    string sdt = "+84" + Input.PhoneNumber.Substring(1);
+
+                    await _sMSSenderService.SendSmsAsync(sdt, $"OTP: {token}");
+
+                    StatusMessage = "Mã xác minh số điện thoại đã gửi. Vui lòng kiểm tra tin nhắn của bạn.";
+
+                }
+                catch (Exception ex)
+                {
+                    StatusMessage = "Error: Đây là chức năng thử nghiệm. Vui lòng nhập số điện thoại đã xác thực trên Twilio.";
+                }
             }
             else
-            StatusMessage = "Error: Bạn vừa nhập số điện thoại hiện tại. Vui lòng nhập số điện thoại mới để tiếp tục.";
+                StatusMessage = "Error: Bạn vừa nhập số điện thoại hiện tại. Vui lòng nhập số điện thoại mới để tiếp tục.";
         }
-      
-      
+
+
     }
 }
 //var userId = await _userManager.GetUserIdAsync(user);
