@@ -58,7 +58,7 @@ builder.Services.AddScoped<GioHangChiTietsController, GioHangChiTietsController>
 builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 builder.Services.AddScoped<IDanhGiaService, DanhGiaService>();
 //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://bazaizaiapi.azurewebsites.net/") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://bazaizaistoreapi.azurewebsites.net/") });
 //Thêm
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
 .AddEntityFrameworkStores<BazaizaiContext>()

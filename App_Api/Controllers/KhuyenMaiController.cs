@@ -2,6 +2,7 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -32,15 +33,14 @@ namespace App_Api.Controllers
 
         [HttpPost("Create-KhuyenMai")]
 
-        public async Task<IActionResult> CreateKhuyenMaiAsync(string id,string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, int loaiHinh, IFormFile formFile)
+        public async Task<IActionResult> CreateKhuyenMaiAsync(string id, string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, int loaiHinh, IFormFile formFile)
         {
             try
             {
-                string currentDirectory = Directory.GetCurrentDirectory();
-                string rootPath = Directory.GetParent(currentDirectory).FullName;
-                string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSale");
+                string azureSitePath = Environment.GetEnvironmentVariable("HOME");
+                string uploadDirectory = Path.Combine(azureSitePath, "site", "wwwroot", "AnhSale");
                 string MaTS;
-                if (repos.GetAll().Count() == null)
+                if (repos.GetAll().Count() == 0)
                 {
                     MaTS = "KM1";
                 }
@@ -67,10 +67,19 @@ namespace App_Api.Controllers
                         Quality = 80
                     };
 
-                    string fileName = Guid.NewGuid().ToString() +formFile.FileName;
+                    string fileName = Guid.NewGuid().ToString() + formFile.FileName;
                     string outputPath = Path.Combine(uploadDirectory, fileName);
                     using var outputStream = new FileStream(outputPath, FileMode.Create);
                     await image.SaveAsync(outputStream, encoder);
+
+                    var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
+                    var containerClient = blobServiceClient.GetBlobContainerClient("image");
+                    var blobClient = containerClient.GetBlobClient(fileName);
+
+                    using (var stream1 = formFile.OpenReadStream())
+                    {
+                        await blobClient.UploadAsync(stream1, true);
+                    }
                     KhuyenMai KhuyenMai = new KhuyenMai();
                     KhuyenMai.TenKhuyenMai = Ten;
                     KhuyenMai.MaKhuyenMai = MaTS;
@@ -134,7 +143,7 @@ namespace App_Api.Controllers
                 KhuyenMai.Url = fileName;
                 repos.EditItem(KhuyenMai);
             }
-            else 
+            else
             {
                 var KhuyenMai = await context.khuyenMais.FindAsync(id);
                 KhuyenMai.TenKhuyenMai = Ten;
@@ -150,14 +159,14 @@ namespace App_Api.Controllers
         [HttpPut("EditNoiImage")]
         public async Task<IActionResult> EditKhuyenMai(string id, string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, int loaiHinh)
         {
-                var KhuyenMai = await context.khuyenMais.FindAsync(id);
-                KhuyenMai.TenKhuyenMai = Ten;
-                KhuyenMai.TrangThai = trangThai;
-                KhuyenMai.NgayBatDau = ngayBD;
-                KhuyenMai.NgayKetThuc = ngayKT;
-                KhuyenMai.MucGiam = mucGiam;
-                KhuyenMai.LoaiHinhKM = loaiHinh;
-                repos.EditItem(KhuyenMai);
+            var KhuyenMai = await context.khuyenMais.FindAsync(id);
+            KhuyenMai.TenKhuyenMai = Ten;
+            KhuyenMai.TrangThai = trangThai;
+            KhuyenMai.NgayBatDau = ngayBD;
+            KhuyenMai.NgayKetThuc = ngayKT;
+            KhuyenMai.MucGiam = mucGiam;
+            KhuyenMai.LoaiHinhKM = loaiHinh;
+            repos.EditItem(KhuyenMai);
             return Ok();
         }
 

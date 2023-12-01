@@ -20,6 +20,12 @@ using App_View.Services;
 using App_Data.Repositories;
 using Google.Apis.PeopleService.v1.Data;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
+using System.Text;
+using Azure.Storage.Blobs;
+using Path = System.IO.Path;
+using System.Drawing.Imaging;
+using Microsoft.AspNetCore.Http;
+using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -49,13 +55,53 @@ namespace App_View.Areas.Admin.Controllers
             {
                 ViewBag.ThongBao = TempData["ThongBao"].ToString();
             }
-            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("https://bazaizaiapi.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync());
+            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync());
+            var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
+            var containerClient = blobServiceClient.GetBlobContainerClient("image");
+            foreach (var item in KhuyenMais)
+            {
+                var blobClient = containerClient.GetBlobClient(item.Url);
+                if (blobClient.Name.ToString() == item.Url)
+                {
+                    var blobDownloadInfo = await blobClient.DownloadAsync();
+                    using (var streamReader = new StreamReader(blobDownloadInfo.Value.Content))
+                    {
+                        var imageBytes = Encoding.UTF8.GetBytes(await streamReader.ReadToEndAsync());
+                        item.Url = Convert.ToBase64String(imageBytes);
+                        string azureSitePath = Environment.GetEnvironmentVariable("HOME");
+                        string uploadDirectory = Path.Combine(azureSitePath, "site", "wwwroot", "wwwroot", "AnhSale");
+
+                        using var stream = new MemoryStream();
+                        IFormFile formFile = new FormFile(stream, 0, imageBytes.Length, item.Url, item.Url);
+                        formFile.CopyTo(stream);
+                        stream.Position = 0;
+
+                        using var image = SixLabors.ImageSharp.Image.Load(stream);
+
+                        image.Mutate(x => x.Resize(new ResizeOptions
+                        {
+                            Size = new SixLabors.ImageSharp.Size(1600, 1600),
+                            Mode = ResizeMode.Max
+                        }));
+
+                        var encoder = new JpegEncoder
+                        {
+                            Quality = 80
+                        };
+
+                        string outputPath = Path.Combine(uploadDirectory, item.Url);
+                        using var outputStream = new FileStream(outputPath, FileMode.Create);
+                        await image.SaveAsync(outputStream, encoder);
+                    }
+                }
+            }
+;
             return View(KhuyenMais);
         }
-        public async Task<IActionResult> LstSaleAsync(string trangThaiSale,string loaiHinhKM, string tenKM)
+        public async Task<IActionResult> LstSaleAsync(string trangThaiSale, string loaiHinhKM, string tenKM)
         {
-            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("https://bazaizaiapi.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync());
-            if(!string.IsNullOrEmpty(trangThaiSale))
+            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync());
+            if (!string.IsNullOrEmpty(trangThaiSale))
             {
                 KhuyenMais = KhuyenMais.Where(x => x.TrangThai == Convert.ToInt32(trangThaiSale)).ToList();
             }
@@ -67,7 +113,7 @@ namespace App_View.Areas.Admin.Controllers
             {
                 KhuyenMais = KhuyenMais.Where(x => x.TenKhuyenMai.ToUpper().Contains(tenKM.ToUpper())).ToList();
             }
-            return PartialView("_LstSale",KhuyenMais);
+            return PartialView("_LstSale", KhuyenMais);
         }
         // GET: Admin/KhuyenMais/Details/5
         public async Task<IActionResult> Details(string id)
@@ -126,7 +172,7 @@ namespace App_View.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(KhuyenMai khuyenMai,IFormFile formFile)
+        public async Task<IActionResult> Create(KhuyenMai khuyenMai, IFormFile formFile)
         {
             khuyenMai.IdKhuyenMai = Guid.NewGuid().ToString();
             khuyenMai.TrangThai = 0;
@@ -161,24 +207,17 @@ namespace App_View.Areas.Admin.Controllers
             };
             try
             {
-                if (khuyenMai.TenKhuyenMai != null&& khuyenMai.NgayBatDau != null&& khuyenMai.NgayKetThuc != null&& khuyenMai.MucGiam != null && khuyenMai.LoaiHinhKM != null)
+                if (khuyenMai.TenKhuyenMai != null && khuyenMai.NgayBatDau != null && khuyenMai.NgayKetThuc != null && khuyenMai.MucGiam != null && khuyenMai.LoaiHinhKM != null)
                 {
 
                     using var content = new MultipartFormDataContent();
-                    //content.Add(new StringContent(khuyenMai.TrangThai.ToString()), "trangThai");
-                    //content.Add(new StringContent(khuyenMai.TenKhuyenMai), "Ten");
-                    //content.Add(new StringContent(khuyenMai.NgayBatDau.ToString()), "ngayBD");
-                    //content.Add(new StringContent(khuyenMai.NgayKetThuc.ToString()), "ngayKT");
-                    //content.Add(new StringContent(khuyenMai.LoaiHinhKM.ToString()), "loaiHinh");
-                    //content.Add(new StringContent(khuyenMai.PhamVi), "PhamVi");
-                    //content.Add(new StringContent(khuyenMai.MucGiam.ToString()), "mucGiam");
                     if (formFile != null && formFile.Length > 0)
                     {
 
                         var streamContent = new StreamContent(formFile.OpenReadStream());
                         streamContent.Headers.Add("Content-Type", formFile.ContentType);
                         content.Add(streamContent, "formFile", formFile.FileName);
-                        var response = await _httpClient.PostAsync($"https://bazaizaiapi.azurewebsites.net/api/KhuyenMai/Create-KhuyenMai?id={khuyenMai.IdKhuyenMai}&Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", content);
+                        var response = await _httpClient.PostAsync($"https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai/Create-KhuyenMai?id={khuyenMai.IdKhuyenMai}&Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", content);
                         if (response.IsSuccessStatusCode)
                         {
                             var lstUser = await _userManager.GetUsersInRoleAsync(ChucVuMacDinh.KhachHang.ToString());
@@ -189,7 +228,7 @@ namespace App_View.Areas.Admin.Controllers
                                 await _emailSender.SendEmailAsync(user.Email, "Khuyến mại 100%",
                                  htmlMessage);
                             }
-                         
+
                             return RedirectToAction("Index");
                         }
                         else
@@ -198,7 +237,8 @@ namespace App_View.Areas.Admin.Controllers
                             return BadRequest();
                         }
                     }
-                    else {
+                    else
+                    {
                         return View();
                     }
                 }
@@ -249,7 +289,7 @@ namespace App_View.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var khuyenMai = await _context.khuyenMais.FirstOrDefaultAsync(x=>x.IdKhuyenMai == id);
+            var khuyenMai = await _context.khuyenMais.FirstOrDefaultAsync(x => x.IdKhuyenMai == id);
             if (khuyenMai == null)
             {
                 return NotFound();
@@ -262,7 +302,7 @@ namespace App_View.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, KhuyenMai khuyenMai,IFormFile formFile)
+        public async Task<IActionResult> Edit(string id, KhuyenMai khuyenMai, IFormFile formFile)
         {
             ViewBag.ListLoaiHinh = new List<SelectListItem>
             {
@@ -292,39 +332,26 @@ namespace App_View.Areas.Admin.Controllers
                 new SelectListItem { Text = "95%", Value = "95" },
                 new SelectListItem { Text = "100%", Value = "100" }
             };
-   
 
-           if (khuyenMai.TenKhuyenMai != null&& khuyenMai.NgayBatDau != null&& khuyenMai.NgayKetThuc != null&& khuyenMai.MucGiam != null && khuyenMai.LoaiHinhKM != null)
+
+            if (khuyenMai.TenKhuyenMai != null && khuyenMai.NgayBatDau != null && khuyenMai.NgayKetThuc != null && khuyenMai.MucGiam != null && khuyenMai.LoaiHinhKM != null)
+            {
+
+                using var content = new MultipartFormDataContent();
+                //content.Add(new StringContent(khuyenMai.TrangThai.ToString()), "trangThai");
+                //content.Add(new StringContent(khuyenMai.TenKhuyenMai), "Ten");
+                //content.Add(new StringContent(khuyenMai.NgayBatDau.ToString()), "ngayBD");
+                //content.Add(new StringContent(khuyenMai.NgayKetThuc.ToString()), "ngayKT");
+                //content.Add(new StringContent(khuyenMai.LoaiHinhKM.ToString()), "loaiHinh");
+                //content.Add(new StringContent(khuyenMai.PhamVi), "PhamVi");
+                //content.Add(new StringContent(khuyenMai.MucGiam.ToString()), "mucGiam");
+                if (formFile != null && formFile.Length > 0)
                 {
 
-                    using var content = new MultipartFormDataContent();
-                    //content.Add(new StringContent(khuyenMai.TrangThai.ToString()), "trangThai");
-                    //content.Add(new StringContent(khuyenMai.TenKhuyenMai), "Ten");
-                    //content.Add(new StringContent(khuyenMai.NgayBatDau.ToString()), "ngayBD");
-                    //content.Add(new StringContent(khuyenMai.NgayKetThuc.ToString()), "ngayKT");
-                    //content.Add(new StringContent(khuyenMai.LoaiHinhKM.ToString()), "loaiHinh");
-                    //content.Add(new StringContent(khuyenMai.PhamVi), "PhamVi");
-                    //content.Add(new StringContent(khuyenMai.MucGiam.ToString()), "mucGiam");
-                    if (formFile != null && formFile.Length > 0)
-                    {
-
-                        var streamContent = new StreamContent(formFile.OpenReadStream());
-                        streamContent.Headers.Add("Content-Type", formFile.ContentType);
-                        content.Add(streamContent, "formFile", formFile.FileName);
-                        var response = await _httpClient.PutAsync($"https://bazaizaiapi.azurewebsites.net/api/KhuyenMai/{id}?Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", content);
-                        if (response.IsSuccessStatusCode)
-                        {
-                            return RedirectToAction("Index");
-                        }
-                        else
-                        {
-                            Console.WriteLine(response.StatusCode);
-                            return BadRequest();
-                        }
-                    }
-                    else {
-                    khuyenMai.IdKhuyenMai = id;
-                    var response = await _httpClient.PutAsync($"https://bazaizaiapi.azurewebsites.net/api/KhuyenMai/EditNoiImage?id={id}&Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", null);
+                    var streamContent = new StreamContent(formFile.OpenReadStream());
+                    streamContent.Headers.Add("Content-Type", formFile.ContentType);
+                    content.Add(streamContent, "formFile", formFile.FileName);
+                    var response = await _httpClient.PutAsync($"https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai/{id}?Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", content);
                     if (response.IsSuccessStatusCode)
                     {
                         return RedirectToAction("Index");
@@ -335,7 +362,21 @@ namespace App_View.Areas.Admin.Controllers
                         return BadRequest();
                     }
                 }
+                else
+                {
+                    khuyenMai.IdKhuyenMai = id;
+                    var response = await _httpClient.PutAsync($"https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai/EditNoiImage?id={id}&Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", null);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        Console.WriteLine(response.StatusCode);
+                        return BadRequest();
+                    }
                 }
+            }
             return View(khuyenMai);
         }
 
@@ -386,13 +427,13 @@ namespace App_View.Areas.Admin.Controllers
             var khuyenMai = _context.khuyenMais.Find(id);
             if (trangThai == (int)TrangThaiSale.BuocDung)
             {
-				if(khuyenMai.NgayKetThuc >= DateTime.Now)
-				{
+                if (khuyenMai.NgayKetThuc >= DateTime.Now)
+                {
 
-					khuyenMai.TrangThai = (int)TrangThaiSale.DangBatDau;
-				}
+                    khuyenMai.TrangThai = (int)TrangThaiSale.DangBatDau;
+                }
                 else return Json(new { success = false });
-			}
+            }
             else
             {
                 khuyenMai.TrangThai = (int)TrangThaiSale.BuocDung;
