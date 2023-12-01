@@ -8,5 +8,8 @@ namespace App_View.Models.ViewModels
         public int TrangThaiSale {get; set; }
         public double? GiaThucTe { get; set; }
         public int TrangThai { get; set; }
+        public string? IdThuongHieu { get; set; }
+        public string? IdLoaiGiay { get; set; }
+        public string? IdMauSac { get; set; }
     }
 }
