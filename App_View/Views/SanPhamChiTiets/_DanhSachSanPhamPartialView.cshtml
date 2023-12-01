@@ -47,7 +47,15 @@ else
                             </div>
                             <div class="product-m__name">
 
-                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham!.ToUpper()</a>
+                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp" data-tooltip="tooltip" data-placement="left" title="" data-original-title="@item.TenSanPham!.ToUpper()" style="
+    display: inline-block;
+    max-width: 213px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #333; 
+    text-decoration: none;
+">@item.TenSanPham!.ToUpper()</a>
                             </div>
                             <div class="gl-rating-style">
                                 @if (item.SoSao < 0.3)
@@ -143,7 +151,16 @@ else
                                 <span class="product-m__review">(@item.SoLanDanhGia)</span>
                             </div>
                             <div>
-                                <div style="color: #0d0f0d;border-radius: 8px;background: #d8e9d7;width: fit-content;padding: 0px 5px;margin: 6px 0px;border: 1px #f86666 solid;">@item.SoMauSac màu</div>
+                                @{ 
+                                    var lstMauSac = item.LstMauSac!.Select(ms => ms.Text).ToList();
+                                }
+                            <div class="lst_color" style="margin: 10px auto">
+                                @foreach (var ms in lstMauSac)
+                                {
+                                    <button style="background: @ms; height: 20px; width: 20px; border-radius: 50%"></button>
+                                }
+                            </div>
+                               
                                 @if (item.GiaMin == item.GiaMax)
                                 {
                                     <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
