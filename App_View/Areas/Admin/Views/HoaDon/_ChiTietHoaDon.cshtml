@@ -7,6 +7,7 @@
 @model HoaDon
 <head>
 	<link rel="stylesheet" type="text/css" href="~/Admin/css/print.css">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <div class="container">
 	<div class="row gutters">
@@ -20,9 +21,14 @@
 								<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
 									<div class="custom-actions-btns mb-5">
 		
-										<button class="btn btn-secondary" onclick="printModalContent()" id="printHoaDon">
+										<button class="btn btn-secondary" onclick="printModalContent()" id="printHoaDon" data-id="@Model.IdHoaDon">
 											<i class="icon-printer"></i> Print
 										</button>
+										@if (Model.TrangThaiGiaoHang == 0)
+										{
+											<button class="btn btn-danger m-r-5" onclick="HuyHoaDon()" id="HuyHoaDon">Hủy</button>
+										}
+
 									</div>
 								</div>
 							</div>
@@ -34,7 +40,7 @@
 								<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12" style="flex: 0 0 75%;max-width: 75%;">
 									<div class="invoice-details">
 										<address>
-											@(ViewBag.TTGH==null?"":ViewBag.TTGH)
+											@(ViewBag.TTGH == null ? "" : ViewBag.TTGH.DiaChi)
 										</address>
 									</div>
 								</div>
@@ -123,11 +129,11 @@
 													<td>
 														<p>
 															@string.Format("{0:N0}đ",ViewData["TONGTIEN"])<br>
-															@((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] == "") ? string.Format("{0:N0}đ", ViewData["TIENSHIP"]) : string.Format("{0:N0}đ", "0"))<br>
-															@((ViewData["TIENGIAM"] != null && ViewData["TIENGIAM"] == "") ? string.Format("{0:N0}đ", ViewData["TIENGIAM"]) : string.Format("{0:N0}đ","0"))
-															
+															@((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] != "") ? string.Format("{0:N0}đ", ViewData["TIENSHIP"]) : string.Format("{0:N0}đ", "0"))<br>
+															@((ViewData["TIENGIAM"] != null && ViewData["TIENGIAM"] != "") ? string.Format("{0:N0}đ", ViewData["TIENGIAM"]) : string.Format("{0:N0}đ", "0"))
+
 														</p>@{
-															var tongTien = Convert.ToDouble(ViewData["TONGTIEN"]) + Convert.ToDouble((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] == "") ? ViewData["TIENSHIP"] : "0") - Convert.ToDouble((ViewData["TIENSHIP"] != null && ViewData["TIENGIAM"] == "") ? ViewData["TIENGIAM"] : "0");
+															var tongTien = Convert.ToDouble(ViewData["TONGTIEN"]) + Convert.ToDouble((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] != "") ? ViewData["TIENSHIP"] : "0") - Convert.ToDouble((ViewData["TIENGIAM"] != null && ViewData["TIENGIAM"] != "") ? ViewData["TIENGIAM"] : "0");
 														}
 														<h5 class="text-success"><strong>@string.Format("{0:N0}đ",tongTien)</strong></h5>
 													</td>
@@ -152,6 +158,7 @@
 <script>
     function printModalContent() {
         document.getElementById("printHoaDon").style.display = "none";
+		document.getElementById("HuyHoaDon").style.display = "none";
 		var printWindow = window.frames["print_frame"];
         var contentToPrint = $("#invoiceDetailContent").html();
 
@@ -161,6 +168,51 @@
         
         printWindow.print();
         document.getElementById("printHoaDon").style.display = "block";
-
+		document.getElementById("HuyHoaDon").style.display = "block";
     }
+	function HuyHoaDon() {
+
+		Swal.fire({
+			title: 'Xác nhận hủy đơn?',
+			text: 'Bạn có chắc muốn hủy đơn hàng này không?',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonText: 'Có',
+			cancelButtonText: 'Không'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				var idHD = $('#printHoaDon').data('id');
+				$.ajax({
+					type: 'POST',
+					url: "@Url.Action("XacNhanHuy", "TrangThaiGiaoHang")",
+					data: { id: idHD },
+					success: function (result) {
+						Swal.fire({
+							icon: 'success',
+							title: 'Hủy thành công!',
+							showConfirmButton: false,
+							timer: 1500
+						});
+						setTimeout(function () {
+							location.reload();
+						}, 1500);
+					},
+					error: function (error) {
+
+						console.error('Error updating status:', error);
+
+						Swal.fire({
+							icon: 'error',
+							title: 'Đã xảy ra lỗi!',
+							text: 'Vui lòng thử lại sau.',
+							showConfirmButton: false,
+							timer: 1500
+						});
+					}
+				});
+			} else {
+				Swal.fire('Hủy bỏ', 'Hành động hủy hóa đơn đã được hủy.', 'info');
+			}
+		});
+	}
 </script>
