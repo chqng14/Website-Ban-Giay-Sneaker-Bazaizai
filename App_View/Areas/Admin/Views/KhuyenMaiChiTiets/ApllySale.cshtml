@@ -20,29 +20,69 @@
 
 
 <div class="card" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
-    <div class="card-body" style="flex-shrink: 0; z-index: 1; background-color: lightgreen; padding: 15px;">
+    <div class="card-body" style="flex-shrink: 0; z-index: 1; background-color: #ffeedb; padding: 15px;">
         
-        <div class="col-lg-4 text-right flex" style="max-width: max-content; display:flex;flex-direction: row;position:sticky;top:0; z-index: 1;">
-            <select class="custom-select" aria-label="Large select example" id="selectSale">
+        <div class="row">
+            <select class="custom-select" aria-label="Large select example" id="selectSale" style="display:none">
                 @foreach (var item in (SelectList)ViewData["IdSale"])
                 {
-
                     <option value="@item.Value">@item.Text</option>
                 }
             </select>
-            <button id="applySaleButton" class="btn btn-primary" style="margin-left:15px">
-                <i class="anticon anticon-plus-circle m-r-5"></i>
-                <span>Add sale</span>
-            </button>
-            
-        </div>
-        <div id="swapContainer" class="form-row">
-        </div>
+            <div class="col-4" style="margin-top: 10px" id="thuonghieu">
+                <label class="font-weight-semibold">
+                    <span> Thương hiệu</span>
+                </label>
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-trademark mr-1"></i>
+                    <select id="idThuongHieu" class="select2-active w-100" onchange="timKiem()">
+                        <option value="">Thương Hiệu</option>
+                        @foreach (var item in (SelectList)ViewData["IdThuongHieu"]!)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-4" style="margin-top: 10px" id="loaigiay">
+                <label class="font-weight-semibold">Loại giầy</label>
+                <div class="d-flex align-items-center">
+                    <i class="fab fa-magento mr-1"></i>
+                    <select id="idLoaiGiay" class="select2-active w-100" onchange="timKiem()">
+                        <option value="">Loại giày</option>
+                        @foreach (var item in (SelectList)ViewData["IdLoaiGiay"]!)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="col-4" style="margin-top: 10px" id="mausac">
+                <label class="font-weight-semibold">Màu Sắc</label>
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-palette mr-1"></i>
+                    <select id="idMauSac" class="select2-active w-100" onchange="timKiem()">
+                        <option value="">Màu sắc</option>
+                        @foreach (var item in (SelectList)ViewData["IdMauSac"]!)
+                        {
+                            <option value="@item.Value">@item.Text</option>
+                        }
+                    </select>
+                </div>
+            </div>
 
+        </div>
+        <div id="swapContainer" class="form-row" style="background-color:#ffeedb">
+        </div>
+        <button id="applySaleButton" class="btn btn-primary" style="float:right">
+            <i class="anticon anticon-plus-circle m-r-5"></i>
+            <span>Add sale</span>
+        </button>
     </div>
     <div class="col-sm-12 " id="sanPham" style="overflow: auto; flex-grow: 1;">
        
     </div>
+  
 </div>
 
 
@@ -116,7 +156,7 @@
         $.ajax({
             url: "@Url.Action("viewSanPhamFilter", "KhuyenMaiChiTiets")",
             type: "GET",
-            data: { id: selectedValue },
+            data: { id: selectedValue, idThuongHieu:"", idLoaiGiay:"", idMauSac:"" },
             success: function (partialViewHtml) {
                 $('#preloader').hide();
                 document.getElementById('sanPham').innerHTML = partialViewHtml;
@@ -126,7 +166,26 @@
             }
         });
     }
-   
+    function timKiem() {
+        var idThuongHieu = document.getElementById('idThuongHieu').value;
+        var idMauSac = document.getElementById('idMauSac').value;
+        var idLoaiGiay = document.getElementById('idLoaiGiay').value;
+        var select = document.getElementById('selectSale');
+        var selectValue = select.value;
+        $('#preloader').show();
+        $.ajax({
+            url: "@Url.Action("viewSanPhamFilter", "KhuyenMaiChiTiets")",
+            type: "GET",
+            data: { id: selectValue, idThuongHieu: idThuongHieu, idLoaiGiay: idLoaiGiay, idMauSac: idMauSac},
+            success: function (partialViewHtml) {
+                $('#preloader').hide();
+                document.getElementById('sanPham').innerHTML = partialViewHtml;
+            },
+            error: function () {
+                console.error('Failed to load partial view.');
+            }
+        });
+    }
 
 </script>
                 @section Scripts {

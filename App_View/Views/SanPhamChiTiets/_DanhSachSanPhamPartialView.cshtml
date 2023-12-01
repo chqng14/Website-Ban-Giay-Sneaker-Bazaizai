@@ -1,11 +1,4 @@
-﻿@using App_View.IServices;
-@using App_View.Services;
-@model App_Data.ViewModels.FilterViewModel.FilterDataVM
-@inject IDanhGiaService _DanhGiaService
-@{
-    _DanhGiaService = new DanhGiaService();
-
-}
+﻿@model App_Data.ViewModels.FilterViewModel.FilterDataVM
 @if (Model.Items!.Count() == 0)
 {
 
@@ -20,8 +13,8 @@
                             <div class="empty__wrap">
 
                                 <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: -60px; height: 300px; width: 100%; background-repeat: no-repeat; background-size: contain; background-position: center; background-image: url('https://www.beevidhya.com/assets/images/no_result.gif');">
-                                        <span style="margin-top: 380px">Không tìm thấy sản phẩm!!!</span>
-                                        <a class="nav-link btn--e-white-brand-shadow" href="/sanphamchitiets">XÓA BỘ LỌC</a>
+                                    <span style="margin-top: 380px">Không tìm thấy sản phẩm!!!</span>
+                                    <a class="nav-link btn--e-white-brand-shadow" href="/sanphamchitiets">XÓA BỘ LỌC</a>
                                 </div>
                             </div>
                         </div>
@@ -38,8 +31,6 @@ else
         <div class="row is-grid-active">
             @foreach (var item in Model.Items!)
             {
-                var TongSoDanhGia = await _DanhGiaService.GetTongSoDanhGia(item.IdChiTietSp);
-                var SaoTb = await _DanhGiaService.GetSoSaoTB(item.IdChiTietSp);
                 <div class="col-lg-3 col-md-4 col-sm-6">
                     <div class="product-m">
                         <div class="product-m__thumb" data-id="@item.IdChiTietSp">
@@ -56,14 +47,18 @@ else
                             </div>
                             <div class="product-m__name">
 
-                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
+                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp" data-tooltip="tooltip" data-placement="left" title="" data-original-title="@item.TenSanPham!.ToUpper()" style="
+    display: inline-block;
+    max-width: 213px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #333; 
+    text-decoration: none;
+">@item.TenSanPham!.ToUpper()</a>
                             </div>
                             <div class="gl-rating-style">
-                                @*<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-
-                                <span class="product-m__review">(@item.SoLanDanhGia)</span>*@
-
-                                @if (SaoTb < 0.3)
+                                @if (item.SoSao < 0.3)
                                 {
 
                                     <i class="far fa-star"></i>
@@ -72,7 +67,7 @@ else
                                     <i class="far fa-star"></i>
                                     <i class="far fa-star"></i>
                                 }
-                                else if (SaoTb < 0.8)
+                                else if (item.SoSao < 0.8)
                                 {
                                     <i class="fas fa-star-half-alt"></i>
                                     <i class="far fa-star"></i>
@@ -80,7 +75,7 @@ else
                                     <i class="far fa-star"></i>
                                     <i class="far fa-star"></i>
                                 }
-                                else if (SaoTb < 1.3)
+                                else if (item.SoSao < 1.3)
                                 {
                                     <i class="fas fa-star"></i>
                                     <i class="far fa-star"></i>
@@ -88,7 +83,7 @@ else
                                     <i class="far fa-star"></i>
                                     <i class="far fa-star"></i>
                                 }
-                                else if (SaoTb < 1.8)
+                                else if (item.SoSao < 1.8)
                                 {
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star-half-alt"></i>
@@ -96,7 +91,7 @@ else
                                     <i class="far fa-star"></i>
                                     <i class="far fa-star"></i>
                                 }
-                                else if (SaoTb < 2.3)
+                                else if (item.SoSao < 2.3)
                                 {
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
@@ -104,7 +99,7 @@ else
                                     <i class="far fa-star"></i>
                                     <i class="far fa-star"></i>
                                 }
-                                else if (SaoTb < 2.8)
+                                else if (item.SoSao < 2.8)
                                 {
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
@@ -112,7 +107,7 @@ else
                                     <i class="far fa-star"></i>
                                     <i class="far fa-star"></i>
                                 }
-                                else if (SaoTb < 3.3)
+                                else if (item.SoSao < 3.3)
                                 {
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
@@ -120,7 +115,7 @@ else
                                     <i class="far fa-star"></i>
                                     <i class="far fa-star"></i>
                                 }
-                                else if (SaoTb < 3.8)
+                                else if (item.SoSao < 3.8)
                                 {
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
@@ -128,7 +123,7 @@ else
                                     <i class="fas fa-star-half-alt"></i>
                                     <i class="far fa-star"></i>
                                 }
-                                else if (SaoTb < 4.3)
+                                else if (item.SoSao < 4.3)
                                 {
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
@@ -137,7 +132,7 @@ else
                                     <i class="far fa-star"></i>
                                 }
 
-                                else if (SaoTb < 4.8)
+                                else if (item.SoSao < 4.8)
                                 {
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
@@ -153,18 +148,29 @@ else
                                     <i class="fas fa-star"></i>
                                     <i class="fas fa-star"></i>
                                 }
-                                <span class="product-m__review">(@TongSoDanhGia)</span>
+                                <span class="product-m__review">(@item.SoLanDanhGia)</span>
                             </div>
-                            <span style="color: orangered; margin-bottom: 10px">@item.SoMauSac màu</span>
-                            @if (item.GiaMin == item.GiaMax)
-                            {
-                                <div class="product-m__price" style="color: red">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
+                            <div>
+                                @{ 
+                                    var lstMauSac = item.LstMauSac!.Select(ms => ms.Text).ToList();
+                                }
+                            <div class="lst_color" style="margin: 10px auto">
+                                @foreach (var ms in lstMauSac)
+                                {
+                                    <button style="background: @ms; height: 20px; width: 20px; border-radius: 50%"></button>
+                                }
+                            </div>
+                               
+                                @if (item.GiaMin == item.GiaMax)
+                                {
+                                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
 
-                            }
-                            else
-                            {
-                                <div class="product-m__price" style="color: red">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
-                            }
+                                }
+                                else
+                                {
+                                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
+                                }
+                            </div>
                             <div class="product-m__hover">
                                 <div class="product-m__preview-description">
 
@@ -172,8 +178,8 @@ else
                                 </div>
                                 @*<div class="product-m__wishlist">
 
-                                        <a class="far fa-heart" href="#" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"></a>
-                                    </div>*@
+                <a class="far fa-heart" href="#" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"></a>
+            </div>*@
                             </div>
                         </div>
                     </div>
@@ -245,6 +251,10 @@ else
                 return $(this).closest('.list__content').find('span').text()
             }).get();
 
+            var lstRating = $('.rating__check input[type="checkbox"]:checked').map(function () {
+                return $(this).val()
+            }).get();
+
             var data = {};
             $('#s-price').find("input, select, textarea").each(function () {
 
@@ -270,6 +280,8 @@ else
                 LstMauSac: lstMauSac,
                 lstKichCo: lstKichCo,
                 TrangHienTai: trangHienTai,
+                LstRating: lstRating,
+                Sort: $('#select_price').val(),
                 ...data
             };
 
@@ -311,67 +323,73 @@ else
     });
 
     function changePage(direction) {
-            const brandParam = new URLSearchParams(window.location.search).get("brand");
-            $('.preloader').addClass('is-active');
+        const brandParam = new URLSearchParams(window.location.search).get("brand");
+        $('.preloader').addClass('is-active');
 
-            var trangHienTai = parseInt($(".shop-p__pagination li.is-active a").text());
-            var newTrangHienTai = trangHienTai + direction;
+        var trangHienTai = parseInt($(".shop-p__pagination li.is-active a").text());
+        var newTrangHienTai = trangHienTai + direction;
 
-            var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
-                return $(this).attr('id');
-            }).get();
+        var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
+            return $(this).attr('id');
+        }).get();
 
-            var lstMauSac = $('.lst-mausac input[type="checkbox"]:checked').map(function () {
-                return $(this).attr('id');
-            }).get();
+        var lstMauSac = $('.lst-mausac input[type="checkbox"]:checked').map(function () {
+            return $(this).attr('id');
+        }).get();
 
-            var lstTheLoai = $('.lst-theloai input[type="checkbox"]:checked').map(function () {
-                return $(this).closest('.list__content').find('span').text();
-            }).get();
+        var lstTheLoai = $('.lst-theloai input[type="checkbox"]:checked').map(function () {
+            return $(this).closest('.list__content').find('span').text();
+        }).get();
 
-            var data = {};
-            $('#s-price').find("input, select, textarea").each(function () {
-                var fieldType = $(this).attr("type");
-                var fieldName = $(this).attr("name");
-                var fieldValue;
+        var lstRating = $('.rating__check input[type="checkbox"]:checked').map(function () {
+            return $(this).val()
+        }).get();
 
-                if (fieldType === "checkbox" || fieldType === "radio") {
-                    fieldValue = $(this).is(":checked");
-                } else {
-                    fieldValue = $(this).val();
-                    if (!fieldValue) {
-                        fieldValue = 0;
-                    }
+        var data = {};
+        $('#s-price').find("input, select, textarea").each(function () {
+            var fieldType = $(this).attr("type");
+            var fieldName = $(this).attr("name");
+            var fieldValue;
+
+            if (fieldType === "checkbox" || fieldType === "radio") {
+                fieldValue = $(this).is(":checked");
+            } else {
+                fieldValue = $(this).val();
+                if (!fieldValue) {
+                    fieldValue = 0;
                 }
+            }
 
-                data[fieldName] = fieldValue;
-            });
+            data[fieldName] = fieldValue;
+        });
 
-            var filterdata = {
-                LstTheLoai: lstTheLoai,
-                LstMauSac: lstMauSac,
-                lstKichCo: lstKichCo,
-                TrangHienTai: newTrangHienTai,
-                ...data
-            };
+        var filterdata = {
+            LstTheLoai: lstTheLoai,
+            LstMauSac: lstMauSac,
+            lstKichCo: lstKichCo,
+            TrangHienTai: newTrangHienTai,
+            LstRating: lstRating,
+            Sort: $('#select_price').val(),
+            ...data
+        };
 
-            $.ajax({
-                url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
-                type: 'POST',
-                data: JSON.stringify(filterdata),
-                contentType: 'application/json',
-                success: function (result) {
-                    $('#body-ds').empty().html(result);
-                    $('.preloader').removeClass('is-active');
-                    isTaskRuning = false;
-                },
-                error: function (xhr, status, error) {
-                    isTaskRuning = false;
-                    console.log(xhr.responseText);
-                    console.log(status);
-                    console.log(error);
-                    console.log(xhr);
-                }
-            });
-        }
+        $.ajax({
+            url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+            type: 'POST',
+            data: JSON.stringify(filterdata),
+            contentType: 'application/json',
+            success: function (result) {
+                $('#body-ds').empty().html(result);
+                $('.preloader').removeClass('is-active');
+                isTaskRuning = false;
+            },
+            error: function (xhr, status, error) {
+                isTaskRuning = false;
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    }
 </script>

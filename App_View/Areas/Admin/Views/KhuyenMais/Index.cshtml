@@ -9,7 +9,7 @@
 
 
 <p>
-    <a class="btn btn-primary " asp-action="Create">Tạo Chương Trình Khuyến Mãi</a>
+    <a class="btn btn-primary " asp-action="Create">Tạo Chương Trình Khuyến Mại</a>
 </p>
 <link rel="stylesheet" type="text/css" href="~/Admin/css/SaleIndex.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -27,13 +27,13 @@
 }
 <div class="container">
     <div style="display:flex;flex-direction:row;gap:10px;margin-bottom: 10px;">
-        <select class="form-control" id="loaiKhuyenMai" onchange="timKiem()">
+        <select class="form-control1" id="loaiKhuyenMai" onchange="timKiem()">
             <option selected value="">Loại hình khuyến mại</option>
             <option value="0">Khuyến mại đồng giá</option>
             <option value="1">Khuyến mại giảm giá</option>
         </select>
 
-        <select class="form-control" id="trangThai" onchange="timKiem()">
+        <select class="form-control1" id="trangThai" onchange="timKiem()">
             <option selected value="">Tất cả</option>
             <option value="1">Hoạt động</option>
             <option value="0">Không hoạt động</option>
@@ -44,7 +44,7 @@
     <div class="search">
         <div class="search-box">
             <button class="btn-search"><i class="fas fa-search"></i></button>
-            <input type="text" class="input-search" id="tenKhuyenMai" placeholder="Tên khuyến mãi..." oninput="timKiem()">
+            <input type="text" class="input-search" id="tenKhuyenMai" placeholder="Tên khuyến mại..." oninput="timKiem()">
         </div>
     </div>
     <div class="row" id="row">

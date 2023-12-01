@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace App_View.Controllers
 {
-    [Authorize] 
+    [Authorize]
     public class DanhGiaController : Controller
     {
 
@@ -22,8 +22,8 @@ namespace App_View.Controllers
             _signInManager = signInManager;
             _danhGiaService = danhGiaService;
         }
-       
-      
+
+
         //public ActionResult AddDanhGia()
         //{
         //    return View();
@@ -32,18 +32,23 @@ namespace App_View.Controllers
         [HttpPost]
         public async Task<IActionResult> AddDanhGia(DanhGia danhgia)
         {
+            var listdanhgia = await _danhGiaService.GetDanhGiaById(danhgia.IdDanhGia);
+            if (listdanhgia != null)
+            {
+                return Json(new { mess = "Bạn đã đánh giá sản phẩm này rồi!" });
+            }
             var user = await _userManager.GetUserAsync(User);
             danhgia.IdNguoiDung = await _userManager.GetUserIdAsync(user);
             danhgia.ParentId = null;
             await _danhGiaService.CreateDanhGia(danhgia);
             string[] parts = danhgia.IdDanhGia.Split('*');
-            var idHoaDon= parts[1];
-            return RedirectToAction("DetailHoaDonOnline", "DonHang", new { idHoaDon = idHoaDon });
+            var idHoaDon = parts[1];
+            return Json(new { iddanhgia = danhgia.IdSanPhamChiTiet });
         }
 
 
 
-        
+
 
     }
 }

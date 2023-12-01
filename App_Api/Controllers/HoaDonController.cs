@@ -6,12 +6,14 @@ using App_Data.ViewModels.DanhGia;
 using App_Data.ViewModels.HoaDon;
 using App_Data.ViewModels.HoaDonChiTietDTO;
 using AutoMapper;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -258,11 +260,13 @@ namespace App_Api.Controllers
         }
 
         [HttpPut]
-        public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, int TrangThaiGiaoHang, string? Lido)
+        public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, string? idNguoiDung, int TrangThaiGiaoHang, string? Lido, DateTime? ngayCapNhatGanNhat)
         {
             var hoadon = _hoaDon.GetHoaDonUpdate().FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            hoadon.IdNguoiSuaGanNhat = idNguoiDung;
             hoadon.TrangThaiGiaoHang = TrangThaiGiaoHang;
             hoadon.LiDoHuy = Lido;
+            hoadon.NgayCapNhatGanNhat = ngayCapNhatGanNhat;
             return _hoaDon.EditBill(hoadon);
         }
 

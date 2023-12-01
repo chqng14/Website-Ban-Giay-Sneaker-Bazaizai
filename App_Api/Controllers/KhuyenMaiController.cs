@@ -40,7 +40,7 @@ namespace App_Api.Controllers
                 string rootPath = Directory.GetParent(currentDirectory).FullName;
                 string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSale");
                 string MaTS;
-                if (repos.GetAll().Count() == null)
+                if (repos.GetAll().Count() == 0)
                 {
                     MaTS = "KM1";
                 }

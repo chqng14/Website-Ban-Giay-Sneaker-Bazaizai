@@ -58,6 +58,10 @@
     .editable-soluong .edit-soluong {
         display: none;
     }
+
+    .swal2-title {
+        font-family: 'Arial', sans-serif; /* Chọn font bạn muốn sử dụng cho alert */
+    }
 </style>
 <div class="w-100 row m-b-10">
     <div class="col-lg-8">
@@ -252,6 +256,7 @@
 </table>
 
 <script>
+    $(document).off('click', '#export-relatedProducts');
     $(document).on('click', '#export-relatedProducts', function () {
         var danhSachId = $('.item:checked').map(function () {
             return $(this).closest('.checkbox').attr('data-id')
@@ -281,6 +286,28 @@
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
 
+                $.ajax({
+                    url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
+                    type: 'GET',
+                    data: {
+                        "sumGuid": keyProduct,
+                        "mauSac": $('#filterMauSac').val(),
+                        "size": $('#filterSize').val(),
+                    },
+                    success: function (result) {
+                        $('#exampleModal .modal-body').fadeOut(450, function () {
+                            $('#exampleModal .modal-body').html(result);
+
+                            $('#exampleModal .modal-body').fadeIn(450);
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
             },
             error: function (xhr, status, error) {
                 console.log(xhr.responseText);
@@ -510,6 +537,7 @@
         var selectedProducts = [];
 
         $('#btnUpdate').on('click', function () {
+            selectedProducts = [];
             $('#data-table tbody input[type="checkbox"].item:checked').each(function () {
                 var row = $(this).closest('tr');
                 var idSanPham = row.find('.checkbox').data('id');
@@ -596,7 +624,6 @@
                     console.log(selectedProducts);
                     selectedProducts = [];
                 } else if (result.dismiss === Swal.DismissReason.cancel) {
-                    // Xử lý khi người dùng nhấp vào "Hủy bỏ"
                     Swal.fire('Đã hủy bỏ', 'Hành động không được thực hiện.', 'error');
                 }
             });
@@ -636,16 +663,23 @@
                 if (!drawEvent || !drawEvent.draw || !drawEvent.draw.length) {
                     $('#data-table').on('draw.dt', function () {
                         $(".formatPrice-table").each(function () {
-                            var autoNumeric = new AutoNumeric(this, {
-                                decimalCharacter: ".",
-                                digitGroupSeparator: ",",
-                                decimalPlaces: 0,
-                                currencySymbol: " ₫",
-                                currencySymbolPlacement: "s",
-                                minimumValue: 0,
-                                maximumValue: 99999999
-                            });
+                            var hasAutoNumeric = $(this).data("hasAutoNumeric");
+
+                            if (!hasAutoNumeric) {
+                                var autoNumeric = new AutoNumeric(this, {
+                                    decimalCharacter: ".",
+                                    digitGroupSeparator: ",",
+                                    decimalPlaces: 0,
+                                    currencySymbol: " ₫",
+                                    currencySymbolPlacement: "s",
+                                    minimumValue: 0,
+                                    maximumValue: 99999999
+                                });
+
+                                $(this).data("hasAutoNumeric", true);
+                            }
                         });
+
                     });
                 }
             }
@@ -694,6 +728,7 @@
             });
         }
 
+        $('#data-table tbody').off('click', 'input[type="checkbox"].item');
         $('#data-table tbody').on('click', 'input[type="checkbox"].item', function () {
             var row = $(this).closest('tr');
             var checkbox = $(this);
@@ -719,6 +754,7 @@
             return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value);
         }
 
+        $('#data-table tbody').off('change', 'input[type="checkbox"].item');
         $('#data-table tbody').on('change', 'input[type="checkbox"].item', function () {
             var atLeastOneChecked = $('tbody .item:checked').length > 0;
             atLeastOneChecked ? $('#showActions').removeClass('d-none') : $('#showActions').addClass('d-none')

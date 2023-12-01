@@ -146,11 +146,11 @@ namespace App_View.Controllers
                         GiaBan = item.GiaBan,
                         TrangThai = (int)TrangThaiHoaDonChiTiet.ChuaThanhToan
                     });
-                    var sanphamupdate = new SanPhamSoLuongDTO()
-                    {
-                        IdChiTietSanPham = item.IdSanPhamCT,
-                        SoLuong = (int)item.SoLuong
-                    };
+                    //var sanphamupdate = new SanPhamSoLuongDTO()
+                    //{
+                    //    IdChiTietSanPham = item.IdSanPhamCT,
+                    //    SoLuong = (int)item.SoLuong
+                    //};
                     var sanPhamTest = new SanPhamTest()
                     {
                         TenThuongHieu = item.TenThuongHieu,
@@ -162,8 +162,7 @@ namespace App_View.Controllers
                     };
                     spList.Add(sanPhamTest);
                     await gioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
-                    var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
-                    await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
+                    //await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                 }
                 var hoadontest = new HoaDonTest()
                 {
@@ -284,11 +283,11 @@ namespace App_View.Controllers
                         GiaBan = item.GiaBan,
                         TrangThai = (int)TrangThaiHoaDonChiTiet.ChuaThanhToan
                     });
-                    var sanphamupdate = new SanPhamSoLuongDTO()
-                    {
-                        IdChiTietSanPham = item.IdSanPhamCT,
-                        SoLuong = (int)item.SoLuong
-                    };
+                    //var sanphamupdate = new SanPhamSoLuongDTO()
+                    //{
+                    //    IdChiTietSanPham = item.IdSanPhamCT,
+                    //    SoLuong = (int)item.SoLuong
+                    //};
                     var sanPhamTest = new SanPhamTest()
                     {
                         TenThuongHieu = item.TenThuongHieu,
@@ -299,8 +298,7 @@ namespace App_View.Controllers
                         GiaBan = item.GiaBan
                     };
                     spList.Add(sanPhamTest);
-                    var product = await _sanPhamChiTietService.GetByKeyAsync(item.IdSanPhamCT);
-                    await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
+                    //await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
                 }
                 var hoadontest = new HoaDonTest()
                 {

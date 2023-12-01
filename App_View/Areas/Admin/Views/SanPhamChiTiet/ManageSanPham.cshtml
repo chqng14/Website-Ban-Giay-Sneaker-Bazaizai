@@ -71,7 +71,6 @@
     .swal2-title {
         font-family: 'Arial', sans-serif; /* Chọn font bạn muốn sử dụng cho alert */
     }
-
 </style>
 
 <div class="modal fade" id="cauHinh" data-backdrop="static">
@@ -325,7 +324,7 @@
                   </button>
               </div>
               <div class="toast-body">
-                  Một vài thực thể dữ liệu chưa được nhập/chọn.
+                  Một vài trường dữ liệu chưa được nhập/chọn.
                   Vui lòng nhập/chọn các trường cần thiết để tiếp tục!
               </div>
           </div>`
@@ -338,11 +337,12 @@
         }
 
         Swal.fire({
-            title: 'Bạn có muốn cấu hình giá trị mặc định cho các biến thể không?',
+            title: 'Thông báo?',
+            text: 'Bạn có muốn cấu hình giá trị mặc định cho các biến thể không?',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Có',
-            cancelButtonText: 'Bỏ qua',
+            cancelButtonText: 'Bỏ qua cấu hình',
             customClass: {
                 confirmButton: 'custom-alert',
                 cancelButton: 'custom-alert',
@@ -371,6 +371,27 @@
     }
 
     $(document).on('change', '#ChonAnh', function () {
+        if (this.files.length > 6) {
+            var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                    <div class="toast-header">
+                        <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                        <strong class="mr-auto">Thông báo</strong>
+                        <small>1 second ago</small>
+                        <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        Chỉ được chọn tối đa 6 ảnh!
+                    </div>
+                </div>`
+            $('#notification-toast').append(toastHTML)
+            $('#notification-toast .toast').toast('show');
+            setTimeout(function () {
+                $('#notification-toast .toast:first-child').remove();
+            }, 3000);
+            return
+        }
 
         $('.item_checkbox:checked').closest('.item-accordion').each((index, item) => {
 
@@ -440,10 +461,29 @@
                 }
                 this.files = "";
             });
-
-            $('.item_checkbox').prop('checked', false);
-            CheckConfirm();
         });
+
+        $('.item_checkbox').prop('checked', false);
+        CheckConfirm();
+        var toastHTML = `<div class="toast fade hide" data-delay="3000">
+             <div class="toast-header">
+                 <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                 <strong class="mr-auto">Bootstrap</strong>
+                 <small>1 second ago</small>
+                 <button type="button" class="ml-2 btn btn-tone close" data-dismiss="toast" aria-label="Close">
+                     <span aria-hidden="true">&times;</span>
+                 </button>
+             </div>
+             <div class="toast-body">
+                  Đã chọn ảnh cho phần tử đã chọn!
+             </div>
+     </div>`
+
+        $('#notification-toast').append(toastHTML)
+        $('#notification-toast .toast').toast('show');
+        setTimeout(function () {
+            $('#notification-toast .toast:first-child').remove();
+        }, 3000);
 
     })
 
@@ -772,16 +812,17 @@
 
     //itemTemplate
     const ItemTemplate = (index, isUpdate, idProduct, idcolor, idsize, Title, giaNhap, giaBan, soLuong, moTa, khoiLuong, message) => {
+        const isUpdateClass = isUpdate ? 'disabled' : '';
         return `
 <div class="card item-accordion" data-update="${isUpdate}" data-idproductdetail="${idProduct}">
-        <div class="card-header">
+        <div class="card-header border-bottom">
             <h5 class="card-title d-flex">
-                <div class="checkbox" data-id="${index}"><input id="check-item-${index}" onchange="CheckboxChange()" type="checkbox" class="item_checkbox"><label for="check-item-${index}" class="m-b-0"></label></div>
+                <div class="checkbox" data-id="${index}"><input id="check-item-${index}" onchange="CheckboxChange()" type="checkbox" ${isUpdateClass} class="item_checkbox"><label for="check-item-${index}" class="m-b-0"></label></div>
                 <a data-toggle="collapse" class="w-100 collapsed" data-IdMauSac="${idcolor}" data-IdKichCo="${idsize}"
                    href="#collapseOneBorderless${index}">
                     <span>${Title} ${message}</span>
                 </a>
-                <button class="btn btn-waring btnn-close">
+                <button class="btn btnn-close border-0">
                     <i class="anticon anticon-close"></i>
                 </button>
             </h5>
@@ -1127,8 +1168,34 @@
     //When file change
     $(document).on('change', '.fileInput', function () {
         const imageList = $(this).closest('.upload').find('.container-file');
+        const countImage = imageList.find('.wrapper-file').length;
         const key = imageList.closest('.collapse').attr('id');
-        debugger
+
+        if (this.files.length + countImage > 6) {
+            var toastHTML = `<div class="toast fade hide" data-delay="5000">
+        <div class="toast-header">
+            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+            <strong class="mr-auto">Thông báo</strong>
+            <small>1 second ago</small>
+            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            Chỉ được chọn tối đa 6 ảnh!
+            <br/>
+            S/P đang có ${countImage} ảnh. 
+            <br/>
+            Do vậy bạn chỉ có thể chọn tối đa ${6 - countImage} ảnh nữa!!!
+        </div>
+    </div>`
+            $('#notification-toast').append(toastHTML)
+            $('#notification-toast .toast').toast('show');
+            setTimeout(function () {
+                $('#notification-toast .toast:first-child').remove();
+            }, 5000);
+            return
+        }
 
         Array.from(this.files).map((file) => {
             if (file.type.startsWith("image")) {
@@ -1192,7 +1259,21 @@
         function processNextItem() {
             if (currentIndex >= items.length) {
                 if ($('.accordion').find($('.item-accordion')).length === 0) {
-                    setTimeout(() => window.location.reload(), 1000)
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: 'Quá trình cập nhật đã hoàn tất!',
+                        icon: 'success',
+                        showCancelButton: true,
+                        confirmButtonText: 'D/Sách tổng quan S/P',
+                        cancelButtonText: 'Ở lại màn hiện tại',
+                        allowOutsideClick: false,
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/Admin/SanPhamChiTiet/TongQuanSanPham'
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            window.location.reload();
+                        }
+                    });
                 }
                 $('#preloader').hide();
                 if (checkSS > 0) {

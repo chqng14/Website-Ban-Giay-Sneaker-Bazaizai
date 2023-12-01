@@ -4,12 +4,14 @@ using App_Data.ViewModels.DonHang;
 using App_Data.ViewModels.DonHangChiTiet;
 using App_Data.ViewModels.GioHangChiTiet;
 using App_Data.ViewModels.HoaDon;
+using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_View.IServices;
 using App_View.Models;
 using App_View.Models.Components;
 using App_View.Models.Order;
 using App_View.Services;
 using DocumentFormat.OpenXml.Spreadsheet;
+using Google.Apis.PeopleService.v1.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -124,15 +126,47 @@ namespace App_View.Controllers
         {
             var UserID = _userManager.GetUserId(User);
             var HoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            var ngayCapNhatGanNhat = DateTime.Now;
             if (HoaDon.LoaiThanhToan == "MOMO" && HoaDon.TrangThaiThanhToan == 1)
             {
-                //var mess = await ReFund(HoaDon.MaHoaDon, (double)HoaDon.TongTien, Lido);
-                await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, 5, Lido);
+                if (HoaDon.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.ChoXacNhan)
+                {
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.DaHuy, Lido, ngayCapNhatGanNhat);
+                    foreach (var item in HoaDon.SanPham)
+                    {
+                        var sanphamupdate = new SanPhamSoLuongDTO()
+                        {
+                            IdChiTietSanPham = item.IdSanPhamChiTiet,
+                            SoLuong = -(int)item.SoLuong
+                        };
+                        await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
+                    }
+                }
+                else
+                {
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.ChoHuy, Lido, ngayCapNhatGanNhat);
+                }
                 return Ok(new { idHoaDon = idHoaDon/*, mess = mess*/ });
             }
             else
             {
-                await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, 5, Lido);
+                if (HoaDon.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.ChoXacNhan)
+                {
+                    foreach (var item in HoaDon.SanPham)
+                    {
+                        var sanphamupdate = new SanPhamSoLuongDTO()
+                        {
+                            IdChiTietSanPham = item.IdSanPhamChiTiet,
+                            SoLuong = -(int)item.SoLuong
+                        };
+                        await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
+                    }
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.DaHuy, Lido, ngayCapNhatGanNhat);
+                }
+                else
+                {
+                    await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.ChoHuy, Lido, ngayCapNhatGanNhat);
+                }
                 return Ok(new { idHoaDon = idHoaDon });
             }
         }
@@ -186,19 +220,12 @@ namespace App_View.Controllers
             return RedirectToAction("ShowCartUser", "GioHangChiTiets");
         }
 
-        //public async Task<int> ReFund(string maHoaDon, double Tien, string Lido)
-        //{
-        //    var transID = SessionServices.GetIdFomSession(HttpContext.Session, "transID");
-        //    var model = new OrderInfoModel()
-        //    {
-        //        OrderId = maHoaDon,
-        //        Amount = Tien,
-        //        description = Lido,
-        //        transId = long.Parse(transID),
-        //    };
-        //    var response = await _momoService.Refund(model);
-        //    return response.ResultCode;
-        //}
+        public async Task<IActionResult> DanhGia(string idHoaDon)
+        {
+            var UserID = _userManager.GetUserId(User);
+            var HoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            return PartialView("_PatialDanhGia", HoaDon);
+        }
 
         public async Task<IActionResult> RePay(string idHoaDon)
         {

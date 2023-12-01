@@ -8,7 +8,9 @@ using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Math;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.VariantTypes;
 using Microsoft.EntityFrameworkCore;
 using OpenXmlPowerTools;
 using System;
@@ -24,11 +26,14 @@ namespace App_Data.Repositories
     {
 
         private readonly BazaizaiContext _context;
+        private readonly IDanhGiaRepo _danhGiaRespo;
         private readonly IMapper _mapper;
+
         public SanPhamChiTietRespo(IMapper mapper)
         {
-            _context = new BazaizaiContext();
             _mapper = mapper;
+            _danhGiaRespo = new DanhGiaRepo();
+            _context = new BazaizaiContext();
         }
         public async Task<bool> AddAsync(SanPhamChiTiet entity)
         {
@@ -82,14 +87,151 @@ namespace App_Data.Repositories
 
         public async Task<DanhSachGiayViewModel> GetDanhSachGiayViewModelAsync()
         {
-            var lstSanPhamChiTiet = await _context.sanPhamChiTiets
+            var dateTimeNow = DateTime.Now;
+            var query = _context.sanPhamChiTiets.AsQueryable();
+            var lstSPNoiBat = await query
+                  .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong && sp.NoiBat == true)
+                  .Include(it => it.Anh)
+                  .Include(it => it.SanPham)
+                  .Include(it => it.ThuongHieu)
+                  .Include(it => it.LoaiGiay)
+                  .ToListAsync();
+
+            var groupedResults = lstSPNoiBat
+                .GroupBy(gr =>
+                    new
+                    {
+                        gr.IdChatLieu,
+                        gr.IdSanPham,
+                        gr.IdThuongHieu,
+                        gr.IdXuatXu,
+                        gr.IdLoaiGiay,
+                        gr.IdKieuDeGiay,
+                    })
+                .ToList();
+
+            var lstSPNoiBatViewModels = groupedResults
+                .Select(gr => CreateItemShopViewModelAsync(gr))
+                .ToList();
+
+            var lstSPMoi = await query
+                .Where(sp => EF.Functions.DateDiffDay(sp.NgayTao, dateTimeNow) < 7 && sp.TrangThai == (int)TrangThaiCoBan.HoatDong)
+                .Include(it => it.Anh)
                 .Include(it => it.SanPham)
                 .Include(it => it.ThuongHieu)
-                .Include(it => it.KichCo)
-                .Include(it => it.Anh)
+                .Include(it => it.LoaiGiay)
                 .ToListAsync();
-            return _mapper.Map<DanhSachGiayViewModel>(lstSanPhamChiTiet);
+
+            groupedResults = lstSPMoi
+                .GroupBy(gr =>
+                    new
+                    {
+                        gr.IdChatLieu,
+                        gr.IdSanPham,
+                        gr.IdThuongHieu,
+                        gr.IdXuatXu,
+                        gr.IdLoaiGiay,
+                        gr.IdKieuDeGiay,
+                    })
+                .ToList();
+
+            var lstSPMoiViewModels = groupedResults
+                .Select(gr => CreateItemShopViewModelAsync(gr))
+                .ToList();
+
+            var lstBanChay = await query
+               .Where(sp => sp.SoLuongDaBan > 0 && sp.TrangThai == (int)TrangThaiCoBan.HoatDong)
+               .Include(it => it.Anh)
+               .Include(it => it.SanPham)
+               .Include(it => it.ThuongHieu)
+               .Include(it => it.LoaiGiay)
+               .ToListAsync();
+
+            groupedResults = lstBanChay
+               .GroupBy(gr =>
+                   new
+                   {
+                       gr.IdChatLieu,
+                       gr.IdSanPham,
+                       gr.IdThuongHieu,
+                       gr.IdXuatXu,
+                       gr.IdLoaiGiay,
+                       gr.IdKieuDeGiay,
+                   })
+               .Where(gr => gr.Sum(it => it.SoLuongDaBan) > 0)
+               .OrderByDescending(gr => gr.Sum(it => it.SoLuongDaBan))
+               .ToList();
+
+            var lstBanChayViewModels = groupedResults
+                .Select(gr => CreateItemShopViewModelAsync(gr))
+                .ToList();
+
+            var lstIDSPDanhGia = await _context.danhGias.Select(it => it.IdSanPhamChiTiet).Distinct().ToListAsync();
+            var lstDanhGia = await query
+               .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong && lstIDSPDanhGia.Contains(sp.IdChiTietSp))
+               .Include(it => it.Anh)
+               .Include(it => it.SanPham)
+               .Include(it => it.ThuongHieu)
+               .Include(it => it.LoaiGiay)
+               .Include(it => it.DanhGias)
+               .ToListAsync();
+
+            groupedResults = lstDanhGia
+               .GroupBy(gr =>
+                   new
+                   {
+                       gr.IdChatLieu,
+                       gr.IdSanPham,
+                       gr.IdThuongHieu,
+                       gr.IdXuatXu,
+                       gr.IdLoaiGiay,
+                       gr.IdKieuDeGiay,
+                   })
+               .OrderByDescending(gr => (double)Math.Round((double)gr.Sum(sp => sp.DanhGias!.Sum(dg => dg.SaoSp))! / gr.Sum(sp => sp.DanhGias.Count)))
+               .ToList();
+
+            var lstDanhGiaViewModels = groupedResults
+                .Select(gr => CreateItemShopViewModelAsync(gr))
+                .ToList();
+
+            return new DanhSachGiayViewModel()
+            {
+                LstSanPhamNoiBat = lstSPNoiBatViewModels,
+                LstSanPhamMoi = lstSPMoiViewModels,
+                LstBanChay = lstBanChayViewModels,
+                LstTopDanhGia = lstDanhGiaViewModels
+            };
         }
+
+        private ItemShopViewModel CreateItemShopViewModelAsync(IGrouping<object, SanPhamChiTiet> gr)
+        {
+            var firstItem = gr.First();
+            var grSp = _context
+                .sanPhamChiTiets
+                .Where(sp =>
+                sp.IdChatLieu == firstItem.IdChatLieu &&
+                sp.IdSanPham == firstItem.IdSanPham &&
+                sp.IdThuongHieu == firstItem.IdThuongHieu &&
+                sp.IdXuatXu == firstItem.IdXuatXu &&
+                sp.IdLoaiGiay == firstItem.IdLoaiGiay &&
+                sp.IdKieuDeGiay == firstItem.IdKieuDeGiay)
+                .ToList();
+            var listGia = grSp.Select(sp => sp.GiaThucTe).ToList();
+            return new ItemShopViewModel()
+            {
+                IdChiTietSp = firstItem.IdChiTietSp,
+                Anh = firstItem.Anh
+                    .Where(a => a.TrangThai == (int)TrangThaiCoBan.HoatDong)
+                    .OrderBy(a => a.NgayTao)
+                    .FirstOrDefault()?.Url,
+                TenSanPham = $"{firstItem.ThuongHieu.TenThuongHieu?.ToUpper()} {firstItem.SanPham.TenSanPham?.ToUpper()}",
+                ThuongHieu = firstItem.ThuongHieu.TenThuongHieu,
+                TheLoai = firstItem.LoaiGiay.TenLoaiGiay,
+                GiaMin = listGia.Min(),
+                GiaMax = listGia.Max()
+            };
+        }
+
 
         public async Task<IEnumerable<SanPhamChiTiet>> GetListAsync()
         {
@@ -186,7 +328,8 @@ namespace App_Data.Repositories
                 TheLoai = sp.LoaiGiay!.TenLoaiGiay,
                 KichCo = Convert.ToInt32(sp.KichCo.SoKichCo),
                 IdChiTietSp = sp.IdChiTietSp,
-                SoLanDanhGia = 32,
+                SoLanDanhGia = _danhGiaRespo.GetTongSoDanhGia(sp.IdChiTietSp!).Result,
+                SoSao = _danhGiaRespo.SoSaoTB(sp.IdChiTietSp!).Result,
                 TenSanPham = sp.SanPham!.TenSanPham,
                 ThuongHieu = sp.ThuongHieu.TenThuongHieu,
                 GiaThucTe = sp.GiaThucTe,
@@ -222,7 +365,8 @@ namespace App_Data.Repositories
                 TheLoai = sp.LoaiGiay.TenLoaiGiay,
                 KichCo = Convert.ToInt32(sp.KichCo.SoKichCo),
                 IdChiTietSp = sp.IdChiTietSp,
-                SoLanDanhGia = 32,
+                SoLanDanhGia = _danhGiaRespo.GetTongSoDanhGia(sp.IdChiTietSp!).Result,
+                SoSao = _danhGiaRespo.SoSaoTB(sp.IdChiTietSp!).Result,
                 TenSanPham = sp.SanPham!.TenSanPham,
                 ThuongHieu = sp.ThuongHieu.TenThuongHieu,
                 GiaThucTe = sp.GiaThucTe,
@@ -573,10 +717,67 @@ namespace App_Data.Repositories
 
                 return new FiltersVM()
                 {
-                    LstItemFilterMauSac = GetListItemFilter(data, sp => sp.MauSac.TenMauSac!),
+                    LstItemFilterMauSac = data
+                    .GroupBy(sp => sp.MauSac.TenMauSac)
+                    .Select(gr => new ItemFilter()
+                    {
+                        Ten = gr.Key,
+                        SoLuong = data
+                        .Where(sp => sp.MauSac.TenMauSac == gr.Key)
+                        .GroupBy(
+                          gr => new
+                          {
+                              gr.IdChatLieu,
+                              gr.IdSanPham,
+                              gr.IdLoaiGiay,
+                              gr.IdKieuDeGiay,
+                              gr.IdThuongHieu,
+                              gr.IdXuatXu,
+                          })
+                        .Count()
+                    })
+                    .ToList(),
                     LstItemFilterKichCo = GetListItemFilter(data, sp => sp.KichCo.SoKichCo.ToString()!).OrderBy(x => x.Ten).ToList(),
-                    LstItemFilterTheLoai = GetListItemFilter(data, sp => sp.LoaiGiay.TenLoaiGiay!),
-                    LstItemFilterThuongHieu = GetListItemFilter(data, sp => sp.ThuongHieu.TenThuongHieu!),
+                    LstItemFilterTheLoai = data
+                    .GroupBy(sp => sp.LoaiGiay.TenLoaiGiay)
+                    .Select(gr => new ItemFilter()
+                    {
+                        Ten = gr.Key,
+                        SoLuong = data
+                        .Where(sp => sp.LoaiGiay.TenLoaiGiay == gr.Key)
+                        .GroupBy(
+                          gr => new
+                          {
+                              gr.IdChatLieu,
+                              gr.IdSanPham,
+                              gr.IdLoaiGiay,
+                              gr.IdKieuDeGiay,
+                              gr.IdThuongHieu,
+                              gr.IdXuatXu,
+                          })
+                        .Count()
+                    })
+                    .ToList(),
+                    LstItemFilterThuongHieu = data
+                    .GroupBy(sp => sp.ThuongHieu.TenThuongHieu)
+                    .Select(gr => new ItemFilter()
+                    {
+                        Ten = gr.Key,
+                        SoLuong = data
+                        .Where(sp => sp.ThuongHieu.TenThuongHieu == gr.Key)
+                        .GroupBy(
+                          gr => new
+                          {
+                              gr.IdChatLieu,
+                              gr.IdSanPham,
+                              gr.IdLoaiGiay,
+                              gr.IdKieuDeGiay,
+                              gr.IdThuongHieu,
+                              gr.IdXuatXu,
+                          })
+                        .Count()
+                    })
+                    .ToList(),
                 };
             }
             catch (Exception ex)

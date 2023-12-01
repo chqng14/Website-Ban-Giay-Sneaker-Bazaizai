@@ -1,6 +1,7 @@
 ﻿using App_Data.Models;
 using App_Data.ViewModels.HoaDonChiTietDTO;
 using App_View.IServices;
+using Google.Apis.PeopleService.v1.Data;
 using System.Net.Http;
 using System.Net.Http.Json;
 
@@ -120,7 +121,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await httpClient.PutAsync("https://localhost:7038/api/HoaDon/HuyHoaDon?maHD=" + maHD +"&lyDoHuy="+lyDoHuy+"&idUser="+idUser,null );
+                var res = await httpClient.PutAsync("https://localhost:7038/api/HoaDon/HuyHoaDon?maHD=" + maHD +"&lyDoHuy="+lyDoHuy+"&idUser="+idUser, null );
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<List<HoaDonChiTiet>>();

@@ -44,15 +44,19 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label class="control-label">Loại hình khuyến mãi</label>
                         <select asp-for="LoaiHinhKM" class="form-control" asp-items="ViewBag.ListLoaiHinh" id="LoaiHinhKMSelect"></select>
                     </div>
 
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <label class="control-label">Mức giảm</label>
                         <select asp-for="MucGiam" class="form-control" asp-items="ViewBag.ListGiamGia" id="MucGiamSelect"></select>
                         <input type="text" asp-for="MucGiam" class="form-control" style="display: none" id="MucGiamInput">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label class="control-label">Trạng thái</label>
+                        <select asp-for="TrangThai" class="form-control" asp-items="ViewBag.TrangThai"></select>
                     </div>
                 </div>
                 <div class="form-row">
@@ -77,6 +81,14 @@
             document.getElementById('MucGiamSelect').style.display = 'block';
             document.getElementById('MucGiamInput').style.display = 'none';
         }
+        $('form').submit(function () {
+            var inputElement = document.getElementById('MucGiamInput');
+            if (document.getElementById('MucGiamInput').style.display === 'block' && inputElement.value.trim() !== '') {
+                document.getElementById('MucGiamSelect').disabled = true;
+            } else {
+                document.getElementById('MucGiamSelect').disabled = false;
+            }
+        });
     });
     document.getElementById('LoaiHinhKMSelect').addEventListener('change', function () {
         var selectedValue = this.value;
@@ -88,14 +100,7 @@
             document.getElementById('MucGiamInput').style.display = 'none';
         }
     });
-    document.querySelector('form').addEventListener('submit', function () {
-        var inputElement = document.getElementById('MucGiamInput');
-        if (inputElement.style.display === 'block') {
-            var inputValue = inputElement.value;
-            console.log("Giá trị từ input: " + inputValue);
-            document.getElementById('MucGiamSelect').value = inputValue;
-        }
-    });
+
     // Lắng nghe sự kiện "change" của trường nhập tệp tin
     document.getElementById('formFileInput').addEventListener('change', function (e) {
         var file = e.target.files[0]; // Lấy tệp tin đã chọn

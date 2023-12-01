@@ -160,6 +160,9 @@
     img {
         display: none;
     }
+    button {
+        display: none;
+    }
     body {
         margin-top: 20px;
         color: #2e323c;

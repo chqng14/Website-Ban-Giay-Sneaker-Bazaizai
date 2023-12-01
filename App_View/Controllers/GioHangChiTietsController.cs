@@ -175,11 +175,12 @@ namespace App_View.Controllers
                 else
                 {
                     var tongtien = giohang.Sum(c => c.GiaBan * c.SoLuong);
+                    SessionServices.SetIdToSession(HttpContext.Session, "TongTien", Convert.ToString(tongtien));
                     var thongTinGH = await thongTinGHServices.GetThongTinByIdUser(GetIdNguoiDung());
                     ViewData["ThongTinGH"] = thongTinGH;
                     var voucherNguoiDung = (await _voucherND.GetAllVoucherNguoiDungByID(GetIdNguoiDung())).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung && c.LoaiHinhUuDai == 2 && c.DieuKien <= tongtien).ToList();
                     ViewData["VoucherFreeShip"] = voucherNguoiDung;
-                    var voucher = (await _voucherND.GetAllVoucherNguoiDungByID(GetIdNguoiDung())).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung && c.LoaiHinhUuDai != 2 && c.DieuKien <= tongtien).ToList();
+                    var voucher = (await _voucherND.GetAllVoucherNguoiDungByID(GetIdNguoiDung())).Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung && c.LoaiHinhUuDai != 2 && c.DieuKien <= tongtien).OrderByDescending(c => c.LoaiHinhUuDai == 0 ? c.MucUuDai : (double)c.MucUuDai / tongtien).ToList();
                     ViewData["Voucher"] = voucher;
                     var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(giohang);
                     if (message.Any())

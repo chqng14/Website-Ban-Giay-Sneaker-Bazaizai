@@ -26,12 +26,16 @@ using App_Data.ViewModels.ThongTinGHDTO;
 using App_Data.ViewModels.HoaDon;
 using App_Data.DbContextt;
 using App_Data.ViewModels.SanPhamYeuThichDTO;
+using App_Data.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace App_Api.Helpers.Mapping
 {
     public class MappingProfiles : Profile
     {
         private readonly BazaizaiContext bazaizaiContext = new BazaizaiContext();
+        private readonly DanhGiaRepo _danhGiaRepo = new DanhGiaRepo();
         public MappingProfiles()
         {
             CreateMap<HoaDon, HoaDonDTO>();
@@ -210,8 +214,8 @@ namespace App_Api.Helpers.Mapping
                     )
                 ;
 
-            CreateMap<List<SanPhamChiTiet>, DanhSachGiayViewModel>()
-                .ConvertUsing<SanPhamChiTietToListItemViewModelConverter>();
+            //CreateMap<List<SanPhamChiTiet>, DanhSachGiayViewModel>()
+            //    .ConvertUsing<SanPhamChiTietToListItemViewModelConverter>();
 
             CreateMap<SanPhamChiTiet, SanPhamDanhSachViewModel>();
 
@@ -295,10 +299,6 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => src.GiaThucTe)
                     )
                 .ForMember(
-                        dest => dest.SoSao,
-                        opt => opt.MapFrom(src => 5)
-                    )
-                .ForMember(
                         dest => dest.ThuongHieu,
                         opt => opt.MapFrom(src => src.ThuongHieu.TenThuongHieu)
                     )
@@ -311,10 +311,6 @@ namespace App_Api.Helpers.Mapping
                         opt => opt.MapFrom(src => "Sản phẩm chính hãng")
                     )
                 .ForMember(
-                        dest => dest.SoLanDanhGia,
-                        opt => opt.MapFrom(src => 32)
-                    )
-                .ForMember(
                         dest => dest.TheLoai,
                         opt => opt.MapFrom(src => src.LoaiGiay.TenLoaiGiay)
                     )
@@ -325,6 +321,14 @@ namespace App_Api.Helpers.Mapping
                 .ForMember(
                         dest => dest.MauSac,
                         opt => opt.MapFrom(src => src.MauSac.TenMauSac)
+                    )
+                .ForMember(
+                        dest => dest.SoSao,
+                        opt => opt.MapFrom(src => _danhGiaRepo.SoSaoTB(src.IdChiTietSp!).Result)
+                    )
+                .ForMember(
+                        dest => dest.SoLanDanhGia,
+                        opt => opt.MapFrom(src => _danhGiaRepo.GetTongSoDanhGia(src.IdChiTietSp!).Result)
                     )
                 .ForMember(
                         dest => dest.GiaMin,
@@ -357,7 +361,7 @@ namespace App_Api.Helpers.Mapping
                         )
                     )
                  .ForMember(
-                        dest => dest.SoMauSac,
+                        dest => dest.LstMauSac,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
                         .Where(x =>
                         x.TrangThai == 0 &&
@@ -368,7 +372,13 @@ namespace App_Api.Helpers.Mapping
                         x.IdKieuDeGiay == src.IdKieuDeGiay &&
                         x.IdChatLieu == src.IdChatLieu
                         )
-                        .Select(sp => sp.IdMauSac).Distinct().Count()
+                        .Select(sp => new SelectListItem()
+                        {
+                            Text = sp.MauSac.TenMauSac,
+                            Value = sp.MauSac.IdMauSac!.ToString()
+                        })
+                        .Distinct()
+                        .ToList()
                         )
                     )
                 ;
