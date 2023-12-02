@@ -22,7 +22,7 @@ namespace App_View.Services
         {
             try
             {
-                string apiUrl = $"https://bazaizaiview.azurewebsites.net/api/DanhGia/AddDanhGia?IdDanhGia={danhGia.IdDanhGia}&BinhLuan={danhGia.BinhLuan}&ParentId={danhGia.ParentId}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}&MoTa={danhGia.MoTa}&ChatLuongSanPham={danhGia.ChatLuongSanPham}";
+                string apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/AddDanhGia?IdDanhGia={danhGia.IdDanhGia}&BinhLuan={danhGia.BinhLuan}&ParentId={danhGia.ParentId}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}&MoTa={danhGia.MoTa}&ChatLuongSanPham={danhGia.ChatLuongSanPham}";
                 var response = await _httpClient.PostAsync(apiUrl, null);
                 if (response.IsSuccessStatusCode)
                 {
@@ -43,7 +43,7 @@ namespace App_View.Services
         {
             try
             {
-                string apiUrl = $"https://bazaizaiview.azurewebsites.net/api/DanhGia/AddDanhGia?IdDanhGia={IdDanhGia}&BinhLuan={BinhLuan}&ParentId={ParentId}&SaoSp={SaoSp}&SaoVanChuyen={SaoVanChuyen}&IdNguoiDung={IdNguoiDung}&IdSanPhamChiTiet={IdSanPhamChiTiet}&MoTa={MoTa}&ChatLuongSanPham={ChatLuongSanPham}";
+                string apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/AddDanhGia?IdDanhGia={IdDanhGia}&BinhLuan={BinhLuan}&ParentId={ParentId}&SaoSp={SaoSp}&SaoVanChuyen={SaoVanChuyen}&IdNguoiDung={IdNguoiDung}&IdSanPhamChiTiet={IdSanPhamChiTiet}&MoTa={MoTa}&ChatLuongSanPham={ChatLuongSanPham}";
                 var response = await _httpClient.PostAsync(apiUrl, null);
                 if (response.IsSuccessStatusCode)
                 {
@@ -63,7 +63,7 @@ namespace App_View.Services
 
         public async Task<bool> DeleteDanhGia(string id)
         {
-            string apiUrl = $"https://bazaizaiview.azurewebsites.net/api/DanhGia/XoaDanhGia/{id}";
+            string apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/XoaDanhGia/{id}";
             try
             {
                 var response = await _httpClient.DeleteAsync(apiUrl);
@@ -78,7 +78,7 @@ namespace App_View.Services
 
         public async Task<List<DanhGia>> GetAllDanhGia()
         {
-            string apiUrl = "https://bazaizaiview.azurewebsites.net/api/DanhGia/GetAllDanhGia";
+            string apiUrl = "https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/GetAllDanhGia";
 
             try
             {
@@ -89,7 +89,7 @@ namespace App_View.Services
             {
                 return new List<DanhGia>();
             }
-            //string apiUrl = "https://bazaizaiview.azurewebsites.net/api/DanhGia/GetAllDanhGia";
+            //string apiUrl = "https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/GetAllDanhGia";
 
             //var response = await _httpClient.GetAsync(apiUrl);
             //string apiData = await response.Content.ReadAsStringAsync();       
@@ -99,7 +99,7 @@ namespace App_View.Services
 
         public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string Idchitietsp)
         {
-            string apiUrl = $"https://bazaizaiview.azurewebsites.net/api/DanhGia/GetListAsyncViewModel?idspchitiet={Idchitietsp}";
+            string apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/GetListAsyncViewModel?idspchitiet={Idchitietsp}";
             try
             {
                 var apiData = await _httpClient.GetStringAsync(apiUrl);
@@ -150,7 +150,7 @@ namespace App_View.Services
         }
         public async Task<DanhGia?> GetDanhGiaById(string id)
         {
-            string apiUrl = $"https://bazaizaiview.azurewebsites.net/api/DanhGia/GetDanhGiaById/{id}";
+            string apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/GetDanhGiaById/{id}";
             try
             {
                 var response = await _httpClient.GetAsync(apiUrl);
@@ -177,7 +177,7 @@ namespace App_View.Services
         {
             try
             {
-                string apiUrl = $"https://bazaizaiview.azurewebsites.net/api/DanhGia/ChinhSuaDanhGia?IdDanhGia={danhGia.IdDanhGia}&BinhLuan={danhGia.BinhLuan}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}";
+                string apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/ChinhSuaDanhGia?IdDanhGia={danhGia.IdDanhGia}&BinhLuan={danhGia.BinhLuan}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}";
 
                 var content = new StringContent(string.Empty);
 
@@ -205,7 +205,7 @@ namespace App_View.Services
 
         public async Task<List<DanhGiaResult>> TongSoDanhGiaCuaMoiSpChuaDuyet()
         {
-            string apiUrl = $"https://bazaizaiview.azurewebsites.net/api/DanhGia/GetTongSoDanhGiaCuaMoiSpChuaDuyet";
+            string apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/GetTongSoDanhGiaCuaMoiSpChuaDuyet";
 
             try
             {
@@ -219,7 +219,7 @@ namespace App_View.Services
         }
         public async Task<List<DanhGiaViewModel>> LstChiTietDanhGiaCuaMoiSpChuaDuyet(string idSanPham)
         {
-            string apiUrl = $"https://bazaizaiview.azurewebsites.net/api/DanhGia/GetLstChiTietDanhGiaCuaMoiSpChuaDuyet?idSanPham={idSanPham}";
+            string apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/GetLstChiTietDanhGiaCuaMoiSpChuaDuyet?idSanPham={idSanPham}";
 
             try
             {
@@ -237,7 +237,7 @@ namespace App_View.Services
         {
             try
             {
-                string apiUrl = $"https://bazaizaiview.azurewebsites.net/api/DanhGia/DuyetDanhGia?IdDanhGia={IdDanhGia}";
+                string apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/DuyetDanhGia?IdDanhGia={IdDanhGia}";
 
                 var content = new StringContent(string.Empty);
 
@@ -259,7 +259,7 @@ namespace App_View.Services
         }
         public async Task<int> GetTongSoDanhGia(string idspchitiet)
         {
-            string apiUrl = $"https://bazaizaiview.azurewebsites.net/api/DanhGia/GetTongSoDanhGia?idspchitiet={idspchitiet}";
+            string apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/GetTongSoDanhGia?idspchitiet={idspchitiet}";
 
             try
             {
@@ -273,7 +273,7 @@ namespace App_View.Services
         }
         public async Task<float> GetSoSaoTB(string IdProductChiTiet)
         {
-            string apiUrl = $"https://bazaizaiview.azurewebsites.net/api/DanhGia/GetSoSaoTB?idspchitiet={IdProductChiTiet}";
+            string apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/GetSoSaoTB?idspchitiet={IdProductChiTiet}";
 
             try
             {
@@ -288,7 +288,7 @@ namespace App_View.Services
 
         public async Task<DanhGiaViewModel?> GetViewModelByKeyAsync(string id)
         {
-            string apiUrl = $"https://bazaizaiview.azurewebsites.net/api/DanhGia/GetDanhGiaViewModelById/{id}";
+            string apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/GetDanhGiaViewModelById/{id}";
             try
             {
                 var response = await _httpClient.GetAsync(apiUrl);
