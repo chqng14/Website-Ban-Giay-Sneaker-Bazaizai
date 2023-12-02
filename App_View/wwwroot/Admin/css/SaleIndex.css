@@ -8,10 +8,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #130f40;
     font-family: 'Lato' !important;
     margin-bottom: 15px;
-    border-radius: 15px 15px 15px 15px
+    border-radius: 25px;
 }
 
 .search-box {
@@ -19,7 +18,17 @@
     height: fit-content;
     position: relative;
 }
-
+.form-control1 {
+    padding: 0.55rem 1rem;
+    height: auto;
+    color: #53535f;
+    border: 1px solid #edf2f9;
+    font-size: .875rem;
+    line-height: 1.5;
+    background-color: #3f87f5;
+    width: 100%;
+    color: #fff
+} 
 .input-search {
     height: 50px;
     width: 50px;
@@ -59,17 +68,17 @@
 }
 
     .btn-search:focus ~ .input-search {
-        width: 900px;
+        width: 1107px;
         border-radius: 0px;
-        background-color: transparent;
+        border-radius: 25px;
         border-bottom: 1px solid rgba(255,255,255,.5);
         transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
     }
 
 .input-search:focus {
-    width: 900px;
+    width: 1107px;
     border-radius: 0px;
-    background-color: transparent;
+    border-radius: 25px;
     border-bottom: 1px solid rgba(255,255,255,.5);
     transition: all 500ms cubic-bezier(0, 0.110, 0.35, 2);
 }
