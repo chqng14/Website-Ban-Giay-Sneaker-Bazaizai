@@ -20,11 +20,11 @@
                         <ul class="pd-breadcrumb__list">
                             <li class="has-separator">
 
-                                <a href="/">Trang chủ</a>
+                                <a href="/">TRANG CHỦ</a>
                             </li>
                             <li class="is-marked">
 
-                                <a href="/sanphamchitiets">Gian Hàng</a>
+                                <a href="/sanphamchitiets">GIAN HÀNG</a>
                             </li>
                         </ul>
                     </div>
@@ -57,34 +57,20 @@
                     </div>
                     <!--====== End - Product Detail ======-->
                 </div>
-                <div class="col-lg-7">
+                <div class="col-lg-7" style="margin-top: 55px">
 
                     <!--====== Product Right Side Details ======-->
                     <div class="pd-detail">
-                        <div>
+                        <div class="product-m__category">
 
-                            <span class="pd-detail__name">@Model.TenSanPham @Model.MauSac @Model.KichCo</span>
+                            <a>@Model.ThuongHieu</a>
                         </div>
                         <div>
-                            <div class="pd-detail__inline">
 
-                                <span class="pd-detail__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaKhuyenMai)</span>
-                                @if (Model.IsKhuyenMai)
-                                {
-                                    <span class="pd-detail__discount">(-@((int)Math.Round(Convert.ToDecimal((Model.GiaGoc - Model.GiaKhuyenMai) / Model.GiaGoc * 100)))%)</span><del class="pd-detail__del">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaGoc)</del>
-
-                                }
-
-                            </div>
+                            <span class="pd-detail__name">@Model.TenSanPham!.ToUpper()</span>
                         </div>
                         <div class="u-s-m-b-15">
                             <div class="pd-detail__rating gl-rating-style">
-                               @* <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-
-                                <span class="pd-detail__review u-s-m-l-4">
-
-                                    <a href="product-detail.html">@Model.SoLanDanhGia Đánh giá</a>
-                                </span>*@
                                 @if (SaoTb < 0.3)
                                 {
 
@@ -183,52 +169,11 @@
                         </div>
                         <div class="u-s-m-b-15">
                             <div class="pd-detail__inline">
-                                @if (@Model.SoLuongTon > 10)
-                                {
-                                    <span class="pd-detail__stock">Còn: @Model.SoLuongTon</span>
 
-                                }
-                                else
-                                {
-                                    <span class="pd-detail__left">Chỉ còn: @Model.SoLuongTon</span>
-                                }
+                                <span class="pd-detail__stock">@Model.LstMauSac!.Count màu</span>
+
                             </div>
                         </div>
-                        <div class="u-s-m-b-15">
-
-                            <span class="pd-detail__preview-desc">@Model.MoTaNgan</span>
-                        </div>
-                        <div class="u-s-m-b-15">
-                            <div class="pd-detail__inline">
-
-                                <span class="pd-detail__click-wrap">
-                                    @if (Model.IsYeuThich)
-                                    {
-                                        <a class="fas fa-heart u-s-m-r-6" style="color: red;" href="javascript:void(0);" id="removeToFavorite"></a>
-                                    }
-                                    else
-                                    {
-                                        <a class="far fa-heart u-s-m-r-6" href="javascript:void(0);" id="addToFavorite"></a>
-                                    }
-                                    <span>(@Model.SoLuotYeuThich) lượt yêu thích</span>
-                                </span>
-                                <form id="addToFavoriteForm" method="post" action="/SanPhamYeuThich/Create">
-                                    <input type="hidden" name="IdSanPhamChiTiet" value="@Model.IdChiTietSp" />
-                                </form>
-                            </div>
-                        </div>
-                        @*<div class="u-s-m-b-15">
-                                <div class="pd-detail__inline">
-
-                                    <span class="pd-detail__click-wrap">
-                                        <i class="far fa-envelope u-s-m-r-6"></i>
-
-                                        <a href="signin.html">Gửi mail cho tôi khi bạn muốn giảm giá.</a>
-
-                                        <span class="pd-detail__click-count">(20)</span>
-                                    </span>
-                                </div>
-                            </div>*@
                         <div class="u-s-m-b-15">
                             <ul class="pd-social-list">
                                 <li>
@@ -249,31 +194,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="u-s-m-b-15">
-                            <div class="pd-detail__form">
-                                <div class="pd-detail-inline-2">
-                                    <div class="u-s-m-b-15">
 
-                                        <!--====== Input Counter ======-->
-                                        <div class="input-counter">
-
-                                            <span class="input-counter__minus fas fa-minus"></span>
-
-                                            <input class="input-counter__text input-counter--text-primary-style" type="text" value="1" name="SoLuong" data-min="1" data-max="1000">
-
-                                            <span class="input-counter__plus fas fa-plus"></span>
-                                        </div>
-                                        <!--====== End - Input Counter ======-->
-                                        <!---== Input - Id Sản phẩm-->
-                                        <input value="@Model.IdChiTietSp" name="IdSanPhamCT" hidden />
-                                    </div>
-                                    <div class="u-s-m-b-15">
-
-                                        <button class="btn btn--e-brand-b-2 add-product">Thêm vào giỏ hàng</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="u-s-m-b-15">
 
                             <span class="pd-detail__label u-s-m-b-8">Chính sách sản phẩm:</span>
@@ -295,6 +216,14 @@
                                 </li>
                             </ul>
                         </div>
+
+                        <div class="u-s-m-b-15">
+                            <div class="pd-detail__form">
+                                <div class="pd-detail-inline-2">
+                                    <a class="btn btn--e-brand-b-2 add-product" href="/SanPhamChiTiets/Details/@Model.IdChiTietSp">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!--====== End - Product Right Side Details ======-->
                 </div>
@@ -302,7 +231,7 @@
         </div>
     </div>
 </div>
-<script>
+@*<script>
 
     $("#addToFavorite").on("click", function () {
         var data = {};
@@ -433,4 +362,4 @@
             }
         });
     })
-</script>
+</script>*@

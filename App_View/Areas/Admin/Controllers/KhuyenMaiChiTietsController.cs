@@ -23,6 +23,7 @@ using static App_Data.Repositories.TrangThai;
 using App_View.Models.ViewModels;
 using System.Security.Policy;
 using Org.BouncyCastle.Crypto;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -30,6 +31,7 @@ namespace App_View.Areas.Admin.Controllers
     public class KhuyenMaiChiTietsController : Controller
     {
         private readonly BazaizaiContext _context;
+
         private readonly IKhuyenMaiChiTietServices khuyenMaiChiTietServices;
         private readonly IKhuyenMaiServices _khuyenMaiServices;
         private readonly ISanPhamChiTietService sanPhamChiTietService;
@@ -215,7 +217,7 @@ namespace App_View.Areas.Admin.Controllers
             };
         }
         [HttpGet]
-        public async Task<IActionResult> ApllySale(string id)
+        public async Task<IActionResult> ApllySale(string id,string? idThuongHieu,string? idLoaiGiay,string? idMauSac)
         {
             try
             {
@@ -237,8 +239,17 @@ namespace App_View.Areas.Admin.Controllers
                         TempData["ThongBao"] = "Chương trình khuyến mại không hoạt động";
                         return RedirectToAction("Index", "KhuyenMais");
                     }
+                    if (sale.TrangThai == (int)TrangThaiSale.ChuaBatDau)
+                    {
+                        TempData["ThongBao"] = "Chương trình khuyến mại chưa bắt đầu";
+                        return RedirectToAction("Index", "KhuyenMais");
+                    }
                     ViewData["IdSale"] = new SelectList(_context.khuyenMais.Where(x => x.IdKhuyenMai == id), "IdKhuyenMai", "TenKhuyenMai");
                 }
+                ViewData["IdLoaiGiay"] = new SelectList(await sanPhamChiTietService.GetListModelLoaiGiayAsync(), "IdLoaiGiay", "TenLoaiGiay");
+                ViewData["IdMauSac"] = new SelectList(await sanPhamChiTietService.GetListModelMauSacAsync(), "IdMauSac", "TenMauSac");
+                ViewData["IdThuongHieu"] = new SelectList(await sanPhamChiTietService.GetListModelThuongHieuAsync(), "IdThuongHieu", "TenThuongHieu");
+
                 //.Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale|| x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale)
                 var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Where(x => (x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong).Select(item => CreateSanPhamDanhSachViewModel(item));
                 var sanPhamChiTietList = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
@@ -249,17 +260,35 @@ namespace App_View.Areas.Admin.Controllers
                     var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
                     var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
                     var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
+                    var thuongHieu = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).IdThuongHieu;
+                    var loaiGiay = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).IdLoaiGiay;
+                    var mauSac = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).IdMauSac;
                     var sanPhamSaleViewModel = new SanPhamSaleViewModel
                     {
                         SanPhamDanhSachView = pro,
                         TrangThaiSale = Convert.ToInt32(trangThaiSale),
                         TrangThai = Convert.ToInt32(trangThai),
-                        GiaThucTe = giaThucTe
+                        GiaThucTe = giaThucTe,
+                        IdThuongHieu = thuongHieu,
+                        IdMauSac =mauSac,
+                        IdLoaiGiay =loaiGiay
                     };
 
                     sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
                 }
                 var lstSpDuocApDungKhuyenMai = sanPhamSaleViewModelList.Where(x => (x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong);
+                if(idThuongHieu!=null && idThuongHieu!="")
+                {
+                    lstSpDuocApDungKhuyenMai = lstSpDuocApDungKhuyenMai.Where(x => x.IdThuongHieu == idThuongHieu);           
+                }
+                if (idLoaiGiay != null && idLoaiGiay != "")
+                {
+                    lstSpDuocApDungKhuyenMai = lstSpDuocApDungKhuyenMai.Where(x => x.IdLoaiGiay == idLoaiGiay);
+                }
+                if (idMauSac != null && idMauSac != "")
+                {
+                    lstSpDuocApDungKhuyenMai = lstSpDuocApDungKhuyenMai.Where(x => x.IdMauSac == idMauSac);
+                }
                 return View(lstSpDuocApDungKhuyenMai);
             }
             catch (Exception)
@@ -364,7 +393,7 @@ namespace App_View.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> viewSanPhamFilter(string id)
+        public async Task<IActionResult> viewSanPhamFilter(string id, string? idThuongHieu, string? idLoaiGiay, string? idMauSac)
         {
             var km = (await _khuyenMaiServices.GetAllKhuyenMai()).FirstOrDefault(x => x.IdKhuyenMai == id);
             var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Where(x => (x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong).Select(item => CreateSanPhamDanhSachViewModel(item));
@@ -376,17 +405,35 @@ namespace App_View.Areas.Admin.Controllers
                 var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
                 var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
                 var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
+                var thuongHieu = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).IdThuongHieu;
+                var loaiGiay = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).IdLoaiGiay;
+                var mauSac = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).IdMauSac;
                 var sanPhamSaleViewModel = new SanPhamSaleViewModel
                 {
                     SanPhamDanhSachView = pro,
                     TrangThaiSale = Convert.ToInt32(trangThaiSale),
                     TrangThai = Convert.ToInt32(trangThai),
-                    GiaThucTe = giaThucTe
+                    GiaThucTe = giaThucTe,
+                    IdThuongHieu = thuongHieu,
+                    IdMauSac = mauSac,
+                    IdLoaiGiay = loaiGiay
                 };
 
                 sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
             }
             var lstSpDuocApDungKhuyenMai = sanPhamSaleViewModelList.Where(x => (x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong);
+            if (idThuongHieu != null && idThuongHieu != "")
+            {
+                lstSpDuocApDungKhuyenMai = lstSpDuocApDungKhuyenMai.Where(x => x.IdThuongHieu == idThuongHieu);
+            }
+            if (idLoaiGiay != null && idLoaiGiay != "")
+            {
+                lstSpDuocApDungKhuyenMai = lstSpDuocApDungKhuyenMai.Where(x => x.IdLoaiGiay == idLoaiGiay);
+            }
+            if (idMauSac != null && idMauSac != "")
+            {
+                lstSpDuocApDungKhuyenMai = lstSpDuocApDungKhuyenMai.Where(x => x.IdMauSac == idMauSac);
+            }
             if (km.LoaiHinhKM==0)
             {
                 var kmDongGia =  lstSpDuocApDungKhuyenMai.Where(x => x.SanPhamDanhSachView.GiaBan > Convert.ToDouble(km.MucGiam));

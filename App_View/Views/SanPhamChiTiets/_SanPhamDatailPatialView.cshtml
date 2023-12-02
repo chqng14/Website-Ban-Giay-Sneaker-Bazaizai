@@ -1,0 +1,397 @@
+﻿@using App_View.IServices;
+@using App_View.Services;
+@model App_Data.ViewModels.SanPhamChiTietViewModel.ItemDetailViewModel
+@inject IDanhGiaService _DanhGiaService
+@{
+    _DanhGiaService = new DanhGiaService();
+    var TongSoDanhGia = await _DanhGiaService.GetTongSoDanhGia(@Model.IdChiTietSp!);
+    var SaoTb = await _DanhGiaService.GetSoSaoTB(@Model.IdChiTietSp);
+
+}
+
+<input hidden name="IdChiTietSp" value="@Model.IdChiTietSp" />
+<div class="u-s-p-t-30">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5">
+
+                <!--====== Product Breadcrumb ======-->
+                <div class="pd-breadcrumb u-s-m-b-30">
+                    <ul class="pd-breadcrumb__list">
+                        <li class="has-separator">
+
+                            <a href="/">TRANG CHỦ</a>
+                        </li>
+                        <li class="has-separator">
+
+                            <a href="/sanphamchitiets">GIAN HÀNG</a>
+                        </li>
+                        <li class="is-marked">
+
+                            <a>@Model.TenSanPham!.ToUpper()</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--====== End - Product Breadcrumb ======-->
+                <!--====== Product Detail Zoom ======-->
+                <div class="pd u-s-m-b-30">
+                    <div class="slider-fouc pd-wrap">
+                        <div id="pd-o-initiate">
+                            @foreach (var item in Model.DanhSachAnh!)
+                            {
+                                <div class="pd-o-img-wrap" data-src="/AnhSanPham/@item">
+
+                                    <img class="u-img-fluid" src="/AnhSanPham/@item" data-zoom-image="/AnhSanPham/@item" alt="">
+                                </div>
+                            }
+
+                        </div>
+
+                        <span class="pd-text">Click for larger zoom</span>
+                    </div>
+                    <div class="u-s-m-t-15">
+                        <div class="slider-fouc">
+                            <div id="pd-o-thumbnail">
+                                @foreach (var item in Model.DanhSachAnh)
+                                {
+                                    <div>
+
+                                        <img class="u-img-fluid" src="/AnhSanPham/@item" alt="" style="height: 84px">
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--====== End - Product Detail Zoom ======-->
+            </div>
+            <div class="col-lg-7">
+
+                <!--====== Product Right Side Details ======-->
+                <div class="pd-detail">
+                    <div>
+
+                        <span class="pd-detail__name">@Model.TenSanPham.ToUpper()</span>
+                    </div>
+                    <div>
+                        <div class="pd-detail__inline">
+                            <span class="pd-detail__price">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaKhuyenMai)</span>
+                            @if (Model.IsKhuyenMai)
+                            {
+                                <span class="pd-detail__discount">(-@((int)Math.Round(Convert.ToDecimal((Model.GiaGoc - Model.GiaKhuyenMai) / Model.GiaGoc * 100)))%)</span><del class="pd-detail__del">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", Model.GiaGoc)</del>
+
+                            }
+                        </div>
+                    </div>
+                    <div class="u-s-m-b-15">
+                        <div class="pd-detail__rating gl-rating-style">
+                            @if (SaoTb < 0.3)
+                            {
+
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                            }
+                            else if (SaoTb < 0.8)
+                            {
+                                <i class="fas fa-star-half-alt"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                            }
+                            else if (SaoTb < 1.3)
+                            {
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                            }
+                            else if (SaoTb < 1.8)
+                            {
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                            }
+                            else if (SaoTb < 2.3)
+                            {
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                            }
+                            else if (SaoTb < 2.8)
+                            {
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                            }
+                            else if (SaoTb < 3.3)
+                            {
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                            }
+                            else if (SaoTb < 3.8)
+                            {
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <i class="far fa-star"></i>
+                            }
+                            else if (SaoTb < 4.3)
+                            {
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            }
+
+                            else if (SaoTb < 4.8)
+                            {
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            }
+                            else
+                            {
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            }
+                            @*<i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>*@
+
+                            <span class="pd-detail__review u-s-m-l-4">
+
+                                <a data-click-scroll="#view-review">@TongSoDanhGia Đánh giá</a>
+
+                            </span>
+                        </div>
+                    </div>
+                    <div class="u-s-m-b-15">
+                        <div class="pd-detail__inline">
+
+                            @if (@Model.SoLuongTon > 10)
+                            {
+                                <span class="pd-detail__stock">Còn: @Model.SoLuongTon</span>
+
+                            }
+                            else
+                            {
+                                @if (@Model.SoLuongTon > 0)
+                                {
+                                    <span class="pd-detail__left">Chỉ còn: @Model.SoLuongTon</span>
+
+                                }
+                                else
+                                {
+                                    <span class="pd-detail__left">Hết hàng</span>
+
+                                }
+
+                            }
+
+                        </div>
+                    </div>
+                    <div class="u-s-m-b-15">
+
+                        <span class="pd-detail__preview-desc">@Model.MoTaNgan.</span>
+                    </div>
+                    <div class="u-s-m-b-15">
+                        <div class="pd-detail__inline">
+
+                            <span class="pd-detail__click-wrap">
+                                @if (Model.IsYeuThich)
+                                {
+                                    <a class="fas fa-heart u-s-m-r-6" style="color: red;" href="javascript:void(0);" onclick="RemoveToFavorite()"></a>
+                                }
+                                else
+                                {
+                                    <a class="far fa-heart u-s-m-r-6" href="javascript:void(0);" onclick="AddToFavorite()"></a>
+                                }
+                                <span>(@Model.SoLuotYeuThich) lượt yêu thích</span>
+                            </span>
+                            <form id="addToFavoriteForm" method="post" action="/SanPhamYeuThich/Create">
+                                <input type="hidden" name="IdSanPhamChiTiet" value="@Model.IdChiTietSp" />
+                            </form>
+                        </div>
+                    </div>
+                    <div class="u-s-m-b-15">
+                        <ul class="pd-social-list">
+                            <li>
+
+                                <a class="s-fb--color-hover" href="#"><i class="fab fa-facebook-f"></i></a>
+                            </li>
+                            <li>
+
+                                <a class="s-tw--color-hover" href="#"><i class="fab fa-twitter"></i></a>
+                            </li>
+                            <li>
+
+                                <a class="s-insta--color-hover" href="#"><i class="fab fa-instagram"></i></a>
+                            </li>
+                            <li>
+
+                                <a class="s-wa--color-hover" href="#"><i class="fab fa-whatsapp"></i></a>
+                            </li>
+                            <li>
+
+                                <a class="s-gplus--color-hover" href="#"><i class="fab fa-google-plus-g"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="u-s-m-b-15">
+                        <div class="pd-detail__form" method="post">
+                            <div class="u-s-m-b-15">
+
+                                <span class="pd-detail__label u-s-m-b-8">Màu sắc:</span>
+                                <div class="pd-detail__color">
+                                    @foreach (var item in Model.LstMauSac!)
+                                    {
+                                        if (Model.MauSac == item)
+                                        {
+                                            if (item == "white")
+                                            {
+                                                <div class="color__radio">
+
+                                                    <input type="radio" id="@item" value="@item" name="color" checked>
+
+                                                    <label class="color__radio-label" for="@item" style="background-color: #8af0ff"></label>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="color__radio">
+
+                                                    <input type="radio" id="@item" value="@item" name="color" checked>
+
+                                                    <label class="color__radio-label" for="@item" style="background-color: @item"></label>
+                                                </div>
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            if (item == "white")
+                                            {
+                                                <div class="color__radio">
+
+                                                    <input type="radio" id="@item" value="@item" name="color">
+
+                                                    <label class="color__radio-label" for="@item" style="background-color: #8af0ff"></label>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="color__radio">
+
+                                                    <input type="radio" id="@item" value="@item" name="color">
+
+                                                    <label class="color__radio-label" for="@item" style="background-color: @item"></label>
+                                                </div>
+                                            }
+
+                                        }
+
+                                    }
+                                </div>
+                            </div>
+                            <div class="u-s-m-b-15">
+
+                                <span class="pd-detail__label u-s-m-b-8">Kích cỡ:</span>
+                                <div class="pd-detail__size">
+                                    @foreach (var item in Model.LstKichThuoc!)
+                                    {
+                                        if (Model.KichCo == item)
+                                        {
+                                            <div class="size__radio">
+
+                                                <input type="radio" id="@item" value="@item" name="size" checked>
+
+                                                <label class="size__radio-label" for="@item">@item</label>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="size__radio">
+
+                                                <input type="radio" id="@item" value="@item" name="size">
+
+                                                <label class="size__radio-label" for="@item">@item</label>
+                                            </div>
+                                        }
+
+                                    }
+                                </div>
+                            </div>
+                            <div class="pd-detail-inline-2">
+                                <div class="u-s-m-b-15">
+
+                                    <!--====== Input Counter ======-->
+                                    <div class="input-counter">
+
+                                        <span class="input-counter__minus fas fa-minus"></span>
+
+                                        <input class="input-counter__text input-counter--text-primary-style" type="number" max="@Model.SoLuongTon" value="1" name="SoLuong" data-min="1" data-max="@Model.SoLuongTon">
+
+                                        <span class="input-counter__plus fas fa-plus"></span>
+                                    </div>
+                                    <!--====== End - Input Counter ======-->
+                                </div>
+                                <input value="@Model.IdChiTietSp" name="IdSanPhamCT" hidden />
+                                <div class="u-s-m-b-15">
+                                    @if (Model.SoLuongTon > 0)
+                                    {
+                                        <button data-modal="modal" data-modal-id="#add-to-cart" class="btn btn--e-brand-b-2">Thêm vào giỏ hàng</button>
+                                    }
+                                    else
+                                    {
+                                        <button data-modal="modal" data-modal-id="#add-to-cart" class="btn btn--e-brand-b-2" style="background: red" disabled>Đã hết hàng!</button>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="u-s-m-b-15">
+
+                        <span class="pd-detail__label u-s-m-b-8">Chính sách sản phẩm:</span>
+                        <ul class="pd-detail__policy-list">
+                            <li>
+                                <i class="fas fa-check-circle u-s-m-r-8"></i>
+
+                                <span>Bảo vệ quyền lợi người dùng.</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle u-s-m-r-8"></i>
+
+                                <span>Hoàn trả đầy đủ nếu bạn không nhận được đơn đặt hàng của mình.</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-check-circle u-s-m-r-8"></i>
+
+                                <span>Chấp nhận đổi trả nếu sản phẩm không như mô tả.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!--====== End - Product Right Side Details ======-->
+            </div>
+        </div>
+    </div>
+</div>

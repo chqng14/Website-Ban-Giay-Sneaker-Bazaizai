@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,7 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
         public string? MoTaNgan { get; set; }
         public string? MoTaSanPham { get; set; }
         public double? GiaKhuyenMai { get; set; }
-        public int SoMauSac { get; set; }
+        public List<SelectListItem>? LstMauSac { get; set; }
         public string? Anh { get; set; }
         public bool IsKhuyenMai { get; set; }
         public bool IsNoiBat { get; set; }

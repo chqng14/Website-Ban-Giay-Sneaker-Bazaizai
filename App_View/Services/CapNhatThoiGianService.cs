@@ -28,6 +28,9 @@ namespace App_View.Services
             var ngaySale = _dbContext.khuyenMais
                 .Where(p => p.NgayKetThuc >= DateTime.Now && p.TrangThai == (int)TrangThaiSale.HetHan && p.TrangThai != (int)TrangThaiSale.BuocDung)
                 .ToList();
+            var saleChuaBatDau = _dbContext.khuyenMais
+               .Where(p => p.NgayBatDau >= DateTime.Now)
+               .ToList();
             foreach (var sale in ngayKetThucSale)
             {
                 sale.TrangThai = (int)TrangThaiSale.HetHan;
@@ -35,6 +38,10 @@ namespace App_View.Services
             foreach (var sale in ngaySale)
             {
                 sale.TrangThai = (int)TrangThaiSale.DangBatDau;
+            }
+            foreach (var sale in saleChuaBatDau)
+            {
+                sale.TrangThai = (int)TrangThaiSale.ChuaBatDau;
             }
             _dbContext.SaveChanges();
         }
