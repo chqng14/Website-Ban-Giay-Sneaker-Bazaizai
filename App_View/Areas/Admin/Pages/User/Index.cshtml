@@ -46,8 +46,16 @@
 
                 </td>
                 <td>
-                   @* <a class="btn btn-success btn-sm" asp-page="./AddRole" asp asp-route-id="@user.Id">Cập nhật</a>*@
                     <a class="btn btn-primary" asp-page="./SetPassword" asp asp-route-id="@user.Id">Đặt mật khẩu</a>
+                    @if (user.LockoutEnd != null && user.LockoutEnd < DateTimeOffset.UtcNow)
+                    {
+                        <a class="btn btn-primary" asp-page="./KhoaTaiKhoan" asp asp-route-id="@user.Id">Mở tài khoản</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-primary" asp-page="./KhoaTaiKhoan" asp asp-route-id="@user.Id">Khóa tài khoản</a>
+                    }
+                   
                 </td>
             </tr>
         }

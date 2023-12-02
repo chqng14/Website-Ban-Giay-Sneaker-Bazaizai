@@ -6,9 +6,10 @@
 @using static App_Data.Repositories.TrangThai;
 @inject ISanPhamChiTietService sanPhamChiTietService;
 @inject IKhuyenMaiServices khuyenMaiService;
+@inject IDanhGiaService _DanhGiaService
 @{
     BazaizaiContext context = new BazaizaiContext();
-
+    _DanhGiaService = new DanhGiaService();
     var sanPhamChiTietList = new List<App_Data.ViewModels.SanPhamChiTietViewModel.SanPhamDanhSachViewModel>();
     try
     {
@@ -269,6 +270,9 @@
                             @if(sale!=null){
                                 @foreach (var flSale in flashSale)
                                 {
+                                        var SaoTb = await _DanhGiaService.GetSoSaoTB(flSale.IdSanPhamChiTiet);
+                                        var TongSoDanhGia = await _DanhGiaService.GetTongSoDanhGia(flSale.IdSanPhamChiTiet);
+
                                     if (count < 3)
                                     {
                                         <div class="col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
@@ -295,9 +299,99 @@
                                                             <a href="@Url.Action("Details","SanPhamChiTiets",new{id= lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).SanPhamDanhSachView.IdChiTietSp})">@lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).SanPhamDanhSachView.SanPham</a>
                                                     </span>
                                                     <div class="product-o2__rating gl-rating-style-2">
-                                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                                                       @* <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>*@
+                                                            @if (SaoTb < 0.3)
+                                                            {
 
-                                                        <span class="product-o2__review">(23)</span>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                            }
+                                                            else if (SaoTb < 0.8)
+                                                            {
+                                                                <i class="fas fa-star-half-alt"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                            }
+                                                            else if (SaoTb < 1.3)
+                                                            {
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                            }
+                                                            else if (SaoTb < 1.8)
+                                                            {
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star-half-alt"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                            }
+                                                            else if (SaoTb < 2.3)
+                                                            {
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                            }
+                                                            else if (SaoTb < 2.8)
+                                                            {
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star-half-alt"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                            }
+                                                            else if (SaoTb < 3.3)
+                                                            {
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                            }
+                                                            else if (SaoTb < 3.8)
+                                                            {
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star-half-alt"></i>
+                                                                <i class="far fa-star"></i>
+                                                            }
+                                                            else if (SaoTb < 4.3)
+                                                            {
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="far fa-star"></i>
+                                                            }
+
+                                                            else if (SaoTb < 4.8)
+                                                            {
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star-half-alt"></i>
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                                <i class="fas fa-star"></i>
+                                                            }
+
+                                                        <span class="product-o2__review">(@TongSoDanhGia)</span>
                                                     </div>
 
                                                     <span class="product-o2__price">

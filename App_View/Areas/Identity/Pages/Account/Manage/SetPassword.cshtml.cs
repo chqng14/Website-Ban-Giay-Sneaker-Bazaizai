@@ -59,7 +59,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
 
             if (hasPassword)
             {
-                return RedirectToPage("./ChangePassword");
+                return RedirectToPage("/Account/my-profile");
             }
 
             return Page();
