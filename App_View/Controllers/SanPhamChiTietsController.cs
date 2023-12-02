@@ -220,7 +220,17 @@ namespace App_View.Controllers
         public async Task<IActionResult> Details(string id)
         {
             var data = await _sanPhamChiTietService.GetItemDetailViewModelAynsc(id);
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+
             var checkLogin = _userManager.GetUserId(User);
+
+            stopwatch.Stop();
+            TimeSpan elapsedTime = stopwatch.Elapsed;
+
+            // Log thời gian phản hồi
+            Console.WriteLine($"Thời gian phản hồi của hàm là: {elapsedTime.TotalMilliseconds} ms");
+
 
             if (checkLogin == null)
             {
@@ -238,8 +248,41 @@ namespace App_View.Controllers
                     data!.IsYeuThich = false;
                 }
             }
-
             return View(data);
+        }
+
+        public async Task<IActionResult> LoadPartialDetailProduct(string id)
+        {
+            var data = await _sanPhamChiTietService.GetItemDetailViewModelAynsc(id);
+
+            var stopwatch = new System.Diagnostics.Stopwatch();
+            stopwatch.Start();
+
+            var checkLogin = _userManager.GetUserId(User);
+
+            stopwatch.Stop();
+            TimeSpan elapsedTime = stopwatch.Elapsed;
+
+            // Log thời gian phản hồi
+            Console.WriteLine($"Thời gian phản hồi của hàm là: {elapsedTime.TotalMilliseconds} ms");
+
+            if (checkLogin == null)
+            {
+                data!.IsYeuThich = false;
+            }
+            else
+            {
+                var danhSachYeuThich = await _httpClient.GetFromJsonAsync<List<SanPhamYeuThichViewModel>>($"/api/SanPhamYeuThich/Get-Danh-Sach-SanPhamYeuThich?idNguoiDung={checkLogin}");
+                if (danhSachYeuThich!.FirstOrDefault(x => x.IdSanPhamChiTiet == data!.IdChiTietSp) != null)
+                {
+                    data!.IsYeuThich = true;
+                }
+                else
+                {
+                    data!.IsYeuThich = false;
+                }
+            }
+            return PartialView("_SanPhamDatailPatialView", data);
         }
 
         public async Task<IActionResult> GetItemDetailViewModelWhenSelectColor([FromQuery] string id, [FromQuery] string mauSac)
