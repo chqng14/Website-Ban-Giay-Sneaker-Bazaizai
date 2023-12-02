@@ -61,12 +61,15 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
+	<ItemGroup>
+	  <Content Remove="wwwroot\AnhSale\host.png" />
+	  <Content Remove="wwwroot\AnhSale\local.png" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<Folder Include="mailssave\" />
 		<Folder Include="wwwroot\AnhSanPham\" />
 		<Folder Include="wwwroot\images\VoucherQRCode\" />
-		<Folder Include="wwwroot\AnhSale\" />
 		<Folder Include="wwwroot\images\QRCode\" />
 	</ItemGroup>
 	<ItemGroup>

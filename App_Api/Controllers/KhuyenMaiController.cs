@@ -37,8 +37,14 @@ namespace App_Api.Controllers
         {
             try
             {
-                string azureSitePath = Environment.GetEnvironmentVariable("HOME");
-                string uploadDirectory = Path.Combine(azureSitePath, "site", "wwwroot", "AnhSale");
+                string hostName = HttpContext.Request.Host.Value;
+                string uploadDirectory = "";
+                if (hostName.ToLower() == "localhost")
+                {
+                    string currentDirectory = Directory.GetCurrentDirectory();
+                    string rootPath = Directory.GetParent(currentDirectory).FullName;
+                    uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSale");
+                }
                 string MaTS;
                 if (repos.GetAll().Count() == 0)
                 {
@@ -50,35 +56,40 @@ namespace App_Api.Controllers
                 }
                 if (formFile.Length > 0)
                 {
-                    using var stream = new MemoryStream();
-                    formFile.CopyTo(stream);
-                    stream.Position = 0;
-
-                    using var image = SixLabors.ImageSharp.Image.Load(stream);
-
-                    image.Mutate(x => x.Resize(new ResizeOptions
-                    {
-                        Size = new SixLabors.ImageSharp.Size(1600, 1600),
-                        Mode = ResizeMode.Max
-                    }));
-
-                    var encoder = new JpegEncoder
-                    {
-                        Quality = 80
-                    };
-
                     string fileName = Guid.NewGuid().ToString() + formFile.FileName;
-                    string outputPath = Path.Combine(uploadDirectory, fileName);
-                    using var outputStream = new FileStream(outputPath, FileMode.Create);
-                    await image.SaveAsync(outputStream, encoder);
-
-                    var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
-                    var containerClient = blobServiceClient.GetBlobContainerClient("image");
-                    var blobClient = containerClient.GetBlobClient(fileName);
-
-                    using (var stream1 = formFile.OpenReadStream())
+                    if (hostName.ToLower() == "localhost")
                     {
-                        await blobClient.UploadAsync(stream1, true);
+                        using var stream = new MemoryStream();
+                        formFile.CopyTo(stream);
+                        stream.Position = 0;
+
+                        using var image = SixLabors.ImageSharp.Image.Load(stream);
+
+                        image.Mutate(x => x.Resize(new ResizeOptions
+                        {
+                            Size = new SixLabors.ImageSharp.Size(1600, 1600),
+                            Mode = ResizeMode.Max
+                        }));
+
+                        var encoder = new JpegEncoder
+                        {
+                            Quality = 80
+                        };
+
+                        string outputPath = Path.Combine(uploadDirectory, fileName);
+                        using var outputStream = new FileStream(outputPath, FileMode.Create);
+                        await image.SaveAsync(outputStream, encoder);
+                    }
+                    else
+                    {
+                        var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
+                        var containerClient = blobServiceClient.GetBlobContainerClient("anhsale");
+                        var blobClient = containerClient.GetBlobClient(fileName);
+
+                        using (var stream1 = formFile.OpenReadStream())
+                        {
+                            await blobClient.UploadAsync(stream1, true);
+                        }
                     }
                     KhuyenMai KhuyenMai = new KhuyenMai();
                     KhuyenMai.TenKhuyenMai = Ten;
@@ -106,33 +117,51 @@ namespace App_Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> EditKhuyenMaiAsync(string id, string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, int loaiHinh, IFormFile formFile)
         {
-            string currentDirectory = Directory.GetCurrentDirectory();
-            string rootPath = Directory.GetParent(currentDirectory).FullName;
-            string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSale");
+            string hostName = HttpContext.Request.Host.Value;
+            string uploadDirectory = "";
+            if (hostName.ToLower() == "localhost")
+            {
+                string currentDirectory = Directory.GetCurrentDirectory();
+                string rootPath = Directory.GetParent(currentDirectory).FullName;
+                uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSale");
+            }
             if (formFile.Length > 0 && formFile != null)
             {
-                using var stream = new MemoryStream();
-                formFile.CopyTo(stream);
-                stream.Position = 0;
-
-                using var image = SixLabors.ImageSharp.Image.Load(stream);
-
-                image.Mutate(x => x.Resize(new ResizeOptions
-                {
-                    Size = new SixLabors.ImageSharp.Size(1600, 1600),
-                    Mode = ResizeMode.Max
-                }));
-
-                var encoder = new JpegEncoder
-                {
-                    Quality = 80
-                };
-
                 string fileName = Guid.NewGuid().ToString() + formFile.FileName;
-                string outputPath = Path.Combine(uploadDirectory, fileName);
+                if (hostName.ToLower() == "localhost")
+                {
+                    using var stream = new MemoryStream();
+                    formFile.CopyTo(stream);
+                    stream.Position = 0;
 
-                using var outputStream = new FileStream(outputPath, FileMode.Create);
-                await image.SaveAsync(outputStream, encoder);
+                    using var image = SixLabors.ImageSharp.Image.Load(stream);
+
+                    image.Mutate(x => x.Resize(new ResizeOptions
+                    {
+                        Size = new SixLabors.ImageSharp.Size(1600, 1600),
+                        Mode = ResizeMode.Max
+                    }));
+
+                    var encoder = new JpegEncoder
+                    {
+                        Quality = 80
+                    };
+
+                    string outputPath = Path.Combine(uploadDirectory, fileName);
+                    using var outputStream = new FileStream(outputPath, FileMode.Create);
+                    await image.SaveAsync(outputStream, encoder);
+                }
+                else
+                {
+                    var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
+                    var containerClient = blobServiceClient.GetBlobContainerClient("anhsale");
+                    var blobClient = containerClient.GetBlobClient(fileName);
+
+                    using (var stream1 = formFile.OpenReadStream())
+                    {
+                        await blobClient.UploadAsync(stream1, true);
+                    }
+                }
                 var KhuyenMai = repos.GetAll().First(p => p.IdKhuyenMai == id);
                 KhuyenMai.TenKhuyenMai = Ten;
                 KhuyenMai.TrangThai = trangThai;

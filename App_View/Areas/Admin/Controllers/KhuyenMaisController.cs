@@ -56,46 +56,55 @@ namespace App_View.Areas.Admin.Controllers
                 ViewBag.ThongBao = TempData["ThongBao"].ToString();
             }
             var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync());
-            var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
-            var containerClient = blobServiceClient.GetBlobContainerClient("image");
-            foreach (var item in KhuyenMais)
+            string hostName = HttpContext.Request.Host.Value;
+            if (hostName.ToLower().Contains("localhost"))
             {
-                var blobClient = containerClient.GetBlobClient(item.Url);
-                if (blobClient.Name.ToString() == item.Url)
+                string currentDirectory = Directory.GetCurrentDirectory();
+                string rootPath = Directory.GetParent(currentDirectory).FullName;
+                string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSale");
+                foreach (var item in KhuyenMais)
                 {
-                    var blobDownloadInfo = await blobClient.DownloadAsync();
-                    using (var streamReader = new StreamReader(blobDownloadInfo.Value.Content))
+                    string imagePath = Path.Combine(uploadDirectory, item.Url);
+                    if (!System.IO.File.Exists(imagePath))
                     {
-                        var imageBytes = Encoding.UTF8.GetBytes(await streamReader.ReadToEndAsync());
-                        item.Url = Convert.ToBase64String(imageBytes);
-                        string azureSitePath = Environment.GetEnvironmentVariable("HOME");
-                        string uploadDirectory = Path.Combine(azureSitePath, "site", "wwwroot", "wwwroot", "AnhSale");
-
-                        using var stream = new MemoryStream();
-                        IFormFile formFile = new FormFile(stream, 0, imageBytes.Length, item.Url, item.Url);
-                        formFile.CopyTo(stream);
-                        stream.Position = 0;
-
-                        using var image = SixLabors.ImageSharp.Image.Load(stream);
-
-                        image.Mutate(x => x.Resize(new ResizeOptions
-                        {
-                            Size = new SixLabors.ImageSharp.Size(1600, 1600),
-                            Mode = ResizeMode.Max
-                        }));
-
-                        var encoder = new JpegEncoder
-                        {
-                            Quality = 80
-                        };
-
-                        string outputPath = Path.Combine(uploadDirectory, item.Url);
-                        using var outputStream = new FileStream(outputPath, FileMode.Create);
-                        await image.SaveAsync(outputStream, encoder);
+                        item.Url = "host.png";
                     }
                 }
             }
-;
+            else
+            {
+                var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
+                var containerClient = blobServiceClient.GetBlobContainerClient("anhsale");
+                foreach (var item in KhuyenMais)
+                {
+                    var blobClient = containerClient.GetBlobClient(item.Url);
+                    if (await blobClient.ExistsAsync() && blobClient.Name == item.Url)
+                    {
+                        var blobDownloadInfo = await blobClient.DownloadAsync();
+                        using (var streamReader = new StreamReader(blobDownloadInfo.Value.Content))
+                        {
+                            byte[] imageBytes = new byte[blobDownloadInfo.Value.ContentLength];
+                            int bytesRead = 0;
+                            while (bytesRead < imageBytes.Length)
+                            {
+                                bytesRead += await streamReader.BaseStream.ReadAsync(imageBytes, bytesRead, imageBytes.Length - bytesRead);
+                            }
+
+                            string azureSitePath = Environment.GetEnvironmentVariable("HOME");
+                            string uploadDirectory = Path.Combine(azureSitePath, "site", "wwwroot", "wwwroot", "AnhSale");
+
+                            // Lưu ảnh vào thư mục
+                            string imagePath = Path.Combine(uploadDirectory, item.Url);
+                            await System.IO.File.WriteAllBytesAsync(imagePath, imageBytes);
+                        }
+                    }
+                    else
+                    {
+                        item.Url = "local.png";
+                    }
+                }
+            }
+
             return View(KhuyenMais);
         }
         public async Task<IActionResult> LstSaleAsync(string trangThaiSale, string loaiHinhKM, string tenKM)
@@ -290,6 +299,13 @@ namespace App_View.Areas.Admin.Controllers
             }
 
             var khuyenMai = await _context.khuyenMais.FirstOrDefaultAsync(x => x.IdKhuyenMai == id);
+            var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
+            var containerClient = blobServiceClient.GetBlobContainerClient("anhsale");
+            var blobClient = containerClient.GetBlobClient(khuyenMai.Url);
+            if (!(await blobClient.ExistsAsync()) || blobClient.Name != khuyenMai.Url)
+            {
+                khuyenMai.Url = "local.png";
+            }
             if (khuyenMai == null)
             {
                 return NotFound();
