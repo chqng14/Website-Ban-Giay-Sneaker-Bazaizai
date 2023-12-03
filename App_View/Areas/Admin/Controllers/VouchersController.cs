@@ -23,6 +23,7 @@ using DocumentFormat.OpenXml.ExtendedProperties;
 using PuppeteerSharp;
 using NuGet.Protocol.Core.Types;
 using Microsoft.AspNetCore.Authorization;
+using Azure.Storage.Blobs;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -36,16 +37,16 @@ namespace App_View.Areas.Admin.Controllers
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IEmailSender _emailSender;
-		private IViewRenderService _viewRenderService;
-		public VouchersController(IVoucherServices voucherServices, IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IEmailSender emailSender, IViewRenderService viewRenderService)
+        private IViewRenderService _viewRenderService;
+        public VouchersController(IVoucherServices voucherServices, IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IEmailSender emailSender, IViewRenderService viewRenderService)
         {
             _voucherND = voucherNDServices;
             _voucherSV = voucherServices;
             _signInManager = signInManager;
             _userManager = userManager;
             _emailSender = emailSender;
-			_viewRenderService = viewRenderService;
-			_context = new BazaizaiContext();
+            _viewRenderService = viewRenderService;
+            _context = new BazaizaiContext();
         }
         #region Online
 
@@ -161,9 +162,9 @@ namespace App_View.Areas.Admin.Controllers
                         var userKhachHang = await _userManager.FindByIdAsync(userId);
 
                         var subject = "Bạn đã nhận được Voucher từ Bazaizai Store";
-						string html = await _viewRenderService.RenderToStringAsync("Voucher/MailVoucher");
+                        string html = await _viewRenderService.RenderToStringAsync("Voucher/MailVoucher");
 
-                        await _emailSender.SendEmailAsync(userKhachHang.Email, subject , html);
+                        await _emailSender.SendEmailAsync(userKhachHang.Email, subject, html);
                     }
 
                     return Ok(true);
@@ -318,7 +319,7 @@ namespace App_View.Areas.Admin.Controllers
 
         public async Task<IActionResult> FilterVoucherTaiQuayDaIn(int? trangThai)
         {
-            var IdAdmin = await _userManager.FindByEmailAsync("adminhehehe@gmail.com");
+            var IdAdmin = await _userManager.FindByEmailAsync("bazaizaistore@gmail.com");
             var voucherTaiQuay = (await _voucherND.GetAllVouCherNguoiDung()).Where(c => c.IdNguoiDung == IdAdmin.Id).ToList();
             List<string> idVoucher = new List<string>();
             foreach (var item in voucherTaiQuay.GroupBy(c => c.IdVouCher).Select(c => c.First()).ToList())
@@ -342,9 +343,32 @@ namespace App_View.Areas.Admin.Controllers
         {
             var lstVoucherDaIn = (await _voucherND.GetAllVouCherNguoiDung()).Where(c => c.IdVouCher == idVoucher).ToList();
             List<VoucherNguoiDungDTO> voucherNguoiDungDTOList = new List<VoucherNguoiDungDTO>();
+            var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
+            var containerClient = blobServiceClient.GetBlobContainerClient("anhvoucher");
             foreach (var voucher in lstVoucherDaIn)
             {
                 VoucherNguoiDungDTO voucherNguoiDungDTO = new VoucherNguoiDungDTO();
+                var blobClient = containerClient.GetBlobClient(voucher.IdVouCherNguoiDung + ".png");
+                if (await blobClient.ExistsAsync())
+                {
+                    var blobDownloadInfo = await blobClient.DownloadAsync();
+                    using (var streamReader = new StreamReader(blobDownloadInfo.Value.Content))
+                    {
+                        byte[] imageBytes = new byte[blobDownloadInfo.Value.ContentLength];
+                        int bytesRead = 0;
+                        while (bytesRead < imageBytes.Length)
+                        {
+                            bytesRead += await streamReader.BaseStream.ReadAsync(imageBytes, bytesRead, imageBytes.Length - bytesRead);
+                        }
+
+                        string azureSitePath = Environment.GetEnvironmentVariable("HOME");
+                        string uploadDirectory = Path.Combine(azureSitePath, "site", "wwwroot", "wwwroot", "images", "VoucherNguoiDungQRCode");
+
+                        // Lưu ảnh vào thư mục
+                        string imagePath = Path.Combine(uploadDirectory, voucher.IdVouCherNguoiDung + ".png");
+                        await System.IO.File.WriteAllBytesAsync(imagePath, imageBytes);
+                    }
+                }
                 // Gán thông tin từ voucher vào voucherNguoiDungDTO
                 voucherNguoiDungDTO.IdVouCherNguoiDung = voucher.IdVouCherNguoiDung;
                 voucherNguoiDungDTO.IdVouCher = voucher.IdVouCher;

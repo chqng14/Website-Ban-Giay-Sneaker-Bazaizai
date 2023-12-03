@@ -64,12 +64,14 @@
 	<ItemGroup>
 	  <Content Remove="wwwroot\AnhSale\host.png" />
 	  <Content Remove="wwwroot\AnhSale\local.png" />
+	  <Content Remove="wwwroot\images\VoucherNguoiDungQRCode\logo.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Folder Include="mailssave\" />
 		<Folder Include="wwwroot\AnhSanPham\" />
 		<Folder Include="wwwroot\images\VoucherQRCode\" />
+		<Folder Include="wwwroot\images\VoucherNguoiDungQRCode\" />
 		<Folder Include="wwwroot\images\QRCode\" />
 	</ItemGroup>
 	<ItemGroup>

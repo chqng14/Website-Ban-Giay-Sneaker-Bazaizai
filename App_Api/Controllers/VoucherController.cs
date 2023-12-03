@@ -17,6 +17,8 @@ using System.Data;
 using System.Drawing.Imaging;
 using System.Drawing;
 using static App_Data.Repositories.TrangThai;
+using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Http;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -304,7 +306,7 @@ namespace App_Api.Controllers
             return false;
         }
         [HttpPost("AddVoucherCungBanTaiQuay/{idVoucher}/{idUser}/{soluong}")]
-        public bool AddVoucherCungBanTaiQuay(string idVoucher, string idUser, int soluong)
+        public async Task<bool> AddVoucherCungBanTaiQuayAsync(string idVoucher, string idUser, int soluong)
         {
             DateTime? ngay = DateTime.Now;
             var voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == idVoucher && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay));
@@ -332,11 +334,20 @@ namespace App_Api.Controllers
 
                     VcNguoiDungRepos.AddItem(VcNguoiDungCanThem);
                     soLuongDaIn += 1;
-
-                    // Tạo và lưu hình ảnh QR nếu thêm voucher người dùng thành công
-                    string currentDirectory = Directory.GetCurrentDirectory();
-                    string rootPath = Directory.GetParent(currentDirectory)!.FullName;
-                    string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "VoucherNguoiDungQRCode");
+                    string hostName = HttpContext.Request.Host.Value;
+                    string uploadDirectory = "";
+                    if (hostName.ToLower() == "localhost")
+                    {
+                        // Tạo và lưu hình ảnh QR nếu thêm voucher người dùng thành công
+                        string currentDirectory = Directory.GetCurrentDirectory();
+                        string rootPath = Directory.GetParent(currentDirectory)!.FullName;
+                        uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "VoucherNguoiDungQRCode");
+                    }
+                    else
+                    {
+                        string currentDirectory = Environment.GetEnvironmentVariable("HOME");
+                        uploadDirectory = Path.Combine(currentDirectory, "site", "wwwroot", "images", "VoucherNguoiDungQRCode");
+                    }
 
                     if (!string.IsNullOrEmpty(uploadDirectory) && !string.IsNullOrEmpty(VcNguoiDungCanThem.IdVouCherNguoiDung))
                     {
@@ -359,6 +370,17 @@ namespace App_Api.Controllers
                             {
                                 qrCodeImage.Save(stream, ImageFormat.Png);
                             }
+                        }
+
+                        var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
+                        var containerClient = blobServiceClient.GetBlobContainerClient("anhvoucher");
+
+                        // Tải lên hình ảnh QR Code lên Azure Blob Storage
+                        using (var uploadFileStream = System.IO.File.OpenRead(qrCodeImagePath))
+                        {
+                            var blobClient = containerClient.GetBlobClient(VcNguoiDungCanThem.IdVouCherNguoiDung + ".png");
+                            await blobClient.UploadAsync(uploadFileStream, true);
+                            uploadFileStream.Close();
                         }
                     }
                 }

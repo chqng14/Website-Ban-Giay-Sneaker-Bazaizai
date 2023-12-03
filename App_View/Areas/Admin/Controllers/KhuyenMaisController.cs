@@ -270,6 +270,13 @@ namespace App_View.Areas.Admin.Controllers
                 new SelectListItem { Text = "Khuyến mại giảm giá", Value = "1" },
                 new SelectListItem { Text = "Khuyến mãi đồng giá", Value = "0" }
             };
+            ViewBag.TrangThai = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hết hạn", Value = "0" },
+                new SelectListItem { Text = "Đang hoạt động", Value = "1" },
+                 new SelectListItem { Text = "Chưa bắt đầu", Value = "1" },
+                  new SelectListItem { Text = "Buộc dừng", Value = "1" }
+            };
             ViewBag.ListGiamGia = new List<SelectListItem>
             {
                 new SelectListItem { Text = "5%", Value = "5" },
@@ -324,6 +331,13 @@ namespace App_View.Areas.Admin.Controllers
             {
                 new SelectListItem { Text = "Khuyến mại giảm giá", Value = "1" },
                 new SelectListItem { Text = "Khuyến mãi đồng giá", Value = "0" }
+            };
+            ViewBag.TrangThai = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hết hạn", Value = "0" },
+                new SelectListItem { Text = "Đang hoạt động", Value = "1" },
+                 new SelectListItem { Text = "Chưa bắt đầu", Value = "1" },
+                  new SelectListItem { Text = "Buộc dừng", Value = "1" }
             };
             ViewBag.ListGiamGia = new List<SelectListItem>
             {
