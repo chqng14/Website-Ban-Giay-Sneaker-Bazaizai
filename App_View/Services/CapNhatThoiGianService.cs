@@ -19,9 +19,10 @@ namespace App_View.Services
 
             _dbContext = new BazaizaiContext();
         }
-
         public void CheckNgayKetThuc()
         {
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime vnTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
             var ngayKetThucSale = _dbContext.khuyenMais
                 .Where(p => p.NgayKetThuc <= DateTime.Now && p.TrangThai != (int)TrangThaiSale.HetHan)
                 .ToList();
@@ -182,7 +183,9 @@ namespace App_View.Services
 
         public void CapNhatVoucherHetHanOnline()
         {
-            var VoucherCanCapNhat = _dbContext.vouchers.Where(c => c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.HoatDong).AsNoTracking().ToList();
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime vnTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
+            var VoucherCanCapNhat = _dbContext.vouchers.Where(c => c.NgayKetThuc < vnTime && c.TrangThai == (int)TrangThaiVoucher.HoatDong).AsNoTracking().ToList();
             if (VoucherCanCapNhat.Count > 0)
             {
                 foreach (var voucher in VoucherCanCapNhat)
@@ -197,18 +200,21 @@ namespace App_View.Services
         }
         public void CapNhatVoucherDenHanOnline()
         {
-            var VoucherCanCapNhat = _dbContext.vouchers.Where(c => c.NgayBatDau <= DateTime.Now && c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaBatDau).AsNoTracking().ToList();
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime vnTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
+
+            var VoucherCanCapNhat = _dbContext.vouchers.Where(c => c.NgayBatDau <= vnTime && c.TrangThai == (int)TrangThaiVoucher.ChuaBatDau || c.TrangThai == (int)TrangThaiVoucher.KhongHoatDong).AsNoTracking().ToList();
             if (VoucherCanCapNhat.Count > 0)
             {
                 foreach (var voucher in VoucherCanCapNhat)
                 {
-                    voucher.TrangThai = (int)TrangThaiVoucher.KhongHoatDong;
-
+                    voucher.TrangThai = (int)TrangThaiVoucher.HoatDong;
                 }
                 _dbContext.UpdateRange(VoucherCanCapNhat);
                 _dbContext.SaveChanges();
             }
         }
+
         public void CapNhatVoucherNguoiDungOnline()
         {
             var VoucherKhongKhaDung = _dbContext.vouchers.Where(c => c.TrangThai == (int)TrangThaiVoucher.KhongHoatDong || c.TrangThai == (int)TrangThaiVoucher.DaHuy).ToList();
@@ -256,12 +262,12 @@ namespace App_View.Services
 
         public void CapNhatVoucherDenHanTaiQuay()
         {
-            var VoucherNeedUpdate = _dbContext.vouchers.Where(c => c.NgayBatDau <= DateTime.Now && c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay).AsNoTracking().ToList();
+            var VoucherNeedUpdate = _dbContext.vouchers.Where(c => c.NgayBatDau <= DateTime.Now && c.NgayKetThuc > DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.KhongHoatDongTaiQuay).AsNoTracking().ToList();
             if (VoucherNeedUpdate.Count > 0)
             {
                 foreach (var voucher in VoucherNeedUpdate)
                 {
-                    voucher.TrangThai = (int)TrangThaiVoucher.KhongHoatDongTaiQuay;
+                    voucher.TrangThai = (int)TrangThaiVoucher.HoatDongTaiQuay;
 
                 }
                 _dbContext.UpdateRange(VoucherNeedUpdate);
