@@ -86,12 +86,12 @@ namespace App_View.Areas.Admin.Pages.User
                 return NotFound($"không tìm thấy người dùng có id: {id}.");
             }
 
-
+            TimeSpan offsetPlus7 = TimeSpan.FromHours(7);
             IdentityResult ResultLockoutEnd = null;
             //IdentityResult ResultLockoutEnabled = null;
             if (Input.LockoutEnd == null /*&& Input.LockoutEnabled == true*/)
             {
-                ResultLockoutEnd = await _userManager.SetLockoutEndDateAsync(user, DateTimeOffset.MaxValue);
+                ResultLockoutEnd = await _userManager.SetLockoutEndDateAsync(user, DateTime.MaxValue);
                 await _userManager.SetLockoutEnabledAsync(user, true);
                 //ResultLockoutEnabled = await _userManager.SetLockoutEnabledAsync(user, true);
             }

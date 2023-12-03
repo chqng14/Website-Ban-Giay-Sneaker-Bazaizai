@@ -1,6 +1,10 @@
 ﻿@{
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+<link href="assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
+
+<!-- page js -->
+<script src="assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
 <style>
     * {
         margin: 0;
@@ -72,13 +76,23 @@
 
 
 <h1 style="text-align:center">Thống kê doanh thu theo đơn hàng</h1>
+<div class="form-group">
+    <label>Range Datepicker</label>
+    <div class="d-flex align-items-center">
+        <input type="text" class="form-control datepicker-input" name="start" placeholder="From">
+        <span class="p-h-10">to</span>
+        <input type="text" class="form-control datepicker-input" name="end" placeholder="To">
+    </div>
+</div>
 <div class="row">
     <input type="date" id="fromDate">
     <input type="date" id="toDate">
     @*<button> Hôm nay</button>
     <button> Hôm qua</button>
     <button> Tuần này</button>*@
+  
     <div class="chartCard">
+       
 
         <div class="chartBox">
             <canvas id="myChart" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"></canvas>
@@ -142,6 +156,8 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+  
+
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>

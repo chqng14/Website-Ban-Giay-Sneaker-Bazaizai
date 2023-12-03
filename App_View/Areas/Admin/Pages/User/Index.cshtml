@@ -5,11 +5,16 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 
 }
+<style>
+    .custom-width-btn {
+        width: 150px;
+    }
+</style>
 <h1 style="text-align:center">@ViewData["Title"]</h1>
 <partial name="_StatusMessage" model="@Model.StatusMessage" />
 <div class="mb-2">
     <a class="btn btn-primary" asp-page="/User/AddAccount"> Tạo tài khoản</a>
-   @* <a class="btn btn-primary" asp-page="">Import Excel</a>*@
+    @* <a class="btn btn-primary" asp-page="">Import Excel</a>*@
 </div>
 
 
@@ -46,16 +51,48 @@
 
                 </td>
                 <td>
-                    <a class="btn btn-primary" asp-page="./SetPassword" asp asp-route-id="@user.Id">Đặt mật khẩu</a>
-                    @if (user.LockoutEnd != null && user.LockoutEnd < DateTimeOffset.UtcNow)
+                    <a class="btn btn-primary custom-width-btn" asp-page="./SetPassword" asp asp-route-id="@user.Id">Đặt mật khẩu</a>
+                    @if (user.LockoutEnd != null)
                     {
-                        <a class="btn btn-primary" asp-page="./KhoaTaiKhoan" asp asp-route-id="@user.Id">Mở tài khoản</a>
+
+                        TimeSpan offset = ((DateTimeOffset)user.LockoutEnd).Offset;
+                        TimeSpan offsetPlus7 = TimeSpan.FromHours(7);
+                        if (offset == offsetPlus7)
+                        {
+                            DateTimeOffset lockoutEndDate = (DateTimeOffset)user.LockoutEnd;
+                            var ThoiGianMoKhoa = lockoutEndDate.DateTime;
+                            var a = DateTime.Now;
+                            if (ThoiGianMoKhoa <= DateTime.Now)
+                            {
+                                <a class="btn btn-primary custom-width-btn" asp-page="./KhoaTaiKhoan" asp asp-route-id="@user.Id">Khóa tài khoản</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-primary custom-width-btn" asp-page="./KhoaTaiKhoan" asp asp-route-id="@user.Id">Mở tài khoản</a>
+
+                            }
+                        }
+                        else
+                        {
+                            DateTimeOffset lockoutEndDate = ((DateTimeOffset)user.LockoutEnd).ToOffset(offsetPlus7);
+                            var ThoiGianMoKhoa = lockoutEndDate.DateTime;
+                            if (ThoiGianMoKhoa <= DateTime.Now)
+                            {
+                                <a class="btn btn-primary custom-width-btn" asp-page="./KhoaTaiKhoan" asp asp-route-id="@user.Id">Khóa tài khoản</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-primary custom-width-btn" asp-page="./KhoaTaiKhoan" asp asp-route-id="@user.Id">Mở tài khoản</a>
+
+                            }
+                        }
+
                     }
                     else
                     {
-                        <a class="btn btn-primary" asp-page="./KhoaTaiKhoan" asp asp-route-id="@user.Id">Khóa tài khoản</a>
+                        <a class="btn btn-primary custom-width-btn" asp-page="./KhoaTaiKhoan" asp asp-route-id="@user.Id">Khóa tài khoản</a>
                     }
-                   
+
                 </td>
             </tr>
         }
