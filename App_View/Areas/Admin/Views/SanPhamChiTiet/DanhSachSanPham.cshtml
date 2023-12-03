@@ -66,7 +66,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header align-items-center" style="background: #129dc1;">
-                    <i class="fas fa-user-astronaut m-r-5" style="font-size: 33px"></i>
+                    <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
                     <h5 class="modal-title" id="exampleModalLabel">IMPORT FILE</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <i class="anticon anticon-close"></i>
@@ -174,7 +174,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header align-items-center" style="background: #129dc1;">
-                    <i class="fas fa-user-astronaut m-r-5" style="font-size: 33px"></i>
+                    <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
                     <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <i class="anticon anticon-close"></i>
@@ -276,7 +276,7 @@
                                         <option value="" selected="">Sản phẩm</option>
                                         @foreach (var item in (SelectList)ViewData["SanPham"]!)
                                         {
-                                            <option value="@item.Text">@item.Text</option>
+                                            <option value="@item.Value">@item.Text</option>
                                         }
 
                                     </select>
@@ -286,7 +286,7 @@
                                         <option value="" selected="">Thương hiệu</option>
                                         @foreach (var item in (SelectList)ViewData["ThuongHieu"]!)
                                         {
-                                            <option value="@item.Text">@item.Text</option>
+                                            <option value="@item.Value">@item.Text</option>
                                         }
                                     </select>
                                 </div>
@@ -295,7 +295,7 @@
                                         <option value="" selected="">Màu sắc</option>
                                         @foreach (var item in (SelectList)ViewData["MauSac"]!)
                                         {
-                                            <option value="@item.Text">@item.Text</option>
+                                            <option value="@item.Value">@item.Text</option>
                                         }
                                     </select>
                                 </div>
@@ -304,7 +304,7 @@
                                         <option value="" selected="">Kích cỡ</option>
                                         @foreach (var item in (SelectList)ViewData["KichCo"]!)
                                         {
-                                            <option value="@item.Text">@item.Text</option>
+                                            <option value="@item.Value">@item.Text</option>
                                         }
                                     </select>
                                 </div>
@@ -445,8 +445,8 @@
 
                 table.rows().every(function () {
                     const data = this.data();
-                    totalQuantity += data.soLuongTon;
-                    totalRevenue += data.giaBan * data.soLuongTon;
+                    totalQuantity += data.SoLuongTon;
+                    totalRevenue += data.GiaBan * data.SoLuongTon;
                 });
                 totalRevenue = new Intl.NumberFormat('vi-VN', {
                     style: 'currency',
@@ -472,10 +472,10 @@
             },
             columns: [
                 {
-                    data: 'idChiTietSp',
+                    data: 'IdChiTietSp',
                     title: '<div class="checkbox"><input id="check-all" type="checkbox"><label for="check-all" class="m-b-0"></label></div>',
                     render: function (data, type, row, meta) {
-                        const isChecked = selectedCheckboxes[data.idChiTietSp];
+                        const isChecked = selectedCheckboxes[data.IdChiTietSp];
                         const checkedAttribute = isChecked ? 'checked' : '';
                         return `
                     <div class="checkbox" data-id="${data}"><input id="check-item-${data}" type="checkbox" class="item"><label for="check-item-${data}" "${checkedAttribute}" class="m-b-0"></label></div>
@@ -492,7 +492,7 @@
                     orderable: false
                 },
                 {
-                    data: 'ma',
+                    data: 'Ma',
                     title: 'Mã SP',
                     orderable: false
                 },
@@ -503,33 +503,33 @@
                         if (data.anh === null) {
                             var defaultImageUrl = '/images/NoImage.png';
                             return `
-                                <div class="d-flex align-items-center"><img data-data="${data.idChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sản phẩm" class="img-fluid cursor-image rounded" src="${defaultImageUrl}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.sanPham}</h6></div>
+                                <div class="d-flex align-items-center"><img data-data="${data.IdChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sản phẩm" class="img-fluid cursor-image rounded" src="${defaultImageUrl}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.SanPham}</h6></div>
                             `;
                         } else {
                             return `
-                                <div class="d-flex align-items-center"><img data-data="${data.idChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sản phẩm" class="img-fluid cursor-image rounded" src="/AnhSanPham/${data.anh}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.sanPham}</h6></div>
+                                <div class="d-flex align-items-center"><img data-data="${data.IdChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sản phẩm" class="img-fluid cursor-image rounded" src="/AnhSanPham/${data.Anh}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.SanPham}</h6></div>
                             `;
                         }
                     },
                     orderable: false
                 },
                 {
-                    data: 'kichCo',
+                    data: 'KichCo',
                     title: 'Size',
                     orderable: false
                 },
                 {
-                    data: 'kieuDeGiay',
+                    data: 'KieuDeGiay',
                     title: 'Kiểu đế giầy',
                     orderable: false
                 },
                 {
-                    data: 'chatLieu',
+                    data: 'ChatLieu',
                     title: 'Chất liệu',
                     orderable: false
                 },
                 {
-                    data: 'giaNhap',
+                    data: 'GiaNhap',
                     title: 'Giá nhập',
                     render: function (data, type, row, meta) {
                         return new Intl.NumberFormat('vi-VN', {
@@ -540,7 +540,7 @@
                     orderable: false
                 },
                 {
-                    data: 'giaBan',
+                    data: 'GiaBan',
                     title: 'Giá bán',
                     render: function (data, type, row, meta) {
                         return new Intl.NumberFormat('vi-VN', {
@@ -551,7 +551,7 @@
                     orderable: false
                 },
                 {
-                    data: 'soLuongTon',
+                    data: 'SoLuongTon',
                     title: 'Số lượng',
                     orderable: false,
                     render: function (data, type, row) {
@@ -573,6 +573,7 @@
                 },
             ],
             initComplete: function (settings, json) {
+                console.log(json);
                 maxLength = json.data.recordsTotal;
                 $('#table-sanpham').on('draw.dt', function () {
                     $('input[type="checkbox"]').each(function () {

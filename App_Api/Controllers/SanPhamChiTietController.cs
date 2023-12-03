@@ -21,6 +21,10 @@ using System.Drawing;
 using System.Reflection;
 using App_Data.ViewModels.FilterViewModel;
 using System.Management.Automation;
+using App_Data.ViewModels.FilterDTO;
+using Microsoft.EntityFrameworkCore;
+using DocumentFormat.OpenXml.InkML;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_Api.Controllers
 {
@@ -636,6 +640,87 @@ namespace App_Api.Controllers
             {
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
+        }
+
+        [HttpPost("get-danh-sach-san-pham-dang-kinh-doanh")]
+        public async Task<IActionResult> GetListTableDanhSachSanPhamDangKinhDoanh([FromBody] FilterAdminDTO filterAdminDTO)
+        {
+            var query = _sanPhamChiTietRes.GetQuerySanPhamChiTiet()
+                .Where(sp=>sp.TrangThai == (int) TrangThaiCoBan.HoatDong)
+                .OrderByDescending(sp=>sp.NgayTao)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.searchValue))
+            {
+                query = query
+                    .Include(it => it.SanPham)
+                    .Where(x =>
+                x.SanPham.TenSanPham!.Contains(filterAdminDTO.searchValue, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.SanPham))
+            {
+                query = query
+                    .Where(x => x.IdSanPham == filterAdminDTO.SanPham.ToString());
+            }
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.MauSac))
+            {
+                query = query
+                    .Where(x => x.IdMauSac == filterAdminDTO.MauSac.ToString());
+            }
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.ThuongHieu))
+            {
+                query = query
+                    .Where(x => x.IdThuongHieu == filterAdminDTO.ThuongHieu.ToString());
+            }
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.KichCo))
+            {
+                query = query
+                     .Where(x => x.IdKichCo == filterAdminDTO.KichCo.ToString());
+            }
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.Sort))
+            {
+                if (filterAdminDTO.Sort == "ascending_quantity")
+                {
+                    query = query
+                        .OrderBy(x => x.SoLuongTon!);
+                }
+
+                if (filterAdminDTO.Sort == "descending_quantity")
+                {
+                    query = query
+                        .OrderByDescending(x => x.SoLuongTon!);
+                }
+
+                if (filterAdminDTO.Sort == "ascending_price")
+                {
+                    query = query
+                        .OrderBy(x => x.GiaBan!);
+                }
+
+                if (filterAdminDTO.Sort == "descending_price")
+                {
+                    query = query
+                        .OrderByDescending(x => x.GiaBan!);
+                }
+            }
+
+            var totalRecords = await query.CountAsync();
+            query = query
+                .Skip(filterAdminDTO.start)
+                .Take(filterAdminDTO.length);
+
+            return new ObjectResult(new
+            {
+                draw = filterAdminDTO.draw,
+                recordsTotal = totalRecords,
+                recordsFiltered = totalRecords,
+                data = await query.Select(sp => _sanPhamChiTietRes.CreateSanPhamDanhSachViewModel(sp)).ToListAsync()
+            });
         }
     }
 }
