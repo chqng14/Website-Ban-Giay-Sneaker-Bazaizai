@@ -300,7 +300,7 @@ namespace App_View.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> InVoucherTaiQuay(string idVoucher, int soLuong)
         {
-            var IdAdmin = await _userManager.FindByEmailAsync("adminhehehe@gmail.com");
+            var IdAdmin = await _userManager.FindByEmailAsync("bazaizaistore@gmail.com");
             var VoucherKhaDung = await _voucherSV.GetVoucherDTOById(idVoucher);
             if (IdAdmin == null || soLuong <= 0 || VoucherKhaDung == null)
             {
