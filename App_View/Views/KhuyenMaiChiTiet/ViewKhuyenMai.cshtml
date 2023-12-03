@@ -6,7 +6,7 @@
 @{
     var max = (await _khuyenMaiService.GetAllKhuyenMai()).Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau || x.TrangThai == (int)TrangThaiSale.ChuaBatDau).Max(x => x.MucGiam);
     var flashSale = (await _khuyenMaiService.GetAllKhuyenMai()).FirstOrDefault(x => x.MucGiam == max&&x.TrangThai==(int)TrangThaiSale.DangBatDau||x.TrangThai==(int)TrangThaiSale.ChuaBatDau);
-
+    var saleChuaBatDau =  (await _khuyenMaiService.GetAllKhuyenMai()).FirstOrDefault(x => x.MucGiam == max && x.TrangThai == (int)TrangThaiSale.ChuaBatDau);
     var sanPhamChiTietList = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
     var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
 
@@ -253,7 +253,7 @@
                                 <div></div>
                             </div>
 
-                            @if (flashSale != null)
+                            @if (saleChuaBatDau != null && saleChuaBatDau.TrangThai == (int)TrangThaiSale.ChuaBatDau)
                             {
                                 <picture class="JEjj5L">
                                     <img data-is-lazy-load-bg-image="false"
@@ -282,123 +282,52 @@
                     </div>
                 </div>
             </div>
-
-            <div style="position: relative;height: 96px;width: 960px;left: calc((100% - 960px) / 2);">
-                <div>
-                    <div class="md-container">
-                        <div class="md-component" data-component-id="1699246519362">
-                            <div class="fazD4N aKKong _8kwsZk vpiXWe" style="height: 96px;">
-                                <div class="cZ76Ba">
-                                    <div class="BwuUKj" style="position: absolute; top: 50%; right: 50%; transform: translate(50%, -50%); max-width: 100%;">
-                                        <div class="Z9KNYN" style="color: rgb(238, 77, 45);">
-                                            11.11
-                                            Siêu Sale | CÒN
-                                        </div>
-                                        <div class="fsk4n9 _7Agh3t" style="color: rgb(238, 77, 45); animation-delay: 94352.6s;">
-                                            <div class="_2UsJOV rbfRts _2jJhsc">
-                                                <span style="animation-delay: -683247s; animation-iteration-count: 1; animation-duration: 864000s;">9876543210</span>
+            @if (saleChuaBatDau != null && saleChuaBatDau.TrangThai == (int)TrangThaiSale.ChuaBatDau)
+            {
+                <div style="position: relative; height: 96px; width: 960px; left: calc((100% - 960px) / 2);">
+                    <div>
+                        <div class="md-container">
+                            <div class="md-component" data-component-id="1699246519362">
+                                <div class="fazD4N aKKong _8kwsZk vpiXWe" style="height: 96px;">
+                                    <div class="cZ76Ba">
+                                        <div class="BwuUKj" style="position: absolute; top: 50%; right: 50%; transform: translate(50%, -50%); max-width: 100%;">
+                                            <div class="Z9KNYN" style="color: rgb(238, 77, 45);">
+                                                @saleChuaBatDau.TenKhuyenMai | CÒN
                                             </div>
-                                            <div class="rbfRts">Ngày</div>
-                                        </div>
-                                        <div class="fsk4n9 Q3Hjob" style="color: rgb(238, 77, 45);">
-                                            <div class="_1mNNLN rbfRts _2jJhsc">
-                                                <div style="animation-delay: -78447.4s; animation-iteration-count: 3; animation-duration: 86400s;">
-                                                    <span>23</span><span>22</span><span>21</span><span>20</span><span>19</span><span>18</span><span>17</span><span>16</span><span>15</span><span>14</span><span>13</span><span>12</span><span>11</span><span>10</span><span>09</span><span>08</span><span>07</span><span>06</span><span>05</span><span>04</span><span>03</span><span>02</span><span>01</span><span>00</span>
+                                            <div class="fsk4n9 _7Agh3t" style="color: rgb(238, 77, 45); animation-delay: 94352.6s;">
+                                                <div class="_2UsJOV rbfRts _2jJhsc">
+                                                    <span style="animation-delay: -683247s; animation-iteration-count: 1; animation-duration: 864000s;" class="countdown_Day"></span>
                                                 </div>
+                                                <div class="rbfRts">Ngày</div>
                                             </div>
-                                            <div class="rbfRts">Giờ</div>
+                                            <div class="fsk4n9 Q3Hjob" style="color: rgb(238, 77, 45);">
+                                                <div class="_1mNNLN rbfRts _2jJhsc">
+                                                    <div style="animation-delay: -78447.4s; animation-iteration-count: 3; animation-duration: 3600s;" class="countdown_Hours"></div>
+                                                </div>
+                                                <div class="rbfRts">Giờ</div>
+                                            </div>
+                                            <div class="fsk4n9" style="color: rgb(238, 77, 45);">
+                                                <div class="FSBEZB rbfRts _2jJhsc">
+                                                    <span style="animation-delay: -2847.42s; animation-iteration-count: 51; animation-duration: 60s;" class="countdown_Mins"></span>
+                                                </div>
+                                            
+                                                <div class="rbfRts">Phút</div>
+                                            </div>
+                                            <div class="fsk4n9" style="color: rgb(238, 77, 45);">
+
+                                                <div class="_2UsJOV rbfRts _2jJhsc">
+                                                    <span style="animation-delay: -7.422s; animation-iteration-count: 18076; animation-duration: 1s;" class="countdown_Secs"></span>
+                                                </div>
+                                                <div class="rbfRts">Giây</div>
+                                            </div>
                                         </div>
-                                        <div class="fsk4n9" style="color: rgb(238, 77, 45);">
-                                            <div class="FSBEZB rbfRts _2jJhsc">
-                                                <span style="animation-delay: -2847.42s; animation-iteration-count: 51; animation-duration: 3600s;">543210</span>
-                                            </div>
-                                            <div class="_2UsJOV rbfRts _2jJhsc">
-                                                <span style="animation-delay: -447.422s; animation-iteration-count: 302; animation-duration: 600s;">9876543210</span>
-                                            </div>
-                                            <div class="rbfRts">Phút</div>
-                                        </div>
-                                        <div class="fsk4n9" style="color: rgb(238, 77, 45);">
-                                            <div class="FSBEZB rbfRts _2jJhsc">
-                                                <span style="animation-delay: -27.422s; animation-iteration-count: 3013; animation-duration: 60s;">543210</span>
-                                            </div>
-                                            <div class="_2UsJOV rbfRts _2jJhsc">
-                                                <span style="animation-delay: -7.422s; animation-iteration-count: 18076; animation-duration: 10s;">9876543210</span>
-                                            </div>
-                                            <div class="rbfRts">Giây</div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div style="position: relative;height: 170.391px;width: 960px;left: calc((100% - 960px) / 2);">
-                <div>
-                    <div class="md-container">
-                        <div class="md-component" data-component-id="1699246519368">
-                            <div class="lEwcgc">
-                                <div style="position: absolute; top: 50%; z-index: 9999;"></div>
-                                <div style="position: relative;">
-                                    <div class="" style="width: 100%; padding-top: 17.75%;">
-                                        <div></div>
-                                    </div>
-                                    <picture class="JEjj5L">
-                                        <img data-is-lazy-load-bg-image="false" data-use-image-server="false"
-                                             class="lazyload RPPDP+" loading="lazy"
-                                             src="https://down-vn.img.susercontent.com/file/vn-50009109-33927b96946a6e8839c060c8031cadce"
-                                             role="presentation" alt=""
-                                             style="position: absolute; top: 0px; height: 100%; width: 100%;">
-                                    </picture>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div style="position: relative; height: 170.391px; width: 960px; left: calc((100% - 960px) / 2);">
-                <div>
-                    <div class="md-container">
-                        <div class="md-component" data-component-id="1699246519371">
-                            <div class="lEwcgc">
-                                <div style="position: absolute; top: 50%; z-index: 9999;"></div>
-                                <div style="position: relative;">
-                                    <div class="" style="width: 100%; padding-top: 17.75%;">
-                                        <div></div>
-                                    </div>
-                                    <picture class="JEjj5L">
-                                        <img data-is-lazy-load-bg-image="false" data-use-image-server="false" class="lazyload RPPDP+" loading="lazy" src="https://down-vn.img.susercontent.com/file/vn-50009109-5b63b67c83faa5f4c2a62b615c0173a5" role="presentation" alt="" style="position: absolute; top: 0px; height: 100%; width: 100%;">
-                                    </picture>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div style="position: relative; height: 132px; width: 960px; left: calc((100% - 960px) / 2);">
-                <div>
-                    <div class="md-container">
-                        <div class="md-component" data-component-id="1699246519373">
-                            <div class="lEwcgc">
-                                <div style="position: absolute; top: 50%; z-index: 9999;"></div>
-                                <div style="position: relative;">
-                                    <div class="" style="width: 100%; padding-top: 13.75%;">
-                                        <div></div>
-                                    </div>
-                                    <picture class="JEjj5L">
-                                        <img data-is-lazy-load-bg-image="false"
-                                             data-use-image-server="false" class="lazyload RPPDP+"
-                                             loading="lazy"
-                                             src="https://down-vn.img.susercontent.com/file/vn-50009109-47ff2361184f1f16f4e5590b8a1493f2"
-                                             role="presentation" alt=""
-                                             style="position: absolute; top: 0px; height: 100%; width: 100%;">
-                                    </picture>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            }
             <div style="position: relative; height: 132px; width: 960px; left: calc((100% - 960px) / 2);">
                 <div>
                     <div class="md-container">
@@ -1193,6 +1122,45 @@
     </div>
 
 </body>
+@{
+    DateTime? saleEndDate;
+    if (saleChuaBatDau != null && saleChuaBatDau.TrangThai == (int)TrangThaiSale.ChuaBatDau)
+    {
+        saleEndDate = saleChuaBatDau.NgayBatDau;
+    }
+    else
+    {
+        saleEndDate = new DateTime(0001, 01, 01);
+
+    }
+}
+<script>
+    let launchDate = new Date("@saleEndDate").getTime();
+    let timer = setInterval(tick, 1000);
+
+    function tick() {
+        let now = new Date().getTime();
+        let t = launchDate - now;
+        if (t > 0) {
+            let days = Math.floor(t / (1000 * 60 * 60 * 24));
+            if (days < 10) { days = "0" + days; }
+            let hours = Math.floor((t % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            if (hours < 10) { hours = "0" + hours; }
+            let mins = Math.floor((t % (1000 * 60 * 60)) / (1000 * 60));
+            if (mins < 10) { mins = "0" + mins; }
+            let secs = Math.floor((t % (1000 * 60)) / 1000);
+            if (secs < 10) { secs = "0" + secs; }
+            let _days = `${days}`;
+            let _hours = `${hours}`;
+            let _mins = `${mins}`;
+            let _secs = `${secs}`;
+            document.querySelector('.countdown_Day').innerText = _days;
+            document.querySelector('.countdown_Hours').innerText = _hours;
+            document.querySelector('.countdown_Mins').innerText = _mins;
+            document.querySelector('.countdown_Secs').innerText = _secs;
+        }
+    }
+</script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // Function để tạo controller cho mỗi carousel
