@@ -182,7 +182,7 @@ namespace App_View.Services
 
         public void CapNhatVoucherHetHanOnline()
         {
-            var VoucherCanCapNhat = _dbContext.vouchers.Where(c => c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.HoatDong).AsNoTracking().ToList();
+            var VoucherCanCapNhat = _dbContext.vouchers.Where(c => c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.HoatDong).ToList();
             if (VoucherCanCapNhat.Count > 0)
             {
                 foreach (var voucher in VoucherCanCapNhat)
@@ -197,12 +197,12 @@ namespace App_View.Services
         }
         public void CapNhatVoucherDenHanOnline()
         {
-            var VoucherCanCapNhat = _dbContext.vouchers.Where(c => c.NgayBatDau <= DateTime.Now && c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaBatDau).AsNoTracking().ToList();
+            var VoucherCanCapNhat = _dbContext.vouchers.Where(c => c.NgayBatDau <= DateTime.Now && c.NgayKetThuc >= DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaBatDau).ToList();
             if (VoucherCanCapNhat.Count > 0)
             {
                 foreach (var voucher in VoucherCanCapNhat)
                 {
-                    voucher.TrangThai = (int)TrangThaiVoucher.KhongHoatDong;
+                    voucher.TrangThai = (int)TrangThaiVoucher.HoatDong;
 
                 }
                 _dbContext.UpdateRange(VoucherCanCapNhat);
@@ -214,7 +214,7 @@ namespace App_View.Services
             var VoucherKhongKhaDung = _dbContext.vouchers.Where(c => c.TrangThai == (int)TrangThaiVoucher.KhongHoatDong || c.TrangThai == (int)TrangThaiVoucher.DaHuy).ToList();
             if (VoucherKhongKhaDung.Count > 0)
             {
-                var VoucherNguoiDungDangHoatDong = _dbContext.voucherNguoiDungs.Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung).AsNoTracking().ToList();
+                var VoucherNguoiDungDangHoatDong = _dbContext.voucherNguoiDungs.Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung).ToList();
                 foreach (var voucher in VoucherKhongKhaDung)
                 {
                     var VoucherNguoiDungCanSua = VoucherNguoiDungDangHoatDong.Where(c => c.IdVouCher == voucher.IdVoucher).ToList();
@@ -234,7 +234,6 @@ namespace App_View.Services
             // Lấy danh sách voucher cần cập nhật với điều kiện hết hạn và trạng thái hoặc không hoạt động tại quầy
             var VoucherCanCapNhat = _dbContext.vouchers
                 .Where(c => c.NgayKetThuc < DateTime.Now && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay))
-                .AsNoTracking()
                 .ToList();
 
             // Kiểm tra nếu có voucher cần cập nhật
@@ -256,12 +255,12 @@ namespace App_View.Services
 
         public void CapNhatVoucherDenHanTaiQuay()
         {
-            var VoucherNeedUpdate = _dbContext.vouchers.Where(c => c.NgayBatDau <= DateTime.Now && c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay).AsNoTracking().ToList();
+            var VoucherNeedUpdate = _dbContext.vouchers.Where(c => c.NgayBatDau <= DateTime.Now && c.NgayKetThuc > DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay).ToList();
             if (VoucherNeedUpdate.Count > 0)
             {
                 foreach (var voucher in VoucherNeedUpdate)
                 {
-                    voucher.TrangThai = (int)TrangThaiVoucher.KhongHoatDongTaiQuay;
+                    voucher.TrangThai = (int)TrangThaiVoucher.HoatDongTaiQuay;
 
                 }
                 _dbContext.UpdateRange(VoucherNeedUpdate);
@@ -273,7 +272,7 @@ namespace App_View.Services
             var VoucherKhongKhaDung = _dbContext.vouchers.Where(c => c.TrangThai == (int)TrangThaiVoucher.KhongHoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.DaHuyTaiQuay).ToList();
             if (VoucherKhongKhaDung.Count > 0)
             {
-                var VoucherNguoiDungDangHoatDong = _dbContext.voucherNguoiDungs.Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung).AsNoTracking().ToList();
+                var VoucherNguoiDungDangHoatDong = _dbContext.voucherNguoiDungs.Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung).ToList();
                 foreach (var voucher in VoucherKhongKhaDung)
                 {
                     var VoucherNguoiDungCanSua = VoucherNguoiDungDangHoatDong.Where(c => c.IdVouCher == voucher.IdVoucher).ToList();
