@@ -17,6 +17,7 @@ using System.Data;
 using System.Drawing.Imaging;
 using System.Drawing;
 using static App_Data.Repositories.TrangThai;
+using OpenXmlPowerTools.HtmlToWml;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -107,7 +108,7 @@ namespace App_Api.Controllers
             var VoucherGet = GetAllVoucher().FirstOrDefault(c => c.IdVoucher == id);
             if (VoucherGet != null)
             {
-                if (VoucherGet.TrangThai != (int)TrangThaiVoucher.KhongHoatDong)
+                if (VoucherGet.TrangThai != (int)TrangThaiVoucher.DaHuy)
                 {
                     VoucherGet!.TrangThai = (int)TrangThaiVoucher.DaHuy;
                     allRepo.EditItem(VoucherGet);
@@ -131,6 +132,10 @@ namespace App_Api.Controllers
                 else if (VoucherGet.NgayBatDau > DateTime.Now && VoucherGet.NgayKetThuc > DateTime.Now)
                 {
                     VoucherGet.TrangThai = (int)TrangThaiVoucher.ChuaBatDau;
+                }
+                else 
+                {
+                    VoucherGet.TrangThai = (int)TrangThaiVoucher.KhongHoatDong;
                 }
                 return allRepo.EditItem(VoucherGet);
             }
@@ -256,6 +261,10 @@ namespace App_Api.Controllers
                 else if (VoucherGet.NgayBatDau > DateTime.Now && VoucherGet.NgayKetThuc > DateTime.Now)
                 {
                     VoucherGet.TrangThai = (int)TrangThaiVoucher.ChuaHoatDongTaiQuay;
+                }
+                else
+                {
+                    VoucherGet.TrangThai = (int)TrangThaiVoucher.KhongHoatDongTaiQuay;
                 }
                 return allRepo.EditItem(VoucherGet);
             }
