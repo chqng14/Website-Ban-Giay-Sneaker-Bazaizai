@@ -4,26 +4,21 @@
     ViewData["Title"] = "Index";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
+<div style="text-align:center">
+    <h1>Danh sách sản phẩm khuyến mại</h1>
+</div>
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table id="tbSaleDT" class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MoTa)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TrangThai)
+                @Html.DisplayNameFor(model => model.SanPham)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.KhuyenMai)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SanPham)
+                @Html.DisplayNameFor(model => model.TrangThai)
             </th>
             <th></th>
         </tr>
@@ -32,7 +27,10 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MoTa)
+                @Html.DisplayFor(modelItem => item.SanPham)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KhuyenMai)
             </td>
             <td>
                     @if (item.TrangThai == 0)
@@ -49,15 +47,7 @@
                     }
                 </td>
             <td>
-                @Html.DisplayFor(modelItem => item.KhuyenMai)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.SanPham)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdKhuyenMaiChiTiet">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdKhuyenMaiChiTiet">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdKhuyenMaiChiTiet">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.IdKhuyenMaiChiTiet">Xóa khuyến mại</a>
             </td>
         </tr>
 }
