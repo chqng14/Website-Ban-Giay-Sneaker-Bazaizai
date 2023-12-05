@@ -24,10 +24,12 @@ using App_View.Models.ViewModels;
 using System.Security.Policy;
 using Org.BouncyCastle.Crypto;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class KhuyenMaiChiTietsController : Controller
     {
         private readonly BazaizaiContext _context;

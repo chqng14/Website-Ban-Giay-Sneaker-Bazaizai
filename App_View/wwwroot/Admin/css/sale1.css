@@ -98,8 +98,7 @@
     }
 
     .BwuUKj .rbfRts span, .HvGSgg .rbfRts span {
-        width: 1ch;
-        word-break: break-all;
+
         display: block
     }
 
@@ -115,17 +114,14 @@
 }
 
 .BwuUKj ._2UsJOV._2jJhsc span, .HvGSgg ._2UsJOV._2jJhsc span {
-    transform: translateY(-90%);
     animation-name: decimal-tick
 }
 
 .BwuUKj .FSBEZB._2jJhsc span, .HvGSgg .FSBEZB._2jJhsc span {
-    transform: translateY(-83.33333%);
     animation-name: senary-tick
 }
 
 .BwuUKj ._1mNNLN._2jJhsc > div, .HvGSgg ._1mNNLN._2jJhsc > div {
-    transform: translateY(-95.83333%);
     animation-name: ms-day-hour-tick
 }
 

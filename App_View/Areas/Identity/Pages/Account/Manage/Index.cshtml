@@ -59,7 +59,12 @@
 
                 <div class="dash__link dash__link--secondary u-s-m-b-30">
 
-                    <a data-modal="modal" data-modal-id="#dash-newsletter">Theo dõi bản tin</a>
+                  @*  <a data-modal="modal" data-modal-id="#dash-newsletter">Theo dõi bản tin</a>*@
+                    @if (user.SuaDoi > 0)
+                    {
+                        <p>Tên Đăng nhập chỉ có thể thay đổi một lần.</p>
+
+                    }
                 </div>
 
                 <div class="row">
@@ -73,6 +78,7 @@
                                     <label asp-for="Input.Username" class="gl-label" for="reg-fname"> Tên đăng nhập </label>
                                     <input asp-for="Input.Username" class="input-text input-text--primary-style" type="text" id="reg-fname">
                                     <span asp-validation-for="Input.Username" class="text-danger"></span>
+                                    
                                 </div>
                             }
                             else

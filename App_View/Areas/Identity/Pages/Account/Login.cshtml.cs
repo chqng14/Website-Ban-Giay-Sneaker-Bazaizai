@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using App_Data.Models;
 using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace App_View.Areas.Identity.Pages.Account
 {
@@ -120,8 +121,13 @@ namespace App_View.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
+                    var user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
+                    if(user == null)
+                    user = await _userManager.FindByNameAsync(Input.UserNameOrEmail);
                     _logger.LogWarning("User account locked out.");
-                    return RedirectToPage("./Lockout");
+                    //return RedirectToPage("./Lockout");
+                    return RedirectToPage("./Lockout", new { id = user.Id });
+
                 }
                 else
                 {

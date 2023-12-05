@@ -1,12 +1,11 @@
-﻿@page "/KhongDuocTruyCap.html"
-@model AccessDeniedModel
+﻿@page
+@model App_View.Areas.Identity.Pages.Account.PageNotFoundModel
 @{
-    ViewData["Title"] = "Hạn chế truy cập";
     Layout = "/Views/Shared/_LayoutAccessDenied.cshtml";
 }
 
 <style>
-  
+
 
     .img-fluid {
         max-width: 50%;
@@ -17,11 +16,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 100vh; 
+        height: 100vh;
     }
 
     .section {
-        text-align: center; 
+        text-align: center;
     }
 
         .section h2 {
@@ -36,9 +35,8 @@
     <div class="container">
 
         <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
-            <h2>Hạn chế truy cập</h2>
-            <h3>Bạn không có quyền truy cập vào tài nguyên này. Hãy liên lạc với quản trị viên để được cấp phép.</h3>
-            <img src="/PageIdentity/AccessDenied.png" class="img-fluid py-5" alt="Page Not Found">
+           
+            <img src="/PageIdentity/pagenotfound.png" class="img-fluid py-5" alt="Page Not Found">
 
         </section>
     </div>

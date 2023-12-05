@@ -98,9 +98,9 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
 
             await _signInManager.RefreshSignInAsync(user);
             _logger.LogInformation("User changed their password successfully.");
-            StatusMessage = "Your password has been changed.";
+            StatusMessage = "Mật khẩu của bạn đã được thay đổi.";
 
-            return RedirectToPage();
+            return RedirectToPage("/Account/my-profile");
         }
     }
 }

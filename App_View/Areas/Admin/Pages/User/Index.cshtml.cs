@@ -68,6 +68,8 @@ namespace App_View.Areas.Admin.Pages.User
             {
                 Id = x.Id,
                 UserName = x.UserName,
+                LockoutEnd = x.LockoutEnd,
+                LockoutEnabled = x.LockoutEnabled,
             });
             users = await lstUserAndRole.ToListAsync();
             foreach (var user in users)
