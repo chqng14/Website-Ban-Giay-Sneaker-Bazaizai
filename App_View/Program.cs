@@ -247,16 +247,16 @@ Task.Run(() =>
 {
     while (true)
     {
-        capNhatTime.CheckNgayKetThuc();
-        capNhatTime.CapNhatTrangThaiSaleDetail();
-        capNhatTime.CapNhatGiaBanThucTe();
-        capNhatTime.CapNhatVoucherHetHanOnline();
-        capNhatTime.CapNhatVoucherDenHanOnline();
-        capNhatTime.CapNhatVoucherNguoiDungOnline();
-        capNhatTime.CapNhatVoucherHetHanTaiQuay();
-        capNhatTime.CapNhatVoucherDenHanTaiQuay();
-        capNhatTime.CapNhatVoucherNguoiDungTaiQuay();
-        capNhatTime.CapNhatVoucherNguoiDungTaiQuayKhiVoucherHoatDong();
+        //capNhatTime.CheckNgayKetThuc();
+        //capNhatTime.CapNhatTrangThaiSaleDetail();
+        //capNhatTime.CapNhatGiaBanThucTe();
+        //capNhatTime.CapNhatVoucherHetHanOnline();
+        //capNhatTime.CapNhatVoucherDenHanOnline();
+        //capNhatTime.CapNhatVoucherNguoiDungOnline();
+        //capNhatTime.CapNhatVoucherHetHanTaiQuay();
+        //capNhatTime.CapNhatVoucherDenHanTaiQuay();
+        //capNhatTime.CapNhatVoucherNguoiDungTaiQuay();
+        //capNhatTime.CapNhatVoucherNguoiDungTaiQuayKhiVoucherHoatDong();
         Thread.Sleep(TimeSpan.FromSeconds(5));
     }
 });
