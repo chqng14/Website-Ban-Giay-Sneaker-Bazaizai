@@ -1,11 +1,14 @@
 ﻿using App_Data.DbContextt;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.Voucher;
 using App_View.IServices;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
 using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Services
@@ -13,12 +16,13 @@ namespace App_View.Services
     public class CapNhatThoiGianService
     {
         BazaizaiContext _dbContext = new BazaizaiContext();
+        private readonly HttpClient _httpClient;
         bool loading = false;
         public CapNhatThoiGianService()
-        {
-            
+        {         
             _dbContext = new BazaizaiContext();
-        }
+            _httpClient =new HttpClient();
+        }     
         #region Sale
         public void CheckNgayKetThuc()
         {
@@ -180,131 +184,27 @@ namespace App_View.Services
         }
         //_dbContext.SaveChanges();
         #endregion
-        #region VoucherOnline
-        public void CapNhatVoucherHetHanOnline()
+        public async Task<bool> CapNhatThoiGianVoucher()
         {
-            var VoucherCanCapNhat = _dbContext.vouchers.Where(c => c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.HoatDong).ToList();
-            if (VoucherCanCapNhat.Count > 0)
+            try
             {
-                foreach (var voucher in VoucherCanCapNhat)
+                var response = await _httpClient.PutAsync("https://localhost:7038/api/AutoUpdate/CapNhatThoiGianVoucher", null);
+                if (response.IsSuccessStatusCode)
                 {
-                    voucher.TrangThai = (int)TrangThaiVoucher.KhongHoatDong;
-
+                    return await response.Content.ReadAsAsync<bool>();
                 }
-                _dbContext.UpdateRange(VoucherCanCapNhat);
-                _dbContext.SaveChanges();
+                else
+                {
+                    return false;
+                }
             }
-
-        }
-        public void CapNhatVoucherDenHanOnline()
-        {
-            var VoucherCanCapNhat = _dbContext.vouchers.Where(c => c.NgayBatDau <= DateTime.Now && c.NgayKetThuc >= DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaBatDau).ToList();
-            if (VoucherCanCapNhat.Count > 0)
+            catch (Exception e)
             {
-                foreach (var voucher in VoucherCanCapNhat)
-                {
-                    voucher.TrangThai = (int)TrangThaiVoucher.HoatDong;
-
-                }
-                _dbContext.UpdateRange(VoucherCanCapNhat);
-                _dbContext.SaveChanges();
-            }
-        }
-        public void CapNhatVoucherNguoiDungOnline()
-        {
-            var VoucherKhongKhaDung = _dbContext.vouchers.Where(c => c.TrangThai == (int)TrangThaiVoucher.KhongHoatDong || c.TrangThai == (int)TrangThaiVoucher.DaHuy).ToList();
-            if (VoucherKhongKhaDung.Count > 0)
-            {
-                var VoucherNguoiDungDangHoatDong = _dbContext.voucherNguoiDungs.Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung).ToList();
-                foreach (var voucher in VoucherKhongKhaDung)
-                {
-                    var VoucherNguoiDungCanSua = VoucherNguoiDungDangHoatDong.Where(c => c.IdVouCher == voucher.IdVoucher).ToList();
-                    foreach (var user in VoucherNguoiDungCanSua)
-                    {
-                        user.TrangThai = (int)TrangThaiVoucherNguoiDung.HetHieuLuc;
-                    }
-                    _dbContext.UpdateRange(VoucherNguoiDungCanSua);
-                }
-
-                _dbContext.SaveChanges();
-            }
-        }
-        #endregion
-        #region VoucherTaiQuay
-        public void CapNhatVoucherHetHanTaiQuay()
-        {
-            // Lấy danh sách voucher cần cập nhật với điều kiện hết hạn và trạng thái hoặc không hoạt động tại quầy
-            var VoucherCanCapNhat = _dbContext.vouchers
-                .Where(c => c.NgayKetThuc < DateTime.Now && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay))
-                .ToList();
-
-            // Kiểm tra nếu có voucher cần cập nhật
-            if (VoucherCanCapNhat.Count > 0)
-            {
-                // Lặp qua từng voucher cần cập nhật và đặt trạng thái là Hết hạn tại quầy
-                foreach (var voucher in VoucherCanCapNhat)
-                {
-                    voucher.TrangThai = (int)TrangThaiVoucher.KhongHoatDongTaiQuay;
-                }
-
-                // Cập nhật danh sách voucher
-                _dbContext.UpdateRange(VoucherCanCapNhat);
-
-                // Lưu các thay đổi vào cơ sở dữ liệu
-                _dbContext.SaveChanges();
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
             }
         }
 
-        public void CapNhatVoucherDenHanTaiQuay()
-        {
-            var VoucherNeedUpdate = _dbContext.vouchers.Where(c => c.NgayBatDau <= DateTime.Now && c.NgayKetThuc > DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay).ToList();
-            if (VoucherNeedUpdate.Count > 0)
-            {
-                foreach (var voucher in VoucherNeedUpdate)
-                {
-                    voucher.TrangThai = (int)TrangThaiVoucher.HoatDongTaiQuay;
 
-                }
-                _dbContext.UpdateRange(VoucherNeedUpdate);
-                _dbContext.SaveChanges();
-            }
-        }
-        public void CapNhatVoucherNguoiDungTaiQuay()
-        {
-            var VoucherKhongKhaDung = _dbContext.vouchers.Where(c => c.TrangThai == (int)TrangThaiVoucher.KhongHoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.DaHuyTaiQuay).ToList();
-            if (VoucherKhongKhaDung.Count > 0)
-            {
-                var VoucherNguoiDungDangHoatDong = _dbContext.voucherNguoiDungs.Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung).ToList();
-                foreach (var voucher in VoucherKhongKhaDung)
-                {
-                    var VoucherNguoiDungCanSua = VoucherNguoiDungDangHoatDong.Where(c => c.IdVouCher == voucher.IdVoucher).ToList();
-                    foreach (var user in VoucherNguoiDungCanSua)
-                    {
-                        user.TrangThai = (int)TrangThaiVoucherNguoiDung.HetHieuLuc;
-                    }
-                    _dbContext.UpdateRange(VoucherNguoiDungCanSua);
-                }
-                _dbContext.SaveChanges();
-            }
-        }
-        public void CapNhatVoucherNguoiDungTaiQuayKhiVoucherHoatDong()
-        {
-            var VoucherHoatDong = _dbContext.vouchers.Where(c => c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay).ToList();
-            if (VoucherHoatDong.Count > 0)
-            {
-                var VoucherNguoiDungChuaBatDau = _dbContext.voucherNguoiDungs.Where(c => c.TrangThai == (int)TrangThaiVoucherNguoiDung.ChuaBatDau).AsNoTracking().ToList();
-                foreach (var voucher in VoucherHoatDong)
-                {
-                    var VoucherNguoiDungCanSua = VoucherNguoiDungChuaBatDau.Where(c => c.IdVouCher == voucher.IdVoucher).ToList();
-                    foreach (var user in VoucherNguoiDungCanSua)
-                    {
-                        user.TrangThai = (int)TrangThaiVoucherNguoiDung.KhaDung;
-                    }
-                    _dbContext.UpdateRange(VoucherNguoiDungCanSua);
-                }
-                _dbContext.SaveChanges();
-            }
-        }
-        #endregion
     }
 }
