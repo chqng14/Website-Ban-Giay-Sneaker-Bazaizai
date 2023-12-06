@@ -78,7 +78,7 @@
         <div class="modal-content">
             <div class="modal-header align-items-center" style="background: #129dc1;">
                 <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
-                <h5 class="modal-title" id="exampleModalLabel">CẤU HÌNH MẶC ĐỊNH CHO CÁC BIẾN THỂ</h5>
+                <h5 class="modal-title" id="exampleModalLabel">CẤU HÌNH GIÁ TRỊ CHO CÁC BIẾN THỂ</h5>
                 <div>
                 </div>
             </div>
@@ -175,7 +175,7 @@
                 <div class="col-4" style="margin-top: 10px" id="sanpham">
                     <label class="font-weight-semibold">Tên sản phẩm</label>
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-cube mr-1"></i>
+                        <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                         <select class="w-100 select2-active" asp-for="IdSanPham">
                             @foreach (var item in (SelectList)ViewData["IdSanPham"]!)
                             {
@@ -190,7 +190,7 @@
                         <span> Thương hiệu</span>
                     </label>
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-trademark mr-1"></i>
+                        <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                         <select class="select2-active w-100" asp-for="IdThuongHieu">
                             @foreach (var item in (SelectList)ViewData["IdThuongHieu"]!)
                             {
@@ -203,7 +203,7 @@
                 <div class="col-4" style="margin-top: 10px" id="xuatxu">
                     <label class="font-weight-semibold">Xuất xứ</label>
                     <div class="d-flex align-items-center">
-                        <i class="fab fa-connectdevelop mr-1"></i>
+                        <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                         <select class="select2-active w-100" asp-for="IdXuatXu">
                             @foreach (var item in (SelectList)ViewData["IdXuatXu"]!)
                             {
@@ -216,7 +216,7 @@
                 <div class="col-4" style="margin-top: 10px" id="chatlieu">
                     <label class="font-weight-semibold">Chất liệu</label>
                     <div class="d-flex align-items-center">
-                        <i class="fab fa-centercode mr-1"></i>
+                        <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                         <select class="select2-active w-100" asp-for="IdChatLieu">
                             @foreach (var item in (SelectList)ViewData["IdChatLieu"]!)
                             {
@@ -229,7 +229,7 @@
                 <div class="col-4" style="margin-top: 10px" id="loaigiay">
                     <label class="font-weight-semibold">Loại giầy</label>
                     <div class="d-flex align-items-center">
-                        <i class="fab fa-magento mr-1"></i>
+                        <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                         <select class="select2-active w-100" asp-for="IdLoaiGiay">
                             @foreach (var item in (SelectList)ViewData["IdLoaiGiay"]!)
                             {
@@ -242,7 +242,7 @@
                 <div class="col-4" style="margin-top: 10px" id="kieudegiay">
                     <label class="font-weight-semibold">Kiểu đế giầy</label>
                     <div class="d-flex align-items-center mr-1">
-                        <i class="fas fa-podcast mr-1"></i>
+                        <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                         <select class="select2-active w-100" asp-for="IdKieuDeGiay">
                             @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"]!)
                             {
@@ -257,7 +257,7 @@
                 <div class="col-6" style="margin-top: 10px" id="mausac">
                     <label class="font-weight-semibold">Màu Sắc</label>
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-palette mr-1"></i>
+                        <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                         <select id="IdColor" class="select2-active w-100"
                                 multiple="multiple">
                             @foreach (var item in (SelectList)ViewData["IdMauSac"]!)
@@ -271,7 +271,7 @@
                 <div class="col-6" style="margin-top: 10px" id="kichco">
                     <label class="font-weight-semibold">Kích cỡ</label>
                     <div class="d-flex align-items-center">
-                        <i class="fas fa-bowling-ball mr-1"></i>
+                        <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                         <select id="IdSize" class="select2-active w-100"
                                 multiple="multiple">
                             @foreach (var item in (SelectList)ViewData["IdKichCo"]!)
@@ -338,7 +338,7 @@
 
         Swal.fire({
             title: 'Thông báo?',
-            text: 'Bạn có muốn cấu hình giá trị mặc định cho các biến thể không?',
+            text: 'Bạn có muốn cấu hình giá trị cho các biến thể không?',
             icon: 'question',
             showCancelButton: true,
             confirmButtonText: 'Có',
@@ -368,6 +368,50 @@
 
     function CheckboxChange() {
         CheckConfirm();
+    }
+
+    function showToastTonTai(name) {
+        var toastHTML = `<div class="toast fade hide" data-delay="3000">
+     <div class="toast-header">
+         <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+         <strong class="mr-auto">Thông báo</strong>
+         <small>1 seconds ago</small>
+         <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+             <span aria-hidden="true">&times;</span>
+         </button>
+     </div>
+     <div class="toast-body">
+         <span>${name} đã tồn tại!</span>
+     </div>
+ </div>`
+
+        $('#notification-toast').append(toastHTML)
+        $('#notification-toast .toast').toast('show');
+        setTimeout(function () {
+            $('#notification-toast .toast:first-child').remove();
+        }, 3000);
+    }
+
+    function showDauVaoKhongHopLe() {
+        var toastHTML = `<div class="toast fade hide" data-delay="3000">
+    <div class="toast-header">
+        <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+        <strong class="mr-auto">Thông báo</strong>
+        <small>1 seconds ago</small>
+        <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+        <span>Đầu vào không hợp lệ</span>
+    </div>
+</div>`
+
+        $('#notification-toast').append(toastHTML)
+        $('#notification-toast .toast').toast('show');
+        setTimeout(function () {
+            $('#notification-toast .toast:first-child').remove();
+        }, 3000);
     }
 
     $(document).on('change', '#ChonAnh', function () {
@@ -502,29 +546,29 @@
                         data: JSON.stringify(data),
                         contentType: 'application/json',
                         success: function (result) {
-                            var $select2 = $("[name='IdThuongHieu']");
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
-                            }
-                            var newOption = new Option(result.tenThuongHieu, result.idThuongHieu, true, true);
-                            $select2.append(newOption).trigger('change');
+                            if (result) {
+                                var $select2 = $("[name='IdThuongHieu']");
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
+                                var newOption = new Option(result.tenThuongHieu, result.idThuongHieu, true, true);
+                                $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
-                            console.log($select2.val());
+                                $(this).val('');
+
+                            } else {
+                                showToastTonTai('Thương hiệu');
+                            }
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
+                            showDauVaoKhongHopLe();
                         }
                     });
                 }
             }
         });
         $('#xuatxu').find('input.select2-input').on('keyup', function (e) {
-            console.log('xuatxu');
             if (e.key === 'Enter') {
                 var inputValue = $(this).val();
                 if (inputValue) {
@@ -537,23 +581,23 @@
                         data: JSON.stringify(data),
                         contentType: 'application/json',
                         success: function (result) {
-                            var $select2 = $("[name='IdXuatXu']");
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
-                            }
+                            if (result) {
+                                var $select2 = $("[name='IdXuatXu']");
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
 
-                            var newOption = new Option(result.ten, result.idXuatXu, true, true);
-                            $select2.append(newOption).trigger('change');
+                                var newOption = new Option(result.ten, result.idXuatXu, true, true);
+                                $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
-                            console.log($select2.val());
+                                $(this).val('');
+                            } else {
+                                showToastTonTai('Xuất xứ');
+                            }                            
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
+                            showDauVaoKhongHopLe();
                         }
                     });
                 }
@@ -572,22 +616,22 @@
                         data: JSON.stringify(data),
                         contentType: 'application/json',
                         success: function (result) {
-                            var $select2 = $("[name='IdSanPham']");
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
-                            }
-                            var newOption = new Option(result.tenSanPham, result.idSanPham, true, true);
-                            $select2.append(newOption).trigger('change');
+                            if (result) {
+                                var $select2 = $("[name='IdSanPham']");
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
+                                var newOption = new Option(result.tenSanPham, result.idSanPham, true, true);
+                                $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
-                            console.log($select2.val());
+                                $(this).val('');
+                            } else {
+                                showToastTonTai('Tên sản phẩm')
+                            }
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
+                            showDauVaoKhongHopLe();
                         }
                     });
                 }
@@ -606,22 +650,22 @@
                         data: JSON.stringify(data),
                         contentType: 'application/json',
                         success: function (result) {
-                            var $select2 = $("[name='IdLoaiGiay']");
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
-                            }
-                            var newOption = new Option(result.tenLoaiGiay, result.idLoaiGiay, true, true);
-                            $select2.append(newOption).trigger('change');
+                            if (result) {
+                                var $select2 = $("[name='IdLoaiGiay']");
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
+                                var newOption = new Option(result.tenLoaiGiay, result.idLoaiGiay, true, true);
+                                $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
-                            console.log($select2.val());
+                                $(this).val('');
+                            } else {
+                                showToastTonTai('Loại giày')
+                            }                     
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
+                            showDauVaoKhongHopLe();
                         }
                     });
                 }
@@ -640,22 +684,22 @@
                         data: JSON.stringify(data),
                         contentType: 'application/json',
                         success: function (result) {
-                            var $select2 = $("[name='IdChatLieu']");
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
-                            }
-                            var newOption = new Option(result.tenChatLieu, result.idChatLieu, true, true);
-                            $select2.append(newOption).trigger('change');
+                            if (result) {
+                                var $select2 = $("[name='IdChatLieu']");
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
+                                var newOption = new Option(result.tenChatLieu, result.idChatLieu, true, true);
+                                $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
-                            console.log($select2.val());
+                                $(this).val('');
+                            } else {
+                                showToastTonTai('Chất liệu')
+                            }
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
+                            showDauVaoKhongHopLe();
                         }
                     });
                 }
@@ -674,22 +718,22 @@
                         data: JSON.stringify(data),
                         contentType: 'application/json',
                         success: function (result) {
-                            var $select2 = $("[name='IdKieuDeGiay']");
-                            var selectedValue = $select2.val();
-                            if (selectedValue && selectedValue.length > 0) {
-                                $select2.val(null).trigger('change');
-                            }
-                            var newOption = new Option(result.tenKieuDeGiay, result.idKieuDeGiay, true, true);
-                            $select2.append(newOption).trigger('change');
+                            if (result) {
+                                var $select2 = $("[name='IdKieuDeGiay']");
+                                var selectedValue = $select2.val();
+                                if (selectedValue && selectedValue.length > 0) {
+                                    $select2.val(null).trigger('change');
+                                }
+                                var newOption = new Option(result.tenKieuDeGiay, result.idKieuDeGiay, true, true);
+                                $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
-                            console.log($select2.val());
+                                $(this).val('');
+                            } else {
+                                showToastTonTai("Kiểu đế giày")
+                            }                            
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
+                            showDauVaoKhongHopLe();
                         }
                     });
                 }
@@ -708,19 +752,19 @@
                         data: JSON.stringify(data),
                         contentType: 'application/json',
                         success: function (result) {
-                            var $select2 = $("#IdColor");
+                            if (result) {
+                                var $select2 = $("#IdColor");
 
-                            var newOption = new Option(result.tenMauSac, result.idMauSac, true, true);
-                            $select2.append(newOption).trigger('change');
+                                var newOption = new Option(result.tenMauSac, result.idMauSac, true, true);
+                                $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
-                            console.log($("[name='listNameSanPham']").select2('data'));
+                                $(this).val('');
+                            } else {
+                                showToastTonTai("Màu sắc")
+                            }                            
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
+                            showDauVaoKhongHopLe();
                         }
                     });
                 }
@@ -739,19 +783,20 @@
                         data: JSON.stringify(data),
                         contentType: 'application/json',
                         success: function (result) {
-                            console.log(result);
-                            var $select2 = $("#IdSize");
+                            if (result) {
+                                console.log(result);
+                                var $select2 = $("#IdSize");
 
-                            var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
-                            $select2.append(newOption).trigger('change');
+                                var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
+                                $select2.append(newOption).trigger('change');
 
-                            $(this).val('');
+                                $(this).val('');
+                            } else {
+                                showToastTonTai("Kích cỡ")
+                            }
                         },
                         error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
+                            showDauVaoKhongHopLe();
                         }
                     });
                 }

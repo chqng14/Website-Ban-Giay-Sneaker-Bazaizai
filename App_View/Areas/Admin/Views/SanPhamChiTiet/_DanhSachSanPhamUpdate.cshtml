@@ -348,6 +348,50 @@
         const URL_UPDATE_PRODUCT_DETAIL = 'UpdateSanPham';
         const URL_DELETE_LIST_IMAGE = 'DeleteAnh';
         const URL_CREATE_IMAGE = 'CreateAnh';
+
+        function showToastTonTai(name) {
+            var toastHTML = `<div class="toast fade hide" data-delay="3000">
+         <div class="toast-header">
+             <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+             <strong class="mr-auto">Thông báo</strong>
+             <small>1 seconds ago</small>
+             <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                 <span aria-hidden="true">&times;</span>
+             </button>
+         </div>
+         <div class="toast-body">
+             <span>${name} đã tồn tại!</span>
+         </div>
+     </div>`
+
+            $('#notification-toast').append(toastHTML)
+            $('#notification-toast .toast').toast('show');
+            setTimeout(function () {
+                $('#notification-toast .toast:first-child').remove();
+            }, 3000);
+        }
+
+        function showDauVaoKhongHopLe() {
+            var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                <div class="toast-header">
+                    <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                    <strong class="mr-auto">Thông báo</strong>
+                    <small>1 seconds ago</small>
+                    <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    <span>Đầu vào không hợp lệ</span>
+                </div>
+            </div>`
+
+            $('#notification-toast').append(toastHTML)
+            $('#notification-toast .toast').toast('show');
+            setTimeout(function () {
+                $('#notification-toast .toast:first-child').remove();
+            }, 3000);
+        }
         $(() => {
 
             $(".select2-active").select2();
@@ -356,7 +400,7 @@
                 const $thuonghieu = $(this);
                 var $thuonghieuInput = $(this).find('input.select2-input');
                 $thuonghieuInput.on('keyup', function (e) {
-                    if (e.keyCode === 13) {
+                    if (e.key === 'Enter') {
                         var inputValue = $(this).val();
                         if (inputValue) {
                             var data = {
@@ -370,20 +414,21 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.tenThuongHieu, result.idThuongHieu, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenThuongHieu, result.idThuongHieu, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $thuonghieuInput.val('');
+                                        $thuonghieuInput.val('');
+                                    } else {
+                                        showToastTonTai('Thương hiệu')
+                                    }
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                    showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -394,7 +439,7 @@
                 const $xuatxu = $(this);
                 var $xuatxuInput = $(this).find('input.select2-input');
                 $xuatxuInput.on('keyup', function (e) {
-                    if (e.keyCode === 13) {
+                    if (e.key === 'Enter') {
                         var inputValue = $(this).val();
                         if (inputValue) {
                             var data = {
@@ -406,21 +451,22 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var $select2 = $xuatxu.find("[name='IdXuatXu']");
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.ten, result.idXuatXu, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var $select2 = $xuatxu.find("[name='IdXuatXu']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.ten, result.idXuatXu, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $(this).val('');
+                                        $(this).val('');
+                                    } else {
+                                        showToastTonTai('Xuất xứ')
+                                    }
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                   showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -431,7 +477,7 @@
                 const $sanpham = $(this);
                 var $sanphamInput = $(this).find('input.select2-input');
                 $sanphamInput.on('keyup', function (e) {
-                    if (e.keyCode === 13) {
+                    if (e.key === 'Enter') {
                         var inputValue = $(this).val();
                         if (inputValue) {
                             var data = {
@@ -443,21 +489,22 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var $select2 = $sanpham.find("[name='IdSanPham']");
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.tenSanPham, result.idSanPham, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var $select2 = $sanpham.find("[name='IdSanPham']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenSanPham, result.idSanPham, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $(this).val('');
+                                        $(this).val('');
+                                    } else {
+                                        showToastTonTai('Tên sản phẩm')
+                                    }
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                  showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -468,7 +515,7 @@
                 const $loaigiay = $(this);
                 var $loaigiayInput = $(this).find('input.select2-input');
                 $loaigiayInput.on('keyup', function (e) {
-                    if (e.keyCode === 13) {
+                    if (e.key === 'Enter') {
                         var inputValue = $(this).val();
                         if (inputValue) {
                             var data = {
@@ -480,21 +527,22 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var $select2 = $loaigiay.find("[name='IdLoaiGiay']");
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.tenLoaiGiay, result.idLoaiGiay, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var $select2 = $loaigiay.find("[name='IdLoaiGiay']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenLoaiGiay, result.idLoaiGiay, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $(this).val('');
+                                        $(this).val('');
+                                    } else {
+                                        showToastTonTai('Tên loại giày')
+                                    }
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                    showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -505,7 +553,7 @@
                 const $chatlieu = $(this);
                 var $chatlieuInput = $(this).find('input.select2-input');
                 $chatlieuInput.on('keyup', function (e) {
-                    if (e.keyCode === 13) {
+                    if (e.key === 'Enter') {
                         var inputValue = $(this).val();
                         if (inputValue) {
                             var data = {
@@ -517,21 +565,22 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var $select2 = $chatlieu.find("[name='IdChatLieu']");
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.tenChatLieu, result.idChatLieu, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var $select2 = $chatlieu.find("[name='IdChatLieu']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenChatLieu, result.idChatLieu, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $(this).val('');
+                                        $(this).val('');
+                                    } else {
+                                        showToastTonTai('Chất liệu')
+                                    }
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                    showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -542,7 +591,7 @@
                 const $kieudegiay = $(this);
                 var $kieudegiayInput = $(this).find('input.select2-input');
                 $kieudegiayInput.on('keyup', function (e) {
-                    if (e.keyCode === 13) {
+                    if (e.key === 'Enter') {
                         var inputValue = $(this).val();
                         if (inputValue) {
                             var data = {
@@ -554,21 +603,22 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var $select2 = $kieudegiay.find("[name='IdKieuDeGiay']");
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.tenKieuDeGiay, result.idKieuDeGiay, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var $select2 = $kieudegiay.find("[name='IdKieuDeGiay']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenKieuDeGiay, result.idKieuDeGiay, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $(this).val('');
+                                        $(this).val('');
+                                    } else {
+                                        showToastTonTai('Kiểu đế giày')
+                                    }
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                    showDauVaoKhongHopLe();
                                 }
                             });
                         }
@@ -579,7 +629,7 @@
                 const $mausac = $(this);
                 var $mausacInput = $(this).find('input.select2-input');
                 $mausacInput.on('keyup', function (e) {
-                    if (e.keyCode === 13) {
+                    if (e.key === 'Enter') {
                         var inputValue = $(this).val();
                         if (inputValue) {
                             var data = {
@@ -591,21 +641,22 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var $select2 = $mausac.find("[name='IdMauSac']");
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.tenMauSac, result.idMauSac, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var $select2 = $mausac.find("[name='IdMauSac']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenMauSac, result.idMauSac, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $(this).val('');
+                                        $(this).val('');
+                                    } else {
+                                        showToastTonTai('Màu sắc')
+                                    }
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                   showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -616,7 +667,7 @@
                 const $kichco = $(this);
                 var $kichcoInput = $(this).find('input.select2-input');
                 $kichcoInput.on('keyup', function (e) {
-                    if (e.keyCode === 13) {
+                    if (e.key === 'Enter') {
                         var inputValue = $(this).val();
                         if (inputValue) {
                             var data = {
@@ -628,22 +679,23 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var $select2 = $kichco.find("[name='IdKichCo']");
+                                    if (result) {
+                                        var $select2 = $kichco.find("[name='IdKichCo']");
 
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
+                                        $select2.append(newOption).trigger('change');
+
+                                        $(this).val('');
+                                    } else {
+                                        showToastTonTai('Kích cỡ')
                                     }
-                                    var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
-                                    $select2.append(newOption).trigger('change');
-
-                                    $(this).val('');
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                   showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -687,7 +739,7 @@
         })
 
         $(document).on('click', '[name= "choseFile"]', function () {
-            $(this).closest('.upload').find('.fileInput').click()
+            $(this).closest('.upload').find('.fileInput').trigger('click')
         })
 
         $(document).on("click", ".file-image", function () {
@@ -815,10 +867,11 @@
                     }
                 }
             })
-            newInputFile.click()
+            newInputFile.trigger('click')
         }
 
-        $('.update-sp').click(function () {
+        $(document).off('click', '.update-sp')
+        $(document).on('click','.update-sp',function () {
             const promise = [];
             const cards = $(".accordion > .card");
             Array.from(cards).forEach(item => {

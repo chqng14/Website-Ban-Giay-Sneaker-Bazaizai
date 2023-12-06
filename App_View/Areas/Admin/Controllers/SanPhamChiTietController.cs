@@ -46,7 +46,6 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly ISanPhamChiTietService _sanPhamChiTietService;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly BazaizaiContext _bazaizaiContext;
         private readonly HttpClient _httpClient;
 
         public SanPhamChiTietController(ISanPhamChiTietService sanPhamChiTietService, IWebHostEnvironment webHostEnvironment, HttpClient httpClient)
@@ -55,7 +54,6 @@ namespace App_View.Areas.Admin.Controllers
             _webHostEnvironment = webHostEnvironment;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             _httpClient = httpClient;
-            _bazaizaiContext = new BazaizaiContext();
         }
         [HttpGet]
         // GET: Admin/SanPhamChiTiet/DanhSachSanPham
@@ -633,24 +631,6 @@ namespace App_View.Areas.Admin.Controllers
             {
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
-            //try
-            //{
-            //    var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/LayDanhSachTongQuan", parameters);
-
-            //    if (response.IsSuccessStatusCode)
-            //    {
-            //        var jsonResponse = await response.Content.ReadAsStringAsync();
-            //        return Content(jsonResponse, "application/json");
-            //    }
-            //    else
-            //    {
-            //        return StatusCode((int)response.StatusCode, response.ReasonPhrase);
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    return StatusCode(500, $"Internal Server Error: {ex.Message}");
-            //}
         }
 
         public async Task<IActionResult> GetDanhSachSanPhamNgungKinhDoanh(int draw, int start, int length, string searchValue)
