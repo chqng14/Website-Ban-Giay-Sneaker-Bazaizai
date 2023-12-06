@@ -58,14 +58,17 @@ namespace App_Api.Controllers
             foreach (var sale in ngayKetThucSale)
             {
                 sale.TrangThai = (int)TrangThaiSale.HetHan;
+                KMRepos.EditItem(sale);
             }
             foreach (var sale in ngaySale)
             {
                 sale.TrangThai = (int)TrangThaiSale.DangBatDau;
+                KMRepos.EditItem(sale);
             }
             foreach (var sale in saleChuaBatDau)
             {
                 sale.TrangThai = (int)TrangThaiSale.ChuaBatDau;
+                KMRepos.EditItem(sale);
             }
 
             // Hàm CapNhatTrangThaiSaleDetail
