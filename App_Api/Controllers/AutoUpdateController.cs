@@ -5,6 +5,7 @@ using App_Data.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OpenXmlPowerTools;
 using static App_Data.Repositories.TrangThai;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -17,12 +18,16 @@ namespace App_Api.Controllers
     {
         private readonly IAllRepo<VoucherNguoiDung> VcNguoiDungRepos;
         private readonly IAllRepo<Voucher> VoucherRepo;
+        private readonly IAllRepo<KhuyenMai> KMRepos;
+        private readonly IAllRepo<KhuyenMaiChiTiet> KmctRepos;
+        private readonly IAllRepo<SanPhamChiTiet> SpctRepos;
+        private readonly ISanPhamChiTietRespo _sanPhamChiTietRes;
         private readonly IMapper _mapper;
         DbSet<Voucher> vouchers;
         DbSet<VoucherNguoiDung> voucherNguoiDung;
         BazaizaiContext _dbContext = new BazaizaiContext();
         bool loading = false;
-        public AutoUpdateController(IMapper mapper)
+        public AutoUpdateController(IMapper mapper, IAllRepo<KhuyenMai> kMRepos, IAllRepo<KhuyenMaiChiTiet> kmctRepos, IAllRepo<SanPhamChiTiet> spctRepos, ISanPhamChiTietRespo sanPhamChiTietRes)
         {
             voucherNguoiDung = _dbContext.voucherNguoiDungs;
             AllRepo<VoucherNguoiDung> VcNd = new AllRepo<VoucherNguoiDung>(_dbContext, voucherNguoiDung);
@@ -32,18 +37,22 @@ namespace App_Api.Controllers
             VoucherRepo = all;
             _mapper = mapper;
             _dbContext = new BazaizaiContext();
+            KMRepos = kMRepos;
+            KmctRepos = kmctRepos;
+            SpctRepos = spctRepos;
+            _sanPhamChiTietRes = sanPhamChiTietRes;
         }
-        #region Sale
-        [HttpPut("CheckNgayKetThucKhuyenMai")]
-        public void CheckNgayKetThuc()
+        [HttpPut("CapNhatThongTinKhuyenMai")]
+        public void CapNhatThongTinKhuyenMai()
         {
-            var ngayKetThucSale = _dbContext.khuyenMais
+            // Hàm CheckNgayKetThucKhuyenMai
+            var ngayKetThucSale = KMRepos.GetAll()
                 .Where(p => p.NgayKetThuc <= DateTime.Now && p.TrangThai != (int)TrangThaiSale.HetHan)
                 .ToList();
-            var ngaySale = _dbContext.khuyenMais
+            var ngaySale = KMRepos.GetAll()
                 .Where(p => p.NgayKetThuc >= DateTime.Now && p.TrangThai == (int)TrangThaiSale.HetHan && p.TrangThai != (int)TrangThaiSale.BuocDung)
                 .ToList();
-            var saleChuaBatDau = _dbContext.khuyenMais
+            var saleChuaBatDau = KMRepos.GetAll()
                .Where(p => p.NgayBatDau >= DateTime.Now)
                .ToList();
             foreach (var sale in ngayKetThucSale)
@@ -58,14 +67,11 @@ namespace App_Api.Controllers
             {
                 sale.TrangThai = (int)TrangThaiSale.ChuaBatDau;
             }
-            _dbContext.SaveChanges();
-        }
-        [HttpPut("CapNhatTrangThaiSaleDetail")]
-        public void CapNhatTrangThaiSaleDetail()
-        {
-            var lstHetHan = _dbContext.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.HetHan || x.TrangThai == (int)TrangThaiSale.BuocDung).ToList();
-            var lstDangKhuyenMai = _dbContext.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau).ToList();
-            var lstKMCT = _dbContext.khuyenMaiChiTiets.ToList();
+
+            // Hàm CapNhatTrangThaiSaleDetail
+            var lstHetHan = KMRepos.GetAll().Where(x => x.TrangThai == (int)TrangThaiSale.HetHan || x.TrangThai == (int)TrangThaiSale.BuocDung).ToList();
+            var lstDangKhuyenMai = KMRepos.GetAll().Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau).ToList();
+            var lstKMCT = KmctRepos.GetAll();
             foreach (var a in lstHetHan)
             {
                 foreach (var b in lstKMCT)
@@ -73,6 +79,7 @@ namespace App_Api.Controllers
                     if (b.IdKhuyenMai == a.IdKhuyenMai)
                     {
                         b.TrangThai = (int)TrangThaiSaleDetail.NgungKhuyenMai;
+                        KmctRepos.EditItem(b);
                     }
                 }
             }
@@ -83,31 +90,26 @@ namespace App_Api.Controllers
                     if (b.IdKhuyenMai == a.IdKhuyenMai)
                     {
                         b.TrangThai = (int)TrangThaiSaleDetail.DangKhuyenMai;
-                        var spct = _dbContext.sanPhamChiTiets.Where(x => x.IdChiTietSp == b.IdSanPhamChiTiet);
+                        var spct = SpctRepos.GetAll().Where(x => x.IdChiTietSp == b.IdSanPhamChiTiet);
                         if (spct.Any())
                         {
                             foreach (var c in spct)
                             {
                                 c.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DaApDungSale;
+                                SpctRepos.EditItem(c);
                             }
-                            _dbContext.sanPhamChiTiets.UpdateRange(spct);
                         }
+                        KmctRepos.EditItem(b);
                     }
                 }
             }
-            _dbContext.SaveChanges();
-            loading = false;
 
-
-        }
-        [HttpPut("CapNhatGiaBanThucTe")]
-        public void CapNhatGiaBanThucTe()
-        {
-            var KhuyenMaiCTs = _dbContext.khuyenMaiChiTiets.AsNoTracking().ToList();
-            var khuyenMais = _dbContext.khuyenMais.AsNoTracking().ToList();
-            var lstKhuyenMaiDangHoatDong = _dbContext.khuyenMaiChiTiets.Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai).AsNoTracking().ToList();
+            // Hàm CapNhatGiaBanThucTe
+            var KhuyenMaiCTs = KmctRepos.GetAll().ToList();
+            var khuyenMais = KMRepos.GetAll().ToList();
+            var lstKhuyenMaiDangHoatDong = KmctRepos.GetAll().Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai).ToList();
             var giohang = _dbContext.gioHangChiTiets.ToList();
-            var lstCTSP = _dbContext.sanPhamChiTiets.Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale && x.TrangThai == (int)TrangThaiCoBan.HoatDong).ToList();
+            var lstCTSP = SpctRepos.GetAll().Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale && x.TrangThai == (int)TrangThaiCoBan.HoatDong).ToList();
             if (lstCTSP != null && lstCTSP.Count() > 0)
             {
                 foreach (var ctsp in lstCTSP)
@@ -144,30 +146,27 @@ namespace App_Api.Controllers
                         {
                             item.GiaBan = ctsp.GiaThucTe;
                         }
-                        //_dbContext.sanPhamChiTiets.Update(ctsp);
-                        //_dbContext.SaveChanges();
+                        _sanPhamChiTietRes.UpdateAsync(ctsp);
                     }
                     else
                     {
                         ctsp.GiaThucTe = ctsp.GiaBan;
                         ctsp.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DuocApDungSale;
-                        //_dbContext.sanPhamChiTiets.Update(ctsp);
-                        //_dbContext.SaveChanges();
                         var gioHangChiTiet = giohang.Where(x => x.IdSanPhamCT == ctsp.IdChiTietSp).ToList();
                         foreach (var item in gioHangChiTiet)
                         {
                             item.GiaBan = ctsp.GiaThucTe;
                         }
+                        _sanPhamChiTietRes.UpdateAsync(ctsp);
                     }
 
                 }
                 _dbContext.gioHangChiTiets.UpdateRange(giohang);
-                _dbContext.sanPhamChiTiets.UpdateRange(lstCTSP);
                 _dbContext.SaveChanges();
             }
         }
-        //_dbContext.SaveChanges();
-        #endregion
+
+
         [HttpPut("CapNhatThoiGianVoucher")]
         public void CapNhatThoiGianVoucher()
         {
