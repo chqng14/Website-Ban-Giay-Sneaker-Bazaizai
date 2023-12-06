@@ -1,0 +1,210 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+    }
+
+    .chartMenu {
+        width: 100vw;
+        height: 40px;
+        background: #1A1A1A;
+        color: rgba(54, 162, 235, 1);
+    }
+
+        .chartMenu p {
+            padding: 10px;
+            font-size: 20px;
+        }
+
+    .chartCard {
+        width: 100vw;
+        height: calc(100vh - 40px);
+        background: rgba(54, 162, 235, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chartBox {
+        width: 80%;
+        height: 70%;
+        padding: 20px;
+        border-radius: 20px;
+        border: solid 3px rgba(54, 162, 235, 1);
+        background: white;
+    }
+
+    /*    .custom-scroll-table {
+                                                max-height: 10px;
+                                                overflow-y: auto;
+                                            }
+                                        */
+
+</style>
+
+<h1 style="text-align:center">Doanh thu theo đơn hàng</h1>
+<div class="row">
+    <input type="date" id="fromDate">
+    <input type="date" id="toDate">
+    <button> Hôm nay</button>
+    <button> Hôm qua</button>
+    <button> Tuần này</button>
+    <div class="chartCard">
+
+        <div class="chartBox">
+            <canvas id="myChart" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"></canvas>
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="~/Admin/moment/moment.min.js"></script>
+    <script>
+
+        var arrDonHang = [];
+        var arrDonHangThanhCong = [];
+        var arrDonHangDaHuy = [];
+        var arrDoanhThu = [];
+        var dates = [];
+        var myChart;
+
+        function updateChart(fromDate, toDate) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("BieuDoThongKeHoaDonOnlineTheoThang", "ThongKe")",
+                data: { fromDate: fromDate, toDate: toDate },
+                success: function (rs) {
+                    console.log(rs.data);
+                    arrDonHangDaHuy = [];
+                    arrDonHangThanhCong = [];
+                    arrDonHang = [];
+                    arrDoanhThu = [];
+                    dates = [];
+
+                    $.each(rs.data, function (i, item) {
+                        console.log("Hi, chào cậu ");
+                        arrDoanhThu.push(item.doanhThu);
+                        arrDonHangThanhCong.push(item.soLuongDonHangThanhCong);
+                        arrDonHangDaHuy.push(item.soLuongDonHangHuy);
+                        arrDonHang.push(item.tongSoDonHang);
+                        dates.push(item.ngayTao);
+                        console.log(dates);
+                    });
+                    const minDoanhThu = Math.min(...arrDoanhThu);
+                    myChart.data.labels = dates;
+                    myChart.data.datasets[0].data = arrDonHang;
+                    myChart.data.datasets[1].data = arrDonHangThanhCong;
+                    myChart.data.datasets[2].data = arrDonHangDaHuy;
+                    myChart.data.datasets[3].data = arrDoanhThu;
+                    console.log(arrDoanhThu);
+                    myChart.options.scales.y.min = minDoanhThu;
+                    myChart.update();
+
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            const data = {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Đơn hàng',
+                        backgroundColor: 'rgba(60, 141, 188, 0.9)',
+                        borderColor: 'rgba(60, 141, 188, 0.9)',
+                        pointRadius: 5,
+                        order: 0,
+                        yAxisID: 'match',
+                        data: [],
+
+                    },
+                    {
+                        label: 'Đơn hàng thành công',
+                        backgroundColor: 'rgba(0, 128, 0, 0.9)',
+                        borderColor: 'rgba(0, 128, 0, 0.9)',
+                        pointRadius: 5,
+                        order: 0,
+                        yAxisID: 'match',
+                        data: []
+                    },
+                    {
+                        label: 'Đơn hàng đã hủy',
+                        backgroundColor: 'rgba(255, 0, 0, 0.9)',
+                        borderColor: 'rgba(255, 0, 0, 0.9)',
+                        pointRadius: 5,
+                        order: 0,
+                        yAxisID: 'match',
+                        data: []
+                    },
+                    {
+                        label: 'Doanh thu',
+                        backgroundColor: 'rgba(255, 255, 0, 0.9)',
+                        borderColor: 'rgba(255, 255, 0, 0.9)',
+                        pointRadius: 5,
+                        order: 1000,
+                        //fill:'start',// đừng thử, đáng sợ lắm
+                        data: []
+                    }
+                ]
+            };
+
+            const config = {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    datasetFill: false,
+
+                    scales: {
+                        y: {
+                            //gridLines: {
+                            //    color: 'rgba(0, 0, 0, 0.1)' // Màu của đường kẻ ngang cho trục y
+                            //},
+                            beginAtZero: false,
+                            min: 100,
+
+                        },
+                        match: {
+                            beginAtZero: true,
+                            //precision:0,
+                            position: 'right'
+                        }
+                    }
+                }
+            };
+
+            myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+
+            updateChart('', '');
+
+        });
+
+        $('#fromDate, #toDate').change(function () {
+            var fromDate = $('#fromDate').val();
+            var toDate = $('#toDate').val();
+            updateChart(fromDate, toDate);
+        });
+
+
+
+
+
+
+    </script>
+}

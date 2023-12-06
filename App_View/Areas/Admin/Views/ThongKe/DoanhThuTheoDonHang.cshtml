@@ -146,7 +146,7 @@
                     console.log(arrDoanhThu);
                     // Cập nhật biểu đồ
                     myChart.update();
-                    load_data(rs.data);
+                   
                 }
             });
         }
@@ -238,6 +238,17 @@
         //    });
         //    $('#load_data').html(strHtml);
         //}
+        function updateChart(fromDate, toDate) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("ThongKeTheoHoaDonOnline", "ThongKe")",
+                data: { fromDate: fromDate, toDate: toDate },
+                success: function (rs) {
+
+                    load_data(rs);
+                }
+            });
+        }
         function load_data(data) {
             var strHtml = "";
             var totalSoLuongKhachHang = 0;
