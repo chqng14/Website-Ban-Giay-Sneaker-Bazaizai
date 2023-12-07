@@ -247,9 +247,7 @@ Task.Run(() =>
 {
     while (true)
     {
-        capNhatTime.CheckNgayKetThuc();
-        capNhatTime.CapNhatTrangThaiSaleDetail();
-        capNhatTime.CapNhatGiaBanThucTe();
+        capNhatTime.CapNhatThongTinKhuyenMai();
         capNhatTime.CapNhatThoiGianVoucher();
         Thread.Sleep(TimeSpan.FromSeconds(5));
     }
