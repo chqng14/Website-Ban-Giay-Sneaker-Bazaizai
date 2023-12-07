@@ -32,7 +32,7 @@ builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 
 
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=MSI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"));
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=LAPTOP-OF-KHAI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"));
 
 //cái này là db online
 //builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Server = tcp:bazaizaidb.database.windows.net,1433; Initial Catalog = bazaizaidb; Persist Security Info = False; User ID = bazaizai; Password = Trinhanh0311; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30;"));
@@ -247,9 +247,7 @@ Task.Run(() =>
 {
     while (true)
     {
-        capNhatTime.CheckNgayKetThuc();
-        capNhatTime.CapNhatTrangThaiSaleDetail();
-        capNhatTime.CapNhatGiaBanThucTe();
+        capNhatTime.CapNhatThongTinKhuyenMai();
         capNhatTime.CapNhatThoiGianVoucher();
         Thread.Sleep(TimeSpan.FromSeconds(5));
     }

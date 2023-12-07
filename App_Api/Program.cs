@@ -41,6 +41,8 @@ builder.Services.AddScoped<IAllRepo<ThuongHieu>, AllRepo<ThuongHieu>>();
 builder.Services.AddScoped<IAllRepo<Voucher>, AllRepo<Voucher>>();
 builder.Services.AddScoped<IAllRepo<VoucherNguoiDung>, AllRepo<VoucherNguoiDung>>();
 builder.Services.AddScoped<IAllRepo<XuatXu>, AllRepo<XuatXu>>();
+builder.Services.AddScoped<IAllRepo<KhuyenMai>, AllRepo<KhuyenMai>>();
+builder.Services.AddScoped<IAllRepo<KhuyenMaiChiTiet>, AllRepo<KhuyenMaiChiTiet>>();
 builder.Services.AddScoped<ISanPhamChiTietRespo, SanPhamChiTietRespo>();
 builder.Services.AddScoped<IXuatXuRespo, XuatXuRespo>();
 builder.Services.AddScoped<IMauSacRespo, MauSacRespo>();
