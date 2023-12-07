@@ -723,10 +723,9 @@
                             $('#modalSanPham').modal('hide');
                             table.draw();
                         } else {
+                            $('#modal-SanPham').modal('hide');
                             GetDanhDachTongQuan();
                             thayDoiBodyDSSanPham();
-                            $('.modal-backdrop').removeClass('show');
-                            $('.modal-backdrop').remove();
                         }
                         var toastHTML = `<div class="toast fade hide" data-delay="3000">
                                             <div class="toast-header">

@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Threading.Tasks;
 using App_Data.Models;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Google.Apis.PeopleService.v1.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -27,31 +28,33 @@ namespace App_View.Areas.Identity.Pages.Account
 
         [BindProperty]
         public InputModel Input { get; set; }
-
+        public string username { get; set; }
+        public string anh { get; set; }
         public class InputModel
         {
             [Required]
             [EmailAddress]
             public string Email { get; set; }
 
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Mật khẩu mới không được để trống.")]
+            [StringLength(100, ErrorMessage = "Mật khẩu phải có ít nhất {2} và dài tối đa {1} ký tự.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
-            //[DataType(DataType.Password)]
-            //[Display(Name = "Confirm password")]
-            //[Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            //public string ConfirmPassword { get; set; }
-            [Required]
-            [EmailAddress]
-            public string emailConf { get; set; }
+            [DataType(DataType.Password)]
+            [Display(Name = "Confirm password")]
+            [Compare("Password", ErrorMessage = "Mật khẩu và mật khẩu xác nhận không khớp.")]
+            public string ConfirmPassword { get; set; }
             [Required]
             public string Code { get; set; }
 
         }
-
-        public IActionResult OnGet(string code = null, string email=null)
+        private async Task LoadAsync(NguoiDung user)
+        {
+            username = await _userManager.GetUserNameAsync(user);
+            anh = user.AnhDaiDien;
+        }
+        public async Task<IActionResult> OnGetAsync(string code = null, string email=null)
         {
             if (code == null||email==null)
             {
@@ -59,10 +62,17 @@ namespace App_View.Areas.Identity.Pages.Account
             }
             else
             {
+                var emailUser = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(email)).ToString();
+                var user= await _userManager.FindByEmailAsync(emailUser);
+                if (user == null)
+                {
+                    return RedirectToPage("./PageNotFound");
+                }
+                await LoadAsync(user);
                 Input = new InputModel
                 {
                     Code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code)),
-                    emailConf = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(email)).ToString()
+                    Email= emailUser,
                 };
                 return Page();
             }
@@ -72,14 +82,23 @@ namespace App_View.Areas.Identity.Pages.Account
         {
             if (!ModelState.IsValid)
             {
+                foreach (var modelStateEntry in ModelState.Values)
+                {
+                    foreach (var error in modelStateEntry.Errors)
+                    {
+                        var errorMessage = error.ErrorMessage;
+                        var exception = error.Exception;
+                        Console.WriteLine($"Error: {errorMessage}, Exception: {exception?.Message}");
+                    }
+                }
+
                 return Page();
             }
 
             var user = await _userManager.FindByEmailAsync(Input.Email);
             if (user == null)
             {
-                // Don't reveal that the user does not exist
-                return RedirectToPage("./ResetPasswordConfirmation");
+                return RedirectToPage("./PageNotFound");
             }
 
             var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);

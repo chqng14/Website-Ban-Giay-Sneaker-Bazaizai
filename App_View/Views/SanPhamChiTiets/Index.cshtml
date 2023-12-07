@@ -72,6 +72,14 @@
 </div>
 <!--====== End - App Content ======-->
 <script>
+    function activateLayoutJavaScript() {
+        $.getScript('/js/vendor.js', function () {
+            $('[data-tooltip="tooltip"]').tooltip({
+                trigger: 'hover'
+            });
+        });
+    }
+
     $(document).on('change', '#select_price', function () {
         const brandParam = new URLSearchParams(window.location.search).get("brand");
 
@@ -130,6 +138,7 @@
             success: function (result) {
                 $('#body-ds').empty().html(result)
                 $('.preloader').removeClass('is-active');
+                activateLayoutJavaScript()
                 isTaskRuning = false;
             },
             error: function (xhr, status, error) {

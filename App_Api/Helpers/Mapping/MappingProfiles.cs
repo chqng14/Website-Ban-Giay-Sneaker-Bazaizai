@@ -27,6 +27,8 @@ using App_Data.ViewModels.HoaDon;
 using App_Data.DbContextt;
 using App_Data.ViewModels.SanPhamYeuThichDTO;
 using App_Data.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace App_Api.Helpers.Mapping
 {
@@ -212,8 +214,8 @@ namespace App_Api.Helpers.Mapping
                     )
                 ;
 
-            CreateMap<List<SanPhamChiTiet>, DanhSachGiayViewModel>()
-                .ConvertUsing<SanPhamChiTietToListItemViewModelConverter>();
+            //CreateMap<List<SanPhamChiTiet>, DanhSachGiayViewModel>()
+            //    .ConvertUsing<SanPhamChiTietToListItemViewModelConverter>();
 
             CreateMap<SanPhamChiTiet, SanPhamDanhSachViewModel>();
 
@@ -359,7 +361,7 @@ namespace App_Api.Helpers.Mapping
                         )
                     )
                  .ForMember(
-                        dest => dest.SoMauSac,
+                        dest => dest.LstMauSac,
                         opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
                         .Where(x =>
                         x.TrangThai == 0 &&
@@ -370,7 +372,13 @@ namespace App_Api.Helpers.Mapping
                         x.IdKieuDeGiay == src.IdKieuDeGiay &&
                         x.IdChatLieu == src.IdChatLieu
                         )
-                        .Select(sp => sp.IdMauSac).Distinct().Count()
+                        .Select(sp => new SelectListItem()
+                        {
+                            Text = sp.MauSac.TenMauSac,
+                            Value = sp.MauSac.IdMauSac!.ToString()
+                        })
+                        .Distinct()
+                        .ToList()
                         )
                     )
                 ;

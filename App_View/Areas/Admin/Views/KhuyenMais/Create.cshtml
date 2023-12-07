@@ -70,21 +70,23 @@
 <script>
     document.getElementById('LoaiHinhKMSelect').addEventListener('change', function () {
         var selectedValue = this.value;
+
+        document.getElementById('MucGiamSelect').style.display = selectedValue == 0 ? 'none' : 'block';
+        document.getElementById('MucGiamInput').style.display = selectedValue == 0 ? 'block' : 'none';
+
         if (selectedValue == 0) {
-            document.getElementById('MucGiamSelect').style.display = 'none';
-            document.getElementById('MucGiamInput').style.display = 'block';
-        } else {
-            document.getElementById('MucGiamSelect').style.display = 'block';
-            document.getElementById('MucGiamInput').style.display = 'none';
+            document.getElementById('MucGiamInput').value = '';
         }
     });
-    document.querySelector('form').addEventListener('submit', function () {
-        var inputElement = document.getElementById('MucGiamInput');
-        if (inputElement.style.display === 'block') {
-            var inputValue = inputElement.value;
-            console.log("Giá trị từ input: " + inputValue);
-            document.getElementById('MucGiamSelect').value = inputValue;
-        }
+    $(document).ready(function () {
+        $('form').submit(function () {
+            var inputElement = document.getElementById('MucGiamInput');
+            if (document.getElementById('MucGiamInput').style.display === 'block' && inputElement.value.trim() !== '') {
+                document.getElementById('MucGiamSelect').disabled = true;
+            } else {
+                document.getElementById('MucGiamSelect').disabled = false;
+            }
+        });
     });
     // Lắng nghe sự kiện "change" của trường nhập tệp tin
     document.getElementById('formFileInput').addEventListener('change', function (e) {

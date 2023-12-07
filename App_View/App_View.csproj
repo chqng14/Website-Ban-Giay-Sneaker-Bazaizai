@@ -9,7 +9,13 @@
 
 	<ItemGroup>
 		<Content Remove="wwwroot\AnhSale\logo.jpg" />
+		<Content Remove="wwwroot\Admin\css\banHangTaiQuay.css" />
+		<Content Remove="wwwroot\AnhSale\z4376551283630_1d1d6c1a9b01210441bb54a3df5d3e40.jpg" />
+		<Content Remove="wwwroot\css\ForgotPassword.css" />
 		<Content Remove="wwwroot\js\toast.js" />
+		<Content Remove="wwwroot\PageIdentity\AccessDenied.png" />
+		<Content Remove="wwwroot\PageIdentity\ForgotPasswordConfirmation.jpg" />
+		<Content Remove="wwwroot\PageIdentity\pagenotfound.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -66,6 +72,7 @@
 
 	<ItemGroup>
 		<Folder Include="mailssave\" />
+		<Folder Include="Views\DanhGia\" />
 		<Folder Include="wwwroot\AnhSanPham\" />
 		<Folder Include="wwwroot\images\VoucherNguoiDungQRCode\" />
 		<Folder Include="wwwroot\images\VoucherQRCode\" />

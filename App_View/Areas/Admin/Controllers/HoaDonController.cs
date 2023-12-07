@@ -1,28 +1,41 @@
 ﻿using App_Data.DbContextt;
 using App_Data.Models;
 using App_Data.ViewModels.HoaDon;
+using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_View.IServices;
 using App_View.Models.ViewModels;
 using App_View.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class HoaDonController : Controller
     {
-        private readonly IHoaDonServices _hoaDonServices;
+
+		private readonly IVoucherNguoiDungServices _voucherNguoiDungServices;
+		private readonly IVoucherServices _voucherServices;
+		private readonly IHoaDonChiTietServices _hoaDonChiTietServices; private readonly SignInManager<NguoiDung> _signInManager;
+		private readonly UserManager<NguoiDung> _userManager;
+		private readonly IHoaDonServices _hoaDonServices;
         private readonly ISanPhamChiTietService sanPhamChiTietService;
         BazaizaiContext context;
-        public HoaDonController(ISanPhamChiTietService sanPhamChiTietService)
-        {
-            _hoaDonServices = new HoaDonServices();
-            context = new BazaizaiContext();
-            this.sanPhamChiTietService = sanPhamChiTietService;
-        }
-        public IActionResult TongQuanHoaDon()
+		public HoaDonController(ISanPhamChiTietService sanPhamChiTietService, IVoucherNguoiDungServices voucherNguoiDungServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
+		{
+			_hoaDonServices = new HoaDonServices();
+			context = new BazaizaiContext();
+			this.sanPhamChiTietService = sanPhamChiTietService;
+			_voucherNguoiDungServices = voucherNguoiDungServices;
+			_hoaDonChiTietServices = new HoaDonChiTietServices();
+			_signInManager = signInManager;
+			_userManager = userManager;
+		}
+		public IActionResult TongQuanHoaDon()
         {
             return View();
         }
@@ -55,7 +68,7 @@ namespace App_View.Areas.Admin.Controllers
             }
             if (trangThaiHD == 0)
             {
-                var lstHoaDonTQ = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 0);
+                var lstHoaDonTQ = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 0&& x.TrangThaiThanhToan ==1);
                 return PartialView("QuanLyHoaDon", lstHoaDonTQ);
             }
             return PartialView("QuanLyHoaDon", lstHoaDon);
@@ -77,5 +90,21 @@ namespace App_View.Areas.Admin.Controllers
             ViewBag.HDCT= HDCT;
             return PartialView("_ChiTietHoaDon", hoaDonChiTiet);
         }
+        [HttpGet]
+        public async Task<IActionResult> InHoaDonTaiQuayAsync(string MaHD)
+        {
+            var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x=>x.MaHoaDon==MaHD);
+			var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
+			ViewBag.TTGH = context.thongTinGiaoHangs.FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH);
+			ViewData["MAHD"] = hoaDon.MaHoaDon;
+			ViewData["NGAYTAO"] = hoaDon.NgayTao;
+			ViewData["TIENSHIP"] = hoaDon.TienShip;
+			ViewData["TONGTIEN"] = hoaDon.TongTien;
+			ViewData["TIENGIAM"] = hoaDon.TienGiam;
+			var HDCT = context.hoaDonChiTiets.Where(x => x.IdHoaDon == hoaDon.IdHoaDon);
+            ViewBag.HDCT = HDCT;
+            return PartialView("InHoaDonTaiQuay", hoaDonChiTiet);
+        }
+        
     }
 }

@@ -22,3 +22,7 @@
         z-index: 100;
     }
 }
+.table-container {
+    max-height: 600px; /* Thay đổi giá trị tối ưu theo yêu cầu của bạn */
+    overflow-y: auto;
+}

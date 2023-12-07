@@ -152,6 +152,28 @@
                 </ul>
             </li>
             <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                        <i class="anticon anticon-star"></i>
+                    </span>
+                    <span class="title">Thống kê</span>
+                    <span class="arrow">
+
+                        <i class="arrow-icon"></i>
+                    </span>
+                </a>
+                @* <ul class="dropdown-menu" style="display: none;">
+                <li>
+                <a href="/Admin/DanhGia/Index">Danh sách đánh giá</a>
+                </li>
+                </ul>*@
+                <ul class="dropdown-menu" style="display: none;">
+                    <li>
+                        <a href="/Admin/ThongKe/DoanhThuTheoDonHangTheoNgay">Thống kê doanh thu theo đơn hàng</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
                 <a asp-controller="BanHangTaiQuay" asp-action="DanhSachHoaDonCho">
                     <span class="icon-holder">
                         <i class="fas fa-shopping-basket"></i>
@@ -165,6 +187,30 @@
                         <i class="fas fa-percent"></i>
                     </span>
                     <span class="title">Khuyến Mại</span>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a asp-controller="KhuyenMaiChiTiets" asp-action="Index">
+                    <span class="icon-holder">
+                        <i class=" fas fa-tags"></i>
+                    </span>
+                    <span class="title">Sản phẩm khuyến mại</span>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a asp-controller="HoaDon" asp-action="TongQuanHoaDon">
+                    <span class="icon-holder">
+                        <i class="fas fa-file-invoice"></i>
+                    </span>
+                    <span class="title">Quản lý hóa đơn</span>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a asp-controller="TrangThaiGiaoHang" asp-action="QuanLyGiaoHang">
+                    <span class="icon-holder">
+                        <i class="fas fa-truck"></i>
+                    </span>
+                    <span class="title">Quản lý trạng thái giao hàng</span>
                 </a>
             </li>
         </ul>

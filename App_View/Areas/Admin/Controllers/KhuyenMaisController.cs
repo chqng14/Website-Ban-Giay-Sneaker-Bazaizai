@@ -20,10 +20,12 @@ using App_View.Services;
 using App_Data.Repositories;
 using Google.Apis.PeopleService.v1.Data;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class KhuyenMaisController : Controller
     {
         private readonly BazaizaiContext _context;
@@ -161,7 +163,7 @@ namespace App_View.Areas.Admin.Controllers
             };
             try
             {
-                if (khuyenMai.TenKhuyenMai != null&& khuyenMai.NgayBatDau != null&& khuyenMai.NgayKetThuc != null&& khuyenMai.MucGiam != null && khuyenMai.LoaiHinhKM != null)
+                if (khuyenMai.TenKhuyenMai != null&& khuyenMai.NgayBatDau != null&& khuyenMai.NgayKetThuc != null&& khuyenMai.MucGiam != null && khuyenMai.LoaiHinhKM != null&&khuyenMai.NgayBatDau<=khuyenMai.NgayKetThuc)
                 {
 
                     using var content = new MultipartFormDataContent();
@@ -221,6 +223,13 @@ namespace App_View.Areas.Admin.Controllers
                 new SelectListItem { Text = "Khuyến mại giảm giá", Value = "1" },
                 new SelectListItem { Text = "Khuyến mãi đồng giá", Value = "0" }
             };
+            ViewBag.TrangThai = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hết hạn", Value = "0" },
+                new SelectListItem { Text = "Đang hoạt động", Value = "1" },
+                 new SelectListItem { Text = "Chưa bắt đầu", Value = "1" },
+                  new SelectListItem { Text = "Buộc dừng", Value = "1" }
+            };
             ViewBag.ListGiamGia = new List<SelectListItem>
             {
                 new SelectListItem { Text = "5%", Value = "5" },
@@ -269,6 +278,13 @@ namespace App_View.Areas.Admin.Controllers
                 new SelectListItem { Text = "Khuyến mại giảm giá", Value = "1" },
                 new SelectListItem { Text = "Khuyến mãi đồng giá", Value = "0" }
             };
+            ViewBag.TrangThai = new List<SelectListItem>
+            {
+                new SelectListItem { Text = "Hết hạn", Value = "0" },
+                new SelectListItem { Text = "Đang hoạt động", Value = "1" },
+                 new SelectListItem { Text = "Chưa bắt đầu", Value = "1" },
+                  new SelectListItem { Text = "Buộc dừng", Value = "1" }
+            };
             ViewBag.ListGiamGia = new List<SelectListItem>
             {
                 new SelectListItem { Text = "5%", Value = "5" },
@@ -294,7 +310,7 @@ namespace App_View.Areas.Admin.Controllers
             };
    
 
-           if (khuyenMai.TenKhuyenMai != null&& khuyenMai.NgayBatDau != null&& khuyenMai.NgayKetThuc != null&& khuyenMai.MucGiam != null && khuyenMai.LoaiHinhKM != null)
+           if (khuyenMai.TenKhuyenMai != null && khuyenMai.NgayBatDau != null && khuyenMai.NgayKetThuc != null && khuyenMai.MucGiam != null && khuyenMai.LoaiHinhKM != null && khuyenMai.NgayBatDau <= khuyenMai.NgayKetThuc)
                 {
 
                     using var content = new MultipartFormDataContent();

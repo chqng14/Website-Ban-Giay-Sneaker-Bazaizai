@@ -2,236 +2,355 @@
 @if (Model.Items!.Count() == 0)
 {
 
-    <div class="u-s-p-y-60">
+<div class="u-s-p-y-60">
 
-        <!--====== Section Content ======-->
-        <div class="section__content">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 u-s-m-b-30">
-                        <div class="empty">
-                            <div class="empty__wrap">
+    <!--====== Section Content ======-->
+    <div class="section__content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 u-s-m-b-30">
+                    <div class="empty">
+                        <div class="empty__wrap">
 
-                                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: -60px; height: 300px; width: 100%; background-repeat: no-repeat; background-size: contain; background-position: center; background-image: url('https://www.beevidhya.com/assets/images/no_result.gif');">
-                                    <span style="margin-top: 380px">Không tìm thấy sản phẩm!!!</span>
-                                    <a class="nav-link btn--e-white-brand-shadow" href="/sanphamchitiets">XÓA BỘ LỌC</a>
-                                </div>
+                            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: -60px; height: 300px; width: 100%; background-repeat: no-repeat; background-size: contain; background-position: center; background-image: url('https://www.beevidhya.com/assets/images/no_result.gif');">
+                                <span style="margin-top: 380px">Không tìm thấy sản phẩm!!!</span>
+                                <a class="nav-link btn--e-white-brand-shadow" href="/sanphamchitiets">XÓA BỘ LỌC</a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!--====== End - Section Content ======-->
     </div>
+    <!--====== End - Section Content ======-->
+</div>
 }
 else
 {
-    <div class="shop-p__collection">
-        <div class="row is-grid-active">
-            @foreach (var item in Model.Items!)
-            {
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="product-m">
-                        <div class="product-m__thumb" data-id="@item.IdChiTietSp">
+<div class="shop-p__collection">
+    <div class="row is-grid-active">
+        @foreach (var item in Model.Items!)
+        {
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="product-m">
+                <div class="product-m__thumb" data-id="@item.IdChiTietSp">
 
-                            <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/@item.IdChiTietSp">
+                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/@item.IdChiTietSp">
 
-                                <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
-                            </a>
+                        <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
+                    </a>
+                </div>
+                <div class="product-m__content">
+                    <div class="product-m__category">
+
+                        <a>@item.ThuongHieu / @item.TheLoai</a>
+                    </div>
+                    <div class="product-m__name">
+
+                        <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp" data-tooltip="tooltip" data-placement="left" title="" data-original-title="@item.TenSanPham!.ToUpper()" style="
+    display: inline-block;
+    max-width: 213px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #333;
+    text-decoration: none;
+">@item.TenSanPham!.ToUpper()</a>
+                    </div>
+                    <div class="gl-rating-style">
+                        @if (item.SoSao < 0.3)
+                        {
+
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        }
+                        else if (item.SoSao < 0.8)
+                        {
+                        <i class="fas fa-star-half-alt"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        }
+                        else if (item.SoSao < 1.3)
+                        {
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        }
+                        else if (item.SoSao < 1.8)
+                        {
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        }
+                        else if (item.SoSao < 2.3)
+                        {
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        }
+                        else if (item.SoSao < 2.8)
+                        {
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        }
+                        else if (item.SoSao < 3.3)
+                        {
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <i class="far fa-star"></i>
+                        }
+                        else if (item.SoSao < 3.8)
+                        {
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <i class="far fa-star"></i>
+                        }
+                        else if (item.SoSao < 4.3)
+                        {
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                        }
+
+                        else if (item.SoSao < 4.8)
+                        {
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        }
+                        else
+                        {
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        }
+                        <span class="product-m__review">(@item.SoLanDanhGia)</span>
+                    </div>
+                    <div>
+                        @{
+                        var lstMauSac = item.LstMauSac!.Select(ms => ms.Text).ToList();
+                        }
+                        <div class="lst_color" style="margin: 10px auto">
+                            @foreach (var ms in lstMauSac)
+                            {
+                            <button style="background: @ms; height: 20px; width: 20px; border-radius: 50%"></button>
+                            }
                         </div>
-                        <div class="product-m__content">
-                            <div class="product-m__category">
 
-                                <a>@item.ThuongHieu / @item.TheLoai</a>
-                            </div>
-                            <div class="product-m__name">
+                        @if (item.GiaMin == item.GiaMax)
+                        {
+                        <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
 
-                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham!.ToUpper()</a>
-                            </div>
-                            <div class="gl-rating-style">
-                                @if (item.SoSao < 0.3)
-                                {
+                        }
+                        else
+                        {
+                        <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
+                        }
+                    </div>
+                    <div class="product-m__hover">
+                        <div class="product-m__preview-description">
 
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                }
-                                else if (item.SoSao < 0.8)
-                                {
-                                    <i class="fas fa-star-half-alt"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                }
-                                else if (item.SoSao < 1.3)
-                                {
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                }
-                                else if (item.SoSao < 1.8)
-                                {
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                }
-                                else if (item.SoSao < 2.3)
-                                {
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                }
-                                else if (item.SoSao < 2.8)
-                                {
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                }
-                                else if (item.SoSao < 3.3)
-                                {
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                }
-                                else if (item.SoSao < 3.8)
-                                {
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                    <i class="far fa-star"></i>
-                                }
-                                else if (item.SoSao < 4.3)
-                                {
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="far fa-star"></i>
-                                }
-
-                                else if (item.SoSao < 4.8)
-                                {
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                }
-                                else
-                                {
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                }
-                                <span class="product-m__review">(@item.SoLanDanhGia)</span>
-                            </div>
-                            <div>
-                                <div style="color: #0d0f0d;border-radius: 8px;background: #d8e9d7;width: fit-content;padding: 0px 5px;margin: 6px 0px;border: 1px #f86666 solid;">@item.SoMauSac màu</div>
-                                @if (item.GiaMin == item.GiaMax)
-                                {
-                                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
-
-                                }
-                                else
-                                {
-                                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
-                                }
-                            </div>
-                            <div class="product-m__hover">
-                                <div class="product-m__preview-description">
-
-                                    <span>@item.MoTaNgan</span>
-                                </div>
-                                @*<div class="product-m__wishlist">
-
-                <a class="far fa-heart" href="#" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"></a>
-            </div>*@
-                            </div>
+                            <span>@item.MoTaNgan</span>
                         </div>
+                        @*<div class="product-m__wishlist">
+
+                            <a class="far fa-heart" href="#" data-tooltip="tooltip" data-placement="top" title="Add to Wishlist"></a>
+                        </div>*@
                     </div>
                 </div>
-
-            }
-
-
+            </div>
         </div>
+
+        }
+
+
     </div>
-    <div class="u-s-p-y-60">
-        <!--====== Pagination ======-->
-        <ul class="shop-p__pagination">
-            @if (Model.PagingInfo!.TrangHienTai > 1)
-            {
-                <li>
-                    <a class="previous-page fas fa-angle-left" href="javascript:void(0);"></a>
-                </li>
-            }
-            @if (Model.PagingInfo!.SoTrang > 1)
-            {
-                for (int i = 1; i <= Model.PagingInfo!.SoTrang; i++)
-                {
-                    if (i == Model.PagingInfo.TrangHienTai)
-                    {
-                        <li class="is-active">
-                            <a href="javascript:void(0);">@i</a>
-                        </li>
-                    }
-                    else
-                    {
-                        <li>
-                            <a class="no-active" href="javascript:void(0);">@i</a>
-                        </li>
-                    }
-                }
-            }
-            @if (Model.PagingInfo!.TrangHienTai < Model.PagingInfo!.SoTrang)
-            {
-                <li>
-                    <a class="next-page fas fa-angle-right" href="javascript:void(0);"></a>
-                </li>
-            }
-        </ul>
-        <!--====== End - Pagination ======-->
-    </div>
+</div>
+<div class="u-s-p-y-60">
+    <!--====== Pagination ======-->
+    <ul class="shop-p__pagination">
+        @if (Model.PagingInfo!.TrangHienTai > 1)
+        {
+        <li>
+            <a class="previous-page fas fa-angle-left" href="javascript:void(0);"></a>
+        </li>
+        }
+        @if (Model.PagingInfo!.SoTrang > 1)
+        {
+        for (int i = 1; i <= Model.PagingInfo!.SoTrang; i++)
+        {
+        if (i == Model.PagingInfo.TrangHienTai)
+        {
+        <li class="is-active">
+            <a href="javascript:void(0);">@i</a>
+        </li>
+        }
+        else
+        {
+        <li>
+            <a class="no-active" href="javascript:void(0);">@i</a>
+        </li>
+        }
+        }
+        }
+        @if (Model.PagingInfo!.TrangHienTai < Model.PagingInfo!.SoTrang)
+        {
+        <li>
+            <a class="next-page fas fa-angle-right" href="javascript:void(0);"></a>
+        </li>
+        }
+    </ul>
+    <!--====== End - Pagination ======-->
+</div>
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    var isTaskRuning = false;
-    $(document).off("click", ".no-active");
-    $(document).on("click", ".no-active", function () {
-        if (!isTaskRuning) {
-            isTaskRuning = true;
-            const brandParam = new URLSearchParams(window.location.search).get("brand");
+    (function () {
+        function activateLayoutJavaScript() {
+             $.getScript('/js/vendor.js', function () {
+                $('[data-tooltip="tooltip"]').tooltip({
+                   trigger: 'hover'
+                });
+             });
+        }
 
+        var isTaskRuning = false;
+        $(document).off("click", ".no-active");
+        $(document).on("click", ".no-active", function () {
+            if (!isTaskRuning) {
+                isTaskRuning = true;
+                const brandParam = new URLSearchParams(window.location.search).get("brand");
+
+                $('.preloader').addClass('is-active');
+                var trangHienTai = $(this).text()
+
+                var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
+                    return $(this).attr('id')
+                }).get();
+
+                var lstMauSac = $('.lst-mausac input[type="checkbox"]:checked').map(function () {
+                    return $(this).attr('id')
+                }).get();
+
+                var lstTheLoai = $('.lst-theloai input[type="checkbox"]:checked').map(function () {
+                    return $(this).closest('.list__content').find('span').text()
+                }).get();
+
+                var lstRating = $('.rating__check input[type="checkbox"]:checked').map(function () {
+                    return $(this).val()
+                }).get();
+
+                var data = {};
+                $('#s-price').find("input, select, textarea").each(function () {
+
+                    var fieldType = $(this).attr("type");
+                    var fieldName = $(this).attr("name");
+                    var fieldValue;
+
+                    if (fieldType === "checkbox" || fieldType === "radio") {
+                        fieldValue = $(this).is(":checked");
+                    } else {
+                        fieldValue = $(this).val();
+                        if (!fieldValue) {
+                            fieldValue = 0;
+                        }
+                    }
+
+                    data[fieldName] = fieldValue;
+
+                });
+
+                var filterdata = {
+                    LstTheLoai: lstTheLoai,
+                    LstMauSac: lstMauSac,
+                    lstKichCo: lstKichCo,
+                    TrangHienTai: trangHienTai,
+                    LstRating: lstRating,
+                    Sort: $('#select_price').val(),
+                    ...data
+                };
+
+                $.ajax({
+                    url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+                    type: 'POST',
+                    data: JSON.stringify(filterdata),
+                    contentType: 'application/json',
+                    success: function (result) {
+                        $('#body-ds').empty().html(result)
+                        $('.preloader').removeClass('is-active');
+                        activateLayoutJavaScript();
+                        setTimeout(function () {
+                            isTaskRunning = false;
+                        }, 2000);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+            }
+        })
+
+        $(document).off("click", ".previous-page")
+        $(document).on("click", ".previous-page", function () {
+            if (!isTaskRuning) {
+                isTaskRuning = true;
+                changePage(-1);
+            }
+        });
+
+        $(document).off("click", ".next-page")
+        $(document).on("click", ".next-page", function () {
+            if (!isTaskRuning) {
+                isTaskRuning = true;
+                changePage(1);
+
+            }
+        });
+
+        function changePage(direction) {
+            const brandParam = new URLSearchParams(window.location.search).get("brand");
             $('.preloader').addClass('is-active');
-            var trangHienTai = $(this).text()
+
+            var trangHienTai = parseInt($(".shop-p__pagination li.is-active a").text());
+            var newTrangHienTai = trangHienTai + direction;
 
             var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
-                return $(this).attr('id')
+                return $(this).attr('id');
             }).get();
 
             var lstMauSac = $('.lst-mausac input[type="checkbox"]:checked').map(function () {
-                return $(this).attr('id')
+                return $(this).attr('id');
             }).get();
 
             var lstTheLoai = $('.lst-theloai input[type="checkbox"]:checked').map(function () {
-                return $(this).closest('.list__content').find('span').text()
+                return $(this).closest('.list__content').find('span').text();
             }).get();
 
             var lstRating = $('.rating__check input[type="checkbox"]:checked').map(function () {
@@ -240,7 +359,6 @@ else
 
             var data = {};
             $('#s-price').find("input, select, textarea").each(function () {
-
                 var fieldType = $(this).attr("type");
                 var fieldName = $(this).attr("name");
                 var fieldValue;
@@ -255,14 +373,13 @@ else
                 }
 
                 data[fieldName] = fieldValue;
-
             });
 
             var filterdata = {
                 LstTheLoai: lstTheLoai,
                 LstMauSac: lstMauSac,
                 lstKichCo: lstKichCo,
-                TrangHienTai: trangHienTai,
+                TrangHienTai: newTrangHienTai,
                 LstRating: lstRating,
                 Sort: $('#select_price').val(),
                 ...data
@@ -274,11 +391,15 @@ else
                 data: JSON.stringify(filterdata),
                 contentType: 'application/json',
                 success: function (result) {
-                    $('#body-ds').empty().html(result)
+                    $('#body-ds').empty().html(result);
                     $('.preloader').removeClass('is-active');
-                    isTaskRuning = false;
+                    activateLayoutJavaScript();
+                    setTimeout(function () {
+                        isTaskRunning = false;
+                    }, 2000);
                 },
                 error: function (xhr, status, error) {
+                    isTaskRuning = false;
                     console.log(xhr.responseText);
                     console.log(status);
                     console.log(error);
@@ -286,93 +407,5 @@ else
                 }
             });
         }
-    })
-
-    $(document).off("click", ".previous-page")
-    $(document).on("click", ".previous-page", function () {
-        if (!isTaskRuning) {
-            isTaskRuning = true;
-            changePage(-1);
-        }
-    });
-
-    $(document).off("click", ".next-page")
-    $(document).on("click", ".next-page", function () {
-        if (!isTaskRuning) {
-            isTaskRuning = true;
-            changePage(1);
-
-        }
-    });
-
-    function changePage(direction) {
-        const brandParam = new URLSearchParams(window.location.search).get("brand");
-        $('.preloader').addClass('is-active');
-
-        var trangHienTai = parseInt($(".shop-p__pagination li.is-active a").text());
-        var newTrangHienTai = trangHienTai + direction;
-
-        var lstKichCo = $('.lst-kichco input[type="checkbox"]:checked').map(function () {
-            return $(this).attr('id');
-        }).get();
-
-        var lstMauSac = $('.lst-mausac input[type="checkbox"]:checked').map(function () {
-            return $(this).attr('id');
-        }).get();
-
-        var lstTheLoai = $('.lst-theloai input[type="checkbox"]:checked').map(function () {
-            return $(this).closest('.list__content').find('span').text();
-        }).get();
-
-        var lstRating = $('.rating__check input[type="checkbox"]:checked').map(function () {
-            return $(this).val()
-        }).get();
-
-        var data = {};
-        $('#s-price').find("input, select, textarea").each(function () {
-            var fieldType = $(this).attr("type");
-            var fieldName = $(this).attr("name");
-            var fieldValue;
-
-            if (fieldType === "checkbox" || fieldType === "radio") {
-                fieldValue = $(this).is(":checked");
-            } else {
-                fieldValue = $(this).val();
-                if (!fieldValue) {
-                    fieldValue = 0;
-                }
-            }
-
-            data[fieldName] = fieldValue;
-        });
-
-        var filterdata = {
-            LstTheLoai: lstTheLoai,
-            LstMauSac: lstMauSac,
-            lstKichCo: lstKichCo,
-            TrangHienTai: newTrangHienTai,
-            LstRating: lstRating,
-            Sort: $('#select_price').val(),
-            ...data
-        };
-
-        $.ajax({
-            url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
-            type: 'POST',
-            data: JSON.stringify(filterdata),
-            contentType: 'application/json',
-            success: function (result) {
-                $('#body-ds').empty().html(result);
-                $('.preloader').removeClass('is-active');
-                isTaskRuning = false;
-            },
-            error: function (xhr, status, error) {
-                isTaskRuning = false;
-                console.log(xhr.responseText);
-                console.log(status);
-                console.log(error);
-                console.log(xhr);
-            }
-        });
-    }
+    })()
 </script>
