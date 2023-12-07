@@ -52,7 +52,31 @@
                     setTimeout(function () {
                         $('#notification-toast .toast:first-child').remove();
                     }, 3000);
-                }
+        }
+
+        function showErrKhoangTrang() {
+            var toastHTML = `<div class="toast fade hide" data-delay="3000">
+            <div class="toast-header">
+                <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                <strong class="mr-auto">Thông báo</strong>
+                <small>1 seconds ago</small>
+                <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+                <span>Vui lòng không để khoảng trắng!</span>
+            </div>
+        </div>`
+
+            $('#notification-toast').append(toastHTML)
+            $('#notification-toast .toast').toast('show');
+            setTimeout(function () {
+                $('#notification-toast .toast:first-child').remove();
+            }, 3000);
+        }
+
+
             $(() => {
 
                 $(".select2-active").select2();
@@ -64,7 +88,7 @@
                     $thuonghieuInput.on('keyup', function (e) {
                         if (e.key === 'Enter') {
                             var inputValue = $(this).val();
-                            if (inputValue) {
+                            if (inputValue.trim() !== "") {
                                 var data = {
                                     TenThuongHieu: inputValue,
                                 };
@@ -88,13 +112,16 @@
                                         } else {
                                             showToastTonTai('Thương hiệu')
                                         }
-                                        
+
                                     },
                                     error: function (xhr, status, error) {
                                         showDauVaoKhongHopLe();
                                     }
                                 });
-                            } 
+                            }
+                            else {
+                                showErrKhoangTrang()
+                            }
                         }
                     });
                 });
@@ -105,7 +132,7 @@
                     $xuatxuInput.on('keyup', function (e) {
                         if (e.key === 'Enter') {
                             var inputValue = $(this).val();
-                            if (inputValue) {
+                            if (inputValue.trim() !== "") {
                                 var data = {
                                     Ten: inputValue,
                                 };
@@ -130,9 +157,12 @@
                                         }
                                     },
                                     error: function (xhr, status, error) {
-                                       showDauVaoKhongHopLe()
+                                        showDauVaoKhongHopLe()
                                     }
                                 });
+                            }
+                            else {
+                                showErrKhoangTrang()
                             }
                         }
                     })
@@ -144,7 +174,7 @@
                     $sanphamInput.on('keyup', function (e) {
                         if (e.key === 'Enter') {
                             var inputValue = $(this).val();
-                            if (inputValue) {
+                            if (inputValue.trim() !== "") {
                                 var data = {
                                     TenSanPham: inputValue,
                                 };
@@ -173,6 +203,9 @@
                                     }
                                 });
                             }
+                            else {
+                                showErrKhoangTrang()
+                            }
                         }
                     });
                 });
@@ -183,7 +216,7 @@
                     $loaigiayInput.on('keyup', function (e) {
                         if (e.key === 'Enter') {
                             var inputValue = $(this).val();
-                            if (inputValue) {
+                            if (inputValue.trim() !== "") {
                                 var data = {
                                     TenLoaiGiay: inputValue,
                                 };
@@ -211,6 +244,9 @@
                                         showDauVaoKhongHopLe()
                                     }
                                 });
+                            }
+                            else {
+                                showDauVaoKhongHopLe()
                             }
                         }
                     });
@@ -374,33 +410,44 @@
                 });
                 $('.moTa').summernote();
                 $(".formatPrice").each(function () {
-                    var autoNumeric = new AutoNumeric(this, {
-                        decimalCharacter: ".",
-                        digitGroupSeparator: ",",
-                        decimalPlaces: 0,
-                        currencySymbol: " ₫",
-                        currencySymbolPlacement: "s",
-                        minimumValue: 0,
-                        maximumValue: 99999999
-                    });
+                    if (!this.autoNumericInitialized) {
+                        new AutoNumeric(this, {
+                            decimalCharacter: ".",
+                            digitGroupSeparator: ",",
+                            decimalPlaces: 0,
+                            currencySymbol: " ₫",
+                            currencySymbolPlacement: "s",
+                            minimumValue: 0,
+                            maximumValue: 99999999
+                        });
+                        this.autoNumericInitialized = true;
+                    }
                 });
+
                 $(".formatNumber").each(function () {
-                    var autoNumeric = new AutoNumeric(this, {
-                        decimalCharacter: ".",
-                        digitGroupSeparator: ",",
-                        decimalPlaces: 0,
-                        minimumValue: 0,
-                        maximumValue: 99999.00
-                    });
+                    if (!this.autoNumericInitialized) {
+                        new AutoNumeric(this, {
+                            decimalCharacter: ".",
+                            digitGroupSeparator: ",",
+                            decimalPlaces: 0,
+                            minimumValue: 0,
+                            maximumValue: 99999.00
+                        });
+                        this.autoNumericInitialized = true;
+                    }
                 });
+
                 $(".formatKhoiLuong").each(function () {
-                    var autoNumeric = new AutoNumeric(this, {
-                        decimalCharacter: ".",
-                        digitGroupSeparator: ",",
-                        decimalPlaces: 2,
-                        minimumValue: 0,
-                        maximumValue: 99999.00
-                    });
+                    if (!this.autoNumericInitialized) {
+                        new AutoNumeric(this, {
+                            decimalCharacter: ".",
+                            digitGroupSeparator: ",",
+                            decimalPlaces: 2,
+                            minimumValue: 0,
+                            maximumValue: 99999.00
+                        });
+                        this.autoNumericInitialized = true;
+                    }
                 });
             })
 
@@ -439,7 +486,35 @@
             $(document).on('change', '.fileInput', function () {
                 const imageList = $(this).closest('.upload').find('.container-file');
                 const key = '@Model.IdChiTietSp';
-                console.log(key);
+
+                const countImage = imageList.find('.wrapper-file').length;
+
+                if (this.files.length + countImage > 6) {
+                    var toastHTML = `<div class="toast fade hide" data-delay="5000">
+                         <div class="toast-header">
+                             <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                             <strong class="mr-auto">Thông báo</strong>
+                             <small>1 second ago</small>
+                             <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                 <span aria-hidden="true">&times;</span>
+                             </button>
+                         </div>
+                         <div class="toast-body">
+                             Chỉ được chọn tối đa 6 ảnh!
+                             <br/>
+                             S/P đang có ${countImage} ảnh.
+                             <br/>
+                             Do vậy bạn chỉ có thể chọn tối đa ${6 - countImage} ảnh nữa!!!
+                         </div>
+                     </div>`
+                    $('#notification-toast').append(toastHTML)
+                    $('#notification-toast .toast').toast('show');
+                    setTimeout(function () {
+                        $('#notification-toast .toast:first-child').remove();
+                    }, 5000);
+                    return
+                }
+
 
                 Array.from(this.files).map((file) => {
                     if (file.type.startsWith("image")) {
@@ -545,142 +620,118 @@
         $(document).off('click', '#btn-add-coppy');
         $(document).on('click', '#btn-add-coppy', function () {
 
-                 var dataGet = {};
-                 $('#form-get-data').find("input, select, textarea").each(function () {
-                     var fieldType = $(this).attr("type");
-                     var fieldName = $(this).attr("name");
-                     var fieldValue;
+            const imageList = $(document).find('.container-file');
 
-                     if (fieldType === "checkbox" || fieldType === "radio") {
-                         fieldValue = $(this).is(":checked");
-                     } else {
-                         if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
-                             var fieldValue = $(this).val();
-                             fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
-                         }
-                         else if ($(this).hasClass("formatKhoiLuong")) {
-                              var autoNumeric = new AutoNumeric(this,
-                                 {
-                                     decimalCharacter: ".",
-                                     digitGroupSeparator: ",",
-                                     decimalPlaces: 2,
-                                     minimumValue: 0
-                                 });
+            const countImage = imageList.find('.wrapper-file').length;
+            if (countImage === 0) {
+                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+            <div class="toast-header">
+                <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                <strong class="mr-auto">Thông báo</strong>
+                <small>1 second ago</small>
+                <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="toast-body">
+              Vui lòng chọn ảnh cho sản phẩm!
+            </div>
+        </div>`
+                $('#notification-toast').append(toastHTML)
+                $('#notification-toast .toast').toast('show');
+                setTimeout(function () {
+                    $('#notification-toast .toast:first-child').remove();
+                }, 3000);
+            } else {
+ var dataGet = {};
+ $('#form-get-data').find("input, select, textarea").each(function () {
+     var fieldType = $(this).attr("type");
+     var fieldName = $(this).attr("name");
+     var fieldValue;
 
-                             var numericValue = autoNumeric.getNumericString();
-
-                             fieldValue = numericValue;
-                         }
-                         else {
-                             fieldValue = $(this).val();
-                         }
-                     }
-                     if (fieldName) {
-                         dataGet[fieldName] = fieldValue;
-                     }
+     if (fieldType === "checkbox" || fieldType === "radio") {
+         fieldValue = $(this).is(":checked");
+     } else {
+         if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
+             var fieldValue = $(this).val();
+             fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
+         }
+         else if ($(this).hasClass("formatKhoiLuong")) {
+              var autoNumeric = new AutoNumeric(this,
+                 {
+                     decimalCharacter: ".",
+                     digitGroupSeparator: ",",
+                     decimalPlaces: 2,
+                     minimumValue: 0
                  });
 
+             var numericValue = autoNumeric.getNumericString();
 
-                 var data = new FormData();
-                 for (var key in dataGet) {
-                     data.append('SanPhamChiTietData.' + key, dataGet[key]);
-                 }
+             fieldValue = numericValue;
+         }
+         else {
+             fieldValue = $(this).val();
+         }
+     }
+     if (fieldName) {
+         dataGet[fieldName] = fieldValue;
+     }
+ });
 
 
-                 var danhSachAnhArray = [];
-                 @for (var i = 0; i < Model.DanhSachAnh!.Count; i++)
-                 {
-                     @:danhSachAnhArray.push('@Model.DanhSachAnh[i]');
-                 }
+ var data = new FormData();
+ for (var key in dataGet) {
+     data.append('SanPhamChiTietData.' + key, dataGet[key]);
+ }
 
-                 for (var i = 0; i < danhSachAnhArray.length; i++) {
-                     data.append('SanPhamChiTietData.' + 'DanhSachAnh', danhSachAnhArray[i]);
-                 }
 
-                 if (lstAnhRemove['@Model.IdChiTietSp'] && lstAnhRemove['@Model.IdChiTietSp'].length > 0)
-                 {
-                     Array.from(lstAnhRemove['@Model.IdChiTietSp']).forEach((item, index) => {
-                         data.append('ListTenAnhRemove', item);
-                     })
-                 }
+ var danhSachAnhArray = [];
+ @for (var i = 0; i < Model.DanhSachAnh!.Count; i++)
+ {
+     @:danhSachAnhArray.push('@Model.DanhSachAnh[i]');
+ }
 
-                 if (selectedFiles['@Model.IdChiTietSp'] && selectedFiles['@Model.IdChiTietSp'].length > 0)
-                 {
-                     console.log(selectedFiles['@Model.IdChiTietSp']);
-                     Array.from(selectedFiles['@Model.IdChiTietSp']).forEach((item, index) => {
-                         data.append('ListAnhCreate', item.data);
-                     })
-                 }
+ for (var i = 0; i < danhSachAnhArray.length; i++) {
+     data.append('SanPhamChiTietData.' + 'DanhSachAnh', danhSachAnhArray[i]);
+ }
 
+ if (lstAnhRemove['@Model.IdChiTietSp'] && lstAnhRemove['@Model.IdChiTietSp'].length > 0)
+ {
+     Array.from(lstAnhRemove['@Model.IdChiTietSp']).forEach((item, index) => {
+         data.append('ListTenAnhRemove', item);
+     })
+ }
+
+ if (selectedFiles['@Model.IdChiTietSp'] && selectedFiles['@Model.IdChiTietSp'].length > 0)
+ {
+     console.log(selectedFiles['@Model.IdChiTietSp']);
+     Array.from(selectedFiles['@Model.IdChiTietSp']).forEach((item, index) => {
+         data.append('ListAnhCreate', item.data);
+     })
+ }
+
+ $.ajax({
+     url: '/Admin/SanPhamChiTiet/CreateSanPhamChiTietCoppy',
+     type: 'POST',
+     data: data,
+     contentType: false,
+     processData: false,
+     success: function (result) {
+         if (result) {
+             if (window.location.pathname.toLowerCase().includes('sanPhamChiTiet/danhSachSanPham')) {
+                 $('#modalSanPham').modal('hide');
+                 table.draw();
+             }
+             else {
+                 GetDanhDachTongQuan();
                  $.ajax({
-                     url: '/Admin/SanPhamChiTiet/CreateSanPhamChiTietCoppy',
-                     type: 'POST',
-                     data: data,
-                     contentType: false,
-                     processData: false,
+                     url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
+                     type: 'GET',
+                     data: {
+                         "sumGuid": keyProduct
+                     },
                      success: function (result) {
-                         if (result) {
-                             if (window.location.pathname.toLowerCase().includes('sanPhamChiTiet/danhSachSanPham')) {
-                                 $('#modalSanPham').modal('hide');
-                                 table.draw();
-                             }
-                             else {
-                                 GetDanhDachTongQuan();
-                                 $.ajax({
-                                     url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
-                                     type: 'GET',
-                                     data: {
-                                         "sumGuid": keyProduct
-                                     },
-                                     success: function (result) {
-                                         $('#modal-dssanpham').empty().html(result);
-                                     },
-                                     error: function (xhr, status, error) {
-                                         console.log(xhr.responseText);
-                                         console.log(status);
-                                         console.log(error);
-                                         console.log(xhr);
-                                     }
-                                 });
-                             }
-                             var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                                 <div class="toast-header">
-                                                     <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                                     <strong class="mr-auto">Thông báo</strong>
-                                                     <small>1 second ago</small>
-                                                     <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                                         <span aria-hidden="true">&times;</span>
-                                                     </button>
-                                                 </div>
-                                                 <div class="toast-body">
-                                                    Đã thêm thành công một sản phẩm
-                                                 </div>
-                                             </div>`
-                             $('#notification-toast').append(toastHTML)
-                             $('#notification-toast .toast').toast('show');
-                             setTimeout(function () {
-                                 $('#notification-toast .toast:first-child').remove();
-                             }, 3000);
-                         } else {
-                             var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                             <div class="toast-header">
-                                                 <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                                 <strong class="mr-auto">Thông báo</strong>
-                                                 <small>1 second ago</small>
-                                                 <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                                     <span aria-hidden="true">&times;</span>
-                                                 </button>
-                                             </div>
-                                             <div class="toast-body">
-                                               Sản phẩm đã tồn tại!
-                                             </div>
-                                         </div>`
-                             $('#notification-toast').append(toastHTML)
-                             $('#notification-toast .toast').toast('show');
-                             setTimeout(function () {
-                                 $('#notification-toast .toast:first-child').remove();
-                             }, 3000);
-                         }
+                         $('#modal-dssanpham').empty().html(result);
                      },
                      error: function (xhr, status, error) {
                          console.log(xhr.responseText);
@@ -689,145 +740,212 @@
                          console.log(xhr);
                      }
                  });
+             }
+             var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                 <div class="toast-header">
+                                     <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                     <strong class="mr-auto">Thông báo</strong>
+                                     <small>1 second ago</small>
+                                     <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                         <span aria-hidden="true">&times;</span>
+                                     </button>
+                                 </div>
+                                 <div class="toast-body">
+                                    Đã thêm thành công một sản phẩm
+                                 </div>
+                             </div>`
+             $('#notification-toast').append(toastHTML)
+             $('#notification-toast .toast').toast('show');
+             setTimeout(function () {
+                 $('#notification-toast .toast:first-child').remove();
+             }, 3000);
+         } else {
+             var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                             <div class="toast-header">
+                                 <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                 <strong class="mr-auto">Thông báo</strong>
+                                 <small>1 second ago</small>
+                                 <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                     <span aria-hidden="true">&times;</span>
+                                 </button>
+                             </div>
+                             <div class="toast-body">
+                               Sản phẩm đã tồn tại!
+                             </div>
+                         </div>`
+             $('#notification-toast').append(toastHTML)
+             $('#notification-toast .toast').toast('show');
+             setTimeout(function () {
+                 $('#notification-toast .toast:first-child').remove();
+             }, 3000);
+         }
+     },
+     error: function (xhr, status, error) {
+         console.log(xhr.responseText);
+         console.log(status);
+         console.log(error);
+         console.log(xhr);
+     }
+ });
 
 
-
+            }
              })
         $(document).off('click', '#btn-add');
         $(document).on('click', '#btn-add', function () {
+            const imageList = $(document).find('.container-file');
 
-            var dataGet = {};
-            $('#form-get-data').find("input, select, textarea").each(function () {
-                var fieldType = $(this).attr("type");
-                var fieldName = $(this).attr("name");
-                var fieldValue;
+            const countImage = imageList.find('.wrapper-file').length;
+            if (countImage === 0) {
+                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+    <div class="toast-header">
+        <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+        <strong class="mr-auto">Thông báo</strong>
+        <small>1 second ago</small>
+        <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="toast-body">
+      Vui lòng chọn ảnh cho sản phẩm!
+    </div>
+</div>`
+                $('#notification-toast').append(toastHTML)
+                $('#notification-toast .toast').toast('show');
+                setTimeout(function () {
+                    $('#notification-toast .toast:first-child').remove();
+                }, 3000);
+            } else {
+                var dataGet = {};
+$('#form-get-data').find("input, select, textarea").each(function () {
+    var fieldType = $(this).attr("type");
+    var fieldName = $(this).attr("name");
+    var fieldValue;
 
-                if (fieldType === "checkbox" || fieldType === "radio") {
-                    fieldValue = $(this).is(":checked");
-                } else {
-                    if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
-                        var fieldValue = $(this).val();
-                        fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
-                    }
-                    else if ($(this).hasClass("formatKhoiLuong")) {
-                        var autoNumeric = new AutoNumeric(this,
-                            {
-                                decimalCharacter: ".",
-                                digitGroupSeparator: ",",
-                                decimalPlaces: 2,
-                                minimumValue: 0
-                            });
+    if (fieldType === "checkbox" || fieldType === "radio") {
+        fieldValue = $(this).is(":checked");
+    } else {
+        if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
+            var fieldValue = $(this).val();
+            fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
+        }
+        else if ($(this).hasClass("formatKhoiLuong")) {
+            var autoNumeric = new AutoNumeric(this,
+                {
+                    decimalCharacter: ".",
+                    digitGroupSeparator: ",",
+                    decimalPlaces: 2,
+                    minimumValue: 0
+                });
 
-                        var numericValue = autoNumeric.getNumericString();
+            var numericValue = autoNumeric.getNumericString();
 
-                        fieldValue = numericValue;
-                    }
-                    else {
-                        fieldValue = $(this).val();
-                    }
-                }
-                if (fieldName) {
-                    dataGet[fieldName] = fieldValue;
-                }
-            });
+            fieldValue = numericValue;
+        }
+        else {
+            fieldValue = $(this).val();
+        }
+    }
+    if (fieldName) {
+        dataGet[fieldName] = fieldValue;
+    }
+});
 
 
-            var data = new FormData();
-            for (var key in dataGet) {
-                data.append('SanPhamChiTietData.' + key, dataGet[key]);
+var data = new FormData();
+for (var key in dataGet) {
+    data.append('SanPhamChiTietData.' + key, dataGet[key]);
+}
+
+
+var danhSachAnhArray = [];
+@for (var i = 0; i < Model.DanhSachAnh!.Count; i++)
+{
+    @:danhSachAnhArray.push('@Model.DanhSachAnh[i]');
+}
+
+for (var i = 0; i < danhSachAnhArray.length; i++) {
+    data.append('SanPhamChiTietData.' + 'DanhSachAnh', danhSachAnhArray[i]);
+}
+
+if (lstAnhRemove['@Model.IdChiTietSp'] && lstAnhRemove['@Model.IdChiTietSp'].length > 0)
+{
+    Array.from(lstAnhRemove['@Model.IdChiTietSp']).forEach((item, index) => {
+        data.append('ListTenAnhRemove', item);
+    })
+}
+
+if (selectedFiles['@Model.IdChiTietSp'] && selectedFiles['@Model.IdChiTietSp'].length > 0)
+{
+    console.log(selectedFiles['@Model.IdChiTietSp']);
+    Array.from(selectedFiles['@Model.IdChiTietSp']).forEach((item, index) => {
+        data.append('ListAnhCreate', item.data);
+    })
+}
+
+$.ajax({
+    url: '/Admin/SanPhamChiTiet/CreateSanPhamChiTietCoppy',
+    type: 'POST',
+    data: data,
+    contentType: false,
+    processData: false,
+    success: function (result) {
+        if (result) {
+            if (window.location.pathname.toLowerCase().includes('sanPhamChiTiet/danhSachSanPham')) {
+                $('#modalSanPham').modal('hide');
+                table.draw();
+            } else {
+                $('#modal-SanPham').modal('hide');
+                GetDanhDachTongQuan();
+                thayDoiBodyDSSanPham();
             }
-
-
-            var danhSachAnhArray = [];
-            @for (var i = 0; i < Model.DanhSachAnh!.Count; i++)
-            {
-                @:danhSachAnhArray.push('@Model.DanhSachAnh[i]');
+            var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                <div class="toast-header">
+                                    <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                    <strong class="mr-auto">Thông báo</strong>
+                                    <small>1 second ago</small>
+                                    <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="toast-body">
+                                   Đã thêm thành công một sản phẩm
+                                </div>
+                            </div>`
+            $('#notification-toast').append(toastHTML)
+            $('#notification-toast .toast').toast('show');
+            setTimeout(function () {
+                $('#notification-toast .toast:first-child').remove();
+            }, 3000);
+        } else {
+            var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                            <div class="toast-header">
+                                <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                <strong class="mr-auto">Thông báo</strong>
+                                <small>1 second ago</small>
+                                <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="toast-body">
+                              Sản phẩm đã tồn tại!
+                            </div>
+                        </div>`
+            $('#notification-toast').append(toastHTML)
+            $('#notification-toast .toast').toast('show');
+            setTimeout(function () {
+                $('#notification-toast .toast:first-child').remove();
+            }, 3000);
+        }
+    },
+    error: function (xhr, status, error) {
+        console.log(xhr.responseText);
+        console.log(status);
+        console.log(error);
+        console.log(xhr);
+    }
+});
             }
-
-            for (var i = 0; i < danhSachAnhArray.length; i++) {
-                data.append('SanPhamChiTietData.' + 'DanhSachAnh', danhSachAnhArray[i]);
-            }
-
-            if (lstAnhRemove['@Model.IdChiTietSp'] && lstAnhRemove['@Model.IdChiTietSp'].length > 0)
-            {
-                Array.from(lstAnhRemove['@Model.IdChiTietSp']).forEach((item, index) => {
-                    data.append('ListTenAnhRemove', item);
-                })
-            }
-
-            if (selectedFiles['@Model.IdChiTietSp'] && selectedFiles['@Model.IdChiTietSp'].length > 0)
-            {
-                console.log(selectedFiles['@Model.IdChiTietSp']);
-                Array.from(selectedFiles['@Model.IdChiTietSp']).forEach((item, index) => {
-                    data.append('ListAnhCreate', item.data);
-                })
-            }
-
-            $.ajax({
-                url: '/Admin/SanPhamChiTiet/CreateSanPhamChiTietCoppy',
-                type: 'POST',
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function (result) {
-                    if (result) {
-                        if (window.location.pathname.toLowerCase().includes('sanPhamChiTiet/danhSachSanPham')) {
-                            $('#modalSanPham').modal('hide');
-                            table.draw();
-                        } else {
-                            $('#modal-SanPham').modal('hide');
-                            GetDanhDachTongQuan();
-                            thayDoiBodyDSSanPham();
-                        }
-                        var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                            <div class="toast-header">
-                                                <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                                <strong class="mr-auto">Thông báo</strong>
-                                                <small>1 second ago</small>
-                                                <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="toast-body">
-                                               Đã thêm thành công một sản phẩm
-                                            </div>
-                                        </div>`
-                        $('#notification-toast').append(toastHTML)
-                        $('#notification-toast .toast').toast('show');
-                        setTimeout(function () {
-                            $('#notification-toast .toast:first-child').remove();
-                        }, 3000);
-                    } else {
-                        var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                        <div class="toast-header">
-                                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                            <strong class="mr-auto">Thông báo</strong>
-                                            <small>1 second ago</small>
-                                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="toast-body">
-                                          Sản phẩm đã tồn tại!
-                                        </div>
-                                    </div>`
-                        $('#notification-toast').append(toastHTML)
-                        $('#notification-toast .toast').toast('show');
-                        setTimeout(function () {
-                            $('#notification-toast .toast:first-child').remove();
-                        }, 3000);
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.log(xhr.responseText);
-                    console.log(status);
-                    console.log(error);
-                    console.log(xhr);
-                }
-            });
-
-
-
         })
 
 
@@ -1118,7 +1236,7 @@
                             <button name="choseFile" class="custom-btn mb-2">
                                 Choose file
                             </button>
-                            <input type="file" class="fileInput default-btn 1" multiple hidden>
+                            <input type="file" class="fileInput default-btn 1" accept="image/*" multiple hidden>
                             <div class="container-file" style="display: flex;">
                                 @foreach (var img in Model.DanhSachAnh!)
                                 {

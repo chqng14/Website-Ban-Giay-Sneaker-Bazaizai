@@ -540,6 +540,7 @@ namespace App_Api.Controllers
         [HttpPost("Create-KichCo")]
         public KichCoDTO? CreateKichCo(KichCoDTO soKichCo)
         {
+            if (string.IsNullOrWhiteSpace(soKichCo.ToString())) return null;
             if (!_kickcoRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.SoKichCo).Contains(soKichCo.SoKichCo))
             {
                 var loaiGiay = _mapper.Map<KichCo>(soKichCo);

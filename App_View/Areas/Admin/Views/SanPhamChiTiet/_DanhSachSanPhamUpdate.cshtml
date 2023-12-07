@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<App_Data.ViewModels.SanPhamChiTietDTO.SanPhamChiTietDTO>
 
+<div class="notification-toast top-right" id="notification-toast"></div>
 <div class="page-header">
     <div class="header-sub-title">
         <nav class="breadcrumb breadcrumb-dash">
@@ -298,7 +299,7 @@
                                     <button name="choseFile" class="custom-btn mb-2">
                                         Choose file
                                     </button>
-                                    <input type="file" class="fileInput default-btn 1" multiple hidden>
+                                    <input type="file" class="fileInput default-btn 1" accept="image/*" multiple hidden>
                                     <div class="container-file" style="display: flex;">
                                         @foreach (var img in sp.DanhSachAnh!)
                                         {
@@ -466,7 +467,7 @@
                                     }
                                 },
                                 error: function (xhr, status, error) {
-                                   showDauVaoKhongHopLe()
+                                    showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -504,7 +505,7 @@
                                     }
                                 },
                                 error: function (xhr, status, error) {
-                                  showDauVaoKhongHopLe()
+                                    showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -656,7 +657,7 @@
                                     }
                                 },
                                 error: function (xhr, status, error) {
-                                   showDauVaoKhongHopLe()
+                                    showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -695,7 +696,7 @@
                                     }
                                 },
                                 error: function (xhr, status, error) {
-                                   showDauVaoKhongHopLe()
+                                    showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -769,7 +770,34 @@
         $(document).on('change', '.fileInput', function () {
             const imageList = $(this).closest('.upload').find('.container-file');
             const key = imageList.closest('.collapse').attr('id').replace("collapseTwoDefault-", "");
-            console.log(key);
+
+            const countImage = imageList.find('.wrapper-file').length;
+
+            if (this.files.length + countImage > 6) {
+                var toastHTML = `<div class="toast fade hide" data-delay="5000">
+                            <div class="toast-header">
+                                <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                <strong class="mr-auto">Thông báo</strong>
+                                <small>1 second ago</small>
+                                <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="toast-body">
+                                Chỉ được chọn tối đa 6 ảnh!
+                                <br/>
+                                S/P đang có ${countImage} ảnh.
+                                <br/>
+                                Do vậy bạn chỉ có thể chọn tối đa ${6 - countImage} ảnh nữa!!!
+                            </div>
+                        </div>`
+                $('#notification-toast').append(toastHTML)
+                $('#notification-toast .toast').toast('show');
+                setTimeout(function () {
+                    $('#notification-toast .toast:first-child').remove();
+                }, 5000);
+                return
+            }
 
             Array.from(this.files).map((file) => {
                 if (file.type.startsWith("image")) {
@@ -871,7 +899,7 @@
         }
 
         $(document).off('click', '.update-sp')
-        $(document).on('click','.update-sp',function () {
+        $(document).on('click', '.update-sp', function () {
             const promise = [];
             const cards = $(".accordion > .card");
             Array.from(cards).forEach(item => {
