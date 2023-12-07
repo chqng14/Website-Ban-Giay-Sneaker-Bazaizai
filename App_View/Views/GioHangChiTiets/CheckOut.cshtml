@@ -685,7 +685,6 @@
                                 </table>
                             </div>
                             <div class="gl-modal-btn-group">
-                                <button class="btn btn--e-brand-b-2" type="submit">LƯU</button>
                                 <button class="btn btn--e-grey-b-2" type="button" data-dismiss="modal">ĐÓNG</button>
                             </div>
                         </form>
@@ -732,16 +731,23 @@
 
              // }
 
-            form.addEventListener('submit', function (event) {
-                event.preventDefault();
-                var selectedAddress = document.querySelector('input[name="default-address"]:checked');
-                if (selectedAddress) {
-                    localStorage.setItem('selectedAddressId', selectedAddress.id);
-                    selectedId = selectedAddress.id;
-                    updateThongTin(selectedAddress);
-                } else {
-                    alert("Vui lòng chọn một địa chỉ trước khi lưu.");
-                }
+            var inputs = document.querySelectorAll('input[name="default-address"]');
+            inputs.forEach(function (input) {
+                input.addEventListener('change', function (event) {
+                    var selectedAddress = document.querySelector('input[name="default-address"]:checked');
+                    if (selectedAddress) {
+                        localStorage.setItem('selectedAddressId', selectedAddress.id);
+                        selectedId = selectedAddress.id;
+                        updateThongTin(selectedAddress);
+                        toast({
+                            title: "Đổi địa chỉ thành công!",
+                            type: "success",
+                            duration: 2000
+                        });
+                    } else {
+                        alert("Vui lòng chọn một địa chỉ trước khi lưu.");
+                    }
+                });
             });
 
             
