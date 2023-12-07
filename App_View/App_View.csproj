@@ -8,6 +8,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Content Remove="wwwroot\AnhSale\logo.jpg" />
 		<Content Remove="wwwroot\js\toast.js" />
 	</ItemGroup>
 
@@ -66,9 +67,9 @@
 	<ItemGroup>
 		<Folder Include="mailssave\" />
 		<Folder Include="wwwroot\AnhSanPham\" />
+		<Folder Include="wwwroot\images\VoucherNguoiDungQRCode\" />
 		<Folder Include="wwwroot\images\VoucherQRCode\" />
 		<Folder Include="wwwroot\images\QRCode\" />
-		<Folder Include="wwwroot\AnhSale\" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="wwwroot\js\site.js" />
