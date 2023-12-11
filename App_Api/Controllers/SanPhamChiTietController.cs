@@ -21,6 +21,10 @@ using System.Drawing;
 using System.Reflection;
 using App_Data.ViewModels.FilterViewModel;
 using System.Management.Automation;
+using App_Data.ViewModels.FilterDTO;
+using Microsoft.EntityFrameworkCore;
+using DocumentFormat.OpenXml.InkML;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_Api.Controllers
 {
@@ -408,8 +412,9 @@ namespace App_Api.Controllers
         [HttpPost("Create-SanPham")]
         public SanPhamDTO? CreateSanPham(SanPhamDTO sanPhamDTO)
         {
+            var nameproduct = sanPhamDTO.TenSanPham!.Trim();
 
-            if (!_sanPhamRes.GetAll().Where(sp => sp.Trangthai == 0).Select(i => i.TenSanPham).Contains(sanPhamDTO.TenSanPham))
+            if (!_sanPhamRes.GetAll().Where(sp => sp.Trangthai == 0).Select(i => i.TenSanPham).Contains(nameproduct,StringComparer.OrdinalIgnoreCase))
             {
                 var sanPham = _mapper.Map<SanPham>(sanPhamDTO);
                 sanPham.IdSanPham = Guid.NewGuid().ToString();
@@ -426,7 +431,8 @@ namespace App_Api.Controllers
         [HttpPost("Create-ThuongHieu")]
         public ThuongHieuDTO? CreateThuongHieu(ThuongHieuDTO thuongHieuDTO)
         {
-            if (!_thuongHieuRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.TenThuongHieu).Contains(thuongHieuDTO.TenThuongHieu))
+            var nameBrand = thuongHieuDTO.TenThuongHieu!.Trim();
+            if (!_thuongHieuRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.TenThuongHieu).Contains(nameBrand,StringComparer.OrdinalIgnoreCase))
             {
                 var thuongHieu = _mapper.Map<ThuongHieu>(thuongHieuDTO);
                 thuongHieu.IdThuongHieu = Guid.NewGuid().ToString();
@@ -443,7 +449,8 @@ namespace App_Api.Controllers
         [HttpPost("Create-XuatXu")]
         public XuatXuDTO? CreateXuatXu(XuatXuDTO xuaXuDTO)
         {
-            if (!_xuatXuRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.Ten).Contains(xuaXuDTO.Ten))
+            var nameXuatXu = xuaXuDTO.Ten.Trim();
+            if (!_xuatXuRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.Ten).Contains(nameXuatXu,StringComparer.OrdinalIgnoreCase))
             {
                 var xuatXu = _mapper.Map<XuatXu>(xuaXuDTO);
                 xuatXu.IdXuatXu = Guid.NewGuid().ToString();
@@ -460,7 +467,9 @@ namespace App_Api.Controllers
         [HttpPost("Create-ChatLieu")]
         public ChatLieuDTO? CreateChatLieu(ChatLieuDTO chatLieuDTO)
         {
-            if (!_chatLieuRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.TenChatLieu).Contains(chatLieuDTO.TenChatLieu))
+            var nameChatLieu = chatLieuDTO.TenChatLieu!.Trim();
+
+            if (!_chatLieuRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.TenChatLieu).Contains(nameChatLieu, StringComparer.OrdinalIgnoreCase))
             {
                 var chatLieu = _mapper.Map<ChatLieu>(chatLieuDTO);
                 chatLieu.IdChatLieu = Guid.NewGuid().ToString();
@@ -477,7 +486,8 @@ namespace App_Api.Controllers
         [HttpPost("Create-LoaiGiay")]
         public LoaiGiayDTO? CreateLoaiGiay(LoaiGiayDTO loaiGiayDTO)
         {
-            if (!_loaiGiayRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.TenLoaiGiay).Contains(loaiGiayDTO.TenLoaiGiay))
+            var nameLoaiGiay = loaiGiayDTO.TenLoaiGiay!.Trim();
+            if (!_loaiGiayRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.TenLoaiGiay).Contains(nameLoaiGiay, StringComparer.OrdinalIgnoreCase))
             {
                 var loaiGiay = _mapper.Map<LoaiGiay>(loaiGiayDTO);
                 loaiGiay.IdLoaiGiay = Guid.NewGuid().ToString();
@@ -494,7 +504,8 @@ namespace App_Api.Controllers
         [HttpPost("Create-KieuDeGiay")]
         public KieuDeGiayDTO? CreateKieuDeGiay(KieuDeGiayDTO kieuDeGiay)
         {
-            if (!_kieuDeGiayRes.GetAll().Where(sp => sp.Trangthai == 0).Select(i => i.TenKieuDeGiay).Contains(kieuDeGiay.TenKieuDeGiay))
+            var nameKieuDeGiay = kieuDeGiay.TenKieuDeGiay!.Trim();
+            if (!_kieuDeGiayRes.GetAll().Where(sp => sp.Trangthai == 0).Select(i => i.TenKieuDeGiay).Contains(nameKieuDeGiay, StringComparer.OrdinalIgnoreCase))
             {
                 var loaiGiay = _mapper.Map<KieuDeGiay>(kieuDeGiay);
                 loaiGiay.IdKieuDeGiay = Guid.NewGuid().ToString();
@@ -509,34 +520,36 @@ namespace App_Api.Controllers
 
         //MauSac
         [HttpPost("Create-MauSac")]
-        public MauSacDTO? CreateMauSac(MauSacDTO kieuDeGiay)
+        public MauSacDTO? CreateMauSac(MauSacDTO mauSac)
         {
-            if (!_mauSacRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.TenMauSac).Contains(kieuDeGiay.TenMauSac))
+            var nameMauSac = mauSac.TenMauSac.Trim();
+            if (!_mauSacRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.TenMauSac).Contains(nameMauSac, StringComparer.OrdinalIgnoreCase))
             {
-                var loaiGiay = _mapper.Map<MauSac>(kieuDeGiay);
+                var loaiGiay = _mapper.Map<MauSac>(mauSac);
                 loaiGiay.IdMauSac = Guid.NewGuid().ToString();
                 loaiGiay.MaMauSac = !_mauSacRes.GetAll().Any() ? "MS1" : "MS" + _mauSacRes.GetAll().Count() + 1;
                 loaiGiay.TrangThai = 0;
                 _mauSacRes.AddItem(loaiGiay);
-                kieuDeGiay.IdMauSac = loaiGiay.IdMauSac;
-                return kieuDeGiay;
+                mauSac.IdMauSac = loaiGiay.IdMauSac;
+                return mauSac;
             }
             return null;
         }
 
         //KichCo
         [HttpPost("Create-KichCo")]
-        public KichCoDTO? CreateKichCo(KichCoDTO kieuDeGiay)
+        public KichCoDTO? CreateKichCo(KichCoDTO soKichCo)
         {
-            if (!_kickcoRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.SoKichCo).Contains(kieuDeGiay.SoKichCo))
+            if (string.IsNullOrWhiteSpace(soKichCo.ToString())) return null;
+            if (!_kickcoRes.GetAll().Where(sp => sp.TrangThai == 0).Select(i => i.SoKichCo).Contains(soKichCo.SoKichCo))
             {
-                var loaiGiay = _mapper.Map<KichCo>(kieuDeGiay);
+                var loaiGiay = _mapper.Map<KichCo>(soKichCo);
                 loaiGiay.IdKichCo = Guid.NewGuid().ToString();
                 loaiGiay.MaKichCo = !_kickcoRes.GetAll().Any() ? "MS1" : "MS" + _kickcoRes.GetAll().Count() + 1;
                 loaiGiay.TrangThai = 0;
                 _kickcoRes.AddItem(loaiGiay);
-                kieuDeGiay.IdKichCo = loaiGiay.IdKichCo;
-                return kieuDeGiay;
+                soKichCo.IdKichCo = loaiGiay.IdKichCo;
+                return soKichCo;
             }
             return null;
         }
@@ -636,6 +649,143 @@ namespace App_Api.Controllers
             {
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
+        }
+
+        [HttpPost("get-danh-sach-san-pham-dang-kinh-doanh")]
+        public async Task<IActionResult> GetListTableDanhSachSanPhamDangKinhDoanh([FromBody] FilterAdminDTO filterAdminDTO)
+        {
+            var query = _sanPhamChiTietRes.GetQuerySanPhamChiTiet()
+                .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong)
+                .OrderByDescending(sp => sp.NgayTao)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.searchValue))
+            {
+                query = query
+                    .Include(it => it.SanPham)
+                    .Where(x =>
+                x.SanPham.TenSanPham!.Contains(filterAdminDTO.searchValue, StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.SanPham))
+            {
+                query = query
+                    .Where(x => x.IdSanPham == filterAdminDTO.SanPham.ToString());
+            }
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.MauSac))
+            {
+                query = query
+                    .Where(x => x.IdMauSac == filterAdminDTO.MauSac.ToString());
+            }
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.ThuongHieu))
+            {
+                query = query
+                    .Where(x => x.IdThuongHieu == filterAdminDTO.ThuongHieu.ToString());
+            }
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.KichCo))
+            {
+                query = query
+                     .Where(x => x.IdKichCo == filterAdminDTO.KichCo.ToString());
+            }
+
+            if (!string.IsNullOrEmpty(filterAdminDTO.Sort))
+            {
+                if (filterAdminDTO.Sort == "ascending_quantity")
+                {
+                    query = query
+                        .OrderBy(x => x.SoLuongTon!);
+                }
+
+                if (filterAdminDTO.Sort == "descending_quantity")
+                {
+                    query = query
+                        .OrderByDescending(x => x.SoLuongTon!);
+                }
+
+                if (filterAdminDTO.Sort == "ascending_price")
+                {
+                    query = query
+                        .OrderBy(x => x.GiaBan!);
+                }
+
+                if (filterAdminDTO.Sort == "descending_price")
+                {
+                    query = query
+                        .OrderByDescending(x => x.GiaBan!);
+                }
+            }
+
+            var totalRecords = await query.CountAsync();
+            query = query
+                .Skip(filterAdminDTO.start)
+                .Take(filterAdminDTO.length);
+
+            return new ObjectResult(new
+            {
+                draw = filterAdminDTO.draw,
+                recordsTotal = totalRecords,
+                recordsFiltered = totalRecords,
+                data = await query.Select(sp => _sanPhamChiTietRes.CreateSanPhamDanhSachViewModel(sp)).ToListAsync()
+            });
+        }
+
+        [HttpGet("get-danh-sach-san-pham-shop")]
+        public async Task<FilterDataVM> GetDanhSachSanPhamShop(string? brand, string? search)
+        {
+           var query = _sanPhamChiTietRes.GetQuerySanPhamChiTiet()
+              .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong)
+              .OrderByDescending(sp => sp.NgayTao)
+              .GroupBy(
+                 gr => new
+                 {
+                     gr.IdChatLieu,
+                     gr.IdSanPham,
+                     gr.IdLoaiGiay,
+                     gr.IdKieuDeGiay,
+                     gr.IdThuongHieu,
+                     gr.IdXuatXu,
+                 })
+               .Select(gr => gr.First());
+
+            if (!string.IsNullOrEmpty(brand))
+            {
+                var brandLower = brand.ToLower();
+                query = query.Include(it => it.ThuongHieu);
+                query = query!
+                    .Where(sp => sp.ThuongHieu!.TenThuongHieu!.ToLower() == brandLower);
+            }
+
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Include(it => it.SanPham);
+                query = query!
+                    .Where(sp => sp.SanPham.TenSanPham!
+                    .Contains(search.ToLower(), StringComparison.OrdinalIgnoreCase));
+            }
+
+            if (query != null)
+            {
+                var count = await query.CountAsync();
+            }
+
+            var items = await query!.Take(12).ToListAsync();
+
+            var model = new FilterDataVM()
+            {
+                Items = _mapper.Map<List<ItemShopViewModel>>(items),
+                PagingInfo = new PagingInfo()
+                {
+                    SoItemTrenMotTrang = 12,
+                    TongSoItem = (await query!.CountAsync()),
+                    TrangHienTai = 1
+                }
+
+            };
+
+            return model;
         }
     }
 }

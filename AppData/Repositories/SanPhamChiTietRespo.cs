@@ -1,5 +1,6 @@
 ﻿using App_Data.DbContextt;
 using App_Data.IRepositories;
+using App_Data.Migrations;
 using App_Data.Models;
 using App_Data.ViewModels.FilterViewModel;
 using App_Data.ViewModels.SanPhamChiTietDTO;
@@ -241,26 +242,30 @@ namespace App_Data.Repositories
 
         public SanPhamDanhSachViewModel CreateSanPhamDanhSachViewModel(SanPhamChiTiet sanPham)
         {
-            return new SanPhamDanhSachViewModel()
+            using (var context = new BazaizaiContext())
             {
-                IdChiTietSp = sanPham.IdChiTietSp,
-                ChatLieu = _context.ChatLieus.ToList().FirstOrDefault(x => x.IdChatLieu == sanPham.IdChatLieu)?.TenChatLieu,
-                SanPham = _context.thuongHieus.ToList().FirstOrDefault(x => x.IdThuongHieu == sanPham.IdThuongHieu)?.TenThuongHieu + " " + _context.SanPhams.ToList().FirstOrDefault(x => x.IdSanPham == sanPham.IdSanPham)?.TenSanPham,
-                GiaBan = sanPham.GiaBan,
-                GiaNhap = sanPham.GiaNhap,
-                MauSac = _context.mauSacs.ToList().FirstOrDefault(ms => ms.IdMauSac == sanPham.IdMauSac)?.TenMauSac,
-                KichCo = _context.kichCos.ToList().FirstOrDefault(x => x.IdKichCo == sanPham.IdKichCo)?.SoKichCo,
-                Anh = _context.Anh.ToList().Where(x => x.IdSanPhamChiTiet == sanPham.IdChiTietSp && x.TrangThai == 0).OrderBy(x => x.NgayTao).FirstOrDefault()?.Url,
-                KieuDeGiay = _context.kieuDeGiays.ToList().FirstOrDefault(x => x.IdKieuDeGiay == sanPham.IdKieuDeGiay)?.TenKieuDeGiay,
-                LoaiGiay = _context.LoaiGiays.ToList().FirstOrDefault(x => x.IdLoaiGiay == sanPham.IdLoaiGiay)?.TenLoaiGiay,
-                SoLuongTon = sanPham.SoLuongTon,
-                Ma = sanPham.Ma
-            };
+                return new SanPhamDanhSachViewModel()
+                {
+                    IdChiTietSp = sanPham.IdChiTietSp,
+                    ChatLieu = context.ChatLieus.ToList().FirstOrDefault(x => x.IdChatLieu == sanPham.IdChatLieu)?.TenChatLieu,
+                    SanPham = context.thuongHieus.ToList().FirstOrDefault(x => x.IdThuongHieu == sanPham.IdThuongHieu)?.TenThuongHieu + " " + context.SanPhams.ToList().FirstOrDefault(x => x.IdSanPham == sanPham.IdSanPham)?.TenSanPham,
+                    GiaBan = sanPham.GiaBan,
+                    GiaNhap = sanPham.GiaNhap,
+                    MauSac = context.mauSacs.ToList().FirstOrDefault(ms => ms.IdMauSac == sanPham.IdMauSac)?.TenMauSac,
+                    KichCo = context.kichCos.ToList().FirstOrDefault(x => x.IdKichCo == sanPham.IdKichCo)?.SoKichCo,
+                    Anh = context.Anh.ToList().Where(x => x.IdSanPhamChiTiet == sanPham.IdChiTietSp && x.TrangThai == 0).OrderBy(x => x.NgayTao).FirstOrDefault()?.Url,
+                    KieuDeGiay = context.kieuDeGiays.ToList().FirstOrDefault(x => x.IdKieuDeGiay == sanPham.IdKieuDeGiay)?.TenKieuDeGiay,
+                    LoaiGiay = context.LoaiGiays.ToList().FirstOrDefault(x => x.IdLoaiGiay == sanPham.IdLoaiGiay)?.TenLoaiGiay,
+                    SoLuongTon = sanPham.SoLuongTon,
+                    Ma = sanPham.Ma
+                };
+            }
         }
 
         public async Task<IEnumerable<SanPhamDanhSachViewModel>> GetListViewModelAsync()
         {
-            var sanPhamChiTietViewModels = (await _context.sanPhamChiTiets.ToListAsync()).Where(it => it.TrangThai == 0).OrderByDescending(x => x.NgayTao).Select(item => CreateSanPhamDanhSachViewModel(item)).ToList();
+            var sanPhamChiTietViewModels = 
+                (await _context.sanPhamChiTiets.ToListAsync()).Where(it => it.TrangThai == 0).OrderByDescending(x => x.NgayTao).Select(item => CreateSanPhamDanhSachViewModel(item)).ToList();
             return sanPhamChiTietViewModels;
         }
 
@@ -698,6 +703,7 @@ namespace App_Data.Repositories
             var sanPhamChiTiet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == IdSanPhamChiTiet);
             sanPhamChiTiet!.SoLuongTon = sanPhamChiTiet.SoLuongTon - soLuong;
             sanPhamChiTiet!.SoLuongDaBan += soLuong;
+            _context.sanPhamChiTiets.Update(sanPhamChiTiet);
             await _context.SaveChangesAsync();
         }
 
@@ -923,14 +929,13 @@ namespace App_Data.Repositories
                 query = query.Where(it => it.IdXuatXu == parametersTongQuanDanhSach.IdXuatXu);
             }
 
-            var result = await query
+            var result = query
                 .Include(sp => sp.SanPham)
                 .Include(sp => sp.ThuongHieu)
                 .Include(sp => sp.KieuDeGiay)
                 .Include(sp => sp.LoaiGiay)
                 .Include(sp => sp.XuatXu)
-                .Include(sp => sp.ChatLieu)
-                .ToListAsync();
+                .Include(sp => sp.ChatLieu);
 
             var viewModelResult = result
                 .GroupBy(gr => new
@@ -955,8 +960,7 @@ namespace App_Data.Repositories
                     SoSize = gr.Select(it => it.IdKichCo).Distinct().Count(),
                     TongSoLuongTon = gr.Sum(it => it.SoLuongTon.GetValueOrDefault()),
                     TongSoLuongDaBan = gr.Sum(it => it.SoLuongDaBan.GetValueOrDefault())
-                })
-                .ToList();
+                });
 
             if (!string.IsNullOrEmpty(parametersTongQuanDanhSach.SearchValue))
             {
@@ -966,11 +970,15 @@ namespace App_Data.Repositories
                         x.SanPham!.ToLower().Contains(searchValueLower) ||
                         x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
                         x.ChatLieu!.ToLower().Contains(searchValueLower) ||
-                        x.KieuDeGiay!.ToLower().Contains(searchValueLower))
-                    .ToList();
+                        x.KieuDeGiay!.ToLower().Contains(searchValueLower));
             }
 
-            return viewModelResult;
+            return await viewModelResult.ToListAsync();
+        }
+
+        public IQueryable<SanPhamChiTiet> GetQuerySanPhamChiTiet()
+        {
+            return _context.sanPhamChiTiets.AsNoTracking();
         }
     }
 }

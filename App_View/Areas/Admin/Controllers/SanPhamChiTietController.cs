@@ -21,7 +21,6 @@ using App_Data.ViewModels.KichCoDTO;
 using App_Data.ViewModels.SanPhamChiTietDTO;
 using OfficeOpenXml;
 using System.Diagnostics;
-using App_View.Models.DTO;
 using System.Text;
 using System.Text.Json;
 using Google.Apis.PeopleService.v1.Data;
@@ -37,6 +36,8 @@ using static Google.Apis.Requests.BatchRequest;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using App_Data.ViewModels.FilterViewModel;
 using Microsoft.DotNet.MSIdentity.Shared;
+using DocumentFormat.OpenXml.Spreadsheet;
+using App_Data.ViewModels.FilterDTO;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -45,7 +46,6 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly ISanPhamChiTietService _sanPhamChiTietService;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private readonly BazaizaiContext _bazaizaiContext;
         private readonly HttpClient _httpClient;
 
         public SanPhamChiTietController(ISanPhamChiTietService sanPhamChiTietService, IWebHostEnvironment webHostEnvironment, HttpClient httpClient)
@@ -54,7 +54,6 @@ namespace App_View.Areas.Admin.Controllers
             _webHostEnvironment = webHostEnvironment;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             _httpClient = httpClient;
-            _bazaizaiContext = new BazaizaiContext();
         }
         [HttpGet]
         // GET: Admin/SanPhamChiTiet/DanhSachSanPham
@@ -619,82 +618,19 @@ namespace App_View.Areas.Admin.Controllers
 
         public async Task<IActionResult> GetDanhSachSanPham([FromBody] FilterAdminDTO filterAdminDTO)
         {
-
-            var query = (await _sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync());
-
-
-            if (!string.IsNullOrEmpty(filterAdminDTO.searchValue))
+            try
             {
-                string searchValueLower = filterAdminDTO.searchValue.ToLower();
-                query = query.Where(x =>
-                x.SanPham!.ToLower().Contains(searchValueLower) ||
-                x.LoaiGiay!.ToLower().Contains(searchValueLower) ||
-                x.ChatLieu!.ToLower().Contains(searchValueLower) ||
-                x.KieuDeGiay!.ToLower().Contains(searchValueLower)
-                )
-                .ToList();
-            }
-
-            if (!string.IsNullOrEmpty(filterAdminDTO.SanPham))
-            {
-                query = query.Where(x => x.SanPham!.ToLower().Contains(filterAdminDTO.SanPham.ToLower()))
-                .ToList();
-            }
-
-            if (!string.IsNullOrEmpty(filterAdminDTO.MauSac))
-            {
-                Console.WriteLine(filterAdminDTO.MauSac);
-                query = query.Where(x => x.MauSac!.ToLower().Contains(filterAdminDTO.MauSac.ToLower()))
-                .ToList();
-            }
-
-            if (!string.IsNullOrEmpty(filterAdminDTO.ThuongHieu))
-            {
-                query = query.Where(x => x.SanPham!.ToLower().Contains(filterAdminDTO.ThuongHieu.ToLower()))
-                .ToList();
-            }
-
-            if (!string.IsNullOrEmpty(filterAdminDTO.KichCo))
-            {
-                query = query.Where(x => x.KichCo == Convert.ToInt16(filterAdminDTO.KichCo))
-                .ToList();
-            }
-
-            if (!string.IsNullOrEmpty(filterAdminDTO.Sort))
-            {
-                if (filterAdminDTO.Sort == "ascending_quantity")
+                var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/get-danh-sach-san-pham-dang-kinh-doanh", filterAdminDTO);
+                if (response.IsSuccessStatusCode)
                 {
-                    query = query.OrderBy(x => x.SoLuongTon!).ToList();
+                    return Content(await response.Content.ReadAsStringAsync(), "appliaction/json");
                 }
-
-                if (filterAdminDTO.Sort == "descending_quantity")
-                {
-                    query = query.OrderByDescending(x => x.SoLuongTon!).ToList();
-                }
-
-                if (filterAdminDTO.Sort == "ascending_price")
-                {
-                    query = query.OrderBy(x => x.GiaBan!).ToList();
-                }
-
-                if (filterAdminDTO.Sort == "descending_price")
-                {
-                    query = query.OrderByDescending(x => x.GiaBan!).ToList();
-                }
+                return StatusCode((int)response.StatusCode, response.ReasonPhrase);
             }
-
-            var totalRecords = query.Count;
-            query = query
-                .Skip(filterAdminDTO.start)
-                .Take(filterAdminDTO.length)
-                .ToList();
-            return Json(new
+            catch (Exception ex)
             {
-                draw = filterAdminDTO.draw,
-                recordsTotal = totalRecords,
-                recordsFiltered = totalRecords,
-                data = query
-            });
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
         }
 
         public async Task<IActionResult> GetDanhSachSanPhamNgungKinhDoanh(int draw, int start, int length, string searchValue)

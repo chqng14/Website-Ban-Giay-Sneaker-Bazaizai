@@ -39,5 +39,7 @@ namespace App_Data.IRepositories
         Task UpdateLstSanPhamTableAynsc(List<SanPhamTableDTO> sanPhamTableDTOs);
         List<RelatedProductViewModel> GetRelatedProducts(string sumGuid);
         Task<List<SPDanhSachViewModel>> GetFilteredDaTaDSTongQuanAynsc(ParametersTongQuanDanhSach parametersTongQuanDanhSach);
+        IQueryable<SanPhamChiTiet> GetQuerySanPhamChiTiet();
+        SanPhamDanhSachViewModel CreateSanPhamDanhSachViewModel(SanPhamChiTiet sanPham);
     }
 }
