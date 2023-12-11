@@ -38,10 +38,12 @@ using App_Data.ViewModels.FilterViewModel;
 using Microsoft.DotNet.MSIdentity.Shared;
 using DocumentFormat.OpenXml.Spreadsheet;
 using App_Data.ViewModels.FilterDTO;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class SanPhamChiTietController : Controller
     {
         private readonly ISanPhamChiTietService _sanPhamChiTietService;
@@ -63,6 +65,7 @@ namespace App_View.Areas.Admin.Controllers
             ViewData["KichCo"] = new SelectList((await _sanPhamChiTietService.GetListModelKichCoAsync()).OrderBy(kc => kc.SoKichCo), "IdKichCo", "SoKichCo");
             ViewData["MauSac"] = new SelectList(await _sanPhamChiTietService.GetListModelMauSacAsync(), "IdMauSac", "TenMauSac");
             ViewData["SanPham"] = new SelectList(await _sanPhamChiTietService.GetListModelSanPhamAsync(), "IdSanPham", "TenSanPham");
+            ViewData["LoaiGiay"] = new SelectList(await _sanPhamChiTietService.GetListModelLoaiGiayAsync(), "IdLoaiGiay", "TenLoaiGiay");
             return View();
         }
 
@@ -159,6 +162,22 @@ namespace App_View.Areas.Admin.Controllers
 
                         for (int row = 2; row <= rowCount; row++)
                         {
+                            bool isRowEmpty = true;
+
+                            for (int col = 1; col <= colCount; col++)
+                            {
+                                if (!string.IsNullOrWhiteSpace(worksheet.Cells[row, col].Text))
+                                {
+                                    isRowEmpty = false;
+                                    break;
+                                }
+                            }
+
+                            if (isRowEmpty)
+                            {
+                                break;
+                            }
+
                             sanpham = worksheet.Cells[row, 1].Text;
                             thuongHieu = worksheet.Cells[row, 2].Text;
                             xuatXu = worksheet.Cells[row, 3].Text;
@@ -174,7 +193,26 @@ namespace App_View.Areas.Admin.Controllers
                             day = worksheet.Cells[row, 13].Text;
                             noiBat = worksheet.Cells[row, 14].Text;
                             trangThaiSale = worksheet.Cells[row, 15].Text;
-                            listTenAnh = worksheet.Cells[row, 16].Text.Split(',').ToList();
+                            listTenAnh = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 16].Text) ? worksheet.Cells[row, 16].Text.Split(',').ToList() : new List<string>();
+
+                            Console.WriteLine($"Row {row}:");
+
+                            Console.WriteLine(string.Format("  Sanpham: {0}", sanpham));
+                            Console.WriteLine(string.Format("  ThuongHieu: {0}", thuongHieu));
+                            Console.WriteLine(string.Format("  XuatXu: {0}", xuatXu));
+                            Console.WriteLine(string.Format("  ChatLieu: {0}", chatLieu));
+                            // ... (Thêm các dòng khác tương tự)
+
+                            // Log danh sách ảnh
+                            Console.WriteLine("  ListTenAnh:");
+                            foreach (var tenAnh in listTenAnh)
+                            {
+                                Console.WriteLine(string.Format("{0}", tenAnh));
+                            }
+
+                            Console.WriteLine(); 
+
+
                             if (
                                 !string.IsNullOrEmpty(sanpham) &&
                                 !string.IsNullOrEmpty(thuongHieu) &&
@@ -204,43 +242,8 @@ namespace App_View.Areas.Admin.Controllers
                                     ThuongHieu = thuongHieu,
                                     XuatXu = xuatXu,
                                 });
-                                sanPhamDTO.GiaNhap = string.IsNullOrEmpty(giaNhap) ? null : Convert.ToDouble(giaNhap);
-                                sanPhamDTO.SoLuongTon = string.IsNullOrEmpty(giaNhap) ? null : Convert.ToInt32(soLuong);
-                                sanPhamDTO.GiaBan = Convert.ToDouble(giaBan);
-                                sanPhamDTO.KhoiLuong = Convert.ToDouble(khoiLuong);
-                                sanPhamDTO.Day = day == "1" ? true : false;
-                                sanPhamDTO.TrangThaiKhuyenMai = trangThaiSale == "1" ? true : false;
-                                sanPhamDTO.NoiBat = noiBat == "1" ? true : false;
-                                var response = (await _sanPhamChiTietService.AddAysnc(sanPhamDTO));
 
-                                if (response.Success)
-                                {
-                                    slSuccess++;
-
-                                    var formContent = new MultipartFormDataContent();
-                                    formContent.Add(new StringContent(response.IdChiTietSp!), "idProductDetail");
-                                    for (int i = 0; i < listTenAnh.Count(); i++)
-                                    {
-                                        formContent.Add(new StringContent(listTenAnh[i]), $"lstNameImage[{i}]");
-                                    }
-                                    try
-                                    {
-                                        HttpResponseMessage responseCreate = await _httpClient.PostAsync("/api/Anh/create-list-model-image", formContent);
-                                        responseCreate.EnsureSuccessStatusCode();
-
-                                    }
-                                    catch (HttpRequestException ex)
-                                    {
-                                        slFalse++;
-                                        Console.WriteLine($"Lỗi gửi yêu cầu HTTP: {ex.Message}");
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        slFalse++;
-                                        Console.WriteLine($"Lỗi khác: {ex.Message}");
-                                    }
-                                }
-                                else
+                                if(sanPhamDTO == null)
                                 {
                                     slFalse++;
                                     var errorRow = new ErrorRow
@@ -261,12 +264,103 @@ namespace App_View.Areas.Admin.Controllers
                                         NoiBat = noiBat == "1",
                                         TrangThaiSale = trangThaiSale == "1",
                                         ListTenAnh = string.Join(",", listTenAnh),
-                                        ErrorMessage = response.DescriptionErr
+                                        ErrorMessage = "Đầu vào không hợp lệ"
                                     };
 
                                     errorRows.Add(errorRow);
-
                                 }
+                                else
+                                {
+                                    sanPhamDTO!.GiaNhap = string.IsNullOrEmpty(giaNhap) ? null : Convert.ToDouble(giaNhap);
+                                    sanPhamDTO.SoLuongTon = string.IsNullOrEmpty(giaNhap) ? null : Convert.ToInt32(soLuong);
+                                    sanPhamDTO.GiaBan = Convert.ToDouble(giaBan);
+                                    sanPhamDTO.KhoiLuong = Convert.ToDouble(khoiLuong);
+                                    sanPhamDTO.Day = day == "1" ? true : false;
+                                    sanPhamDTO.TrangThaiKhuyenMai = trangThaiSale == "1" ? true : false;
+                                    sanPhamDTO.NoiBat = noiBat == "1" ? true : false;
+                                    var response = (await _sanPhamChiTietService.AddAysnc(sanPhamDTO));
+
+                                    if (response.Success)
+                                    {
+                                        slSuccess++;
+
+                                        var formContent = new MultipartFormDataContent();
+                                        formContent.Add(new StringContent(response.IdChiTietSp!), "idProductDetail");
+                                        for (int i = 0; i < listTenAnh.Count(); i++)
+                                        {
+                                            formContent.Add(new StringContent(listTenAnh[i]), $"lstNameImage[{i}]");
+                                        }
+                                        try
+                                        {
+                                            HttpResponseMessage responseCreate = await _httpClient.PostAsync("/api/Anh/create-list-model-image", formContent);
+                                            responseCreate.EnsureSuccessStatusCode();
+
+                                        }
+                                        catch (HttpRequestException ex)
+                                        {
+                                            slFalse++;
+                                            Console.WriteLine($"Lỗi gửi yêu cầu HTTP: {ex.Message}");
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            slFalse++;
+                                            Console.WriteLine($"Lỗi khác: {ex.Message}");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        slFalse++;
+                                        var errorRow = new ErrorRow
+                                        {
+                                            SanPham = sanpham,
+                                            ThuongHieu = thuongHieu,
+                                            XuatXu = xuatXu,
+                                            ChatLieu = chatLieu,
+                                            LoaiGiay = loaiGiay,
+                                            KieuDeGiay = kieuDeGiay,
+                                            MauSac = mauSac,
+                                            KichCo = kichCo,
+                                            GiaNhap = giaNhap,
+                                            GiaBan = giaBan,
+                                            SoLuong = soLuong,
+                                            KhoiLuong = khoiLuong,
+                                            Day = day == "1",
+                                            NoiBat = noiBat == "1",
+                                            TrangThaiSale = trangThaiSale == "1",
+                                            ListTenAnh = string.Join(",", listTenAnh),
+                                            ErrorMessage = response.DescriptionErr
+                                        };
+
+                                        errorRows.Add(errorRow);
+
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                slFalse++;
+                                var errorRow = new ErrorRow
+                                {
+                                    SanPham = sanpham,
+                                    ThuongHieu = thuongHieu,
+                                    XuatXu = xuatXu,
+                                    ChatLieu = chatLieu,
+                                    LoaiGiay = loaiGiay,
+                                    KieuDeGiay = kieuDeGiay,
+                                    MauSac = mauSac,
+                                    KichCo = kichCo,
+                                    GiaNhap = giaNhap,
+                                    GiaBan = giaBan,
+                                    SoLuong = soLuong,
+                                    KhoiLuong = khoiLuong,
+                                    Day = day == "1",
+                                    NoiBat = noiBat == "1",
+                                    TrangThaiSale = trangThaiSale == "1",
+                                    ListTenAnh = string.Join(",", listTenAnh),
+                                    ErrorMessage = "Các trường không được để trống."
+                                };
+
+                                errorRows.Add(errorRow);
                             }
                         }
                     }
@@ -293,7 +387,7 @@ namespace App_View.Areas.Admin.Controllers
                         NoiBat = noiBat == "1",
                         TrangThaiSale = trangThaiSale == "1",
                         ListTenAnh = string.Join(",", listTenAnh),
-                        ErrorMessage = "Sai định dạng hoặc để trống trường"
+                        ErrorMessage = "Trường có đầu vào không hợp lệ"
                     };
 
                     errorRows.Add(errorRow);
@@ -325,11 +419,10 @@ namespace App_View.Areas.Admin.Controllers
                     errorWorksheet.Cells[1, 12].Value = "Khối lượng";
                     errorWorksheet.Cells[1, 13].Value = "Dây";
                     errorWorksheet.Cells[1, 14].Value = "Nổi bật";
-                    errorWorksheet.Cells[1, 15].Value = "Trạng thái Sale";
+                    errorWorksheet.Cells[1, 15].Value = "Được áp dụng khuyển mại";
                     errorWorksheet.Cells[1, 16].Value = "Ảnh";
                     errorWorksheet.Cells[1, 17].Value = "Mô tả lỗi";
 
-                    // Dữ liệu
                     for (int i = 0; i < errorRows.Count; i++)
                     {
                         var errorRow = errorRows[i];
@@ -372,7 +465,6 @@ namespace App_View.Areas.Admin.Controllers
 
         #endregion
 
-
         #region DownLoadFile
         public IActionResult DownloadFileTemplate()
         {
@@ -411,7 +503,7 @@ namespace App_View.Areas.Admin.Controllers
 
         #region ExportToExcel
         [HttpPost]
-        public async Task<IActionResult> ExportListProductRelateFromListGuild([FromBody]ListGuildDTO listGuildDTO)
+        public async Task<IActionResult> ExportListProductRelateFromListGuild([FromBody] ListGuildDTO listGuildDTO)
         {
             var listSanPhamChiTietViewModel = new List<SanPhamChiTietViewModel>();
             foreach (var guild in listGuildDTO.listGuild!)
@@ -550,8 +642,7 @@ namespace App_View.Areas.Admin.Controllers
             var model = (await _sanPhamChiTietService
                 .GetListSanPhamChiTietDTOAsync(new ListGuildDTO()
                 {
-                    listGuild = new List<string>()
-                {
+                    listGuild = new List<string>(){
                     IdSanPhamChiTiet
                 }
                 })
@@ -620,7 +711,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync("/api/SanPhamChiTiet/get-danh-sach-san-pham-dang-kinh-doanh", filterAdminDTO);
+                var response = await _httpClient.PostAsJsonAsync("/api/sanphamchitiet/get-danh-sach-san-pham-dang-kinh-doanh", filterAdminDTO);
                 if (response.IsSuccessStatusCode)
                 {
                     return Content(await response.Content.ReadAsStringAsync(), "appliaction/json");
@@ -859,7 +950,30 @@ namespace App_View.Areas.Admin.Controllers
             {
                 listGuild = new List<string>() { idSanPhamChiTiet }
             });
-            return PartialView("_SachSanPhamUpdatePartialView", model);
+            return PartialView("_SanPhamUpdatePartialView", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadImage([FromForm]List<IFormFile> files)
+        {
+            var formData = new MultipartFormDataContent();
+            foreach (var file in files)
+            {
+                formData.Add(new StreamContent(file.OpenReadStream())
+                {
+                    Headers =
+                {
+                    ContentLength = file.Length,
+                    ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType)
+                }
+                }, "files", file.FileName);
+            }
+            var response = await _httpClient.PostAsync("/api/anh/upload-anh", formData);
+            if (response.IsSuccessStatusCode)
+            {
+                return Ok(await response.Content.ReadAsAsync<bool>());
+            }
+            return Ok(false);
         }
 
     }

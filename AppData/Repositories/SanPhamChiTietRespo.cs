@@ -250,10 +250,11 @@ namespace App_Data.Repositories
                     ChatLieu = context.ChatLieus.ToList().FirstOrDefault(x => x.IdChatLieu == sanPham.IdChatLieu)?.TenChatLieu,
                     SanPham = context.thuongHieus.ToList().FirstOrDefault(x => x.IdThuongHieu == sanPham.IdThuongHieu)?.TenThuongHieu + " " + context.SanPhams.ToList().FirstOrDefault(x => x.IdSanPham == sanPham.IdSanPham)?.TenSanPham,
                     GiaBan = sanPham.GiaBan,
-                    GiaNhap = sanPham.GiaNhap,
                     MauSac = context.mauSacs.ToList().FirstOrDefault(ms => ms.IdMauSac == sanPham.IdMauSac)?.TenMauSac,
                     KichCo = context.kichCos.ToList().FirstOrDefault(x => x.IdKichCo == sanPham.IdKichCo)?.SoKichCo,
                     Anh = context.Anh.ToList().Where(x => x.IdSanPhamChiTiet == sanPham.IdChiTietSp && x.TrangThai == 0).OrderBy(x => x.NgayTao).FirstOrDefault()?.Url,
+                    SoLuongDaBan = sanPham.SoLuongDaBan,
+                    XuatXu = context.xuatXus.ToList().FirstOrDefault(x => x.IdXuatXu == sanPham.IdXuatXu)?.Ten,
                     KieuDeGiay = context.kieuDeGiays.ToList().FirstOrDefault(x => x.IdKieuDeGiay == sanPham.IdKieuDeGiay)?.TenKieuDeGiay,
                     LoaiGiay = context.LoaiGiays.ToList().FirstOrDefault(x => x.IdLoaiGiay == sanPham.IdLoaiGiay)?.TenLoaiGiay,
                     SoLuongTon = sanPham.SoLuongTon,
@@ -412,31 +413,77 @@ namespace App_Data.Repositories
 
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac)
         {
+            //var sanPhamGet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
+
+            //var idMauSac = (await _context.mauSacs.FirstOrDefaultAsync(x => x.TenMauSac == mauSac))!.IdMauSac;
+            //if (sanPhamGet == null) return null;
+            //var lstBienThe = await _context.sanPhamChiTiets
+            //    .Where(sp =>
+            //    sp.TrangThai == 0 &&
+            //    sp.IdKieuDeGiay == sanPhamGet!.IdKieuDeGiay &&
+            //    sp.IdLoaiGiay == sanPhamGet.IdLoaiGiay &&
+            //    sp.IdThuongHieu == sanPhamGet.IdThuongHieu &&
+            //    sp.IdXuatXu == sanPhamGet.IdXuatXu &&
+            //    sp.IdChatLieu == sanPhamGet.IdChatLieu &&
+            //    sp.IdSanPham == sanPhamGet.IdSanPham &&
+            //    sp.IdMauSac == idMauSac
+            //    )
+            //    .Include(x => x.MauSac)
+            //    .Include(x => x.KichCo)
+            //    .Include(x => x.Anh)
+            //    .ToListAsync();
+            //var lstSize = lstBienThe.DistinctBy(sp => sp.KichCo.SoKichCo).OrderBy(item => item.KichCo.SoKichCo).ToList();
+            //var idSizeGet = lstSize.FirstOrDefault()!.KichCo.IdKichCo;
+            //var sanPhamChiTiet = lstBienThe.FirstOrDefault(sp => sp.IdKichCo == idSizeGet);
+            //var itemDetailViewModel = _mapper.Map<ItemDetailViewModel>(sanPhamChiTiet);
+            //itemDetailViewModel.LstKichThuoc = lstBienThe.Select(x => x.KichCo.SoKichCo!.Value).Distinct().OrderBy(item => item).ToList();
+            //return itemDetailViewModel;
+
+
             var sanPhamGet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
 
-            var idMauSac = (await _context.mauSacs.FirstOrDefaultAsync(x => x.TenMauSac == mauSac))!.IdMauSac;
-            if (sanPhamGet == null) return null;
-            var lstBienThe = await _context.sanPhamChiTiets
+            if (sanPhamGet == null)
+                return null;
+
+            var mauSacEntity = await _context.mauSacs.FirstOrDefaultAsync(x => x.TenMauSac == mauSac);
+
+            if (mauSacEntity == null)
+                return null;
+
+            var idMauSac = mauSacEntity.IdMauSac;
+
+            var query = _context.sanPhamChiTiets
                 .Where(sp =>
-                sp.TrangThai == 0 &&
-                sp.IdKieuDeGiay == sanPhamGet!.IdKieuDeGiay &&
-                sp.IdLoaiGiay == sanPhamGet.IdLoaiGiay &&
-                sp.IdThuongHieu == sanPhamGet.IdThuongHieu &&
-                sp.IdXuatXu == sanPhamGet.IdXuatXu &&
-                sp.IdChatLieu == sanPhamGet.IdChatLieu &&
-                sp.IdSanPham == sanPhamGet.IdSanPham &&
-                sp.IdMauSac == idMauSac
+                    sp.TrangThai == 0 &&
+                    sp.IdKieuDeGiay == sanPhamGet!.IdKieuDeGiay &&
+                    sp.IdLoaiGiay == sanPhamGet.IdLoaiGiay &&
+                    sp.IdThuongHieu == sanPhamGet.IdThuongHieu &&
+                    sp.IdXuatXu == sanPhamGet.IdXuatXu &&
+                    sp.IdChatLieu == sanPhamGet.IdChatLieu &&
+                    sp.IdSanPham == sanPhamGet.IdSanPham &&
+                    sp.IdMauSac == idMauSac
                 )
                 .Include(x => x.MauSac)
                 .Include(x => x.KichCo)
-                .Include(x => x.Anh)
-                .ToListAsync();
-            var lstSize = lstBienThe.DistinctBy(sp => sp.KichCo.SoKichCo).OrderBy(item => item.KichCo.SoKichCo).ToList();
-            var idSizeGet = lstSize.FirstOrDefault()!.KichCo.IdKichCo;
+                .Include(x => x.Anh);
+
+            var lstBienThe = await query.ToListAsync();
+
+            var lstSize = lstBienThe
+                .GroupBy(sp => sp.KichCo.SoKichCo)
+                .OrderBy(item => item.Key)
+                .Select(group => group.First());
+
+            var idSizeGet = lstSize.FirstOrDefault()?.KichCo.IdKichCo;
+
             var sanPhamChiTiet = lstBienThe.FirstOrDefault(sp => sp.IdKichCo == idSizeGet);
+
             var itemDetailViewModel = _mapper.Map<ItemDetailViewModel>(sanPhamChiTiet);
-            itemDetailViewModel.LstKichThuoc = lstBienThe.Select(x => x.KichCo.SoKichCo!.Value).Distinct().OrderBy(item => item).ToList();
+            itemDetailViewModel.LstKichThuoc = lstSize.Select(x => x.KichCo.SoKichCo!.Value).ToList();
+
             return itemDetailViewModel;
+
+
         }
 
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSizeAynsc(string id, int size)
@@ -576,126 +623,135 @@ namespace App_Data.Repositories
             return _mapper.Map<List<SanPhamChiTiet>, List<SanPhamChiTietExcelViewModel>>(listSanPhamChiTiet);
         }
 
-        public async Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO)
+        public async Task<SanPhamChiTietDTO?> GetItemExcelAynsc(BienTheDTO bienTheDTO)
         {
-            var chatLieu = await _context.ChatLieus.FirstOrDefaultAsync(cl => cl.TenChatLieu == bienTheDTO.ChatLieu);
-            if (chatLieu == null)
+            try
             {
-                chatLieu = new ChatLieu()
+                var chatLieu = await _context.ChatLieus.FirstOrDefaultAsync(cl => cl.TenChatLieu == bienTheDTO.ChatLieu);
+                if (chatLieu == null)
                 {
-                    IdChatLieu = Guid.NewGuid().ToString(),
-                    MaChatLieu = !_context.ChatLieus.Any() ? "CL1" : "CL2" + (_context.ChatLieus.Count() + 1),
-                    TenChatLieu = bienTheDTO.ChatLieu,
-                    TrangThai = 0
-                };
-                await _context.ChatLieus.AddAsync(chatLieu);
-            }
+                    chatLieu = new ChatLieu()
+                    {
+                        IdChatLieu = Guid.NewGuid().ToString(),
+                        MaChatLieu = !_context.ChatLieus.Any() ? "CL1" : "CL2" + (_context.ChatLieus.Count() + 1),
+                        TenChatLieu = bienTheDTO.ChatLieu,
+                        TrangThai = 0
+                    };
+                    await _context.ChatLieus.AddAsync(chatLieu);
+                }
 
-            var xuatXu = await _context.xuatXus.FirstOrDefaultAsync(cl => cl.Ten == bienTheDTO.XuatXu);
-            if (xuatXu == null)
-            {
-                xuatXu = new XuatXu()
+                var xuatXu = await _context.xuatXus.FirstOrDefaultAsync(cl => cl.Ten == bienTheDTO.XuatXu);
+                if (xuatXu == null)
                 {
-                    IdXuatXu = Guid.NewGuid().ToString(),
-                    Ma = !_context.xuatXus.Any() ? "XX1" : "XX" + (_context.ChatLieus.Count() + 1),
-                    Ten = bienTheDTO.XuatXu,
-                    TrangThai = 0
-                };
-                await _context.xuatXus.AddAsync(xuatXu);
-            }
+                    xuatXu = new XuatXu()
+                    {
+                        IdXuatXu = Guid.NewGuid().ToString(),
+                        Ma = !_context.xuatXus.Any() ? "XX1" : "XX" + (_context.ChatLieus.Count() + 1),
+                        Ten = bienTheDTO.XuatXu,
+                        TrangThai = 0
+                    };
+                    await _context.xuatXus.AddAsync(xuatXu);
+                }
 
-            var mauSac = await _context.mauSacs.FirstOrDefaultAsync(cl => cl.TenMauSac == bienTheDTO.MauSac);
-            if (mauSac == null)
-            {
-                mauSac = new MauSac()
+                var mauSac = await _context.mauSacs.FirstOrDefaultAsync(cl => cl.TenMauSac == bienTheDTO.MauSac);
+                if (mauSac == null)
                 {
-                    IdMauSac = Guid.NewGuid().ToString(),
-                    MaMauSac = !_context.mauSacs.Any() ? "MS1" : "MS" + (_context.mauSacs.Count() + 1),
-                    TenMauSac = bienTheDTO.MauSac,
-                    TrangThai = 0
-                };
-                await _context.mauSacs.AddAsync(mauSac);
-            }
+                    mauSac = new MauSac()
+                    {
+                        IdMauSac = Guid.NewGuid().ToString(),
+                        MaMauSac = !_context.mauSacs.Any() ? "MS1" : "MS" + (_context.mauSacs.Count() + 1),
+                        TenMauSac = bienTheDTO.MauSac,
+                        TrangThai = 0
+                    };
+                    await _context.mauSacs.AddAsync(mauSac);
+                }
 
-            var kichCo = await _context.kichCos.FirstOrDefaultAsync(cl => cl.SoKichCo == Convert.ToInt32(bienTheDTO.KichCo));
-            if (kichCo == null)
-            {
-                kichCo = new KichCo()
+                var kichCo = await _context.kichCos.FirstOrDefaultAsync(cl => cl.SoKichCo == Convert.ToInt32(bienTheDTO.KichCo));
+                if (kichCo == null)
                 {
-                    IdKichCo = Guid.NewGuid().ToString(),
-                    MaKichCo = !_context.kichCos.Any() ? "KC1" : "KC" + (_context.kichCos.Count() + 1),
-                    SoKichCo = Convert.ToInt32(bienTheDTO.KichCo),
-                    TrangThai = 0
-                };
-                await _context.kichCos.AddAsync(kichCo);
-            }
+                    kichCo = new KichCo()
+                    {
+                        IdKichCo = Guid.NewGuid().ToString(),
+                        MaKichCo = !_context.kichCos.Any() ? "KC1" : "KC" + (_context.kichCos.Count() + 1),
+                        SoKichCo = Convert.ToInt32(bienTheDTO.KichCo),
+                        TrangThai = 0
+                    };
+                    await _context.kichCos.AddAsync(kichCo);
+                }
 
-            var loaiGiay = await _context.LoaiGiays.FirstOrDefaultAsync(cl => cl.TenLoaiGiay == bienTheDTO.LoaiGiay);
-            if (loaiGiay == null)
-            {
-                loaiGiay = new LoaiGiay()
+                var loaiGiay = await _context.LoaiGiays.FirstOrDefaultAsync(cl => cl.TenLoaiGiay == bienTheDTO.LoaiGiay);
+                if (loaiGiay == null)
                 {
-                    IdLoaiGiay = Guid.NewGuid().ToString(),
-                    MaLoaiGiay = !_context.LoaiGiays.Any() ? "LG1" : "LG" + (_context.LoaiGiays.Count() + 1),
-                    TenLoaiGiay = bienTheDTO.LoaiGiay,
-                    TrangThai = 0
-                };
-                await _context.LoaiGiays.AddAsync(loaiGiay);
-            }
+                    loaiGiay = new LoaiGiay()
+                    {
+                        IdLoaiGiay = Guid.NewGuid().ToString(),
+                        MaLoaiGiay = !_context.LoaiGiays.Any() ? "LG1" : "LG" + (_context.LoaiGiays.Count() + 1),
+                        TenLoaiGiay = bienTheDTO.LoaiGiay,
+                        TrangThai = 0
+                    };
+                    await _context.LoaiGiays.AddAsync(loaiGiay);
+                }
 
-            var kieuDeGiay = await _context.kieuDeGiays.FirstOrDefaultAsync(cl => cl.TenKieuDeGiay == bienTheDTO.KieuDeGiay);
-            if (kieuDeGiay == null)
-            {
-                kieuDeGiay = new KieuDeGiay()
+                var kieuDeGiay = await _context.kieuDeGiays.FirstOrDefaultAsync(cl => cl.TenKieuDeGiay == bienTheDTO.KieuDeGiay);
+                if (kieuDeGiay == null)
                 {
-                    IdKieuDeGiay = Guid.NewGuid().ToString(),
-                    MaKieuDeGiay = !_context.kieuDeGiays.Any() ? "KDG1" : "KDG" + (_context.kieuDeGiays.Count() + 1),
-                    TenKieuDeGiay = bienTheDTO.KieuDeGiay,
-                    Trangthai = 0
-                };
-                await _context.kieuDeGiays.AddAsync(kieuDeGiay);
-            }
+                    kieuDeGiay = new KieuDeGiay()
+                    {
+                        IdKieuDeGiay = Guid.NewGuid().ToString(),
+                        MaKieuDeGiay = !_context.kieuDeGiays.Any() ? "KDG1" : "KDG" + (_context.kieuDeGiays.Count() + 1),
+                        TenKieuDeGiay = bienTheDTO.KieuDeGiay,
+                        Trangthai = 0
+                    };
+                    await _context.kieuDeGiays.AddAsync(kieuDeGiay);
+                }
 
-            var sanPham = await _context.SanPhams.FirstOrDefaultAsync(cl => cl.TenSanPham == bienTheDTO.SanPham);
-            if (sanPham == null)
-            {
-                sanPham = new SanPham()
+                var sanPham = await _context.SanPhams.FirstOrDefaultAsync(cl => cl.TenSanPham == bienTheDTO.SanPham);
+                if (sanPham == null)
                 {
-                    IdSanPham = Guid.NewGuid().ToString(),
-                    MaSanPham = !_context.SanPhams.Any() ? "SP1" : "SP" + (_context.SanPhams.Count() + 1),
-                    TenSanPham = bienTheDTO.SanPham,
-                    Trangthai = 0
-                };
-                await _context.SanPhams.AddAsync(sanPham);
-            }
+                    sanPham = new SanPham()
+                    {
+                        IdSanPham = Guid.NewGuid().ToString(),
+                        MaSanPham = !_context.SanPhams.Any() ? "SP1" : "SP" + (_context.SanPhams.Count() + 1),
+                        TenSanPham = bienTheDTO.SanPham,
+                        Trangthai = 0
+                    };
+                    await _context.SanPhams.AddAsync(sanPham);
+                }
 
-            var thuongHieu = await _context.thuongHieus.FirstOrDefaultAsync(cl => cl.TenThuongHieu == bienTheDTO.ThuongHieu);
-            if (thuongHieu == null)
-            {
-                thuongHieu = new ThuongHieu()
+                var thuongHieu = await _context.thuongHieus.FirstOrDefaultAsync(cl => cl.TenThuongHieu == bienTheDTO.ThuongHieu);
+                if (thuongHieu == null)
                 {
-                    IdThuongHieu = Guid.NewGuid().ToString(),
-                    MaThuongHieu = !_context.thuongHieus.Any() ? "TH1" : "TH" + (_context.thuongHieus.Count() + 1),
-                    TenThuongHieu = bienTheDTO.ThuongHieu,
-                    TrangThai = 0
+                    thuongHieu = new ThuongHieu()
+                    {
+                        IdThuongHieu = Guid.NewGuid().ToString(),
+                        MaThuongHieu = !_context.thuongHieus.Any() ? "TH1" : "TH" + (_context.thuongHieus.Count() + 1),
+                        TenThuongHieu = bienTheDTO.ThuongHieu,
+                        TrangThai = 0
+                    };
+                    await _context.thuongHieus.AddAsync(thuongHieu);
+                }
+
+                await _context.SaveChangesAsync();
+
+                var spDTO = new SanPhamChiTietDTO()
+                {
+                    IdChatLieu = chatLieu.IdChatLieu,
+                    IdKichCo = kichCo.IdKichCo,
+                    IdKieuDeGiay = kieuDeGiay.IdKieuDeGiay,
+                    IdLoaiGiay = loaiGiay.IdLoaiGiay,
+                    IdMauSac = mauSac.IdMauSac,
+                    IdThuongHieu = thuongHieu.IdThuongHieu,
+                    IdSanPham = sanPham.IdSanPham,
+                    IdXuatXu = xuatXu.IdXuatXu,
                 };
-                await _context.thuongHieus.AddAsync(thuongHieu);
+                return spDTO;
             }
-
-            await _context.SaveChangesAsync();
-
-            var spDTO = new SanPhamChiTietDTO()
+            catch (Exception ex)
             {
-                IdChatLieu = chatLieu.IdChatLieu,
-                IdKichCo = kichCo.IdKichCo,
-                IdKieuDeGiay = kieuDeGiay.IdKieuDeGiay,
-                IdLoaiGiay = loaiGiay.IdLoaiGiay,
-                IdMauSac = mauSac.IdMauSac,
-                IdThuongHieu = thuongHieu.IdThuongHieu,
-                IdSanPham = sanPham.IdSanPham,
-                IdXuatXu = xuatXu.IdXuatXu,
-            };
-            return spDTO;
+                Console.WriteLine(ex);
+                return null;
+            }
+           
         }
 
         public async Task UpdateSoLuongSanPhamChiTietAynsc(string IdSanPhamChiTiet, int soLuong)

@@ -403,20 +403,21 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.tenThuongHieu, result.idThuongHieu, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenThuongHieu, result.idThuongHieu, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $thuonghieuInput.val('');
+                                        $thuonghieuInput.val('');
+                                    } else {
+                                        showToastTonTai('Thương hiệu')
+                                    }
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                    showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -442,21 +443,23 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var $select2 = $xuatxu.find("[name='IdXuatXu']");
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.ten, result.idXuatXu, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var $select2 = $xuatxu.find("[name='IdXuatXu']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.ten, result.idXuatXu, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $(this).val('');
+                                        $(this).val('');
+                                    } else {
+                                        showToastTonTai('Xuất xứ')
+                                    }
+                                    
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                    showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -482,21 +485,22 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var $select2 = $sanpham.find("[name='IdSanPham']");
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.tenSanPham, result.idSanPham, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var $select2 = $sanpham.find("[name='IdSanPham']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenSanPham, result.idSanPham, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $(this).val('');
+                                        $(this).val('');
+                                    } else {
+                                        showToastTonTai('Sản phẩm')
+                                    }
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                    showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -522,21 +526,22 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var $select2 = $loaigiay.find("[name='IdLoaiGiay']");
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.tenLoaiGiay, result.idLoaiGiay, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var $select2 = $loaigiay.find("[name='IdLoaiGiay']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenLoaiGiay, result.idLoaiGiay, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $(this).val('');
+                                        $(this).val('');
+                                    } else {
+                                        showToastTonTai('Loại giày')
+                                    }
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                    showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -562,21 +567,22 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var $select2 = $chatlieu.find("[name='IdChatLieu']");
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.tenChatLieu, result.idChatLieu, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var $select2 = $chatlieu.find("[name='IdChatLieu']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenChatLieu, result.idChatLieu, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $(this).val('');
+                                        $(this).val('');
+                                    } else {
+                                        showToastTonTai('Chất liệu')
+                                    }
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                    showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -602,21 +608,22 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var $select2 = $kieudegiay.find("[name='IdKieuDeGiay']");
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.tenKieuDeGiay, result.idKieuDeGiay, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var $select2 = $kieudegiay.find("[name='IdKieuDeGiay']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenKieuDeGiay, result.idKieuDeGiay, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $(this).val('');
+                                        $(this).val('');
+                                    } else {
+                                        showToastTonTai('Kiểu đế giày')
+                                    }
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                   showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -642,21 +649,22 @@
                                 data: JSON.stringify(data),
                                 contentType: 'application/json',
                                 success: function (result) {
-                                    var $select2 = $mausac.find("[name='IdMauSac']");
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
-                                    }
-                                    var newOption = new Option(result.tenMauSac, result.idMauSac, true, true);
-                                    $select2.append(newOption).trigger('change');
+                                    if (result) {
+                                        var $select2 = $mausac.find("[name='IdMauSac']");
+                                        var selectedValue = $select2.val();
+                                        if (selectedValue && selectedValue.length > 0) {
+                                            $select2.val(null).trigger('change');
+                                        }
+                                        var newOption = new Option(result.tenMauSac, result.idMauSac, true, true);
+                                        $select2.append(newOption).trigger('change');
 
-                                    $(this).val('');
+                                        $(this).val('');
+                                    } else {
+                                        showToastTonTai('Màu sắc')
+                                    }
                                 },
                                 error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
+                                    showDauVaoKhongHopLe()
                                 }
                             });
                         }
@@ -673,33 +681,56 @@
                     if (e.key === 'Enter') {
                         var inputValue = $(this).val();
                         if (inputValue.trim() !== "") {
-                            var data = {
-                                soKichCo: inputValue,
-                            };
-                            $.ajax({
-                                url: 'CreateTenKichCo',
-                                type: 'POST',
-                                data: JSON.stringify(data),
-                                contentType: 'application/json',
-                                success: function (result) {
-                                    var $select2 = $kichco.find("[name='IdKichCo']");
+                            if (Number.isInteger(parseFloat(inputValue.trim())) && parseInt(inputValue) < 0) {
+                                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                    <div class="toast-header">
+                                        <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                        <strong class="mr-auto">Thông báo</strong>
+                                        <small>1 seconds ago</small>
+                                        <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="toast-body">
+                                        <span>Kích cỡ phải là số nguyên dương</span>
+                                    </div>
+                                </div>`
 
-                                    var selectedValue = $select2.val();
-                                    if (selectedValue && selectedValue.length > 0) {
-                                        $select2.val(null).trigger('change');
+                                $('#notification-toast').append(toastHTML)
+                                $('#notification-toast .toast').toast('show');
+                                setTimeout(function () {
+                                    $('#notification-toast .toast:first-child').remove();
+                                }, 3000);
+                            } else {
+                                var data = {
+                                    soKichCo: inputValue.trim(),
+                                };
+                                $.ajax({
+                                    url: 'CreateTenKichCo',
+                                    type: 'POST',
+                                    data: JSON.stringify(data),
+                                    contentType: 'application/json',
+                                    success: function (result) {
+                                        if (result) {
+                                            var $select2 = $kichco.find("[name='IdKichCo']");
+
+                                            var selectedValue = $select2.val();
+                                            if (selectedValue && selectedValue.length > 0) {
+                                                $select2.val(null).trigger('change');
+                                            }
+                                            var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
+                                            $select2.append(newOption).trigger('change');
+
+                                            $(this).val('');
+                                        } else {
+                                            showToastTonTai('Kích cỡ')
+                                        }
+                                    },
+                                    error: function (xhr, status, error) {
+                                        showDauVaoKhongHopLe()
                                     }
-                                    var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
-                                    $select2.append(newOption).trigger('change');
-
-                                    $(this).val('');
-                                },
-                                error: function (xhr, status, error) {
-                                    console.log(xhr.responseText);
-                                    console.log(status);
-                                    console.log(error);
-                                    console.log(xhr);
-                                }
-                            });
+                                });
+                            }
                         }
                         else {
                             showErrKhoangTrang()
@@ -974,17 +1005,7 @@
                                             fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
                                         }
                                         else if ($(this).hasClass("formatKhoiLuong")) {
-                                            var autoNumeric = new AutoNumeric(this,
-                                                {
-                                                    decimalCharacter: ".",
-                                                    digitGroupSeparator: ",",
-                                                    decimalPlaces: 2,
-                                                    minimumValue: 0
-                                                });
-
-                                            var numericValue = autoNumeric.getNumericString();
-
-                                            var doubleValue = parseFloat(numericValue);
+                                            var doubleValue = parseFloat($(this).val().replace(/,/g, ''));
                                             fieldValue = doubleValue;
                                         }
                                         else {
@@ -1075,41 +1096,65 @@
                         Promise.all(promise)
                             .then(() => {
                                 if (isUpdate) {
-                                    GetDanhDachTongQuan();
-                                    thayDoiBodyDSSanPham();
-                                    $('#modal-SanPham').modal('hide');
-                                    var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                    <div class="toast-header">
-                        <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                        <strong class="mr-auto">Thông báo</strong>
-                        <small>1 second ago</small>
-                        <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="toast-body">
-                      Save success!
-                    </div>
-                </div>`
-                                    $('#notification-toast').append(toastHTML)
-                                    $('#notification-toast .toast').toast('show');
-                                    setTimeout(function () {
-                                        $('#notification-toast .toast:first-child').remove();
-                                    }, 3000);
+                                    if (!window.location.pathname.toLowerCase().includes('sanphamchitiet/danhsachsanpham')) {
+                                        GetDanhDachTongQuan();
+                                        thayDoiBodyDSSanPham();
+                                        $('#modal-SanPham').modal('hide');
+                                        var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                            <div class="toast-header">
+                                                                <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                                <strong class="mr-auto">Thông báo</strong>
+                                                                <small>1 second ago</small>
+                                                                <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="toast-body">
+                                                              Save success!
+                                                            </div>
+                                                        </div>`
+                                        $('#notification-toast').append(toastHTML)
+                                        $('#notification-toast .toast').toast('show');
+                                        setTimeout(function () {
+                                            $('#notification-toast .toast:first-child').remove();
+                                        }, 3000);
+                                    } else {
+                                        $('#modalSanPham').modal('hide');
+                                        table.draw();
+                                        var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                            <div class="toast-header">
+                                                                <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                                <strong class="mr-auto">Thông báo</strong>
+                                                                <small>1 second ago</small>
+                                                                <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="toast-body">
+                                                              Save success!
+                                                            </div>
+                                                        </div>`
+                                        $('#notification-toast').append(toastHTML)
+                                        $('#notification-toast .toast').toast('show');
+                                        setTimeout(function () {
+                                            $('#notification-toast .toast:first-child').remove();
+                                        }, 3000);
+                                    }
+                                   
                                 } else {
                                     var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                        <div class="toast-header">
-                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                            <strong class="mr-auto">Thông báo</strong>
-                            <small>1 second ago</small>
-                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="toast-body">
-                          Save Faile!
-                        </div>
-                    </div>`
+                                                        <div class="toast-header">
+                                                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                            <strong class="mr-auto">Thông báo</strong>
+                                                            <small>1 second ago</small>
+                                                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="toast-body">
+                                                          Save Faile!
+                                                        </div>
+                                                    </div>`
                                     $('#notification-toast').append(toastHTML)
                                     $('#notification-toast .toast').toast('show');
                                     setTimeout(function () {

@@ -283,7 +283,7 @@ columns: [
     },
 ],
 initComplete: function (settings, json) {
-    $('#thongTin').text(`HIỆN ĐANG CÓ ${json.data.length} MẶT HÀNG ĐANG NGỪNG KINH DOANH`)
+    $('#thongTin').text(`HIỆN ĐANG CÓ ${json.recordsTotal} MẶT HÀNG ĐANG NGỪNG KINH DOANH`)
     $('#table-sanpham').on('draw.dt', function () {
         $('input[type="checkbox"]').each(function () {
             const id = $(this).attr('id').replace('check-item-', '');
@@ -293,6 +293,9 @@ initComplete: function (settings, json) {
                 $(this).prop('checked', false);
             }
         });
+        var json = table.ajax.json();
+
+        $('#thongTin').text(`HIỆN ĐANG CÓ ${json.recordsTotal} MẶT HÀNG ĐANG NGỪNG KINH DOANH`);
     });
 
     $('#check-all').on('change', function () {

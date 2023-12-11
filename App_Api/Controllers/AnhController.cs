@@ -64,16 +64,63 @@ namespace App_Api.Controllers
             }
         }
 
+        [HttpPost("upload-anh")]
+        public async Task<bool> CreateImage([FromForm]List<IFormFile> files)
+        {
+            try
+            {
+                string currentDirectory = Directory.GetCurrentDirectory();
+                string rootPath = Directory.GetParent(currentDirectory)!.FullName;
+                string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSanPham");
+
+                foreach (var file in files)
+                {
+                    if (file.Length > 0)
+                    {
+                        using var stream = new MemoryStream();
+                        file.CopyTo(stream);
+                        stream.Position = 0;
+
+                        using var image = SixLabors.ImageSharp.Image.Load(stream);
+
+                        image.Mutate(x => x.Resize(new ResizeOptions
+                        {
+                            Size = new SixLabors.ImageSharp.Size(1600, 1600),
+                            Mode = ResizeMode.Max
+                        }));
+
+                        var encoder = new JpegEncoder
+                        {
+                            Quality = 80
+                        };
+
+                        string fileName = file.FileName;
+                        string outputPath = Path.Combine(uploadDirectory, fileName);
+
+                        using var outputStream = new FileStream(outputPath, FileMode.Create);
+                        await image.SaveAsync(outputStream, encoder);
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
+        }
+
 
         [HttpDelete("delete-list-image")]
         public IActionResult DeleteListImage(ImageDTO responseImageDeleteVM)
         {
             string currentDirectory = Directory.GetCurrentDirectory();
-            string rootPath = Directory.GetParent(currentDirectory).FullName;
+            string rootPath = Directory.GetParent(currentDirectory)!.FullName;
             string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSanPham");
             try
             {
-                foreach (var item in _allRepoImage.GetAll().Where(im => im.IdSanPhamChiTiet == responseImageDeleteVM.idProductDetail && responseImageDeleteVM.lstImageRemove!.Contains(im.Url)))
+                foreach (var item in _allRepoImage.GetAll().Where(im => im.IdSanPhamChiTiet == responseImageDeleteVM.idProductDetail && responseImageDeleteVM.lstImageRemove!.Contains(im.Url!)))
                 {
                     item.TrangThai = 1;
                     _allRepoImage.EditItem(item);

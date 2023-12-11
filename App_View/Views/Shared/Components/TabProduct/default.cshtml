@@ -72,124 +72,132 @@
 
                                             <div class="product-m__category">
 
-                                                <a>@item.ThuongHieu / @item.TheLoai</a>
+                                                <span>@item.ThuongHieu / @item.TheLoai</span>
                                             </div>
 
                                             <span class="product-o__name">
 
-                                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
-                                            </span>
-                                            <div class="product-o__rating gl-rating-style">
-                                                @{
-                                                    soSao = await _danhGiaService.GetSoSaoTB(item.IdChiTietSp!);
-                                                }
-                                                @if (soSao < 0.3)
-                                                {
+                                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp" data-tooltip="tooltip" data-placement="top" title="" data-original-title="@item.TenSanPham!.ToUpper()" style="
+    display: inline-block;
+    max-width: 213px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #333;
+    text-decoration: none;
+">@item.TenSanPham!.ToUpper()</a>
+            </span>
+            <div class="product-o__rating gl-rating-style">
+                @{
+                    soSao = await _danhGiaService.GetSoSaoTB(item.IdChiTietSp!);
+                }
+                @if (soSao < 0.3)
+                {
 
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 0.8)
-                                                {
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 1.3)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 1.8)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 2.3)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 2.8)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 3.3)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 3.8)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 4.3)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 0.8)
+                {
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 1.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 1.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 2.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 2.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 3.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 3.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 4.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
 
-                                                else if (soSao < 4.8)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                }
-                                                <span class="product-o__review">(@await _danhGiaService.GetTongSoDanhGia(item.IdChiTietSp!))</span>
+                else if (soSao < 4.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                }
+                else
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                }
+                <span class="product-o__review">(@await _danhGiaService.GetTongSoDanhGia(item.IdChiTietSp!))</span>
 
-                                            </div>
-                                            <div>
-                                                @if (item.GiaMin == item.GiaMax)
-                                                {
-                                                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
+            </div>
+            <div>
+                @if (item.GiaMin == item.GiaMax)
+                {
+                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
 
-                                                }
-                                                else
-                                                {
-                                                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
+                }
+                else
+                {
+                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
+                }
+            </div>
+            </div>
+            </div>
+        }
                             </div>
                         </div>
                     }
@@ -241,124 +249,132 @@
 
                                             <div class="product-m__category">
 
-                                                <a>@item.ThuongHieu / @item.TheLoai</a>
+                                                <span>@item.ThuongHieu / @item.TheLoai</span>
                                             </div>
 
                                             <span class="product-o__name">
 
-                                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
-                                            </span>
-                                            <div class="product-o__rating gl-rating-style">
-                                                @{
-                                                    soSao = await _danhGiaService.GetSoSaoTB(item.IdChiTietSp!);
-                                                }
-                                                @if (soSao < 0.3)
-                                                {
+                                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp" data-tooltip="tooltip" data-placement="top" title="" data-original-title="@item.TenSanPham!.ToUpper()" style="
+    display: inline-block;
+    max-width: 213px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #333;
+    text-decoration: none;
+">@item.TenSanPham!.ToUpper()</a>
+            </span>
+            <div class="product-o__rating gl-rating-style">
+                @{
+                    soSao = await _danhGiaService.GetSoSaoTB(item.IdChiTietSp!);
+                }
+                @if (soSao < 0.3)
+                {
 
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 0.8)
-                                                {
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 1.3)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 1.8)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 2.3)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 2.8)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 3.3)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 3.8)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 4.3)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 0.8)
+                {
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 1.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 1.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 2.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 2.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 3.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 3.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 4.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
 
-                                                else if (soSao < 4.8)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                }
-                                                <span class="product-o__review">(@await _danhGiaService.GetTongSoDanhGia(item.IdChiTietSp!))</span>
+                else if (soSao < 4.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                }
+                else
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                }
+                <span class="product-o__review">(@await _danhGiaService.GetTongSoDanhGia(item.IdChiTietSp!))</span>
 
-                                            </div>
-                                            <div>
-                                                @if (item.GiaMin == item.GiaMax)
-                                                {
-                                                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
+            </div>
+            <div>
+                @if (item.GiaMin == item.GiaMax)
+                {
+                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
 
-                                                }
-                                                else
-                                                {
-                                                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
+                }
+                else
+                {
+                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
+                }
+            </div>
+            </div>
+            </div>
+        }
                             </div>
                         </div>
                     }
@@ -410,124 +426,132 @@
 
                                             <div class="product-m__category">
 
-                                                <a>@item.ThuongHieu / @item.TheLoai</a>
+                                                <span>@item.ThuongHieu / @item.TheLoai</span>
                                             </div>
 
                                             <span class="product-o__name">
 
-                                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
-                                            </span>
-                                            <div class="product-o__rating gl-rating-style">
-                                                @{
-                                                    soSao = await _danhGiaService.GetSoSaoTB(item.IdChiTietSp!);
-                                                }
-                                                @if (soSao < 0.3)
-                                                {
+                                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp" data-tooltip="tooltip" data-placement="top" title="" data-original-title="@item.TenSanPham!.ToUpper()" style="
+    display: inline-block;
+    max-width: 213px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #333;
+    text-decoration: none;
+">@item.TenSanPham!.ToUpper()</a>
+            </span>
+            <div class="product-o__rating gl-rating-style">
+                @{
+                    soSao = await _danhGiaService.GetSoSaoTB(item.IdChiTietSp!);
+                }
+                @if (soSao < 0.3)
+                {
 
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 0.8)
-                                                {
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 1.3)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 1.8)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 2.3)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 2.8)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 3.3)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 3.8)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
-                                                else if (soSao < 4.3)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="far fa-star"></i>
-                                                }
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 0.8)
+                {
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 1.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 1.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 2.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 2.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 3.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 3.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 4.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
 
-                                                else if (soSao < 4.8)
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star-half-alt"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                    <i class="fas fa-star"></i>
-                                                }
-                                                <span class="product-o__review">(@await _danhGiaService.GetTongSoDanhGia(item.IdChiTietSp!))</span>
+                else if (soSao < 4.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                }
+                else
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                }
+                <span class="product-o__review">(@await _danhGiaService.GetTongSoDanhGia(item.IdChiTietSp!))</span>
 
-                                            </div>
-                                            <div>
-                                                @if (item.GiaMin == item.GiaMax)
-                                                {
-                                                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
+            </div>
+            <div>
+                @if (item.GiaMin == item.GiaMax)
+                {
+                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
 
-                                                }
-                                                else
-                                                {
-                                                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
+                }
+                else
+                {
+                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
+                }
+            </div>
+            </div>
+            </div>
+        }
                             </div>
                         </div>
                     }
@@ -555,146 +579,154 @@
                             <div class="owl-carousel tab-slider" data-item="4">
                                 @foreach (var item in Model.LstSanPhamNoiBat!)
                                 {
-                                   <div class="u-s-m-b-30">
-                                       <div class="product-o product-o--hover-on" data-id="@item.IdChiTietSp">
-                                           <div class="product-o__wrap">
+                                    <div class="u-s-m-b-30">
+                                        <div class="product-o product-o--hover-on" data-id="@item.IdChiTietSp">
+                                            <div class="product-o__wrap">
 
-                                               <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/@item.IdChiTietSp">
+                                                <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/@item.IdChiTietSp">
 
-                                                   <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
-                                               </a>
-                                               <div class="product-o__action-wrap">
-                                                   <ul class="product-o__action-list">
-                                                       <li>
+                                                    <img class="aspect__img" src="/AnhSanPham/@item.Anh" alt="">
+                                                </a>
+                                                <div class="product-o__action-wrap">
+                                                    <ul class="product-o__action-list">
+                                                        <li>
 
-                                                           <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
-                                                       </li>
+                                                            <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
+                                                        </li>
 
 
-                                                   </ul>
-                                               </div>
-                                           </div>
+                                                    </ul>
+                                                </div>
+                                            </div>
 
-                                           <div class="product-m__category">
+                                            <div class="product-m__category">
 
-                                               <a>@item.ThuongHieu / @item.TheLoai</a>
-                                           </div>
+                                                <span>@item.ThuongHieu / @item.TheLoai</span>
+                                            </div>
 
-                                           <span class="product-o__name">
+                                            <span class="product-o__name">
 
-                                               <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp">@item.TenSanPham</a>
-                                           </span>
-                                           <div class="product-o__rating gl-rating-style">
-                                               @{
-                                                   soSao = await _danhGiaService.GetSoSaoTB(item.IdChiTietSp!);
-                                               }
-                                               @if (soSao < 0.3)
-                                               {
+                                                <a href="/SanPhamChiTiets/Details/@item.IdChiTietSp" data-tooltip="tooltip" data-placement="top" title="" data-original-title="@item.TenSanPham!.ToUpper()" style="
+    display: inline-block;
+    max-width: 213px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #333;
+    text-decoration: none;
+">@item.TenSanPham!.ToUpper()</a>
+            </span>
+            <div class="product-o__rating gl-rating-style">
+                @{
+                    soSao = await _danhGiaService.GetSoSaoTB(item.IdChiTietSp!);
+                }
+                @if (soSao < 0.3)
+                {
 
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                               }
-                                               else if (soSao < 0.8)
-                                               {
-                                                   <i class="fas fa-star-half-alt"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                               }
-                                               else if (soSao < 1.3)
-                                               {
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                               }
-                                               else if (soSao < 1.8)
-                                               {
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star-half-alt"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                               }
-                                               else if (soSao < 2.3)
-                                               {
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                               }
-                                               else if (soSao < 2.8)
-                                               {
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star-half-alt"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                               }
-                                               else if (soSao < 3.3)
-                                               {
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                               }
-                                               else if (soSao < 3.8)
-                                               {
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star-half-alt"></i>
-                                                   <i class="far fa-star"></i>
-                                               }
-                                               else if (soSao < 4.3)
-                                               {
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="far fa-star"></i>
-                                               }
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 0.8)
+                {
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 1.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 1.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 2.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 2.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 3.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 3.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                    <i class="far fa-star"></i>
+                }
+                else if (soSao < 4.3)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="far fa-star"></i>
+                }
 
-                                               else if (soSao < 4.8)
-                                               {
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star-half-alt"></i>
-                                               }
-                                               else
-                                               {
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                                   <i class="fas fa-star"></i>
-                                               }
-                                               <span class="product-o__review">(@await _danhGiaService.GetTongSoDanhGia(item.IdChiTietSp!))</span>
+                else if (soSao < 4.8)
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                }
+                else
+                {
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                }
+                <span class="product-o__review">(@await _danhGiaService.GetTongSoDanhGia(item.IdChiTietSp!))</span>
 
-                                           </div>
-                                           <div>
-                                               @if (item.GiaMin == item.GiaMax)
-                                               {
-                                                   <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
+            </div>
+            <div>
+                @if (item.GiaMin == item.GiaMax)
+                {
+                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)</div>
 
-                                               }
-                                               else
-                                               {
-                                                   <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
-                                               }
-                                           </div>
-                                       </div>
-                                   </div>
-                                }
+                }
+                else
+                {
+                    <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMin)  -  @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", item.GiaMax)</div>
+                }
+            </div>
+            </div>
+            </div>
+        }
                             </div>
                         </div>
                     }

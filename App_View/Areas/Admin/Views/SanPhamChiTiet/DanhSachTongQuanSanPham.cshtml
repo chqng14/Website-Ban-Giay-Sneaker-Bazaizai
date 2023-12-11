@@ -6,9 +6,74 @@
     .modal-custom {
         max-width: 80% !important;
     }
+
+    .swal2-title {
+        font-family: 'Arial', sans-serif; /* Chọn font bạn muốn sử dụng cho alert */
+    }
 </style>
 
 <div class="card-body">
+    <div class="modal fade" id="modal-upload_image">
+        <div class="modal-dialog modal-dialog-centered">
+            <form id="form_upload" asp-action="uploadimage" method="post" class="modal-content" enctype="multipart/form-data">
+                <div class="modal-header align-items-center" style="background: #129dc1;">
+                    <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
+                    <h5 class="modal-title" id="exampleModalLabel">UPLOAD ẢNH</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="background: #d3f6ff;">
+                    <input hidden type="file" id="chose-img" onchange="displaySelectedFileImages(this)" multiple name="files" />
+                    <a class="btn btn-kio mt-3" id="btn-chose-img">
+                        <i class="anticon anticon-file-excel m-r-5"></i>
+                        <span>Chọn ảnh(s)</span>
+                    </a>
+                    <p class="mt-3" id="file-img-info" style="padding-top: 5px;color: #1c0497;"></p>
+                    <br />
+                    <span style="color: red">
+                        Lưu ý:
+                        <br />
+                        -Bạn nên đặt tên các file ảnh khác nhau để tránh gặp lỗi!
+                        <br />
+                        -Ví dụ: Tên giày_Màu sắc_Kích cỡ_STT.
+                    </span>
+                </div>
+                <div class="modal-footer" style="background: #d0dae3">
+                    <button class="btn btn-primary submit_file" type="submit">Upload</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-import">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header align-items-center" style="background: #129dc1;">
+                    <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
+                    <h5 class="modal-title" id="exampleModalLabel">IMPORT FILE</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="background: #d3f6ff;">
+                    <span style="color: red">Sử dụng template mẫu để import: </span><a href="/Admin/SanPhamChiTiet/DownloadFileTemplate">Download</a>
+                    <br />
+                    <input hidden type="file" id="chose-excel" onchange="displaySelectedFileExcel(this)" name="file" accept=".xlsx, .xls" />
+                    <button class="btn btn-kio mt-3" id="btn-chose-import">
+                        <i class="anticon anticon-file-excel m-r-5"></i>
+                        <span>Chọn file Excel</span>
+                    </button>
+                    <p class="mt-3" id="file-excel-info" style="padding-top: 5px;color: #1c0497;"></p>
+                </div>
+                <div class="modal-footer" style="background: #d0dae3">
+                    <button class="btn btn-primary" id="submit_import">Import</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <button class="btn btn-kio" style="position: absolute;right: 24px;top: 21px;z-index:1" onclick="window.location.href = '@Url.Action("ManageSanPham", "SanPhamChiTiet")'">
         <i class="fas fa-cog"></i>
         <span>Quản lý sản phẩm</span>
@@ -47,7 +112,7 @@
                 <div class="col-lg-8">
                     <div class="d-md-flex">
                         <div class="m-b-10 ml-1">
-                            <button class="btn btn-kio btn-import" data-toggle="modal" data-target="#modal-import">
+                            <button class="btn btn-kio" onclick="ConfirmImport()">
                                 <i class="anticon anticon-file-excel m-r-5"></i>
                                 <span>
                                     Import Excel
@@ -68,6 +133,7 @@
                 </div>
             </div>
         </div>
+
         <div class="tab-pane fade" id="sanPhamNgungKinhDoanh" style="height: auto" role="tabpanel" aria-labelledby="sanPhamNgungKinhDoanh-tab">
             <div class="row w-100">
                 <div class="col-lg-8">
@@ -161,7 +227,7 @@
         </div>
     </div>
     <div class="col-sm-12 m-t-15">
-        <table class="table table-hover no-footer w-100" id="table-sanpham">
+        <table class="table table-bordered table-hover no-footer w-100" id="table-sanpham">
         </table>
     </div>
 </div>
@@ -253,12 +319,12 @@
         },
         {
             data: 'TongSoLuongTon',
-            title: 'Số lượng',
+            title: 'S/Lượng',
             orderable: false
         },
         {
             data: 'TongSoLuongDaBan',
-            title: 'Số lượng đã bán',
+            title: 'Đã bán',
             orderable: false
         },
     ],
@@ -349,5 +415,160 @@
             }
         });
     }
+
+
+    $(document).off('hidden.bs.modal', '#modal-upload_image')
+$(document).on('hidden.bs.modal', '#modal-upload_image', function (e) {
+    $('#modal-import').modal('show');
+})
+$(document).off('submit', '#form_upload')
+$(document).on('submit', '#form_upload', function (event) {
+    event.preventDefault()
+    var $form = $(this);
+    $.ajax({
+        url: $(this).attr('action'),
+        type: $(this).attr('method'),
+        data: new FormData(this),
+        contentType: false,
+        processData: false,
+        success: function (result) {
+            if (result) {
+                $form.find('input[type="file"]').val('');
+                $('#file-img-info').text('')
+                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                        <div class="toast-header">
+                                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                            <strong class="mr-auto">Thông báo</strong>
+                                            <small>1 seconds ago</small>
+                                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="toast-body">
+                                            <span>Đã upload thành công!</span>
+                                        </div>
+                                    </div>`
+
+                $('#notification-toast').append(toastHTML)
+                $('#notification-toast .toast').toast('show');
+                setTimeout(function () {
+                    $('#notification-toast .toast:first-child').remove();
+                }, 3000);
+                $('#modal-upload_image').modal('hide')
+                $('#modal-import').modal('show')
+            } else {
+                alert('Upload thất bại!')
+            }
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+            console.log(status);
+            console.log(error);
+            console.log(xhr);
+        }
+    });
+
+
+})
+$(document).off('click', '#btn-chose-img')
+$(document).on('click', '#btn-chose-img', function () {
+    $('#chose-img').trigger('click');
+})
+function displaySelectedFileImages(value) {
+    $('#file-img-info').text('\u00A0\u00A0' + value.files.length + " ảnh được chọn")
+}
+function ConfirmImport() {
+    Swal.fire({
+        title: 'Trước khi import Sản phẩm bạn có file ảnh(s) cần upload không?',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Có',
+        cancelButtonText: 'Không',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#modal-upload_image').modal('show')
+        } else {
+            $('#modal-import').modal('show')
+        }
+    });
+
+}
+$(document).off('click', '#btn-chose-import')
+$(document).on('click', '#btn-chose-import', function () {
+    $('#chose-excel').trigger('click');
+})
+function displaySelectedFileExcel(value) {
+    const selectedFile = value.files[0];
+    $('#file-excel-info').text(selectedFile.name)
+}
+$(document).on('click', '#submit_import', function () {
+    $('#preloader').show();
+    $('#modal-import').modal('hide')
+    var data = new FormData();
+    data.append('file', $('#chose-excel')[0].files[0]);
+    $.ajax({
+        url: "@Url.Action("ImportProducts", "SanPhamChiTiet")",
+        type: 'POST',
+        data: data,
+        contentType: false,
+        processData: false,
+        success: function (result) {
+            $('#preloader').hide();
+            Swal.fire({
+                title: "Thông báo!",
+                html: `
+                      <div class="text-left" style="padding-left: 100px;">
+                          <span class="text-primary">
+                              Success: ${result.slSuccess}
+                          </span>
+                          <br />
+                          <span class="text-red">
+                              False: ${result.slFalse}
+                          </span>
+                      </div>
+                  `,
+                icon: "info",
+                allowOutsideClick: false,
+                showCancelButton: result.slFalse > 0,
+                confirmButtonText: result.slFalse > 0 ? 'Download File Lỗi' : 'OK',
+                cancelButtonText: 'Close',
+            }).then((resultAlert) => {
+                if (resultAlert.isConfirmed) {
+                    if (result.slFalse > 0) {
+                        var iframe = document.createElement('iframe');
+                        iframe.style.display = 'none';
+                        document.body.appendChild(iframe);
+
+                        iframe.src = '/Admin/sanphamchitiet/DownloadFileErr';
+
+                        iframe.onload = function () {
+                            document.body.removeChild(iframe);
+                        };
+
+                        iframe.onerror = function (error) {
+                            console.log('Error downloading file:', error);
+                        };
+                    }
+                    window.location.reload();
+
+                } else if (resultAlert.dismiss === Swal.DismissReason.cancel) {
+                    if (resultAlert.value) {
+                        console.log('Nút "Download File Lỗi" được nhấp');
+                        window.location.reload();
+
+                    } else {
+                        window.location.reload();
+                    }
+                }
+            });
+        },
+        error: function (xhr, status, error) {
+            console.log(xhr.responseText);
+            console.log(status);
+            console.log(error);
+            console.log(xhr);
+        }
+    });
+})
 </script>
 

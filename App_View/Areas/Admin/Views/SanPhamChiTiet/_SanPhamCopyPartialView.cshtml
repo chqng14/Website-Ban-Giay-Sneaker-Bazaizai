@@ -376,34 +376,56 @@
                         if (e.key === 'Enter') {
                             var inputValue = $(this).val();
                             if (inputValue) {
-                                var data = {
-                                    soKichCo: inputValue.trim()
-                                };
-                                $.ajax({
-                                    url: 'CreateTenKichCo',
-                                    type: 'POST',
-                                    data: JSON.stringify(data),
-                                    contentType: 'application/json',
-                                    success: function (result) {
-                                        if (result) {
-                                            var $select2 = $kichco.find("[name='IdKichCo']");
+                                if (Number.isInteger(parseFloat(inputValue.trim())) && parseInt(inputValue) < 0) {
+                                    var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                        <div class="toast-header">
+                                                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                            <strong class="mr-auto">Thông báo</strong>
+                                                            <small>1 seconds ago</small>
+                                                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="toast-body">
+                                                            <span>Kích cỡ phải là số nguyên dương</span>
+                                                        </div>
+                                                    </div>`
 
-                                            var selectedValue = $select2.val();
-                                            if (selectedValue && selectedValue.length > 0) {
-                                                $select2.val(null).trigger('change');
+                                    $('#notification-toast').append(toastHTML)
+                                    $('#notification-toast .toast').toast('show');
+                                    setTimeout(function () {
+                                        $('#notification-toast .toast:first-child').remove();
+                                    }, 3000);
+                                } else {
+                                    var data = {
+                                        soKichCo: inputValue.trim()
+                                    };
+                                    $.ajax({
+                                        url: 'CreateTenKichCo',
+                                        type: 'POST',
+                                        data: JSON.stringify(data),
+                                        contentType: 'application/json',
+                                        success: function (result) {
+                                            if (result) {
+                                                var $select2 = $kichco.find("[name='IdKichCo']");
+
+                                                var selectedValue = $select2.val();
+                                                if (selectedValue && selectedValue.length > 0) {
+                                                    $select2.val(null).trigger('change');
+                                                }
+                                                var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
+                                                $select2.append(newOption).trigger('change');
+
+                                                $(this).val('');
+                                            } else {
+                                                showToastTonTai('Kích cỡ')
                                             }
-                                            var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
-                                            $select2.append(newOption).trigger('change');
-
-                                            $(this).val('');
-                                        } else {
-                                            showToastTonTai('Kích cỡ')
+                                        },
+                                        error: function (xhr, status, error) {
+                                            showDauVaoKhongHopLe()
                                         }
-                                    },
-                                    error: function (xhr, status, error) {
-                                        showDauVaoKhongHopLe()
-                                    }
-                                });
+                                    });
+                                }
                             }
                         }
                     });
@@ -718,7 +740,7 @@
      processData: false,
      success: function (result) {
          if (result) {
-             if (window.location.pathname.toLowerCase().includes('sanPhamChiTiet/danhSachSanPham')) {
+             if (window.location.pathname.toLowerCase().includes('sanphamchitiet/danhsachsanpham')) {
                  $('#modalSanPham').modal('hide');
                  table.draw();
              }
@@ -830,17 +852,7 @@ $('#form-get-data').find("input, select, textarea").each(function () {
             fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
         }
         else if ($(this).hasClass("formatKhoiLuong")) {
-            var autoNumeric = new AutoNumeric(this,
-                {
-                    decimalCharacter: ".",
-                    digitGroupSeparator: ",",
-                    decimalPlaces: 2,
-                    minimumValue: 0
-                });
-
-            var numericValue = autoNumeric.getNumericString();
-
-            fieldValue = numericValue;
+            fieldValue = $(this).val().replace(/,/g, '');
         }
         else {
             fieldValue = $(this).val();
@@ -891,7 +903,7 @@ $.ajax({
     processData: false,
     success: function (result) {
         if (result) {
-            if (window.location.pathname.toLowerCase().includes('sanPhamChiTiet/danhSachSanPham')) {
+            if (window.location.pathname.toLowerCase().includes('sanphamchitiet/danhsachsanpham')) {
                 $('#modalSanPham').modal('hide');
                 table.draw();
             } else {

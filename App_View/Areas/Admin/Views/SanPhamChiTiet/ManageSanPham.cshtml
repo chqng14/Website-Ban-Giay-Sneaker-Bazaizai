@@ -845,7 +845,7 @@
                         }, 3000);
                     } else {
                         var data = {
-                            soKichCo: inputValue,
+                            soKichCo: inputValue.trim(),
                         };
                         $.ajax({
                             url: 'CreateTenKichCo',
@@ -1471,17 +1471,7 @@
                                 fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
                             }
                             else if ($(this).hasClass("formatKhoiLuong")) {
-                                var autoNumeric = new AutoNumeric(this,
-                                    {
-                                        decimalCharacter: ".",
-                                        digitGroupSeparator: ",",
-                                        decimalPlaces: 2,
-                                        minimumValue: 0
-                                    });
-
-                                var numericValue = autoNumeric.getNumericString();
-
-                                var doubleValue = parseFloat(numericValue);
+                                var doubleValue = parseFloat($(this).val().replace(/,/g, ''));
                                 fieldValue = doubleValue;
                             }
                             else {
