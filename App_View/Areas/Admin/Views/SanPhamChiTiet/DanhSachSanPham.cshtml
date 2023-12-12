@@ -544,7 +544,7 @@
                 console.log(json);
                 maxLength = json.data.recordsTotal;
                 $('#table-sanpham').on('draw.dt', function () {
-                    $('input[type="checkbox"]').each(function () {
+                    $('#table-sanpham input[type="checkbox"]').each(function () {
                         if ($(this).attr('id')) {
                             const id = $(this).attr('id').replace('check-item-', '');
                             if (selectedCheckboxes[id]) {
@@ -699,6 +699,7 @@
             type: 'Get',
             data: data,
             success: function (result) {
+                debugger
                 $('#modalSanPham').empty().html(result);
                 $('#modalSanPham').modal('show')
 

@@ -3,6 +3,7 @@
 
 <script>
     (function () {
+        debugger;
             var selectedFiles = {};
             var lstAnhRemove = {};
             selectedFiles = {};
@@ -679,17 +680,8 @@
              fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
          }
          else if ($(this).hasClass("formatKhoiLuong")) {
-              var autoNumeric = new AutoNumeric(this,
-                 {
-                     decimalCharacter: ".",
-                     digitGroupSeparator: ",",
-                     decimalPlaces: 2,
-                     minimumValue: 0
-                 });
-
-             var numericValue = autoNumeric.getNumericString();
-
-             fieldValue = numericValue;
+             var doubleValue = parseFloat($(this).val().replace(/,/g, ''));
+             fieldValue = doubleValue;
          }
          else {
              fieldValue = $(this).val();
@@ -741,7 +733,7 @@
      success: function (result) {
          if (result) {
              if (window.location.pathname.toLowerCase().includes('sanphamchitiet/danhsachsanpham')) {
-                 $('#modalSanPham').modal('hide');
+                 debugger
                  table.draw();
              }
              else {
@@ -820,54 +812,55 @@
             const countImage = imageList.find('.wrapper-file').length;
             if (countImage === 0) {
                 var toastHTML = `<div class="toast fade hide" data-delay="3000">
-    <div class="toast-header">
-        <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-        <strong class="mr-auto">Thông báo</strong>
-        <small>1 second ago</small>
-        <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="toast-body">
-      Vui lòng chọn ảnh cho sản phẩm!
-    </div>
-</div>`
+                        <div class="toast-header">
+                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                            <strong class="mr-auto">Thông báo</strong>
+                            <small>1 second ago</small>
+                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="toast-body">
+                          Vui lòng chọn ảnh cho sản phẩm!
+                        </div>
+                    </div>`
                 $('#notification-toast').append(toastHTML)
                 $('#notification-toast .toast').toast('show');
                 setTimeout(function () {
                     $('#notification-toast .toast:first-child').remove();
                 }, 3000);
-            } else {
+            }
+            else {
                 var dataGet = {};
-$('#form-get-data').find("input, select, textarea").each(function () {
-    var fieldType = $(this).attr("type");
-    var fieldName = $(this).attr("name");
-    var fieldValue;
+                $('#form-get-data').find("input, select, textarea").each(function () {
+                    var fieldType = $(this).attr("type");
+                    var fieldName = $(this).attr("name");
+                    var fieldValue;
 
-    if (fieldType === "checkbox" || fieldType === "radio") {
-        fieldValue = $(this).is(":checked");
-    } else {
-        if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
-            var fieldValue = $(this).val();
-            fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
-        }
-        else if ($(this).hasClass("formatKhoiLuong")) {
-            fieldValue = $(this).val().replace(/,/g, '');
-        }
-        else {
-            fieldValue = $(this).val();
-        }
-    }
-    if (fieldName) {
-        dataGet[fieldName] = fieldValue;
-    }
-});
+                    if (fieldType === "checkbox" || fieldType === "radio") {
+                        fieldValue = $(this).is(":checked");
+                    } else {
+                        if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
+                            var fieldValue = $(this).val();
+                            fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
+                        }
+                        else if ($(this).hasClass("formatKhoiLuong")) {
+                            fieldValue = $(this).val().replace(/,/g, '');
+                        }
+                        else {
+                            fieldValue = $(this).val();
+                        }
+                    }
+                    if (fieldName) {
+                        dataGet[fieldName] = fieldValue;
+                    }
+                });
 
 
-var data = new FormData();
+                var data = new FormData();
 for (var key in dataGet) {
     data.append('SanPhamChiTietData.' + key, dataGet[key]);
-}
+                }
 
 
 var danhSachAnhArray = [];
@@ -957,8 +950,8 @@ $.ajax({
         console.log(xhr);
     }
 });
-            }
-        })
+            };
+        });
 
 
     })();

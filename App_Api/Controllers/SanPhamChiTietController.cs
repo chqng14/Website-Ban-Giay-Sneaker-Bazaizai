@@ -25,6 +25,8 @@ using App_Data.ViewModels.FilterDTO;
 using Microsoft.EntityFrameworkCore;
 using DocumentFormat.OpenXml.InkML;
 using static App_Data.Repositories.TrangThai;
+using System.Data;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace App_Api.Controllers
 {
@@ -740,55 +742,81 @@ namespace App_Api.Controllers
         }
 
         [HttpGet("get-danh-sach-san-pham-shop-khoi-tao")]
-        public async Task<FilterDataVM> GetDanhSachSanPhamShop(string? brand, string? search)
+        public FilterDataVM GetDanhSachSanPhamShop(string? brand, string? search)
         {
-            var data = await _sanPhamChiTietRes.GetQuerySanPhamChiTiet()
-            .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong)
-            .Include(it => it.ThuongHieu)
-            .Include(it => it.SanPham)
-            .Include(it => it.LoaiGiay)
-            .Include(it => it.Anh)
-            .OrderByDescending(sp => sp.NgayTao)
-            .GroupBy(gr => new
-            {
-                gr.IdChatLieu,
-                gr.IdSanPham,
-                gr.IdLoaiGiay,
-                gr.IdKieuDeGiay,
-                gr.IdThuongHieu,
-                gr.IdXuatXu,
-            })
-            .Select(gr => gr.First())
-            .ToListAsync();
+            var data = _sanPhamChiTietRes.GetQuerySanPhamChiTiet()
+                    .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong)
+                    .Include(x => x.Anh)
+                    .Include(x => x.SanPham)
+                    .Include(x => x.ThuongHieu)
+                    .Include(x => x.LoaiGiay)
+                    .AsEnumerable()
+                    .GroupBy(gr => new
+                    {
+                        gr.IdChatLieu,
+                        gr.IdSanPham,
+                        gr.IdLoaiGiay,
+                        gr.IdKieuDeGiay,
+                        gr.IdThuongHieu,
+                        gr.IdXuatXu
+                    })
+                    .Select(gr => gr.FirstOrDefault())
+                    .ToList();
+            var sumItem = data.Count();
 
             var brandLower = brand?.ToLower();
             var searchLower = search?.ToLower();
 
-            var items = data.Where(sp =>
-                (string.IsNullOrEmpty(brandLower) ||
-                 sp.ThuongHieu!.TenThuongHieu!.Equals(brandLower, StringComparison.OrdinalIgnoreCase)) &&
-                (string.IsNullOrEmpty(searchLower) ||
-                 sp.SanPham.TenSanPham!.Contains(searchLower, StringComparison.OrdinalIgnoreCase))
-            );
+            if (!string.IsNullOrEmpty(brandLower))
+            {
+                data = data.Where(sp =>
+                    sp!.ThuongHieu!.TenThuongHieu!.Contains(brandLower, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+
+            if (!string.IsNullOrEmpty(searchLower))
+            {
+                data = data.Where(sp =>
+                    sp!.SanPham.TenSanPham!.Contains(searchLower, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
 
             var pageSize = 12;
 
             return new FilterDataVM
             {
-                Items = _mapper.Map<List<ItemShopViewModel>>(items.Take(12)),
+                Items = _mapper.Map<List<ItemShopViewModel>>(data.Take(12)),
                 PagingInfo = new PagingInfo
                 {
                     SoItemTrenMotTrang = pageSize,
-                    TongSoItem = items.Count(),
+                    TongSoItem = data.Count(),
                     TrangHienTai = 1
                 }
             };
         }
 
         [HttpPost("get-danh-sach-san-pham-shop")]
-        public async Task<FilterDataVM> GetDanhSachSanPhamShop(FilterData filterData)
+        public FilterDataVM GetDanhSachSanPhamShop(FilterData filterData)
         {
-            var data = await _sanPhamChiTietRes.GetDanhSachItemShopViewModelAsync();
+            var dataGet = _sanPhamChiTietRes.GetQuerySanPhamChiTiet()
+                .AsNoTracking()
+                .Include(x => x.Anh)
+                    .Include(x => x.SanPham)
+                    .Include(x => x.ThuongHieu)
+                    .Include(x => x.LoaiGiay)
+                    .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong)
+                    .AsEnumerable()
+                   .GroupBy(gr => new
+                   {
+                       gr.IdChatLieu,
+                       gr.IdSanPham,
+                       gr.IdLoaiGiay,
+                       gr.IdKieuDeGiay,
+                       gr.IdThuongHieu,
+                       gr.IdXuatXu
+                   })
+                    .Select(gr => gr.FirstOrDefault())
+                    .ToList();
+
+            var data = _mapper.Map<List<ItemShopViewModel>>(dataGet);
 
             if (!string.IsNullOrEmpty(filterData.Brand))
             {

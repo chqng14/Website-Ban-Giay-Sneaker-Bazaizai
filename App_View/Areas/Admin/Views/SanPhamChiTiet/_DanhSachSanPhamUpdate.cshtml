@@ -988,8 +988,8 @@
                     }
                 });
                 data.MoTa = $(item).find('[name="MoTa"]').summernote('code');
-                console.log(data);
-                if (data.GiaNhap !== "0" && data.GiaBan !== "0" && data.SoLuongTon !== "0" && data.KhoiLuong !== "0") {
+
+                if (data.GiaNhap !== "0" && data.GiaBan !== "0" && data.SoLuongTon !== "0" && data.KhoiLuong !== NaN && $(item).find('.wrapper-file').length > 0) {
                     const updateProduct = $.ajax({
                         url: URL_UPDATE_PRODUCT_DETAIL,
                         type: 'POST',
