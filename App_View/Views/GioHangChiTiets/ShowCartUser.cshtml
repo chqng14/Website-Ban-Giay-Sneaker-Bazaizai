@@ -119,7 +119,7 @@
 
                                                     <span class="input-counter__minus fas fa-minus" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" ></span>
 
-                                                    <input class="input-counter__text input-counter--text-primary-style" type="text" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" value="@item.SoLuong" data-min="1" data-max="1000" min="1">
+                                                    <input id="soluong-@item.IdSanPhamCT" class="input-counter__text input-counter--text-primary-style" type="text" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" value="@item.SoLuong" data-min="1" data-max="1000" min="1">
                                                     <span class="input-counter__plus fas fa-plus" data-product-id="@item.IdSanPhamCT" data-cart-id="@item.IdGioHangChiTiet" data-value="@item.SoLuong" ></span>
                                                 </div>
                                                 <!--====== End - Input Counter ======-->
@@ -281,13 +281,20 @@
 @section Scripts{
     <!--====== Cập nhật số lượng ======-->
     <script>
-        var soLuongBanDau = parseInt($(".input-counter__text").data("value"));
+        var soLuongBanDau = "";
+        var isload= false;
         $(document).on("input", ".input-counter__text", function () {
+            if (!isNaN(this.value)) {
+                soLuongBanDau = this.value;
+            } 
+            var isload = false;
             updateCart(this);
         });
 
         $(document).on("click", ".input-counter__plus, .input-counter__minus", function () {
             var inputElement = $(this).siblings(".input-counter__text")[0];
+            soLuongBanDau = parseInt($(inputElement).val());
+            var isload = false;
             updateCart(inputElement);
         });
 
@@ -295,28 +302,43 @@
             var soLuong = parseInt($(inputElement).val());
             var idSanPhamChiTiet = $(inputElement).data('product-id');
             var idGioHangChiTiet = $(inputElement).data('cart-id');
+            if (isNaN(soLuong) && isload == false) {
+                isload=true;
+                var soluongcu = document.getElementById('soluong');
+                soluongcu.value = soLuongBanDau;
+                console.log(soluongcu);
+                console.log(soLuongBanDau);
+                toast({
+                    title: "Vui lòng chỉ nhập số!",
+                    type: "warning",
+                    duration: 2000
+                });
+                updateCart(soluongcu);
+            }
+            else {
+                $.ajax({
+                    url: '/GioHangChiTiets/CapNhatSoLuongGioHang',
+                    method: 'POST',
+                    data: { IdSanPhamChiTiet: idSanPhamChiTiet, SoLuong: soLuong, IdGioHangChiTiet: idGioHangChiTiet },
+                    success: function (response) {
+                        //var SumPrice = response.sumPrice;
+                        if (response.tongTien != null) {
+                            var TongTien = response.tongTien;
+                            $('#tamtinh').text(TongTien.toLocaleString("vi-VN") + "đ");
+                            $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
+                        } else {
+                            document.getElementById('soluong').value = soLuongBanDau;
+                            Swal.fire({
+                                title: 'Sản phẩm lỗi',
+                                icon: 'error',
+                                html: response.quantityError,
+                            })
+                        }
 
-            $.ajax({
-                url: '/GioHangChiTiets/CapNhatSoLuongGioHang',
-                method: 'POST',
-                data: { IdSanPhamChiTiet: idSanPhamChiTiet, SoLuong: soLuong, IdGioHangChiTiet: idGioHangChiTiet },
-                success: function (response) {
-                    //var SumPrice = response.sumPrice;
-                    if (response.tongTien != null) {
-                        var TongTien = response.tongTien;
-                        $('#tamtinh').text(TongTien.toLocaleString("vi-VN") + "đ");
-                        $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
-                    } else {
-                        $(inputElement).val(soLuongBanDau);
-                        Swal.fire({
-                            title: 'Sản phẩm lỗi',
-                            icon: 'error',
-                            html: response.quantityError,
-                        })
                     }
+                });
+            }
 
-                }
-            });
         }
     </script>
     <!--====== Tính phí ship ======-->

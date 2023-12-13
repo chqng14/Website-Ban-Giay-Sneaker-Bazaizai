@@ -27,7 +27,10 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
 
         public string? ChatLieu { get; set; }
 
+        public string? XuatXu { get; set; }
+
         public int? KichCo { get; set; }
+        public int? SoLuongDaBan { get; set; }
 
         public string? LoaiGiay { get; set; }
 

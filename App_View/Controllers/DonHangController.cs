@@ -277,7 +277,7 @@ namespace App_View.Controllers
             return url;
         }
 
-        public async Task<IActionResult> CallBack(string idHoaDon)
+        public async Task<IActionResult> CallBack(string? idHoaDon)
         {
             var idpt = SessionServices.GetIdFomSession(HttpContext.Session, "idPay");
             var idHoaDonSession = SessionServices.GetIdFomSession(HttpContext.Session, "idHoaDon");

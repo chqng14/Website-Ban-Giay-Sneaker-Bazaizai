@@ -11,7 +11,7 @@
         <div class="modal-content">
             <form id="voucherForm" method="post" asp-area="Admin" asp-controller="Vouchers" asp-action="InVoucherTaiQuay">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="printVoucherLabel">Nhập số lượng để in voucher</h5>
+                    <h5 class="modal-title" id="printVoucherLabel">Nhập số lượng voucher cần được in</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <i class="anticon anticon-close"></i>
                     </button>
@@ -151,7 +151,7 @@
                     <div class="btn-group dropdown" style="cursor: pointer">
                             <i class="fas fa-bars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
                             <div class="dropdown-menu">
-                                <a onclick="printVourcher('@item.IdVoucher')" class="dropdown-item"><i class="anticon anticon-printer icon"></i> In Voucher</a>
+                                <a onclick="printVourcher('@item.IdVoucher')" class="dropdown-item"><i class="anticon anticon-printer icon"></i> Tạo voucher để in</a>
                                 <a asp-action="EditTaiQuay" class="dropdown-item" asp-route-id="@item.IdVoucher"> <i class="anticon anticon-edit icon"></i> Chỉnh sửa</a>
                             </div>
                    </div>   

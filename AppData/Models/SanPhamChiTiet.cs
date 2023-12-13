@@ -24,14 +24,14 @@ namespace App_Data.Models
         public double? KhoiLuong { get; set; }
         public int? TrangThai { get; set; }
         public int? TrangThaiSale { get; set; }
-        public string? IdSanPham { get; set; }
-        public string? IdKieuDeGiay { get; set; }
-        public string? IdXuatXu { get; set; }
-        public string? IdChatLieu { get; set; }
-        public string? IdMauSac { get; set; }
-        public string? IdKichCo { get; set; }
-        public string? IdLoaiGiay { get; set; }
-        public string? IdThuongHieu { get; set; }
+        public string IdSanPham { get; set; }
+        public string IdKieuDeGiay { get; set; }
+        public string IdXuatXu { get; set; }
+        public string IdChatLieu { get; set; }
+        public string IdMauSac { get; set; }
+        public string IdKichCo { get; set; }
+        public string IdLoaiGiay { get; set; }
+        public string IdThuongHieu { get; set; }
         public virtual SanPham SanPham { get; set; }
         public virtual KieuDeGiay KieuDeGiay { get; set; }
         public virtual XuatXu XuatXu { get; set; }

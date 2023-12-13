@@ -10,87 +10,127 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table" id="data-table">
-    <thead>
-        <tr>
-            <th>
-                Đánh giá
-            </th>
-            <th>
-                Ngày
-            </th>
-            <th>
-                Sao sản phẩm
-            </th>
-            <th>
-                Sao vận chuyển
-            </th>
-            <th>
-                Trạng thái
-            </th>
-            <th>
-                Người dùng
-            </th>
-            <th>
-                Sản phẩm
-            </th>
-            <th>
-                Trả lời
-            </th>
-            <th>
-                Đúng với mô tả
-            </th>
-            <th>
-                Chất lượng sản phẩm
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản lý đánh giá</a>
+            <span class="breadcrumb-item active">Danh sách đánh giá chưa duyệt</span>
+        </nav>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <h4>Danh sách đánh giá chưa duyệt</h4>
+        <p>Use <code>.nav-justified</code>. All horizontal space will be occupied by nav links, but unlike the <code>.nav-fill</code> above, every nav item will be the same width.</p>
+        <div class="m-t-25">
+            <ul class="nav nav-tabs nav-justified" id="myTabJustified" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab-justified" data-toggle="tab" href="#home-justified" role="tab" aria-controls="home-justified" aria-selected="true">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="profile-tab-justified" data-toggle="tab" href="#profile-justified" role="tab" aria-controls="profile-justified" aria-selected="false">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="contact-tab-justified" data-toggle="tab" href="#contact-justified" role="tab" aria-controls="contact-justified" aria-selected="false">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="contact-tab-justified" data-toggle="tab" href="#contact-justified" role="tab" aria-controls="contact-justified" aria-selected="false">Tất cả</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab-justified" data-toggle="tab" href="#home-justified" role="tab" aria-controls="home-justified" aria-selected="true">5 sao</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab-justified" data-toggle="tab" href="#home-justified" role="tab" aria-controls="home-justified" aria-selected="true">4 sao</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab-justified" data-toggle="tab" href="#home-justified" role="tab" aria-controls="home-justified" aria-selected="true">3 sao</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link active" id="home-tab-justified" data-toggle="tab" href="#home-justified" role="tab" aria-controls="home-justified" aria-selected="true">2 sao</a>
+                </li>
+                 <li class="nav-item">
+                    <a class="nav-link active" id="home-tab-justified" data-toggle="tab" href="#home-justified" role="tab" aria-controls="home-justified" aria-selected="true">1 sao</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" id="home-tab-justified" data-toggle="tab" href="#home-justified" role="tab" aria-controls="home-justified" aria-selected="true">Có bình luận</a>
+                </li>
+            </ul>
+            <div class="tab-content m-t-15" id="myTabContentJustified">
+                <div class="tab-pane fade show active" id="home-justified" role="tabpanel" aria-labelledby="home-tab-justified">
+                    <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+                </div>
+                <div class="tab-pane fade" id="profile-justified" role="tabpanel" aria-labelledby="profile-tab-justified">
+                    <p>Food truck fixie locavore, accusamus mcsweeney's marfa nulla single-origin coffee squid. Exercitation +1 labore velit, blog sartorial PBR leggings next level wes anderson artisan four loko farm-to-table craft beer twee. Qui photo booth letterpress, commodo enim craft beer mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR. Homo nostrud organic, assumenda labore aesthetic magna delectus mollit. Keytar helvetica VHS salvia yr, vero magna velit sapiente labore stumptown. Vegan fanny pack odio cillum wes anderson 8-bit, sustainable jean shorts beard ut DIY ethical culpa terry richardson biodiesel. Art party scenester stumptown, tumblr butcher vero sint qui sapiente accusamus tattooed echo park.</p>
+                </div>
+                <div class="tab-pane fade" id="contact-justified" role="tabpanel" aria-labelledby="contact-tab-justified">
+                    <p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork. Williamsburg banh mi whatever gluten-free, carles pitchfork biodiesel fixie etsy retro mlkshk vice blog. Scenester cred you probably haven't heard of them, vinyl craft beer blog stumptown. Pitchfork sustainable tofu synth chambray yr.</p>
+                </div>
+            </div>
+        </div>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.BinhLuan)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NgayDanhGia)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SaoSp)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SaoVanChuyen)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TrangThai)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IdNguoiDung)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IdSanPhamChiTiet)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ParentId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MoTa)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ChatLuongSanPham)
-                </td>
-               
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5>Reviews (18)</h5>
+        <div class="m-t-20">
+            <table class="table" id="data-table">
+                <thead>
+                    <tr>
+                        <th>
+                            Đánh giá
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MoTa)
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item p-h-0">
+                                        <div class="media m-b-15">
+                                            <div class="avatar avatar-image">
+                                                <img src="assets/images/avatars/thumb-8.jpg" alt="">
+                                            </div>
+                                            <div class="media-body m-l-20">
+                                                <h6 class="m-b-0">
+                                                    <a href="" class="text-dark">Lillian Stone</a>
+                                                </h6>
+                                                <span class="font-size-13 text-gray">28th Jul 2018</span>
+                                            </div>
+                                        </div>
+                                        <span>The palatable sensation we lovingly refer to as The Cheeseburger has a distinguished and illustrious history. It was born from humble roots, only to rise to well-seasoned greatness.</span>
+                                        <div class="star-rating m-t-15">
+                                            <input type="radio" id="star1-5" name="rating-1" value="5" checked disabled /><label for="star1-5" title="5 star"></label>
+                                            <input type="radio" id="star1-4" name="rating-1" value="4" disabled /><label for="star1-4" title="4 star"></label>
+                                            <input type="radio" id="star1-3" name="rating-1" value="3" disabled /><label for="star1-3" title="3 star"></label>
+                                            <input type="radio" id="star1-2" name="rating-1" value="2" disabled /><label for="star1-2" title="2 star"></label>
+                                            <input type="radio" id="star1-1" name="rating-1" value="1" disabled /><label for="star1-1" title="1 star"></label>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </td>
+
+
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     @{

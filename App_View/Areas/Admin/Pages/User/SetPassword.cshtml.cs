@@ -9,6 +9,7 @@ using App_Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Areas.Admin.Pages.User
 {
@@ -80,13 +81,25 @@ namespace App_View.Areas.Admin.Pages.User
             {
                 return Page();
             }
-
-            //var user = await _userManager.GetUserAsync(User);
-            //if (user == null)
-            //{
-            //    return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            //}
-          await  _userManager.RemovePasswordAsync(user);
+            var LstRole = await _userManager.GetRolesAsync(user);
+            int i = 0;
+            foreach (var role in LstRole)
+            {
+                if (role == ChucVuMacDinh.NhanVien.ToString())
+                {
+                    i = 1;
+                }
+                if (role == ChucVuMacDinh.Admin.ToString())
+                {
+                    i = 2;
+                }
+                if (role == ChucVuMacDinh.KhachHang.ToString())
+                {
+                    i = 3;
+                }
+            }
+           
+            await  _userManager.RemovePasswordAsync(user);
             var addPasswordResult = await _userManager.AddPasswordAsync(user, Input.NewPassword);
             if (!addPasswordResult.Succeeded)
             {
@@ -97,10 +110,22 @@ namespace App_View.Areas.Admin.Pages.User
                 return Page();
             }
 
-            //await _signInManager.RefreshSignInAsync(user);
+            await _signInManager.RefreshSignInAsync(user);
             StatusMessage = $"Bạn vừa cập nhật mật khẩu cho người dùng: {user.UserName}";
 
-            return RedirectToPage("./Index");
+            if (i == 1)
+            {
+                return RedirectToPage("./DanhSachNhanVien");
+            }
+            else if (i == 2)
+            {
+                return RedirectToPage("./DanhSachQuanly");
+            }
+            else if (i == 3)
+            {
+                return RedirectToPage("./Index");
+            }
+            else return RedirectToPage("./Index");
         }
     }
 }

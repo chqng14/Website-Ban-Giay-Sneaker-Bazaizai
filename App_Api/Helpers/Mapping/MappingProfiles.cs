@@ -443,6 +443,22 @@ namespace App_Api.Helpers.Mapping
                         dest => dest.IsKhuyenMai,
                         opt => opt.MapFrom(src => src.TrangThaiSale == 2 ? true : false)
                     )
+                 .ForMember(
+                        dest => dest.XuatXu,
+                        opt => opt.MapFrom(src => src.XuatXu.Ten)
+                    )
+                  .ForMember(
+                        dest => dest.LoaiGiay,
+                        opt => opt.MapFrom(src => src.LoaiGiay.TenLoaiGiay)
+                    )
+                   .ForMember(
+                        dest => dest.ChatLieu,
+                        opt => opt.MapFrom(src => src.ChatLieu.TenChatLieu)
+                    )
+                   .ForMember(
+                        dest => dest.KieuDeGiay,
+                        opt => opt.MapFrom(src => src.KieuDeGiay.TenKieuDeGiay)
+                    )
                 ;
             CreateMap<SanPhamDTO, SanPham>();
             CreateMap<ThuongHieuDTO, ThuongHieu>();
