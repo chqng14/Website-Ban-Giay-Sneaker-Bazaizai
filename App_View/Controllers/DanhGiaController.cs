@@ -43,7 +43,7 @@ namespace App_View.Controllers
             await _danhGiaService.CreateDanhGia(danhgia);
             string[] parts = danhgia.IdDanhGia.Split('*');
             var idHoaDon = parts[1];
-            return Json(new { iddanhgia = danhgia.IdSanPhamChiTiet });
+            return Json(new { iddanhgia = danhgia.IdDanhGia });
         }
 
 
