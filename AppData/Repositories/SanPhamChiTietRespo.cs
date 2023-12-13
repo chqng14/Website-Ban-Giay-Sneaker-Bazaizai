@@ -389,6 +389,10 @@ namespace App_Data.Repositories
                 Include(x => x.SanPham).
                 Include(x => x.ThuongHieu).
                 Include(x => x.KichCo).
+                Include(x => x.ChatLieu).
+                Include(x => x.XuatXu).
+                Include(x => x.LoaiGiay).
+                Include(x => x.KieuDeGiay).
                 Include(x => x.MauSac).
                 Include(x => x.SanPhamYeuThichs).
                 FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
@@ -413,33 +417,6 @@ namespace App_Data.Repositories
 
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac)
         {
-            //var sanPhamGet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
-
-            //var idMauSac = (await _context.mauSacs.FirstOrDefaultAsync(x => x.TenMauSac == mauSac))!.IdMauSac;
-            //if (sanPhamGet == null) return null;
-            //var lstBienThe = await _context.sanPhamChiTiets
-            //    .Where(sp =>
-            //    sp.TrangThai == 0 &&
-            //    sp.IdKieuDeGiay == sanPhamGet!.IdKieuDeGiay &&
-            //    sp.IdLoaiGiay == sanPhamGet.IdLoaiGiay &&
-            //    sp.IdThuongHieu == sanPhamGet.IdThuongHieu &&
-            //    sp.IdXuatXu == sanPhamGet.IdXuatXu &&
-            //    sp.IdChatLieu == sanPhamGet.IdChatLieu &&
-            //    sp.IdSanPham == sanPhamGet.IdSanPham &&
-            //    sp.IdMauSac == idMauSac
-            //    )
-            //    .Include(x => x.MauSac)
-            //    .Include(x => x.KichCo)
-            //    .Include(x => x.Anh)
-            //    .ToListAsync();
-            //var lstSize = lstBienThe.DistinctBy(sp => sp.KichCo.SoKichCo).OrderBy(item => item.KichCo.SoKichCo).ToList();
-            //var idSizeGet = lstSize.FirstOrDefault()!.KichCo.IdKichCo;
-            //var sanPhamChiTiet = lstBienThe.FirstOrDefault(sp => sp.IdKichCo == idSizeGet);
-            //var itemDetailViewModel = _mapper.Map<ItemDetailViewModel>(sanPhamChiTiet);
-            //itemDetailViewModel.LstKichThuoc = lstBienThe.Select(x => x.KichCo.SoKichCo!.Value).Distinct().OrderBy(item => item).ToList();
-            //return itemDetailViewModel;
-
-
             var sanPhamGet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
 
             if (sanPhamGet == null)
@@ -464,6 +441,10 @@ namespace App_Data.Repositories
                     sp.IdMauSac == idMauSac
                 )
                 .Include(x => x.MauSac)
+                .Include(x => x.ChatLieu)
+                .Include(x => x.LoaiGiay)
+                .Include(x => x.XuatXu)
+                .Include(x => x.KieuDeGiay)
                 .Include(x => x.KichCo)
                 .Include(x => x.Anh);
 
@@ -503,6 +484,10 @@ namespace App_Data.Repositories
                 Include(x => x.Anh).
                 Include(x => x.SanPham).
                 Include(x => x.ThuongHieu).
+                Include(x => x.LoaiGiay).
+                Include(x => x.XuatXu).
+                Include(x => x.KieuDeGiay).
+                Include(x => x.ChatLieu).
                 Include(x => x.KichCo).
                 Include(x => x.MauSac).FirstOrDefaultAsync());
             if (sanPhamChiTiet == null) return null;
@@ -756,11 +741,19 @@ namespace App_Data.Repositories
 
         public async Task UpdateSoLuongSanPhamChiTietAynsc(string IdSanPhamChiTiet, int soLuong)
         {
-            var sanPhamChiTiet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == IdSanPhamChiTiet);
-            sanPhamChiTiet!.SoLuongTon = sanPhamChiTiet.SoLuongTon - soLuong;
-            sanPhamChiTiet!.SoLuongDaBan += soLuong;
-            _context.sanPhamChiTiets.Update(sanPhamChiTiet);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var sanPhamChiTiet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == IdSanPhamChiTiet);
+                sanPhamChiTiet!.SoLuongTon = sanPhamChiTiet.SoLuongTon - soLuong;
+                sanPhamChiTiet!.SoLuongDaBan += soLuong;
+                _context.sanPhamChiTiets.Update(sanPhamChiTiet);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+           
         }
 
         //Filter

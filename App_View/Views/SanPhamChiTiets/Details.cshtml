@@ -8,74 +8,30 @@
     var SaoTb = await _DanhGiaService.GetSoSaoTB(@Model.IdChiTietSp);
 
 }
-<div class="app-content">
-    <div id="body_detail">
-        @await Html.PartialAsync("_SanPhamDatailPatialView", Model)
-    </div>
-
-    <!--====== Product Detail Tab ======-->
-    <div class="u-s-p-y-90">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="pd-tab">
-                        <div class="u-s-m-b-30">
-                            <ul class="nav pd-tab__list">
-                                <li class="nav-item">
-
-                                    <a class="nav-link" data-toggle="tab" href="#pd-desc">MÔ TẢ</a>
-                                </li>
-                                <li class="nav-item">
-
-                                    <a class="nav-link active" id="view-review" data-toggle="tab" href="#pd-rev">
-                                        ĐÁNH GIÁ
-
-                                        <span>(@TongSoDanhGia)</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="tab-content">
-
-                            <!--====== Tab 1 ======-->
-                            <div class="tab-pane" id="pd-desc">
-                                <div class="pd-tab__desc" style="max-width: none !important">
-                                    @if (string.IsNullOrEmpty(Model.MoTaSanPham))
-                                    {
-                                        <div style="DISPLAY: flex; justify-content: center; align-items: center; height: 200px; width: 100%; background-repeat: no-repeat; background-size: contain; background-position: center; background-image: url('https://i.stack.imgur.com/8yFqA.gif');">
-                                            <span style="
-                                                            margin-top: 237px;
-                                                            color: red;
-                                                            font-weight: bold;
-                                                        ">
-                                                Chưa có mô tả cho sản phẩm này!!!
-                                            </span>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        @Html.Raw(Model.MoTaSanPham)
-                                    }
-                                </div>
-                            </div>
-                            <!--====== End - Tab 1 ======-->
-                            <div class="tab-pane active show" id="pd-rev">
-                                <partial name="_DanhGiaPartial" />
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
+<div class="modal fade" id="show-menu-size">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-radius modal-shadow"  style="
+    MARGIN-TOP: -300px;
+    WIDTH: 643px !important;
+    max-width: 600px !important;
+">
+            <button class="btn dismiss-button miss-add-to-cart fas fa-times" type="button" data-dismiss="modal"></button>
+            <div class="modal-body" style="background-repeat: no-repeat;width: 542px;background-image: url('https://www.giaykimthanh.net/image/cache/catalog/Fado.VN_1519380156.5984-950x672.jpg');height: 382px;background-position: center;background-size: contain;">
+                
             </div>
         </div>
     </div>
-    <!--====== End - Product Detail Tab ======-->
-    <!--====== End - Section 1 ======-->
+</div>
+<div class="app-content">
+    <div id="body_detail">
+        @await Html.PartialAsync("_SanPhamDetailPatialView", Model)
+    </div>
+
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
-    function RemoveToFavorite() { 
+    function RemoveToFavorite() {
         var data = {};
         $('#addToFavoriteForm').find("input, select, textarea").each(function () {
             var fieldType = $(this).attr("type");
@@ -191,7 +147,7 @@
             data: { "id": idChiTietSp },
             success: function (resultPartial) {
                 $('#body_detail').empty().html(resultPartial);
-                window.history.pushState({}, null, '/SanPhamChiTiets/Details/'+ idChiTietSp);
+                window.history.pushState({}, null, '/SanPhamChiTiets/Details/' + idChiTietSp);
                 loadScripts();
 
             },

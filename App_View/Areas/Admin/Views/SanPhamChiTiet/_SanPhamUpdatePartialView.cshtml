@@ -1,9 +1,9 @@
 ﻿@model IEnumerable<App_Data.ViewModels.SanPhamChiTietDTO.SanPhamChiTietDTO>
 <div class="modal-dialog  modal-xl">
     <div class="modal-content">
-        <div class="modal-header align-items-center" style="background: #129dc1;">
+        <div class="modal-header align-items-center" style=" background: #00090b; color: white">
             <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
-            <h5 class="modal-title" id="exampleModalLabel">EDIT SẢN PHẨM</h5>
+            <h5 style="color: white" class="modal-title" id="exampleModalLabel">EDIT SẢN PHẨM</h5>
             <button type="button" class="close" data-dismiss="modal">
                 <i class="anticon anticon-close"></i>
             </button>
@@ -337,13 +337,14 @@
         </div>
         <div class="modal-footer d-flex justify-content-between" style="background: #d0dae3 ">
             <div>
-                <button class="btn btn-primary" id="btn-save">
-                    <i class="far fa-copy"></i>
+                <button class="btn btn-kio" id="btn-save">
+                    <i class="anticon anticon-loading m-r-5"></i>
+                    <i class="anticon anticon-save m-r-5"></i>
                     <span>Lưu</span>
                 </button>
             </div>
             <div>
-                <button type="button" class="btn btn-warning" data-dismiss="modal">
+                <button type="button" class="btn btn-kio" data-dismiss="modal">
                     <i class="anticon anticon-close-circle"></i>
                     <span>Close</span>
                 </button>
@@ -951,6 +952,8 @@
 
         $(document).off('click', '#btn-save');
         $(document).on('click', '#btn-save', function () {
+            const btn = $(this);
+            
             const imageList = $(document).find('.container-file');
 
             const countImage = imageList.find('.wrapper-file').length;
@@ -984,6 +987,7 @@
                     confirmButtonText: 'Đồng ý'
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        btn.addClass('is-loading');
                         isUpdate = false;
                         const promise = [];
                         const cards = $(".accordion > .card");
@@ -1159,7 +1163,7 @@
                                         $('#notification-toast .toast:first-child').remove();
                                     }, 3000);
                                 }
-
+                                btn.removeClass('is-loading')
                             })
                     }
                 });

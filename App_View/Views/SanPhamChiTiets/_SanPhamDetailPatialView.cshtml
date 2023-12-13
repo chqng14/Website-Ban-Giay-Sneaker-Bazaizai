@@ -214,7 +214,7 @@
                         <span class="pd-detail__preview-desc">@Model.MoTaNgan.</span>
                     </div>
                     <div class="u-s-m-b-15">
-                        <div class="pd-detail__inline">
+                        <div class="pd-detail__inline" style="margin-bottom: 10px">
 
                             <span class="pd-detail__click-wrap">
                                 @if (Model.IsYeuThich)
@@ -231,31 +231,37 @@
                                 <input type="hidden" name="IdSanPhamChiTiet" value="@Model.IdChiTietSp" />
                             </form>
                         </div>
+                        <div class="pd-detail__inline">
+                            <a data-modal="modal" data-modal-id="#show-menu-size" style="
+    color: #9a9add;
+    text-decoration: underline;
+">Hướng dẫn chọn size</a>
+                        </div>
                     </div>
-                    <div class="u-s-m-b-15">
-                        <ul class="pd-social-list">
-                            <li>
+                    @*<div class="u-s-m-b-15">
+                            <ul class="pd-social-list">
+                                <li>
 
-                                <a class="s-fb--color-hover" href="#"><i class="fab fa-facebook-f"></i></a>
-                            </li>
-                            <li>
+                                    <a class="s-fb--color-hover" href="#"><i class="fab fa-facebook-f"></i></a>
+                                </li>
+                                <li>
 
-                                <a class="s-tw--color-hover" href="#"><i class="fab fa-twitter"></i></a>
-                            </li>
-                            <li>
+                                    <a class="s-tw--color-hover" href="#"><i class="fab fa-twitter"></i></a>
+                                </li>
+                                <li>
 
-                                <a class="s-insta--color-hover" href="#"><i class="fab fa-instagram"></i></a>
-                            </li>
-                            <li>
+                                    <a class="s-insta--color-hover" href="#"><i class="fab fa-instagram"></i></a>
+                                </li>
+                                <li>
 
-                                <a class="s-wa--color-hover" href="#"><i class="fab fa-whatsapp"></i></a>
-                            </li>
-                            <li>
+                                    <a class="s-wa--color-hover" href="#"><i class="fab fa-whatsapp"></i></a>
+                                </li>
+                                <li>
 
-                                <a class="s-gplus--color-hover" href="#"><i class="fab fa-google-plus-g"></i></a>
-                            </li>
-                        </ul>
-                    </div>
+                                    <a class="s-gplus--color-hover" href="#"><i class="fab fa-google-plus-g"></i></a>
+                                </li>
+                            </ul>
+                        </div>*@
                     <div class="u-s-m-b-15">
                         <div class="pd-detail__form" method="post">
                             <div class="u-s-m-b-15">
@@ -395,3 +401,111 @@
         </div>
     </div>
 </div>
+<!--====== Product Detail Tab ======-->
+<div class="u-s-p-y-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="pd-tab">
+                    <div class="u-s-m-b-30">
+                        <ul class="nav pd-tab__list">
+                            <li class="nav-item">
+
+                                <a class="nav-link active" data-toggle="tab" href="#pd-desc">MÔ TẢ</a>
+                            </li>
+                            <li class="nav-item">
+
+                                <a class="nav-link" id="view-review" data-toggle="tab" href="#pd-rev">
+                                    ĐÁNH GIÁ
+
+                                    <span>(@TongSoDanhGia)</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content">
+
+                        <!--====== Tab 1 ======-->
+                        <div class="tab-pane  active show" id="pd-desc">
+                            <div class="pd-tab__desc">
+                                <div class="u-s-m-b-15">
+                                    <h4>THÔNG TIN SẢN PHẨM</h4>
+                                </div>
+                                <div class="u-s-m-b-15">
+                                    <div class="pd-table gl-scroll">
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Thương hiệu</td>
+                                                    <td>@Model.ThuongHieu</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Chất liệu chính</td>
+                                                    <td>@Model.ChatLieu</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Kiểu đế giày</td>
+                                                    <td>@Model.KieuDeGiay</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Thể loại</td>
+                                                    <td>@Model.LoaiGiay</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Màu sắc</td>
+                                                    <td>@Model.MauSac</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Size</td>
+                                                    <td>@Model.KichCo</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Xuất xứ</td>
+                                                    <td>@Model.XuatXu</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Trọng lượng vận chuyển (g)</td>
+                                                    <td>
+                                                        @Model.KhoiLuong g
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="u-s-m-b-30">
+                                    @Html.Raw(Model.MoTaSanPham)
+                                </div>
+                                    <div class="u-s-m-b-30">
+                                        <ul>
+                                            <li>
+                                                <i class="fas fa-check u-s-m-r-8"></i>
+
+                                                <span>Bảo vệ người mua.</span>
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-check u-s-m-r-8"></i>
+
+                                                <span>Hoàn trả đầy đủ nếu bạn không nhận được đơn đặt hàng của mình.</span>
+                                            </li>
+                                            <li>
+                                                <i class="fas fa-check u-s-m-r-8"></i>
+
+                                                <span>Chấp nhận đổi trả nếu sản phẩm không đúng mô tả.</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        <!--====== End - Tab 1 ======-->
+                        <div class="tab-pane" id="pd-rev">
+                            <partial name="_DanhGiaPartial" />
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--====== End - Product Detail Tab ======-->

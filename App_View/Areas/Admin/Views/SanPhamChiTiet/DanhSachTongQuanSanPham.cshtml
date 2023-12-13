@@ -16,9 +16,9 @@
     <div class="modal fade" id="modal-upload_image">
         <div class="modal-dialog modal-dialog-centered">
             <form id="form_upload" asp-action="uploadimage" method="post" class="modal-content" enctype="multipart/form-data">
-                <div class="modal-header align-items-center" style="background: #129dc1;">
+                <div class="modal-header align-items-center" style=" background: #00090b; color: white">
                     <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
-                    <h5 class="modal-title" id="exampleModalLabel">UPLOAD ẢNH</h5>
+                    <h5 style="color: white" class="modal-title" id="exampleModalLabel">UPLOAD ẢNH</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <i class="anticon anticon-close"></i>
                     </button>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="modal-footer" style="background: #d0dae3">
                     <button class="btn btn-primary submit_file" type="submit">Upload</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Skip</button>
                 </div>
             </form>
         </div>
@@ -50,9 +50,9 @@
     <div class="modal fade" id="modal-import">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header align-items-center" style="background: #129dc1;">
+                <div class="modal-header align-items-center" style=" background: #00090b; color: white">
                     <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
-                    <h5 class="modal-title" id="exampleModalLabel">IMPORT FILE</h5>
+                    <h5 style="color: white" class="modal-title" id="exampleModalLabel">IMPORT FILE</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <i class="anticon anticon-close"></i>
                     </button>
@@ -83,9 +83,9 @@
     <div class="modal fade" id="exampleModal">
         <div class="modal-dialog modal-dialog-scrollable modal-custom">
             <div class="modal-content">
-                <div class="modal-header align-items-center" style="background: #129dc1;">
+                <div class="modal-header align-items-center" style=" background: #00090b; color: white">
                     <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
-                    <h5 class="modal-title" id="ModalLabelDanhSach">DANH SÁCH SẢN PHẨM</h5>
+                    <h5 style="color: white" class="modal-title" id="ModalLabelDanhSach">DANH SÁCH SẢN PHẨM</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <i class="anticon anticon-close"></i>
                     </button>
@@ -418,9 +418,9 @@
 
 
     $(document).off('hidden.bs.modal', '#modal-upload_image')
-$(document).on('hidden.bs.modal', '#modal-upload_image', function (e) {
-    $('#modal-import').modal('show');
-})
+    $(document).on('hidden.bs.modal', '#modal-upload_image', function (e) {
+        $('#modal-import').modal('show');
+    });
 $(document).off('submit', '#form_upload')
 $(document).on('submit', '#form_upload', function (event) {
     event.preventDefault()

@@ -138,7 +138,7 @@ namespace App_View.Controllers
                     data!.IsYeuThich = false;
                 }
             }
-            return PartialView("_SanPhamDatailPatialView", data);
+            return PartialView("_SanPhamDetailPatialView", data);
         }
 
         public async Task<IActionResult> GetItemDetailViewModelWhenSelectColor([FromQuery] string id, [FromQuery] string mauSac)
