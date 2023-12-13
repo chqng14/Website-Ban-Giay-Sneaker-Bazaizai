@@ -17,5 +17,6 @@ namespace App_Data.ViewModels.FilterViewModel
         public int TrangHienTai { get; set; } = 1;
         public int SoLuongSanPhamTrenMotTrang { get; set; } = 8;
         public string? Sort { get; set; }
+        public string? Brand { get; set;}
     }
 }

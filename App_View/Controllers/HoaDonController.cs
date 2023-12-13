@@ -63,7 +63,7 @@ namespace App_View.Controllers
             var idNguoiDung = _userManager.GetUserId(User);
             var thongtin = await thongTinGHServices.GetThongTinByIdUser(idNguoiDung);
             int trangthai = 0;
-            if (thongtin.Any())
+            if (thongtin.Count() > 0)
             {
                 trangthai = (int)TrangThaiThongTinGH.HoatDong;
             }

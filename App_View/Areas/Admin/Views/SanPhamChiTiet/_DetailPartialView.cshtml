@@ -1,9 +1,9 @@
 ﻿@model  App_Data.ViewModels.SanPhamChiTietViewModel.SanPhamChiTietViewModel
 <div class="modal-dialog  modal-xl modal-dialog-scrollable">
     <div class="modal-content">
-        <div class="modal-header align-items-center" style="background: #129dc1;">
-            <i class="fas fa-user-astronaut m-r-5" style="font-size: 33px"></i>
-            <h5 class="modal-title" id="exampleModalLabel">THÔNG TIN SẢN PHẨM</h5>
+        <div class="modal-header align-items-center" style=" background: #00090b; color: white">
+            <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
+            <h5 class="modal-title" id="exampleModalLabel" style="color:white">THÔNG TIN SẢN PHẨM</h5>
             <button type="button" class="close" data-dismiss="modal">
                 <i class="anticon anticon-close"></i>
             </button>
@@ -162,13 +162,13 @@
         <div class="modal-footer d-flex justify-content-between" style="background: #d0dae3 ">
             <div id="form-getID">
                 <input asp-for="IdChiTietSp" hidden/>
-                <button class="btn btn-primary" id="btn-coppy">
+                <button class="btn btn-kio" id="btn-coppy">
                     <i class="far fa-copy"></i>
                     <span>Coppy</span>
                 </button>
             </div>
             <div>
-                <button type="button" class="btn btn-warning" data-dismiss="modal">
+                <button type="button" class="btn btn-kio" data-dismiss="modal">
                     <i class="anticon anticon-close-circle"></i>
                     <span>Close</span>
                 </button>
@@ -195,6 +195,7 @@
         var data = {
             IdSanPhamChiTiet: id,
         };
+
         $.ajax({
             url: '/Admin/SanPhamChiTiet/GetPartialViewSanPhamCopy',
             type: 'Get',
