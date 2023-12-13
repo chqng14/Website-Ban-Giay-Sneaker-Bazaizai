@@ -1,0 +1,250 @@
+﻿@page "/admin/Danh-Sach-QuanLy"
+@using App_Data.Models;
+@model App_View.Areas.Admin.Pages.User.DanhSachQuanLyModel
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    int i= 0;
+    var Ur = await UserManager.GetUserAsync(User);
+    if (Ur != null)
+    {
+        var Emailuser = await UserManager.GetEmailAsync(Ur);
+        if (Emailuser != "bazaizaistore@gmail.com")
+        {
+            i = 1;
+        }
+    }
+    
+}
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản lý người dùng</a>
+            <span class="breadcrumb-item active">Danh sách quản lý</span>
+        </nav>
+    </div>
+</div>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="page-header no-gutters">
+    <div class="row align-items-md-center">
+        <div class="col-md-6">
+            <div class="media m-v-10">
+                <div class="avatar avatar-cyan avatar-icon avatar-square">
+                    <i class="anticon anticon-star"></i>
+                </div>
+                <div class="media-body m-l-15">
+                    <h6 class="mb-0">Tất cả thành viên (@Model.users.Count())</h6>
+                    <span class="text-gray font-size-13">Quản lý</span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="text-md-right m-v-10">
+                <div class="btn-group">
+                    <button id="list-view-btn" type="button" class="btn btn-default btn-icon active">
+                        <i class="anticon anticon-ordered-list"></i>
+                    </button>
+                    <button id="card-view-btn" type="button" class="btn btn-default btn-icon ">
+                        <i class="anticon anticon-appstore"></i>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<a class="btn btn-primary btn-tone" asp-page="/User/AddAccount">
+    <i class="anticon anticon-plus">Tạo tài khoản</i>
+</a>
+
+<div class="row">
+    <div class="col-lg-12 mx-auto">
+        <div class="row" id="list-view">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="data-table" class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Tài khoản</th>
+                                        <th>Email</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Vai trò</th>
+                                        @if (i == 0)
+                                        {
+                                            <th></th>
+                                        }
+                                       
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model.usersManKhac)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="media align-items-center">
+                                                    <div class="avatar avatar-image">
+                                                        <img src="@user.AnhDaiDien" alt="">
+                                                    </div>
+                                                    <div class="media-body m-l-15">
+
+                                                        <h6 class="mb-0"> <a style="text-decoration: none" class="text-dark" asp-page="./UserDetail" asp-route-id="@user.Id">@user.UserName</a></h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>@user.Email</td>
+                                            <td>@user.PhoneNumber</td>
+                                            @if (i == 0)
+                                            {
+                                            <td>
+                                                @if (string.IsNullOrEmpty(user.RoleName))
+                                                {
+                                                    <a style="text-decoration: none" class="text-dark" asp-page="./AddRole" asp-route-id="@user.Id">+ Thêm vai trò </a>
+                                                }
+                                                else
+                                                {
+                                                    <a style="text-decoration: none" class="text-dark" asp-page="./AddRole" asp-route-id="@user.Id">@user.RoleName</a>
+                                                }
+                                            </td>
+                                           
+                                                <td style="width: 15%;">
+
+
+                                                    <a class="btn btn-primary btn-tone" asp-page="./SetPassword" asp-route-id="@user.Id">
+                                                        <i class="anticon anticon-key"></i>
+                                                    </a>
+                                                    @if (user.LockoutEnd != null)
+                                                    {
+
+                                                        TimeSpan offset = ((DateTimeOffset)user.LockoutEnd).Offset;
+                                                        TimeSpan offsetPlus7 = TimeSpan.FromHours(7);
+                                                        if (offset == offsetPlus7)
+                                                        {
+                                                            DateTimeOffset lockoutEndDate = (DateTimeOffset)user.LockoutEnd;
+                                                            var ThoiGianMoKhoa = lockoutEndDate.DateTime;
+                                                            if (ThoiGianMoKhoa <= DateTime.Now)
+                                                            {
+                                                                <a class="btn btn-primary btn-tone" asp-page="./KhoaTaiKhoan" asp-route-id="@user.Id">
+                                                                    <i class="anticon anticon-lock"></i>
+
+                                                                </a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a class="btn btn-primary btn-tone" asp-page="./MoKhoaTaiKhoan" asp-route-id="@user.Id">
+                                                                    <i class="anticon anticon-unlock"></i>
+                                                                </a>
+
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            DateTimeOffset lockoutEndDate = ((DateTimeOffset)user.LockoutEnd).ToOffset(offsetPlus7);
+                                                            var ThoiGianMoKhoa = lockoutEndDate.DateTime;
+                                                            if (ThoiGianMoKhoa <= DateTime.Now)
+                                                            {
+                                                                <a class="btn btn-primary btn-tone" asp-page="./KhoaTaiKhoan" asp-route-id="@user.Id">
+                                                                    <i class="anticon anticon-lock"></i>
+
+                                                                </a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a class="btn btn-primary btn-tone" asp-page="./MoKhoaTaiKhoan" asp-route-id="@user.Id">
+                                                                    <i class="anticon anticon-unlock"></i>
+
+                                                                </a>
+
+                                                            }
+                                                        }
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <a class="btn btn-primary btn-tone" asp-page="./KhoaTaiKhoan" asp-route-id="@user.Id">
+                                                            <i class="anticon anticon-lock"></i>
+
+                                                        </a>
+                                                    }
+                                                </td>
+                                            }
+                                           else{
+                                                <td>
+                                                    @if (string.IsNullOrEmpty(user.RoleName))
+                                                    {
+                                                        <p>+ Thêm vai trò </p>
+                                                    }
+                                                    else
+                                                    {
+                                                        <p>@user.RoleName</p>
+                                                    }
+                                                </td>
+                                           }
+
+                                        </tr>
+                                    }
+
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row d-none" id="card-view">
+            @foreach (var user in Model.users)
+            {
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="m-t-20 text-center">
+                                <div class="avatar avatar-image" style="height: 100px; width: 100px;">
+                                    <img src="@user.AnhDaiDien" alt="">
+                                </div>
+                                <h4 class="m-t-30">@user.UserName</h4>
+                                <p>@user.Email</p>
+                                <p>@user.RoleName</p>
+                            </div>
+                            <div class="text-center m-t-30">
+                                <a class="btn btn-primary btn-tone" asp-page="./UserDetail" asp-route-id="@user.Id">
+                                    <i class="anticon anticon-eye"></i>
+                                    <span class="m-l-5"></span>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+            @{
+                var pagingmodel = new XTL.Helpers.PagingModel()
+            {
+                currentpage = Model.currentPage,
+                countpages = Model.countPages,
+                generateUrl = (int? p) => Url.Page("./DanhSachNhanVien", new { p = p })
+            };
+            }
+            <partial name="_Paging" model="@pagingmodel" />
+
+        </div>
+    </div>
+</div>
+@section Scripts
+    {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/Admin/js/pages/profile.js"></script>
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js"></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="~/Admin/js/pages/datatables.js"></script>
+
+    }

@@ -155,7 +155,6 @@
                                 <span class="ah-close">✕ Close</span>
 
                                 <!--====== List ======-->
-                                @*   @await Html.PartialAsync("_ListMenuPartialView")*@
                                 <ul class="ah-list ah-list--design2 ah-list--link-color-secondary">
                                     <li>
 
@@ -165,10 +164,10 @@
                                         <a href="/sanphamchitiets">GIAN HÀNG</a>
                                     </li>
                                     <li>
-                                        <a>SALE</a>
+                                        <a asp-action="ViewKhuyenMai" asp-controller="KhuyenMaiChiTiet" asp-area="">SALE</a>
                                     </li>
                                     <li>
-                                        <a asp-action="VoucherToCalm" asp-area="" asp-controller="Voucher">VOUCHER</a>
+                                        <a asp-action="VoucherToCalm" asp-controller="Voucher" asp-area="">VOUCHER</a>
                                     </li>
                                     <li>
                                         <a href="/home/AboutUs">ABOUT US</a>
@@ -177,7 +176,7 @@
                                         <a href="/home/FAQ">FAQ</a>
                                     </li>
                                 </ul>
-                                @*   @await Html.PartialAsync("_ListMenuPartialView")*@
+                              
                                 <!--====== End - List ======-->
                             </div>
                             <!--====== End - Menu ======-->

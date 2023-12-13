@@ -78,7 +78,6 @@ namespace App_Data.DbContextt
         {
             optionsBuilder.UseSqlServer(@"Data Source=.\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
 
-
             //cái này là db online
             //optionsBuilder.UseSqlServer("Server = tcp:bazaizaidb.database.windows.net,1433; Initial Catalog = bazaizaidb; Persist Security Info = False; User ID = bazaizai; Password = Trinhanh0311; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30;");
         }

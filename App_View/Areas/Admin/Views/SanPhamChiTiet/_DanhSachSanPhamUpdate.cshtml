@@ -5,11 +5,24 @@
     <div class="header-sub-title">
         <nav class="breadcrumb breadcrumb-dash">
             <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>QUẢN LÝ SẢN PHẨM</a>
-            <a class="breadcrumb-item" href="#">Cập nhật sản phẩm</a>
+            <a class="breadcrumb-item">CẬP NHẬT SẢN PHẨM</a>
         </nav>
     </div>
 </div>
 
+<div id="confirm-ds" class="mt-2 mb-2">
+    <div style=" position: fixed; top: 90px; right: 26px; z-index: 2">
+        <button class="btn btn-kio" onclick="window.location.reload()">
+            <i class="far fa-list-alt m-r-5"></i>
+            <span>Quay lại danh sách</span>
+        </button>
+        <button class="btn btn-kio update-sp">
+            <i class="far fa-edit"></i>
+            <span>Lưu</span>
+        </button>
+    </div>
+</div>
+<div hidden class="w-100" id="empty" style="height: 600px; background-image: url('https://img.freepik.com/premium-vector/completed-task-list-documents-folder_249405-293.jpg');background-position: center;background-repeat: no-repeat;"></div>
 <div class="card">
     <div class="accordion" id="accordion-default">
         @foreach (var sp in Model)
@@ -18,7 +31,7 @@
                 <div class="card-header d-flex justify-content-between" style="background: #e1faff">
                     <h5 class="card-title">
                         <a style="background: #e1faff" class="collapsed" data-toggle="collapse" href="#collapseTwoDefault-@sp.IdChiTietSp">
-                            <span>@sp.FullName</span>
+                            <span>@sp.FullName!.ToUpper()</span>
                         </a>
                     </h5>
                     <button class="btn btn-tone rounded-circle btn-delete btn-close" style="border: none">X</button>
@@ -46,10 +59,10 @@
                                     <div class="card-body main">
                                         <div class="row">
                                             <div class="col-4 sanpham" style="margin-top: 10px">
-                                                <label class="font-weight-semibold">Tên sản phẩm</label>
+                                                <label class="font-weight-semibold">Tên sản phẩm(*)</label>
                                                 <div class="d-flex align-items-center">
-                                                    <i class="fas fa-cube mr-1"></i>
-                                                    <select class="w-100 select2-active" name="IdSanPham">
+                                                    <i class="fas fa-info-circle mr-1"></i>
+                                                    <select class="w-100 select2-active" name="IdSanPham" disabled>
                                                         @foreach (var item in (SelectList)ViewData["IdSanPham"]!)
                                                         {
                                                             if (item.Value == sp.IdSanPham)
@@ -67,10 +80,10 @@
                                             </div>
 
                                             <div class="col-4 thuonghieu" style="margin-top: 10px">
-                                                <label class="font-weight-semibold">Thương hiệu</label>
+                                                <label class="font-weight-semibold">Thương hiệu(*)</label>
                                                 <div class="d-flex align-items-center">
-                                                    <i class="fas fa-trademark mr-1"></i>
-                                                    <select class="select2-active w-100" name="IdThuongHieu">
+                                                    <i class="fas fa-info-circle mr-1"></i>
+                                                    <select class="select2-active w-100" name="IdThuongHieu" disabled>
                                                         @foreach (var item in (SelectList)ViewData["IdThuongHieu"]!)
                                                         {
                                                             if (item.Value == sp.IdThuongHieu)
@@ -87,10 +100,10 @@
                                             </div>
 
                                             <div class="col-4 xuatxu" style="margin-top: 10px">
-                                                <label class="font-weight-semibold">Xuất xứ</label>
+                                                <label class="font-weight-semibold">Xuất xứ(*)</label>
                                                 <div class="d-flex align-items-center">
-                                                    <i class="fab fa-connectdevelop mr-1"></i>
-                                                    <select class="select2-active w-100" name="IdXuatXu">
+                                                    <i class="fas fa-info-circle mr-1"></i>
+                                                    <select class="select2-active w-100" name="IdXuatXu" disabled>
                                                         @foreach (var item in (SelectList)ViewData["IdXuatXu"]!)
                                                         {
                                                             if (item.Value == sp.IdXuatXu)
@@ -107,10 +120,10 @@
                                             </div>
 
                                             <div class="col-4 chatlieu" style="margin-top: 10px">
-                                                <label class="font-weight-semibold">Chất liệu</label>
+                                                <label class="font-weight-semibold">Chất liệu(*)</label>
                                                 <div class="d-flex align-items-center">
-                                                    <i class="fab fa-centercode mr-1"></i>
-                                                    <select class="select2-active w-100" name="IdChatLieu">
+                                                    <i class="fas fa-info-circle mr-1"></i>
+                                                    <select class="select2-active w-100" name="IdChatLieu" disabled>
                                                         @foreach (var item in (SelectList)ViewData["IdChatLieu"]!)
                                                         {
                                                             if (item.Value == sp.IdChatLieu)
@@ -127,10 +140,10 @@
                                             </div>
 
                                             <div class="col-4 loaigiay" style="margin-top: 10px">
-                                                <label class="font-weight-semibold">Loại giầy</label>
+                                                <label class="font-weight-semibold">Loại giầy(*)</label>
                                                 <div class="d-flex align-items-center">
-                                                    <i class="fab fa-magento mr-1"></i>
-                                                    <select class="select2-active w-100" name="IdLoaiGiay">
+                                                    <i class="fas fa-info-circle mr-1"></i>
+                                                    <select class="select2-active w-100" name="IdLoaiGiay" disabled>
                                                         @foreach (var item in (SelectList)ViewData["IdLoaiGiay"]!)
                                                         {
                                                             if (item.Value == sp.IdLoaiGiay)
@@ -147,10 +160,10 @@
                                             </div>
 
                                             <div class="col-4 kieudegiay" style="margin-top: 10px">
-                                                <label class="font-weight-semibold">Kiểu đế giầy</label>
+                                                <label class="font-weight-semibold">Kiểu đế giầy(*)</label>
                                                 <div class="d-flex align-items-center mr-1">
-                                                    <i class="fas fa-podcast mr-1"></i>
-                                                    <select class="select2-active w-100" name="IdKieuDeGiay">
+                                                    <i class="fas fa-info-circle mr-1"></i>
+                                                    <select class="select2-active w-100" name="IdKieuDeGiay" disabled>
                                                         @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"]!)
                                                         {
                                                             if (item.Value == sp.IdKieuDeGiay)
@@ -170,10 +183,10 @@
 
                                         <div class="row">
                                             <div class="col-6 mausac">
-                                                <label class="font-weight-semibold">Màu Sắc</label>
+                                                <label class="font-weight-semibold">Màu Sắc(*)</label>
                                                 <div class="d-flex align-items-center">
-                                                    <i class="fas fa-palette mr-1"></i>
-                                                    <select class="select2-active w-100" name="IdMauSac">
+                                                    <i class="fas fa-info-circle mr-1"></i>
+                                                    <select class="select2-active w-100" name="IdMauSac" disabled>
                                                         @foreach (var item in (SelectList)ViewData["IdMauSac"]!)
                                                         {
                                                             if (item.Value == sp.IdMauSac)
@@ -190,10 +203,10 @@
                                             </div>
 
                                             <div class="col-6 kichco">
-                                                <label class="font-weight-semibold">Kích cỡ</label>
+                                                <label class="font-weight-semibold">Kích cỡ(*)</label>
                                                 <div class="d-flex align-items-center">
-                                                    <i class="fas fa-bowling-ball mr-1"></i>
-                                                    <select class="select2-active w-100" name="IdKichCo">
+                                                    <i class="fas fa-info-circle mr-1"></i>
+                                                    <select class="select2-active w-100" name="IdKichCo" disabled>
                                                         @foreach (var item in (SelectList)ViewData["IdKichCo"]!)
                                                         {
                                                             if (item.Value == sp.IdKichCo)
@@ -212,7 +225,7 @@
 
                                         <div class="row mt-2">
                                             <div class="form-group col-3">
-                                                <label class="font-weight-semibold" for="productBrand">Giá nhập</label>
+                                                <label class="font-weight-semibold" for="productBrand">Giá nhập(*)</label>
                                                 <div class="d-flex align-items-center">
                                                     <i class="far fa-money-bill-alt mr-1"></i>
                                                     <input type="text" class="form-control formatPrice" name="GiaNhap" value="@sp.GiaNhap">
@@ -220,7 +233,7 @@
                                             </div>
 
                                             <div class="form-group col-3">
-                                                <label class="font-weight-semibold" for="productBrand">Giá bán</label>
+                                                <label class="font-weight-semibold" for="productBrand">Giá bán(*)</label>
                                                 <div class="d-flex align-items-center">
                                                     <i class="fas fa-money-bill-wave mr-1"></i>
                                                     <input type="text" class="form-control formatPrice" name="GiaBan" value="@sp.GiaBan">
@@ -228,7 +241,7 @@
                                             </div>
 
                                             <div class="form-group col-3">
-                                                <label class="font-weight-semibold" for="productBrand">Số lượng tồn</label>
+                                                <label class="font-weight-semibold" for="productBrand">Số lượng tồn(*)</label>
                                                 <div class="d-flex align-items-center">
                                                     <i class="fas fa-database mr-1"></i>
                                                     <input type="text" class="form-control formatNumber" name="SoLuongTon" value="@sp.SoLuongTon">
@@ -236,7 +249,7 @@
                                             </div>
 
                                             <div class="form-group col-3">
-                                                <label class="font-weight-semibold" for="productBrand">Khối lượng</label>
+                                                <label class="font-weight-semibold" for="productBrand">Khối lượng(*)</label>
                                                 <div class="d-flex align-items-center">
                                                     <i class="fas fa-weight mr-1"></i>
                                                     <input type="text" class="form-control formatKhoiLuong" name="KhoiLuong" value="@sp.KhoiLuong">
@@ -335,12 +348,7 @@
     </div>
 </div>
 
-<div id="confirm" class="mt-2 mb-2">
-    <div class="d-flex justify-content-end">
-        <button class="btn btn-tone update-sp" onclick="window.location.reload()">Quay lại danh sách</button>
-        <button class="btn btn-warning update-sp">Cập nhật</button>
-    </div>
-</div>
+
 
 <script>
     (function () {
@@ -349,6 +357,29 @@
         const URL_UPDATE_PRODUCT_DETAIL = 'UpdateSanPham';
         const URL_DELETE_LIST_IMAGE = 'DeleteAnh';
         const URL_CREATE_IMAGE = 'CreateAnh';
+
+        function CheckRong() {
+            const cards = $(".accordion > .card");
+            if (cards.length == 0) {
+                $('#empty').show()
+                Swal.fire({
+                    title: 'Thông báo',
+                    text: 'Hiện không còn task nào!',
+                    confirmButtonText: 'Quay lại danh sách',
+                    allowOutsideClick: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/Admin/SanPhamChiTiet/DanhSachSanPham'
+                    }
+                });
+            } else {
+                $('#empty').hide()
+            }
+        }
+
+        $(() => {
+            CheckRong();
+        })
 
         function showToastTonTai(name) {
             var toastHTML = `<div class="toast fade hide" data-delay="3000">
@@ -671,41 +702,64 @@
                     if (e.key === 'Enter') {
                         var inputValue = $(this).val();
                         if (inputValue) {
-                            var data = {
-                                soKichCo: inputValue,
-                            };
-                            $.ajax({
-                                url: 'CreateTenKichCo',
-                                type: 'POST',
-                                data: JSON.stringify(data),
-                                contentType: 'application/json',
-                                success: function (result) {
-                                    if (result) {
-                                        var $select2 = $kichco.find("[name='IdKichCo']");
+                            if (Number.isInteger(parseFloat(inputValue.trim())) && parseInt(inputValue) < 0) {
+                                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                    <div class="toast-header">
+                                        <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                        <strong class="mr-auto">Thông báo</strong>
+                                        <small>1 seconds ago</small>
+                                        <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="toast-body">
+                                        <span>Kích cỡ phải là số nguyên dương</span>
+                                    </div>
+                                </div>`
 
-                                        var selectedValue = $select2.val();
-                                        if (selectedValue && selectedValue.length > 0) {
-                                            $select2.val(null).trigger('change');
+                                $('#notification-toast').append(toastHTML)
+                                $('#notification-toast .toast').toast('show');
+                                setTimeout(function () {
+                                    $('#notification-toast .toast:first-child').remove();
+                                }, 3000);
+                            } else {
+                                var data = {
+                                    soKichCo: inputValue.trim(),
+                                };
+                                $.ajax({
+                                    url: 'CreateTenKichCo',
+                                    type: 'POST',
+                                    data: JSON.stringify(data),
+                                    contentType: 'application/json',
+                                    success: function (result) {
+                                        if (result) {
+                                            var $select2 = $kichco.find("[name='IdKichCo']");
+
+                                            var selectedValue = $select2.val();
+                                            if (selectedValue && selectedValue.length > 0) {
+                                                $select2.val(null).trigger('change');
+                                            }
+                                            var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
+                                            $select2.append(newOption).trigger('change');
+
+                                            $(this).val('');
+                                        } else {
+                                            showToastTonTai('Kích cỡ')
                                         }
-                                        var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
-                                        $select2.append(newOption).trigger('change');
-
-                                        $(this).val('');
-                                    } else {
-                                        showToastTonTai('Kích cỡ')
+                                    },
+                                    error: function (xhr, status, error) {
+                                        showDauVaoKhongHopLe()
                                     }
-                                },
-                                error: function (xhr, status, error) {
-                                    showDauVaoKhongHopLe()
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 });
             });
+
             $('.moTa').summernote();
             $(".formatPrice").each(function () {
-                var autoNumeric = new AutoNumeric(this, {
+                new AutoNumeric(this, {
                     decimalCharacter: ".",
                     digitGroupSeparator: ",",
                     decimalPlaces: 0,
@@ -715,8 +769,9 @@
                     maximumValue: 99999999
                 });
             });
+
             $(".formatNumber").each(function () {
-                var autoNumeric = new AutoNumeric(this, {
+                new AutoNumeric(this, {
                     decimalCharacter: ".",
                     digitGroupSeparator: ",",
                     decimalPlaces: 0,
@@ -724,19 +779,21 @@
                     maximumValue: 99999.00
                 });
             });
+
             $(".formatKhoiLuong").each(function () {
-                var autoNumeric = new AutoNumeric(this, {
+                new AutoNumeric(this, {
                     decimalCharacter: ".",
                     digitGroupSeparator: ",",
                     decimalPlaces: 2,
                     minimumValue: 0,
                     maximumValue: 99999.00
                 });
-            });
+            }); 
         })
 
         $(document).on('click', '.btn-delete', function () {
             $(this).closest('.card').remove();
+            CheckRong()
         })
 
         $(document).on('click', '[name= "choseFile"]', function () {
@@ -900,6 +957,7 @@
 
         $(document).off('click', '.update-sp')
         $(document).on('click', '.update-sp', function () {
+            var slSS = 0;
             const promise = [];
             const cards = $(".accordion > .card");
             Array.from(cards).forEach(item => {
@@ -918,17 +976,7 @@
                                 fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
                             }
                             else if ($(this).hasClass("formatKhoiLuong")) {
-                                var autoNumeric = new AutoNumeric(this,
-                                    {
-                                        decimalCharacter: ".",
-                                        digitGroupSeparator: ",",
-                                        decimalPlaces: 2,
-                                        minimumValue: 0
-                                    });
-
-                                var numericValue = autoNumeric.getNumericString();
-
-                                var doubleValue = parseFloat(numericValue);
+                                var doubleValue = parseFloat($(this).val().replace(/,/g, ''));
                                 fieldValue = doubleValue;
                             }
                             else {
@@ -941,34 +989,66 @@
                 });
                 data.MoTa = $(item).find('[name="MoTa"]').summernote('code');
 
-                const updateProduct = $.ajax({
-                    url: URL_UPDATE_PRODUCT_DETAIL,
-                    type: 'POST',
-                    data: JSON.stringify(data),
-                    contentType: 'application/json',
-                    success: function (result) {
-
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(xhr.responseText);
-                        console.log(status);
-                        console.log(error);
-                        console.log(xhr);
-                    }
-                });
-                promise.push(updateProduct)
-
-                if (selectedFiles[key] && Array.from(selectedFiles[key]).length > 0) {
-                    var data = new FormData();
-                    Array.from(selectedFiles[key]).map(item => data.append('lstIFormFile', item.data))
-                    data.append('IdChiTietSp', key);
-                    const createAnh = $.ajax({
-                        url: URL_CREATE_IMAGE,
+                if (data.GiaNhap !== "0" && data.GiaBan !== "0" && data.SoLuongTon !== "0" && data.KhoiLuong !== NaN && $(item).find('.wrapper-file').length > 0) {
+                    const updateProduct = $.ajax({
+                        url: URL_UPDATE_PRODUCT_DETAIL,
                         type: 'POST',
-                        data: data,
-                        contentType: false,
-                        processData: false,
+                        data: JSON.stringify(data),
+                        contentType: 'application/json',
                         success: function (result) {
+                            if (result) {
+                                if (selectedFiles[key] && Array.from(selectedFiles[key]).length > 0) {
+                                    var data = new FormData();
+                                    Array.from(selectedFiles[key]).map(item => data.append('lstIFormFile', item.data))
+                                    data.append('IdChiTietSp', key);
+                                    const createAnh = $.ajax({
+                                        url: URL_CREATE_IMAGE,
+                                        type: 'POST',
+                                        data: data,
+                                        contentType: false,
+                                        processData: false,
+                                        success: function (result) {
+                                        },
+                                        error: function (xhr, status, error) {
+                                            console.log(xhr.responseText);
+                                            console.log(status);
+                                            console.log(error);
+                                            console.log(xhr);
+                                        }
+                                    });
+                                    promise.push(createAnh);
+                                }
+
+                                if (lstAnhRemove[key] && Array.from(lstAnhRemove[key]).length > 0) {
+                                    const data = new FormData();
+                                    lstAnhRemove[key].map(item => data.append('lstImageRemove', item))
+                                    data.append('idProductDetail', key)
+                                    const deleteAnh = fetch(URL_DELETE_LIST_IMAGE, {
+                                        method: 'POST',
+                                        body: data
+                                    })
+                                        .then(response => {
+                                            if (response.ok) {
+                                                if (response.headers.get("content-length") !== "0") {
+                                                    return response.json();
+                                                } else {
+                                                    return null;
+                                                }
+                                            }
+                                            throw new Error('Network response was not ok.');
+                                        })
+                                        .then(data => {
+
+                                        })
+                                        .catch(error => {
+                                            console.error(error);
+                                        });
+                                    promise.push(deleteAnh);
+                                }
+
+                                $(item).remove()
+                                slSS++;
+                            }
                         },
                         error: function (xhr, status, error) {
                             console.log(xhr.responseText);
@@ -977,38 +1057,39 @@
                             console.log(xhr);
                         }
                     });
-                    promise.push(createAnh);
-                }
-
-                if (lstAnhRemove[key] && Array.from(lstAnhRemove[key]).length > 0) {
-                    const data = new FormData();
-                    lstAnhRemove[key].map(item => data.append('lstImageRemove', item))
-                    data.append('idProductDetail', key)
-                    const deleteAnh = fetch(URL_DELETE_LIST_IMAGE, {
-                        method: 'POST',
-                        body: data
-                    })
-                        .then(response => {
-                            if (response.ok) {
-                                if (response.headers.get("content-length") !== "0") {
-                                    return response.json();
-                                } else {
-                                    return null;
-                                }
-                            }
-                            throw new Error('Network response was not ok.');
-                        })
-                        .then(data => {
-
-                        })
-                        .catch(error => {
-                            console.error(error);
-                        });
-                    promise.push(deleteAnh);
+                    promise.push(updateProduct)
+                } else {
+                    var previousValue = $(item).find('.card-title span').text();
+                    if (!previousValue.includes('Vui lòng')) {
+                        var redText = '<span style="color: red;"> (Vui lòng nhập đầy đủ thông tin cho các trường bắt buộc(*)/Chọn ảnh cho sản phẩm.)</span>';
+                        $(item).find('.card-title span').html(previousValue + redText);
+                    }
                 }
             })
             Promise.all(promise)
-                .then(() => window.location.reload())
+                .then(() => {
+                    CheckRong()
+                    if (slSS) {
+                        var toastHTML = `<div class="toast fade hide" data-delay="5000">
+                             <div class="toast-header">
+                                 <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                 <strong class="mr-auto">Thông báo</strong>
+                                 <small>1 second ago</small>
+                                 <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                     <span aria-hidden="true">&times;</span>
+                                 </button>
+                             </div>
+                             <div class="toast-body">
+                                 Đã cập nhật thành công ${slSS} sản phẩm
+                             </div>
+                         </div>`
+                        $('#notification-toast').append(toastHTML)
+                        $('#notification-toast .toast').toast('show');
+                        setTimeout(function () {
+                            $('#notification-toast .toast:first-child').remove();
+                        }, 5000);
+                    }
+                })
         })
     })();
 

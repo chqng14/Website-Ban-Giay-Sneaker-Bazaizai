@@ -60,9 +60,9 @@
     <div class="modal fade" id="confirm">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header align-items-center" style="background: #129dc1;">
+                <div class="modal-header align-items-center" style=" background: #00090b; color: white">
                     <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
-                    <h5 class="modal-title" id="exampleModalLabel">Xác nhận</h5>
+                    <h5 style="color: white" class="modal-title" id="exampleModalLabel">Xác nhận</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <i class="anticon anticon-close"></i>
                     </button>
@@ -283,7 +283,7 @@ columns: [
     },
 ],
 initComplete: function (settings, json) {
-    $('#thongTin').text(`HIỆN ĐANG CÓ ${json.data.length} MẶT HÀNG ĐANG NGỪNG KINH DOANH`)
+    $('#thongTin').text(`HIỆN ĐANG CÓ ${json.recordsTotal} MẶT HÀNG ĐANG NGỪNG KINH DOANH`)
     $('#table-sanpham').on('draw.dt', function () {
         $('input[type="checkbox"]').each(function () {
             const id = $(this).attr('id').replace('check-item-', '');
@@ -293,6 +293,9 @@ initComplete: function (settings, json) {
                 $(this).prop('checked', false);
             }
         });
+        var json = table.ajax.json();
+
+        $('#thongTin').text(`HIỆN ĐANG CÓ ${json.recordsTotal} MẶT HÀNG ĐANG NGỪNG KINH DOANH`);
     });
 
     $('#check-all').on('change', function () {

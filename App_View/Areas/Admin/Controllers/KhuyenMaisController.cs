@@ -227,8 +227,8 @@ namespace App_View.Areas.Admin.Controllers
             {
                 new SelectListItem { Text = "Hết hạn", Value = "0" },
                 new SelectListItem { Text = "Đang hoạt động", Value = "1" },
-                 new SelectListItem { Text = "Chưa bắt đầu", Value = "1" },
-                  new SelectListItem { Text = "Buộc dừng", Value = "1" }
+                 new SelectListItem { Text = "Chưa bắt đầu", Value = "2" },
+                  new SelectListItem { Text = "Buộc dừng", Value = "3" }
             };
             ViewBag.ListGiamGia = new List<SelectListItem>
             {
@@ -282,8 +282,8 @@ namespace App_View.Areas.Admin.Controllers
             {
                 new SelectListItem { Text = "Hết hạn", Value = "0" },
                 new SelectListItem { Text = "Đang hoạt động", Value = "1" },
-                 new SelectListItem { Text = "Chưa bắt đầu", Value = "1" },
-                  new SelectListItem { Text = "Buộc dừng", Value = "1" }
+                 new SelectListItem { Text = "Chưa bắt đầu", Value = "2" },
+                  new SelectListItem { Text = "Buộc dừng", Value = "3" }
             };
             ViewBag.ListGiamGia = new List<SelectListItem>
             {
@@ -400,15 +400,22 @@ namespace App_View.Areas.Admin.Controllers
         public JsonResult CapNhatTrangThai(string id, int trangThai)
         {
             var khuyenMai = _context.khuyenMais.Find(id);
+            string mess;
             if (trangThai == (int)TrangThaiSale.BuocDung)
             {
-				if(khuyenMai.NgayKetThuc >= DateTime.Now)
+				if(khuyenMai.NgayKetThuc >= DateTime.Now&&khuyenMai.NgayBatDau<= DateTime.Now)
 				{
 
 					khuyenMai.TrangThai = (int)TrangThaiSale.DangBatDau;
 				}
-                else return Json(new { success = false });
-			}
+                else
+                    if(khuyenMai.NgayBatDau >= DateTime.Now)
+                {
+                    return Json(new { success = false, mess= "Khuyến mại chưa đến ngày bắt đầu" });
+                }
+                else return Json(new { success = false, mess = "Chương trình khuyến mãi đã hết hạn" });
+
+            }
             else
             {
                 khuyenMai.TrangThai = (int)TrangThaiSale.BuocDung;

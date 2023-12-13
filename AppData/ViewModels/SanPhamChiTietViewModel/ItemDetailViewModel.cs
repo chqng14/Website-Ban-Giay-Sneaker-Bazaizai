@@ -14,7 +14,11 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
         public List<int>? LstKichThuoc { get; set; }
         public List<string>? DanhSachAnh { get; set; }
         public bool IsYeuThich { get; set; }
-        public bool IsKhuyenMai { get; set; }
+        public string? XuatXu { get; set; }
+        public string? LoaiGiay { get; set; }
+        public string? ChatLieu { get; set; }
+        public string? KieuDeGiay { get; set; }
+        public double? KhoiLuong { get; set; }
 
     }
 }

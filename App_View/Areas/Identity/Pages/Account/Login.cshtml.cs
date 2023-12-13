@@ -111,7 +111,7 @@ namespace App_View.Areas.Identity.Pages.Account
                     bool isCustomer = await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "NhanVien");
                     if (isCustomer)
                     {
-                        return RedirectToAction("Index", "Home", new { area = "Admin" });
+                        return RedirectToAction("DanhSachHoaDonCho", "BanHangTaiQuay", new { area = "Admin" });
                     }
                     else return LocalRedirect(returnUrl);
                 }

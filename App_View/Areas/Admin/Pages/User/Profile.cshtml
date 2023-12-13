@@ -1,0 +1,153 @@
+﻿@page "/admin/Profile"
+@using App_Data.Models;
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
+
+@model App_View.Areas.Admin.Pages.User.ProfileModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+}
+<!-- Page Container START -->
+<!-- Content Wrapper START -->
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Hồ sơ</a>
+            <span class="breadcrumb-item active">Hồ sơ cá nhân</span>
+        </nav>
+    </div>
+</div>
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-2">
+                    <div class="d-md-flex align-items-center">
+                        <div class="text-center text-sm-left ">
+                            <div class="avatar avatar-image" style="width: 150px; height:150px">
+                                
+                                <img src="@Model.Picture" alt="">
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="d-md-block d-none border-left col-1"></div>
+                        <div class="col">
+                            <ul class="list-unstyled m-t-10">
+                                <li class="row">
+                                    <p class="col-sm-4 col-4 font-weight-semibold text-dark m-b-5">
+                                        <i class="m-r-10 text-primary anticon anticon-mail"></i>
+                                        <span>Họ và tên:</span>
+                                    </p>
+                                    <p class="col font-weight-semibold"> @Model.FullName</p>
+                                </li>
+                                <li class="row">
+                                    <p class="col-sm-4 col-4 font-weight-semibold text-dark m-b-5">
+                                        <i class="m-r-10 text-primary anticon anticon-phone"></i>
+                                        <span>SDT: </span>
+                                    </p>
+                                    <p class="col font-weight-semibold">@Model.Phone</p>
+                                </li>
+                                <li class="row">
+                                    <p class="col-sm-4 col-5 font-weight-semibold text-dark m-b-5">
+                                        <i class="m-r-10 text-primary anticon anticon-mail"></i>
+                                        <span>Email: </span>
+                                    </p>
+                                    <p class="col font-weight-semibold">@Model.Email</p>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="d-md-block d-none border-left col-1"></div>
+                        <div class="col">
+                            <ul class="list-unstyled m-t-10">
+                                <li class="row">
+                                    <p class="col-sm-4 col-5 font-weight-semibold text-dark m-b-5">
+                                        <i class="m-r-10 text-primary anticon anticon-user"></i>
+                                    
+                                        <span>Giới tính: </span>
+                                    </p>
+                                    <p class="col font-weight-semibold">@Model.GioiTinh</p>
+                                </li>
+                                <li class="row">
+                                    <p class="col-sm-4 col-5 font-weight-semibold text-dark m-b-5">
+                                        <i class="m-r-10 text-primary anticon anticon-profile"></i>
+
+                                        <span>Ngày sinh: </span>
+                                    </p>
+                                    <p class="col font-weight-semibold">@Model.NgaySinh</p>
+                                </li>
+                                <li class="row">
+                                    <p class="col-sm-4 col-5 font-weight-semibold text-dark m-b-5">
+                                        <i class="m-r-10 text-primary anticon anticon-environment"></i>
+                                        <span>địa chỉ: </span>
+                                    </p>
+                                    <p class="col font-weight-semibold">@Model.DiaChi</p>
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <h4 class="m-b-5" style="text-align:center">@Model.Username</h4>
+                </div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="d-md-block d-none  col-1"></div>
+                        <div class="col">
+                            <ul class="list-unstyled m-t-10">
+                                <li class="row">
+                                    <p class="col-sm-4 col-4 font-weight-semibold text-dark m-b-5">
+                                        <i class="m-r-10 text-primary anticon anticon-branches"></i>
+                                        <span>Vai trò: </span>
+                                    </p>
+                                    @if (SignInManager.IsSignedIn(User))
+                                    {
+                                        var user = await UserManager.GetUserAsync(User);
+                                        var chucvu = await UserManager.GetRolesAsync(user);
+                                        @foreach (var role in chucvu)
+                                        {
+                                          
+                                            <p class="col font-weight-semibold">@role</p>
+                                        }
+                                    }
+                                    
+                                </li>
+
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <div class="d-md-block d-none  col-1"></div>
+                        <div class="col">
+                            <a class="btn btn-primary btn-tone" asp-page="/User/EditProfile">Chỉnh sửa hồ sơ</a>
+                            <a class="btn btn-primary btn-tone" asp-page="/User/DoiMatKhau">Đổi mật khẩu</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+

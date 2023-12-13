@@ -78,7 +78,7 @@ namespace App_View.Services
             return new IdentityError()
             {
                 Code = error.Code,
-                Description = $"Tên tài khoản {userName} không hợp lệ. Tên tài khoản chỉ chứa số và chữ cái.",
+                Description = $"Tên tài khoản {userName} không hợp lệ. Tên tài khoản chỉ chứa số, chữ cái, dấu_ và dấu .",
             };
             //return base.InvalidUserName(userName);
         }

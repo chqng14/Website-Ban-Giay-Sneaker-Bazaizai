@@ -18,6 +18,7 @@ namespace App_Data.Models
 
         [Required(ErrorMessage = "Tên khuyến mãi là trường bắt buộc.")]
         [MaxLength(100, ErrorMessage = "Tên khuyến mãi không được vượt quá 100 ký tự.")]
+        [RegularExpression(@"^[a-zA-Z0-9\s]*$", ErrorMessage = "Tên Khuyến mại không được chứa ký tự đặc biệt.")]
         public string TenKhuyenMai { get; set; }
 
         [Required(ErrorMessage = "Ngày bắt đầu là trường bắt buộc.")]

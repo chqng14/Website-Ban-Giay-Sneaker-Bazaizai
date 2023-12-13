@@ -52,6 +52,7 @@ namespace App_View.Areas.Admin.Pages.User
         {
             [DataType(DataType.Date)]
             [Display(Name = "Ngày sinh")]
+            [AgeDateTime(100, ErrorMessage = "Ngày sinh bạn nhập không hợp lệ.")]
             public DateTime? NgaySinh { get; set; }
 
             [Required(ErrorMessage = "Email không được để trống.")]
@@ -81,19 +82,23 @@ namespace App_View.Areas.Admin.Pages.User
             public string? Sdt { get; set; }
 
             [DataType(DataType.Text)]
-            [Required(ErrorMessage = "Tên của bạn không được để trống.")]
-            [NameLimit(ErrorMessage = "Tên bạn nhập không hợp lệ.")]
-            [Display(Name = "Tên của bạn")]
+            [Required(ErrorMessage = "Tên không được để trống.")]
+            [NameLimit(ErrorMessage = "Tên nhập không hợp lệ.")]
+            [Display(Name = "Họ và tên")]
             public string FullName { get; set; }
+
+            [DataType(DataType.Text)]
+            [Display(Name = "Địa chỉ")]
+            public string? Diachi { get; set; }
 
             [DataType(DataType.Text)]
             [Display(Name = "Giới tính")]
             public int? GioiTinh { get; set; }
 
-
+            [Required(ErrorMessage = "Hãy chọn vai trò.")]
             [DataType(DataType.Text)]
             [Display(Name = "Chức vụ")]
-           public string? ChucVu { get; set; }
+           public string ChucVu { get; set; }
 
 
         }
@@ -110,7 +115,7 @@ namespace App_View.Areas.Admin.Pages.User
                 user.GioiTinh = Input.GioiTinh;
 
                 user.NgaySinh = Input.NgaySinh;
-
+                user.DiaChi = Input.Diachi;
                 user.TenNguoiDung = Input.FullName;
                 user.AnhDaiDien = "/user_img/default_image.png";
                 user.EmailConfirmed = true;
@@ -120,9 +125,13 @@ namespace App_View.Areas.Admin.Pages.User
                 {
                     await _phoneStore.SetPhoneNumberAsync(user, Input.Sdt, CancellationToken.None);
                 }
-
+                if (Input.ChucVu ==null)
+                {
+                    ModelState.AddModelError(string.Empty, "Hãy chọn chức vụ");
+                    return Page();
+                }
                 var result = await _userManager.CreateAsync(user, Input.Password);
-
+                
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");

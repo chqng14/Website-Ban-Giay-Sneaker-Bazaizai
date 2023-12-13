@@ -3,6 +3,7 @@
 
 <script>
     (function () {
+        debugger;
             var selectedFiles = {};
             var lstAnhRemove = {};
             selectedFiles = {};
@@ -376,34 +377,56 @@
                         if (e.key === 'Enter') {
                             var inputValue = $(this).val();
                             if (inputValue) {
-                                var data = {
-                                    soKichCo: inputValue.trim()
-                                };
-                                $.ajax({
-                                    url: 'CreateTenKichCo',
-                                    type: 'POST',
-                                    data: JSON.stringify(data),
-                                    contentType: 'application/json',
-                                    success: function (result) {
-                                        if (result) {
-                                            var $select2 = $kichco.find("[name='IdKichCo']");
+                                if (Number.isInteger(parseFloat(inputValue.trim())) && parseInt(inputValue) < 0) {
+                                    var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                        <div class="toast-header">
+                                                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                            <strong class="mr-auto">Thông báo</strong>
+                                                            <small>1 seconds ago</small>
+                                                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="toast-body">
+                                                            <span>Kích cỡ phải là số nguyên dương</span>
+                                                        </div>
+                                                    </div>`
 
-                                            var selectedValue = $select2.val();
-                                            if (selectedValue && selectedValue.length > 0) {
-                                                $select2.val(null).trigger('change');
+                                    $('#notification-toast').append(toastHTML)
+                                    $('#notification-toast .toast').toast('show');
+                                    setTimeout(function () {
+                                        $('#notification-toast .toast:first-child').remove();
+                                    }, 3000);
+                                } else {
+                                    var data = {
+                                        soKichCo: inputValue.trim()
+                                    };
+                                    $.ajax({
+                                        url: 'CreateTenKichCo',
+                                        type: 'POST',
+                                        data: JSON.stringify(data),
+                                        contentType: 'application/json',
+                                        success: function (result) {
+                                            if (result) {
+                                                var $select2 = $kichco.find("[name='IdKichCo']");
+
+                                                var selectedValue = $select2.val();
+                                                if (selectedValue && selectedValue.length > 0) {
+                                                    $select2.val(null).trigger('change');
+                                                }
+                                                var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
+                                                $select2.append(newOption).trigger('change');
+
+                                                $(this).val('');
+                                            } else {
+                                                showToastTonTai('Kích cỡ')
                                             }
-                                            var newOption = new Option(result.soKichCo, result.idKichCo, true, true);
-                                            $select2.append(newOption).trigger('change');
-
-                                            $(this).val('');
-                                        } else {
-                                            showToastTonTai('Kích cỡ')
+                                        },
+                                        error: function (xhr, status, error) {
+                                            showDauVaoKhongHopLe()
                                         }
-                                    },
-                                    error: function (xhr, status, error) {
-                                        showDauVaoKhongHopLe()
-                                    }
-                                });
+                                    });
+                                }
                             }
                         }
                     });
@@ -619,7 +642,8 @@
 
         $(document).off('click', '#btn-add-coppy');
         $(document).on('click', '#btn-add-coppy', function () {
-
+            const $btn = $(this)
+            $(this).addClass('is-loading')
             const imageList = $(document).find('.container-file');
 
             const countImage = imageList.find('.wrapper-file').length;
@@ -657,17 +681,8 @@
              fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
          }
          else if ($(this).hasClass("formatKhoiLuong")) {
-              var autoNumeric = new AutoNumeric(this,
-                 {
-                     decimalCharacter: ".",
-                     digitGroupSeparator: ",",
-                     decimalPlaces: 2,
-                     minimumValue: 0
-                 });
-
-             var numericValue = autoNumeric.getNumericString();
-
-             fieldValue = numericValue;
+             var doubleValue = parseFloat($(this).val().replace(/,/g, ''));
+             fieldValue = doubleValue;
          }
          else {
              fieldValue = $(this).val();
@@ -718,8 +733,8 @@
      processData: false,
      success: function (result) {
          if (result) {
-             if (window.location.pathname.toLowerCase().includes('sanPhamChiTiet/danhSachSanPham')) {
-                 $('#modalSanPham').modal('hide');
+             if (window.location.pathname.toLowerCase().includes('sanphamchitiet/danhsachsanpham')) {
+                 debugger
                  table.draw();
              }
              else {
@@ -779,6 +794,7 @@
                  $('#notification-toast .toast:first-child').remove();
              }, 3000);
          }
+         $btn.removeClass('is-loading')
      },
      error: function (xhr, status, error) {
          console.log(xhr.responseText);
@@ -793,69 +809,63 @@
              })
         $(document).off('click', '#btn-add');
         $(document).on('click', '#btn-add', function () {
+            $btn = $(this);
+            $btn.addClass('is-loading')
+
             const imageList = $(document).find('.container-file');
 
             const countImage = imageList.find('.wrapper-file').length;
             if (countImage === 0) {
                 var toastHTML = `<div class="toast fade hide" data-delay="3000">
-    <div class="toast-header">
-        <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-        <strong class="mr-auto">Thông báo</strong>
-        <small>1 second ago</small>
-        <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="toast-body">
-      Vui lòng chọn ảnh cho sản phẩm!
-    </div>
-</div>`
+                        <div class="toast-header">
+                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                            <strong class="mr-auto">Thông báo</strong>
+                            <small>1 second ago</small>
+                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="toast-body">
+                          Vui lòng chọn ảnh cho sản phẩm!
+                        </div>
+                    </div>`
                 $('#notification-toast').append(toastHTML)
                 $('#notification-toast .toast').toast('show');
                 setTimeout(function () {
                     $('#notification-toast .toast:first-child').remove();
                 }, 3000);
-            } else {
+            }
+            else {
                 var dataGet = {};
-$('#form-get-data').find("input, select, textarea").each(function () {
-    var fieldType = $(this).attr("type");
-    var fieldName = $(this).attr("name");
-    var fieldValue;
+                $('#form-get-data').find("input, select, textarea").each(function () {
+                    var fieldType = $(this).attr("type");
+                    var fieldName = $(this).attr("name");
+                    var fieldValue;
 
-    if (fieldType === "checkbox" || fieldType === "radio") {
-        fieldValue = $(this).is(":checked");
-    } else {
-        if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
-            var fieldValue = $(this).val();
-            fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
-        }
-        else if ($(this).hasClass("formatKhoiLuong")) {
-            var autoNumeric = new AutoNumeric(this,
-                {
-                    decimalCharacter: ".",
-                    digitGroupSeparator: ",",
-                    decimalPlaces: 2,
-                    minimumValue: 0
+                    if (fieldType === "checkbox" || fieldType === "radio") {
+                        fieldValue = $(this).is(":checked");
+                    } else {
+                        if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
+                            var fieldValue = $(this).val();
+                            fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
+                        }
+                        else if ($(this).hasClass("formatKhoiLuong")) {
+                            fieldValue = $(this).val().replace(/,/g, '');
+                        }
+                        else {
+                            fieldValue = $(this).val();
+                        }
+                    }
+                    if (fieldName) {
+                        dataGet[fieldName] = fieldValue;
+                    }
                 });
 
-            var numericValue = autoNumeric.getNumericString();
 
-            fieldValue = numericValue;
-        }
-        else {
-            fieldValue = $(this).val();
-        }
-    }
-    if (fieldName) {
-        dataGet[fieldName] = fieldValue;
-    }
-});
-
-
-var data = new FormData();
+                var data = new FormData();
 for (var key in dataGet) {
     data.append('SanPhamChiTietData.' + key, dataGet[key]);
-}
+                }
 
 
 var danhSachAnhArray = [];
@@ -891,7 +901,7 @@ $.ajax({
     processData: false,
     success: function (result) {
         if (result) {
-            if (window.location.pathname.toLowerCase().includes('sanPhamChiTiet/danhSachSanPham')) {
+            if (window.location.pathname.toLowerCase().includes('sanphamchitiet/danhsachsanpham')) {
                 $('#modalSanPham').modal('hide');
                 table.draw();
             } else {
@@ -937,6 +947,7 @@ $.ajax({
                 $('#notification-toast .toast:first-child').remove();
             }, 3000);
         }
+        $btn.removeClass('is-loading')
     },
     error: function (xhr, status, error) {
         console.log(xhr.responseText);
@@ -945,8 +956,8 @@ $.ajax({
         console.log(xhr);
     }
 });
-            }
-        })
+            };
+        });
 
 
     })();
@@ -954,9 +965,9 @@ $.ajax({
 
 <div class="modal-dialog  modal-xl">
     <div class="modal-content">
-        <div class="modal-header align-items-center" style="background: #129dc1;">
+        <div class="modal-header align-items-center" style=" background: #00090b; color: white">
             <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
-            <h5 class="modal-title" id="exampleModalLabel">THÊM MỚI SẢN PHẨM</h5>
+            <h5 class="modal-title" style="color: white" id="exampleModalLabel">THÊM MỚI SẢN PHẨM</h5>
             <button type="button" class="close" data-dismiss="modal">
                 <i class="anticon anticon-close"></i>
             </button>
@@ -985,7 +996,7 @@ $.ajax({
                                     <div class="col-4 sanpham" style="margin-top: 10px">
                                         <label class="font-weight-semibold">Tên sản phẩm</label>
                                         <div class="d-flex align-items-center">
-                                            <i class="fas fa-cube mr-1"></i>
+                                            <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="w-100 select2-active" name="IdSanPham">
                                                 @foreach (var item in (SelectList)ViewData["IdSanPham"]!)
                                                 {
@@ -1006,7 +1017,7 @@ $.ajax({
                                     <div class="col-4 thuonghieu" style="margin-top: 10px">
                                         <label class="font-weight-semibold">Thương hiệu</label>
                                         <div class="d-flex align-items-center">
-                                            <i class="fas fa-trademark mr-1"></i>
+                                            <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdThuongHieu">
                                                 @foreach (var item in (SelectList)ViewData["IdThuongHieu"]!)
                                                 {
@@ -1026,7 +1037,7 @@ $.ajax({
                                     <div class="col-4 xuatxu" style="margin-top: 10px">
                                         <label class="font-weight-semibold">Xuất xứ</label>
                                         <div class="d-flex align-items-center">
-                                            <i class="fab fa-connectdevelop mr-1"></i>
+                                            <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdXuatXu">
                                                 @foreach (var item in (SelectList)ViewData["IdXuatXu"]!)
                                                 {
@@ -1046,7 +1057,7 @@ $.ajax({
                                     <div class="col-4 chatlieu" style="margin-top: 10px">
                                         <label class="font-weight-semibold">Chất liệu</label>
                                         <div class="d-flex align-items-center">
-                                            <i class="fab fa-centercode mr-1"></i>
+                                            <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdChatLieu">
                                                 @foreach (var item in (SelectList)ViewData["IdChatLieu"]!)
                                                 {
@@ -1066,7 +1077,7 @@ $.ajax({
                                     <div class="col-4 loaigiay" style="margin-top: 10px">
                                         <label class="font-weight-semibold">Loại giầy</label>
                                         <div class="d-flex align-items-center">
-                                            <i class="fab fa-magento mr-1"></i>
+                                            <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdLoaiGiay">
                                                 @foreach (var item in (SelectList)ViewData["IdLoaiGiay"]!)
                                                 {
@@ -1086,7 +1097,7 @@ $.ajax({
                                     <div class="col-4 kieudegiay" style="margin-top: 10px">
                                         <label class="font-weight-semibold">Kiểu đế giầy</label>
                                         <div class="d-flex align-items-center mr-1">
-                                            <i class="fas fa-podcast mr-1"></i>
+                                            <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdKieuDeGiay">
                                                 @foreach (var item in (SelectList)ViewData["IdKieuDeGiay"]!)
                                                 {
@@ -1109,7 +1120,7 @@ $.ajax({
                                     <div class="col-6 mausac">
                                         <label class="font-weight-semibold">Màu Sắc</label>
                                         <div class="d-flex align-items-center">
-                                            <i class="fas fa-palette mr-1"></i>
+                                            <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdMauSac">
                                                 @foreach (var item in (SelectList)ViewData["IdMauSac"]!)
                                                 {
@@ -1129,7 +1140,7 @@ $.ajax({
                                     <div class="col-6 kichco">
                                         <label class="font-weight-semibold">Kích cỡ</label>
                                         <div class="d-flex align-items-center">
-                                            <i class="fas fa-bowling-ball mr-1"></i>
+                                            <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdKichCo">
                                                 @foreach (var item in (SelectList)ViewData["IdKichCo"]!)
                                                 {
@@ -1269,17 +1280,19 @@ $.ajax({
         </div>
         <div class="modal-footer d-flex justify-content-between" style="background: #d0dae3 ">
             <div>
-                <button class="btn btn-primary" id="btn-add">
-                    <i class="far fa-copy"></i>
+                <button class="btn btn-kio" id="btn-add">
+                    <i class="anticon anticon-loading"></i>
+                    <i class="anticon anticon-copy"></i>
                     <span>Thêm</span>
                 </button>
-                <button class="btn btn-primary" id="btn-add-coppy">
-                    <i class="far fa-copy"></i>
+                <button class="btn btn-kio" id="btn-add-coppy">
+                    <i class="anticon anticon-loading"></i>
+                    <i class="anticon anticon-copy"></i>
                     <span>Thêm và coppy</span>
                 </button>
             </div>
             <div>
-                <button type="button" class="btn btn-warning" data-dismiss="modal">
+                <button type="button" class="btn btn-kio" data-dismiss="modal">
                     <i class="anticon anticon-close-circle"></i>
                     <span>Close</span>
                 </button>

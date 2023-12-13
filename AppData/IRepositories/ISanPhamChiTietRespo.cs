@@ -32,7 +32,7 @@ namespace App_Data.IRepositories
         Task<bool> KinhDoanhLaiSanPhamAynsc(List<string> lstguid);
         Task<bool> KhoiPhucKinhDoanhAynsc(string id);
         Task<List<SanPhamChiTietExcelViewModel>> GetListSanPhamExcelAynsc();
-        Task<SanPhamChiTietDTO> GetItemExcelAynsc(BienTheDTO bienTheDTO);
+        Task<SanPhamChiTietDTO?> GetItemExcelAynsc(BienTheDTO bienTheDTO);
         Task UpdateSoLuongSanPhamChiTietAynsc(string IdSanPhamChiTiet, int soLuong);
         Task<FiltersVM> GetFiltersVMAynsc();
         Task<bool> ProductIsNull(SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO);

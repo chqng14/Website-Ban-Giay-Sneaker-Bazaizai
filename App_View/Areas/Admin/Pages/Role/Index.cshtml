@@ -6,7 +6,14 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <h1 style="text-align:center">@ViewData["Title"]</h1>
-
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản lý người dùng</a>
+            <span class="breadcrumb-item active">Danh sách chức vụ</span>
+        </nav>
+    </div>
+</div>
 <partial name="_StatusMessage" model="@Model.StatusMessage" />
 
 <div class="mb-2">
