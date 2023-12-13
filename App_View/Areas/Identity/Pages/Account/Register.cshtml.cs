@@ -97,6 +97,7 @@ namespace App_View.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             [DataType(DataType.Text)]
+            [StringLength(100, ErrorMessage = "{0} phải dài ít nhất là {2} và tối đa {1} ký tự.", MinimumLength = 10)]
             [Required(ErrorMessage = "Tên tài Khoản không được để trống.")]
             [Display(Name = "Tên tài Khoản")]
             public string UserName { get; set; }

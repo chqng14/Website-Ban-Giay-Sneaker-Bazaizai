@@ -1,10 +1,7 @@
 ﻿@{
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
-<link href="assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
 
-<!-- page js -->
-<script src="assets/vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
 <style>
     * {
         margin: 0;
@@ -15,7 +12,8 @@
     .chartMenu {
         width: 100vw;
         height: 40px;
-        background: #1A1A1A;
+       /* background: #1A1A1A;*/
+        background: white;
         color: rgba(54, 162, 235, 1);
     }
 
@@ -26,8 +24,9 @@
 
     .chartCard {
         width: 100vw;
-        height: calc(100vh - 40px);
-        background: rgba(54, 162, 235, 0.2);
+        height: calc(80vh - 40px);
+     /*   background: rgba(54, 162, 235, 0.2);*/
+        background: white;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -43,10 +42,10 @@
     }
 
     /*    .custom-scroll-table {
-                                            max-height: 10px;
-                                            overflow-y: auto;
-                                        }
-                                    */
+                                                            max-height: 10px;
+                                                            overflow-y: auto;
+                                                        }
+                                                    */
     .ChoXacNhan {
         background-color: burlywood;
     }
@@ -72,37 +71,51 @@
         background-color: white;
     }
 
+    .chartCard {
+        display: flex;
+        flex-direction: column;
+    }
+
 </style>
 
 
 <h1 style="text-align:center">Thống kê doanh thu theo đơn hàng</h1>
-<div class="form-group">
-    <label>Range Datepicker</label>
-    <div class="d-flex align-items-center">
-        <input type="text" class="form-control datepicker-input" name="start" placeholder="From">
-        <span class="p-h-10">to</span>
-        <input type="text" class="form-control datepicker-input" name="end" placeholder="To">
-    </div>
-</div>
+
 <div class="row">
-    <input type="date" id="fromDate">
+@*    <input type="date" id="fromDate">
     <input type="date" id="toDate">
-    @*<button> Hôm nay</button>
-    <button> Hôm qua</button>
-    <button> Tuần này</button>*@
-  
-    <div class="chartCard">
-       
+*@    <div class="chartCard">
+        <div class="row" style="width: 100%;
+    margin-left: 7%;
+    margin-top: -2%;">
+            <div class="form-group">
+
+                <div class="d-flex align-items-center">
+                    <label style="margin-right: 2%;
+    width: 50%;
+    margin-top: 2%;">Chọn phạm vi</label>
+                    <input id="fromDate" type="date" class="form-control datepicker-input" name="start" placeholder="From">
+                    <span class="p-h-10">to</span>
+                    <input id="toDate" type="date" class="form-control datepicker-input" name="end" placeholder="To">
+                </div>
+            </div>
+        </div>
 
         <div class="chartBox">
             <canvas id="myChart" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"></canvas>
 
         </div>
     </div>
-   
-   
+
+
 </div>
 <button class="btn btn-kio" onclick="exportToExcel()">
+    <i class="anticon anticon-file-excel m-r-5"></i>
+    <span>
+        Tải xuống dữ liệu
+    </span>
+</button>
+@*<button class="btn btn-kio" onclick="exportToExcel()">
     <i class="anticon anticon-file-excel m-r-5"></i>
     <span>
         Xuất Excel
@@ -111,9 +124,9 @@
 <button class="btn btn-kio" onclick="downloadImg()">
     <i class="anticon anticon-file-excel m-r-5"></i>
     <span>
-      Tải ảnh biểu đồ
+        Tải ảnh biểu đồ
     </span>
-</button>
+</button>*@
 <table id="dataTable" class="table table-bordered custom-scroll-table">
     <thead>
         <tr style="background-color:mediumturquoise">
@@ -139,9 +152,9 @@
 </table>
 <table id="datachart" class="table table-bordered custom-scroll-table" style=" display: none;">
     <thead>
-        <tr >
+        <tr>
             <th>STT</th>
-            <th>Ngày</th>         
+            <th>Ngày</th>
             <th>Đơn hàng thành công</th>
             <th>Đơn hàng đã hủy</th>
             <th>Tổng số đơn hàng</th>
@@ -156,19 +169,20 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-  
+
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
 
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 
 
- 
+
 
 
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
     <script src="~/Admin/moment/moment.min.js"></script>
     <script>
 
@@ -271,7 +285,8 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     datasetFill: false,
-
+                    backgroundColor: 'white',
+                
                     scales: {
                         y: {
                             //gridLines: {
@@ -440,8 +455,8 @@
 
         //function exportToExcel() {
         //    var wb = XLSX.utils.book_new();
-        //    var ws = XLSX.utils.table_to_sheet(document.getElementById('dataTable')); 
-        //    var ws1 = XLSX.utils.table_to_sheet(document.getElementById('dataChar')); 
+        //    var ws = XLSX.utils.table_to_sheet(document.getElementById('dataTable'));
+        //    var ws1 = XLSX.utils.table_to_sheet(document.getElementById('dataChar'));
 
         //    XLSX.utils.book_append_sheet(wb, ws, 'DanhSachDonHang');
 
@@ -450,7 +465,7 @@
         function exportToExcel() {
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
-            var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
             var yyyy = today.getFullYear();
             var currentDate = yyyy + '-' + mm + '-' + dd;
 
@@ -460,22 +475,24 @@
             var ws1 = XLSX.utils.table_to_sheet(document.getElementById('datachart'));
             XLSX.utils.book_append_sheet(wb, ws1, 'DataChart');
             XLSX.utils.book_append_sheet(wb, ws, 'DanhSachDonHang');
-           
+
 
             var fileName = 'DoanhThuTheoDonHang' + currentDate + '.xlsx';
-
+            var fileanh = 'DoanhThuTheoDonHang' + currentDate + '.png';
             XLSX.writeFile(wb, fileName);
+            downloadImg(fileanh);
         }
 
-        function downloadImg() {
+        function downloadImg(fileanh) {
             const imageLink = document.createElement('a');
             const canvas = document.getElementById('myChart');
-            imageLink.download = 'canvas.png';
-            imageLink.href =canvas.toDataURL('image/png', 1); 
+            //imageLink.download = 'canvas.png';
+            imageLink.download = fileanh;
+            imageLink.href = canvas.toDataURL('image/png', 1);
             imageLink.click();
 
         }
-      
+
 
 
 

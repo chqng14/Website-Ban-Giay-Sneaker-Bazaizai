@@ -1,16 +1,19 @@
-﻿@page "/admin/members"
-@model App_View.Areas.Admin.Pages.User.IndexModel
+﻿@page "/admin/Listofemployee"
+@using X.PagedList.Mvc.Core;
+@using X.PagedList.Web.Common;
+@model App_View.Areas.Admin.Pages.User.DanhSachNhanVienModel
 @{
-    ViewData["Title"] = "Danh sách thành viên";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 
 }
 
+<!-- Content Wrapper START -->
+@*<div class="main-content">*@
 <div class="page-header">
     <div class="header-sub-title">
         <nav class="breadcrumb breadcrumb-dash">
             <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản lý người dùng</a>
-            <span class="breadcrumb-item active">Danh sách khách hàng</span>
+            <span class="breadcrumb-item active">Danh sách nhân viên</span>
         </nav>
     </div>
 </div>
@@ -24,11 +27,23 @@
                 </div>
                 <div class="media-body m-l-15">
                     <h6 class="mb-0">Tất cả thành viên (@Model.users.Count())</h6>
-                    <span class="text-gray font-size-13">Khách hàng</span>
+                    <span class="text-gray font-size-13">Nhân viên</span>
                 </div>
             </div>
         </div>
-        
+        <div class="col-md-6">
+            <div class="text-md-right m-v-10">
+                <div class="btn-group">
+                    <button id="list-view-btn" type="button" class="btn btn-default btn-icon active">
+                        <i class="anticon anticon-ordered-list"></i>
+                    </button>
+                    <button id="card-view-btn" type="button" class="btn btn-default btn-icon ">
+                        <i class="anticon anticon-appstore"></i>
+                    </button>
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <a class="btn btn-primary btn-tone" asp-page="/User/AddAccount">
@@ -53,7 +68,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var user in Model.users)
+                                    @foreach (var user in Model.usersManKhac)
                                     {
                                         <tr>
                                             <td>
@@ -79,11 +94,21 @@
                                                     <a style="text-decoration: none" class="text-dark" asp-page="./AddRole" asp-route-id="@user.Id">@user.RoleName</a>
                                                 }
                                             </td>
-                                     
+                                            @*  <td>
+                                        <button class="m-r-5 btn btn-icon btn-hover btn-rounded">
+                                        <i class="anticon anticon-facebook"></i>
+                                        </button>
+                                        <button class="m-r-5 btn btn-icon btn-hover btn-rounded">
+                                        <i class="anticon anticon-twitter"></i>
+                                        </button>
+                                        <button class="m-r-5 btn btn-icon btn-hover btn-rounded">
+                                        <i class="anticon anticon-instagram"></i>
+                                        </button>
+                                        </td>*@
                                             <td style="width: 15%;">
                                                 <a class="btn btn-primary btn-tone" asp-page="./SetPassword" asp-route-id="@user.Id">
                                                     <i class="anticon anticon-key"></i>
-                                                
+                                                    @*<span class="m-l-5">Đặt mật khẩu</span>*@
                                                 </a>
                                                 @if (user.LockoutEnd != null)
                                                 {
@@ -105,7 +130,7 @@
                                                         {
                                                             <a class="btn btn-primary btn-tone" asp-page="./MoKhoaTaiKhoan" asp-route-id="@user.Id">
                                                                 <i class="anticon anticon-unlock"></i>
-                                                                
+                                                                @*  <span class="m-l-5">Mở tài khoản</span>*@
                                                             </a>
 
                                                         }
@@ -118,7 +143,8 @@
                                                         {
                                                             <a class="btn btn-primary btn-tone" asp-page="./KhoaTaiKhoan" asp-route-id="@user.Id">
                                                                 <i class="anticon anticon-lock"></i>
-                                                              
+                                                                @*                                                                    <span class="m-l-5">Khóa tài khoản</span>
+                                                *@
                                                             </a>
                                                         }
                                                         else
@@ -136,7 +162,8 @@
                                                 {
                                                     <a class="btn btn-primary btn-tone" asp-page="./KhoaTaiKhoan" asp-route-id="@user.Id">
                                                         <i class="anticon anticon-lock"></i>
-                                                        
+                                                        @*                                                            <span class="m-l-5">Khóa tài khoản</span>
+                                                *@
                                                     </a>
                                                 }
                                             </td>
@@ -151,7 +178,51 @@
                 </div>
             </div>
         </div>
+
+        <div class="row d-none" id="card-view">
+            @foreach (var user in Model.users)
+            {
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="m-t-20 text-center">
+                                <div class="avatar avatar-image" style="height: 100px; width: 100px;">
+                                    <img src="@user.AnhDaiDien" alt="">
+                                </div>
+                                <h4 class="m-t-30">@user.UserName</h4>
+                                <p>@user.Email</p>
+                                <p>@user.RoleName</p>
+                            </div>
+                            <div class="text-center m-t-30">
+                                <a class="btn btn-primary btn-tone" asp-page="./UserDetail" asp-route-id="@user.Id">
+                                    <i class="anticon anticon-eye"></i>
+                                    <span class="m-l-5"></span>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+            @{
+                var pagingmodel = new XTL.Helpers.PagingModel()
+            {
+                currentpage = Model.currentPage,
+                countpages = Model.countPages,
+                generateUrl = (int? p) => Url.Page("./DanhSachNhanVien", new { p = p })
+            };
+            }
+            <partial name="_Paging" model="@pagingmodel" />
+
+        </div>
     </div>
+    @* </div>*@
+
+
+
+
 </div>
 @section Scripts
     {

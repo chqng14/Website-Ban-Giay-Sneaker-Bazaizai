@@ -1,28 +1,20 @@
 ﻿using App_Data.Models;
-using DocumentFormat.OpenXml.InkML;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Security.Claims;
-using System.Text.Encodings.Web;
 using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Areas.Admin.Pages.User
 {
-    public class KhoaTaiKhoanModel : PageModel
+    public class MoKhoaTaiKhoanModel : PageModel
     {
-
         private readonly UserManager<NguoiDung> _userManager;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly RoleManager<ChucVu> _roleManager;
         private readonly IEmailSender _emailSender;
-        public KhoaTaiKhoanModel(
+        public MoKhoaTaiKhoanModel(
             UserManager<NguoiDung> userManager,
             SignInManager<NguoiDung> signInManager,
             RoleManager<ChucVu> roleManager,
@@ -39,8 +31,6 @@ namespace App_View.Areas.Admin.Pages.User
         [TempData]
         public string StatusMessage { get; set; }
 
-        //public DateTimeOffset? LockoutEnd { get; set; }
-        //public Boolean LockoutEnabled { get; set; }
         public NguoiDung user { get; set; }
 
         public class InputModel
@@ -48,9 +38,6 @@ namespace App_View.Areas.Admin.Pages.User
             [DataType(DataType.DateTime)]
             [Display(Name = "Thời gian mở khóa tài khoản")]
             public DateTimeOffset? LockoutEnd { get; set; }
-
-            //[Required]
-            //public Boolean LockoutEnabled { get; set; }
 
         }
 
@@ -102,48 +89,63 @@ namespace App_View.Areas.Admin.Pages.User
                     i = 3;
                 }
             }
-            TimeSpan offsetPlus7 = TimeSpan.FromHours(7);
             IdentityResult ResultLockoutEnd = null;
-            //IdentityResult ResultLockoutEnabled = null;
-            if (Input.LockoutEnd == null /*&& Input.LockoutEnabled == true*/)
+            if (Input.LockoutEnd == null)
             {
-                ResultLockoutEnd = await _userManager.SetLockoutEndDateAsync(user, DateTime.MaxValue);
+                ResultLockoutEnd = await _userManager.SetLockoutEndDateAsync(user, null);
                 await _userManager.SetLockoutEnabledAsync(user, true);
-                //ResultLockoutEnabled = await _userManager.SetLockoutEnabledAsync(user, true);
             }
-            else /*if (Input.LockoutEnd != null && Input.LockoutEnabled == true)*/
+            else
             {
-                if(Input.LockoutEnd<= DateTime.Now)
+                var ThoiGianKhoa = ((DateTimeOffset)user.LockoutEnd).DateTime;
+                var ThoiGianMo = ((DateTimeOffset)Input.LockoutEnd).DateTime;
+                TimeSpan offset = ((DateTimeOffset)user.LockoutEnd).Offset;
+                TimeSpan offsetPlus7 = TimeSpan.FromHours(7);
+                if (offset == offsetPlus7)
                 {
-                    ModelState.AddModelError(string.Empty, "Thời gian khóa phải ở tương lai.");
-                    return Page();
+                   if (ThoiGianMo < DateTime.Now)
+                    {
+                        ModelState.AddModelError(string.Empty, "Thời gian mở khóa Không phải thời gian trong quá khứ.");
+                        return Page();
+                    }
+                    else if (ThoiGianMo > ThoiGianKhoa)
+                    {
+                        ModelState.AddModelError(string.Empty, "Thời gian mở khóa phải sớm hơn thời gian khóa.");
+                        return Page();
+                    }
+                }
+                else
+                {
+                    ThoiGianKhoa = ((DateTimeOffset)user.LockoutEnd).ToOffset(offsetPlus7).DateTime;
+                    if (ThoiGianMo < DateTime.Now)
+                    {
+                        ModelState.AddModelError(string.Empty, "Thời gian mở khóa Không phải thời gian trong quá khứ.");
+                        return Page();
+                    }
+                    else if (ThoiGianMo > ThoiGianKhoa)
+                    {
+                        ModelState.AddModelError(string.Empty, "Thời gian mở khóa phải sớm hơn thời gian khóa.");
+                        return Page();
+                    }
                 }
                 ResultLockoutEnd = await _userManager.SetLockoutEndDateAsync(user, Input.LockoutEnd);
                 await _userManager.SetLockoutEnabledAsync(user, true);
-                //ResultLockoutEnabled = await _userManager.SetLockoutEnabledAsync(user, true);
-                
+
+
             }
 
-            if (ResultLockoutEnd == null /*|| ResultLockoutEnabled == null*/ ||
-     !ResultLockoutEnd.Succeeded /*|| !ResultLockoutEnabled.Succeeded*/)
+            if (ResultLockoutEnd == null ||
+     !ResultLockoutEnd.Succeeded)
             {
-                ModelState.AddModelError(string.Empty, "Có lỗi xảy ra khi thực hiện khóa tài khoản.");
+                ModelState.AddModelError(string.Empty, "Có lỗi xảy ra khi thực hiện mở khóa tài khoản.");
                 return Page();
             }
-            var NguoiKhoa = await _userManager.GetUserAsync(User);
-            DateTimeOffset? time;
-            if (Input.LockoutEnd == null)
-            {
-                 time = DateTimeOffset.MaxValue.DateTime;
-            }
-            else time = ((DateTimeOffset)Input.LockoutEnd).DateTime;
-            await _emailSender.SendEmailAsync(user.Email, "Thông báo về việc khóa tài khoản của bạn",
-                     $"Bạn đã vi phạm điều khoản trên Web bán giày thể thao Bazaizai. Tài khoản của bạn đã bị khóa bởi quản trị web: {NguoiKhoa.UserName} cho đến:{time} . Mọi thắc mắc xin vui lòng liên hệ đội ngũ hỗ trợ 0369426223.");
-            //await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);         
-            //await _signInManager.RefreshSignInAsync(user);
-            await _userManager.UpdateSecurityStampAsync(user);
-            StatusMessage = $"Bạn vừa khóa tài khoản người dùng: {user.UserName}";
 
+            await _emailSender.SendEmailAsync(user.Email, "Thông báo về việc mở khóa tài khoản của bạn",
+                     $"Tài khoản của bạn đã được mở khóa. Mong bạn sẽ tuân thủ điều khoản trên web chúng tôi. Chân thành xin lỗi bạn vì sự bất tiện này. Mọi thắc mắc xin vui lòng liên hệ đội ngũ hỗ trợ 0369426223.");
+            await _userManager.UpdateSecurityStampAsync(user);
+            await _signInManager.RefreshSignInAsync(user);
+            StatusMessage = $"Bạn vừa mở khóa tài khoản người dùng: {user.UserName}";
             if (i == 1)
             {
                 return RedirectToPage("./DanhSachNhanVien");
