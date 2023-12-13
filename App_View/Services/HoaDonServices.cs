@@ -58,7 +58,10 @@ namespace App_View.Services
         {
             return await _httpClient.GetFromJsonAsync<List<HoaDonTest>>($"https://localhost:7038/api/HoaDon/GetHoaDonOnlineTest?idNguoiDung={idNguoiDung}");
         }
-
+        public async Task<HoaDonTest> GetHoaDonOnlineById(string idHoaDon, string idNguoiDung)
+        {
+            return await _httpClient.GetFromJsonAsync<HoaDonTest>($"https://localhost:7038/api/HoaDon/GetHoaDonOnlineById?idHoadon={idHoaDon}&idNguoiDung={idNguoiDung}");
+        }
         public async Task<HoaDonTest> GetHoaDonOnlineByMa(string Ma)
         {
             return await _httpClient.GetFromJsonAsync<HoaDonTest>($"https://localhost:7038/api/HoaDon/GetHoaDonOnlineByMa?Ma={Ma}");
@@ -173,7 +176,7 @@ namespace App_View.Services
             }
         }
 
-        public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, string? idNguoiDung, int TrangThai, string? Lido,DateTime? ngayCapNhatGanNhat)
+        public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, string? idNguoiDung, int TrangThai, string? Lido, DateTime? ngayCapNhatGanNhat)
         {
             try
             {
