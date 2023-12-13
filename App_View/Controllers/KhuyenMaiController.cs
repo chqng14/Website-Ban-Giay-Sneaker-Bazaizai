@@ -14,13 +14,13 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> GetAllKhuyenMai()
         {
-            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await httpClient.GetAsync("https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync());
+            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await httpClient.GetAsync("https://bazaizaiapi-v2.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync());
             return View(KhuyenMais);
         }
         public async Task<IActionResult> DetailKhuyenMai(string id)
         {
 
-            var kichCo = (JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await httpClient.GetAsync("https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKhuyenMai == id);
+            var kichCo = (JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await httpClient.GetAsync("https://bazaizaiapi-v2.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKhuyenMai == id);
             return View(kichCo);
 
         }
@@ -33,20 +33,20 @@ namespace App_View.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateKhuyenMai(KhuyenMai q)
         {
-            await httpClient.PostAsync($"https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai?Ten={q.TenKhuyenMai}&ngayBD={q.NgayBatDau}&ngayKT={q.NgayKetThuc}&trangThai={q.TrangThai}&mucGiam={q.MucGiam}&loaiHinh={q.LoaiHinhKM}", null);
+            await httpClient.PostAsync($"https://bazaizaiapi-v2.azurewebsites.net/api/KhuyenMai?Ten={q.TenKhuyenMai}&ngayBD={q.NgayBatDau}&ngayKT={q.NgayKetThuc}&trangThai={q.TrangThai}&mucGiam={q.MucGiam}&loaiHinh={q.LoaiHinhKM}", null);
             return RedirectToAction("GetAllKhuyenMai");
         }
 
 
         public async Task<IActionResult> DeleteKhuyenMai(string id)
         {
-            await httpClient.DeleteAsync($"https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai/{id}");
+            await httpClient.DeleteAsync($"https://bazaizaiapi-v2.azurewebsites.net/api/KhuyenMai/{id}");
             return RedirectToAction("GetAllKhuyenMai");
         }
 
         public async Task<IActionResult> EditKhuyenMai(string IdKhuyenMai)
         {
-            var kichCo = (JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await httpClient.GetAsync("https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKhuyenMai == IdKhuyenMai);
+            var kichCo = (JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await httpClient.GetAsync("https://bazaizaiapi-v2.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKhuyenMai == IdKhuyenMai);
 
             if (kichCo == null)
             {
@@ -59,7 +59,7 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> EditKhuyenMai(KhuyenMai q)
         {
-            var apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai/{q.IdKhuyenMai}?Ten={q.TenKhuyenMai}&ngayBD={q.NgayBatDau}&ngayKT={q.NgayKetThuc}&trangThai={q.TrangThai}&mucGiam={q.MucGiam}&loaiHinh={q.LoaiHinhKM}";
+            var apiUrl = $"https://bazaizaiapi-v2.azurewebsites.net/api/KhuyenMai/{q.IdKhuyenMai}?Ten={q.TenKhuyenMai}&ngayBD={q.NgayBatDau}&ngayKT={q.NgayKetThuc}&trangThai={q.TrangThai}&mucGiam={q.MucGiam}&loaiHinh={q.LoaiHinhKM}";
 
             var response = await httpClient.PutAsync(apiUrl, null);
 

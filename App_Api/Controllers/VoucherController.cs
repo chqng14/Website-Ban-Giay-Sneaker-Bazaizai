@@ -19,6 +19,7 @@ using System.Drawing;
 using static App_Data.Repositories.TrangThai;
 using Azure.Storage.Blobs;
 using Microsoft.AspNetCore.Http;
+using OpenXmlPowerTools.HtmlToWml;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -109,7 +110,7 @@ namespace App_Api.Controllers
             var VoucherGet = GetAllVoucher().FirstOrDefault(c => c.IdVoucher == id);
             if (VoucherGet != null)
             {
-                if (VoucherGet.TrangThai != (int)TrangThaiVoucher.KhongHoatDong)
+                if (VoucherGet.TrangThai != (int)TrangThaiVoucher.DaHuy)
                 {
                     VoucherGet!.TrangThai = (int)TrangThaiVoucher.DaHuy;
                     allRepo.EditItem(VoucherGet);
@@ -133,6 +134,10 @@ namespace App_Api.Controllers
                 else if (VoucherGet.NgayBatDau > DateTime.Now && VoucherGet.NgayKetThuc > DateTime.Now)
                 {
                     VoucherGet.TrangThai = (int)TrangThaiVoucher.ChuaBatDau;
+                }
+                else
+                {
+                    VoucherGet.TrangThai = (int)TrangThaiVoucher.KhongHoatDong;
                 }
                 return allRepo.EditItem(VoucherGet);
             }
@@ -259,6 +264,10 @@ namespace App_Api.Controllers
                 {
                     VoucherGet.TrangThai = (int)TrangThaiVoucher.ChuaHoatDongTaiQuay;
                 }
+                else
+                {
+                    VoucherGet.TrangThai = (int)TrangThaiVoucher.KhongHoatDongTaiQuay;
+                }
                 return allRepo.EditItem(VoucherGet);
             }
             return false;
@@ -372,7 +381,7 @@ namespace App_Api.Controllers
                             }
                         }
 
-                        var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
+                        var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=bazaizaistg;AccountKey=E5dRTMV054IsGz5zlWw4jTtNDQPXSpabEKn+FY6oKsRs61c0wYvlCzkJ7OM+52M6IsqEV4V+2lU4+AStUJRzlg==;EndpointSuffix=core.windows.net");
                         var containerClient = blobServiceClient.GetBlobContainerClient("anhvoucher");
 
                         // Tải lên hình ảnh QR Code lên Azure Blob Storage

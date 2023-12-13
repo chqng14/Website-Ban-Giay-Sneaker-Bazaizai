@@ -179,7 +179,10 @@
                         icon: 'success'
                     }).then((result) => {
                         if (result.isConfirmed || result.isDismissed) {
-                            location.reload(); // Reload trang khi ấn OK
+                            // location.reload(); // Reload trang khi ấn OK
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500);
                         }
                     });
                 } else {
@@ -189,7 +192,10 @@
                         icon: 'error'
                     }).then((result) => {
                         if (result.isConfirmed || result.isDismissed) {
-                            location.reload(); // Reload trang khi ấn OK
+                            // location.reload(); // Reload trang khi ấn OK
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500);
                         }
                     });
                 }
@@ -203,7 +209,10 @@
                     icon: 'error'
                 }).then((result) => {
                     if (result.isConfirmed || result.isDismissed) {
-                        location.reload(); // Reload trang khi ấn OK
+                        // location.reload(); // Reload trang khi ấn OK
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1500);
                     }
                 });
                 $('#cancel').modal('toggle');
@@ -226,7 +235,10 @@
                         icon: 'success'
                     }).then((result) => {
                         if (result.isConfirmed || result.isDismissed) {
-                            location.reload(); // Reload trang khi ấn OK
+                            // location.reload(); // Reload trang khi ấn OK
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500);
                         }
                     });
                 } else {
@@ -236,7 +248,10 @@
                         icon: 'error'
                     }).then((result) => {
                         if (result.isConfirmed || result.isDismissed) {
-                            location.reload(); // Reload trang khi ấn OK
+                            // location.reload(); // Reload trang khi ấn OK
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500);
                         }
                     });
                 }
@@ -249,7 +264,10 @@
                     icon: 'error'
                 }).then((result) => {
                     if (result.isConfirmed || result.isDismissed) {
-                        location.reload(); // Reload trang khi ấn OK
+                        // location.reload(); // Reload trang khi ấn OK
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1500);
                     }
                 });
                 $('#restore').modal('hide');

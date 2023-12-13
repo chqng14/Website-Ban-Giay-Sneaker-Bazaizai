@@ -7,7 +7,19 @@
 		<UserSecretsId>aspnet-App_View-674261e7-97b6-45eb-9b85-a143f6bc4e29</UserSecretsId>
 	</PropertyGroup>
 
-
+	<ItemGroup>
+		<Content Remove="wwwroot\AnhSale\logo.jpg" />
+		<Content Remove="wwwroot\Admin\css\banHangTaiQuay.css" />
+		<Content Remove="wwwroot\Admin\css\Knorke.ttf" />
+		<Content Remove="wwwroot\AnhSale\z4376551283630_1d1d6c1a9b01210441bb54a3df5d3e40.jpg" />
+		<Content Remove="wwwroot\css\ForgotPassword.css" />
+		<Content Remove="wwwroot\images\banners\Banner sale.png" />
+		<Content Remove="wwwroot\images\banners\navbar sale.png" />
+		<Content Remove="wwwroot\js\toast.js" />
+		<Content Remove="wwwroot\PageIdentity\AccessDenied.png" />
+		<Content Remove="wwwroot\PageIdentity\ForgotPasswordConfirmation.jpg" />
+		<Content Remove="wwwroot\PageIdentity\pagenotfound.png" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
@@ -62,14 +74,16 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-	  <Content Remove="wwwroot\AnhSale\host.png" />
-	  <Content Remove="wwwroot\AnhSale\local.png" />
-	  <Content Remove="wwwroot\images\VoucherNguoiDungQRCode\logo.jpg" />
+		<Content Remove="wwwroot\AnhSale\host.png" />
+		<Content Remove="wwwroot\AnhSale\local.png" />
+		<Content Remove="wwwroot\images\VoucherNguoiDungQRCode\logo.jpg" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Folder Include="mailssave\" />
+		<Folder Include="Views\DanhGia\" />
 		<Folder Include="wwwroot\AnhSanPham\" />
+		<Folder Include="wwwroot\images\VoucherNguoiDungQRCode\" />
 		<Folder Include="wwwroot\images\VoucherQRCode\" />
 		<Folder Include="wwwroot\images\VoucherNguoiDungQRCode\" />
 		<Folder Include="wwwroot\images\QRCode\" />

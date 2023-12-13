@@ -118,16 +118,29 @@
                     }
                 </td>
                 <td>
-                    <div class="btn-group dropdown" style="cursor: pointer">
-                        <i class="fas fa-bars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
-                        <div class="dropdown-menu">
-                            <a asp-action="GiveVouchersToUsers" class="dropdown-item" asp-route-maVoucher="@item.MaVoucher">
-                                <i class="anticon anticon-gift"></i>
-                                Tặng voucher
-                            </a>
-                            <a asp-action="Edit" class="dropdown-item" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i> Chỉnh sửa</a>
+                    @if (item.TrangThai == 0)
+                    {
+                        <div class="btn-group dropdown" style="cursor: pointer">
+                            <i class="fas fa-bars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                            <div class="dropdown-menu">
+                                <a asp-action="GiveVouchersToUsers" class="dropdown-item" asp-route-maVoucher="@item.MaVoucher">
+                                    <i class="anticon anticon-gift"></i>
+                                    Tặng voucher
+                                </a>
+                                <a asp-action="Edit" class="dropdown-item" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i> Chỉnh sửa</a>
+                            </div>
                         </div>
-                    </div>
+                    }
+                    else
+                    {
+                        <div class="btn-group dropdown" style="cursor: pointer">
+                            <i class="fas fa-bars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                            <div class="dropdown-menu">
+                                <a asp-action="Edit" class="dropdown-item" asp-route-id="@item.IdVoucher"><i class="anticon anticon-edit"></i> Chỉnh sửa</a>
+                            </div>
+                        </div>
+                    }
+                   
                 </td>
                 <td>
                     <input type="checkbox" class="voucher-checkbox" data-value="@item.IdVoucher" />

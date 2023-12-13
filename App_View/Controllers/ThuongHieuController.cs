@@ -14,13 +14,13 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> GetAllThuongHieu()
         {
-            var KichCos = JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("https://bazaizaistoreapi.azurewebsites.net/api/ThuongHieu")).Content.ReadAsStringAsync());
+            var KichCos = JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("https://bazaizaiapi-v2.azurewebsites.net/api/ThuongHieu")).Content.ReadAsStringAsync());
             return View(KichCos);
         }
         public async Task<IActionResult> DetailThuongHieu(string id)
         {
 
-            var kichCo = (JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("https://bazaizaistoreapi.azurewebsites.net/api/ThuongHieu")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdThuongHieu == id);
+            var kichCo = (JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("https://bazaizaiapi-v2.azurewebsites.net/api/ThuongHieu")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdThuongHieu == id);
             return View(kichCo);
 
         }
@@ -33,20 +33,20 @@ namespace App_View.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateThuongHieu(ThuongHieu q)
         {
-            await httpClient.PostAsync($"https://bazaizaistoreapi.azurewebsites.net/api/ThuongHieu?TrangThai={q.TrangThai}&Ten={q.TenThuongHieu}", null);
+            await httpClient.PostAsync($"https://bazaizaiapi-v2.azurewebsites.net/api/ThuongHieu?TrangThai={q.TrangThai}&Ten={q.TenThuongHieu}", null);
             return RedirectToAction("GetAllThuongHieu");
         }
 
 
         public async Task<IActionResult> DeleteThuongHieu(string id)
         {
-            await httpClient.DeleteAsync($"https://bazaizaistoreapi.azurewebsites.net/api/ThuongHieu/{id}");
+            await httpClient.DeleteAsync($"https://bazaizaiapi-v2.azurewebsites.net/api/ThuongHieu/{id}");
             return RedirectToAction("GetAllThuongHieu");
         }
 
         public async Task<IActionResult> EditThuongHieu(string Id)
         {
-            var kichCo = (JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("https://bazaizaistoreapi.azurewebsites.net/api/ThuongHieu")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdThuongHieu == Id);
+            var kichCo = (JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("https://bazaizaiapi-v2.azurewebsites.net/api/ThuongHieu")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdThuongHieu == Id);
 
             if (kichCo == null)
             {
@@ -59,7 +59,7 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> EditThuongHieu(ThuongHieu a)
         {
-            var apiUrl = $"https://bazaizaistoreapi.azurewebsites.net/api/ThuongHieu/{a.IdThuongHieu}?TrangThai={a.TrangThai}&Ten={a.TenThuongHieu}";
+            var apiUrl = $"https://bazaizaiapi-v2.azurewebsites.net/api/ThuongHieu/{a.IdThuongHieu}?TrangThai={a.TrangThai}&Ten={a.TenThuongHieu}";
 
             var response = await httpClient.PutAsync(apiUrl, null);
 

@@ -1,0 +1,502 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+    }
+
+    .chartMenu {
+        width: 100vw;
+        height: 40px;
+       /* background: #1A1A1A;*/
+        background: white;
+        color: rgba(54, 162, 235, 1);
+    }
+
+        .chartMenu p {
+            padding: 10px;
+            font-size: 20px;
+        }
+
+    .chartCard {
+        width: 100vw;
+        height: calc(80vh - 40px);
+     /*   background: rgba(54, 162, 235, 0.2);*/
+        background: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .chartBox {
+        width: 80%;
+        height: 70%;
+        padding: 20px;
+        border-radius: 20px;
+        border: solid 3px rgba(54, 162, 235, 1);
+        background: white;
+    }
+
+    /*    .custom-scroll-table {
+                                                            max-height: 10px;
+                                                            overflow-y: auto;
+                                                        }
+                                                    */
+    .ChoXacNhan {
+        background-color: burlywood;
+    }
+
+    .cholayhang {
+        background-color: coral;
+    }
+
+    .danggiao {
+        background-color: goldenrod;
+    }
+
+    .hoanthanh {
+        background-color: lime;
+    }
+
+    .dahuy {
+        background-color: crimson;
+    }
+
+    /* Thêm định dạng cho các trường hợp khác nếu cần */
+    .default {
+        background-color: white;
+    }
+
+    .chartCard {
+        display: flex;
+        flex-direction: column;
+    }
+
+</style>
+
+
+<h1 style="text-align:center">Thống kê doanh thu theo đơn hàng</h1>
+
+<div class="row">
+@*    <input type="date" id="fromDate">
+    <input type="date" id="toDate">
+*@    <div class="chartCard">
+        <div class="row" style="width: 100%;
+    margin-left: 7%;
+    margin-top: -2%;">
+            <div class="form-group">
+
+                <div class="d-flex align-items-center">
+                    <label style="margin-right: 2%;
+    width: 50%;
+    margin-top: 2%;">Chọn phạm vi</label>
+                    <input id="fromDate" type="date" class="form-control datepicker-input" name="start" placeholder="From">
+                    <span class="p-h-10">to</span>
+                    <input id="toDate" type="date" class="form-control datepicker-input" name="end" placeholder="To">
+                </div>
+            </div>
+        </div>
+
+        <div class="chartBox">
+            <canvas id="myChart" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"></canvas>
+
+        </div>
+    </div>
+
+
+</div>
+<button class="btn btn-kio" onclick="exportToExcel()">
+    <i class="anticon anticon-file-excel m-r-5"></i>
+    <span>
+        Tải xuống dữ liệu
+    </span>
+</button>
+@*<button class="btn btn-kio" onclick="exportToExcel()">
+    <i class="anticon anticon-file-excel m-r-5"></i>
+    <span>
+        Xuất Excel
+    </span>
+</button>
+<button class="btn btn-kio" onclick="downloadImg()">
+    <i class="anticon anticon-file-excel m-r-5"></i>
+    <span>
+        Tải ảnh biểu đồ
+    </span>
+</button>*@
+<table id="dataTable" class="table table-bordered custom-scroll-table">
+    <thead>
+        <tr style="background-color:mediumturquoise">
+            <th>#</th>
+            <th>Mã đơn hàng</th>
+            <th>Ngày</th>
+            <th>Thời gian</th>
+            <th>Giá trị voucher</th>
+            <th>Giá trị khuyến mãi</th>
+            <th>Giá trị đơn hàng</th>
+            <th>Phí vận chuyển</th>
+
+            <th>Thanh toán</th>
+            <th>Tình trạng</th>
+            <th>Họ và tên khách</th>
+            <th>SĐT</th>
+            <th>Tỉnh thành</th>
+            <th>Lí do hủy</th>
+        </tr>
+    </thead>
+    <tbody id="load_data">
+    </tbody>
+</table>
+<table id="datachart" class="table table-bordered custom-scroll-table" style=" display: none;">
+    <thead>
+        <tr>
+            <th>STT</th>
+            <th>Ngày</th>
+            <th>Đơn hàng thành công</th>
+            <th>Đơn hàng đã hủy</th>
+            <th>Tổng số đơn hàng</th>
+            <th>Doanh thu</th>
+        </tr>
+    </thead>
+    <tbody id="load_datachart">
+    </tbody>
+</table>
+
+@section scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+
+
+
+
+
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+    <script src="~/Admin/moment/moment.min.js"></script>
+    <script>
+
+        var arrDonHang = [];
+        var arrDonHangThanhCong = [];
+        var arrDonHangDaHuy = [];
+        var arrDoanhThu = [];
+        var dates = [];
+        var myChart;
+
+        function updateChart(fromDate, toDate) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("BieuDoThongKeHoaDonOnlineTheoNgay", "ThongKe")",
+                data: { fromDate: fromDate, toDate: toDate },
+                success: function (rs) {
+                    console.log(rs.data);
+                    arrDonHangDaHuy = [];
+                    arrDonHangThanhCong = [];
+                    arrDonHang = [];
+                    arrDoanhThu = [];
+                    dates = [];
+
+                    $.each(rs.data, function (i, item) {
+                        console.log("Hi, chào cậu ");
+                        arrDoanhThu.push(item.doanhThu);
+                        arrDonHangThanhCong.push(item.soLuongDonHangThanhCong);
+                        arrDonHangDaHuy.push(item.soLuongDonHangHuy);
+                        arrDonHang.push(item.tongSoDonHang);
+                        console.log(arrDoanhThu);
+                        var strDate = moment(item.ngayTao).format('DD/MM/yyyy');
+                        dates.push(strDate);
+                    });
+                    const minDoanhThu = Math.min(...arrDoanhThu);
+                    //const minDoanhThu = 100000;
+                    console.log(minDoanhThu);
+                    myChart.data.labels = dates;
+                    myChart.data.datasets[0].data = arrDonHang;
+                    myChart.data.datasets[1].data = arrDonHangThanhCong;
+                    myChart.data.datasets[2].data = arrDonHangDaHuy;
+                    myChart.data.datasets[3].data = arrDoanhThu;
+                    console.log(arrDoanhThu);
+                    myChart.options.scales.y.min = minDoanhThu;
+                    myChart.update();
+                    //load_data(rs);
+                    console.log("Hi, chào bạn ");
+                    load_datachart(rs);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            const data = {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Đơn hàng',
+                        backgroundColor: 'rgba(60, 141, 188, 0.9)',
+                        borderColor: 'rgba(60, 141, 188, 0.9)',
+                        pointRadius: 5,
+                        order: 0,
+                        yAxisID: 'match',
+                        data: [],
+
+                    },
+                    {
+                        label: 'Đơn hàng thành công',
+                        backgroundColor: 'rgba(0, 128, 0, 0.9)',
+                        borderColor: 'rgba(0, 128, 0, 0.9)',
+                        pointRadius: 5,
+                        order: 0,
+                        yAxisID: 'match',
+                        data: []
+                    },
+                    {
+                        label: 'Đơn hàng đã hủy',
+                        backgroundColor: 'rgba(255, 0, 0, 0.9)',
+                        borderColor: 'rgba(255, 0, 0, 0.9)',
+                        pointRadius: 5,
+                        order: 0,
+                        yAxisID: 'match',
+                        data: []
+                    },
+                    {
+                        label: 'Doanh thu',
+                        backgroundColor: 'rgba(255, 255, 0, 0.9)',
+                        borderColor: 'rgba(255, 255, 0, 0.9)',
+                        pointRadius: 5,
+                        //order: 1000,
+                        //fill:'start',// đừng thử, đáng sợ lắm
+                        data: []
+                    }
+                ]
+            };
+
+            const config = {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    datasetFill: false,
+                    backgroundColor: 'white',
+                
+                    scales: {
+                        y: {
+                            //gridLines: {
+                            //    color: 'rgba(0, 0, 0, 0.1)' // Màu của đường kẻ ngang cho trục y
+                            //},
+                            beginAtZero: false,
+                            min: 0,
+
+                        },
+                        match: {
+                            beginAtZero: true,
+                            //precision:0,
+                            position: 'right'
+                        }
+                    }
+                }
+            };
+
+            myChart = new Chart(
+                document.getElementById('myChart'),
+                config
+            );
+
+            updateChart('', '');
+            updateTable('', '');
+
+
+        });
+
+        $('#fromDate, #toDate').change(function () {
+            var fromDate = $('#fromDate').val();
+            var toDate = $('#toDate').val();
+            updateChart(fromDate, toDate);
+            updateTable(fromDate, toDate);
+        });
+
+
+        function load_data(data) {
+            var strHtml = "";
+            var totalSoLuongDonHang = 0;
+            var totalSoLuongDonHangHoanThanh = 0;
+            var totalSoLuongDonHangHuy = 0;
+            var totalVoucher = 0;
+            var totalDoanhThu = 0;
+            var totalKhuyenMai = 0;
+            var totalShip = 0;
+            var tgBatDau = "";
+            var tgKetThuc = "";
+            var lastIndex = data.length - 1;
+            $.each(data, function (i, item) {
+                var date = moment(item.ngay).format('DD/MM/yyyy');
+                var backgroundColor = '';
+
+                var statusClass = '';
+                switch (item.tinhTrang) {
+                    case "Chờ xác nhận":
+                        statusClass = 'ChoXacNhan';
+                        break;
+                    case "Chờ lấy hàng":
+                        statusClass = 'cholayhang';
+                        break;
+                    case "Đang giao":
+                        statusClass = 'danggiao';
+                        break;
+                    case "Hoàn thành":
+                        statusClass = 'hoanthanh';
+                        break;
+                    case "Đã hủy":
+                        statusClass = 'dahuy';
+                        break;
+                    // Thêm các trường hợp khác nếu cần
+                    default:
+                        // Mặc định nếu không khớp trường hợp nào
+                        statusClass = 'default';
+                        break;
+                }
+                strHtml += "<tr>";
+                strHtml += "<td>" + (i + 1) + "</td>";
+                strHtml += "<td>" + item.maDonHang + "</td>";
+                strHtml += "<td>" + date + "</td>";
+                strHtml += "<td>" + item.thoiGian + "</td>";
+                strHtml += "<td>" + item.chietKhauHoaDon.toLocaleString('en-US') + "</td>";
+                strHtml += "<td>" + item.tongKhuyenMai.toLocaleString('en-US') + "</td>";
+                strHtml += "<td>" + item.giaTriDon.toLocaleString('en-US') + "</td>";
+                strHtml += "<td>" + item.tienShip.toLocaleString('en-US') + "</td>";
+                strHtml += "<td>" + item.trangThaiThanhToan + "</td>";
+                strHtml += "<td class='" + statusClass + "'>" + item.tinhTrang + "</td>";
+                strHtml += "<td>" + item.tenKhach + "</td>";
+                strHtml += "<td>" + item.sdt + "</td>";
+                strHtml += "<td>" + item.tinhThanh + "</td>";
+                strHtml += "<td>" + item.lidohuy + "</td>";
+                strHtml += "</tr>";
+                if (i === 0) {
+                    tgBatDau = item.thoiGian + " " + date;
+                }
+                if (i === lastIndex) {
+                    tgKetThuc = item.thoiGian + " " + date;
+                }
+                if (item.tinhTrang == "Hoàn thành") {
+                    totalVoucher += item.chietKhauHoaDon;
+                    totalDoanhThu += item.giaTriDon;
+                    totalKhuyenMai += item.tongKhuyenMai;
+                    totalShip += item.tienShip;
+                    totalSoLuongDonHangHoanThanh++;
+                }
+                if (item.tinhTrang == "Đã hủy") {
+                    totalSoLuongDonHangHuy++;
+                }
+                //Tính toán tổng
+                totalSoLuongDonHang++;
+
+            });
+
+            //Thêm ô cuối cùng chứa tổng
+            //colspan='2'
+            strHtml += "<tr>";
+            strHtml += "<td><strong>Tổng</strong></td>";
+            strHtml += "<td><strong>Tổng đơn hàng: " + totalSoLuongDonHang + "</strong></td>";
+            strHtml += "<td colspan='2'><strong>Thời gian:" + tgBatDau + " - " + tgKetThuc + "</strong></td>";
+            strHtml += "<td><strong>" + totalVoucher + "</strong></td>";
+            strHtml += "<td><strong>" + totalKhuyenMai + "</strong></td>";
+            strHtml += "<td><strong>Doanh thu: " + totalDoanhThu.toLocaleString('en-US') + "</strong></td>";
+            strHtml += "<td><strong>Phí vận chuyển: " + totalShip + "</strong></td>";
+            strHtml += "<td><strong></strong></td>";
+            strHtml += "<td><strong>Đơn hoàn thành: " + totalSoLuongDonHangHoanThanh + "</strong></td>";
+            strHtml += "<td><strong></strong></td>";
+            strHtml += "<td><strong></strong></td>";
+            strHtml += "<td><strong></strong></td>";
+            strHtml += "<td><strong>Đơn đã hủy: " + totalSoLuongDonHangHuy + "</strong></td>";
+            strHtml += "</tr>";
+
+
+            $('#load_data').html(strHtml);
+        }
+        function load_datachart(data) {
+            var strHtml = "";
+            console.log("mi");
+            console.log(data.data);
+            console.log("mi");
+            $.each(data.data, function (i, item) {
+                var strDate = moment(item.ngayTao).format('DD/MM/yyyy');
+                strHtml += "<tr>";
+                strHtml += "<td>" + (i + 1) + "</td>";
+                strHtml += "<td>" + strDate + "</td>";
+                strHtml += "<td>" + item.soLuongDonHangThanhCong + "</td>";
+                strHtml += "<td>" + item.soLuongDonHangHuy + "</td>";
+                strHtml += "<td>" + item.tongSoDonHang + "</td>";
+                strHtml += "<td>" + item.doanhThu.toLocaleString('en-US') + "</td>";
+                strHtml += "</tr>";
+            });
+            $('#load_datachart').html(strHtml);
+        }
+        function updateTable(fromDate, toDate) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("ThongTinThongKeHoaDonOnlineTheoNgay", "ThongKe")",
+                data: { fromDate: fromDate, toDate: toDate },
+                success: function (rs) {
+                    console.log("hi");
+                    console.log(rs.data);
+
+                    load_data(rs.data);
+                }
+            });
+        }
+
+        //function exportToExcel() {
+        //    var wb = XLSX.utils.book_new();
+        //    var ws = XLSX.utils.table_to_sheet(document.getElementById('dataTable'));
+        //    var ws1 = XLSX.utils.table_to_sheet(document.getElementById('dataChar'));
+
+        //    XLSX.utils.book_append_sheet(wb, ws, 'DanhSachDonHang');
+
+        //    XLSX.writeFile(wb, 'DanhSachDonHang.xlsx');
+        //}
+        function exportToExcel() {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+            var currentDate = yyyy + '-' + mm + '-' + dd;
+
+            var wb = XLSX.utils.book_new();
+
+            var ws = XLSX.utils.table_to_sheet(document.getElementById('dataTable'));
+            var ws1 = XLSX.utils.table_to_sheet(document.getElementById('datachart'));
+            XLSX.utils.book_append_sheet(wb, ws1, 'DataChart');
+            XLSX.utils.book_append_sheet(wb, ws, 'DanhSachDonHang');
+
+
+            var fileName = 'DoanhThuTheoDonHang' + currentDate + '.xlsx';
+            var fileanh = 'DoanhThuTheoDonHang' + currentDate + '.png';
+            XLSX.writeFile(wb, fileName);
+            downloadImg(fileanh);
+        }
+
+        function downloadImg(fileanh) {
+            const imageLink = document.createElement('a');
+            const canvas = document.getElementById('myChart');
+            //imageLink.download = 'canvas.png';
+            imageLink.download = fileanh;
+            imageLink.href = canvas.toDataURL('image/png', 1);
+            imageLink.click();
+
+        }
+
+
+
+
+
+
+    </script>
+}

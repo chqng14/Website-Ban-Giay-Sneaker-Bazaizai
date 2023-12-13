@@ -13,12 +13,21 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
 <style>
+    a:hover {
+        color: white; /* Màu chữ khi di chuột vào */
+    }
+    label.form-control {
+        border: none;
+        outline: none; 
+    }
     .text-danger {
         color: red;
     }
 
     .register {
-        background: -webkit-linear-gradient(left, #886cff, #00c6ff);
+        /*        background: -webkit-linear-gradient(left, #886cff, #00c6ff);
+        */
+        background-color: white;
         margin-top: 1%;
         padding: 3%;
     }
@@ -91,6 +100,7 @@
     .register .register-form {
         padding: 7%;
         margin-top: 10%;
+        background-color: white;
     }
 
     .btnRegister {
@@ -142,14 +152,28 @@
         margin-bottom: -15%;
         color: #495057;
     }
+
+    .placeholder-style::before {
+        content: "Ngày sinh";
+        color: gray;
+    }
+
+ 
 </style>
 
-
-<partial name="_StatusMessage" for="StatusMessage" />
-<div class="container register">
-    <div class="mb-2">
-        <a class="btn btn-primary" asp-page="../User/Index">Danh sách thành viên</a>
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash" style="background-color: white; ">
+            <a href="#" class="breadcrumb-item " style="text-decoration: none;"><i class="anticon anticon-home m-r-5"></i>Quản lý người dùng</a>
+            <span class="breadcrumb-item active">Tạo tài khoản</span>
+        </nav>
     </div>
+</div>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="container register" style="margin-top: -7%;">
+    @*<div class="mb-2" style="margin-left: 7%;">
+        <a class="btn btn-primary" asp-page="../User/Index">Danh sách thành viên</a>
+    </div>*@
     <div class="row">
         <div class="col-md-12 register-right">
             <div class="tab-content" id="myTabContent">
@@ -170,39 +194,65 @@
                                     <span asp-validation-for="Input.UserName" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <select class="form-control">
-                                        <option class="hidden" selected disabled>Giới tính</option>
+                                    <select class="form-control" asp-for="Input.GioiTinh">
+                                        <option value="" class="hidden" selected disabled>Giới tính</option>
                                         <option value="@((int)GioiTinhMacDinh.Nam)">Nam</option>
                                         <option value="@((int)GioiTinhMacDinh.Nu)">Nữ</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <input asp-for="Input.NgaySinh" type="date" class="form-control" />
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <label class="form-control">
+                                                Ngày sinh
+                                            </label>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <input asp-for="Input.NgaySinh" type="date" class="form-control" placeholder="Ngày sinh" id="birthdayInput" />
+                                        </div>
+                                    </div>
+                                    
                                     <span asp-validation-for="Input.NgaySinh" class="text-danger"></span>
                                 </div>
-
                                 <div class="form-group">
-                                    <select class="form-control" asp-for="Input.ChucVu">
-                                        <option class="hidden" selected disabled>Chức vụ</option>
-                                        @foreach(var item in roles)
-                                        {
-                                            <option value="@item">@item</option>
-                                        }
-                                       
-                                    </select>
+                                    <input asp-for="Input.Diachi" class="form-control" placeholder="Địa chỉ" />
+                                    <span asp-validation-for="Input.Diachi" class="text-danger"></span>
                                 </div>
+
                             </div>
                             <div class="col-md-6">
+
                                 <div class="form-group">
                                     <input asp-for="Input.Email" class="form-control" placeholder="Email *" aria-required="true" />
                                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <input asp-for="Input.Sdt" class="form-control" placeholder="Số điện thoại" value="" />
+                                    <input asp-for="Input.Sdt" class="form-control" placeholder="Số điện thoại" />
                                     <span asp-validation-for="Input.Sdt" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <input asp-for="Input.Password" class="form-control" placeholder="Mật khẩu *" aria-required="true" />
+
+                                    <select class="form-control" asp-for="Input.ChucVu" required>
+                                        <option value="null" class="hidden" selected disabled>Vai trò</option>
+
+                                        @foreach (var item in roles)
+                                        {
+                                            <option value="@item">@item</option>
+                                        }
+
+                                    </select>
+                                    <span asp-validation-for="Input.ChucVu" class="text-danger"></span>
+
+
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        
+                                        <div class="col-md-12">
+                                            <input asp-for="Input.Password" class="form-control" placeholder="Mật khẩu *" aria-required="true" />
+                                        </div>
+                                    </div>
+                                    
                                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
@@ -210,7 +260,12 @@
                                     <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                                 </div>
 
+
+                               
+                               
                                 <input type="submit" class="btnRegister" value="Tạo" />
+                               
+                                <a style="text-align: center;text-decoration: none;" class="btnRegister" asp-page="../User/Index">Danh sách thành viên</a>
                             </div>
                         </div>
                     </form>
@@ -225,4 +280,5 @@
 </div>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
 }

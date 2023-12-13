@@ -1,0 +1,53 @@
+﻿@page "/admin/set-member-lockout/{id}"
+@model App_View.Areas.Admin.Pages.User.KhoaTaiKhoanModel
+
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+
+}
+
+<h3>Thiết lập khóa tài khoản thành viên: @Model.user.UserName</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<form id="khoa-tai-khoan-form" method="post">
+    
+    <div class="col-md-6">
+       
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-floating">
+                <label asp-for="Input.LockoutEnd" class="form-label">Thời gian khóa đến:</label>
+                <input asp-for="Input.LockoutEnd" class="form-control" />
+                <span asp-validation-for="Input.LockoutEnd" class="text-danger"></span>
+            </div>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                Khóa tài khoản
+            </button>
+@*            <button type="submit" class="btn btn-primary">Khóa tài khoản</button>
+*@            <a class="btn btn-primary" asp-page="./Index">Danh sách các thành viên</a>
+
+      
+    </div>
+    <div class="modal fade" id="exampleModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Xác nhận khóa tài khoản</h5>
+                </div>
+                <div class="modal-body">
+                        Bạn có chắc chắn khóa tài khoản thành viên: @Model.user.UserName không
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary">Khóa tài khoản</button>
+@*                    <button type="button" class="btn btn-primary">Có</button>
+*@                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+}

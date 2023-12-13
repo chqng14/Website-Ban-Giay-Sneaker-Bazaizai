@@ -711,6 +711,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="danh-gia">
     <div class="modal-dialog modal-dialog-centered justify-content-center" style="max-width:500px">
         <div class="modal-content">
@@ -721,7 +722,7 @@
                             <h1 class="gl-modal-h1">Chọn sản phẩm để đánh giá</h1>
                         </div>
                     </div>
-                    @foreach (var item in Model.SanPham.Where(c=>c.DanhGia.SaoSp==null))
+                    @foreach (var item in Model.SanPham)
                     {
                         <div class="manage-o__description" style="margin-top:10px">
                             <div class="description__container">
@@ -757,7 +758,16 @@
                                     }
                                     else
                                     {
-                                        <h1 class="gl-modal-h1">Không còn sản phẩm nào cần đánh giá</h1>
+                                        <span data-user-img-id="@item.DanhGia.AnhDaiDien"
+                                              data-user-name-id="@item.DanhGia.TenNguoiDung"
+                                              data-Ngay-id="@item.DanhGia.NgayDanhGia"
+                                              data-mota-id="@item.DanhGia.MoTa"
+                                              data-binhluan-id="@item.DanhGia.BinhLuan"
+                                              data-sao-id="@item.DanhGia.SaoSp"
+                                              data-chatlg-id="@item.DanhGia.ChatLuongSanPham"
+                                              data-Sp-detail-id="@item.IdSanPhamChiTiet"
+                                              data-Sp-img-id="@item.LinkAnh[0]"
+                                              data-Sp-name-id="@item.TenSanPham" data-Sp-mau-id="@item.TenMauSac" data-Sp-kichco-id="@item.TenKichCo" data-modal="modal" data-modal-id="#xem-danh-gia" class="btn btn--e-transparent-brand-b-2 order" style="width: 100px;text-align:center">Xem đánh giá</span>
                                     }
                                 </div>
                             </div>
@@ -1089,7 +1099,7 @@
         });
     </script>
     <!--====== đánh giá ======-->
-    <script>
+    @* <script>
         var isLoading = false;
         isLoading = true;
         var idHoaDon = $('a[data-modal-id="#danh-gia"]').data('idhoadon');
@@ -1098,7 +1108,9 @@
             type: 'GET',
             data: { idHoaDon: idHoaDon },
             success: function (result) {
-                $('#content1').empty().html(result);
+                if (result.mess==null) {
+                    $('#content1').empty().html(result);
+                }
                 isLoading = false;
             },
             error: function (xhr, status, error) {
@@ -1109,7 +1121,7 @@
                 isLoading = false;
             }
         });
-    </script>
+    </script> *@
     <!--====== truyền qua sp ======-->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -1117,7 +1129,7 @@
             danhGiaButtons.forEach(function (button) {
                 button.addEventListener('click', function () {
                     var storedDanhgias = JSON.parse(localStorage.getItem("danhgias")) || {}
-                    if (storedDanhgias[button.dataset.productId]) {
+                    if (storedDanhgias[button.dataset.danhgiaDetailId]) {
                         toast({
                             title: "Bạn đã đánh giá sản phẩm này rồi!",
                             type: "warning",

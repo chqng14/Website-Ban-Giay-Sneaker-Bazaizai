@@ -30,7 +30,7 @@ namespace App_View.Areas.Admin.Controllers
         }
         //public async Task<IActionResult> _GetAllDanhGia()
         //{
-        //    var lst = JsonConvert.DeserializeObject<List<DanhGia>>(await (await httpClient.GetAsync("https://bazaizaistoreapi.azurewebsites.net/api/DanhGia")).Content.ReadAsStringAsync()).ToList();
+        //    var lst = JsonConvert.DeserializeObject<List<DanhGia>>(await (await httpClient.GetAsync("https://bazaizaiapi-v2.azurewebsites.net/api/DanhGia")).Content.ReadAsStringAsync()).ToList();
         //    return PartialView("_GetAllDanhGia", lst);
         //}
         //public async Task<IActionResult> GetAllDanhGiaView()
@@ -70,7 +70,7 @@ namespace App_View.Areas.Admin.Controllers
         //} 
         public async Task<IActionResult> TongSoDanhGiaCuaMoiSpChuaDuyet()
         {
-            //string apiUrl = "https://bazaizaistoreapi.azurewebsites.net/api/DanhGia/GetTongSoDanhGiaCuaMoiSpChuaDuyet";
+            //string apiUrl = "https://bazaizaiapi-v2.azurewebsites.net/api/DanhGia/GetTongSoDanhGiaCuaMoiSpChuaDuyet";
             //using (var httpClient = new HttpClient())
             //{
             //    var apiData = await httpClient.GetStringAsync(apiUrl);

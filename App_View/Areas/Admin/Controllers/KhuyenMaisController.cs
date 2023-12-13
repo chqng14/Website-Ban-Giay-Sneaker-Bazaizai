@@ -20,16 +20,13 @@ using App_View.Services;
 using App_Data.Repositories;
 using Google.Apis.PeopleService.v1.Data;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
-using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Azure.Storage.Blobs;
-using Path = System.IO.Path;
-using System.Drawing.Imaging;
-using Microsoft.AspNetCore.Http;
-using SixLabors.ImageSharp.Formats.Jpeg;
 
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin,NhanVien")]
     public class KhuyenMaisController : Controller
     {
         private readonly BazaizaiContext _context;
@@ -55,61 +52,38 @@ namespace App_View.Areas.Admin.Controllers
             {
                 ViewBag.ThongBao = TempData["ThongBao"].ToString();
             }
-            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync());
-            string hostName = HttpContext.Request.Host.Value;
-            if (hostName.ToLower().Contains("localhost"))
+            var KhuyenMais = await _httpClient.GetFromJsonAsync<List<KhuyenMai>>("https://bazaizaiapi-v2.azurewebsites.net/api/KhuyenMai");
+            var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=bazaizaistg;AccountKey=E5dRTMV054IsGz5zlWw4jTtNDQPXSpabEKn+FY6oKsRs61c0wYvlCzkJ7OM+52M6IsqEV4V+2lU4+AStUJRzlg==;EndpointSuffix=core.windows.net");
+            var containerClient = blobServiceClient.GetBlobContainerClient("anhsale");
+            foreach (var item in KhuyenMais)
             {
-                string currentDirectory = Directory.GetCurrentDirectory();
-                string rootPath = Directory.GetParent(currentDirectory).FullName;
-                string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSale");
-                foreach (var item in KhuyenMais)
+                var blobClient = containerClient.GetBlobClient(item.Url);
+                if (await blobClient.ExistsAsync())
                 {
-                    string imagePath = Path.Combine(uploadDirectory, item.Url);
-                    if (!System.IO.File.Exists(imagePath))
+                    var blobDownloadInfo = await blobClient.DownloadAsync();
+                    using (var streamReader = new StreamReader(blobDownloadInfo.Value.Content))
                     {
-                        item.Url = "host.png";
-                    }
-                }
-            }
-            else
-            {
-                var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
-                var containerClient = blobServiceClient.GetBlobContainerClient("anhsale");
-                foreach (var item in KhuyenMais)
-                {
-                    var blobClient = containerClient.GetBlobClient(item.Url);
-                    if (await blobClient.ExistsAsync() && blobClient.Name == item.Url)
-                    {
-                        var blobDownloadInfo = await blobClient.DownloadAsync();
-                        using (var streamReader = new StreamReader(blobDownloadInfo.Value.Content))
+                        byte[] imageBytes = new byte[blobDownloadInfo.Value.ContentLength];
+                        int bytesRead = 0;
+                        while (bytesRead < imageBytes.Length)
                         {
-                            byte[] imageBytes = new byte[blobDownloadInfo.Value.ContentLength];
-                            int bytesRead = 0;
-                            while (bytesRead < imageBytes.Length)
-                            {
-                                bytesRead += await streamReader.BaseStream.ReadAsync(imageBytes, bytesRead, imageBytes.Length - bytesRead);
-                            }
-
-                            string azureSitePath = Environment.GetEnvironmentVariable("HOME");
-                            string uploadDirectory = Path.Combine(azureSitePath, "site", "wwwroot", "wwwroot", "AnhSale");
-
-                            // Lưu ảnh vào thư mục
-                            string imagePath = Path.Combine(uploadDirectory, item.Url);
-                            await System.IO.File.WriteAllBytesAsync(imagePath, imageBytes);
+                            bytesRead += await streamReader.BaseStream.ReadAsync(imageBytes, bytesRead, imageBytes.Length - bytesRead);
                         }
-                    }
-                    else
-                    {
-                        item.Url = "local.png";
+
+                        string azureSitePath = Environment.GetEnvironmentVariable("HOME");
+                        string uploadDirectory = System.IO.Path.Combine(azureSitePath, "site", "wwwroot", "wwwroot","AnhSale");
+
+                        // Lưu ảnh vào thư mục
+                        string imagePath = System.IO.Path.Combine(uploadDirectory, item.Url);
+                        await System.IO.File.WriteAllBytesAsync(imagePath, imageBytes);
                     }
                 }
             }
-
             return View(KhuyenMais);
         }
         public async Task<IActionResult> LstSaleAsync(string trangThaiSale, string loaiHinhKM, string tenKM)
         {
-            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync());
+            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("https://bazaizaiapi-v2.azurewebsites.net/api/KhuyenMai")).Content.ReadAsStringAsync());
             if (!string.IsNullOrEmpty(trangThaiSale))
             {
                 KhuyenMais = KhuyenMais.Where(x => x.TrangThai == Convert.ToInt32(trangThaiSale)).ToList();
@@ -220,13 +194,20 @@ namespace App_View.Areas.Admin.Controllers
                 {
 
                     using var content = new MultipartFormDataContent();
+                    //content.Add(new StringContent(khuyenMai.TrangThai.ToString()), "trangThai");
+                    //content.Add(new StringContent(khuyenMai.TenKhuyenMai), "Ten");
+                    //content.Add(new StringContent(khuyenMai.NgayBatDau.ToString()), "ngayBD");
+                    //content.Add(new StringContent(khuyenMai.NgayKetThuc.ToString()), "ngayKT");
+                    //content.Add(new StringContent(khuyenMai.LoaiHinhKM.ToString()), "loaiHinh");
+                    //content.Add(new StringContent(khuyenMai.PhamVi), "PhamVi");
+                    //content.Add(new StringContent(khuyenMai.MucGiam.ToString()), "mucGiam");
                     if (formFile != null && formFile.Length > 0)
                     {
 
                         var streamContent = new StreamContent(formFile.OpenReadStream());
                         streamContent.Headers.Add("Content-Type", formFile.ContentType);
                         content.Add(streamContent, "formFile", formFile.FileName);
-                        var response = await _httpClient.PostAsync($"https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai/Create-KhuyenMai?id={khuyenMai.IdKhuyenMai}&Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", content);
+                        var response = await _httpClient.PostAsync($"https://bazaizaiapi-v2.azurewebsites.net/api/KhuyenMai/Create-KhuyenMai?id={khuyenMai.IdKhuyenMai}&Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", content);
                         if (response.IsSuccessStatusCode)
                         {
                             var lstUser = await _userManager.GetUsersInRoleAsync(ChucVuMacDinh.KhachHang.ToString());
@@ -274,8 +255,8 @@ namespace App_View.Areas.Admin.Controllers
             {
                 new SelectListItem { Text = "Hết hạn", Value = "0" },
                 new SelectListItem { Text = "Đang hoạt động", Value = "1" },
-                 new SelectListItem { Text = "Chưa bắt đầu", Value = "1" },
-                  new SelectListItem { Text = "Buộc dừng", Value = "1" }
+                 new SelectListItem { Text = "Chưa bắt đầu", Value = "2" },
+                  new SelectListItem { Text = "Buộc dừng", Value = "3" }
             };
             ViewBag.ListGiamGia = new List<SelectListItem>
             {
@@ -306,13 +287,6 @@ namespace App_View.Areas.Admin.Controllers
             }
 
             var khuyenMai = await _context.khuyenMais.FirstOrDefaultAsync(x => x.IdKhuyenMai == id);
-            var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
-            var containerClient = blobServiceClient.GetBlobContainerClient("anhsale");
-            var blobClient = containerClient.GetBlobClient(khuyenMai.Url);
-            if (!(await blobClient.ExistsAsync()) || blobClient.Name != khuyenMai.Url)
-            {
-                khuyenMai.Url = "local.png";
-            }
             if (khuyenMai == null)
             {
                 return NotFound();
@@ -336,8 +310,8 @@ namespace App_View.Areas.Admin.Controllers
             {
                 new SelectListItem { Text = "Hết hạn", Value = "0" },
                 new SelectListItem { Text = "Đang hoạt động", Value = "1" },
-                 new SelectListItem { Text = "Chưa bắt đầu", Value = "1" },
-                  new SelectListItem { Text = "Buộc dừng", Value = "1" }
+                 new SelectListItem { Text = "Chưa bắt đầu", Value = "2" },
+                  new SelectListItem { Text = "Buộc dừng", Value = "3" }
             };
             ViewBag.ListGiamGia = new List<SelectListItem>
             {
@@ -381,7 +355,7 @@ namespace App_View.Areas.Admin.Controllers
                     var streamContent = new StreamContent(formFile.OpenReadStream());
                     streamContent.Headers.Add("Content-Type", formFile.ContentType);
                     content.Add(streamContent, "formFile", formFile.FileName);
-                    var response = await _httpClient.PutAsync($"https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai/{id}?Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", content);
+                    var response = await _httpClient.PutAsync($"https://localhost:7038/api/KhuyenMai/{id}?Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", content);
                     if (response.IsSuccessStatusCode)
                     {
                         return RedirectToAction("Index");
@@ -395,7 +369,7 @@ namespace App_View.Areas.Admin.Controllers
                 else
                 {
                     khuyenMai.IdKhuyenMai = id;
-                    var response = await _httpClient.PutAsync($"https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMai/EditNoiImage?id={id}&Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", null);
+                    var response = await _httpClient.PutAsync($"https://localhost:7038/api/KhuyenMai/EditNoiImage?id={id}&Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", null);
                     if (response.IsSuccessStatusCode)
                     {
                         return RedirectToAction("Index");
@@ -455,14 +429,21 @@ namespace App_View.Areas.Admin.Controllers
         public JsonResult CapNhatTrangThai(string id, int trangThai)
         {
             var khuyenMai = _context.khuyenMais.Find(id);
+            string mess;
             if (trangThai == (int)TrangThaiSale.BuocDung)
             {
-                if (khuyenMai.NgayKetThuc >= DateTime.Now)
+                if (khuyenMai.NgayKetThuc >= DateTime.Now && khuyenMai.NgayBatDau <= DateTime.Now)
                 {
 
                     khuyenMai.TrangThai = (int)TrangThaiSale.DangBatDau;
                 }
-                else return Json(new { success = false });
+                else
+                    if (khuyenMai.NgayBatDau >= DateTime.Now)
+                {
+                    return Json(new { success = false, mess = "Khuyến mại chưa đến ngày bắt đầu" });
+                }
+                else return Json(new { success = false, mess = "Chương trình khuyến mãi đã hết hạn" });
+
             }
             else
             {

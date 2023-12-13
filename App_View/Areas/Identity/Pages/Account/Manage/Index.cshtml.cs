@@ -56,6 +56,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Giới tính")]
             public int? GioiTinh { get; set; }
 
+
             [DataType(DataType.Text)]
             [Display(Name = "Ngày sinh")]
             [AgeLimit(100, ErrorMessage = "Ngày sinh bạn nhập không hợp lệ.")]

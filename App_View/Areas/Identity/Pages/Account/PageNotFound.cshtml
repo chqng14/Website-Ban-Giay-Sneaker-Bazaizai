@@ -1,0 +1,43 @@
+﻿@page
+@model App_View.Areas.Identity.Pages.Account.PageNotFoundModel
+@{
+    Layout = "/Views/Shared/_LayoutAccessDenied.cshtml";
+}
+
+<style>
+
+
+    .img-fluid {
+        max-width: 50%;
+        height: auto;
+    }
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+    }
+
+    .section {
+        text-align: center;
+    }
+
+        .section h2 {
+            margin-bottom: 10px;
+        }
+
+        .section h3 {
+            margin-bottom: 20px;
+        }
+</style>
+<main>
+    <div class="container">
+
+        <section class="section error-404 min-vh-100 d-flex flex-column align-items-center justify-content-center">
+           
+            <img src="/PageIdentity/pagenotfound.png" class="img-fluid py-5" alt="Page Not Found">
+
+        </section>
+    </div>
+</main>

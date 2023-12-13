@@ -15,7 +15,7 @@ namespace App_View.Services
 
         public async Task<List<KhuyenMaiChiTietDTO>> GetAllKhuyenMaiChiTiet()
         {
-            var lstKMCT = (await _httpClient.GetFromJsonAsync<List<KhuyenMaiChiTietDTO>>("https://bazaizaistoreapi.azurewebsites.net/api/KhuyenMaiChiTiet"));
+            var lstKMCT = (await _httpClient.GetFromJsonAsync<List<KhuyenMaiChiTietDTO>>("https://bazaizaiapi-v2.azurewebsites.net/api/KhuyenMaiChiTiet"));
             return lstKMCT;
         }
     }

@@ -8,7 +8,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7038;http://localhost:5291;https://bazaizaistoreapi.azurewebsites.net"
+      "applicationUrl": "https://localhost:7038;http://localhost:5291;https://bazaizaiapi-v2.azurewebsites.net"
     },
     "IIS Express": {
       "commandName": "IISExpress",

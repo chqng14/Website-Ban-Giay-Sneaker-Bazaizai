@@ -24,6 +24,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using static App_Data.Repositories.TrangThai;
 using Microsoft.EntityFrameworkCore;
 using Google.Apis.PeopleService.v1.Data;
+using Newtonsoft.Json;
+using App_Data.ViewModels.DanhGia;
 
 namespace App_View.Areas.Identity.Pages.Account
 {
@@ -36,6 +38,7 @@ namespace App_View.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<NguoiDung> _emailStore;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ExternalLoginModel> _logger;
+        private readonly HttpClient _httpClient;
 
         public ExternalLoginModel(
             SignInManager<NguoiDung> signInManager,
@@ -50,6 +53,7 @@ namespace App_View.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _logger = logger;
             _emailSender = emailSender;
+            _httpClient = new HttpClient();
         }
 
 
@@ -65,7 +69,7 @@ namespace App_View.Areas.Identity.Pages.Account
 
         public IActionResult OnGet() => RedirectToPage("./Login");
 
-        public IActionResult OnPost(string provider, string returnUrl = null)
+        public async Task<IActionResult> OnPost(string provider, string returnUrl = null)
         {
             var redirectUrl = Url.Page("./ExternalLogin", pageHandler: "Callback", values: new { returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
@@ -78,7 +82,7 @@ namespace App_View.Areas.Identity.Pages.Account
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
             {
-                ErrorMessage = "Lỗi, không lấy được thông tin từ dịch vụ ngoài.";
+                ErrorMessage = "Error: Không lấy được thông tin từ dịch vụ ngoài.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
             
@@ -90,13 +94,18 @@ namespace App_View.Areas.Identity.Pages.Account
                 bool isCustomer = await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "NhanVien");
                 if (isCustomer)
                 {
-                    return RedirectToAction("Index", "Home", new { area = "Admin" });
+                    return RedirectToAction("DanhSachHoaDonCho", "BanHangTaiQuay", new { area = "Admin" });
+                    //return RedirectToAction("Index", "Home", new { area = "Admin" });
                 }
                 return LocalRedirect(returnUrl);
             }
             if (result.IsLockedOut)
             {
-                return RedirectToPage("./Lockout");
+                var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+               
+                _logger.LogWarning("User account locked out.");
+                //return RedirectToPage("./Lockout");
+                return RedirectToPage("./Lockout", new { id = user.Id });
             }
             else
             {
@@ -130,8 +139,26 @@ namespace App_View.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, "Không liên kết được tài khoản, hãy sử dụng email khác");
-                        return Page();
+                        if (externalEmailUser.EmailConfirmed==false)
+                        {
+                            var CheckGioHang=await GetGioHangById(externalEmailUser.Id);
+                            if (CheckGioHang == null)
+                            {
+                                await AddCart(externalEmailUser.Id, 0);
+                            }
+                            var props = new AuthenticationProperties();
+                            props.StoreTokens(info.AuthenticationTokens);
+                            props.IsPersistent = false;
+                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(externalEmailUser);
+                            await _userManager.ConfirmEmailAsync(externalEmailUser, code);
+                            await _signInManager.SignInAsync(externalEmailUser, props, info.LoginProvider);
+                            return LocalRedirect(returnUrl);
+                        }
+
+                        ErrorMessage = "Error: Không liên kết được tài khoản, hãy sử dụng email khác.";
+                        //ModelState.AddModelError(string.Empty, "Không liên kết được tài khoản, hãy sử dụng email khác");
+                        //return Page();
+                        return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
                     }
                 }
                 else
@@ -222,9 +249,26 @@ namespace App_View.Areas.Identity.Pages.Account
 
         public async Task<bool> AddCart(string idUser, int trangThai)
         {
-            var httpClient = new HttpClient();
-            var response = await httpClient.PostAsync($"https://bazaizaistoreapi.azurewebsites.net/api/GioHang?id={idUser}&trangthai={trangThai}", null);
-            return true;
+            var response= await _httpClient.PostAsync($"https://bazaizaiapi-v2.azurewebsites.net/api/GioHang?id={idUser}&trangthai={trangThai}", null);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+        }
+        public async Task<GioHang> GetGioHangById(string idUser)
+        {        
+            var response = await _httpClient.GetAsync($"https://bazaizaiapi-v2.azurewebsites.net/api/GioHang/{idUser}");
+            if (response.IsSuccessStatusCode)
+            {
+                string apiData = await response.Content.ReadAsStringAsync();
+                var GioHang = JsonConvert.DeserializeObject<GioHang>(apiData);
+                return GioHang;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

@@ -82,7 +82,7 @@ namespace App_Api.Controllers
                     }
                     else
                     {
-                        var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
+                        var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=bazaizaistg;AccountKey=E5dRTMV054IsGz5zlWw4jTtNDQPXSpabEKn+FY6oKsRs61c0wYvlCzkJ7OM+52M6IsqEV4V+2lU4+AStUJRzlg==;EndpointSuffix=core.windows.net");
                         var containerClient = blobServiceClient.GetBlobContainerClient("anhsale");
                         var blobClient = containerClient.GetBlobClient(fileName);
 
@@ -153,7 +153,7 @@ namespace App_Api.Controllers
                 }
                 else
                 {
-                    var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
+                    var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=bazaizaistg;AccountKey=E5dRTMV054IsGz5zlWw4jTtNDQPXSpabEKn+FY6oKsRs61c0wYvlCzkJ7OM+52M6IsqEV4V+2lU4+AStUJRzlg==;EndpointSuffix=core.windows.net");
                     var containerClient = blobServiceClient.GetBlobContainerClient("anhsale");
                     var blobClient = containerClient.GetBlobClient(fileName);
 

@@ -1,6 +1,7 @@
 ﻿@page
 @model ExternalLoginModel
-@{
+<partial name="_StatusMessage" for="ErrorMessage" />
+@*@{
     ViewData["Title"] = "Register";
 }
 
@@ -13,8 +14,17 @@
     You've successfully authenticated with <strong>@Model.ProviderDisplayName</strong>.
     Please enter an email address for this site below and click the Register button to finish
     logging in.
-</p>
-
+</p>*@
+<div style="text-align: center;  display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 500px;">
+    <img src="/PageIdentity/ExternalLoginCallback.jpg" style="width: 200px;" alt="Ảnh đánh giá">
+    <div class="u-s-m-b-15" style="text-align: center;">
+        <h1 class="dash__h1 u-s-m-b-14" style="display: inline-block; margin-top: 10px;">Hãy sử dụng tài khoản khác để đăng nhập</h1>
+    </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

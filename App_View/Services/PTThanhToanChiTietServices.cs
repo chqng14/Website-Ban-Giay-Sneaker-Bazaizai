@@ -16,7 +16,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PostAsync($"https://bazaizaistoreapi.azurewebsites.net/api/PTThanhToanChiTiet?IdHoaDon={IdHoaDon}&IdThanhToan={IdThanhToan}&SoTien={SoTien}", null);
+                var res = await _httpClient.PostAsync($"https://bazaizaiapi-v2.azurewebsites.net/api/PTThanhToanChiTiet?IdHoaDon={IdHoaDon}&IdThanhToan={IdThanhToan}&SoTien={SoTien}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsStringAsync();
@@ -50,7 +50,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://bazaizaistoreapi.azurewebsites.net/api/PTThanhToanChiTiet/SuaTrangThaiPTThanhToanChiTiet?IdPhuongThucThanhToanChiTiet={IdPhuongThucThanhToanChiTiet}&TrangThai={TrangThai}", null);
+                var res = await _httpClient.PutAsync($"https://bazaizaiapi-v2.azurewebsites.net/api/PTThanhToanChiTiet/SuaTrangThaiPTThanhToanChiTiet?IdPhuongThucThanhToanChiTiet={IdPhuongThucThanhToanChiTiet}&TrangThai={TrangThai}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();

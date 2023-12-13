@@ -1,10 +1,72 @@
-﻿@page "/KhoaTaiKhoan.html"
+﻿@page "/KhoaTaiKhoan/{id}"
 @model LockoutModel
 @{
     ViewData["Title"] = "Tài khoản bị tạm khóa";
 }
 
-<header>
+@*<header>
     <h1 class="text-danger">@ViewData["Title"]</h1>
     <p class="text-danger">Tài khoản này đã bị tạm khóa, vui lòng thử lại sau ít phút.</p>
-</header>
+</header>*@
+<div style="text-align: center;  display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 500px;">
+    <img src="/PageIdentity/ExternalLoginCallback.jpg" style="width: 200px;" alt="Ảnh đánh giá">
+    <div class="u-s-m-b-15" style="text-align: center;">
+        <h1 class="dash__h1 u-s-m-b-14" style="display: inline-block; margin-top: 10px;">
+             <span id="countdown"></span>
+        </h1>
+    </div>
+</div>
+<p id="targetTime" style="display: none">@Model.ThoiGianMoKhoa</p>
+<script>
+    function countdownTimer(targetDate) {
+        const targetTime = targetDate - new Date();
+        let remaining = "Thời gian khóa đã hết. Vui lòng đăng nhập lại";
+
+        if (targetTime > 0) {//300000
+            const parts = {
+                năm: Math.floor(targetTime / (1000 * 60 * 60 * 24 * 365)),
+                tháng: Math.floor((targetTime % (1000 * 60 * 60 * 24 * 365)) / (1000 * 60 * 60 * 24 * 30)),
+                ngày: Math.floor((targetTime % (1000 * 60 * 60 * 24 * 30)) / (1000 * 60 * 60 * 24)),
+                //ngày: Math.floor(targetTime / (1000 * 60 * 60 * 24)),
+                giờ: Math.floor((targetTime / (1000 * 60 * 60)) % 24),
+                phút: Math.floor((targetTime / 1000 / 60) % 60),
+                giây: Math.floor((targetTime / 1000) % 60)
+            };
+
+            remaining = "Tài khoản đã bị khóa Vui lòng thử lại sau: "+ Object.keys(parts)
+                .map(part => {
+                    if (!parts[part]) return;
+                    return `${parts[part]} ${part}`;
+                })
+                .join(" ") + "<br /><br />Mọi thắc mắc xin liên hệ đội ngũ hỗ trợ để giải đáp.";
+
+        }
+        //else if (targetTime>0) {
+        //    const parts = {
+        //        phút: Math.floor((targetTime / 1000 / 60) % 60),
+        //        giây: Math.floor((targetTime / 1000) % 60)
+        //    };
+
+        //    remaining = "Tài khoản đã bị khóa do đăng nhập sai quá nhiều lần. Vui lòng thử lại sau: " + Object.keys(parts)
+        //        .map(part => {
+        //            if (!parts[part]) return;
+        //            return `${parts[part]} ${part}`;
+        //        })
+        //        .join(" ") + "<br /><br />Mọi thắc mắc xin liên hệ đội ngũ hỗ trợ để giải đáp.";
+        //}
+        document.getElementById("countdown").innerHTML = remaining;
+    }
+
+    // Lấy giá trị thời gian từ thẻ p
+    const targetTimeString = document.getElementById("targetTime").innerText;
+    console.log(targetTimeString);
+    // Chuyển đổi chuỗi thời gian thành đối tượng Date
+    const targetDate = new Date(targetTimeString);
+
+    countdownTimer(targetDate);
+    setInterval(() => countdownTimer(targetDate), 1000);
+</script>

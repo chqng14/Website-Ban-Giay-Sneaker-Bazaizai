@@ -343,7 +343,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             var lstVoucherDaIn = (await _voucherND.GetAllVouCherNguoiDung()).Where(c => c.IdVouCher == idVoucher).ToList();
             List<VoucherNguoiDungDTO> voucherNguoiDungDTOList = new List<VoucherNguoiDungDTO>();
-            var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=azurenhucut;AccountKey=YXdnVGGVxA8rYNZQrNMfIu8ZDI47+/wZYr2ypN4vmp8TynAzJ4xXoq9kizECI4CkWtyJmpoT6veG+AStGLH21g==;EndpointSuffix=core.windows.net");
+            var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=bazaizaistg;AccountKey=E5dRTMV054IsGz5zlWw4jTtNDQPXSpabEKn+FY6oKsRs61c0wYvlCzkJ7OM+52M6IsqEV4V+2lU4+AStUJRzlg==;EndpointSuffix=core.windows.net");
             var containerClient = blobServiceClient.GetBlobContainerClient("anhvoucher");
             foreach (var voucher in lstVoucherDaIn)
             {
@@ -391,35 +391,7 @@ namespace App_View.Areas.Admin.Controllers
 
             return PartialView("_FilterListDetailsVoucherTaiQuayDaIn", voucherNguoiDungDTOList);
         }
-        //public async Task<IActionResult> XuatVoucher(string idVoucher, int trangThai = 0)
-        //{
-        //    var lstVoucherDaIn = (await _voucherND.GetAllVouCherNguoiDung()).Where(c => c.IdVouCher == idVoucher).ToList();
-        //    List<VoucherNguoiDungDTO> voucherNguoiDungDTOList = new List<VoucherNguoiDungDTO>();
-        //    foreach (var voucher in lstVoucherDaIn)
-        //    {
-        //        VoucherNguoiDungDTO voucherNguoiDungDTO = new VoucherNguoiDungDTO();
-        //        // Gán thông tin từ voucher vào voucherNguoiDungDTO
-        //        voucherNguoiDungDTO.IdVouCherNguoiDung = voucher.IdVouCherNguoiDung;
-        //        voucherNguoiDungDTO.IdVouCher = voucher.IdVouCher;
-        //        voucherNguoiDungDTO.TenVoucher = voucher.TenVoucher;
-        //        voucherNguoiDungDTO.LoaiHinhUuDai = voucher.LoaiHinhUuDai;
-        //        voucherNguoiDungDTO.NgayBatDau = voucher.NgayBatDau;
-        //        voucherNguoiDungDTO.NgayKetThuc = voucher.NgayKetThuc;
-        //        voucherNguoiDungDTO.DieuKien = voucher.DieuKien;
-        //        voucherNguoiDungDTO.MucUuDai = voucher.MucUuDai;
-        //        voucherNguoiDungDTO.NgayTao = voucher.NgayTao;
-        //        voucherNguoiDungDTO.TrangThai = voucher.TrangThai;
-        //        // ...
-        //        // Thêm voucherNguoiDungDTO vào danh sách voucherNguoiDungDTOList
-        //        voucherNguoiDungDTOList.Add(voucherNguoiDungDTO);
-        //    }
-        //    if (trangThai != 0)
-        //    {
-        //        voucherNguoiDungDTOList = voucherNguoiDungDTOList.Where(c => c.TrangThai == trangThai).ToList();
-        //    }
-
-        //    return View(voucherNguoiDungDTOList);
-        //}
+      
         #endregion
     }
 }

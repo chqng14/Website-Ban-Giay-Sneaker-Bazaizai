@@ -31,9 +31,8 @@ builder.Services.AddScoped<IVnPayService, VnPayService>();
 //BAZAIZAI\SQLEXPRESS
 
 
+//builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=LAPTOP-OF-KHAI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"));
 
-
-//builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=.\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"));
 //cái này là db online
 builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Server=tcp:bazaizaidatabase.database.windows.net,1433;Initial Catalog=bazaizaidb;Persist Security Info=False;User ID=bazaizai;Password=Trinhanh0311;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
 //Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
@@ -59,7 +58,7 @@ builder.Services.AddScoped<GioHangChiTietsController, GioHangChiTietsController>
 builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 builder.Services.AddScoped<IDanhGiaService, DanhGiaService>();
 //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://bazaizaistoreapi.azurewebsites.net/") });
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://bazaizaiapi-v2.azurewebsites.net/") });
 //Thêm
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
 .AddEntityFrameworkStores<BazaizaiContext>()
@@ -82,8 +81,8 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredUniqueChars = 1; // Số ký tự riêng biệt
 
     // Cấu hình Lockout - khóa user
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1); // Khóa 1 phút
-    options.Lockout.MaxFailedAccessAttempts = 100; // Thất bại 5 lần thì khóa
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); // Khóa 5 phút
+    options.Lockout.MaxFailedAccessAttempts = 5; // Thất bại 5 lần thì khóa
     options.Lockout.AllowedForNewUsers = true;
 
     // Cấu hình về User.
@@ -233,7 +232,8 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
+app.UseDeveloperExceptionPage();
+app.UseExceptionHandler("/Error");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseSession();
@@ -247,16 +247,8 @@ Task.Run(() =>
 {
     while (true)
     {
-        capNhatTime.CheckNgayKetThuc();
-        capNhatTime.CapNhatTrangThaiSaleDetail();
-        capNhatTime.CapNhatGiaBanThucTe();
-        capNhatTime.CapNhatVoucherHetHanOnline();
-        capNhatTime.CapNhatVoucherDenHanOnline();
-        capNhatTime.CapNhatVoucherNguoiDungOnline();
-        capNhatTime.CapNhatVoucherHetHanTaiQuay();
-        capNhatTime.CapNhatVoucherDenHanTaiQuay();
-        capNhatTime.CapNhatVoucherNguoiDungTaiQuay();
-        capNhatTime.CapNhatVoucherNguoiDungTaiQuayKhiVoucherHoatDong();
+        capNhatTime.CapNhatThongTinKhuyenMai();
+        capNhatTime.CapNhatThoiGianVoucher();
         Thread.Sleep(TimeSpan.FromSeconds(5));
     }
 });
