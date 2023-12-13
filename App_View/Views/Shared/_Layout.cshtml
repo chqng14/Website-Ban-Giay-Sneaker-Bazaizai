@@ -1129,7 +1129,27 @@
                                 <span class="ah-close">✕ Close</span>
 
                                 <!--====== List ======-->
-                                @await Html.PartialAsync("_ListMenuPartialView")
+                                <ul class="ah-list ah-list--design2 ah-list--link-color-secondary">
+                                    <li>
+
+                                        <a href="/">TRANG CHỦ</a>
+                                    </li>
+                                    <li>
+                                        <a href="/sanphamchitiets">GIAN HÀNG</a>
+                                    </li>
+                                    <li>
+                                        <a asp-action="ViewKhuyenMai" asp-controller="KhuyenMaiChiTiet" asp-area="">SALE</a>
+                                    </li>
+                                    <li>
+                                        <a asp-action="VoucherToCalm" asp-controller="Voucher" asp-area="">VOUCHER</a>
+                                    </li>
+                                    <li>
+                                        <a href="/home/AboutUs">ABOUT US</a>
+                                    </li>
+                                    <li>
+                                        <a href="/home/FAQ">FAQ</a>
+                                    </li>
+                                </ul>
                                 <!--====== End - List ======-->
                             </div>
                             <!--====== End - Menu ======-->

@@ -116,17 +116,26 @@
                 <ul class="dropdown-menu" style="display: none;">
                     <li>
                         <a asp-page="/User/Index">
-                            Danh sách người dùng
+                            Danh sách khách hàng
                         </a>
                     </li>
-                </ul>
-                <ul class="dropdown-menu" style="display: none;">
+                    <li>
+                        <a asp-page="/User/DanhSachNhanVien">
+                            Danh sách nhân viên
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-page="/User/DanhSachQuanLy">
+                            Danh sách quản lý
+                        </a>
+                    </li>
                     <li>
                         <a asp-page="/Role/Index">
                             Danh sách chức vụ
                         </a>
                     </li>
                 </ul>
+              
 
             </li>
             <li class="nav-item dropdown">
@@ -152,6 +161,28 @@
                 </ul>
             </li>
             <li class="nav-item dropdown">
+                <a class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                        <i class="anticon anticon-area-chart"></i>
+                    </span>
+                    <span class="title">Thống kê</span>
+                    <span class="arrow">
+
+                        <i class="arrow-icon"></i>
+                    </span>
+                </a>
+                @* <ul class="dropdown-menu" style="display: none;">
+                <li>
+                <a href="/Admin/DanhGia/Index">Danh sách đánh giá</a>
+                </li>
+                </ul>*@
+                <ul class="dropdown-menu" style="display: none;">
+                    <li>
+                        <a href="/Admin/ThongKe/DoanhThuTheoDonHangTheoNgay">Thống kê doanh thu theo đơn hàng</a>
+                    </li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
                 <a asp-controller="BanHangTaiQuay" asp-action="DanhSachHoaDonCho">
                     <span class="icon-holder">
                         <i class="fas fa-shopping-basket"></i>
@@ -165,6 +196,14 @@
                         <i class="fas fa-percent"></i>
                     </span>
                     <span class="title">Khuyến Mại</span>
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a asp-controller="KhuyenMaiChiTiets" asp-action="Index">
+                    <span class="icon-holder">
+                        <i class=" fas fa-tags"></i>
+                    </span>
+                    <span class="title">Sản phẩm khuyến mại</span>
                 </a>
             </li>
             <li class="nav-item dropdown">

@@ -125,7 +125,9 @@ namespace App_Data.Repositories
             [Description("Ngưng khuyến mãi")]
             NgungKhuyenMai = 0,
             [Description("Đang khuyến mãi")]
-            DangKhuyenMai = 1
+            DangKhuyenMai = 1,
+            [Description("Đang khuyến mãi")]
+            SapKhuyenMai = 2
         }
         public enum GioiTinhMacDinh
         {

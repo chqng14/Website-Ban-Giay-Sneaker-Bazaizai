@@ -58,16 +58,55 @@
     .checkbox input[type="checkbox"]:not(:checked) + label::before {
         background-color: #c4d0d9; /* Màu nền khi chưa chọn */
     }
+
+    .swal2-title {
+        font-family: 'Arial', sans-serif; /* Chọn font bạn muốn sử dụng cho alert */
+    }
 </style>
 
 <div id="body-danhsach">
     <div class="notification-toast top-right" id="notification-toast"></div>
+
+    <div class="modal fade" id="modal-upload_image">
+        <div class="modal-dialog modal-dialog-centered">
+            <form id="form_upload" asp-action="uploadimage" method="post" class="modal-content" enctype="multipart/form-data">
+                <div class="modal-header align-items-center" style=" background: #00090b; color: white">
+                    <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
+                    <h5 style="color: white" class="modal-title" id="exampleModalLabel">UPLOAD ẢNH</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <i class="anticon anticon-close"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="background: #d3f6ff;">
+                    <input hidden type="file" id="chose-img" onchange="displaySelectedFileImages(this)" multiple name="files" />
+                    <a class="btn btn-kio mt-3" id="btn-chose-img">
+                        <i class="anticon anticon-file-excel m-r-5"></i>
+                        <span>Chọn ảnh(s)</span>
+                    </a>
+                    <p class="mt-3" id="file-img-info" style="padding-top: 5px;color: #1c0497;"></p>
+                    <br />
+                    <span style="color: red">
+                        Lưu ý:
+                        <br />
+                        -Bạn nên đặt tên các file ảnh khác nhau để tránh gặp lỗi!
+                        <br />
+                        -Ví dụ: Tên giày_Màu sắc_Kích cỡ_STT.
+                    </span>
+                </div>
+                <div class="modal-footer" style="background: #d0dae3">
+                    <button class="btn btn-primary submit_file" type="submit">Upload</button>
+                    <button type="button" class="btn btn-secondary" id="btn-skip">Skip</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="modal fade" id="modal-import">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header align-items-center" style="background: #129dc1;">
-                    <i class="fas fa-user-astronaut m-r-5" style="font-size: 33px"></i>
-                    <h5 class="modal-title" id="exampleModalLabel">IMPORT FILE</h5>
+                <div class="modal-header align-items-center" style=" background: #00090b; color: white">
+                    <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
+                    <h5 style="color: white" class="modal-title" id="exampleModalLabel">IMPORT FILE</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <i class="anticon anticon-close"></i>
                     </button>
@@ -75,107 +114,26 @@
                 <div class="modal-body" style="background: #d3f6ff;">
                     <span style="color: red">Sử dụng template mẫu để import: </span><a href="/Admin/SanPhamChiTiet/DownloadFileTemplate">Download</a>
                     <br />
-                    <input hidden type="file" id="import" onchange="displaySelectedFile(this)" name="file" />
-                    <button class="btn btn-tone mt-3" id="btn-import">
+                    <input hidden type="file" id="chose-excel" onchange="displaySelectedFileExcel(this)" name="file" accept=".xlsx, .xls" />
+                    <button class="btn btn-kio mt-3" id="btn-chose-import">
                         <i class="anticon anticon-file-excel m-r-5"></i>
-                        <span>Import</span>
+                        <span>Chọn file Excel</span>
                     </button>
-                    <p class="mt-3" id="selected-file-name" style="padding-top: 10px;color: #1c0497;"></p>
+                    <p class="mt-3" id="file-excel-info" style="padding-top: 5px;color: #1c0497;"></p>
                 </div>
                 <div class="modal-footer" style="background: #d0dae3">
-                    <button class="btn btn-primary submit_file">Submit</button>
+                    <button class="btn btn-primary" id="submit_import">Import</button>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-       $(() => {
-           $('.submit_file').click(() => {
-               $('#preloader').show();
-                    var data = new FormData();
-                    data.append('file', $('#import')[0].files[0]);
-                    $.ajax({
-                        url: "@Url.Action("ImportProducts", "SanPhamChiTiet")",
-                        type: 'POST',
-                        data: data,
-                        contentType: false,
-                        processData: false,
-                        success: function (result) {
-                            $('#preloader').hide();
-                            Swal.fire({
-                                title: "Thông báo!",
-                                html: `
-                                        <div class="text-left" style="padding-left: 100px;">
-                                            <span class="text-primary">
-                                                Success: ${result.slSuccess}
-                                            </span>
-                                            <br />
-                                            <span class="text-red">
-                                                False: ${result.slFalse}
-                                            </span>
-                                        </div>
-                                    `,
-                                icon: "info",
-                                allowOutsideClick: false,
-                                showCancelButton: result.slFalse > 0,
-                                confirmButtonText: result.slFalse > 0 ? 'Download File Lỗi' : 'OK',
-                                cancelButtonText: 'Close',
-                            }).then((resultAlert) => {
-                                if (resultAlert.isConfirmed) {
-                                    if (result.slFalse > 0) {
-                                        // Create a hidden iframe to trigger the file download
-                                        var iframe = document.createElement('iframe');
-                                        iframe.style.display = 'none';
-                                        document.body.appendChild(iframe);
 
-                                        iframe.src = '/Admin/sanphamchitiet/DownloadFileErr';
-
-                                        // Remove the iframe after the file download begins
-                                        iframe.onload = function () {
-                                            document.body.removeChild(iframe);
-                                        };
-
-                                        // Handle any errors during the download
-                                        iframe.onerror = function (error) {
-                                            console.log('Error downloading file:', error);
-                                        };
-                                    }
-                                    window.location.reload();
-
-                                } else if (resultAlert.dismiss === Swal.DismissReason.cancel) {
-                                    if (resultAlert.value) {
-                                        console.log('Nút "Download File Lỗi" được nhấp');
-                                        window.location.reload();
-
-                                    } else {
-                                        window.location.reload();
-                                    }
-                                }
-                            });
-
-
-                            //setTimeout(function () {
-                            //    window.location.href = "/admin/sanphamchitiet/danhsachsanpham";
-                            //},100000)
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(xhr.responseText);
-                            console.log(status);
-                            console.log(error);
-                            console.log(xhr);
-                        }
-                    });
-                });
-            });
-
-    </script>
-    <div class="notification-toast top-right" id="notification-toast"></div>
     <div class="modal fade" id="confirm">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header align-items-center" style="background: #129dc1;">
-                    <i class="fas fa-user-astronaut m-r-5" style="font-size: 33px"></i>
-                    <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
+                <div class="modal-header align-items-center" style=" background: #00090b; color: white">
+                    <i class="far fa-bell m-r-5" style="font-size: 33px"></i>
+                    <h5 style="color: white" class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <i class="anticon anticon-close"></i>
                     </button>
@@ -224,7 +182,7 @@
                         <div class="col-lg-8">
                             <div class="d-md-flex">
                                 <div class="m-b-10 ml-1">
-                                    <button class="btn btn-kio btn-import" data-toggle="modal" data-target="#modal-import">
+                                    <button class="btn btn-kio" onclick="ConfirmImport()">
                                         <i class="anticon anticon-file-excel m-r-5"></i>
                                         <span>
                                             Import Excel
@@ -276,7 +234,7 @@
                                         <option value="" selected="">Sản phẩm</option>
                                         @foreach (var item in (SelectList)ViewData["SanPham"]!)
                                         {
-                                            <option value="@item.Text">@item.Text</option>
+                                            <option value="@item.Value">@item.Text</option>
                                         }
 
                                     </select>
@@ -286,7 +244,16 @@
                                         <option value="" selected="">Thương hiệu</option>
                                         @foreach (var item in (SelectList)ViewData["ThuongHieu"]!)
                                         {
-                                            <option value="@item.Text">@item.Text</option>
+                                            <option value="@item.Value">@item.Text</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="m-b-10 ml-1">
+                                    <select class="select2_active" style="min-width: 180px;" id="filterLoaiGiay">
+                                        <option value="" selected="">Thể loại</option>
+                                        @foreach (var item in (SelectList)ViewData["LoaiGiay"]!)
+                                        {
+                                            <option value="@item.Value">@item.Text</option>
                                         }
                                     </select>
                                 </div>
@@ -295,7 +262,7 @@
                                         <option value="" selected="">Màu sắc</option>
                                         @foreach (var item in (SelectList)ViewData["MauSac"]!)
                                         {
-                                            <option value="@item.Text">@item.Text</option>
+                                            <option value="@item.Value">@item.Text</option>
                                         }
                                     </select>
                                 </div>
@@ -304,7 +271,7 @@
                                         <option value="" selected="">Kích cỡ</option>
                                         @foreach (var item in (SelectList)ViewData["KichCo"]!)
                                         {
-                                            <option value="@item.Text">@item.Text</option>
+                                            <option value="@item.Value">@item.Text</option>
                                         }
                                     </select>
                                 </div>
@@ -358,23 +325,14 @@
     var thuongHieu;
     var mauSac;
     var kichCo;
+    var theLoai;
     var sort;
+    var selectedCheckboxes = {};
+
     var maxLength = 999999;
     $(() => {
         $('.select2_active').select2();
-        $('#btn-import').click((event) => {
-            event.preventDefault();
-            $('#import').trigger('click');
-        });
     });
-
-    function displaySelectedFile(input) {
-        const selectedFile = input.files[0];
-        if (selectedFile) {
-            const fileName = selectedFile.name;
-            document.getElementById('selected-file-name').textContent = fileName;
-        }
-    }
 
     $(() => checkToshowConfirm())
     const checkToshowConfirm = () => {
@@ -408,8 +366,7 @@
         $('[data-toggle="tooltip"]').tooltip();
     })
 
-    $(document).ready(function () {
-        let selectedCheckboxes = {};
+   $(()=> {
         table = $('#table-sanpham').DataTable({
             ajax: {
                 url: '@Url.Action("GetDanhSachSanPham", "SanPhamChiTiet", new { area= "Admin" })',
@@ -424,6 +381,7 @@
                         SanPham: sanpham,
                         MauSac: mauSac,
                         KichCo: kichCo,
+                        TheLoai: theLoai,
                         ThuongHieu: thuongHieu,
                         Sort: sort
                     });
@@ -438,21 +396,19 @@
             [10, 25, 50, 100, "All"]],
             pageLength: 10,
             drawCallback: function (settings) {
-                // Tính tổng số lượng và tổng giá bán sau mỗi lần vẽ lại DataTable
                 let totalQuantity = 0;
                 let totalRevenue = 0;
                 let totalGiaNhap = 0;
 
                 table.rows().every(function () {
                     const data = this.data();
-                    totalQuantity += data.soLuongTon;
-                    totalRevenue += data.giaBan * data.soLuongTon;
+                    totalQuantity += data.SoLuongTon;
+                    totalRevenue += data.GiaBan * data.SoLuongTon;
                 });
                 totalRevenue = new Intl.NumberFormat('vi-VN', {
                     style: 'currency',
                     currency: 'VND'
                 }).format(totalRevenue).replace(",00", "");
-                // Hiển thị tổng số lượng và tổng giá bán ở cuối table
                 $('#table-sanpham').find('.total-row').remove();
                 $('#table-sanpham tbody').append(`
                 <tr class="total-row" style="background: #c4e9c4">
@@ -463,19 +419,21 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td>Tổng cộng</td>
+                    <td>Tổng:</td>
                     <td>${totalRevenue}</td>
                     <td>${totalQuantity}</td>
                     <td></td>
+                    <td></td>
+
                 </tr>
             `);
             },
             columns: [
                 {
-                    data: 'idChiTietSp',
+                    data: 'IdChiTietSp',
                     title: '<div class="checkbox"><input id="check-all" type="checkbox"><label for="check-all" class="m-b-0"></label></div>',
                     render: function (data, type, row, meta) {
-                        const isChecked = selectedCheckboxes[data.idChiTietSp];
+                        const isChecked = selectedCheckboxes[data.IdChiTietSp];
                         const checkedAttribute = isChecked ? 'checked' : '';
                         return `
                     <div class="checkbox" data-id="${data}"><input id="check-item-${data}" type="checkbox" class="item"><label for="check-item-${data}" "${checkedAttribute}" class="m-b-0"></label></div>
@@ -484,16 +442,8 @@
                     orderable: false
                 },
                 {
-                    data: null,
-                    title: 'STT',
-                    render: function (data, type, row, meta) {
-                        return meta.row + 1;
-                    },
-                    orderable: false
-                },
-                {
-                    data: 'ma',
-                    title: 'Mã SP',
+                    data: 'Ma',
+                    title: 'Mã sản phẩm',
                     orderable: false
                 },
                 {
@@ -503,44 +453,43 @@
                         if (data.anh === null) {
                             var defaultImageUrl = '/images/NoImage.png';
                             return `
-                                <div class="d-flex align-items-center"><img data-data="${data.idChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sản phẩm" class="img-fluid cursor-image rounded" src="${defaultImageUrl}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.sanPham}</h6></div>
+                                <div class="d-flex align-items-center"><img data-data="${data.IdChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sản phẩm" class="img-fluid cursor-image rounded" src="${defaultImageUrl}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.SanPham}</h6></div>
                             `;
                         } else {
                             return `
-                                <div class="d-flex align-items-center"><img data-data="${data.idChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sản phẩm" class="img-fluid cursor-image rounded" src="/AnhSanPham/${data.anh}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.sanPham}</h6></div>
+                                <div class="d-flex align-items-center"><img data-data="${data.IdChiTietSp}" data-toggle="tooltip" data-placement="top" title="Chi tiết sản phẩm" class="img-fluid cursor-image rounded" src="/AnhSanPham/${data.Anh}" style="max-width: 60px" alt=""><h6 class="m-b-0 m-l-10">${data.SanPham}</h6></div>
                             `;
                         }
                     },
                     orderable: false
                 },
                 {
-                    data: 'kichCo',
-                    title: 'Size',
+                    data: 'KieuDeGiay',
+                    title: 'Kiểu đế',
                     orderable: false
                 },
                 {
-                    data: 'kieuDeGiay',
-                    title: 'Kiểu đế giầy',
-                    orderable: false
-                },
-                {
-                    data: 'chatLieu',
+                    data: 'ChatLieu',
                     title: 'Chất liệu',
                     orderable: false
                 },
                 {
-                    data: 'giaNhap',
-                    title: 'Giá nhập',
-                    render: function (data, type, row, meta) {
-                        return new Intl.NumberFormat('vi-VN', {
-                            style: 'currency',
-                            currency: 'VND'
-                        }).format(data).replace(",00", "");
-                    },
+                    data: 'LoaiGiay',
+                    title: 'Thể loại',
                     orderable: false
                 },
                 {
-                    data: 'giaBan',
+                    data: 'XuatXu',
+                    title: 'Xuất xứ',
+                    orderable: false
+                },
+                {
+                    data: 'KichCo',
+                    title: 'Size',
+                    orderable: false
+                },
+                {
+                    data: 'GiaBan',
                     title: 'Giá bán',
                     render: function (data, type, row, meta) {
                         return new Intl.NumberFormat('vi-VN', {
@@ -551,8 +500,8 @@
                     orderable: false
                 },
                 {
-                    data: 'soLuongTon',
-                    title: 'Số lượng',
+                    data: 'SoLuongTon',
+                    title: 'S/lượng',
                     orderable: false,
                     render: function (data, type, row) {
                         if (type === 'display' || type === 'filter') {
@@ -562,20 +511,40 @@
                     }
                 },
                 {
-                    data: null,
-                    title: '#',
+                    data: 'SoLuongDaBan',
+                    title: 'Đã bán',
+                    orderable: false,
+                    render: function (data, type, row) {
+                        if (type === 'display' || type === 'filter') {
+                            return formatNumber(data);
+                        }
+                        return data;
+                    }
+                },
+                {
+                    data: 'IdChiTietSp',
+                    title: '###',
                     render: function (data, type, row, meta) {
                         return `
-                    <button class="btn btn-icon btn-primary btn-rounded btn-tone delete-item"><i class="far fa-trash-alt"></i></button>
+                               <div class="btn-group dropdown" style="cursor: pointer">
+                                    <i class="fas fa-bars" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></i>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item" type="button" onclick="XemSanPham('${data}')"> Xem chi tiết</button>
+                                        <button class="dropdown-item" type="button" onclick="NgungKinhDoanhSanPham('${data}')">Ngừng Kinh Doanh</button>
+                                        <button class="dropdown-item" type="button" onclick="EditSanPham('${data}')">Chỉnh sửa</button>
+                                        <button class="dropdown-item" type="button" onclick="CoppySanPham('${data}')">Coppy</button>
+                                    </div>
+                                </div>
                     `;
                     },
                     orderable: false
                 },
             ],
             initComplete: function (settings, json) {
+                console.log(json);
                 maxLength = json.data.recordsTotal;
                 $('#table-sanpham').on('draw.dt', function () {
-                    $('input[type="checkbox"]').each(function () {
+                    $('#table-sanpham input[type="checkbox"]').each(function () {
                         if ($(this).attr('id')) {
                             const id = $(this).attr('id').replace('check-item-', '');
                             if (selectedCheckboxes[id]) {
@@ -636,6 +605,12 @@
                     table.draw();
                 });
 
+                $('#filterLoaiGiay').on('change', function () {
+                    theLoai = $(this).val();
+                    console.log(theLoai);
+                    table.draw();
+                });
+
                 $('#filterSort').on('change', function () {
                     sort = $(this).val();
                     table.draw();
@@ -643,101 +618,146 @@
             },
 
         });
+   });
+
+    function EditSanPham(id) {
+        var data = {
+            idSanPhamChiTiet: id,
+        };
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/LoadPartialViewUpdate',
+            type: 'GET',
+            data: data,
+            success: function (result) {
+                $('#modalSanPham').empty().append(result).modal('show');
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    }
 
 
-        $(document).on("click", ".delete-item", function () {
-            $('#confirm').find('#thongBao').text("Bạn có muốn ngừng kinh doanh mặt hàng này?");
-            $('#confirm').modal('show');
-            var item = $(this).closest('tr')
-            $('#confirm').off('click', '.btn-primary');
-            $('#confirm').one('click', '.btn-primary', function () {
-                const id = item.find('.checkbox').attr('data-id');
-                $.ajax({
-                    url: '/Admin/SanPhamChiTiet/Delete/' + id,
-                    type: 'GET',
-                    success: function (result) {
-                        if (result) {
-                            delete selectedCheckboxes[id];
-                            item.remove();
-                            $('#confirm').modal('hide');
-                            showToastDeleteSucsess();
-                            checkToshowConfirm();
-                            table.draw();
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(xhr.responseText);
-                        console.log(status);
-                        console.log(error);
-                        console.log(xhr);
-                    }
-                });
-                confirmModal.modal('hide');
-            });
-        })
+    function XemSanPham(id) {
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/LoadPartialView?idSanPhamChiTiet=' + id,
+            type: 'GET',
+            success: function (result) {
+                const modal = $('#modalSanPham');
+                modal.empty();
+                modal.html(result);
+                modal.modal("show")
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    }
 
-        $(document).on("click", '.ngung_kinh_doanh', function () {
-            const keys = Object.keys(selectedCheckboxes);
-            $('#confirm').find('#thongBao').text(`Bạn có muốn ngừng kinh doanh ${keys.length} mặt hàng này?`);
-            $('#confirm').modal('show');
-            const soLuong = keys.length;
-            const data = { listGuild: keys };
-            console.log(JSON.stringify(data));
-            $('#confirm').off('click', '.btn-primary');
-            $('#confirm').one('click', '.btn-primary', function () {
-                $.ajax({
-                    url: '/Admin/SanPhamChiTiet/NgungKinhDoanhListSanPham',
-                    type: 'POST',
-                    data: JSON.stringify(data),
-                    contentType: 'application/json',
-                    success: function (result) {
-                        if (result) {
-                            var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                <div class="toast-header">
-                                    <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                    <strong class="mr-auto">Thông báo</strong>
-                                    <small>1 seconds ago</small>
-                                    <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="toast-body">
-                                    <span>Đã ngừng kinh doanh ${soLuong} mặt hàng!</span>
-                                </div>
-                            </div>`
-                            $('#confirm').modal('hide');
-                            $('#notification-toast').append(toastHTML)
-                            $('#notification-toast .toast').toast('show');
-                            setTimeout(function () {
-                                $('#notification-toast .toast:first-child').remove();
-                            }, 3000);
-                            $('#confirm-ds').hide();
-                            selectedCheckboxes = {};
-                            table.draw();
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        console.log(xhr.responseText);
-                        console.log(status);
-                        console.log(error);
-                        console.log(xhr);
-                    }
-                });
-            })
-        })
-
-        $(document).on("click", '.thaotac', function () {
-            const keys = Object.keys(selectedCheckboxes);
-            const data = { "listGuild": keys };
-            $('#preloader').show();
+    function NgungKinhDoanhSanPham(id) {
+        $('#confirm').find('#thongBao').text("Bạn có muốn ngừng kinh doanh mặt hàng này?");
+        $('#confirm').modal('show');
+        var item = $(this).closest('tr')
+        $('#confirm').off('click', '.btn-primary');
+        $('#confirm').one('click', '.btn-primary', function () {
             $.ajax({
-                url: 'GetPartialViewListUpdate',
+                url: '/Admin/SanPhamChiTiet/Delete/' + id,
+                type: 'GET',
+                success: function (result) {
+                    if (result) {
+                        delete selectedCheckboxes[id];
+                        item.remove();
+                        $('#confirm').modal('hide');
+                        showToastDeleteSucsess();
+                        checkToshowConfirm();
+                        table.draw();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    console.log(status);
+                    console.log(error);
+                    console.log(xhr);
+                }
+            });
+        });
+    }
+
+    function CoppySanPham(id) {
+        var data = {
+            IdSanPhamChiTiet: id,
+        };
+
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/GetPartialViewSanPhamCopy',
+            type: 'Get',
+            data: data,
+            success: function (result) {
+                debugger
+                $('#modalSanPham').empty().html(result);
+                $('#modalSanPham').modal('show')
+
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    }
+    $(document).off('click', '#btn-skip')
+    $(document).on('click', '#btn-skip', function (e) {
+        $('#modal-upload_image').modal('hide');
+        $('#modal-import').modal('show');
+    });
+
+    $(document).off("click", '.ngung_kinh_doanh');
+    $(document).on("click", '.ngung_kinh_doanh', function () {
+        const keys = Object.keys(selectedCheckboxes);
+        $('#confirm').find('#thongBao').text(`Bạn có muốn ngừng kinh doanh ${keys.length} mặt hàng này?`);
+        $('#confirm').modal('show');
+        const soLuong = keys.length;
+        const data = { listGuild: keys };
+        console.log(JSON.stringify(data));
+        $('#confirm').off('click', '.btn-primary');
+        $('#confirm').one('click', '.btn-primary', function () {
+            $.ajax({
+                url: '/Admin/SanPhamChiTiet/NgungKinhDoanhListSanPham',
                 type: 'POST',
                 data: JSON.stringify(data),
                 contentType: 'application/json',
                 success: function (result) {
-                    $('#body-danhsach').html(result)
-                    $('#preloader').hide();
+                    if (result) {
+                        var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                         <div class="toast-header">
+                             <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                             <strong class="mr-auto">Thông báo</strong>
+                             <small>1 seconds ago</small>
+                             <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                 <span aria-hidden="true">&times;</span>
+                             </button>
+                         </div>
+                         <div class="toast-body">
+                             <span>Đã ngừng kinh doanh ${soLuong} mặt hàng!</span>
+                         </div>
+                     </div>`
+                        $('#confirm').modal('hide');
+                        $('#notification-toast').append(toastHTML)
+                        $('#notification-toast .toast').toast('show');
+                        setTimeout(function () {
+                            $('#notification-toast .toast:first-child').remove();
+                        }, 3000);
+                        $('#confirm-ds').hide();
+                        selectedCheckboxes = {};
+                        table.draw();
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.log(xhr.responseText);
@@ -747,7 +767,29 @@
                 }
             });
         })
-    });
+    })
+
+    $(document).on("click", '.thaotac', function () {
+        const keys = Object.keys(selectedCheckboxes);
+        const data = { "listGuild": keys };
+        $('#preloader').show();
+        $.ajax({
+            url: 'GetPartialViewListUpdate',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: function (result) {
+                $('#body-danhsach').html(result)
+                $('#preloader').hide();
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    })
 
     function formatNumber(number) {
         if (number >= 1000) {
@@ -777,6 +819,156 @@
             $('#notification-toast .toast:first-child').remove();
         }, 3000);
     }
+
+    $(document).off('submit', '#form_upload');
+    $(document).on('submit', '#form_upload', function (event) {
+        event.preventDefault()
+        var $form = $(this);
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: new FormData(this),
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                if (result) {
+                    $form.find('input[type="file"]').val('');
+                    $('#file-img-info').text('')
+                    var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                        <div class="toast-header">
+                                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                            <strong class="mr-auto">Thông báo</strong>
+                                            <small>1 seconds ago</small>
+                                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="toast-body">
+                                            <span>Đã upload thành công!</span>
+                                        </div>
+                                    </div>`
+
+                    $('#notification-toast').append(toastHTML)
+                    $('#notification-toast .toast').toast('show');
+                    setTimeout(function () {
+                        $('#notification-toast .toast:first-child').remove();
+                    }, 3000);
+                    $('#modal-upload_image').modal('hide')
+                    $('#modal-import').modal('show')
+                } else {
+                    alert('Upload thất bại!')
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+
+
+    });
+    $(document).off('click', '#btn-chose-img');
+    $(document).on('click', '#btn-chose-img', function () {
+        $('#chose-img').trigger('click');
+    });
+    function displaySelectedFileImages(value) {
+    $('#file-img-info').text('\u00A0\u00A0' + value.files.length + " ảnh được chọn")
+    };
+    function ConfirmImport() {
+    Swal.fire({
+        title: 'Trước khi import Sản phẩm bạn có file ảnh(s) cần upload không?',
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonText: 'Có',
+        cancelButtonText: 'Không',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $('#modal-upload_image').modal('show')
+        } else {
+            $('#modal-import').modal('show')
+        }
+    });
+
+    };
+    $(document).off('click', '#btn-chose-import');
+    $(document).on('click', '#btn-chose-import', function () {
+        $('#chose-excel').trigger('click');
+    });
+    function displaySelectedFileExcel(value) {
+    const selectedFile = value.files[0];
+    $('#file-excel-info').text(selectedFile.name)
+}
+    $(document).on('click', '#submit_import', function () {
+        $('#preloader').show();
+        $('#modal-import').modal('hide')
+        var data = new FormData();
+        data.append('file', $('#chose-excel')[0].files[0]);
+        $.ajax({
+            url: "@Url.Action("ImportProducts", "SanPhamChiTiet")",
+            type: 'POST',
+            data: data,
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                $('#preloader').hide();
+                Swal.fire({
+                    title: "Thông báo!",
+                    html: `
+                      <div class="text-left" style="padding-left: 100px;">
+                          <span class="text-primary">
+                              Success: ${result.slSuccess}
+                          </span>
+                          <br />
+                          <span class="text-red">
+                              False: ${result.slFalse}
+                          </span>
+                      </div>
+                  `,
+                    icon: "info",
+                    allowOutsideClick: false,
+                    showCancelButton: result.slFalse > 0,
+                    confirmButtonText: result.slFalse > 0 ? 'Download File Lỗi' : 'OK',
+                    cancelButtonText: 'Close',
+                }).then((resultAlert) => {
+                    if (resultAlert.isConfirmed) {
+                        if (result.slFalse > 0) {
+                            var iframe = document.createElement('iframe');
+                            iframe.style.display = 'none';
+                            document.body.appendChild(iframe);
+
+                            iframe.src = '/Admin/sanphamchitiet/DownloadFileErr';
+
+                            iframe.onload = function () {
+                                document.body.removeChild(iframe);
+                            };
+
+                            iframe.onerror = function (error) {
+                                console.log('Error downloading file:', error);
+                            };
+                        }
+                        window.location.reload();
+
+                    } else if (resultAlert.dismiss === Swal.DismissReason.cancel) {
+                        if (resultAlert.value) {
+                            console.log('Nút "Download File Lỗi" được nhấp');
+                            window.location.reload();
+
+                        } else {
+                            window.location.reload();
+                        }
+                    }
+                });
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    });
 </script>
 
 

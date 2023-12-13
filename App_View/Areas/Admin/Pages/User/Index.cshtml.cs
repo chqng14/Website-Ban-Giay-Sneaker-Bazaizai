@@ -27,56 +27,37 @@ namespace App_View.Areas.Admin.Pages.User
             public string RoleName { get; set; }
         }
 
-        // public List<NguoiDung> users { get; set; }
         public List<User_Role> users { get; set; }
 
         [TempData]
         public string StatusMessage { get; set; }
 
-        public const int ITEMS_PER_PAGE = 10;//số phần tử trong 1 trang
-
-        [BindProperty(SupportsGet = true, Name = "p")]
-        public int currentPage { get; set; }
-        public int countPages { get; set; }
-        public int totalUsers { get; set; }
 
 
 
 
         public async Task<IActionResult> OnGet()
         {
-            //var qr = _userManager.Users.OrderBy(x => x.MaNguoiDung);
-            //totalUsers = await qr.CountAsync();
-            //countPages = (int)Math.Ceiling((double)totalUsers / ITEMS_PER_PAGE);
-            //if (currentPage < 1)
-            //    currentPage = 1;
-            //if (currentPage > countPages)
-            //    currentPage = countPages;
-            //var qr1 = qr.Skip((currentPage - 1) * ITEMS_PER_PAGE)
-            //.Take(ITEMS_PER_PAGE)
-            //.Select(x => new User_Role()
-            //{
-            //    Id = x.Id,
-            //    UserName = x.UserName,
-            //});
-            //users = await qr1.ToListAsync();
-
-
-
-            var lst =  _userManager.Users.OrderBy(x => x.UserName);
+            var usersInRole = await _userManager.GetUsersInRoleAsync(ChucVuMacDinh.KhachHang.ToString());
+            var lst = usersInRole.OrderBy(x => x.UserName).ToList();
             var lstUserAndRole = lst.Select(x => new User_Role()
             {
                 Id = x.Id,
                 UserName = x.UserName,
+                AnhDaiDien=x.AnhDaiDien,
+                Email = x.Email,
+                LockoutEnd = x.LockoutEnd,
+                LockoutEnabled = x.LockoutEnabled,
+                PhoneNumber = x.PhoneNumber,
+
             });
-            users = await lstUserAndRole.ToListAsync();
+            users = lstUserAndRole.ToList();
             foreach (var user in users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
                 user.RoleName = string.Join(",", roles);
             }
 
-            //users = await _userManager.Users.OrderBy(x => x.UserName).ToListAsync();
             return Page();
         }
         public async Task<IActionResult> OnPostAsync()
@@ -88,7 +69,7 @@ namespace App_View.Areas.Admin.Pages.User
                     await _userManager.CreateAsync(new NguoiDung { MaNguoiDung = "ND2", UserName = "user" + i, Email = "user" + i + "@gmail.com" }, "1234567");
                 }
             }
-            return Page();
+            return RedirectToPage("./Index");
         }
     }
 }

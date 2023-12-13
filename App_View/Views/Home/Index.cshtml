@@ -6,37 +6,17 @@
 @using static App_Data.Repositories.TrangThai;
 @inject ISanPhamChiTietService sanPhamChiTietService;
 @inject IKhuyenMaiServices khuyenMaiService;
+@inject IDanhGiaService _DanhGiaService
+@inject IKhuyenMaiChiTietServices khuyenMaiChiTiet;
 @{
     BazaizaiContext context = new BazaizaiContext();
-
-    var sanPhamChiTietList = new List<App_Data.ViewModels.SanPhamChiTietViewModel.SanPhamDanhSachViewModel>();
-    try
-    {
-        sanPhamChiTietList = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
-    }
-    catch (Exception)
-    {
-        sanPhamChiTietList = new List<App_Data.ViewModels.SanPhamChiTietViewModel.SanPhamDanhSachViewModel>();
-    }
-    var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
-
-    foreach (var pro in sanPhamChiTietList)
-    {
-        var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
-        var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
-        var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
-        var sanPhamSaleViewModel = new SanPhamSaleViewModel
-        {
-            SanPhamDanhSachView = pro,
-            TrangThaiSale = Convert.ToInt32(trangThaiSale),
-            TrangThai = Convert.ToInt32(trangThai),
-            GiaThucTe = giaThucTe
-        };
-
-        sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
-    }
-    var lstSpDuocApDungKhuyenMai = sanPhamSaleViewModelList.Where(x => ( x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong);
-    var flashSale = context.khuyenMaiChiTiets.Where(x=>x.TrangThai==(int)TrangThaiSaleDetail.DangKhuyenMai);
+    _DanhGiaService = new DanhGiaService();
+    var model = new App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel();
+    model = sanPhamChiTietService.GetDanhSachGiayViewModelAynsc().Result;
+    var lstSpDuocApDungKhuyenMai = model.LstAllSanPham.Where(x => x.GiaThucTe < x.GiaGoc).GroupBy(x => x.TenSanPham)
+    .Select(group => group.First())
+    .ToList(); 
+    var flashSale =(await khuyenMaiChiTiet.GetAllKhuyenMaiChiTiet()).Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai);
     List<string> temp = new List<string>();
     List<KhuyenMai> tempKM = new List<KhuyenMai>();
     foreach (var salemax in flashSale)
@@ -50,7 +30,7 @@
     }
     var saleMax = tempKM.Max(x => x.MucGiam);
     var sale = tempKM.FirstOrDefault(x => x.MucGiam == saleMax);
-    flashSale = context.khuyenMaiChiTiets.Where(x=>x.TrangThai==(int)TrangThaiSaleDetail.DangKhuyenMai&&x.IdKhuyenMai==sale.IdKhuyenMai);
+    flashSale = (await khuyenMaiChiTiet.GetAllKhuyenMaiChiTiet()).Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai && x.IdKhuyenMai == sale.IdKhuyenMai);
 
 }
 <div class="app-content">
@@ -81,9 +61,9 @@
                                                     <div class="row">
                                                         <div class="col-12">
                                                             <div class="slider-content slider-content--animation">
-                                                                <span class="content-span-2 u-c-white">@_km.TenKhuyenMai</span>
-                                                                <span class="content-span-3 u-c-white">Bắt đầu từ @_km.NgayBatDau-@_km.NgayKetThuc</span>
-                                                                <span class="content-span-4 u-c-white">
+                                                                <span class="content-span-2" style="color: #FFB544">@_km.TenKhuyenMai</span>
+                                                                <span class="content-span-3" style="color: #FFB544">Bắt đầu từ @_km.NgayBatDau-@_km.NgayKetThuc</span>
+                                                                <span class="content-span-4" style="color: #FFB544">
                                                                     Bắt đầu tại
                                                                     <span class="u-c-brand">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}",lstSpDuocApDungKhuyenMai.Min(x=>x.GiaThucTe))</span>
                                                                 </span>
@@ -104,13 +84,13 @@
                                                     <div class="col-12">
                                                         <div class="slider-content slider-content--animation">
 
-                                                            <span class="content-span-1 u-c-white">Tìm thương hiệu hàng đầu</span>
+                                                            <span class="content-span-1" style="color: #FFB544">Tìm thương hiệu hàng đầu</span>
 
-                                                            <span class="content-span-2 u-c-white">Giày xịn giá tốt chỉ có tại BAZAIZAI STORE</span>
+                                                            <span class="content-span-2" style="color: #FFB544">Giày xịn giá tốt chỉ có tại BAZAIZAI STORE</span>
 
-                                                            <span class="content-span-3 u-c-white">Tìm giày với giá tốt nhất</span>
+                                                            <span class="content-span-3" style="color: #FFB544">Tìm giày với giá tốt nhất</span>
 
-                                                            <span class="content-span-4 u-c-white">
+                                                            <span class="content-span-4" style="color: #FFB544">
                                                                 Bắt đầu tại
 
                                                                 <span class="u-c-brand">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}",lstSpDuocApDungKhuyenMai.Min(x=>x.GiaThucTe))</span>
@@ -212,7 +192,7 @@
             <!--</div>-->
             <!--====== End - Section 7 ======-->
             <!--====== Section 8 ======-->
-            <div class="u-s-p-b-60">
+            <div class="u-s-p-b-60" style="margin-top: 30px;">
 
                 <!--====== Section Intro ======-->
                 <div class="section__intro u-s-m-b-46">
@@ -260,64 +240,175 @@
                 </div>
                 <!--====== End - Section Intro ======-->
                 <!--====== Section Content ======-->
-                <div class="section__content">
+
+                <div class="section__content" >
                     <div class="container">
-                        <div class="row">
-                            @{
-                                int count = 0;
-                            }
-                            @if(sale!=null){
-                                @foreach (var flSale in flashSale)
-                                {
-                                    if (count < 3)
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="e-l-p">
+                                    @if (sale != null)
                                     {
-                                        <div class="col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
+                                        <div class="slider-fouc">
+                                            <div class="owl-carousel tab-slider" data-item="4">
 
-                                            <!--====== Product Orientation Version 2 ======-->
-                                            <div class="product-o2 u-h-100">
-                                                <div class="product-o2__wrap">
+                                                @foreach (var item in flashSale.GroupBy(x=>x.SanPham).Select(x=>x.First()).ToList())
+                                                {
+                                                    var spGroup = lstSpDuocApDungKhuyenMai.Where(x => x.TenSanPham.ToUpper().Contains(item.SanPham.ToUpper()));
+                                                    if (spGroup.Any())
+                                                    {
+                                                    var SaoTb = await _DanhGiaService.GetSoSaoTB(item.IdSanPhamChiTiet);
+                                                    var TongSoDanhGia = await _DanhGiaService.GetTongSoDanhGia(item.IdSanPhamChiTiet);
+                                                    <div class="u-s-m-b-30">
+                                                        <div class="product-o product-o--hover-on" data-id="@item.IdSanPhamChiTiet">
+                                                            <div class="product-o__wrap">
 
-                                                        <a class="aspect aspect--bg-grey aspect--square u-d-block" href="@Url.Action("Details","SanPhamChiTiets",new{id= lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).SanPhamDanhSachView.IdChiTietSp})">
+                                                                <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/Details/@item.IdSanPhamChiTiet">
 
-                                                        <img class="aspect__img product-o2__img" src="~/AnhSanPham/@lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).SanPhamDanhSachView.Anh" alt="">
-                                                    </a>
-                                                    
-                                                </div>
-                                                <div class="product-o2__content">
+                                                                        <img class="aspect__img" src="/AnhSanPham/@lstSpDuocApDungKhuyenMai.FirstOrDefault(x => x.TenSanPham.ToUpper().Contains(item.SanPham.ToUpper())).Anh" alt="">
+                                                                </a>
+                                                                <div class="product-o__action-wrap">
+                                                                    <ul class="product-o__action-list">
+                                                                        <li>
 
-                                                    <span class="product-o2__category">
+                                                                            <a data-modal="modal" data-modal-id="#quick-look" data-tooltip="tooltip" data-placement="top" title="Quick View"><i class="fas fa-search-plus"></i></a>
+                                                                        </li>
 
-                                                            <a href="@Url.Action("Details","SanPhamChiTiets",new{id= lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).SanPhamDanhSachView.IdChiTietSp})">@lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).SanPhamDanhSachView.LoaiGiay</a>
-                                                    </span>
 
-                                                    <span class="product-o2__name">
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
 
-                                                            <a href="@Url.Action("Details","SanPhamChiTiets",new{id= lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).SanPhamDanhSachView.IdChiTietSp})">@lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).SanPhamDanhSachView.SanPham</a>
-                                                    </span>
-                                                    <div class="product-o2__rating gl-rating-style-2">
-                                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                                                            <div class="product-m__category">
 
-                                                        <span class="product-o2__review">(23)</span>
+                                                                    <a>@lstSpDuocApDungKhuyenMai.FirstOrDefault(x => x.TenSanPham.ToUpper().Contains(item.SanPham.ToUpper())).ThuongHieu / @lstSpDuocApDungKhuyenMai.FirstOrDefault(x => x.TenSanPham.ToUpper().Contains(item.SanPham.ToUpper())).TheLoai</a>
+                                                            </div>
+
+                                                            <span class="product-o__name">
+
+                                                                    <a href="/SanPhamChiTiets/Details/@item.IdSanPhamChiTiet">@lstSpDuocApDungKhuyenMai.FirstOrDefault(x => x.TenSanPham.ToUpper().Contains(item.SanPham.ToUpper())).TenSanPham</a>
+                                                            </span>
+                                                            <div class="product-o__rating gl-rating-style">
+                                                               
+                                                                @if (SaoTb < 0.3)
+                                                                {
+
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                }
+                                                                else if (SaoTb < 0.8)
+                                                                {
+                                                                    <i class="fas fa-star-half-alt"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                }
+                                                                else if (SaoTb < 1.3)
+                                                                {
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                }
+                                                                else if (SaoTb < 1.8)
+                                                                {
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star-half-alt"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                }
+                                                                else if (SaoTb < 2.3)
+                                                                {
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                }
+                                                                else if (SaoTb < 2.8)
+                                                                {
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star-half-alt"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                }
+                                                                else if (SaoTb < 3.3)
+                                                                {
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                }
+                                                                else if (SaoTb < 3.8)
+                                                                {
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star-half-alt"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                }
+                                                                else if (SaoTb < 4.3)
+                                                                {
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="far fa-star"></i>
+                                                                }
+
+                                                                else if (SaoTb < 4.8)
+                                                                {
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star-half-alt"></i>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                    <i class="fas fa-star"></i>
+                                                                }
+                                                                <span class="product-o2__review">(@TongSoDanhGia)</span>
+
+                                                            </div>
+                                                            <div>
+
+                                                                    @if (lstSpDuocApDungKhuyenMai.FirstOrDefault(x => x.TenSanPham.ToUpper().Contains(item.SanPham.ToUpper())).GiaThucTe == lstSpDuocApDungKhuyenMai.FirstOrDefault(x => x.TenSanPham.ToUpper().Contains(item.SanPham.ToUpper())).GiaGoc)
+                                                                {
+                                                                        <div class="product-m__price" style="color: red">Giá: @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", lstSpDuocApDungKhuyenMai.FirstOrDefault(x => x.TenSanPham.ToUpper().Contains(item.SanPham.ToUpper())).GiaThucTe)</div>
+
+                                                                }
+                                                                else
+                                                                {
+                                                                        <span class="product-o2__price" style="color: red;display:flex;flex-direction:row">
+                                                                            Giá: <span class="product-o2__discount" style="color: red;margin-left: 5px;">
+                                                                                @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", lstSpDuocApDungKhuyenMai.FirstOrDefault(x => x.TenSanPham.ToUpper().Contains(item.SanPham.ToUpper())).GiaGoc)
+                                                                            </span>->
+                                                                            @string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", @lstSpDuocApDungKhuyenMai.FirstOrDefault(x => x.TenSanPham.ToUpper().Contains(item.SanPham.ToUpper())).GiaThucTe)
+                                                                        </span>
+                                                                }
+                                                            </div>
+                                                        </div>
                                                     </div>
-
-                                                    <span class="product-o2__price">
-                                                        @lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).GiaThucTe VNĐ
-
-                                                        <span class="product-o2__discount">@lstSpDuocApDungKhuyenMai.FirstOrDefault(x=>x.SanPhamDanhSachView.IdChiTietSp==flSale.IdSanPhamChiTiet).SanPhamDanhSachView.GiaBan VNĐ</span>
-                                                    </span>
-                                                </div>
+                                                    }
+                                                }
                                             </div>
-                                            <!--====== End - Product Orientation Version 2 ======-->
                                         </div>
-                                        count++;
                                     }
-                                    else
-                                    {
-                                        break;
-                                    }
-                                }
 
-                            }
+
+                                </div>
+                           
                                
                             
                             </div>

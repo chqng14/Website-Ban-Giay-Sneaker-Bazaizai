@@ -35,34 +35,7 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> Index(string brand, string search)
         {
-            var lstSanPhamItemShop = await _sanPhamChiTietService.GetListItemShopViewModelAynsc();
-
-            if (!string.IsNullOrEmpty(brand))
-            {
-                lstSanPhamItemShop = lstSanPhamItemShop!
-                    .Where(sp => sp.ThuongHieu!.ToLower() == brand.ToLower())
-                    .ToList();
-            }
-
-            if (!string.IsNullOrEmpty(search))
-            {
-                lstSanPhamItemShop = lstSanPhamItemShop!
-                    .Where(sp => sp.TenSanPham!.ToLower()
-                    .Contains(search.ToLower()))
-                    .ToList();
-            }
-
-            return View(new FilterDataVM()
-            {
-                Items = lstSanPhamItemShop!.Take(12).ToList(),
-                PagingInfo = new PagingInfo()
-                {
-                    SoItemTrenMotTrang = 12,
-                    TongSoItem = lstSanPhamItemShop!.Count(),
-                    TrangHienTai = 1
-                }
-
-            });
+            return View(await _httpClient.GetFromJsonAsync<FilterDataVM>($"/api/SanPhamChiTiet/get-danh-sach-san-pham-shop-khoi-tao?brand={brand}&search={search}"));
         }
 
         [HttpPost]
@@ -76,138 +49,21 @@ namespace App_View.Controllers
         public async Task<IActionResult> LoadPartialViewDanhSachSanPhamNguoiDung([FromBody] FilterData filterData)
         {
             var brand = HttpContext.Request.Query["brand"].ToString();
-            var data = await _sanPhamChiTietService.GetListItemShopViewModelAynsc();
 
             if (!string.IsNullOrEmpty(brand))
             {
-                data = data!.Where(sp => sp.ThuongHieu!.ToLower() == brand.ToLower()).ToList();
+                filterData.Brand = brand;
             }
-
-            //if (filterData.LstKichCo!.Any() || filterData.LstMauSac!.Any() || (filterData.GiaMin != 0 && filterData.GiaMax != 0) || !string.IsNullOrEmpty(filterData.Sort))
-            //{
-            //    data = await _sanPhamChiTietService.GetDanhSachBienTheItemShopViewModelAsync();
-
-            //    if (filterData.GiaMin != 0 && filterData.GiaMax != 0)
-            //    {
-            //        data = data!.Where(sp => sp.GiaThucTe >= filterData.GiaMin && sp.GiaThucTe <= filterData.GiaMax).ToList();
-            //    }
-
-            //    if (!string.IsNullOrEmpty(brand))
-            //    {
-            //        data = data!.Where(sp => sp.ThuongHieu!.ToLower() == brand.ToLower()).ToList();
-            //    }
-
-            //    if (filterData.LstMauSac!.Any())
-            //    {
-            //        data = data!
-            //            .Where(sp => filterData.LstMauSac!.Contains(sp.MauSac!))
-            //            .ToList();
-            //    }
-
-            //    if (filterData.LstRating!.Any())
-            //    {
-            //        data = data!
-            //            .Where(sp =>
-            //                filterData.LstRating!.Any(item =>
-            //                    sp.SoSao >= item && sp.SoSao <= item + 1
-            //                )
-            //            )
-            //            .ToList();
-            //    }
-
-
-            //    if (filterData.LstKichCo!.Any())
-            //    {
-            //        data = data!
-            //            .Where(sp => filterData.LstKichCo!.Contains(sp.KichCo!))
-            //            .ToList();
-            //    }
-
-            //    if (filterData.LstTheLoai!.Any())
-            //    {
-            //        data = data!
-            //            .Where(sp => filterData.LstTheLoai!.Contains(sp.TheLoai!))
-            //            .ToList();
-            //    }
-
-            //    if (!string.IsNullOrEmpty(filterData.Sort))
-            //    {
-            //        if (filterData.Sort == "price_asc")
-            //        {
-            //            data = data!.OrderBy(it => it.GiaThucTe).ToList();
-            //        }else
-            //        {
-            //            data = data!.OrderByDescending(it => it.GiaThucTe).ToList();
-            //        }
-            //    }
-
-            //    var dataBienThe = new FilterDataVM()
-            //    {
-            //        Items = data!.Skip((filterData.TrangHienTai - 1) * 12).Take(12).ToList(),
-            //        PagingInfo = new PagingInfo()
-            //        {
-            //            SoItemTrenMotTrang = 12,
-            //            TongSoItem = data!.Count(),
-            //            TrangHienTai = filterData.TrangHienTai
-            //        }
-            //    };
-
-            //    return PartialView("_DanhSachSanPhamBienThePartialView", dataBienThe);
-            //}
-
-            if (!string.IsNullOrEmpty(filterData.Sort))
+            var response = await _httpClient.PostAsJsonAsync<FilterData>("/api/SanPhamChiTiet/get-danh-sach-san-pham-shop", filterData);
+            var model = new FilterDataVM();
+            if (response.IsSuccessStatusCode)
             {
-                if (filterData.Sort == "price_asc")
-                {
-                    data = data!.OrderBy(it => it.GiaMin).ToList();
-                }
-                else
-                {
-                    data = data!.OrderByDescending(it => it.GiaMin).ToList();
-                }
+                model = await response.Content.ReadAsAsync<FilterDataVM>();
+            }else
+            {
+                var errorMessage = await response.Content.ReadAsStringAsync();
+                Console.WriteLine($"HTTP request failed with status code {response.StatusCode}. Error message: {errorMessage}");
             }
-
-            if (filterData.LstTheLoai!.Any())
-            {
-                data = data!
-                    .Where(sp => filterData.LstTheLoai!.Contains(sp.TheLoai!))
-                    .ToList();
-            }
-
-            if (filterData.LstMauSac!.Any())
-            {
-                data = data!
-                    .Where(sp => sp.LstMauSac!.Any(it=>filterData.LstMauSac!.Contains(it.Text, StringComparer.OrdinalIgnoreCase)))
-                    .ToList();
-            }
-
-            if (filterData.LstRating!.Any())
-            {
-                data = data!
-                    .Where(sp =>
-                        filterData.LstRating!.Any(item =>
-                            sp.SoSao >= item && sp.SoSao <= item + 1
-                        )
-                    )
-                    .ToList();
-            }
-
-            if (filterData.GiaMin != 0 && filterData.GiaMax != 0)
-            {
-                data = data!.Where(sp => sp.GiaMin >= filterData.GiaMin && sp.GiaMin <= filterData.GiaMax).ToList();
-            }
-
-            var model = new FilterDataVM()
-            {
-                Items = data!.Skip((filterData.TrangHienTai - 1) * 12).Take(12).ToList(),
-                PagingInfo = new PagingInfo()
-                {
-                    SoItemTrenMotTrang = 12,
-                    TongSoItem = data!.Count(),
-                    TrangHienTai = filterData.TrangHienTai
-                }
-            };
-
             return PartialView("_DanhSachSanPhamPartialView", model);
         }
 
@@ -282,7 +138,7 @@ namespace App_View.Controllers
                     data!.IsYeuThich = false;
                 }
             }
-            return PartialView("_SanPhamDatailPatialView", data);
+            return PartialView("_SanPhamDetailPatialView", data);
         }
 
         public async Task<IActionResult> GetItemDetailViewModelWhenSelectColor([FromQuery] string id, [FromQuery] string mauSac)

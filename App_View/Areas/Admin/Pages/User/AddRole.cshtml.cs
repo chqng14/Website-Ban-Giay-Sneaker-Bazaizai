@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Areas.Admin.Pages.User
 {
@@ -72,7 +73,25 @@ namespace App_View.Areas.Admin.Pages.User
             {
                 return NotFound($"không tìm thấy người dùng có id: {id}.");
             }
+            var LstRole = await _userManager.GetRolesAsync(user);
+            int i = 0;
+            foreach (var role in LstRole)
+            {
+                if (role == ChucVuMacDinh.NhanVien.ToString())
+                {
+                    i = 1;
+                }
+                if (role == ChucVuMacDinh.Admin.ToString())
+                {
+                    i = 2;
+                }             
+                if (role == ChucVuMacDinh.KhachHang.ToString())
+                {
+                    i = 3;
+                }
+            }
             var Rolecu = (await _userManager.GetRolesAsync(user)).ToArray();
+
             var DeleteRoles = Rolecu.Where(x => !RoleNames.Contains(x));
             var AddRoles = RoleNames.Where(x => !Rolecu.Contains(x));
             List<string> roleNames = await _roleManager.Roles.Select(x => x.Name).ToListAsync();
@@ -103,10 +122,21 @@ namespace App_View.Areas.Admin.Pages.User
                 );
                 return Page();
             }
-            
+            await _signInManager.RefreshSignInAsync(user);
             StatusMessage = $"Bạn vừa cập nhật chức vụ cho người dùng: {user.UserName}";
-
-            return RedirectToPage("./Index");
+            if (i == 1)
+            {
+                return RedirectToPage("./DanhSachNhanVien");
+            }
+            else if (i == 2)
+            {
+                return RedirectToPage("./DanhSachQuanly");
+            }
+            else if (i == 3)
+            {
+                return RedirectToPage("./Index");
+            }
+            else return RedirectToPage("./Index");
         }
     }
 }

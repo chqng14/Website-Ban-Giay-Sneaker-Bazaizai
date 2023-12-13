@@ -22,7 +22,7 @@
                 <div class="row">
                     @foreach (var item in Model)
                     {
-                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 u-s-m-b-30">
+                        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 u-s-m-b-30" style="flex: 0 0 20%">
                             <div class="category-o">
                                 <div class="aspect aspect--bg-grey aspect--square category-o__img-wrap">
 
@@ -30,7 +30,7 @@
                                 </div>
                                 <div class="category-o__info">
 
-                                    <a class="category-o__shop-now btn--e-white-brand" href="/sanphamchitiets?brand=@item.TenThuongHieu" style=" background: #180303e6; color: white;">@item.TenThuongHieu</a>
+                                    <a class="category-o__shop-now btn--e-white-brand" href="/sanphamchitiets?brand=@item.TenThuongHieu" style=" background: #180303e6; color: white;">@item.TenThuongHieu!.ToUpper()</a>
                                 </div>
                             </div>
                         </div>

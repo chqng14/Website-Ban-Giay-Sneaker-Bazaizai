@@ -51,15 +51,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="dash__pad-2">
                 <h1 class="dash__h1 u-s-m-b-14">Chỉnh sửa hồ sơ</h1>
-               @* @if ( string.IsNullOrEmpty(Model.Phone) && string.IsNullOrEmpty(Model.Input.NgaySinh.ToString()) && string.IsNullOrEmpty(Model.Input.GioiTinh.ToString()))
-                {
-                    <span class="dash__text u-s-m-b-30">Có vẻ như bạn chưa cập nhật hồ sơ của mình</span>
-
-                }*@
-
                 <div class="dash__link dash__link--secondary u-s-m-b-30">
 
-                    <a data-modal="modal" data-modal-id="#dash-newsletter">Theo dõi bản tin</a>
+                  @*  <a data-modal="modal" data-modal-id="#dash-newsletter">Theo dõi bản tin</a>*@
+                    @if (user.SuaDoi > 0)
+                    {
+                        <p>Tên Đăng nhập chỉ có thể thay đổi một lần.</p>
+
+                    }
                 </div>
 
                 <div class="row">
@@ -73,6 +72,7 @@
                                     <label asp-for="Input.Username" class="gl-label" for="reg-fname"> Tên đăng nhập </label>
                                     <input asp-for="Input.Username" class="input-text input-text--primary-style" type="text" id="reg-fname">
                                     <span asp-validation-for="Input.Username" class="text-danger"></span>
+                                    
                                 </div>
                             }
                             else
