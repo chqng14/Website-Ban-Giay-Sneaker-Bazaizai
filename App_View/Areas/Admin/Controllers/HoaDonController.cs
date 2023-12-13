@@ -14,7 +14,7 @@ using System.Linq;
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,NhanVien")]
     public class HoaDonController : Controller
     {
 
