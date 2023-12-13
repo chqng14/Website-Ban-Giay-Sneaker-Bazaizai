@@ -25,5 +25,6 @@ namespace App_View.IServices
         public Task<List<DanhGiaResult>> TongSoDanhGiaCuaMoiSpChuaDuyet();
         public Task<List<DanhGiaViewModel>> LstChiTietDanhGiaCuaMoiSpChuaDuyet(string idSanPham);
         public Task<bool> DuyetDanhGia(string IdDanhGia);
+        public Task<List<DanhGiaViewModel>> GetLstDanhGiaChuaDuyetByDK(int? dk);
     }
 }

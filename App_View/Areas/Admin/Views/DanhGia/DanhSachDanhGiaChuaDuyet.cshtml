@@ -1,12 +1,7 @@
-﻿@model IEnumerable<App_Data.Models.DanhGia>
-@using App_View.IServices;
+﻿@using App_View.IServices;
 @using App_View.Services;
 @inject IDanhGiaService _DanhGiaService
-
-
-
 @{
-    ViewData["Title"] = "GetAllDanhGia";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
     _DanhGiaService = new DanhGiaService();
 }
@@ -42,27 +37,23 @@
                 {
                     var lst = await _DanhGiaService.GetLstDanhGiaChuaDuyetByDK(i);
                     <div class="tab-pane fade show @(i == 0 ? "active" : "")" id="tab@(i)-justified" role="tabpanel" aria-labelledby="tab@(i)-tab-justified">
-                    @if (lst.Count==0)
-                    {
-                        <div style="text-align: center;  display: flex;
+                        @if (lst.Count == 0)
+                        {
+                            <div style="text-align: center;  display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         min-height: 500px;">
-                            <img src="/images/imageedit_danhgia.png" style="width: 200px;" alt="Ảnh đánh giá">
-                            <div class="u-s-m-b-15" style="text-align: center;">
-                                <h3 class="dash__h1 u-s-m-b-14" style="display: inline-block; margin-top: 10px;">
-                                    Không có đánh giá nào
-                                </h3>
+                                <img src="/images/imageedit_danhgia.png" style="width: 200px;" alt="Ảnh đánh giá">
+                                <div class="u-s-m-b-15" style="text-align: center;">
+                                    <h3 class="dash__h1 u-s-m-b-14" style="display: inline-block; margin-top: 10px;">
+                                        Không có đánh giá nào
+                                    </h3>
+                                </div>
                             </div>
-                        </div>
-                    }
-                    else
-                    {
-                      
-
-                            @*<div id="partialContainer@(i)">
-                    </div>*@
+                        }
+                        else
+                        {
                             <div class="card">
                                 <div class="card-body">
                                     <h5>Tổng số đánh giá: (@lst.Count())</h5>
@@ -113,7 +104,7 @@
                                 </div>
                             </div>
 
-                    }
+                        }
 
                     </div>
                 }
@@ -125,19 +116,10 @@
     $(document).ready(function () {
         $('table.display').DataTable({
             pageLength: 5,
-            lengthMenu: [[5, 10,30,50,100, -1], [5, 10,30,50,100, 'All']]
+            lengthMenu: [[5, 10, 30, 50, 100, -1], [5, 10, 30, 50, 100, 'All']]
         });
     });
-    function loadLstDanhGia(tab) {
-        $.ajax({
-            url: '@Url.Action("LstDangGiaChuaDuyetTab", "DanhGia")',
-            type: 'POST',
-            data: { tab: tab },
-            success: function (result) {
-                $('#partialContainer' + tab).html(result);
-            }
-        });
-    }
+    
 </script>
 
 @section Scripts {

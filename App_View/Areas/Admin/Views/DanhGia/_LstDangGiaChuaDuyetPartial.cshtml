@@ -1,0 +1,123 @@
+﻿@model IEnumerable<App_Data.ViewModels.DanhGia.DanhGiaViewModel>
+<!-- Favicon -->
+<link rel="shortcut icon" href="/images/logo.jpg">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- page css -->
+<link href="~/Admin/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
+<link href="~/Admin/vendors/select2/select2.css" rel="stylesheet">
+<link href="~/Admin/vendors/datatables/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<!-- Core css -->
+<link href="~/Admin/css/app.min.css" rel="stylesheet">
+<link href="~/Admin/css/style.css" rel="stylesheet" />
+<script src="~/js/toast.js"></script>
+
+<div class="card">
+    <div class="card-body">
+        <h5>Reviews (18)</h5>
+        <div class="m-t-20">
+            <table class="table" id="data-table">
+                <thead>
+                    <tr>
+                        <th>
+                            Đánh giá
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+
+                            <td>
+                                @Html.DisplayFor(modelItem => item.MoTa)
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item p-h-0">
+                                        <div class="media m-b-15">
+                                            <div class="avatar avatar-image">
+                                                <img src="assets/images/avatars/thumb-8.jpg" alt="">
+                                            </div>
+                                            <div class="media-body m-l-20">
+                                                <h6 class="m-b-0">
+                                                    <a href="" class="text-dark">Lillian Stone</a>
+                                                </h6>
+                                                <span class="font-size-13 text-gray">28th Jul 2018</span>
+                                            </div>
+                                        </div>
+                                        <span>The palatable sensation we lovingly refer to as The Cheeseburger has a distinguished and illustrious history. It was born from humble roots, only to rise to well-seasoned greatness.</span>
+                                        <div class="star-rating m-t-15">
+                                            <input type="radio" id="star1-5" name="rating-1" value="5" checked disabled /><label for="star1-5" title="5 star"></label>
+                                            <input type="radio" id="star1-4" name="rating-1" value="4" disabled /><label for="star1-4" title="4 star"></label>
+                                            <input type="radio" id="star1-3" name="rating-1" value="3" disabled /><label for="star1-3" title="3 star"></label>
+                                            <input type="radio" id="star1-2" name="rating-1" value="2" disabled /><label for="star1-2" title="2 star"></label>
+                                            <input type="radio" id="star1-1" name="rating-1" value="1" disabled /><label for="star1-1" title="1 star"></label>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </td>
+
+
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+    <!-- Core Vendors JS -->
+    <script src="~/Admin/js/vendors.min.js"></script>
+
+    <script src="~/Admin/js/pages/dashboard-e-commerce.js"></script>
+
+    <!-- Core JS -->
+    <script src="~/Admin/js/app.min.js"></script>
+}
+
+@*<script>
+    $(document).ready(function () {
+        $('#data-table').DataTable()
+        $('#select-all-checkbox').click(function () {
+            $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
+        });
+
+
+        $('#delete-button').on('click', function () {
+            // Lấy danh sách id voucher đã chọn
+            var selectedIds = [];
+
+            $('.voucher-checkbox:checked').each(function () {
+                selectedIds.push($(this).data('value'));
+            });
+            // Gọi hàm để huỷ hoạt động voucher
+            huyHoatDongVoucher(selectedIds);
+        });
+        $('#restore-button').on('click', function () {
+            // Lấy danh sách id voucher đã chọn
+            var selectedIds = [];
+
+            $('.voucher-checkbox:checked').each(function () {
+                selectedIds.push($(this).data('value'));
+            });
+            // Gọi hàm để huỷ hoạt động voucher
+            KhoiPhucVoucher(selectedIds);
+        });
+
+    });
+</script>*@

@@ -4,25 +4,43 @@ using App_Data.Repositories;
 using App_Data.ViewModels.DanhGia;
 using App_View.IServices;
 using App_View.Services;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles ="Admin, NhanVien")]
+    [Authorize(Roles = "Admin, NhanVien")]
     public class DanhGiaController : Controller
     {
+        private readonly UserManager<NguoiDung> _userManager;
         private IDanhGiaService _danhGiaService;
         public HttpClient httpClient { get; set; }
 
-        public DanhGiaController(IDanhGiaService danhGiaService)
+        public DanhGiaController(IDanhGiaService danhGiaService, UserManager<NguoiDung> userManager)
         {
             httpClient = new HttpClient();
             _danhGiaService = danhGiaService;
+            _userManager = userManager;
         }
+        public const int ITEMS_PER_PAGE = 10;
 
+        [BindProperty(SupportsGet = true, Name = "p")]
+        public int currentPage { get; set; }
+        public int countPages { get; set; }
+        public int totalUsers { get; set; }
+
+        [HttpPost]
+        public async Task<IActionResult> LstDangGiaChuaDuyetTab(int? tab)
+        {
+            
+
+            var lstDanhGiaChuaDuyet = await _danhGiaService.GetLstDanhGiaChuaDuyetByDK(tab);
+            return PartialView("_LstDangGiaChuaDuyetPartial", lstDanhGiaChuaDuyet);
+        }
         public async Task<IActionResult> Index()
         {
             var lst = await _danhGiaService.GetAllDanhGia();
@@ -45,9 +63,13 @@ namespace App_View.Areas.Admin.Controllers
         //    var data = lst.FirstOrDefault(s => s.ParentId == id);
         //    return PartialView("_ChildComment", data);
         //}
-      
 
 
+        public async Task<IActionResult> DanhSachDanhGiaChuaDuyet()
+        {
+            
+            return View();
+        }
 
 
 
@@ -141,5 +163,11 @@ namespace App_View.Areas.Admin.Controllers
             }
             return RedirectToAction("TongSoDanhGiaCuaMoiSpChuaDuyet");
         }
+
+
+
+
+
+
     }
 }

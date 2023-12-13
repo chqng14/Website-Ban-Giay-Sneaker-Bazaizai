@@ -29,12 +29,6 @@ namespace App_Api.Controllers
             AllRepo<DanhGia> all = new AllRepo<DanhGia>(context, danhGias);
             repos = all;
         }
-        //public class DanhGiaResult
-        //{
-        //    public string SanPham { get; set; }
-        //    public int SoLuongDanhGiaChuaDuyet { get; set; }
-        //    public string IdSanPham { get;set; }
-        //}
         [HttpGet("GetListAsyncViewModel")]
         public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string idspchitiet)
         {
@@ -175,5 +169,26 @@ namespace App_Api.Controllers
             return await _danhGiaRepo.GetViewModelByKeyAsync(id);
         }
 
+        //[HttpGet("GetAllDanhGiaChuaDuyetViewModel")]
+        //public async Task<List<DanhGiaViewModel>> GetAllDanhGiaChuaDuyetViewModel()
+        //{
+        //    var lst = (await _danhGiaRepo.LstDanhGia()).Where(x=> x.TrangThai == (int)TrangThaiDanhGia.ChuaDuyet).ToList();
+        //    return lst;
+        //}
+        [HttpGet("GetAllDanhGiaChuaDuyetByDkViewModel")]
+        public async Task<List<DanhGiaViewModel>> GetAllDanhGiaChuaDuyetByDkViewModel(int? Dk)
+        {
+            
+            var lst = (await _danhGiaRepo.LstDanhGia()).Where(x => x.TrangThai == (int)TrangThaiDanhGia.ChuaDuyet).ToList();
+            if (Dk <= 5&&Dk>=1)
+            {
+                lst = lst.Where(x => x.SaoSp == Dk).ToList();
+            }
+            else if(Dk==6)
+            {
+                lst=lst.Where(x => x.BinhLuan !=null).ToList();
+            }
+            return lst;
+        }
     }
 }
