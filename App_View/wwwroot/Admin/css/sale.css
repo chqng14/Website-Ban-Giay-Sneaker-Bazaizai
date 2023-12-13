@@ -3,8 +3,18 @@
     position: relative;
     z-index: 0
 }
-
-ul.MOttpc {
+@font-face {
+    font-family: 'Monument';
+    src: url('Knorke.ttf') format('opentype');
+}
+.tenKhuyenMai {
+    font-family: Montserrat, sans-serif;
+    color: #FF2F2F; /* Màu chữ */
+    text-shadow: 2px 2px 4px rgba(52, 152, 219, 0.5); /* Hiệu ứng nổi bật */
+    font-weight: bold;
+    font-size: 30px;
+} 
+ul .MOttpc {
     padding: 0;
     margin: 0
 }

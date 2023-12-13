@@ -1,15 +1,25 @@
 ﻿using App_Data.Models;
+using App_View.IServices;
+using App_View.Services;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Controllers
 {
     public class KhuyenMaiChiTietController : Controller
     {
         public HttpClient httpClient { get; set; }
-        public KhuyenMaiChiTietController()
+        private readonly IKhuyenMaiChiTietServices khuyenMaiChiTietServices;
+        private readonly IKhuyenMaiServices khuyenMaiServices;
+        private readonly ISanPhamChiTietService sanPhamChiTietService;
+        public KhuyenMaiChiTietController(IKhuyenMaiChiTietServices khuyenMaiChiTietServices, IKhuyenMaiServices khuyenMaiServices, ISanPhamChiTietService sanPhamChiTietService)
         {
             httpClient = new HttpClient();
+            this.khuyenMaiChiTietServices = khuyenMaiChiTietServices;
+            this.khuyenMaiServices = khuyenMaiServices;
+            this.sanPhamChiTietService = sanPhamChiTietService;
         }
 
         public async Task<IActionResult> GetAllKhuyenMaiChiTiet()
@@ -75,6 +85,18 @@ namespace App_View.Controllers
         public IActionResult ViewKhuyenMai()
         {
             return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> KhuyenMaiDongGiaAsync(string idKhuyenMai)
+        {
+            var kmct = (await khuyenMaiChiTietServices.GetAllKhuyenMaiChiTiet()).Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai&&x.IdKhuyenMai== idKhuyenMai);
+            var model = new App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel();
+            model = sanPhamChiTietService.GetDanhSachGiayViewModelAynsc().Result;
+            var lstSpDuocApDungKhuyenMai = model.LstAllSanPham.Where(x => x.GiaThucTe < x.GiaGoc);
+            ViewBag.lstSpct = lstSpDuocApDungKhuyenMai.ToList();
+            var khuyenMai = (await khuyenMaiServices.GetAllKhuyenMai()).Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau);
+            ViewBag.KhuyemMai = khuyenMai;
+            return PartialView(kmct);
         }
     }
 }
