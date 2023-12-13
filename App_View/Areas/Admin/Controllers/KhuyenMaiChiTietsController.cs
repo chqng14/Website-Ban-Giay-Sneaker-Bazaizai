@@ -30,7 +30,7 @@ using System.Diagnostics.Metrics;
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,NhanVien")]
     public class KhuyenMaiChiTietsController : Controller
     {
         private readonly BazaizaiContext _context;
@@ -253,24 +253,24 @@ namespace App_View.Areas.Admin.Controllers
                 var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Where(x => (x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong).Select(item => CreateSanPhamDanhSachViewModel(item));
                 var model = new DanhSachGiayViewModel();
                 model = sanPhamChiTietService.GetDanhSachGiayViewModelAynsc().Result;
-                var lstSpDuocApDungKhuyenMai = model.LstAllSanPham;
-                
-                
-                
+                var lstSpDuocApDungKhuyenMai = model.LstAllSanPham.GroupBy(x => x.TenSanPham).Select(x => x.First()).ToList();
+
+
+
                 if (idThuongHieu!=null && idThuongHieu!="")
                 {
                     var tenThuongHieu = _context.thuongHieus.Find(idThuongHieu).TenThuongHieu;
-                    lstSpDuocApDungKhuyenMai = (List<ItemShopViewModel>?)lstSpDuocApDungKhuyenMai.Where(x => x.ThuongHieu.ToUpper() == tenThuongHieu.ToUpper());           
+                    lstSpDuocApDungKhuyenMai = (List<ItemShopViewModel>?)lstSpDuocApDungKhuyenMai.Where(x => x.ThuongHieu.ToUpper() == tenThuongHieu.ToUpper()).ToList();           
                 }
                 if (idLoaiGiay != null && idLoaiGiay != "")
                 {
                     var tenLoaiGiay = _context.LoaiGiays.Find(idLoaiGiay).TenLoaiGiay;
-                    lstSpDuocApDungKhuyenMai = (List<ItemShopViewModel>?)lstSpDuocApDungKhuyenMai.Where(x => x.TheLoai.ToUpper() == tenLoaiGiay.ToUpper());
+                    lstSpDuocApDungKhuyenMai = (List<ItemShopViewModel>?)lstSpDuocApDungKhuyenMai.Where(x => x.TheLoai.ToUpper() == tenLoaiGiay.ToUpper()).ToList();
                 }
                 if (idMauSac != null && idMauSac != "")
                 {
-                    var tenMauSac = _context.mauSacs.Find(idLoaiGiay).TenMauSac;
-                    lstSpDuocApDungKhuyenMai = (List<ItemShopViewModel>?)lstSpDuocApDungKhuyenMai.Where(x => x.MauSac.ToUpper() == tenMauSac.ToUpper());
+                    var tenMauSac = _context.mauSacs.Find(idMauSac).TenMauSac;
+                    lstSpDuocApDungKhuyenMai = (List<ItemShopViewModel>?)lstSpDuocApDungKhuyenMai.Where(x => x.MauSac.ToUpper() == tenMauSac.ToUpper()).ToList();
                 }
                 return View(lstSpDuocApDungKhuyenMai);
             }
@@ -382,24 +382,24 @@ namespace App_View.Areas.Admin.Controllers
             var getallProductDT = (await sanPhamChiTietService.GetListSanPhamChiTietAsync()).Where(x => (x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DuocApDungSale || x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale) && x.TrangThai == (int)TrangThaiCoBan.HoatDong).Select(item => CreateSanPhamDanhSachViewModel(item));
             var model = new DanhSachGiayViewModel();
             model = sanPhamChiTietService.GetDanhSachGiayViewModelAynsc().Result;
-            var lstSpDuocApDungKhuyenMai = model.LstAllSanPham;
+            var lstSpDuocApDungKhuyenMai = model.LstAllSanPham.GroupBy(x=>x.TenSanPham).Select(x=>x.First()).ToList();
            
            
             
             if (idThuongHieu != null && idThuongHieu != "")
             {
                 var tenThuongHieu = _context.thuongHieus.Find(idThuongHieu).TenThuongHieu;
-                lstSpDuocApDungKhuyenMai = (List<ItemShopViewModel>?)lstSpDuocApDungKhuyenMai.Where(x => x.ThuongHieu.ToUpper() == tenThuongHieu.ToUpper());
+                lstSpDuocApDungKhuyenMai = (List<ItemShopViewModel>?)lstSpDuocApDungKhuyenMai.Where(x => x.ThuongHieu.ToUpper() == tenThuongHieu.ToUpper()).ToList();
             }
             if (idLoaiGiay != null && idLoaiGiay != "")
             {
                 var tenLoaiGiay = _context.LoaiGiays.Find(idLoaiGiay).TenLoaiGiay;
-                lstSpDuocApDungKhuyenMai = (List<ItemShopViewModel>?)lstSpDuocApDungKhuyenMai.Where(x => x.TheLoai.ToUpper() == tenLoaiGiay.ToUpper());
+                lstSpDuocApDungKhuyenMai = (List<ItemShopViewModel>?)lstSpDuocApDungKhuyenMai.Where(x => x.TheLoai.ToUpper() == tenLoaiGiay.ToUpper()).ToList();
             }
             if (idMauSac != null && idMauSac != "")
             {
-                var tenMauSac = _context.mauSacs.Find(idLoaiGiay).TenMauSac;
-                lstSpDuocApDungKhuyenMai = (List<ItemShopViewModel>?)lstSpDuocApDungKhuyenMai.Where(x => x.MauSac.ToUpper() == tenMauSac.ToUpper());
+                var tenMauSac = _context.mauSacs.Find(idMauSac).TenMauSac;
+                lstSpDuocApDungKhuyenMai = (List<ItemShopViewModel>?)lstSpDuocApDungKhuyenMai.Where(x => x.MauSac.ToUpper() == tenMauSac.ToUpper()).ToList();
             }
            
             if (km.LoaiHinhKM==0)
