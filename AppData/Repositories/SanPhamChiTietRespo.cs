@@ -7,6 +7,7 @@ using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_Data.ViewModels.SanPhamChiTietViewModel;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Math;
 using DocumentFormat.OpenXml.Packaging;
@@ -90,6 +91,23 @@ namespace App_Data.Repositories
         {
             var dateTimeNow = DateTime.Now;
             var query = _context.sanPhamChiTiets.AsQueryable();
+            var lstAllSp = await query
+                  .Include(it => it.Anh)
+                  .Include(it => it.SanPham)
+                  .Include(it => it.ThuongHieu)
+                  .Include(it => it.LoaiGiay)
+                  .Include(it => it.MauSac)
+                  .ToListAsync();
+            var groupedResults1 = lstAllSp
+              .GroupBy(gr =>
+                  new
+                  {
+                      gr.IdChiTietSp
+                  })
+              .ToList();
+            var lstAllSpViewModel = groupedResults1
+               .Select(gr => CreateAllItemShopViewModelAsync(gr))
+               .ToList();
             var lstSPNoiBat = await query
                   .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong && sp.NoiBat == true)
                   .Include(it => it.Anh)
@@ -197,6 +215,7 @@ namespace App_Data.Repositories
 
             return new DanhSachGiayViewModel()
             {
+                LstAllSanPham = lstAllSpViewModel,
                 LstSanPhamNoiBat = lstSPNoiBatViewModels,
                 LstSanPhamMoi = lstSPMoiViewModels,
                 LstBanChay = lstBanChayViewModels,
@@ -232,7 +251,32 @@ namespace App_Data.Repositories
                 GiaMax = listGia.Max()
             };
         }
-
+        private ItemShopViewModel CreateAllItemShopViewModelAsync(IGrouping<object, SanPhamChiTiet> gr)
+        {
+            var firstItem = gr.First();
+            var grSp = _context
+                .sanPhamChiTiets
+                .Where(sp =>
+               sp.IdChiTietSp== firstItem.IdChiTietSp)
+                .ToList();
+            var listGia = grSp.Select(sp => sp.GiaThucTe).ToList();
+            return new ItemShopViewModel()
+            {
+                IdChiTietSp = firstItem.IdChiTietSp,
+                Anh = firstItem.Anh
+                    .Where(a => a.TrangThai == (int)TrangThaiCoBan.HoatDong)
+                    .OrderBy(a => a.NgayTao)
+                    .FirstOrDefault()?.Url,
+                TenSanPham = $"{firstItem.ThuongHieu.TenThuongHieu?.ToUpper()} {firstItem.SanPham.TenSanPham?.ToUpper()}",
+                ThuongHieu = firstItem.ThuongHieu.TenThuongHieu,
+                TheLoai = firstItem.LoaiGiay.TenLoaiGiay,
+                GiaMin = listGia.Min(),
+                GiaMax = listGia.Max(),
+                GiaThucTe= firstItem.GiaThucTe,
+                GiaGoc= firstItem.GiaBan,
+                MauSac= firstItem.MauSac.TenMauSac
+            };
+        }
 
         public async Task<IEnumerable<SanPhamChiTiet>> GetListAsync()
         {

@@ -118,7 +118,7 @@
                     if(response.success==false){
                         Swal.fire({
                             title: 'Thông báo!',
-                            text: 'Chương trình khuyến mãi đã hết hạn',
+                            text: response.mess,
                             icon: 'info',
                             confirmButtonText: 'Đóng'
                         }).then((result) => {

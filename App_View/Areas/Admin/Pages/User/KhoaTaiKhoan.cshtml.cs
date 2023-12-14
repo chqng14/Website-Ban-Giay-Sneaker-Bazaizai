@@ -11,6 +11,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Areas.Admin.Pages.User
 {
@@ -49,7 +50,6 @@ namespace App_View.Areas.Admin.Pages.User
             public DateTimeOffset? LockoutEnd { get; set; }
 
             //[Required]
-            //[Display(Name = "Confirm new password")]
             //public Boolean LockoutEnabled { get; set; }
 
         }
@@ -85,7 +85,23 @@ namespace App_View.Areas.Admin.Pages.User
             {
                 return NotFound($"không tìm thấy người dùng có id: {id}.");
             }
-
+            var LstRole = await _userManager.GetRolesAsync(user);
+            int i = 0;
+            foreach (var role in LstRole)
+            {
+                if (role == ChucVuMacDinh.NhanVien.ToString())
+                {
+                    i = 1;
+                }
+                if (role == ChucVuMacDinh.Admin.ToString())
+                {
+                    i = 2;
+                }
+                if (role == ChucVuMacDinh.KhachHang.ToString())
+                {
+                    i = 3;
+                }
+            }
             TimeSpan offsetPlus7 = TimeSpan.FromHours(7);
             IdentityResult ResultLockoutEnd = null;
             //IdentityResult ResultLockoutEnabled = null;
@@ -97,6 +113,11 @@ namespace App_View.Areas.Admin.Pages.User
             }
             else /*if (Input.LockoutEnd != null && Input.LockoutEnabled == true)*/
             {
+                if(Input.LockoutEnd<= DateTime.Now)
+                {
+                    ModelState.AddModelError(string.Empty, "Thời gian khóa phải ở tương lai.");
+                    return Page();
+                }
                 ResultLockoutEnd = await _userManager.SetLockoutEndDateAsync(user, Input.LockoutEnd);
                 await _userManager.SetLockoutEnabledAsync(user, true);
                 //ResultLockoutEnabled = await _userManager.SetLockoutEnabledAsync(user, true);
@@ -123,7 +144,19 @@ namespace App_View.Areas.Admin.Pages.User
             await _userManager.UpdateSecurityStampAsync(user);
             StatusMessage = $"Bạn vừa khóa tài khoản người dùng: {user.UserName}";
 
-            return RedirectToPage("./Index");
+            if (i == 1)
+            {
+                return RedirectToPage("./DanhSachNhanVien");
+            }
+            else if (i == 2)
+            {
+                return RedirectToPage("./DanhSachQuanly");
+            }
+            else if (i == 3)
+            {
+                return RedirectToPage("./Index");
+            }
+            else return RedirectToPage("./Index");
         }
     }
 }

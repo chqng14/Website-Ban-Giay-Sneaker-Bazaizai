@@ -116,17 +116,26 @@
                 <ul class="dropdown-menu" style="display: none;">
                     <li>
                         <a asp-page="/User/Index">
-                            Danh sách người dùng
+                            Danh sách khách hàng
                         </a>
                     </li>
-                </ul>
-                <ul class="dropdown-menu" style="display: none;">
+                    <li>
+                        <a asp-page="/User/DanhSachNhanVien">
+                            Danh sách nhân viên
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-page="/User/DanhSachQuanLy">
+                            Danh sách quản lý
+                        </a>
+                    </li>
                     <li>
                         <a asp-page="/Role/Index">
                             Danh sách chức vụ
                         </a>
                     </li>
                 </ul>
+              
 
             </li>
             <li class="nav-item dropdown">
@@ -154,7 +163,7 @@
             <li class="nav-item dropdown">
                 <a class="dropdown-toggle" href="javascript:void(0);">
                     <span class="icon-holder">
-                        <i class="anticon anticon-star"></i>
+                        <i class="anticon anticon-area-chart"></i>
                     </span>
                     <span class="title">Thống kê</span>
                     <span class="arrow">

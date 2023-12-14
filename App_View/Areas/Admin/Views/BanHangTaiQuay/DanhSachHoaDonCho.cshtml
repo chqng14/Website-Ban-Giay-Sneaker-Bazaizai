@@ -305,10 +305,10 @@
             </div>
         </div>
         <div class="col-8" style="height: 400px ">
-            <div class="row" style="height: 400px;">
+            <div class="row" style="height: 420px;">
                 <div class="card w-100 h-100">
                     <div class="d-flex">
-                        <button class="btn btn-primary" id="create-tab" style="width: 140px">Tạo hóa đơn mới</button>
+                        <button class="btn btn-primary" id="create-tab" style="width: 200px">Tạo hóa đơn mới</button>
                         <button id="trigger-loading-1" class="btn btn-warning m-r-5 m-l-5">
                             <i class="anticon anticon-loading m-r-5"></i>
                             <i class="anticon anticon-scan m-r-5"></i>
@@ -481,7 +481,7 @@
                     </tr>
                     <tr>
                         <td>Số điện thoại: </td>
-                        <td><input class="form-control" type="text" id="SoDienThoaiThem" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
+                        <td><input class="form-control" type="text" id="SoDienThoaiThem" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
                     </tr>
                 </table>
             </div>

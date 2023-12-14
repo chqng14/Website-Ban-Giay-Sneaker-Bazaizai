@@ -1,0 +1,91 @@
+﻿@page "/Admin/DoiMatKhau"
+@model App_View.Areas.Admin.Pages.User.DoiMatKhauModel
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<style>
+    .text-danger {
+        color: red;
+    }
+</style>
+
+<link rel="shortcut icon" href="assets/images/logo/favicon.png">
+
+<!-- page css -->
+<!-- Core css -->
+<link href="assets/css/app.min.css" rel="stylesheet">
+
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Hồ sơ</a>
+            <span class="breadcrumb-item active">Đổi mật khẩu</span>
+        </nav>
+    </div>
+</div>
+<partial name="_StatusMessage" for="StatusMessage" />
+
+<div class="app">
+    <div class="container-fluid p-0 h-100">
+        <div class="row ">
+
+            <div class="col-lg-12 bg-white">
+                <div class="container h-100">
+                    <div class="row no-gutters h-100 align-items-center">
+                        <div class="col-md-8 col-lg-7 col-xl-6 mx-auto">
+                            <h2>Đổi mật khẩu</h2>
+                            <p class="m-b-30">Nhập thông tin xác thực để đổi mật khẩu</p>
+                            <form  id="doi-matkhau-form" method="post">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label class="font-weight-semibold">Mật khẩu hiện tại:</label>
+                                    <div class="input-affix">
+                                        <i class="prefix-icon anticon anticon-lock"></i>
+                                        <input asp-for="Input.OldPassword" class="form-control" placeholder="Mật khẩu hiện tại">
+                                        <span asp-validation-for="Input.OldPassword" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-semibold">Mật khẩu mới:</label>
+                                    <div class="input-affix">
+                                        <i class="prefix-icon anticon anticon-lock"></i>
+                                        <input asp-for="Input.NewPassword" class="form-control" placeholder="Mật khẩu mới">
+                                        <span asp-validation-for="Input.NewPassword" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-semibold">Nhập lại mật khẩu mới:</label>
+
+                                    <div class="input-affix m-b-10">
+                                        <i class="prefix-icon anticon anticon-lock"></i>
+                                        <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Nhập lại mật khẩu mới">
+                                        <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="d-flex align-items-center justify-content-between">
+
+                                        <button id="doi-matkhau" type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Core Vendors JS -->
+<script src="assets/js/vendors.min.js"></script>
+
+<!-- page js -->
+<!-- Core JS -->
+<script src="assets/js/app.min.js"></script>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

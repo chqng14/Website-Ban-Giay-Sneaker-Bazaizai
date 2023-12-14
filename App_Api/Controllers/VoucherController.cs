@@ -1,4 +1,4 @@
-﻿ using App_Data.DbContextt;
+﻿using App_Data.DbContextt;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -133,7 +133,7 @@ namespace App_Api.Controllers
                 {
                     VoucherGet.TrangThai = (int)TrangThaiVoucher.ChuaBatDau;
                 }
-                else 
+                else
                 {
                     VoucherGet.TrangThai = (int)TrangThaiVoucher.KhongHoatDong;
                 }
@@ -316,11 +316,16 @@ namespace App_Api.Controllers
         public bool AddVoucherCungBanTaiQuay(string idVoucher, string idUser, int soluong)
         {
             DateTime? ngay = DateTime.Now;
-            var voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == idVoucher && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay));
+            var voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == idVoucher && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay) && c.SoLuong < 1000);
+
 
             if (voucher != null)
             {
-                int soLuongDaIn = 0;
+                if (soluong + voucher.SoLuong >1000 || voucher.SoLuong == 1000)
+                {
+                    return false;
+                }
+                //int soLuongDaIn = 0;
                 int TrangThaiCanTao = (int)TrangThaiVoucherNguoiDung.KhaDung;
 
                 if (voucher.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay)
@@ -340,7 +345,9 @@ namespace App_Api.Controllers
                     };
 
                     VcNguoiDungRepos.AddItem(VcNguoiDungCanThem);
-                    soLuongDaIn += 1;
+                    voucher.SoLuong += 1;
+                    allRepo.EditItem(voucher);
+                    //soLuongDaIn += 1;
 
                     // Tạo và lưu hình ảnh QR nếu thêm voucher người dùng thành công
                     string currentDirectory = Directory.GetCurrentDirectory();
@@ -372,8 +379,7 @@ namespace App_Api.Controllers
                     }
                 }
 
-                voucher.SoLuong = voucher.SoLuong + soLuongDaIn;
-                allRepo.EditItem(voucher);
+
 
                 return true;
             }

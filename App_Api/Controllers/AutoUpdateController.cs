@@ -50,7 +50,7 @@ namespace App_Api.Controllers
                 .Where(p => p.NgayKetThuc <= DateTime.Now && p.TrangThai != (int)TrangThaiSale.HetHan)
                 .ToList();
             var ngaySale = KMRepos.GetAll()
-                .Where(p => p.NgayKetThuc >= DateTime.Now && p.TrangThai == (int)TrangThaiSale.HetHan && p.TrangThai != (int)TrangThaiSale.BuocDung)
+                .Where(p => p.NgayKetThuc >= DateTime.Now && p.NgayBatDau<= DateTime.Now&&(  p.TrangThai == (int)TrangThaiSale.HetHan|| p.TrangThai==(int)TrangThaiSale.ChuaBatDau) && p.TrangThai != (int)TrangThaiSale.BuocDung)
                 .ToList();
             var saleChuaBatDau = KMRepos.GetAll()
                .Where(p => p.NgayBatDau >= DateTime.Now)
@@ -74,6 +74,7 @@ namespace App_Api.Controllers
             // Hàm CapNhatTrangThaiSaleDetail
             var lstHetHan = KMRepos.GetAll().Where(x => x.TrangThai == (int)TrangThaiSale.HetHan || x.TrangThai == (int)TrangThaiSale.BuocDung).ToList();
             var lstDangKhuyenMai = KMRepos.GetAll().Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau).ToList();
+            var lstSapKhuyenMai = KMRepos.GetAll().Where(x => x.TrangThai == (int)TrangThaiSale.ChuaBatDau).ToList();
             var lstKMCT = KmctRepos.GetAll();
             foreach (var a in lstHetHan)
             {
@@ -82,6 +83,17 @@ namespace App_Api.Controllers
                     if (b.IdKhuyenMai == a.IdKhuyenMai)
                     {
                         b.TrangThai = (int)TrangThaiSaleDetail.NgungKhuyenMai;
+                        KmctRepos.EditItem(b);
+                    }
+                }
+            }
+            foreach (var a in lstSapKhuyenMai)
+            {
+                foreach (var b in lstKMCT)
+                {
+                    if (b.IdKhuyenMai == a.IdKhuyenMai)
+                    {
+                        b.TrangThai = (int)TrangThaiSaleDetail.SapKhuyenMai;
                         KmctRepos.EditItem(b);
                     }
                 }
@@ -149,7 +161,7 @@ namespace App_Api.Controllers
                         {
                             item.GiaBan = ctsp.GiaThucTe;
                         }
-                        _sanPhamChiTietRes.UpdateAsync(ctsp);
+                        
                     }
                     else
                     {
@@ -160,10 +172,11 @@ namespace App_Api.Controllers
                         {
                             item.GiaBan = ctsp.GiaThucTe;
                         }
-                        _sanPhamChiTietRes.UpdateAsync(ctsp);
+                        
                     }
 
                 }
+                _dbContext.sanPhamChiTiets.UpdateRange(lstCTSP);
                 _dbContext.gioHangChiTiets.UpdateRange(giohang);
                 _dbContext.SaveChanges();
             }

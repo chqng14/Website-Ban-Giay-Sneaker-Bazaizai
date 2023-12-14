@@ -153,8 +153,13 @@
                 <span id="thongBao">Bạn có duyệt các đánh giá đã chọn không ?</span>
             </div>
             <div class="modal-footer" style="background: white">
+                @if (Model.Any() )
+                {
+                    <button class="btn btn-primary bd-0 col-md-6" id="delete-button" data-idSanPham="@Model.FirstOrDefault().IdSanPham">Xác nhận </button>
 
-                <button class="btn btn-primary bd-0 col-md-6" id="delete-button" data-idSanPham="@Model.First().IdSanPham">Xác nhận </button>
+
+                }
+              
                 <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
             </div>
         </div>
@@ -175,8 +180,11 @@
                 <span id="thongBao">Bạn có duyệt tất cả đánh giá của sản phẩm này không ?</span>
             </div>
             <div class="modal-footer" style="background: white">
+                @if (Model.Any())
+                {
+                    <button class="btn btn-primary bd-0 col-md-6"><a asp-controller="DanhGia" asp-action="DuyetTatCaDanhGiaCuaMSp" asp-route-idSanPham="@Model.First().IdSanPham" style="color:white">Xác nhận</a> </button>
+                }
                 
-                <button class="btn btn-primary bd-0 col-md-6"><a asp-controller="DanhGia" asp-action="DuyetTatCaDanhGiaCuaMSp" asp-route-idSanPham="@Model.First().IdSanPham" style="color:white">Xác nhận</a> </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
             </div>
         </div>
