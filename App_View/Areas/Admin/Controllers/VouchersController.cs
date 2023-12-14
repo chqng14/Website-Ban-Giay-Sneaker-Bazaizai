@@ -376,6 +376,7 @@ namespace App_View.Areas.Admin.Controllers
 
             if (lstIdVoucherNguoiDung != null && lstIdVoucherNguoiDung.Any())
             {
+                await _voucherSV.UpdateTrangThaiKhiXuat(lstIdVoucherNguoiDung);
                     return Ok(true);
                    
             }
