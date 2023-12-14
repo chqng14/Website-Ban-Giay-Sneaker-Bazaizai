@@ -140,7 +140,7 @@
                 </div>
             </div>
             <div class="modal-footer" style="background: #d0dae3">
-                <button type="button" class="btn btn-warning" onclick="generate()">
+                <button type="button" class="btn btn-kio" onclick="generate()">
                     <i class="far fa-calendar-check"></i>
                     <span>Áp dụng</span>
                 </button>
@@ -154,7 +154,7 @@
     <div class="header-sub-title">
         <nav class="breadcrumb breadcrumb-dash">
             <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>QUẢN LÝ SẢN PHẨM</a>
-            <a class="breadcrumb-item" href="#">QUẢN LÝ THỰC THỂ SẢN PHẨM</a>
+            <a class="breadcrumb-item" href="#">THÊM MỚI & CHỈNH SỬA SẢN PHẨM</a>
         </nav>
     </div>
 </div>
@@ -293,8 +293,9 @@
             <i class="far fa-file-image m-r-5"></i>
             Chọn Ảnh
         </button>
-        <button onclick="CapNhat()" class="btn btn-kio mr-2">
-            <i class="far fa-save m-r-5"></i>
+        <button onclick="CapNhat(this)" class="btn btn-kio mr-2">
+            <i class="anticon anticon-sync m-r-5"></i>
+            <i class="anticon anticon-loading m-r-5"></i>
             Cập nhật
         </button>
         <button onclick="Huy()" class="btn btn-warning mr-2">
@@ -1369,7 +1370,8 @@
         });
     });
 
-    function CapNhat() {
+    function CapNhat(btn) {
+        const $btn = $(btn)
         Swal.fire({
             title: 'Thông báo?',
             text: 'Bạn có muốn cập nhật các biến thể này không?',
@@ -1380,6 +1382,7 @@
             confirmButtonText: 'Đồng ý'
         }).then((result) => {
             if (result.isConfirmed) {
+                $btn.addClass('is-loading')
                 var items = $('.item-accordion');
                 var currentIndex = 0;
                 var checkErr = 0;
@@ -1403,6 +1406,7 @@
                                     window.location.reload();
                                 }
                             });
+                            $btn.removeClass('is-loading')
                         }
                         $('#preloader').hide();
                         if (checkSS > 0) {
@@ -1426,6 +1430,7 @@
                                 $('#notification-toast .toast:first-child').remove();
                             }, 3000);
                             checkErr = 0;
+                            $btn.removeClass('is-loading')
                         }
 
                         if (checkErr > 0) {
@@ -1449,6 +1454,7 @@
                                 $('#notification-toast .toast:first-child').remove();
                             }, 3000);
                             checkErr = 0;
+                            $btn.removeClass('is-loading')
                         }
                         return
                     }

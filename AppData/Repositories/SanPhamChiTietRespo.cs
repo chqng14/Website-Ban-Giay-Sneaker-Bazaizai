@@ -1027,7 +1027,10 @@ namespace App_Data.Repositories
 
         public IQueryable<SanPhamChiTiet> GetQuerySanPhamChiTiet()
         {
-            return _context.sanPhamChiTiets.AsNoTracking();
+            using (var context = new BazaizaiContext())
+            {
+                return _context.sanPhamChiTiets.AsNoTracking();
+            }
         }
     }
 }
