@@ -122,7 +122,12 @@
 														<td colspan="2">
 															<p>
 																Tổng Tiền<br>
-																Tiền ship<br>
+																@if (Model.TrangThaiGiaoHang != 0)
+																{
+																	<p>
+																		Tiền ship <br>
+																	</p>
+																}
 																Tiền giảm
 															</p>
 															<h5 class="text-success"><strong>Tổng Cộng</strong></h5>
@@ -130,7 +135,11 @@
 														<td>
 															<p>
 																@string.Format("{0:N0}đ",ViewData["TONGTIEN"])<br>
-																@((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] != "") ? string.Format("{0:N0}đ", ViewData["TIENSHIP"]) : string.Format("{0:N0}đ", "0"))<br>
+															@if (Model.TrangThaiGiaoHang != 0)
+															{
+																@((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] != "") ? string.Format("{0:N0}đ", ViewData["TIENSHIP"]) : string.Format("{0:N0}đ", "0"))
+																<br>
+															}
 															@((ViewData["TIENGIAM"] != null && ViewData["TIENGIAM"] != "") ? string.Format("{0:N0}đ", ViewData["TIENGIAM"]) : string.Format("{0:N0}đ", "0"))
 
 															</p>@{

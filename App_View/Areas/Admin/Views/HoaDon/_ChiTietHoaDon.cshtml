@@ -121,7 +121,12 @@
 													<td colspan="2">
 														<p>
 															Tổng Tiền<br>
-															Tiền ship<br>
+															@if (Model.TrangThaiGiaoHang != 0)
+															{
+																<p>
+																Tiền ship <br>
+																</p>
+															}
 															Tiền giảm
 														</p>
 														<h5 class="text-success"><strong>Tổng Cộng</strong></h5>
@@ -129,7 +134,11 @@
 													<td>
 														<p>
 															@string.Format("{0:N0}đ",ViewData["TONGTIEN"])<br>
-															@((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] != "") ? string.Format("{0:N0}đ", ViewData["TIENSHIP"]) : string.Format("{0:N0}đ", "0"))<br>
+															@if (Model.TrangThaiGiaoHang != 0)
+															{
+																@((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] != "") ? string.Format("{0:N0}đ", ViewData["TIENSHIP"]) : string.Format("{0:N0}đ", "0"))
+																<br>
+															}
 															@((ViewData["TIENGIAM"] != null && ViewData["TIENGIAM"] != "") ? string.Format("{0:N0}đ", ViewData["TIENGIAM"]) : string.Format("{0:N0}đ", "0"))
 
 														</p>@{
@@ -157,8 +166,7 @@
 <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
 <script>
     function printModalContent() {
-        document.getElementById("printHoaDon").style.display = "none";
-		document.getElementById("HuyHoaDon").style.display = "none";
+        
 		var printWindow = window.frames["print_frame"];
         var contentToPrint = $("#invoiceDetailContent").html();
 
@@ -167,8 +175,7 @@
         printWindow.document.close();
         
         printWindow.print();
-        document.getElementById("printHoaDon").style.display = "block";
-		document.getElementById("HuyHoaDon").style.display = "block";
+
     }
 	function HuyHoaDon() {
 

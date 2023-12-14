@@ -16,19 +16,16 @@
             <strong>Tên khuyến mãi:</strong> @Model.TenKhuyenMai
         </div>
         <div class="form-group col-md-6">
-            <strong>Ngày bắt đầu:</strong> @Model.NgayBatDau.ToString()<br />
+        <strong>Ngày bắt đầu:</strong> @((Model.NgayBatDau.HasValue ? Model.NgayBatDau.Value.ToShortDateString() : ""))<br />
         </div>
         <div class="form-group col-md-6">
-            <strong>Ngày bắt đầu:</strong> @Model.NgayBatDau.ToString()<br />
-        </div>
-        <div class="form-group col-md-6">
-            <strong>Ngày kết thúc:</strong> @Model.NgayKetThuc.ToString()<br />
+        <strong>Ngày kết thúc:</strong> @((Model.NgayBatDau.HasValue ? Model.NgayKetThuc.Value.ToShortDateString() : ""))<br />
         </div>
         <div class="form-group col-md-6">
             <strong>Loại hình:</strong> @(Model.LoaiHinhKM == 0 ? "Khuyến mại đồng giá" : "Khuyến mại giảm giá")<br />
         </div>
         <div class="form-group col-md-6">
-            <strong>Mức giảm:</strong> @Model.MucGiam<br />
+        <strong>Mức giảm:</strong>@((Model.LoaiHinhKM == 0) ? string.Format("{0:N0}đ", @Model.MucGiam) : Model.MucGiam + "%")<br />
         </div>
 
     </div>
