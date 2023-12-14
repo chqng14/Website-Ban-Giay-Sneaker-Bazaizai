@@ -64,7 +64,7 @@
                             <strong>Ngày bắt đầu:</strong> @((item.NgayBatDau.HasValue ? item.NgayBatDau.Value.ToShortDateString() : ""))<br />
                             <strong>Ngày kết thúc:</strong> @((item.NgayKetThuc.HasValue ? item.NgayKetThuc.Value.ToShortDateString() : ""))<br />
                             <strong>Loại hình:</strong> @(item.LoaiHinhKM == 0 ? "Khuyến mại đồng giá" : "Khuyến mại giảm giá")<br />
-                            <strong>Mức giảm:</strong> @string.Format("{0:N0}đ",@item.MucGiam)<br />
+                            <strong>Mức giảm:</strong>@((item.LoaiHinhKM == 0) ? string.Format("{0:N0}đ", @item.MucGiam) : item.MucGiam + "%") <br />
 
                             
                         </div>

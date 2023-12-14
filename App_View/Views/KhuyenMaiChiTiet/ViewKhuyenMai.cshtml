@@ -316,189 +316,203 @@
             }
             @foreach (var km in khuyenMai.Where(x=>x.LoaiHinhKM==1))
             {
-                <div style="position: relative; height: 132px; width: 960px; left: calc((100% - 960px) / 2);">
-                    <div>
-                        <div class="md-container">
-                            <div class="md-component" data-component-id="1699246519373">
-                                <div class="lEwcgc">
-                                    <div style="position: absolute; top: 50%; z-index: 9999;"></div>
-                                    <div style="position: relative;">
-                                        <div class="tenKhuyenMai" style="width: 100%; padding-top: 13.75%;">
-                                           
-                                            <div style="position: absolute; z-index: 10000;left: 50%;  top: 40%;transform: translate(-50%, -50%); text-align: center;">
-                                                @km.TenKhuyenMai.ToUpper()
+                if (kmct.Where(x => x.IdKhuyenMai == km.IdKhuyenMai).Count() > 0)
+                {
+                    <div style="position: relative; height: 132px; width: 960px; left: calc((100% - 960px) / 2);">
+                        <div>
+                            <div class="md-container">
+                                <div class="md-component" data-component-id="1699246519373">
+                                    <div class="lEwcgc">
+                                        <div style="position: absolute; top: 50%; z-index: 9999;"></div>
+                                        <div style="position: relative;">
+                                            <div class="tenKhuyenMai" style="width: 100%; padding-top: 13.75%;">
+
+                                                <div style="position: absolute; z-index: 10000;left: 50%;  top: 40%;transform: translate(-50%, -50%); text-align: center;">
+                                                    @km.TenKhuyenMai.ToUpper()
+                                                </div>
                                             </div>
+                                            <picture class="JEjj5L">
+                                                <img data-is-lazy-load-bg-image="false"
+                                                     data-use-image-server="false" class="lazyload RPPDP+"
+                                                     loading="lazy"
+                                                     src="~/images/banners/navbar sale.png"
+                                                     role="presentation" alt=""
+                                                     style="position: absolute; top: 0px; height: 100%; width: 100%;">
+                                            </picture>
                                         </div>
-                                        <picture class="JEjj5L">
-                                            <img data-is-lazy-load-bg-image="false"
-                                                 data-use-image-server="false" class="lazyload RPPDP+"
-                                                 loading="lazy"
-                                                 src="~/images/banners/navbar sale.png"
-                                                 role="presentation" alt=""
-                                                 style="position: absolute; top: 0px; height: 100%; width: 100%;">
-                                        </picture>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div style="position: relative;  height: 320.156px; width: 960px; left: calc((100% - 960px) / 2); margin-bottom: 40px;">
-                    <div>
-                        <div class="md-container">
-                            <div class="md-component" data-component-id="1699246519374">
-                                <div>
-                                    <div class="HC9+PG">
-                                        <div class="fX9y5D rsM6mQ"></div>
-                                        <div>
-                                            <div class="hJ4n7F lShvj+">
-                                                <a href="/sanphamchitiets" role="button"
-                                                   data-is-ssr-see-all-button="true"
-                                                   class="tQx6Fj PwG79a Gge7KH"
-                                                   style="color: rgb(0, 0, 0);">
-                                                    <span>
-                                                        Xem tất
-                                                        cả
-                                                    </span>
-                                                    <svg viewBox="0 0 12 12" fill="none"
-                                                         width="12" height="12" color="#000000"
-                                                         class="dH7hlX">
-                                                    </svg>
-                                                </a>
+                    <div style="position: relative;  height: 320.156px; width: 960px; left: calc((100% - 960px) / 2); margin-bottom: 40px;">
+                        <div>
+                            <div class="md-container">
+                                <div class="md-component" data-component-id="1699246519374">
+                                    <div>
+                                        <div class="HC9+PG">
+                                            <div class="fX9y5D rsM6mQ"></div>
+                                            <div>
+                                                <div class="hJ4n7F lShvj+">
+                                                    <a href="/sanphamchitiets" role="button"
+                                                       data-is-ssr-see-all-button="true"
+                                                       class="tQx6Fj PwG79a Gge7KH"
+                                                       style="color: rgb(0, 0, 0);">
+                                                        <span>
+                                                            Xem tất
+                                                            cả
+                                                        </span>
+                                                        <svg viewBox="0 0 12 12" fill="none"
+                                                             width="12" height="12" color="#000000"
+                                                             class="dH7hlX">
+                                                        </svg>
+                                                    </a>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div></div>
-                                    <div class="Qn3t0w">
-                                        <div data-is-ssr-product-cards-container="true">
-                                            <div class="_1-jsxf">
-                                                <div class="QoAOuE">
-                                                    <div data-horizontal-scroll-container="true"
-                                                         class="ggEu9K Q7tVEg">
-                                                        <ul class="MOttpc _3N9g5K"
-                                                            data-horizontal-scroll-wrapper="true">
-                                                            @foreach (var spSale in kmct.Where(x => x.IdKhuyenMai==km.IdKhuyenMai).GroupBy(x=>x.SanPham).Select(x=>x.First()).ToList())
-                                                            {
-                                                                var spct = lstSpDuocApDungKhuyenMai.FirstOrDefault(x => x.IdChiTietSp == spSale.IdSanPhamChiTiet);
-                                                                <li class="mCTLtQ qn2FlY"
-                                                                    style="width: 16.67%;">
-                                                                    <a href="@Url.Action("Details","SanPhamChiTiets",new{id= spSale.IdSanPhamChiTiet})"
-                                                                       data-sqe="link" class="sgdCbK">
-                                                                        <div class="Wj2E1T LHzHhr n98Hr6">
-                                                                            <div class="Wc6Tex">
-                                                                                <div class="_58HtDH">
-                                                                                    <picture class="JEjj5L">
-                                                                                        <img data-is-lazy-load-bg-image="false"
-                                                                                             data-use-image-server="false"
-                                                                                             class="lazyload Mq2X5q"
-                                                                                             loading="lazy"
-                                                                                             src="/AnhSanPham/@spct.Anh"
-                                                                                             alt=$"{@spct.TenSanPham}">
-                                                                                    </picture>
-                                                                                </div>
-                                                                                <div class="mwCb8P">
-                                                                                    <div class="l6i7Zv">
-                                                                                         @{
-                                                                                        var giamGia = 100 - ((spct.GiaThucTe / spct.GiaGoc) * 100);
-                                                                                            if (spct.GiaThucTe == 0)
-                                                                                        {
-                                                                                            giamGia = 100;
-                                                                                        }
-                                                                                        var roundedGiamGia = (int)Math.Round(Convert.ToDouble(giamGia));
-                                                                                    }
-                                                                                    <span class="O2ltJ8">-@roundedGiamGia%</span>
+                                        <div></div>
+                                        <div class="Qn3t0w">
+                                            <div data-is-ssr-product-cards-container="true">
+                                                <div class="_1-jsxf">
+                                                    <div class="QoAOuE">
+                                                        <div data-horizontal-scroll-container="true"
+                                                             class="ggEu9K Q7tVEg">
+                                                            <ul class="MOttpc _3N9g5K"
+                                                                data-horizontal-scroll-wrapper="true">
+                                                                @foreach (var spSale in kmct.Where(x => x.IdKhuyenMai == km.IdKhuyenMai).GroupBy(x => x.SanPham).Select(x => x.First()).ToList())
+                                                                {
+                                                                    var spct = lstSpDuocApDungKhuyenMai.FirstOrDefault(x => x.IdChiTietSp == spSale.IdSanPhamChiTiet);
+                                                                    <li class="mCTLtQ qn2FlY"
+                                                                        style="width: 16.67%;">
+                                                                        <a href="@Url.Action("Details","SanPhamChiTiets",new{id= spSale.IdSanPhamChiTiet})"
+                                                                           data-sqe="link" class="sgdCbK">
+                                                                            <div class="Wj2E1T LHzHhr n98Hr6">
+                                                                                <div class="Wc6Tex">
+                                                                                    <div class="_58HtDH">
+                                                                                        <picture class="JEjj5L">
+                                                                                            <img data-is-lazy-load-bg-image="false"
+                                                                                                 data-use-image-server="false"
+                                                                                                 class="lazyload Mq2X5q"
+                                                                                                 loading="lazy"
+                                                                                                 src="/AnhSanPham/@spct.Anh"
+                                                                                                 alt=$"{@spct.TenSanPham}">
+                                                                                        </picture>
                                                                                     </div>
-                                                                                </div>
-
-                                                                            </div>
-                                                                            <div class="NryQg2">
-                                                                                <div class="RGjY0m">
-                                                                                    <div aria-hidden="true"
-                                                                                         class="Y9JWoL laR5TZ">
-                                                                                        @spct.TenSanPham
-                                                                                    </div>
-                                                                                    
-                                                                                </div>
-                                                                                <div class="iu8isX">
-                                                                                    <div class="MqK3rf">
-                                                                                        <div class="_0w738K PrqYGq SlEOxC"
-                                                                                             manifest="[object Object]"
-                                                                                             aria-hidden="true">
-                                                                                            @string.Format("{0:N0}đ",@spct.GiaGoc)
-                                                                                          
-                                                                                        </div>
-                                                                                        <div class="_0w738K _5650Ab"
-                                                                                             manifest="[object Object]">
-                                                                                            <span aria-label="current price"></span><span class="yi6wjz yS8ee6"></span><span class="Fh3XjX _2cK8Gd">@string.Format("{0:N0}đ",@spct.GiaThucTe)</span>
-
+                                                                                    <div class="mwCb8P">
+                                                                                        <div class="l6i7Zv">
+                                                                                            @{
+                                                                                                var giamGia = 100 - ((spct.GiaThucTe / spct.GiaGoc) * 100);
+                                                                                                if (spct.GiaThucTe == 0)
+                                                                                                {
+                                                                                                    giamGia = 100;
+                                                                                                }
+                                                                                                var roundedGiamGia = (int)Math.Round(Convert.ToDouble(giamGia));
+                                                                                            }
+                                                                                            <span class="O2ltJ8">-@roundedGiamGia%</span>
                                                                                         </div>
                                                                                     </div>
-                                                                                    <div class="l4kljj">
-                                                                                        <button data-addtocart="{&quot;action&quot;:1,&quot;itemName&quot;:&quot;[ CHÍNH HÃNG - BH12 THÁNG ] Máy giặt mini SAKURA Tự động 100%, giặt, vắt, sấy - Có thể giặt áo khoác lông mùa đông&quot;,&quot;shopid&quot;:460426806,&quot;itemid&quot;:17289290116}"
-                                                                                                data-addtocarttracking="{&quot;page_type&quot;:&quot;microsite&quot;,&quot;page_section&quot;:&quot;product_collection&quot;,&quot;target_type&quot;:&quot;add_to_cart_button&quot;,&quot;data&quot;:{&quot;microsite_pageid&quot;:48866,&quot;tracking_msg&quot;:&quot;eyJwYWdlX2luZm8iOnsicGFnZV90cmFjZV9pZCI6IjFmOGExYjg0MDlhNTJhOGQwY2EzYTk4NDcxMDExMjAwIn19&quot;,&quot;md_component_id&quot;:1699246519374,&quot;component_name&quot;:&quot;NewUserZone_  3917424 _ 115&quot;,&quot;component_type&quot;:&quot;33&quot;,&quot;microsite_labelid&quot;:[],&quot;section_location&quot;:9,&quot;collection_id&quot;:3917424,&quot;is_horizontal&quot;:true,&quot;itemid&quot;:17289290116,&quot;shopid&quot;:460426806,&quot;item_location&quot;:0}}"
-                                                                                                class="uQynIu h3YISB"></button>
+
+                                                                                </div>
+                                                                                <div class="NryQg2">
+                                                                                    <div class="RGjY0m">
+                                                                                        <div aria-hidden="true"
+                                                                                             class="Y9JWoL laR5TZ">
+                                                                                            @spct.TenSanPham
+                                                                                        </div>
+
+                                                                                    </div>
+                                                                                    <div class="iu8isX">
+                                                                                        <div class="MqK3rf">
+                                                                                            <div class="_0w738K PrqYGq SlEOxC"
+                                                                                                 manifest="[object Object]"
+                                                                                                 aria-hidden="true">
+                                                                                                @string.Format("{0:N0}đ",@spct.GiaGoc)
+
+                                                                                            </div>
+                                                                                            <div class="_0w738K _5650Ab"
+                                                                                                 manifest="[object Object]">
+                                                                                                <span aria-label="current price"></span><span class="yi6wjz yS8ee6"></span><span class="Fh3XjX _2cK8Gd">@string.Format("{0:N0}đ",@spct.GiaThucTe)</span>
+
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <div class="l4kljj">
+                                                                                            <button data-addtocart="{&quot;action&quot;:1,&quot;itemName&quot;:&quot;[ CHÍNH HÃNG - BH12 THÁNG ] Máy giặt mini SAKURA Tự động 100%, giặt, vắt, sấy - Có thể giặt áo khoác lông mùa đông&quot;,&quot;shopid&quot;:460426806,&quot;itemid&quot;:17289290116}"
+                                                                                                    data-addtocarttracking="{&quot;page_type&quot;:&quot;microsite&quot;,&quot;page_section&quot;:&quot;product_collection&quot;,&quot;target_type&quot;:&quot;add_to_cart_button&quot;,&quot;data&quot;:{&quot;microsite_pageid&quot;:48866,&quot;tracking_msg&quot;:&quot;eyJwYWdlX2luZm8iOnsicGFnZV90cmFjZV9pZCI6IjFmOGExYjg0MDlhNTJhOGQwY2EzYTk4NDcxMDExMjAwIn19&quot;,&quot;md_component_id&quot;:1699246519374,&quot;component_name&quot;:&quot;NewUserZone_  3917424 _ 115&quot;,&quot;component_type&quot;:&quot;33&quot;,&quot;microsite_labelid&quot;:[],&quot;section_location&quot;:9,&quot;collection_id&quot;:3917424,&quot;is_horizontal&quot;:true,&quot;itemid&quot;:17289290116,&quot;shopid&quot;:460426806,&quot;item_location&quot;:0}}"
+                                                                                                    class="uQynIu h3YISB"></button>
+                                                                                        </div>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
-                                                                        </div>
-                                                                    </a>
-                                                                </li>
-                                                            }
-                                                            <div class="mCTLtQ qn2FlY"
-                                                                 style="width: 16.67%;">
-                                                                <div class="_00qJSX kK-mfd">
-                                                                    <div class="hJ4n7F u4f1Yx">
-                                                                        <a href="/sanphamchitiets"
-                                                                           role="button"
-                                                                           data-is-ssr-see-all-button="false"
-                                                                           class="tQx6Fj _5Hogue PwG79a _5+DP0m">
-                                                                            <span class="fB9tKY"
-                                                                                  style="background: url(&quot;https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/micrositefe/e5a3dc5f12dce285ae9dede33ff0ba0c.svg&quot;) center center / contain no-repeat; width: 32px; height: 32px; display: inline-block;"></span><span>
-                                                                                Xem
-                                                                                tất cả
-                                                                            </span>
                                                                         </a>
+                                                                    </li>
+                                                                }
+                                                                <div class="mCTLtQ qn2FlY"
+                                                                     style="width: 16.67%;">
+                                                                    <div class="_00qJSX kK-mfd">
+                                                                        <div class="hJ4n7F u4f1Yx">
+                                                                            <a href="/sanphamchitiets"
+                                                                               role="button"
+                                                                               data-is-ssr-see-all-button="false"
+                                                                               class="tQx6Fj _5Hogue PwG79a _5+DP0m">
+                                                                                <span class="fB9tKY"
+                                                                                      style="background: url(&quot;https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/micrositefe/e5a3dc5f12dce285ae9dede33ff0ba0c.svg&quot;) center center / contain no-repeat; width: 32px; height: 32px; display: inline-block;"></span><span>
+                                                                                    Xem
+                                                                                    tất cả
+                                                                                </span>
+                                                                            </a>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        </ul>
+                                                            </ul>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div data-is-carousel-nav-button="prev"
-                                                     class="JpPmOu oPcZ0D oDW-sh">
-                                                    <svg enable-background="new 0 0 13 20"
-                                                         viewBox="0 0 13 20" role="img"
-                                                         class="stardust-icon stardust-icon-arrow-left-bold">
-                                                        <path stroke="none"
-                                                              d="m4.2 10l7.9-7.9-2.1-2.2-9 9-1.1 1.1 1.1 1 9 9 2.1-2.1z">
-                                                        </path>
-                                                    </svg>
-                                                </div>
-                                                <div data-is-carousel-nav-button="next"
-                                                     class="JpPmOu oPcZ0D xP3YuH">
-                                                    <svg enable-background="new 0 0 13 21"
-                                                         viewBox="0 0 13 21" role="img"
-                                                         class="stardust-icon stardust-icon-arrow-right-bold">
-                                                        <path stroke="none"
-                                                              d="m11.1 9.9l-9-9-2.2 2.2 8 7.9-8 7.9 2.2 2.1 9-9 1-1z">
-                                                        </path>
-                                                    </svg>
+                                                    <div data-is-carousel-nav-button="prev"
+                                                         class="JpPmOu oPcZ0D oDW-sh">
+                                                        <svg enable-background="new 0 0 13 20"
+                                                             viewBox="0 0 13 20" role="img"
+                                                             class="stardust-icon stardust-icon-arrow-left-bold">
+                                                            <path stroke="none"
+                                                                  d="m4.2 10l7.9-7.9-2.1-2.2-9 9-1.1 1.1 1.1 1 9 9 2.1-2.1z">
+                                                            </path>
+                                                        </svg>
+                                                    </div>
+                                                    <div data-is-carousel-nav-button="next"
+                                                         class="JpPmOu oPcZ0D xP3YuH">
+                                                        <svg enable-background="new 0 0 13 21"
+                                                             viewBox="0 0 13 21" role="img"
+                                                             class="stardust-icon stardust-icon-arrow-right-bold">
+                                                            <path stroke="none"
+                                                                  d="m11.1 9.9l-9-9-2.2 2.2 8 7.9-8 7.9 2.2 2.1 9-9 1-1z">
+                                                            </path>
+                                                        </svg>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        <div></div>
                                     </div>
-                                    <div></div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
+                
             }
             
            
            
             @if (khuyenMai.Where(x => x.LoaiHinhKM == 0).Any())
             {
+                int temp = 0;
+                foreach (var a in khuyenMai.Where(x => x.LoaiHinhKM == 0))
+                {
+                    if (kmct.Where(x => x.IdKhuyenMai == a.IdKhuyenMai).Count() > 0)
+                    {
+                        temp++;    
+                    }
+                }
+                if (temp != 0)
+                {
                 <div style="position: relative; height: 132px; width: 960px; left: calc((100% - 960px) / 2);">
                     <div>
                         <div class="md-container">
@@ -613,7 +627,7 @@
                         </div>
                     </div>
                 </div>
-            
+                }
             }
                 
     </div>
