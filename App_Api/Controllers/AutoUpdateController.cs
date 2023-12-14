@@ -45,15 +45,16 @@ namespace App_Api.Controllers
         [HttpPut("CapNhatThongTinKhuyenMai")]
         public void CapNhatThongTinKhuyenMai()
         {
+            var vnTime = GetDateTimeNow();
             // Hàm CheckNgayKetThucKhuyenMai
             var ngayKetThucSale = KMRepos.GetAll()
-                .Where(p => p.NgayKetThuc <= DateTime.Now && p.TrangThai != (int)TrangThaiSale.HetHan)
+                .Where(p => p.NgayKetThuc <= vnTime && p.TrangThai != (int)TrangThaiSale.HetHan)
                 .ToList();
             var ngaySale = KMRepos.GetAll()
-                .Where(p => p.NgayKetThuc >= DateTime.Now && p.NgayBatDau<= DateTime.Now&&(  p.TrangThai == (int)TrangThaiSale.HetHan|| p.TrangThai==(int)TrangThaiSale.ChuaBatDau) && p.TrangThai != (int)TrangThaiSale.BuocDung)
+                .Where(p => p.NgayKetThuc >= vnTime && p.NgayBatDau <= vnTime && (p.TrangThai == (int)TrangThaiSale.HetHan || p.TrangThai == (int)TrangThaiSale.ChuaBatDau) && p.TrangThai != (int)TrangThaiSale.BuocDung)
                 .ToList();
             var saleChuaBatDau = KMRepos.GetAll()
-               .Where(p => p.NgayBatDau >= DateTime.Now)
+               .Where(p => p.NgayBatDau >= vnTime)
                .ToList();
             foreach (var sale in ngayKetThucSale)
             {
@@ -161,7 +162,7 @@ namespace App_Api.Controllers
                         {
                             item.GiaBan = ctsp.GiaThucTe;
                         }
-                        
+
                     }
                     else
                     {
@@ -172,7 +173,7 @@ namespace App_Api.Controllers
                         {
                             item.GiaBan = ctsp.GiaThucTe;
                         }
-                        
+
                     }
 
                 }
@@ -182,13 +183,21 @@ namespace App_Api.Controllers
             }
         }
 
+        [HttpGet("GetVNTimeNow")]
+        public DateTime GetDateTimeNow()
+        {
+            TimeZoneInfo vnTimeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            DateTime vnTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, vnTimeZone);
+            return vnTime;
+        }
 
         [HttpPut("CapNhatThoiGianVoucher")]
         public void CapNhatThoiGianVoucher()
         {
+            var vnTime = GetDateTimeNow();
             #region VoucherOn
             // Update Voucher Online đã hết hạn
-            var CapNhatVoucherHetHanOnline = VoucherRepo.GetAll().Where(c => c.NgayKetThuc < DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.HoatDong).ToList();
+            var CapNhatVoucherHetHanOnline = VoucherRepo.GetAll().Where(c => c.NgayKetThuc < vnTime && c.TrangThai == (int)TrangThaiVoucher.HoatDong).ToList();
             if (CapNhatVoucherHetHanOnline.Count > 0)
             {
                 foreach (var voucher in CapNhatVoucherHetHanOnline)
@@ -198,7 +207,7 @@ namespace App_Api.Controllers
                 }
             }
             // Update Voucher Online bắt đầu
-            var CapNhatVoucherDenHanOnline = VoucherRepo.GetAll().Where(c => c.NgayBatDau <= DateTime.Now && c.NgayKetThuc >= DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaBatDau).ToList();
+            var CapNhatVoucherDenHanOnline = VoucherRepo.GetAll().Where(c => c.NgayBatDau <= vnTime && c.NgayKetThuc >= vnTime && c.TrangThai == (int)TrangThaiVoucher.ChuaBatDau).ToList();
             if (CapNhatVoucherDenHanOnline.Count > 0)
             {
                 foreach (var voucher in CapNhatVoucherDenHanOnline)
@@ -227,7 +236,7 @@ namespace App_Api.Controllers
             #region VoucherTaiQuay
             // Update Voucher tại quầy đã hết hạn      
             var VoucherTaiQuayCanCapNhat = VoucherRepo.GetAll()
-                .Where(c => c.NgayKetThuc < DateTime.Now && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay))
+                .Where(c => c.NgayKetThuc < vnTime && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay))
                 .ToList();
             if (VoucherTaiQuayCanCapNhat.Count > 0)
             {
@@ -238,7 +247,7 @@ namespace App_Api.Controllers
                 }
             }
             // Update Voucher tại quầy hoạt động
-            var VoucherTaiCanCapNhat = VoucherRepo.GetAll().Where(c => c.NgayBatDau <= DateTime.Now && c.NgayKetThuc > DateTime.Now && c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay).ToList();
+            var VoucherTaiCanCapNhat = VoucherRepo.GetAll().Where(c => c.NgayBatDau <= vnTime && c.NgayKetThuc > vnTime && c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay).ToList();
             if (VoucherTaiCanCapNhat.Count > 0)
             {
                 foreach (var voucher in VoucherTaiCanCapNhat)
