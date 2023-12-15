@@ -74,7 +74,10 @@ namespace App_Api.Helpers.Mapping
                          .ForMember(
                 dest => dest.SoLuong, opt => opt.MapFrom(x => x.Vouchers.SoLuong))
             .ForMember(
-                dest => dest.MaVoucher, opt => opt.MapFrom(x => x.Vouchers.MaVoucher));
+                dest => dest.MaVoucher, opt => opt.MapFrom(x => x.Vouchers.MaVoucher))
+            .ForMember(
+                dest => dest.NgayNhan, opt => opt.MapFrom(x => x.NgayNhan))
+            ;
 
             CreateMap<GioHangChiTiet, SanPhamGioHangViewModel>()
                 .ForMember(

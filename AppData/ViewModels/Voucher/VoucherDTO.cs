@@ -11,6 +11,7 @@ namespace App_Data.ViewModels.Voucher
     public class VoucherDTO
     {
         public string? IdVoucher { get; set; }
+        public string? MaVoucher { get; set; }
         [Required(ErrorMessage = "Tên voucher là trường bắt buộc.")]
         [StringLength(25, MinimumLength = 2, ErrorMessage = "Tên voucher phải nhập từ 2-25 kí tự")]
         public string? TenVoucher { get; set; }
@@ -30,5 +31,7 @@ namespace App_Data.ViewModels.Voucher
         [CustomNgayKetThucValidation(ErrorMessage = "Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.")]
         public DateTime NgayKetThuc { get; set; }
         public int? TrangThai { get; set; }
+        public int SoLuongVoucherDaIn { get; set; }
+        public int SoLuongVoucherChuaIN { get; set; }
     }
 }

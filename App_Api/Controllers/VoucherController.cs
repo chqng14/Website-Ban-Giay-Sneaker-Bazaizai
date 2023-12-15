@@ -316,15 +316,11 @@ namespace App_Api.Controllers
         public bool AddVoucherCungBanTaiQuay(string idVoucher, string idUser, int soluong)
         {
             DateTime? ngay = DateTime.Now;
-            var voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == idVoucher && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay) && c.SoLuong < 1000);
+            var voucher = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == idVoucher && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.ChuaHoatDongTaiQuay));
 
 
             if (voucher != null)
             {
-                if (soluong + voucher.SoLuong >1000 || voucher.SoLuong == 1000)
-                {
-                    return false;
-                }
                 //int soLuongDaIn = 0;
                 int TrangThaiCanTao = (int)TrangThaiVoucherNguoiDung.KhaDung;
 
@@ -340,7 +336,7 @@ namespace App_Api.Controllers
                         IdVouCherNguoiDung = Guid.NewGuid().ToString(),
                         IdNguoiDung = idUser,
                         IdVouCher = voucher.IdVoucher,
-                        NgayNhan = ngay,
+                        NgayNhan = null,
                         TrangThai = TrangThaiCanTao
                     };
 
@@ -387,6 +383,45 @@ namespace App_Api.Controllers
             return false;
         }
 
+        [HttpPut("UpdateTrangThaiKhiXuat")]
+        public bool UpdateTrangThaiKhiXuat(List<string> idVoucherNguoiDung)
+        {
+            try
+            {
+                string currentDirectory = Directory.GetCurrentDirectory();
+                string rootPath = Directory.GetParent(currentDirectory)!.FullName;
+                string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "VoucherNguoiDungQRCode");
+
+                foreach (var item in idVoucherNguoiDung)
+                {
+                    var VoucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCherNguoiDung == item);
+                    if (VoucherNguoiDung != null)
+                    {
+                        VoucherNguoiDung.NgayNhan = DateTime.Now;
+                        VcNguoiDungRepos.EditItem(VoucherNguoiDung);
+                        string oldImagePath = Path.Combine(uploadDirectory, item + ".png");
+
+                        // Kiểm tra và xoá ảnh cũ nếu tồn tại
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            // Thông báo hoặc ghi log trước khi xoá
+                            // Xoá ảnh cũ
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+                }
+
+                // Nếu hàm thực hiện thành công, trả về true
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Có lỗi xảy ra: " + ex.Message);
+                // Ghi log hoặc xử lý ngoại lệ ở đây (nếu cần)
+                // Nếu có lỗi, trả về false
+                return false;
+            }
+        }
 
         #endregion
     }

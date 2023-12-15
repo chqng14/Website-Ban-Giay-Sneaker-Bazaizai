@@ -97,6 +97,7 @@ namespace App_Data.Repositories
                   .Include(it => it.ThuongHieu)
                   .Include(it => it.LoaiGiay)
                   .Include(it => it.MauSac)
+                  .Include(it=>it.KichCo)
                   .ToListAsync();
             var groupedResults1 = lstAllSp
               .GroupBy(gr =>
@@ -274,7 +275,8 @@ namespace App_Data.Repositories
                 GiaMax = listGia.Max(),
                 GiaThucTe= firstItem.GiaThucTe,
                 GiaGoc= firstItem.GiaBan,
-                MauSac= firstItem.MauSac.TenMauSac
+                MauSac= firstItem.MauSac.TenMauSac,
+                KichCo = firstItem.KichCo.SoKichCo
             };
         }
 

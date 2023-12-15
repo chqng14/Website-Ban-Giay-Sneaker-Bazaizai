@@ -48,7 +48,7 @@ namespace App_View.Areas.Admin.Controllers
             }
             if (trangThaiHD==1)
             {
-                var lstHoaDonOnline = lstHoaDon.Where(x => x.TrangThaiGiaoHang != 0);
+                var lstHoaDonOnline = lstHoaDon.Where(x => x.TrangThaiGiaoHang != 0&& x.TrangThaiGiaoHang != 5);
                 return PartialView("QuanLyHoaDon", lstHoaDonOnline);
             }
             if (trangThaiHD == 2)
