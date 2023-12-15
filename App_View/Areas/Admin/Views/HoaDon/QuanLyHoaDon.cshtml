@@ -37,7 +37,7 @@
                                     <tr class="invoice-row btnInvoiceDetail" data-invoice-id="@hoaDon.IdHoaDon">
                                         <td class="column1">@hoaDon.NgayTao</td>
                                         <td class="column2">@hoaDon.MaHoaDon</td>
-                                        <td class="column3">@hoaDon.TenNguoiNhan</td>
+                                            <td class="column3">@((hoaDon.TenNguoiNhan == ""||hoaDon.TenNguoiNhan==null) ? "Khách vãng lai" : hoaDon.TenNguoiNhan)</td>
                                         <td class="column4">@string.Format("{0:N0}đ",hoaDon.TongTien)</td>
 
                                     </tr>

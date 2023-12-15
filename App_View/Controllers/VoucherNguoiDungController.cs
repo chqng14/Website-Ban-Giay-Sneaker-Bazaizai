@@ -33,7 +33,14 @@ namespace App_View.Controllers
         }
         public async Task<IActionResult> VoucherWalletPatial(int? loaiHinh)
         {
-            var idNguoiDung = _userManager.GetUserId(User);
+            var user = await _userManager.GetUserAsync(User);
+            var role = await _userManager.IsInRoleAsync(user, "Admin") || await _userManager.IsInRoleAsync(user, "NhanVien");
+            if (role)
+            {
+                return Json(new { mess = "Vui lòng dùng tài khoản khách!" });
+            }
+
+            var idNguoiDung = user.Id;
             if (string.IsNullOrEmpty(idNguoiDung))
             {
             }

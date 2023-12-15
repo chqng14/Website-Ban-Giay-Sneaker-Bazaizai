@@ -2,6 +2,8 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.SanPhamChiTiet.SanPhamDTO;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,11 +18,13 @@ namespace App_Api.Controllers
         private readonly IAllRepo<SanPham> allRepo;
         BazaizaiContext dbContext = new BazaizaiContext();
         DbSet<SanPham> SanPham;
-        public SanPhamController()
+        private readonly IMapper _mapper;
+        public SanPhamController(IMapper mapper)
         {
             SanPham = dbContext.SanPhams;
             AllRepo<SanPham> all = new AllRepo<SanPham>(dbContext, SanPham);
             allRepo = all;
+            _mapper = mapper;
         }
         // GET: api/<SanPhamController>
         [HttpGet]
@@ -59,17 +63,26 @@ namespace App_Api.Controllers
             return allRepo.AddItem(SanPham);
         }
 
-        [HttpPut("SuaSanPham={id}")]
-        public bool SuaSanPham(string id, string ma, string ten, int trangthai)
+        [HttpPut("SuaSanPham")]
+        public bool SuaSanPham(SanPhamDTO sanPham)
         {
-            var SanPham = new SanPham()
+            try
             {
-                IdSanPham = id,
-                MaSanPham = ma,
-                TenSanPham = ten,
-                Trangthai = trangthai
-            };
-            return allRepo.EditItem(SanPham);
+                var nameSanPhamLower = sanPham.TenSanPham!.Trim().ToLower();
+                if (!dbContext.SanPhams.Where(x => x.TenSanPham!.Trim().ToLower() == nameSanPhamLower).Any())
+                {
+                    var sanPhamGet = _mapper.Map<SanPham>(sanPham);
+                    dbContext.Attach(sanPhamGet);
+                    dbContext.Entry(sanPhamGet).Property(sp => sp.TenSanPham).IsModified = true;
+                    dbContext.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         // DELETE api/<SanPhamController>/5

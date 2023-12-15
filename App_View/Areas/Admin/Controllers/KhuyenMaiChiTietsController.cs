@@ -26,11 +26,14 @@ using Org.BouncyCastle.Crypto;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics.Metrics;
+using OpenXmlPowerTools;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Engineering;
+using NuGet.Packaging.Signing;
 
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin,NhanVien")]
+    [Authorize(Roles = "Admin")]
     public class KhuyenMaiChiTietsController : Controller
     {
         private readonly BazaizaiContext _context;
@@ -58,7 +61,7 @@ namespace App_View.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             
-            return View(await khuyenMaiChiTietServices.GetAllKhuyenMaiChiTiet());
+            return View((await khuyenMaiChiTietServices.GetAllKhuyenMaiChiTiet()).GroupBy(x=>x.SanPham).Select(x=>x.First()).ToList());
         }
 
         // GET: Admin/KhuyenMaiChiTiets/Details/5
@@ -160,43 +163,50 @@ namespace App_View.Areas.Admin.Controllers
         }
 
         // GET: Admin/KhuyenMaiChiTiets/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        [HttpPost]
+        public async Task<IActionResult> Delete(List<string> idKm, List<string> TenSpct)
         {
-            if (id == null || _context.khuyenMaiChiTiets == null)
+            try
             {
-                return NotFound();
-            }
+                string mess;
+                foreach (var km in idKm)
+                {
+                    foreach (var sp in TenSpct)
+                    {
 
-            var khuyenMaiChiTiet = await _context.khuyenMaiChiTiets
-                .Include(k => k.KhuyenMai)
-                .Include(k => k.SanPhamChiTiet)
-                .FirstOrDefaultAsync(m => m.IdKhuyenMaiChiTiet == id);
-            if (khuyenMaiChiTiet == null)
+                        var lstsp = (await khuyenMaiChiTietServices.GetAllKhuyenMaiChiTiet()).Where(x => x.SanPham == sp && x.IdKhuyenMai == km).ToList();
+                        if (lstsp.Any())
+                        {
+
+                            foreach (var _kmct in lstsp)
+                            {
+                                var kmct = new KhuyenMaiChiTiet()
+                                {
+                                    IdKhuyenMai = _kmct.IdKhuyenMai,
+                                    IdKhuyenMaiChiTiet = _kmct.IdKhuyenMaiChiTiet,
+                                    IdSanPhamChiTiet = _kmct.IdSanPhamChiTiet,
+                                    MoTa = _kmct.MoTa,
+                                    TrangThai = _kmct.TrangThai
+                                };
+                                _context.khuyenMaiChiTiets.Remove(kmct);
+                                _context.SaveChanges();
+                            }
+
+                        }
+                    }
+                }
+
+                return Ok(new { mess = "Xóa thành công" });
+            }
+            catch (Exception)
             {
-                return NotFound();
-            }
 
-            return View(khuyenMaiChiTiet);
+
+                return Ok(new { mess = "Xóa thất bại" });
+            }
         }
 
-        // POST: Admin/KhuyenMaiChiTiets/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            if (_context.khuyenMaiChiTiets == null)
-            {
-                return Problem("Entity set 'BazaizaiContext.khuyenMaiChiTiets'  is null.");
-            }
-            var khuyenMaiChiTiet = await _context.khuyenMaiChiTiets.FindAsync(id);
-            if (khuyenMaiChiTiet != null)
-            {
-                _context.khuyenMaiChiTiets.Remove(khuyenMaiChiTiet);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+      
 
         private bool KhuyenMaiChiTietExists(string id)
         {
@@ -285,6 +295,8 @@ namespace App_View.Areas.Admin.Controllers
         {
             ViewData["IdSale"] = new SelectList(_context.khuyenMais.Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau), "IdKhuyenMai", "TenKhuyenMai");
             List<string> DataMessage = new List<string>();
+            List<string> SpDaApDungKm = new List<string>();
+            var km = (await _khuyenMaiServices.GetAllKhuyenMai()).FirstOrDefault(x => x.IdKhuyenMai == idSale);
             var successApllySale = "";
             var saledetailVM = khuyenMaiChiTietServices.GetAllKhuyenMaiChiTiet();
             var nameSale = _context.khuyenMais.FirstOrDefault(x => x.IdKhuyenMai == idSale);
@@ -322,9 +334,69 @@ namespace App_View.Areas.Admin.Controllers
                                 if (i != 0)
                                 {
 
-                                    DataMessage.Add($"Sản phẩm {name} đang áp dụng chương trình {nameSale.TenKhuyenMai}");
+                                    SpDaApDungKm.Add($"Sản phẩm {name} đang áp dụng chương trình {nameSale.TenKhuyenMai}");
                                 }
                                 else
+                                {
+                                    if(km.LoaiHinhKM==0)
+                                    {
+                                        if(IdProduct.GiaGoc> Convert.ToDouble(km.MucGiam)) {
+                                            var addSale = new KhuyenMaiChiTiet()
+                                            {
+                                                IdKhuyenMaiChiTiet = Guid.NewGuid().ToString(),
+                                                IdKhuyenMai = idSale,
+                                                IdSanPhamChiTiet = IdProduct.IdChiTietSp,
+                                                MoTa = "Kaisan",
+                                                TrangThai = (int)TrangThaiSaleDetail.DangKhuyenMai
+                                            };
+                                            idChiTietSanPham.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DaApDungSale;
+                                            _context.sanPhamChiTiets.Update(idChiTietSanPham);
+                                            _context.SaveChanges();
+                                            await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
+                                            DataMessage.Add($"Áp dụng thành công chương trình giảm giá {nameSale.TenKhuyenMai} với sản phẩm {name}");
+                                        }
+                                    }
+                                    else 
+                                    {
+                                        var addSale = new KhuyenMaiChiTiet()
+                                        {
+                                            IdKhuyenMaiChiTiet = Guid.NewGuid().ToString(),
+                                            IdKhuyenMai = idSale,
+                                            IdSanPhamChiTiet = IdProduct.IdChiTietSp,
+                                            MoTa = "Kaisan",
+                                            TrangThai = (int)TrangThaiSaleDetail.DangKhuyenMai
+                                        };
+                                        idChiTietSanPham.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DaApDungSale;
+                                        _context.sanPhamChiTiets.Update(idChiTietSanPham);
+                                        _context.SaveChanges();
+                                        await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
+                                        DataMessage.Add($"Áp dụng thành công chương trình giảm giá {nameSale.TenKhuyenMai} với sản phẩm {name}");
+                                    }
+                                    
+                                }
+                            }
+                            else
+                            {
+                                if (km.LoaiHinhKM == 0)
+                                {
+                                    if (IdProduct.GiaGoc > Convert.ToDouble(km.MucGiam))
+                                    {
+                                        var addSale = new KhuyenMaiChiTiet()
+                                        {
+                                            IdKhuyenMaiChiTiet = Guid.NewGuid().ToString(),
+                                            IdKhuyenMai = idSale,
+                                            IdSanPhamChiTiet = IdProduct.IdChiTietSp,
+                                            MoTa = "Kaisan",
+                                            TrangThai = (int)TrangThaiSaleDetail.DangKhuyenMai
+                                        };
+                                        idChiTietSanPham.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DaApDungSale;
+                                        _context.sanPhamChiTiets.Update(idChiTietSanPham);
+                                        _context.SaveChanges();
+                                        await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
+                                        successApllySale = $"Ap dụng thành công chương trình {nameSale.TenKhuyenMai} với sản phẩm đã chọn";
+                                    }
+                                }
+                                else 
                                 {
                                     var addSale = new KhuyenMaiChiTiet()
                                     {
@@ -338,31 +410,15 @@ namespace App_View.Areas.Admin.Controllers
                                     _context.sanPhamChiTiets.Update(idChiTietSanPham);
                                     _context.SaveChanges();
                                     await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
-                                    DataMessage.Add($"Áp dụng thành công chương trình giảm giá {nameSale.TenKhuyenMai} với sản phẩm {name}");
+                                    successApllySale = $"Ap dụng thành công chương trình {nameSale.TenKhuyenMai} với sản phẩm đã chọn";
                                 }
-                            }
-                            else
-                            {
-                                var addSale = new KhuyenMaiChiTiet()
-                                {
-                                    IdKhuyenMaiChiTiet = Guid.NewGuid().ToString(),
-                                    IdKhuyenMai = idSale,
-                                    IdSanPhamChiTiet = IdProduct.IdChiTietSp,
-                                    MoTa = "Kaisan",
-                                    TrangThai = (int)TrangThaiSaleDetail.DangKhuyenMai
-                                };
-                                idChiTietSanPham.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DaApDungSale;
-                                _context.sanPhamChiTiets.Update(idChiTietSanPham);
-                                _context.SaveChanges();
-                                await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
-                                successApllySale = $"Ap dụng thành công chương trình {nameSale.TenKhuyenMai} với sản phẩm đã chọn";
                             }
                             temp++;
                         }
                         ViewBag.Sales = DataMessage;
                         
                     }
-                    return Ok(new { err = DataMessage, add = successApllySale });
+                    return Ok(new { err = DataMessage.Count, err1 = SpDaApDungKm.Count, add = successApllySale});
 
                 }
                 else

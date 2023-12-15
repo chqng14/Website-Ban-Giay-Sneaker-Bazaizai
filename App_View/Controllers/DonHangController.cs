@@ -118,16 +118,16 @@ namespace App_View.Controllers
         public async Task<IActionResult> DetailHoaDonOnline(string idHoaDon)
         {
             var UserID = _userManager.GetUserId(User);
-            var listHoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            var listHoaDon = await hoaDonServices.GetHoaDonOnlineById(idHoaDon, UserID);
             return View(listHoaDon);
         }
 
         public async Task<IActionResult> HuyDonHang(string idHoaDon, string Lido)
         {
             var UserID = _userManager.GetUserId(User);
-            var HoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            var HoaDon = await hoaDonServices.GetHoaDonOnlineById(idHoaDon, UserID);
             var ngayCapNhatGanNhat = DateTime.Now;
-            if (HoaDon.LoaiThanhToan == "MOMO" && HoaDon.TrangThaiThanhToan == 1)
+            if (HoaDon.LoaiThanhToan == "MOMO" && HoaDon.TrangThaiGiaoHang == 1)
             {
                 if (HoaDon.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.ChoXacNhan)
                 {
@@ -173,13 +173,13 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> ReBuy(string idHoaDon)
         {
-            var IdCart = _userManager.GetUserId(User);
-            var listHoaDon = (await hoaDonServices.GetHoaDonOnline(IdCart)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            var UserID = _userManager.GetUserId(User);
+            var listHoaDon = await hoaDonServices.GetHoaDonOnlineById(idHoaDon, UserID);
             var message = new List<string>();
             foreach (var sp in listHoaDon.SanPham)
             {
                 var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(sp.IdSanPhamChiTiet);
-                var existing = (await GioHangChiTietServices.GetAllGioHang()).FirstOrDefault(x => x.IdSanPhamCT == product.IdChiTietSp && x.IdNguoiDung == IdCart);
+                var existing = (await GioHangChiTietServices.GetAllGioHang()).FirstOrDefault(x => x.IdSanPhamCT == product.IdChiTietSp && x.IdNguoiDung == UserID);
                 if (existing != null)
                 {
                     if (existing.SoLuong + sp.SoLuong <= product.SoLuongTon)
@@ -191,7 +191,7 @@ namespace App_View.Controllers
                         existing.SoLuong = Convert.ToInt32(product.SoLuongTon);
                         message.Add($"{product.SanPham} màu {product.MauSac} size {product.KichCo} số lượn chỉ còn {product.SoLuongTon},Trong giỏ hàng bạn đã có!");
                     }
-                    await GioHangChiTietServices.UpdateGioHang(sp.IdSanPhamChiTiet, Convert.ToInt32(existing.SoLuong), IdCart);
+                    await GioHangChiTietServices.UpdateGioHang(sp.IdSanPhamChiTiet, Convert.ToInt32(existing.SoLuong), UserID);
                 }
                 else if (product.TrangThai == 1)
                 {
@@ -206,7 +206,7 @@ namespace App_View.Controllers
                     var giohang = new GioHangChiTietDTOCUD();
                     giohang.IdGioHangChiTiet = Guid.NewGuid().ToString();
                     giohang.IdSanPhamCT = sp.IdSanPhamChiTiet;
-                    giohang.IdNguoiDung = IdCart;
+                    giohang.IdNguoiDung = UserID;
                     giohang.SoLuong = sp.SoLuong;
                     giohang.GiaGoc = product.GiaBan;
                     giohang.GiaBan = product.GiaThucTe;
@@ -222,15 +222,19 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> DanhGia(string idHoaDon)
         {
+            if (idHoaDon == null)
+            {
+                return Ok(new { mess = "Đơn hàng chưa thanh toán" });
+            }
             var UserID = _userManager.GetUserId(User);
-            var HoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            var HoaDon = await hoaDonServices.GetHoaDonOnlineById(idHoaDon, UserID);
             return PartialView("_PatialDanhGia", HoaDon);
         }
 
         public async Task<IActionResult> RePay(string idHoaDon)
         {
             var UserID = _userManager.GetUserId(User);
-            var HoaDon = (await hoaDonServices.GetHoaDonOnline(UserID)).FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            var HoaDon = await hoaDonServices.GetHoaDonOnlineById(idHoaDon, UserID);
             SessionServices.SetIdToSession(HttpContext.Session, "idHoaDon", idHoaDon);
             if (HoaDon.LoaiThanhToan.ToLower() == "momo")
             {

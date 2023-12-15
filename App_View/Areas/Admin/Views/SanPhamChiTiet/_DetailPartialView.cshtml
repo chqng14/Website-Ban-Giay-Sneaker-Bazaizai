@@ -163,8 +163,9 @@
             <div id="form-getID">
                 <input asp-for="IdChiTietSp" hidden/>
                 <button class="btn btn-kio" id="btn-coppy">
-                    <i class="far fa-copy"></i>
-                    <span>Coppy</span>
+                    <i class="anticon anticon-loading m-r-5"></i>
+                    <i class="anticon anticon-copy"></i>
+                    <span>Copy</span>
                 </button>
             </div>
             <div>
@@ -190,6 +191,8 @@
     $(document).off('click', '#btn-coppy');
 
     $(document).one('click', '#btn-coppy', function () {
+        const $btn = $(this);
+        $btn.addClass('is-loading')
         var id = $(this).closest('#form-getID').find('[name="IdChiTietSp"]').val();
 
         var data = {
@@ -207,9 +210,12 @@
                     $(this).fadeIn(20, function () {
                         $(this).css('opacity', 1);
                     });
+                    $btn.removeClass('is-loading')
                 });
             },
             error: function (xhr, status, error) {
+                $btn.removeClass('is-loading')
+                alert('Copy false!')
                 console.log(xhr.responseText);
                 console.log(status);
                 console.log(error);

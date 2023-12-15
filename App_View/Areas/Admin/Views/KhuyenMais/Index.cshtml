@@ -1,4 +1,5 @@
 ﻿﻿@using static App_Data.Repositories.TrangThai;
+@using System;
 @model IEnumerable<App_Data.Models.KhuyenMai>
 
 @{
@@ -9,7 +10,7 @@
 
 
 <p>
-    <a class="btn btn-primary " asp-action="Create">Tạo Chương Trình Khuyến Mại</a>
+    <a class="btn btn-primary " asp-action="Create">Tạo chương trình khuyến mại</a>
 </p>
 <link rel="stylesheet" type="text/css" href="~/Admin/css/SaleIndex.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -60,10 +61,10 @@
                         <div style="height:200px">
                             <strong>Mã khuyến mãi:</strong> @item.MaKhuyenMai<br />
                             <strong>Tên khuyến mãi:</strong> @item.TenKhuyenMai<br />
-                            <strong>Ngày bắt đầu:</strong> @item.NgayBatDau.ToString()<br />
-                            <strong>Ngày kết thúc:</strong> @item.NgayKetThuc.ToString()<br />
+                            <strong>Ngày bắt đầu:</strong> @((item.NgayBatDau.HasValue ? item.NgayBatDau.Value.ToShortDateString() : ""))<br />
+                            <strong>Ngày kết thúc:</strong> @((item.NgayKetThuc.HasValue ? item.NgayKetThuc.Value.ToShortDateString() : ""))<br />
                             <strong>Loại hình:</strong> @(item.LoaiHinhKM == 0 ? "Khuyến mại đồng giá" : "Khuyến mại giảm giá")<br />
-                            <strong>Mức giảm:</strong> @item.MucGiam<br />
+                            <strong>Mức giảm:</strong>@((item.LoaiHinhKM == 0) ? string.Format("{0:N0}đ", @item.MucGiam) : item.MucGiam + "%") <br />
 
                             
                         </div>

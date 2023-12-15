@@ -23,7 +23,6 @@ using DocumentFormat.OpenXml.ExtendedProperties;
 using PuppeteerSharp;
 using NuGet.Protocol.Core.Types;
 using Microsoft.AspNetCore.Authorization;
-
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -36,17 +35,18 @@ namespace App_View.Areas.Admin.Controllers
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IEmailSender _emailSender;
-		private IViewRenderService _viewRenderService;
-		public VouchersController(IVoucherServices voucherServices, IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IEmailSender emailSender, IViewRenderService viewRenderService)
+        private IViewRenderService _viewRenderService;
+        public VouchersController(IVoucherServices voucherServices, IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IEmailSender emailSender, IViewRenderService viewRenderService)
         {
             _voucherND = voucherNDServices;
             _voucherSV = voucherServices;
             _signInManager = signInManager;
             _userManager = userManager;
             _emailSender = emailSender;
-			_viewRenderService = viewRenderService;
-			_context = new BazaizaiContext();
+            _viewRenderService = viewRenderService;
+            _context = new BazaizaiContext();
         }
+
         #region Online
 
         public async Task<IActionResult> ShowVoucher(int? trangThai)
@@ -161,9 +161,9 @@ namespace App_View.Areas.Admin.Controllers
                         var userKhachHang = await _userManager.FindByIdAsync(userId);
 
                         var subject = "Bạn đã nhận được Voucher từ Bazaizai Store";
-						string html = await _viewRenderService.RenderToStringAsync("Voucher/MailVoucher");
+                        string html = await _viewRenderService.RenderToStringAsync("Voucher/MailVoucher");
 
-                        await _emailSender.SendEmailAsync(userKhachHang.Email, subject , html);
+                        await _emailSender.SendEmailAsync(userKhachHang.Email, subject, html);
                     }
 
                     return Ok(true);
@@ -335,14 +335,34 @@ namespace App_View.Areas.Admin.Controllers
             {
                 lstVoucherDaIn = lstVoucherDaIn.Where(c => c.TrangThai == trangThai).ToList();
             }
-            return PartialView("_VoucherDaInTaiQuayPartial", lstVoucherDaIn);
+
+            var voucherDTOs = lstVoucherDaIn.Select(voucher => new VoucherDTO
+            {
+                IdVoucher = voucher.IdVoucher,
+                MaVoucher = voucher.MaVoucher,
+                TenVoucher = voucher.TenVoucher,
+                DieuKien = voucher.DieuKien,
+                LoaiHinhUuDai = voucher.LoaiHinhUuDai,
+                SoLuong = voucher.SoLuong,
+                MucUuDai = voucher.MucUuDai,
+                NgayBatDau = voucher.NgayBatDau,
+                NgayTao = voucher.NgayTao,
+                NgayKetThuc = voucher.NgayKetThuc,
+                TrangThai = voucher.TrangThai,
+                SoLuongVoucherDaIn = voucherTaiQuay.Count(c => c.NgayNhan != null && c.IdVouCher == voucher.IdVoucher),
+                SoLuongVoucherChuaIN = voucherTaiQuay.Count(c => c.NgayNhan == null && c.IdVouCher == voucher.IdVoucher)
+            }).ToList();
+
+
+            return PartialView("_VoucherDaInTaiQuayPartial", voucherDTOs);
         }
         [HttpPost]
         public async Task<IActionResult> FilterListDetailsVoucherTaiQuayDaIn(string idVoucher, int trangThai = 0)
         {
-            var lstVoucherDaIn = (await _voucherND.GetAllVouCherNguoiDung()).Where(c => c.IdVouCher == idVoucher).ToList();
+
+            var lstVoucherDaIn = (await _voucherND.GetAllVouCherNguoiDung()).Where(c => c.IdVouCher == idVoucher && c.NgayNhan == null).ToList();
             List<VoucherNguoiDungDTO> voucherNguoiDungDTOList = new List<VoucherNguoiDungDTO>();
-            foreach (var voucher in lstVoucherDaIn)
+            foreach (var voucher in lstVoucherDaIn.Take(500))
             {
                 VoucherNguoiDungDTO voucherNguoiDungDTO = new VoucherNguoiDungDTO();
                 // Gán thông tin từ voucher vào voucherNguoiDungDTO
@@ -361,13 +381,27 @@ namespace App_View.Areas.Admin.Controllers
                 voucherNguoiDungDTOList.Add(voucherNguoiDungDTO);
             }
             if (trangThai != 0)
-            {
+            {//In 1 lần 500 voucher
                 voucherNguoiDungDTOList = voucherNguoiDungDTOList.Where(c => c.TrangThai == trangThai).ToList();
             }
+            SessionServices.SetLstString(HttpContext.Session, "lstIdVoucherNguoiDung", voucherNguoiDungDTOList.Select(v => v.IdVouCherNguoiDung).Take(500).ToList());
 
             return PartialView("_FilterListDetailsVoucherTaiQuayDaIn", voucherNguoiDungDTOList);
         }
-      
+        public async Task<IActionResult> CapNhatVoucherNguoiDungDain()
+        {
+            var lstIdVoucherNguoiDung = SessionServices.GetLstString(HttpContext.Session, "lstIdVoucherNguoiDung");
+
+            if (lstIdVoucherNguoiDung != null && lstIdVoucherNguoiDung.Any())
+            {
+                if (await _voucherSV.UpdateTrangThaiKhiXuat(lstIdVoucherNguoiDung))
+                {
+                    return Ok(true);
+                }
+                return Ok(false);
+            }
+            return Ok(false);
+        }
         #endregion
     }
 }
