@@ -23,7 +23,6 @@ using DocumentFormat.OpenXml.ExtendedProperties;
 using PuppeteerSharp;
 using NuGet.Protocol.Core.Types;
 using Microsoft.AspNetCore.Authorization;
-
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -336,7 +335,26 @@ namespace App_View.Areas.Admin.Controllers
             {
                 lstVoucherDaIn = lstVoucherDaIn.Where(c => c.TrangThai == trangThai).ToList();
             }
-            return PartialView("_VoucherDaInTaiQuayPartial", lstVoucherDaIn);
+
+            var voucherDTOs = lstVoucherDaIn.Select(voucher => new VoucherDTO
+            {
+                IdVoucher = voucher.IdVoucher,
+                MaVoucher = voucher.MaVoucher,
+                TenVoucher = voucher.TenVoucher,
+                DieuKien = voucher.DieuKien,
+                LoaiHinhUuDai = voucher.LoaiHinhUuDai,
+                SoLuong = voucher.SoLuong,
+                MucUuDai = voucher.MucUuDai,
+                NgayBatDau = voucher.NgayBatDau,
+                NgayTao = voucher.NgayTao,
+                NgayKetThuc = voucher.NgayKetThuc,
+                TrangThai = voucher.TrangThai,
+                SoLuongVoucherDaIn = voucherTaiQuay.Count(c => c.NgayNhan != null && c.IdVouCher == voucher.IdVoucher),
+                SoLuongVoucherChuaIN = voucherTaiQuay.Count(c => c.NgayNhan == null && c.IdVouCher == voucher.IdVoucher)
+            }).ToList();
+
+
+            return PartialView("_VoucherDaInTaiQuayPartial", voucherDTOs);
         }
         [HttpPost]
         public async Task<IActionResult> FilterListDetailsVoucherTaiQuayDaIn(string idVoucher, int trangThai = 0)
@@ -376,9 +394,11 @@ namespace App_View.Areas.Admin.Controllers
 
             if (lstIdVoucherNguoiDung != null && lstIdVoucherNguoiDung.Any())
             {
-                await _voucherSV.UpdateTrangThaiKhiXuat(lstIdVoucherNguoiDung);
+                if (await _voucherSV.UpdateTrangThaiKhiXuat(lstIdVoucherNguoiDung))
+                {
                     return Ok(true);
-                   
+                }
+                return Ok(false);
             }
             return Ok(false);
         }

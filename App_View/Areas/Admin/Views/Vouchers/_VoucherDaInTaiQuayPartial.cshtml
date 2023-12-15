@@ -1,5 +1,5 @@
 ﻿@using App_Data.DbContextt;
-@model IEnumerable<App_Data.Models.Voucher>
+@model IEnumerable<App_Data.ViewModels.Voucher.VoucherDTO>
 
 @{
     BazaizaiContext context = new BazaizaiContext();
@@ -39,7 +39,7 @@
     <thead>
         <tr>
             <th>
-                Mã Voucher
+                Mã
             </th>
             <th>
                 Tên
@@ -55,6 +55,12 @@
             </th>
             <th>
                 Voucher đã tạo
+            </th>
+            <th>
+                Voucher đã in
+            </th>
+            <th>
+                Voucher chưa in
             </th>
             <th>
                 Ngày bắt đầu
@@ -112,6 +118,12 @@
                 </td>
                 <td>
                     @item.SoLuong
+                </td>
+                <td>
+                    @item.SoLuongVoucherDaIn
+                </td>
+                <td>
+                    @item.SoLuongVoucherChuaIN
                 </td>
                 <td>
                     @item.NgayBatDau
@@ -245,13 +257,25 @@
                 }).then((result) => {
                     if (result.isConfirmed) {
                         $('#preloader').show();
-                        $.ajax  ({
+                        $.ajax({
                             url: '/Admin/Vouchers/CapNhatVoucherNguoiDungDain',
-                            type: 'POST',                         
+                            type: 'POST',
                             success: function (result) {
                                 if (result) {
-                                    $('#preloader').hide();
-                                    Swal.fire("Voucher đã in xong và sẽ ẩn không thể in lại!", "", "success");
+                                    $('#preloader').hide();                                   
+                                    Swal.fire({
+                                        title: "Voucher đã in xong và sẽ ẩn không thể in lại!",
+                                        icon: "success",
+                                        confirmButtonText: "OK",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            // Nếu người dùng nhấn OK, thì mới thực hiện reload
+                                            window.location.reload();
+                                        }
+                                        else    {
+                                            window.location.reload();
+                                        }
+                                    });
                                 }
                                 else {
                                     $('#preloader').hide();
@@ -261,7 +285,7 @@
                                 console.error(error);
                             }
                         });
-                     
+
                     } else if (result.isDenied) {
                         Swal.fire("Voucher đã bị huỷ in", "", "warning");
                     }
@@ -269,8 +293,8 @@
             });
         });
     });
-    function printVourcher(idvoucher) {        
-        $('#printVoucher').modal('show');      
+    function printVourcher(idvoucher) {
+        $('#printVoucher').modal('show');
         $('#idVoucherPrint').val(idvoucher);
     }
     function showDetails(idVoucher) {

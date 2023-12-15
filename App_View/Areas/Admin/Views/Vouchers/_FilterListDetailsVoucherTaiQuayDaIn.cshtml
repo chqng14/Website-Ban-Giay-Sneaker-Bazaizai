@@ -12,10 +12,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <link href="~/css/cssVoucherIn.css" rel="stylesheet" />
-
+<style>
+    .alert {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
 <body>
     <div id="voucher-container-wrapper">
-        @if(Model != null)
+        @if(Model.Any())
         {
             @foreach (var item in Model)
             {
@@ -96,8 +103,8 @@
         else
         {
             <div class="alert alert-warning">
-                <strong style="margin:auto">Hiện chưa có voucher nào để in!</strong>
-            </div>
+                <strong>Hiện chưa có voucher nào để in!</strong>
+            </div>  
         }
   
     </div>

@@ -384,32 +384,45 @@ namespace App_Api.Controllers
         }
 
         [HttpPut("UpdateTrangThaiKhiXuat")]
-        public void UpdateTrangThaiKhiXuat(List<string> idVoucherNguoiDung)
+        public bool UpdateTrangThaiKhiXuat(List<string> idVoucherNguoiDung)
         {
-            string currentDirectory = Directory.GetCurrentDirectory();
-            string rootPath = Directory.GetParent(currentDirectory)!.FullName;
-            string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "VoucherNguoiDungQRCode");
-            foreach (var item in idVoucherNguoiDung)
+            try
             {
-                var VoucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCherNguoiDung == item);
-                if(VoucherNguoiDung != null)
-                {
-                    VoucherNguoiDung.NgayNhan = DateTime.Now;
-                    VcNguoiDungRepos.EditItem(VoucherNguoiDung);
-                    string oldImagePath = Path.Combine(uploadDirectory, item + ".png");
+                string currentDirectory = Directory.GetCurrentDirectory();
+                string rootPath = Directory.GetParent(currentDirectory)!.FullName;
+                string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "VoucherNguoiDungQRCode");
 
-                    // Kiểm tra và xoá ảnh cũ nếu tồn tại
-                    if (System.IO.File.Exists(oldImagePath))
+                foreach (var item in idVoucherNguoiDung)
+                {
+                    var VoucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCherNguoiDung == item);
+                    if (VoucherNguoiDung != null)
                     {
-                        // Thông báo hoặc ghi log trước khi xo
-                        // Xoá ảnh cũ
-                        System.IO.File.Delete(oldImagePath);
+                        VoucherNguoiDung.NgayNhan = DateTime.Now;
+                        VcNguoiDungRepos.EditItem(VoucherNguoiDung);
+                        string oldImagePath = Path.Combine(uploadDirectory, item + ".png");
+
+                        // Kiểm tra và xoá ảnh cũ nếu tồn tại
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            // Thông báo hoặc ghi log trước khi xoá
+                            // Xoá ảnh cũ
+                            System.IO.File.Delete(oldImagePath);
+                        }
                     }
                 }
 
+                // Nếu hàm thực hiện thành công, trả về true
+                return true;
             }
-           
+            catch (Exception ex)
+            {
+                Console.WriteLine("Có lỗi xảy ra: " + ex.Message);
+                // Ghi log hoặc xử lý ngoại lệ ở đây (nếu cần)
+                // Nếu có lỗi, trả về false
+                return false;
+            }
         }
+
         #endregion
     }
 }
