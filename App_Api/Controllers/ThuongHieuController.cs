@@ -2,6 +2,9 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.SanPhamChiTiet.ThuongHieuDTO;
+using AutoMapper;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +18,13 @@ namespace App_Api.Controllers
         private readonly IAllRepo<ThuongHieu> repos;
         BazaizaiContext context = new BazaizaiContext();
         DbSet<ThuongHieu> thuongHieus;
-        public ThuongHieuController()
+        private readonly IMapper _mapper;
+        public ThuongHieuController(IMapper mapper)
         {
             thuongHieus = context.thuongHieus;
             AllRepo<ThuongHieu> all = new AllRepo<ThuongHieu>(context, thuongHieus);
             repos = all;
+            _mapper = mapper;
         }
         [HttpGet]
         public IEnumerable<ThuongHieu> GetAllKhuyenMai()
@@ -48,13 +53,26 @@ namespace App_Api.Controllers
             return repos.AddItem(b);
         }
 
-        [HttpPut("{id}")]
-        public bool EditThuongHieu(string id, int trangThai, string Ten)
+        [HttpPut("sua-thuong-hieu")]
+        public bool EditThuongHieu(ThuongHieuDTO thuongHieuDTO)
         {
-            var b = repos.GetAll().First(p => p.IdThuongHieu == id);
-            b.TenThuongHieu = Ten;
-            b.TrangThai = trangThai;
-            return repos.EditItem(b);
+            try
+            {
+                var nameThuongHieuLower = thuongHieuDTO.TenThuongHieu!.Trim().ToLower();
+                if (!context.thuongHieus.Where(x => x.TenThuongHieu!.Trim().ToLower() == nameThuongHieuLower).Any())
+                {
+                    var thuongHieu = _mapper.Map<ThuongHieu>(thuongHieuDTO);
+                    context.Attach(thuongHieu);
+                    context.Entry(thuongHieu).Property(sp => sp.TenThuongHieu).IsModified = true;
+                    context.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         [HttpDelete("{id}")]

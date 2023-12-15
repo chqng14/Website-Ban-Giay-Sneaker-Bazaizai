@@ -2,6 +2,9 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.KichCoDTO;
+using AutoMapper;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,11 +18,13 @@ namespace App_Api.Controllers
         private readonly IAllRepo<KichCo> repos;
         BazaizaiContext context = new BazaizaiContext();
         DbSet<KichCo> kichCos;
-        public KichCoController()
+        private readonly IMapper _mapper;
+        public KichCoController(IMapper mapper)
         {
             kichCos = context.kichCos;
             AllRepo<KichCo> all = new AllRepo<KichCo>(context, kichCos);
             repos = all;
+            _mapper = mapper;
         }
         [HttpGet]
         public IEnumerable<KichCo> GetAllKichCo()
@@ -49,20 +54,41 @@ namespace App_Api.Controllers
         }
 
 
-        [HttpPut("{id}")]
-        public bool EditKichCo(string id,int TrangThai, int KichCo)
+        [HttpPut("sua-kich-co")]
+        public bool EditKichCo(KichCoDTO kichCoDTO)
         {
-            var b = repos.GetAll().First(p => p.IdKichCo == id);
-            b.SoKichCo = KichCo ;
-            b.TrangThai = TrangThai;
-            return repos.EditItem(b);
+            try
+            {
+                var kichCo = kichCoDTO.SoKichCo;
+                if (!context.kichCos.Where(x => x.SoKichCo == kichCo).Any())
+                {
+                    var kichCoGet = _mapper.Map<KichCo>(kichCoDTO);
+                    context.Attach(kichCoGet);
+                    context.Entry(kichCoGet).Property(sp => sp.SoKichCo).IsModified = true;
+                    context.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            };
         }
 
         [HttpDelete("{id}")]
         public bool DeleteKichCo(string id)
         {
-            var KichCo = repos.GetAll().First(p => p.IdKichCo == id);
-            return repos.RemoveItem(KichCo);
+            try
+            {
+                var KichCo = repos.GetAll().First(p => p.IdKichCo == id);
+                return repos.RemoveItem(KichCo);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+           
         }
     }
 }

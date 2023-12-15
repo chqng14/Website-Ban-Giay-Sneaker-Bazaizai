@@ -2,6 +2,9 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.LoaiGiayDTO;
+using AutoMapper;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,10 +19,12 @@ namespace App_Api.Controllers
         private readonly IAllRepo<LoaiGiay> allRepo;
         BazaizaiContext DbContextModel = new BazaizaiContext();
         DbSet<LoaiGiay> loaiGiays;
-        public LoaiGiayController()
+        private readonly IMapper _mapper;
+        public LoaiGiayController(IMapper mapper)
         {
             loaiGiays = DbContextModel.LoaiGiays;
             allRepo = new AllRepo<LoaiGiay>(DbContextModel, loaiGiays);
+            _mapper = mapper;
         }
         // GET: api/<LoaiGiayController>
         [HttpGet]
@@ -59,14 +64,26 @@ namespace App_Api.Controllers
         }
 
         // PUT api/<LoaiGiayController>/5
-        [HttpPut("Edit")]
-        public bool Put(string idLoaiGiay, string TenLoaiGiay, string MaLoaiGiay, int TrangThai)
+        [HttpPut("sua-loai-giay")]
+        public bool Put(LoaiGiayDTO loaiGiayDTO)
         {
-            var lg = allRepo.GetAll().First(p => p.IdLoaiGiay == idLoaiGiay);
-            lg.TenLoaiGiay = TenLoaiGiay;
-            lg.MaLoaiGiay = MaLoaiGiay;
-            lg.TrangThai = TrangThai;
-            return allRepo.EditItem(lg);
+            try
+            {
+                var nameLoaiGiay = loaiGiayDTO.TenLoaiGiay!.Trim().ToLower();
+                if (!DbContextModel.LoaiGiays.Where(x => x.TenLoaiGiay!.Trim().ToLower() == nameLoaiGiay).Any())
+                {
+                    var loaiGiay = _mapper.Map<LoaiGiay>(loaiGiayDTO);
+                    DbContextModel.Attach(loaiGiay);
+                    DbContextModel.Entry(loaiGiay).Property(sp => sp.TenLoaiGiay).IsModified = true;
+                    DbContextModel.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         // DELETE api/<LoaiGiayController>/5
