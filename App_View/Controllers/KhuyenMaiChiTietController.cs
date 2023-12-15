@@ -92,7 +92,7 @@ namespace App_View.Controllers
             var kmct = (await khuyenMaiChiTietServices.GetAllKhuyenMaiChiTiet()).Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai&&x.IdKhuyenMai== idKhuyenMai);
             var model = new App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel();
             model = sanPhamChiTietService.GetDanhSachGiayViewModelAynsc().Result;
-            var lstSpDuocApDungKhuyenMai = model.LstAllSanPham.Where(x => x.GiaThucTe < x.GiaGoc);
+            var lstSpDuocApDungKhuyenMai = model.LstAllSanPham.Where(x => x.GiaThucTe < x.GiaGoc).ToList();
             ViewBag.lstSpct = lstSpDuocApDungKhuyenMai.ToList();
             var khuyenMai = (await khuyenMaiServices.GetAllKhuyenMai()).Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau);
             ViewBag.KhuyemMai = khuyenMai;

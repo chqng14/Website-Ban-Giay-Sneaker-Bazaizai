@@ -31,7 +31,7 @@ builder.Services.AddScoped<IVnPayService, VnPayService>();
 //BAZAIZAI\SQLEXPRESS
 
 
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=LAPTOP-OF-KHAI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"));
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=BAZAIZAI\SQLEXPRESS;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"));
 
 
 //cái này là db online
