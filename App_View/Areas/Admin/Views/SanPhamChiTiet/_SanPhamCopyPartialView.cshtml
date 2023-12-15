@@ -3,7 +3,6 @@
 
 <script>
     (function () {
-        debugger;
             var selectedFiles = {};
             var lstAnhRemove = {};
             selectedFiles = {};
@@ -734,7 +733,6 @@
      success: function (result) {
          if (result) {
              if (window.location.pathname.toLowerCase().includes('sanphamchitiet/danhsachsanpham')) {
-                 debugger
                  table.draw();
              }
              else {
@@ -1191,7 +1189,7 @@ $.ajax({
                                         </div>
                                     </div>
 
-                                    <div class="form-group d-flex align-items-center col-3">
+                                    <div class="form-group d-flex align-items-center col-2">
                                         <div class="switch m-r-10">
                                             @if (Model.Day == true)
                                             {
@@ -1207,7 +1205,7 @@ $.ajax({
                                         <label class="font-weight-semibold">Dây</label>
                                     </div>
 
-                                    <div class="form-group d-flex align-items-center col-3">
+                                    <div class="form-group d-flex align-items-center col-4">
                                         <div class="switch m-r-10">
                                             @if (Model.TrangThaiKhuyenMai == true)
                                             {
@@ -1220,7 +1218,7 @@ $.ajax({
 
                                             <label class="font-weight-semibold" for="switch-trangThaiKhuyenMai-@Model.IdChiTietSp"></label>
                                         </div>
-                                        <label class="font-weight-semibold">Trạng thái khuyến mại</label>
+                                        <label class="font-weight-semibold">Cho phép áp dụng khuyến mại</label>
                                     </div>
 
 

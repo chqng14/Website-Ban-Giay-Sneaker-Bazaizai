@@ -1,0 +1,194 @@
+﻿@using System.Web
+@model List<App_Data.ViewModels.ThuocTinh.ThuocTinhViewModel>
+<style>
+    thead {
+        background: #0eabe7;
+    }
+
+        thead > tr > th {
+            color: white !important;
+        }
+</style>
+<div style="padding:20px">
+    <table id="data-table" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th class="text-center">STT</th>
+                <th class="text-center">Mã</th>
+                <th class="text-center">Tên</th>
+                <th class="text-center">Trạng thái</th>
+                <th class="text-center">Biến thể liên quan</th>
+                <th class="text-center">###</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var STT = 1;
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-center">@(STT++)</td>
+                    <td class="text-center">@item.Ma!.ToUpper()</td>
+                    <td class="text-center">@item.Ten!.ToUpper()</td>
+                    <td class="text-center">@item.TrangThai</td>
+                    <td class="text-center">@item.SoBienTheDangDung</td>
+                    <td class="text-center">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-kio" onclick="Edit('@item.Id', '@Html.Raw(HttpUtility.JavaScriptStringEncode(item.Ten))', '@item.SoBienTheDangDung')
+">
+                                <i class="far fa-edit"></i>
+                            </button>
+                            <button type="button" class="btn" style="background: red; color: #fff" onclick="Delete('@item.Id','@Html.Raw(HttpUtility.JavaScriptStringEncode(item.Ten))','@item.SoBienTheDangDung')">
+                                <i class="anticon anticon-delete"></i>
+                            </button>
+                        </div>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<script>
+    function DrawChatLieu() {
+        $.ajax({
+            url: '/admin/thuoctinhsanpham/LoadPartialViewDanhSachChatLieu',
+            type: 'GET',
+            success: function (result) {
+                content.empty().append(result);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    }
+    $('#data-table').Datatable();
+    function Delete(id, name, soBienTheDangDung) {
+        if (soBienTheDangDung > 0) {
+            Swal.fire({
+                title: 'Xóa thất bại',
+                text: `"${name}" đang được dùng cho ${soBienTheDangDung} biến thể.`,
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
+        } else {
+            Swal.fire({
+                title: 'Xác nhận',
+                text: `Bạn có chắc chắn muốn xóa chất liệu "${name}" không?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Hủy',
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    var data = {
+                        idChatLieu: id,
+                    };
+                    $.ajax({
+                        url: '/admin/thuoctinhsanpham/DeleteChatLieu',
+                        type: 'GET',
+                        data: data,
+                        success: function (result) {
+                            if (result) {
+                                DrawChatLieu();
+                                Swal.fire(
+                                    'Thông báo',
+                                    'Đã xóa thành công',
+                                    'success'
+                                );
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.log(xhr.responseText);
+                            console.log(status);
+                            console.log(error);
+                            console.log(xhr);
+                        }
+                    });
+                }
+            });
+
+        }
+    }
+
+    function Edit(id, name, soBienTheDangDung) {
+        Swal.fire({
+            title: 'Chỉnh sửa chất liệu',
+            input: 'text',
+            inputValue: name,
+            inputPlaceholder: 'Nhập giá trị',
+            showCancelButton: true,
+            confirmButtonText: 'Lưu',
+            cancelButtonText: 'Hủy',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const enteredValue = result.value;
+
+                if (enteredValue !== '') {
+
+                    Swal.fire({
+                        title: 'Xác nhận',
+                        text: `Bạn có chắc chắn muốn thay đổi chất liệu, việc thay đổi chất liệu sẽ làm cho chất liệu của ${soBienTheDangDung} biến thể thay đổi theo?`,
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'OK',
+                        cancelButtonText: 'Hủy',
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+
+                            var data = {
+                                IdChatLieu: id,
+                                TenChatLieu: enteredValue
+                            };
+                            $.ajax({
+                                url: '/admin/thuoctinhsanpham/EditChatLieu',
+                                type: 'POST',
+                                data: JSON.stringify(data),
+                                contentType: 'application/json',
+                                success: function (result) {
+                                    if (result) {
+                                        DrawChatLieu();
+                                        Swal.fire(
+                                            'Thông báo!',
+                                            'Cập nhật thành công!',
+                                            'success'
+                                        );
+                                    } else {
+                                        Swal.fire(
+                                            'Thông báo',
+                                            'Cập nhật thất bại!',
+                                            'info'
+                                        );
+                                    }
+                                },
+                                error: function (xhr, status, error) {
+                                    console.log(xhr.responseText);
+                                    console.log(status);
+                                    console.log(error);
+                                    console.log(xhr);
+                                }
+                            });
+                        }
+                    });
+                } else {
+                    Swal.fire(
+                        'Lỗi!',
+                        'Vui lòng nhập giá trị.',
+                        'error'
+                    );
+                }
+            }
+        });
+    }
+</script>
+
+<script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+<script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+<script src="~/Admin/js/pages/datatables.js" defer></script>

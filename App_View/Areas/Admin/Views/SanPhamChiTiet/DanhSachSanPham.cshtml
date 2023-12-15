@@ -101,7 +101,7 @@
                             Upload
                         </span>
                     </button>
-                    <button type="button" class="btn btn-kio" data-dismiss="modal">Skip</button>
+                    <button type="button" class="btn btn-kio" id="btn_skip">Skip</button>
                 </div>
             </form>
         </div>
@@ -161,7 +161,7 @@
         <div class="header-sub-title">
             <nav class="breadcrumb breadcrumb-dash">
                 <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>QUẢN LÝ SẢN PHẨM</a>
-                <a class="breadcrumb-item" href="#">DANH SÁCH THỰC THỂ SẢN PHẨM</a>
+                <a class="breadcrumb-item" href="#">DANH SÁCH SẢN PHẨM ĐANG KINH DOANH</a>
             </nav>
         </div>
     </div>
@@ -216,13 +216,13 @@
                                 <div class="m-b-10">
                                     <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh">
                                         <i class="far fa-list-alt m-r-5"></i>
-                                        <span>Thực thể ngừng kinh doanh</span>
+                                        <span>Danh sách sản phẩm ngừng kinh doanh</span>
                                     </a>
                                 </div>
                                 <div class="m-b-10 m-l-10">
                                     <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/TongQuanSanPham">
                                         <i class="far fa-list-alt m-r-5"></i>
-                                        <span>Tổng quan sản phẩm</span>
+                                        <span>Danh sách nhóm sản phẩm</span>
                                     </a>
                                 </div>
                             </div>
@@ -308,7 +308,7 @@
     </div>
     <div id="confirm-ds" class="mt-2 mb-2">
         <div style=" position: fixed; top: 90px; right: 26px; z-index: 2">
-            <button class="btn btn-kio export_excel">
+            <button class="btn btn-kio export_excel" id="export_excel_btn">
                 <i class="anticon anticon-file-excel"></i>
                 <span>Export Excel</span>
             </button>
@@ -339,6 +339,12 @@
     $(() => {
         $('.select2_active').select2();
     });
+
+    $(document).off('click', '#btn_skip')
+    $(document).on('click', '#btn_skip', function () {
+        $('#modal-upload_image').modal('hide');
+        $('#modal-import').modal('show');
+    })
 
     $(() => checkToshowConfirm())
     const checkToshowConfirm = () => {
@@ -705,7 +711,6 @@
             type: 'Get',
             data: data,
             success: function (result) {
-                debugger
                 $('#modalSanPham').empty().html(result);
                 $('#modalSanPham').modal('show')
 
@@ -723,6 +728,43 @@
         $('#modal-upload_image').modal('hide');
         $('#modal-import').modal('show');
     });
+
+    $(document).off('click', '#export_excel_btn')
+    $(document).on('click', '#export_excel_btn', function () {
+        const keys = Object.keys(selectedCheckboxes);
+        const data = { listGuild: keys };
+
+        $.ajax({
+            url: '/Admin/SanPhamChiTiet/ExportSanPhamDangKinhDoanhFromListGuid',
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            xhrFields: {
+                responseType: 'blob'
+            },
+            success: function (blob, status, xhr) {
+                if (blob instanceof Blob) {
+                    var link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = 'ProductList.xlsx';
+
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+
+                selectedCheckboxes = {};
+                table.draw();
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+    });
+
 
     $(document).off("click", '.ngung_kinh_doanh');
     $(document).on("click", '.ngung_kinh_doanh', function () {

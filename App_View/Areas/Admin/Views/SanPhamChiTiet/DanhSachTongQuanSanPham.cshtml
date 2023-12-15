@@ -47,7 +47,7 @@
                             Upload
                         </span>
                     </button>
-                    <button type="button" class="btn btn-kio" data-dismiss="modal">Skip</button>
+                    <button type="button" class="btn btn-kio" id="btn_skip">Skip</button>
                 </div>
             </form>
         </div>
@@ -106,7 +106,7 @@
             <a class="nav-link" id="excel-tab" data-toggle="tab" href="#excel" role="tab" aria-controls="excel" aria-selected="false">Thao tác Excel</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="sanPhamNgungKinhDoanh-tab" data-toggle="tab" href="#sanPhamNgungKinhDoanh" role="tab" aria-controls="sanPhamNgungKinhDoanh" aria-selected="false">Danh sách thực thể</a>
+            <a class="nav-link" id="sanPhamNgungKinhDoanh-tab" data-toggle="tab" href="#sanPhamNgungKinhDoanh" role="tab" aria-controls="sanPhamNgungKinhDoanh" aria-selected="false">Danh sách</a>
         </li>
         <li class="nav-item">
             <a class="nav-link active" id="timKiemNangCao-tab" data-toggle="tab" href="#timKiemNangCao" role="tab" aria-controls="timKiemNangCao" aria-selected="true">Bộ lọc</a>
@@ -147,13 +147,13 @@
                         <div class="m-b-10">
                             <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh">
                                 <i class="far fa-list-alt m-r-5"></i>
-                                <span>Ngừng kinh doanh</span>
+                                <span>Danh sách sản phẩm ngừng kinh doanh</span>
                             </a>
                         </div>
                         <div class="m-b-10 m-l-10">
                             <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/DanhSachSanPham">
                                 <i class="far fa-list-alt m-r-5"></i>
-                                <span>Đang kinh doanh</span>
+                                <span>Danh sách sản phẩm đang kinh doanh</span>
                             </a>
                         </div>
                     </div>
@@ -247,6 +247,12 @@
     var idLoaiGiay;
     var idThuongHieu;
     var tableDSTongQuan;
+
+    $(document).off('click', '#btn_skip')
+    $(document).on('click', '#btn_skip', function () {
+        $('#modal-upload_image').modal('hide');
+        $('#modal-import').modal('show');
+    })
     $(() => {
             tableDSTongQuan = $('#table-sanpham').DataTable({
     ajax: {
