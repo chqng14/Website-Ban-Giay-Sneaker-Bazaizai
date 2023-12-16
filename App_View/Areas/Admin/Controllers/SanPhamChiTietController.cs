@@ -115,6 +115,7 @@ namespace App_View.Areas.Admin.Controllers
             public string? GiaBan { get; set; }
             public string? SoLuong { get; set; }
             public string? KhoiLuong { get; set; }
+            public string? MoTa { get; set; }
             public bool? Day { get; set; }
             public bool? NoiBat { get; set; }
             public bool? TrangThaiSale { get; set; }
@@ -144,6 +145,7 @@ namespace App_View.Areas.Admin.Controllers
             var khoiLuong = "";
             var day = "";
             var noiBat = "";
+            var moTa = "";
             var trangThaiSale = "";
             var listTenAnh = new List<string>();
 
@@ -158,14 +160,17 @@ namespace App_View.Areas.Admin.Controllers
 
                         int rowCount = worksheet.Dimension.Rows;
                         int colCount = worksheet.Dimension.Columns;
-
+                        Console.WriteLine(rowCount);
+                        Console.WriteLine(colCount);
 
                         for (int row = 2; row <= rowCount; row++)
                         {
                             bool isRowEmpty = true;
-
+                            Console.WriteLine(row);
+                            Console.WriteLine(rowCount);
                             for (int col = 1; col <= colCount; col++)
                             {
+                                Console.WriteLine(row.ToString() + "-" + worksheet.Cells[row, col].Text + "-");
                                 if (!string.IsNullOrWhiteSpace(worksheet.Cells[row, col].Text))
                                 {
                                     isRowEmpty = false;
@@ -186,32 +191,17 @@ namespace App_View.Areas.Admin.Controllers
                             kieuDeGiay = worksheet.Cells[row, 6].Text;
                             mauSac = worksheet.Cells[row, 7].Text;
                             kichCo = worksheet.Cells[row, 8].Text;
-                            giaNhap = worksheet.Cells[row, 9].Text;
-                            giaBan = worksheet.Cells[row, 10].Text;
+                            giaNhap = worksheet.Cells[row, 9].Text.Replace(",", "").Replace("₫", "");
+                            giaBan = worksheet.Cells[row, 10].Text.Replace(",", "").Replace("₫", "");
                             soLuong = worksheet.Cells[row, 11].Text;
                             khoiLuong = worksheet.Cells[row, 12].Text;
                             day = worksheet.Cells[row, 13].Text;
                             noiBat = worksheet.Cells[row, 14].Text;
                             trangThaiSale = worksheet.Cells[row, 15].Text;
-                            listTenAnh = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 16].Text) ? worksheet.Cells[row, 16].Text.Split(',').ToList() : new List<string>();
-
-                            Console.WriteLine($"Row {row}:");
-
-                            Console.WriteLine(string.Format("  Sanpham: {0}", sanpham));
-                            Console.WriteLine(string.Format("  ThuongHieu: {0}", thuongHieu));
-                            Console.WriteLine(string.Format("  XuatXu: {0}", xuatXu));
-                            Console.WriteLine(string.Format("  ChatLieu: {0}", chatLieu));
-                            // ... (Thêm các dòng khác tương tự)
-
-                            // Log danh sách ảnh
-                            Console.WriteLine("  ListTenAnh:");
-                            foreach (var tenAnh in listTenAnh)
-                            {
-                                Console.WriteLine(string.Format("{0}", tenAnh));
-                            }
-
-                            Console.WriteLine(); 
-
+                            moTa = worksheet.Cells[row, 16].Text;
+                            listTenAnh = !string.IsNullOrWhiteSpace(worksheet.Cells[row, 17].Text) ? worksheet.Cells[row, 17].Text.Split(',').ToList() : new List<string>();
+                            Console.WriteLine(sanpham + "-" + mauSac + "-" + kichCo);
+                            Console.WriteLine();
 
                             if (
                                 !string.IsNullOrEmpty(sanpham) &&
@@ -221,6 +211,7 @@ namespace App_View.Areas.Admin.Controllers
                                 !string.IsNullOrEmpty(loaiGiay) &&
                                 !string.IsNullOrEmpty(kieuDeGiay) &&
                                 !string.IsNullOrEmpty(mauSac) &&
+                                mauSac.Length > 2 &&
                                 !string.IsNullOrEmpty(kichCo) &&
                                 !string.IsNullOrEmpty(giaNhap) &&
                                 !string.IsNullOrEmpty(giaBan) &&
@@ -243,7 +234,7 @@ namespace App_View.Areas.Admin.Controllers
                                     XuatXu = xuatXu,
                                 });
 
-                                if(sanPhamDTO == null)
+                                if (sanPhamDTO == null)
                                 {
                                     slFalse++;
                                     var errorRow = new ErrorRow
@@ -263,6 +254,7 @@ namespace App_View.Areas.Admin.Controllers
                                         Day = day == "1",
                                         NoiBat = noiBat == "1",
                                         TrangThaiSale = trangThaiSale == "1",
+                                        MoTa = moTa,
                                         ListTenAnh = string.Join(",", listTenAnh),
                                         ErrorMessage = "Đầu vào không hợp lệ"
                                     };
@@ -271,43 +263,82 @@ namespace App_View.Areas.Admin.Controllers
                                 }
                                 else
                                 {
-                                    sanPhamDTO!.GiaNhap = string.IsNullOrEmpty(giaNhap) ? null : Convert.ToDouble(giaNhap);
-                                    sanPhamDTO.SoLuongTon = string.IsNullOrEmpty(giaNhap) ? null : Convert.ToInt32(soLuong);
-                                    sanPhamDTO.GiaBan = Convert.ToDouble(giaBan);
-                                    sanPhamDTO.KhoiLuong = Convert.ToDouble(khoiLuong);
-                                    sanPhamDTO.Day = day == "1" ? true : false;
-                                    sanPhamDTO.TrangThaiKhuyenMai = trangThaiSale == "1" ? true : false;
-                                    sanPhamDTO.NoiBat = noiBat == "1" ? true : false;
-                                    var response = (await _sanPhamChiTietService.AddAysnc(sanPhamDTO));
-
-                                    if (response.Success)
+                                    try
                                     {
-                                        slSuccess++;
 
-                                        var formContent = new MultipartFormDataContent();
-                                        formContent.Add(new StringContent(response.IdChiTietSp!), "idProductDetail");
-                                        for (int i = 0; i < listTenAnh.Count(); i++)
-                                        {
-                                            formContent.Add(new StringContent(listTenAnh[i]), $"lstNameImage[{i}]");
-                                        }
-                                        try
-                                        {
-                                            HttpResponseMessage responseCreate = await _httpClient.PostAsync("/api/Anh/create-list-model-image", formContent);
-                                            responseCreate.EnsureSuccessStatusCode();
+                                        sanPhamDTO!.GiaNhap = string.IsNullOrEmpty(giaNhap) ? null : Convert.ToDouble(giaNhap);
+                                        sanPhamDTO.SoLuongTon = string.IsNullOrEmpty(giaNhap) ? null : Convert.ToInt32(soLuong);
+                                        sanPhamDTO.GiaBan = Convert.ToDouble(giaBan);
+                                        sanPhamDTO.KhoiLuong = Convert.ToDouble(khoiLuong);
+                                        sanPhamDTO.Day = day == "1" ? true : false;
+                                        sanPhamDTO.TrangThaiKhuyenMai = trangThaiSale == "1" ? true : false;
+                                        sanPhamDTO.NoiBat = noiBat == "1" ? true : false;
+                                        sanPhamDTO.MoTa = moTa;
 
+                                        if (sanPhamDTO!.GiaNhap < 0 || sanPhamDTO.SoLuongTon < 0 || sanPhamDTO.GiaBan < 0 || sanPhamDTO.KhoiLuong < 0)
+                                        {
+                                            throw new Exception();
                                         }
-                                        catch (HttpRequestException ex)
+
+                                        var response = (await _sanPhamChiTietService.AddAysnc(sanPhamDTO));
+
+                                        if (response.Success)
+                                        {
+                                            slSuccess++;
+
+                                            var formContent = new MultipartFormDataContent();
+                                            formContent.Add(new StringContent(response.IdChiTietSp!), "idProductDetail");
+                                            for (int i = 0; i < listTenAnh.Count(); i++)
+                                            {
+                                                formContent.Add(new StringContent(listTenAnh[i]), $"lstNameImage[{i}]");
+                                            }
+                                            try
+                                            {
+                                                HttpResponseMessage responseCreate = await _httpClient.PostAsync("/api/Anh/create-list-model-image", formContent);
+                                                responseCreate.EnsureSuccessStatusCode();
+
+                                            }
+                                            catch (HttpRequestException ex)
+                                            {
+                                                slFalse++;
+                                                Console.WriteLine($"Lỗi gửi yêu cầu HTTP: {ex.Message}");
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                slFalse++;
+                                                Console.WriteLine($"Lỗi khác: {ex.Message}");
+                                            }
+                                        }
+                                        else
                                         {
                                             slFalse++;
-                                            Console.WriteLine($"Lỗi gửi yêu cầu HTTP: {ex.Message}");
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            slFalse++;
-                                            Console.WriteLine($"Lỗi khác: {ex.Message}");
+                                            var errorRow = new ErrorRow
+                                            {
+                                                SanPham = sanpham,
+                                                ThuongHieu = thuongHieu,
+                                                XuatXu = xuatXu,
+                                                ChatLieu = chatLieu,
+                                                LoaiGiay = loaiGiay,
+                                                KieuDeGiay = kieuDeGiay,
+                                                MauSac = mauSac,
+                                                KichCo = kichCo,
+                                                GiaNhap = giaNhap,
+                                                GiaBan = giaBan,
+                                                SoLuong = soLuong,
+                                                KhoiLuong = khoiLuong,
+                                                Day = day == "1",
+                                                NoiBat = noiBat == "1",
+                                                TrangThaiSale = trangThaiSale == "1",
+                                                MoTa = moTa,
+                                                ListTenAnh = string.Join(",", listTenAnh),
+                                                ErrorMessage = response.DescriptionErr
+                                            };
+
+                                            errorRows.Add(errorRow);
+
                                         }
                                     }
-                                    else
+                                    catch (Exception)
                                     {
                                         slFalse++;
                                         var errorRow = new ErrorRow
@@ -327,12 +358,12 @@ namespace App_View.Areas.Admin.Controllers
                                             Day = day == "1",
                                             NoiBat = noiBat == "1",
                                             TrangThaiSale = trangThaiSale == "1",
+                                            MoTa = moTa,
                                             ListTenAnh = string.Join(",", listTenAnh),
-                                            ErrorMessage = response.DescriptionErr
+                                            ErrorMessage = "Trường có đầu vào không hợp lệ"
                                         };
 
                                         errorRows.Add(errorRow);
-
                                     }
                                 }
                             }
@@ -356,8 +387,9 @@ namespace App_View.Areas.Admin.Controllers
                                     Day = day == "1",
                                     NoiBat = noiBat == "1",
                                     TrangThaiSale = trangThaiSale == "1",
+                                    MoTa = moTa,
                                     ListTenAnh = string.Join(",", listTenAnh),
-                                    ErrorMessage = "Các trường không được để trống."
+                                    ErrorMessage = "Các trường không được để trống/Độ dài không hợp lệ."
                                 };
 
                                 errorRows.Add(errorRow);
@@ -386,6 +418,7 @@ namespace App_View.Areas.Admin.Controllers
                         Day = day == "1",
                         NoiBat = noiBat == "1",
                         TrangThaiSale = trangThaiSale == "1",
+                        MoTa = moTa,
                         ListTenAnh = string.Join(",", listTenAnh),
                         ErrorMessage = "Trường có đầu vào không hợp lệ"
                     };
@@ -398,30 +431,31 @@ namespace App_View.Areas.Admin.Controllers
                 using (var errorPackage = new ExcelPackage())
                 {
                     var errorWorksheet = errorPackage.Workbook.Worksheets.Add("Errors");
-                    using (var range = errorWorksheet.Cells[1, 1, 1, 17])
+                    using (var range = errorWorksheet.Cells[1, 1, 1, 19])
                     {
                         range.Style.Font.Bold = true;
                         range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
                         range.Style.Font.Size = 12;
                     }
 
-                    errorWorksheet.Cells[1, 1].Value = "Tên SP";
-                    errorWorksheet.Cells[1, 2].Value = "Thương Hiệu";
-                    errorWorksheet.Cells[1, 3].Value = "Xuất xứ";
-                    errorWorksheet.Cells[1, 4].Value = "Chất liệu";
-                    errorWorksheet.Cells[1, 5].Value = "Loại giầy";
-                    errorWorksheet.Cells[1, 6].Value = "Kiểu đế giầy";
-                    errorWorksheet.Cells[1, 7].Value = "Màu sắc";
-                    errorWorksheet.Cells[1, 8].Value = "Kích cỡ";
-                    errorWorksheet.Cells[1, 9].Value = "Giá nhập";
-                    errorWorksheet.Cells[1, 10].Value = "Giá bán";
-                    errorWorksheet.Cells[1, 11].Value = "Số lượng";
-                    errorWorksheet.Cells[1, 12].Value = "Khối lượng";
-                    errorWorksheet.Cells[1, 13].Value = "Dây";
-                    errorWorksheet.Cells[1, 14].Value = "Nổi bật";
-                    errorWorksheet.Cells[1, 15].Value = "Được áp dụng khuyển mại";
-                    errorWorksheet.Cells[1, 16].Value = "Ảnh";
-                    errorWorksheet.Cells[1, 17].Value = "Mô tả lỗi";
+                    errorWorksheet.Cells[1, 1].Value = "Tên SP*";
+                    errorWorksheet.Cells[1, 2].Value = "Thương Hiệu*";
+                    errorWorksheet.Cells[1, 3].Value = "Xuất xứ*";
+                    errorWorksheet.Cells[1, 4].Value = "Chất liệu*";
+                    errorWorksheet.Cells[1, 5].Value = "Loại giầy*";
+                    errorWorksheet.Cells[1, 6].Value = "Kiểu đế giầy*";
+                    errorWorksheet.Cells[1, 7].Value = "Màu sắc*";
+                    errorWorksheet.Cells[1, 8].Value = "Kích cỡ*";
+                    errorWorksheet.Cells[1, 9].Value = "Giá nhập*";
+                    errorWorksheet.Cells[1, 10].Value = "Giá bán*";
+                    errorWorksheet.Cells[1, 11].Value = "Số lượng*";
+                    errorWorksheet.Cells[1, 12].Value = "Khối lượng*";
+                    errorWorksheet.Cells[1, 13].Value = "Dây*";
+                    errorWorksheet.Cells[1, 14].Value = "Nổi bật*";
+                    errorWorksheet.Cells[1, 15].Value = "Được áp dụng khuyển mại*";
+                    errorWorksheet.Cells[1, 16].Value = "Mô tả";
+                    errorWorksheet.Cells[1, 17].Value = "Ảnh*";
+                    errorWorksheet.Cells[1, 18].Value = "Mô tả lỗi";
 
                     for (int i = 0; i < errorRows.Count; i++)
                     {
@@ -442,8 +476,9 @@ namespace App_View.Areas.Admin.Controllers
                         errorWorksheet.Cells[i + 2, 13].Value = errorRow.Day;
                         errorWorksheet.Cells[i + 2, 14].Value = errorRow.NoiBat;
                         errorWorksheet.Cells[i + 2, 15].Value = errorRow.TrangThaiSale;
-                        errorWorksheet.Cells[i + 2, 16].Value = errorRow.ListTenAnh;
-                        errorWorksheet.Cells[i + 2, 17].Value = errorRow.ErrorMessage;
+                        errorWorksheet.Cells[i + 2, 16].Value = errorRow.MoTa;
+                        errorWorksheet.Cells[i + 2, 17].Value = errorRow.ListTenAnh;
+                        errorWorksheet.Cells[i + 2, 18].Value = errorRow.ErrorMessage;
                     }
 
                     var errorBytes = errorPackage.GetAsByteArray();
@@ -457,10 +492,7 @@ namespace App_View.Areas.Admin.Controllers
                     return Ok(new { Success = false, ErrorFilePath = errorFilePath, slFalse, slSuccess });
                 }
             }
-
-
             return Ok(new { slFalse, slSuccess });
-
         }
 
         #endregion
@@ -553,6 +585,77 @@ namespace App_View.Areas.Admin.Controllers
                 return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
             }
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> ExportSanPhamDangKinhDoanhFromListGuid([FromBody] ListGuildDTO listGuildDTO)
+        {
+            var lstProduct = (await _sanPhamChiTietService.GetListSanPhamExcelAynsc()).Where(sp => listGuildDTO.listGuild!.Contains(sp.IdChiTietSp!)).ToList();
+            using (var package = new ExcelPackage())
+            {
+                var worksheet = package.Workbook.Worksheets.Add("ProductList");
+
+                using (var range = worksheet.Cells[1, 1, 1, 20])
+                {
+                    range.Style.Font.Bold = true;
+                    range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    range.Style.Font.Size = 12;
+                }
+
+                worksheet.Cells[1, 1].Value = "Mã sản phẩm";
+                worksheet.Cells[1, 2].Value = "Tên sản phẩm";
+                worksheet.Cells[1, 3].Value = "Thương hiệu";
+                worksheet.Cells[1, 4].Value = "Kiểu đế";
+                worksheet.Cells[1, 5].Value = "Chất liệu";
+                worksheet.Cells[1, 6].Value = "Thể loại";
+                worksheet.Cells[1, 7].Value = "Xuất xứ";
+                worksheet.Cells[1, 8].Value = "Size";
+                worksheet.Cells[1, 9].Value = "Màu sắc";
+                worksheet.Cells[1, 10].Value = "Giá nhập";
+                worksheet.Cells[1, 11].Value = "Giá bán";
+                worksheet.Cells[1, 12].Value = "Dây(True/False)";
+                worksheet.Cells[1, 13].Value = "Được áp dụng khuyến mại(True/False)";
+                worksheet.Cells[1, 14].Value = "Hiển thị ở danh sách nổi bật(True/False)";
+                worksheet.Cells[1, 15].Value = "Số lượng";
+                worksheet.Cells[1, 16].Value = "Số lượng đã bán";
+                worksheet.Cells[1, 17].Value = "Khối lượng(g)";
+                worksheet.Cells[1, 18].Value = "Ngày tạo";
+                worksheet.Cells[1, 19].Value = "Mô tả";
+                worksheet.Cells[1, 20].Value = "Danh sách ảnh";
+
+                for (int i = 0; i < lstProduct.Count(); i++)
+                {
+                    worksheet.Cells[i + 2, 1].Value = lstProduct[i].Ma;
+                    worksheet.Cells[i + 2, 2].Value = lstProduct[i].SanPham;
+                    worksheet.Cells[i + 2, 3].Value = lstProduct[i].ThuongHieu;
+                    worksheet.Cells[i + 2, 4].Value = lstProduct[i].KieuDeGiay;
+                    worksheet.Cells[i + 2, 5].Value = lstProduct[i].ChatLieu;
+                    worksheet.Cells[i + 2, 6].Value = lstProduct[i].LoaiGiay;
+                    worksheet.Cells[i + 2, 7].Value = lstProduct[i].XuatXu;
+                    worksheet.Cells[i + 2, 8].Value = lstProduct[i].KichCo;
+                    worksheet.Cells[i + 2, 9].Value = lstProduct[i].MauSac;
+                    worksheet.Cells[i + 2, 10].Value = lstProduct[i].GiaNhap;
+                    worksheet.Cells[i + 2, 11].Value = lstProduct[i].GiaBan;
+                    worksheet.Cells[i + 2, 12].Value = lstProduct[i].Day;
+                    worksheet.Cells[i + 2, 13].Value = lstProduct[i].TrangThaiKhuyenMai;
+                    worksheet.Cells[i + 2, 14].Value = lstProduct[i].NoiBat;
+                    worksheet.Cells[i + 2, 15].Value = lstProduct[i].SoLuongTon;
+                    worksheet.Cells[i + 2, 16].Value = lstProduct[i].SoLuongDaBan;
+                    worksheet.Cells[i + 2, 17].Value = lstProduct[i].KhoiLuong;
+                    worksheet.Cells[i + 2, 18].Value = lstProduct[i].NgayTao;
+                    worksheet.Cells[i + 2, 19].Value = lstProduct[i].MoTa;
+                    worksheet.Cells[i + 2, 20].Value = lstProduct[i].DanhSachAnh;
+                }
+
+                byte[] excelBytes = package.GetAsByteArray();
+
+                string fileName = $"ProductList_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+
+                return File(excelBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            }
+        }
+
+
         public async Task<IActionResult> ExportToExcel()
         {
             var lstProduct = await _sanPhamChiTietService.GetListSanPhamExcelAynsc();
@@ -560,46 +663,56 @@ namespace App_View.Areas.Admin.Controllers
             {
                 var worksheet = package.Workbook.Worksheets.Add("ProductList");
 
-                using (var range = worksheet.Cells[1, 1, 1, 15])
+                using (var range = worksheet.Cells[1, 1, 1, 20])
                 {
                     range.Style.Font.Bold = true;
                     range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
                     range.Style.Font.Size = 12;
                 }
 
-                worksheet.Cells[1, 1].Value = "Id";
-                worksheet.Cells[1, 2].Value = "Tên Sản Phẩm";
+                worksheet.Cells[1, 1].Value = "Mã sản phẩm";
+                worksheet.Cells[1, 2].Value = "Tên sản phẩm";
                 worksheet.Cells[1, 3].Value = "Thương hiệu";
-                worksheet.Cells[1, 4].Value = "Xuất xứ";
+                worksheet.Cells[1, 4].Value = "Kiểu đế";
                 worksheet.Cells[1, 5].Value = "Chất liệu";
-                worksheet.Cells[1, 6].Value = "Loại giầy";
-                worksheet.Cells[1, 7].Value = "Kiểu để giầy";
-                worksheet.Cells[1, 8].Value = "Màu sắc";
-                worksheet.Cells[1, 9].Value = "Kích cỡ";
+                worksheet.Cells[1, 6].Value = "Thể loại";
+                worksheet.Cells[1, 7].Value = "Xuất xứ";
+                worksheet.Cells[1, 8].Value = "Size";
+                worksheet.Cells[1, 9].Value = "Màu sắc";
                 worksheet.Cells[1, 10].Value = "Giá nhập";
                 worksheet.Cells[1, 11].Value = "Giá bán";
-                worksheet.Cells[1, 12].Value = "Số lượng";
-                worksheet.Cells[1, 13].Value = "Khối lượng";
-                worksheet.Cells[1, 14].Value = "Dây";
-                worksheet.Cells[1, 15].Value = "Nổi bật";
+                worksheet.Cells[1, 12].Value = "Dây(True/False)";
+                worksheet.Cells[1, 13].Value = "Được áp dụng khuyến mại(True/False)";
+                worksheet.Cells[1, 14].Value = "Hiển thị ở danh sách nổi bật(True/False)";
+                worksheet.Cells[1, 15].Value = "Số lượng";
+                worksheet.Cells[1, 16].Value = "Số lượng đã bán";
+                worksheet.Cells[1, 17].Value = "Khối lượng(g)";
+                worksheet.Cells[1, 18].Value = "Ngày tạo";
+                worksheet.Cells[1, 19].Value = "Mô tả";
+                worksheet.Cells[1, 20].Value = "Danh sách ảnh";
 
                 for (int i = 0; i < lstProduct.Count(); i++)
                 {
-                    worksheet.Cells[i + 2, 1].Value = lstProduct[i].IdChiTietSp;
+                    worksheet.Cells[i + 2, 1].Value = lstProduct[i].Ma;
                     worksheet.Cells[i + 2, 2].Value = lstProduct[i].SanPham;
                     worksheet.Cells[i + 2, 3].Value = lstProduct[i].ThuongHieu;
-                    worksheet.Cells[i + 2, 4].Value = lstProduct[i].XuatXu;
+                    worksheet.Cells[i + 2, 4].Value = lstProduct[i].KieuDeGiay;
                     worksheet.Cells[i + 2, 5].Value = lstProduct[i].ChatLieu;
                     worksheet.Cells[i + 2, 6].Value = lstProduct[i].LoaiGiay;
-                    worksheet.Cells[i + 2, 7].Value = lstProduct[i].KieuDeGiay;
-                    worksheet.Cells[i + 2, 8].Value = lstProduct[i].MauSac;
-                    worksheet.Cells[i + 2, 9].Value = lstProduct[i].KichCo;
+                    worksheet.Cells[i + 2, 7].Value = lstProduct[i].XuatXu;
+                    worksheet.Cells[i + 2, 8].Value = lstProduct[i].KichCo;
+                    worksheet.Cells[i + 2, 9].Value = lstProduct[i].MauSac;
                     worksheet.Cells[i + 2, 10].Value = lstProduct[i].GiaNhap;
                     worksheet.Cells[i + 2, 11].Value = lstProduct[i].GiaBan;
-                    worksheet.Cells[i + 2, 12].Value = lstProduct[i].SoLuongTon;
-                    worksheet.Cells[i + 2, 13].Value = lstProduct[i].KhoiLuong;
-                    worksheet.Cells[i + 2, 14].Value = lstProduct[i].Day;
-                    worksheet.Cells[i + 2, 15].Value = lstProduct[i].NoiBat;
+                    worksheet.Cells[i + 2, 12].Value = lstProduct[i].Day;
+                    worksheet.Cells[i + 2, 13].Value = lstProduct[i].TrangThaiKhuyenMai;
+                    worksheet.Cells[i + 2, 14].Value = lstProduct[i].NoiBat;
+                    worksheet.Cells[i + 2, 15].Value = lstProduct[i].SoLuongTon;
+                    worksheet.Cells[i + 2, 16].Value = lstProduct[i].SoLuongDaBan;
+                    worksheet.Cells[i + 2, 17].Value = lstProduct[i].KhoiLuong;
+                    worksheet.Cells[i + 2, 18].Value = lstProduct[i].NgayTao;
+                    worksheet.Cells[i + 2, 19].Value = lstProduct[i].MoTa;
+                    worksheet.Cells[i + 2, 20].Value = lstProduct[i].DanhSachAnh;
                 }
 
                 byte[] excelBytes = package.GetAsByteArray();
@@ -954,7 +1067,7 @@ namespace App_View.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> UploadImage([FromForm]List<IFormFile> files)
+        public async Task<IActionResult> UploadImage([FromForm] List<IFormFile> files)
         {
             var formData = new MultipartFormDataContent();
             foreach (var file in files)

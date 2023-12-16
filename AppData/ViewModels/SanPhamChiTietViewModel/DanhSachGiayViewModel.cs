@@ -12,5 +12,6 @@ namespace App_Data.ViewModels.SanPhamChiTietViewModel
         public List<ItemShopViewModel>? LstBanChay { get; set; } = new List<ItemShopViewModel> { };
         public List<ItemShopViewModel>? LstTopDanhGia { get; set; } = new List<ItemShopViewModel> { };
         public List<ItemShopViewModel>? LstSanPhamNoiBat { get; set; } = new List<ItemShopViewModel> { };
+        public List<ItemShopViewModel>? LstAllSanPham { get; set; } = new List<ItemShopViewModel> { };
     }
 }

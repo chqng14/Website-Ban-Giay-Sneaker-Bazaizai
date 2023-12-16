@@ -1,8 +1,11 @@
-﻿using App_Data.IRepositories;
+﻿using App_Data.DbContextt;
+using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.SanPhamChiTiet.ThuongHieuDTO;
 using App_Data.ViewModels.XuatXu;
 using AutoMapper;
+using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App_Api.Controllers
@@ -13,11 +16,13 @@ namespace App_Api.Controllers
     {
         private readonly IAllRepo<XuatXu> _xuaXuRespo;
         private readonly IMapper _mapper;
+        private readonly BazaizaiContext _bazaizaiContext;
 
         public XuatXuController(IAllRepo<XuatXu> xuaXuRespo, IMapper mapper)
         {
             _xuaXuRespo = xuaXuRespo;
             _mapper = mapper;
+            _bazaizaiContext = new BazaizaiContext();
         }
 
 
@@ -47,26 +52,41 @@ namespace App_Api.Controllers
         [HttpDelete("DeleteXuatXu/{id}")]
         public bool Delete(string id)
         {
-            var xuaXu = GetXuatXu(id);
-            if (xuaXu != null)
+            try
             {
-                xuaXu!.TrangThai = 1;
-                return _xuaXuRespo.EditItem(xuaXu);
+                var xuaXu = GetXuatXu(id);
+                if (xuaXu != null)
+                {
+                    return _xuaXuRespo.RemoveItem(xuaXu);
+                }
+                return false;
             }
-            return false;
-
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
-        [HttpPut("UpdateXuatXu")]
+        [HttpPut("sua-xuat-xu")]
         public bool Update(XuatXuDTO xuaXuDTO)
         {
-            var xuaXuGet = GetXuatXu(xuaXuDTO.IdXuatXu);
-            if (xuaXuGet != null)
+            try
             {
-                _mapper.Map(xuaXuDTO, xuaXuGet);
-                return _xuaXuRespo.EditItem(xuaXuGet);
+                var nameXuatXu = xuaXuDTO.Ten!.Trim().ToLower();
+                if (!_bazaizaiContext.xuatXus.Where(x => x.Ten!.Trim().ToLower() == nameXuatXu).Any())
+                {
+                    var xuatXu = _mapper.Map<XuatXu>(xuaXuDTO);
+                    _bazaizaiContext.Attach(xuatXu);
+                    _bazaizaiContext.Entry(xuatXu).Property(sp => sp.Ten).IsModified = true;
+                    _bazaizaiContext.SaveChanges();
+                    return true;
+                }
+                return false;
             }
-            return false;
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

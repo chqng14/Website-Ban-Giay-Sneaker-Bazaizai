@@ -6,26 +6,37 @@
 }
 <div style="text-align:center">
     <h1>Danh sách sản phẩm khuyến mại</h1>
-</div>
 
+        <button class="btn btn-danger m-r-5" id="xoaKmct" style="float:right">Xóa khuyến mại</button>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <table id="tbSaleDT" class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.SanPham)
+                <input type="checkbox" id="select-all-checkbox" />
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.KhuyenMai)
+                Tên sản phẩm
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TrangThai)
+                Tên khuyến mại
             </th>
-            <th></th>
+            <th>
+                Trạng thái
+            </th>
+
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+                <td class="sorting_1">
+
+                    <input type="checkbox" class="voucher-checkbox" name="selectedKmct" data-idKmct="@item.IdKhuyenMai" data-idSpct="@item.SanPham" />
+
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.SanPham)
             </td>
@@ -41,21 +52,93 @@
                     {
                         <text>Đang khuyến mãi</text>
                     }
+                    else if (item.TrangThai == 2)
+                    {
+                        <text>Sắp khuyến mãi</text>
+                    }
                     else
                     {
                         <text>Trạng thái lỗi</text>
                     }
                 </td>
-            <td>
-                <a asp-action="Delete" asp-route-id="@item.IdKhuyenMaiChiTiet">Xóa khuyến mại</a>
-            </td>
+            
         </tr>
 }
     </tbody>
 </table>
 <script>
-    $(() => $("#tbSaleDT").DataTable())
+    $(document).ready(function () {
+        $("#tbSaleDT").DataTable();
+
+        $('#select-all-checkbox').click(function () {
+            $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
+        });
+
+        $('#xoaKmct').click(function () {
+            var TenSpct = [];
+            var idKmct = [];
+            var checkboxes = document.querySelectorAll("input[name='selectedKmct']:checked");
+            if (checkboxes.length === 0) {
+                Swal.fire({
+                    title: 'Thông báo!',
+                    text: "Vui lòng chọn ít nhất một sản phẩm để xóa",
+                    icon: 'info',
+                    confirmButtonText: 'Đóng'
+                })
+                return;
+            }
+            Swal.fire({
+                title: 'Xác nhận xóa',
+                text: 'Bạn có chắc chắn muốn xóa các mục đã chọn?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Xóa',
+                cancelButtonText: 'Hủy bỏ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+            checkboxes.forEach(function (checkbox) {
+                TenSpct.push(checkbox.getAttribute("data-idSpct"));
+                idKmct.push(checkbox.getAttribute("data-idKmct"));
+            });
+
+            var formData = new FormData();
+            TenSpct.forEach(function (tenSpct) {
+                formData.append("TenSpct", tenSpct);
+            });
+            idKmct.forEach(function (idkmct) {
+                formData.append("idKm", idkmct);
+            });
+            $.ajax({
+                url: "@Url.Action("Delete", "KhuyenMaiChiTiets")",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    if (response.mess !== "") {
+                                Swal.fire({
+                                    title: 'Thông báo!',
+                                    text: response.mess,
+                                    icon: 'info',
+                                    confirmButtonText: 'Đóng'
+                                }).then((result) => {
+
+                                    if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop || result.dismiss === Swal.DismissReason.esc) {
+                                        location.reload();
+                                    }
+                                });
+                    }
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            });
+                }
+            });
+        });
+    });
 </script>
+
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

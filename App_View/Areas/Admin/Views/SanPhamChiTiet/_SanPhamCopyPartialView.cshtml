@@ -3,7 +3,6 @@
 
 <script>
     (function () {
-        debugger;
             var selectedFiles = {};
             var lstAnhRemove = {};
             selectedFiles = {};
@@ -667,144 +666,170 @@
                     $('#notification-toast .toast:first-child').remove();
                 }, 3000);
             } else {
- var dataGet = {};
- $('#form-get-data').find("input, select, textarea").each(function () {
-     var fieldType = $(this).attr("type");
-     var fieldName = $(this).attr("name");
-     var fieldValue;
+                var dataGet = {};
+                $('#form-get-data').find("input, select, textarea").each(function () {
+                    var fieldType = $(this).attr("type");
+                    var fieldName = $(this).attr("name");
+                    var fieldValue;
 
-     if (fieldType === "checkbox" || fieldType === "radio") {
-         fieldValue = $(this).is(":checked");
-     } else {
-         if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
-             var fieldValue = $(this).val();
-             fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
-         }
-         else if ($(this).hasClass("formatKhoiLuong")) {
-             var doubleValue = parseFloat($(this).val().replace(/,/g, ''));
-             fieldValue = doubleValue;
-         }
-         else {
-             fieldValue = $(this).val();
-         }
-     }
-     if (fieldName) {
-         dataGet[fieldName] = fieldValue;
-     }
- });
-
-
- var data = new FormData();
- for (var key in dataGet) {
-     data.append('SanPhamChiTietData.' + key, dataGet[key]);
- }
+                    if (fieldType === "checkbox" || fieldType === "radio") {
+                        fieldValue = $(this).is(":checked");
+                    } else {
+                        if ($(this).hasClass("formatPrice") || $(this).hasClass("formatNumber")) {
+                            var fieldValue = $(this).val();
+                            fieldValue = BigInt(fieldValue.replace(/₫|,|\s/g, '')).toString();
+                        }
+                        else if ($(this).hasClass("formatKhoiLuong")) {
+                            var doubleValue = parseFloat($(this).val().replace(/,/g, ''));
+                            fieldValue = doubleValue;
+                        }
+                        else {
+                            fieldValue = $(this).val();
+                        }
+                    }
+                    if (fieldName) {
+                        dataGet[fieldName] = fieldValue;
+                    }
+                });
 
 
- var danhSachAnhArray = [];
- @for (var i = 0; i < Model.DanhSachAnh!.Count; i++)
- {
-     @:danhSachAnhArray.push('@Model.DanhSachAnh[i]');
- }
-
- for (var i = 0; i < danhSachAnhArray.length; i++) {
-     data.append('SanPhamChiTietData.' + 'DanhSachAnh', danhSachAnhArray[i]);
- }
-
- if (lstAnhRemove['@Model.IdChiTietSp'] && lstAnhRemove['@Model.IdChiTietSp'].length > 0)
- {
-     Array.from(lstAnhRemove['@Model.IdChiTietSp']).forEach((item, index) => {
-         data.append('ListTenAnhRemove', item);
-     })
- }
-
- if (selectedFiles['@Model.IdChiTietSp'] && selectedFiles['@Model.IdChiTietSp'].length > 0)
- {
-     console.log(selectedFiles['@Model.IdChiTietSp']);
-     Array.from(selectedFiles['@Model.IdChiTietSp']).forEach((item, index) => {
-         data.append('ListAnhCreate', item.data);
-     })
- }
-
- $.ajax({
-     url: '/Admin/SanPhamChiTiet/CreateSanPhamChiTietCoppy',
-     type: 'POST',
-     data: data,
-     contentType: false,
-     processData: false,
-     success: function (result) {
-         if (result) {
-             if (window.location.pathname.toLowerCase().includes('sanphamchitiet/danhsachsanpham')) {
-                 debugger
-                 table.draw();
-             }
-             else {
-                 GetDanhDachTongQuan();
-                 $.ajax({
-                     url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
-                     type: 'GET',
-                     data: {
-                         "sumGuid": keyProduct
-                     },
-                     success: function (result) {
-                         $('#modal-dssanpham').empty().html(result);
-                     },
-                     error: function (xhr, status, error) {
-                         console.log(xhr.responseText);
-                         console.log(status);
-                         console.log(error);
-                         console.log(xhr);
-                     }
-                 });
-             }
-             var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                 <div class="toast-header">
-                                     <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                     <strong class="mr-auto">Thông báo</strong>
-                                     <small>1 second ago</small>
-                                     <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                         <span aria-hidden="true">&times;</span>
-                                     </button>
-                                 </div>
-                                 <div class="toast-body">
-                                    Đã thêm thành công một sản phẩm
-                                 </div>
-                             </div>`
-             $('#notification-toast').append(toastHTML)
-             $('#notification-toast .toast').toast('show');
-             setTimeout(function () {
-                 $('#notification-toast .toast:first-child').remove();
-             }, 3000);
-         } else {
-             var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                             <div class="toast-header">
-                                 <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                 <strong class="mr-auto">Thông báo</strong>
-                                 <small>1 second ago</small>
-                                 <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                     <span aria-hidden="true">&times;</span>
-                                 </button>
-                             </div>
-                             <div class="toast-body">
-                               Sản phẩm đã tồn tại!
-                             </div>
-                         </div>`
-             $('#notification-toast').append(toastHTML)
-             $('#notification-toast .toast').toast('show');
-             setTimeout(function () {
-                 $('#notification-toast .toast:first-child').remove();
-             }, 3000);
-         }
-         $btn.removeClass('is-loading')
-     },
-     error: function (xhr, status, error) {
-         console.log(xhr.responseText);
-         console.log(status);
-         console.log(error);
-         console.log(xhr);
-     }
- });
+                if (parseFloat(dataGet.GiaBan) !== 0 &&
+                    parseFloat(dataGet.GiaNhap) !== 0 &&
+                    parseFloat(dataGet.KhoiLuong) !== 0 &&
+                    !isNaN(dataGet.KhoiLuong) &&
+                    dataGet.GiaBan.trim() !== "" &&
+                    dataGet.GiaNhap.trim() !== "" &&
+                    dataGet.SoLuongTon.trim() !== "" &&
+                    dataGet.KhoiLuong.toString().trim() !== "") {
+                                   var data = new FormData();
+for (var key in dataGet) {
+    data.append('SanPhamChiTietData.' + key, dataGet[key]);
+               };
 
 
+var danhSachAnhArray = [];
+@for (var i = 0; i < Model.DanhSachAnh!.Count; i++)
+{
+    @:danhSachAnhArray.push('@Model.DanhSachAnh[i]');
+}
+
+for (var i = 0; i < danhSachAnhArray.length; i++) {
+    data.append('SanPhamChiTietData.' + 'DanhSachAnh', danhSachAnhArray[i]);
+}
+
+if (lstAnhRemove['@Model.IdChiTietSp'] && lstAnhRemove['@Model.IdChiTietSp'].length > 0)
+{
+    Array.from(lstAnhRemove['@Model.IdChiTietSp']).forEach((item, index) => {
+        data.append('ListTenAnhRemove', item);
+    })
+}
+
+if (selectedFiles['@Model.IdChiTietSp'] && selectedFiles['@Model.IdChiTietSp'].length > 0)
+{
+    console.log(selectedFiles['@Model.IdChiTietSp']);
+    Array.from(selectedFiles['@Model.IdChiTietSp']).forEach((item, index) => {
+        data.append('ListAnhCreate', item.data);
+    })
+}
+
+$.ajax({
+    url: '/Admin/SanPhamChiTiet/CreateSanPhamChiTietCoppy',
+    type: 'POST',
+    data: data,
+    contentType: false,
+    processData: false,
+    success: function (result) {
+        if (result) {
+            if (window.location.pathname.toLowerCase().includes('sanphamchitiet/danhsachsanpham')) {
+                table.draw();
+            }
+            else {
+                GetDanhDachTongQuan();
+                $.ajax({
+                    url: '/Admin/SanPhamChiTiet/GetRelatedProducts',
+                    type: 'GET',
+                    data: {
+                        "sumGuid": keyProduct
+                    },
+                    success: function (result) {
+                        $('#modal-dssanpham').empty().html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText);
+                        console.log(status);
+                        console.log(error);
+                        console.log(xhr);
+                    }
+                });
+            }
+            var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                <div class="toast-header">
+                                    <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                    <strong class="mr-auto">Thông báo</strong>
+                                    <small>1 second ago</small>
+                                    <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="toast-body">
+                                   Đã thêm thành công một sản phẩm
+                                </div>
+                            </div>`
+            $('#notification-toast').append(toastHTML)
+            $('#notification-toast .toast').toast('show');
+            setTimeout(function () {
+                $('#notification-toast .toast:first-child').remove();
+            }, 3000);
+        } else {
+            var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                            <div class="toast-header">
+                                <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                <strong class="mr-auto">Thông báo</strong>
+                                <small>1 second ago</small>
+                                <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="toast-body">
+                              Sản phẩm đã tồn tại!
+                            </div>
+                        </div>`
+            $('#notification-toast').append(toastHTML)
+            $('#notification-toast .toast').toast('show');
+            setTimeout(function () {
+                $('#notification-toast .toast:first-child').remove();
+            }, 3000);
+        }
+        $btn.removeClass('is-loading')
+    },
+    error: function (xhr, status, error) {
+        console.log(xhr.responseText);
+        console.log(status);
+        console.log(error);
+        console.log(xhr);
+    }
+});
+                } else {
+                    var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                        <div class="toast-header">
+                                            <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                            <strong class="mr-auto">Thông báo</strong>
+                                            <small>1 second ago</small>
+                                            <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="toast-body">
+                                          Vui lòng nhập đầy đủ các trường đánh dấu *
+                                        </div>
+                                    </div>`
+                    $('#notification-toast').append(toastHTML)
+                    $('#notification-toast .toast').toast('show');
+                    setTimeout(function () {
+                        $('#notification-toast .toast:first-child').remove();
+                    }, 3000);
+                    $btn.removeClass('is-loading')
+                }
             }
              })
         $(document).off('click', '#btn-add');
@@ -860,9 +885,15 @@
                         dataGet[fieldName] = fieldValue;
                     }
                 });
-
-
-                var data = new FormData();
+                if (parseFloat(dataGet.GiaBan) !== 0 &&
+                    parseFloat(dataGet.GiaNhap) !== 0 &&
+                    parseFloat(dataGet.KhoiLuong) !== 0 &&
+                    !isNaN(dataGet.KhoiLuong) &&
+                    dataGet.GiaBan.trim() !== "" &&
+                    dataGet.GiaNhap.trim() !== "" &&
+                    dataGet.SoLuongTon.trim() !== "" &&
+                    dataGet.KhoiLuong.toString().trim() !== "") {
+                                        var data = new FormData();
 for (var key in dataGet) {
     data.append('SanPhamChiTietData.' + key, dataGet[key]);
                 }
@@ -956,6 +987,28 @@ $.ajax({
         console.log(xhr);
     }
 });
+
+                } else {
+                       var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                       <div class="toast-header">
+                           <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                           <strong class="mr-auto">Thông báo</strong>
+                           <small>1 second ago</small>
+                           <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                               <span aria-hidden="true">&times;</span>
+                           </button>
+                       </div>
+                       <div class="toast-body">
+                         Vui lòng nhập đầy đủ các trường đánh dấu *
+                       </div>
+                   </div>`
+   $('#notification-toast').append(toastHTML)
+   $('#notification-toast .toast').toast('show');
+   setTimeout(function () {
+       $('#notification-toast .toast:first-child').remove();
+   }, 3000);
+   $btn.removeClass('is-loading')
+                }
             };
         });
 
@@ -994,7 +1047,7 @@ $.ajax({
                             <div class="card-body main">
                                 <div class="row">
                                     <div class="col-4 sanpham" style="margin-top: 10px">
-                                        <label class="font-weight-semibold">Tên sản phẩm</label>
+                                        <label class="font-weight-semibold">Tên sản phẩm*</label>
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="w-100 select2-active" name="IdSanPham">
@@ -1015,7 +1068,7 @@ $.ajax({
                                     </div>
 
                                     <div class="col-4 thuonghieu" style="margin-top: 10px">
-                                        <label class="font-weight-semibold">Thương hiệu</label>
+                                        <label class="font-weight-semibold">Thương hiệu*</label>
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdThuongHieu">
@@ -1035,7 +1088,7 @@ $.ajax({
                                     </div>
 
                                     <div class="col-4 xuatxu" style="margin-top: 10px">
-                                        <label class="font-weight-semibold">Xuất xứ</label>
+                                        <label class="font-weight-semibold">Xuất xứ*</label>
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdXuatXu">
@@ -1055,7 +1108,7 @@ $.ajax({
                                     </div>
 
                                     <div class="col-4 chatlieu" style="margin-top: 10px">
-                                        <label class="font-weight-semibold">Chất liệu</label>
+                                        <label class="font-weight-semibold">Chất liệu*</label>
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdChatLieu">
@@ -1075,7 +1128,7 @@ $.ajax({
                                     </div>
 
                                     <div class="col-4 loaigiay" style="margin-top: 10px">
-                                        <label class="font-weight-semibold">Loại giầy</label>
+                                        <label class="font-weight-semibold">Loại giầy*</label>
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdLoaiGiay">
@@ -1095,7 +1148,7 @@ $.ajax({
                                     </div>
 
                                     <div class="col-4 kieudegiay" style="margin-top: 10px">
-                                        <label class="font-weight-semibold">Kiểu đế giầy</label>
+                                        <label class="font-weight-semibold">Kiểu đế giầy*</label>
                                         <div class="d-flex align-items-center mr-1">
                                             <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdKieuDeGiay">
@@ -1118,7 +1171,7 @@ $.ajax({
 
                                 <div class="row">
                                     <div class="col-6 mausac">
-                                        <label class="font-weight-semibold">Màu Sắc</label>
+                                        <label class="font-weight-semibold">Màu Sắc*</label>
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdMauSac">
@@ -1138,7 +1191,7 @@ $.ajax({
                                     </div>
 
                                     <div class="col-6 kichco">
-                                        <label class="font-weight-semibold">Kích cỡ</label>
+                                        <label class="font-weight-semibold">Kích cỡ*</label>
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-info-circle mr-1" data-toggle="tooltip" data-placement="top" title="Nhấn Enter để thêm vào cơ sở dữ liệu nếu giá trị chưa tồn tại!"></i>
                                             <select class="select2-active w-100" name="IdKichCo">
@@ -1160,7 +1213,7 @@ $.ajax({
 
                                 <div class="row mt-2">
                                     <div class="form-group col-3">
-                                        <label class="font-weight-semibold" for="productBrand">Giá nhập</label>
+                                        <label class="font-weight-semibold" for="productBrand">Giá nhập*</label>
                                         <div class="d-flex align-items-center">
                                             <i class="far fa-money-bill-alt mr-1"></i>
                                             <input type="text" class="form-control formatPrice" name="GiaNhap" value="@Model.GiaNhap">
@@ -1168,7 +1221,7 @@ $.ajax({
                                     </div>
 
                                     <div class="form-group col-3">
-                                        <label class="font-weight-semibold" for="productBrand">Giá bán</label>
+                                        <label class="font-weight-semibold" for="productBrand">Giá bán*</label>
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-money-bill-wave mr-1"></i>
                                             <input type="text" class="form-control formatPrice" name="GiaBan" value="@Model.GiaBan">
@@ -1176,7 +1229,7 @@ $.ajax({
                                     </div>
 
                                     <div class="form-group col-3">
-                                        <label class="font-weight-semibold" for="productBrand">Số lượng tồn</label>
+                                        <label class="font-weight-semibold" for="productBrand">Số lượng tồn*</label>
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-database mr-1"></i>
                                             <input type="text" class="form-control formatNumber" name="SoLuongTon" value="@Model.SoLuongTon">
@@ -1184,14 +1237,14 @@ $.ajax({
                                     </div>
 
                                     <div class="form-group col-3">
-                                        <label class="font-weight-semibold" for="productBrand">Khối lượng</label>
+                                        <label class="font-weight-semibold" for="productBrand">Khối lượng*</label>
                                         <div class="d-flex align-items-center">
                                             <i class="fas fa-weight mr-1"></i>
                                             <input type="text" class="form-control formatKhoiLuong" name="KhoiLuong" value="@Model.KhoiLuong">
                                         </div>
                                     </div>
 
-                                    <div class="form-group d-flex align-items-center col-3">
+                                    <div class="form-group d-flex align-items-center col-2">
                                         <div class="switch m-r-10">
                                             @if (Model.Day == true)
                                             {
@@ -1207,7 +1260,7 @@ $.ajax({
                                         <label class="font-weight-semibold">Dây</label>
                                     </div>
 
-                                    <div class="form-group d-flex align-items-center col-3">
+                                    <div class="form-group d-flex align-items-center col-4">
                                         <div class="switch m-r-10">
                                             @if (Model.TrangThaiKhuyenMai == true)
                                             {
@@ -1220,7 +1273,7 @@ $.ajax({
 
                                             <label class="font-weight-semibold" for="switch-trangThaiKhuyenMai-@Model.IdChiTietSp"></label>
                                         </div>
-                                        <label class="font-weight-semibold">Trạng thái khuyến mãi</label>
+                                        <label class="font-weight-semibold">Cho phép áp dụng khuyến mại</label>
                                     </div>
 
 
@@ -1282,13 +1335,13 @@ $.ajax({
             <div>
                 <button class="btn btn-kio" id="btn-add">
                     <i class="anticon anticon-loading"></i>
-                    <i class="anticon anticon-copy"></i>
+                    <i class="anticon anticon-plus"></i>
                     <span>Thêm</span>
                 </button>
                 <button class="btn btn-kio" id="btn-add-coppy">
                     <i class="anticon anticon-loading"></i>
                     <i class="anticon anticon-copy"></i>
-                    <span>Thêm và coppy</span>
+                    <span>Thêm và copy</span>
                 </button>
             </div>
             <div>

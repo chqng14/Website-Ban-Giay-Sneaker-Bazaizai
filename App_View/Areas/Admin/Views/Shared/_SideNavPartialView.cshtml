@@ -1,72 +1,4 @@
-﻿@*<div class="side-nav">
-        <div class="side-nav-inner">
-            <ul class="side-nav-menu scrollable">
-                <li class="nav-item dropdown">
-                    <a class="dropdown-toggle" href="javascript:void(0);">
-                        <span class="icon-holder">
-                            <i class="anticon anticon-dashboard"></i>
-                        </span>
-                        <span class="title">Dashboard</span>
-                        <span class="arrow">
-                            <i class="arrow-icon"></i>
-                        </span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="/Admin/SanPhamChiTiet/DanhSachSanPham">Danh sách sản phẩm</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="dropdown-toggle" href="javascript:void(0);">
-                                <span class="icon-holder">
-                                    <i class="fas fa-gift"></i>
-                                </span>
-                                <span class="title">Quản lý voucher</span>
-                                <span class="arrow">
-                                    <i class="arrow-icon"></i>
-                                </span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="/Admin/Vouchers/Index">Voucher</a>
-                                </li>
-                            </ul>
-
-                        </li>
-                        <li>
-                            <a asp-controller="BanHangTaiQuay" asp-action="DanhSachHoaDonCho">Bán hàng tại quầy</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="dropdown-toggle" href="javascript:void(0);">
-                                <span class="icon-holder">
-                                    <i class="fas fa-gift"></i>
-                                </span>
-                                <span class="title">Quản lý chức vụ</span>
-                                <span class="arrow">
-                                    <i class="arrow-icon"></i>
-                                </span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="/Admin/Role/GetAllRole">Danh sách chức vụ</a>
-                                    <a asp-page="/Role/GetAllRole">
-                                        Danh sách chức vụ
-                                    </a>
-                                </li>
-                            </ul>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="/Admin/Role/Create">Thêm mới chức vụ</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-
-                </li>
-            </ul>
-        </div>
-    </div>*@
-
-<div class="side-nav">
+﻿<div class="side-nav">
     <div class="side-nav-inner">
         <ul class="side-nav-menu scrollable">
             <li class="nav-item dropdown">
@@ -81,7 +13,12 @@
                 </a>
                 <ul class="dropdown-menu" style="display: none;">
                     <li>
-                        <a href="/Admin/SanPhamChiTiet/TongQuanSanPham">DS tổng quan sản phẩm</a>
+                        <a href="/Admin/SanPhamChiTiet/TongQuanSanPham">Danh sách nhóm sản phẩm</a>
+                    </li>
+                </ul>
+                <ul class="dropdown-menu" style="display: none;">
+                    <li>
+                        <a href="/Admin/ThuocTinhSanPham/DanhSachThuocTinhSanPham">Danh sách thuộc tính</a>
                     </li>
                 </ul>
             </li>

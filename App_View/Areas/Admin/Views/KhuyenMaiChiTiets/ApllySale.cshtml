@@ -1,9 +1,10 @@
 ﻿@using App_Data.DbContextt;
+@using App_Data.ViewModels.SanPhamChiTietViewModel;
 @using App_View.IServices;
 @using App_View.Models.ViewModels;
 @using static App_Data.Repositories.TrangThai;
 @inject IKhuyenMaiServices khuyenMaiServices;
-@model IEnumerable<SanPhamSaleViewModel>
+@model List<ItemShopViewModel>
 
 @{
     ViewData["Title"] = "ApllySale";
@@ -12,7 +13,7 @@
 <div style="text-align:center">
     <h1>Apply Sale</h1>
 </div>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <link rel="stylesheet" type="text/css" href="~/Admin/css/ApplySale.css">
 <style>
     .clickable-image {
@@ -24,7 +25,7 @@
 <div class="card" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden;">
     <div class="card-body" style="flex-shrink: 0; z-index: 1; background-color: #ffeedb; padding: 15px;">
         
-        <div class="row">
+        <div class="row" style="margin-bottom:10px">
             <select class="custom-select" aria-label="Large select example" id="selectSale" style="display:none">
                 @foreach (var item in (SelectList)ViewData["IdSale"])
                 {
@@ -123,11 +124,31 @@
             success: function (response) {
                 //alert("add thành công");
                 if (response.add != "") {
-                    alert(response.add)
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        text: response.add,
+                        icon: 'info',
+                        confirmButtonText: 'Đóng'
+                    }).then((result) => {
+
+                        if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop || result.dismiss === Swal.DismissReason.esc) {
+                            location.reload();
+                        }
+                    });
                 }
-                else
-                    alert(response.err.join("\n"));
-                //window.location.href = "/Admin/SaleDetail/ApllySale";
+                else {
+                    Swal.fire({
+                        title: 'Thông báo!',
+                        html: "Áp dụng thành công với " + response.err + " Sản phẩm<br>" + response.err1 + " Đã áp dụng khuyến mại này",
+                        icon: 'info',
+                        confirmButtonText: 'Đóng'
+                    }).then((result) => {
+
+                        if (result.isConfirmed || result.dismiss === Swal.DismissReason.backdrop || result.dismiss === Swal.DismissReason.esc) {
+                            location.reload();
+                        }
+                    });
+                }
             },
             error: function (error) {
                 console.error(error);

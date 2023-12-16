@@ -66,7 +66,19 @@ namespace App_View.Services
             var giohangSession = JsonConvert.DeserializeObject<OrderInfoModel>(JsonData);
             return giohangSession;
         }
-
-
+        public static List<string> GetLstString(ISession session, string key)
+        {
+            //lấy string
+            var JsonData = session.GetString(key);
+            if (JsonData == null) return new List<string>();
+            //chuyển dữ liệu
+            var lstString = JsonConvert.DeserializeObject<List<string>>(JsonData);
+            return lstString;
+        }
+        public static void SetLstString(ISession session, string key, List<string> value)
+        {
+            var JsonData = JsonConvert.SerializeObject(value);
+            session.SetString(key, JsonData);
+        }
     }
 }

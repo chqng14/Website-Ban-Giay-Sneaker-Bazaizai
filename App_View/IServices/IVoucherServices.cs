@@ -25,6 +25,7 @@ namespace App_View.IServices
         Task<bool> UpdateTaiQuay(VoucherDTO voucherDTO);
         Task<bool> UpdateVoucherAfterUseItTaiQuay(string idVoucherNguoiDung);
         Task<bool> AddVoucherCungBanTaiQuay(string idVoucher, string idUser, int soluong);
+        Task<bool> UpdateTrangThaiKhiXuat(List<string> idVoucherNguoiDung);
     }
 
 }

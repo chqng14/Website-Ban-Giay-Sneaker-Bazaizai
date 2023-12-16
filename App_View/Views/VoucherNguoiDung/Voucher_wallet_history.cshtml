@@ -130,8 +130,12 @@
             url: '@Url.Action("Voucher_wallet_historyPatial", "VoucherNguoiDung")',
             type: 'POST',
             success: function (result) {
-
-                $('#voucherList').html(result);
+                if (result.mess) {
+                    $('#voucherList').empty().html('<h1 class="dash__h1 u-s-m-b-14">' + result.mess + '</h1>');
+                }
+                else  {
+                    $('#voucherList').html(result);
+                }
             }
         });
     }

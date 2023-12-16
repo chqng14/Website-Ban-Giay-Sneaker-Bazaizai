@@ -420,7 +420,7 @@ namespace App_Api.Controllers
             {
                 var sanPham = _mapper.Map<SanPham>(sanPhamDTO);
                 sanPham.IdSanPham = Guid.NewGuid().ToString();
-                sanPham.MaSanPham = !_sanPhamRes.GetAll().Any() ? "SP1" : "SP" + _sanPhamRes.GetAll().Count() + 1;
+                sanPham.MaSanPham = !_sanPhamRes.GetAll().Any() ? "SP1" : "SP" + (_sanPhamRes.GetAll().Count() + 1);
                 sanPham.Trangthai = 0;
                 _sanPhamRes.AddItem(sanPham);
                 sanPhamDTO.IdSanPham = sanPham.IdSanPham;
@@ -438,7 +438,7 @@ namespace App_Api.Controllers
             {
                 var thuongHieu = _mapper.Map<ThuongHieu>(thuongHieuDTO);
                 thuongHieu.IdThuongHieu = Guid.NewGuid().ToString();
-                thuongHieu.MaThuongHieu = !_xuatXuRes.GetAll().Any() ? "TH1" : "TH" + _xuatXuRes.GetAll().Count() + 1;
+                thuongHieu.MaThuongHieu = !_xuatXuRes.GetAll().Any() ? "TH1" : "TH" + (_xuatXuRes.GetAll().Count() + 1);
                 thuongHieu.TrangThai = 0;
                 _thuongHieuRes.AddItem(thuongHieu);
                 thuongHieuDTO.IdThuongHieu = thuongHieu.IdThuongHieu;
@@ -456,7 +456,7 @@ namespace App_Api.Controllers
             {
                 var xuatXu = _mapper.Map<XuatXu>(xuaXuDTO);
                 xuatXu.IdXuatXu = Guid.NewGuid().ToString();
-                xuatXu.Ma = !_xuatXuRes.GetAll().Any() ? "XX1" : "XX" + _xuatXuRes.GetAll().Count() + 1;
+                xuatXu.Ma = !_xuatXuRes.GetAll().Any() ? "XX1" : "XX" + (_xuatXuRes.GetAll().Count() + 1);
                 xuatXu.TrangThai = 0;
                 _xuatXuRes.AddItem(xuatXu);
                 xuaXuDTO.IdXuatXu = xuatXu.IdXuatXu;
@@ -475,7 +475,7 @@ namespace App_Api.Controllers
             {
                 var chatLieu = _mapper.Map<ChatLieu>(chatLieuDTO);
                 chatLieu.IdChatLieu = Guid.NewGuid().ToString();
-                chatLieu.MaChatLieu = !_chatLieuRes.GetAll().Any() ? "CL1" : "CL" + _chatLieuRes.GetAll().Count() + 1;
+                chatLieu.MaChatLieu = !_chatLieuRes.GetAll().Any() ? "CL1" : "CL" + (_chatLieuRes.GetAll().Count() + 1);
                 chatLieu.TrangThai = 0;
                 _chatLieuRes.AddItem(chatLieu);
                 chatLieuDTO.IdChatLieu = chatLieu.IdChatLieu;
@@ -493,7 +493,7 @@ namespace App_Api.Controllers
             {
                 var loaiGiay = _mapper.Map<LoaiGiay>(loaiGiayDTO);
                 loaiGiay.IdLoaiGiay = Guid.NewGuid().ToString();
-                loaiGiay.MaLoaiGiay = !_loaiGiayRes.GetAll().Any() ? "LG1" : "LG" + _loaiGiayRes.GetAll().Count() + 1;
+                loaiGiay.MaLoaiGiay = !_loaiGiayRes.GetAll().Any() ? "LG1" : "LG" + (_loaiGiayRes.GetAll().Count() + 1);
                 loaiGiay.TrangThai = 0;
                 _loaiGiayRes.AddItem(loaiGiay);
                 loaiGiayDTO.IdLoaiGiay = loaiGiay.IdLoaiGiay;
@@ -529,7 +529,7 @@ namespace App_Api.Controllers
             {
                 var loaiGiay = _mapper.Map<MauSac>(mauSac);
                 loaiGiay.IdMauSac = Guid.NewGuid().ToString();
-                loaiGiay.MaMauSac = !_mauSacRes.GetAll().Any() ? "MS1" : "MS" + _mauSacRes.GetAll().Count() + 1;
+                loaiGiay.MaMauSac = !_mauSacRes.GetAll().Any() ? "MS1" : "MS" + (_mauSacRes.GetAll().Count() + 1);
                 loaiGiay.TrangThai = 0;
                 _mauSacRes.AddItem(loaiGiay);
                 mauSac.IdMauSac = loaiGiay.IdMauSac;
@@ -547,7 +547,7 @@ namespace App_Api.Controllers
             {
                 var loaiGiay = _mapper.Map<KichCo>(soKichCo);
                 loaiGiay.IdKichCo = Guid.NewGuid().ToString();
-                loaiGiay.MaKichCo = !_kickcoRes.GetAll().Any() ? "MS1" : "MS" + _kickcoRes.GetAll().Count() + 1;
+                loaiGiay.MaKichCo = !_kickcoRes.GetAll().Any() ? "MS1" : "MS" + (_kickcoRes.GetAll().Count() + 1);
                 loaiGiay.TrangThai = 0;
                 _kickcoRes.AddItem(loaiGiay);
                 soKichCo.IdKichCo = loaiGiay.IdKichCo;
