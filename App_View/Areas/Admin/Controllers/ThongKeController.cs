@@ -25,29 +25,28 @@ namespace App_View.Areas.Admin.Controllers
         public ThongKeController()
         {
             baseQuery = from a in db.HoaDons
-                        join b in db.hoaDonChiTiets on a.IdHoaDon equals b.IdHoaDon
-                        join c in db.sanPhamChiTiets on b.IdSanPhamChiTiet equals c.IdChiTietSp
-                        join e in db.thongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH
-                        where a.TrangThaiGiaoHang != (int)TrangThaiGiaoHang.TaiQuay && a.NgayTao != null
+                        join e in db.thongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH into thongTinGiaoHangGroup
+                        from e in thongTinGiaoHangGroup.DefaultIfEmpty()
+                        join d in db.KhachHangs on a.IdKhachHang equals d.IdKhachHang into khachHangGroup
+                        from d in khachHangGroup.DefaultIfEmpty()
                         select new ThongKeDoanhThuOnline
                         {
                             NgayTao = (DateTime)a.NgayTao,
                             TongTien = (double)a.TongTien,
-                            TienGiam = a.TienGiam,
                             MaDonHang = a.MaHoaDon,
                             TienShip = a.TienShip,
                             TrangThaiGiaoHang = a.TrangThaiGiaoHang,
-                            TenNguoiNhan = e.TenNguoiNhan,
-                            SoDt = e.SDT,
-                            DiaChi = e.DiaChi,
+                            TenNguoiNhan = e != null ? e.TenNguoiNhan : null,
+                            SoDt = e != null ? e.SDT : null,
+                            DiaChi = e != null ? e.DiaChi : null,
                             LiDoHuy = a.LiDoHuy,
-                            GiaBan = (double)b.GiaBan,
-                            GiaGoc = (double)b.GiaGoc,
-                            SoLuong=(int)b.SoLuong,
-                            TrangThaiThanhToan=a.TrangThaiThanhToan
+                            TrangThaiThanhToan = a.TrangThaiThanhToan,
+                            SDTKhachHang = d != null ? d.SDT : null,
+                            TenKhachHang = d != null ? d.TenKhachHang : null
 
                         };
-
+            var m = baseQuery.ToList();
+            var n = m.Count();
         }
 
         public IActionResult Index()
@@ -137,199 +136,153 @@ namespace App_View.Areas.Admin.Controllers
                         join b in db.hoaDonChiTiets on a.IdHoaDon equals b.IdHoaDon
                         join c in db.sanPhamChiTiets on b.IdSanPhamChiTiet equals c.IdChiTietSp
                         join d in db.SanPhams on c.IdSanPham equals d.IdSanPham
-                        join e in db.thongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH
-                        where a.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao && a.NgayTao != null
+                        //join e in db.thongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH
+                        where (a.TrangThaiGiaoHang != (int)TrangThaiGiaoHang.DaGiao|| a.TrangThaiGiaoHang != (int)TrangThaiGiaoHang.TaiQuay) && a.TrangThaiThanhToan== (int)TrangThaiHoaDon.DaThanhToan
                         select new ThongKeTheoSanPhamBanOnline
                         {
                             NgayTao = (DateTime)a.NgayTao,
                             SoLuong = (int)b.SoLuong,
-                            GiaGoc = (double)c.GiaNhap,
+                            //GiaGoc = (double)c.GiaNhap,
                             GiaBan = (double)c.GiaBan,
                             GiaThucTe = (double)c.GiaThucTe,
                             TenSp = d.TenSanPham,
                             IdnguoiDung = a.IdNguoiDung,
                             TongTien = (double)a.TongTien,
-                            TienGiam = a.TienGiam,
+                            //TienGiam = a.TienGiam,
                             IdDonHang = a.IdHoaDon,
-                            SoDt = e.SDT,
-                            MaSp = d.MaSanPham
+                            //SoDt = e.SDT,
+                            MaSp = d.MaSanPham,
+                            Mactsp = c.Ma,
 
                         };
             if (!string.IsNullOrEmpty(fromDate))
             {
 
                 DateTime startDate = DateTime.ParseExact(fromDate, "yyyy-MM-dd", null);
-                query = query.Where(x => x.NgayTao >= startDate);
+                query = query.Where(x => x.NgayTao.Date >= startDate);
             }
 
             if (!string.IsNullOrEmpty(toDate))
             {
                 DateTime endDate = DateTime.ParseExact(toDate, "yyyy-MM-dd", null);
-                query = query.Where(x => x.NgayTao <= endDate);
+                query = query.Where(x => x.NgayTao.Date <= endDate);
             }
 
             if (string.IsNullOrEmpty(toDate) && string.IsNullOrEmpty(fromDate))
             {
                 DateTime currentDate = DateTime.Now;
                 DateTime startDate = currentDate.AddDays(-7);
-                query = query.Where(x => x.NgayTao >= startDate);
-                query = query.Where(x => x.NgayTao <= currentDate);
+                query = query.Where(x => x.NgayTao.Date >= startDate);
+                query = query.Where(x => x.NgayTao.Date <= currentDate);
             }
-            var totalTienGiam = query.Sum(y => y.TienGiam);
+            //var totalTienGiam = query.Sum(y => y.TienGiam);
             var result = query.GroupBy(x => x.MaSp)
             .Select(x => new
             {
                 MaSanPham = x.Key,
                 TenSanPham = x.Select(y => y.TenSp).Distinct(),
                 SoLuongHangBan = x.Sum(y => y.SoLuong),
-                TongNhap = x.Sum(y => y.SoLuong * y.GiaGoc),
+                //TongNhap = x.Sum(y => y.SoLuong * y.GiaGoc),
                 TongBanThucTe = x.Sum(y => y.SoLuong * y.GiaThucTe),
                 TongBan = x.Sum(y => y.SoLuong * y.GiaBan),
                 SoLuongDonHang = x.Select(y => y.IdDonHang).Distinct().Count(),
-                SoLuongKhachHang = x.Select(y => y.SoDt).Distinct().Count(),
+                //SoLuongKhachHang = x.Select(y => y.SoDt).Distinct().Count(),
 
             }).Select(x => new
             {
+                MaSanPham=x.MaSanPham,
                 DoanhThu = x.TongBanThucTe,
-                SoLuongKhachHang = x.SoLuongKhachHang,
+                //SoLuongKhachHang = x.SoLuongKhachHang,
                 SoLuongDonHang = x.SoLuongDonHang,
                 SanPham = x.TenSanPham,
                 SoLuongHangBan = x.SoLuongHangBan,
-                TienHang = x.TongNhap,
+                //TienHang = x.TongNhap,
                 ChietKhauSanPham = x.TongBan - x.TongBanThucTe,
-                MaSanPham = x.MaSanPham,
-                ChietKhauHoaDon = totalTienGiam,
+                //ChietKhauHoaDon = totalTienGiam,
             }).ToList();
 
             return Json(new { Data = result });
         }
 
-
-        public IActionResult DoanhThuTheoDonHangTheoNgay()
-        {
-            return View();
-        }
-        /// Doanh thu theo hóa đơn qua khoảng thời gian
         [HttpGet]
-        public ActionResult BieuDoThongKeHoaDonOnlineTheoNgay(string fromDate, string toDate)
+        public ActionResult ThongTinThongKeTheoSanPhamOnline(string fromDate, string toDate)
         {
-            var query = from a in db.HoaDons
 
-                        where a.TrangThaiGiaoHang != (int)TrangThaiGiaoHang.TaiQuay && a.NgayTao != null
-                        select new ThongKeDoanhThuOnline
+            var query = from a in db.HoaDons
+                        join b in db.hoaDonChiTiets on a.IdHoaDon equals b.IdHoaDon
+                        join c in db.sanPhamChiTiets on b.IdSanPhamChiTiet equals c.IdChiTietSp
+                        join d in db.SanPhams on c.IdSanPham equals d.IdSanPham
+                        select new ThongKeTheoSanPhamBanOnline
                         {
                             NgayTao = (DateTime)a.NgayTao,
+                            SoLuong = (int)b.SoLuong,
+                            GiaBan = (double)c.GiaBan,
+                            GiaThucTe = (double)c.GiaThucTe,
+                            TenSp = d.TenSanPham,
+                            IdnguoiDung = a.IdNguoiDung,
                             TongTien = (double)a.TongTien,
-                            MaDonHang = a.MaHoaDon,
-                            NgayNhan = a.NgayNhan,
-                            TrangThaiGiaoHang = a.TrangThaiGiaoHang,
+                            IdDonHang = a.IdHoaDon,
+                            MaSp = d.MaSanPham,
+                            Mactsp = c.Ma,
+                            MaHoaDon=a.MaHoaDon,
+                            
+
 
                         };
             if (!string.IsNullOrEmpty(fromDate))
             {
 
                 DateTime startDate = DateTime.ParseExact(fromDate, "yyyy-MM-dd", null);
-                query = query.Where(x => x.NgayTao >= startDate);
+                query = query.Where(x => x.NgayTao.Date >= startDate);
             }
 
             if (!string.IsNullOrEmpty(toDate))
             {
                 DateTime endDate = DateTime.ParseExact(toDate, "yyyy-MM-dd", null);
-                query = query.Where(x => x.NgayTao <= endDate);
+                query = query.Where(x => x.NgayTao.Date <= endDate);
             }
 
             if (string.IsNullOrEmpty(toDate) && string.IsNullOrEmpty(fromDate))
             {
                 DateTime currentDate = DateTime.Now;
                 DateTime startDate = currentDate.AddDays(-7);
-                query = query.Where(x => x.NgayTao >= startDate);
-                query = query.Where(x => x.NgayTao <= currentDate);
+                query = query.Where(x => x.NgayTao.Date >= startDate);
+                query = query.Where(x => x.NgayTao.Date <= currentDate);
             }
-            var result = query.GroupBy(x => x.NgayTao.Date)
-              .Select(x => new
-              {
-                  NgayTao = x.Key,
-                  TongSoDonHang = x.Count(y => y.MaDonHang != null),
-                  SoLuongDonHangHuy = x.Count(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaHuy),
-                  SoLuongDonHangThanhCong = x.Count(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao),
-                  DoanhThu = x.Where(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao).Sum(y => y.TongTien),
-              }).Select(x => new
-              {
-                  NgayTao = x.NgayTao,
-                  TongSoDonHang = x.TongSoDonHang,
-                  SoLuongDonHangThanhCong = x.SoLuongDonHangThanhCong,
-                  SoLuongDonHangHuy = x.SoLuongDonHangHuy,
-                  DoanhThu = x.DoanhThu,
-              }).ToList();
+            //var totalTienGiam = query.Sum(y => y.TienGiam);
+            var result = query.GroupBy(x => x.MaSp)
+            .Select(x => new
+            {
+                MaSanPham = x.Key,
+                TenSanPham = x.Select(y => y.TenSp).Distinct(),
+                SoLuongHangBan = x.Sum(y => y.SoLuong),
+                //TongNhap = x.Sum(y => y.SoLuong * y.GiaGoc),
+                TongBanThucTe = x.Sum(y => y.SoLuong * y.GiaThucTe),
+                TongBan = x.Sum(y => y.SoLuong * y.GiaBan),
+                SoLuongDonHang = x.Select(y => y.IdDonHang).Distinct().Count(),
+                //SoLuongKhachHang = x.Select(y => y.SoDt).Distinct().Count(),
 
+            }).Select(x => new
+            {
+                MaSanPham = x.MaSanPham,
+                DoanhThu = x.TongBanThucTe,
+                //SoLuongKhachHang = x.SoLuongKhachHang,
+                SoLuongDonHang = x.SoLuongDonHang,
+                SanPham = x.TenSanPham,
+                SoLuongHangBan = x.SoLuongHangBan,
+                //TienHang = x.TongNhap,
+                ChietKhauSanPham = x.TongBan - x.TongBanThucTe,
+                //ChietKhauHoaDon = totalTienGiam,
+            }).ToList();
 
             return Json(new { Data = result });
         }
-        [HttpGet]
-        public ActionResult ThongTinThongKeHoaDonOnlineTheoNgay(string fromDate, string toDate)
+
+        public IActionResult DoanhThuTheoDonHangTheoNgay()
         {
-            if (!string.IsNullOrEmpty(fromDate))
-            {
-
-                DateTime startDate = DateTime.ParseExact(fromDate, "yyyy-MM-dd", null);
-                baseQuery = baseQuery.Where(x => x.NgayTao >= startDate);
-            }
-
-            if (!string.IsNullOrEmpty(toDate))
-            {
-                DateTime endDate = DateTime.ParseExact(toDate, "yyyy-MM-dd", null);
-                baseQuery = baseQuery.Where(x => x.NgayTao <= endDate);
-            }
-
-            if (string.IsNullOrEmpty(toDate) && string.IsNullOrEmpty(fromDate))
-            {
-                DateTime currentDate = DateTime.Now;
-                DateTime startDate = currentDate.AddDays(-7);
-                baseQuery = baseQuery.Where(x => x.NgayTao >= startDate);
-                baseQuery = baseQuery.Where(x => x.NgayTao <= currentDate);
-            }
-            var result = baseQuery.GroupBy(x => x.MaDonHang)
-               .Select(x => new
-               {
-                   MaDonHang = x.Key,
-                   TongGoc = x.Sum(y => y.SoLuong * y.GiaGoc),
-                   TongBan = x.Sum(y => y.SoLuong * y.GiaBan),
-                   NgayTao = x.Select(y => y.NgayTao).FirstOrDefault(),
-                   TrangThaiThanhToan = GetTrangThaiThanhToan(x.First().TrangThaiThanhToan ?? 10),
-                   GiaTriDon = x.Select(y => y.TongTien).Distinct().FirstOrDefault(),
-                   TinhTrang = GetTinhTrang(x.First().TrangThaiGiaoHang ?? 7),
-                   ChietKhauHoaDon = x.Select(y => y.TienGiam).FirstOrDefault(),//voucher
-                   TienShip = x.Select(y => y.TienShip).FirstOrDefault(),
-                   TenKhach = x.Select(y => y.TenNguoiNhan).FirstOrDefault(),
-                   SDT = x.Select(y => y.SoDt).FirstOrDefault().ToString(),
-                   Lidohuy = x.Select(y => y.LiDoHuy).FirstOrDefault() ?? "",
-                   TinhThanh = x.Select(y => GetTinhThanhFromDiaChi(y.DiaChi ?? "")).FirstOrDefault()
-               }).AsEnumerable()
-             .Select(x => new
-             {
-                 TongKhuyenMai=x.TongGoc-x.TongBan,
-                 MaDonHang =x.MaDonHang,
-                 ChietKhauHoaDon = x.ChietKhauHoaDon,
-                 GiaTriDon=x.GiaTriDon,
-                 TinhTrang=x.TinhTrang,
-                 TienShip=x.TienShip,
-                 TenKhach=x.TenKhach,
-                 SDT=x.SDT,
-                 TrangThaiThanhToan=x.TrangThaiThanhToan,
-                 Lidohuy =x.Lidohuy,
-                 TinhThanh=x.TinhThanh,
-                 ThoiGian = DateTime.ParseExact($"{x.NgayTao.Hour}:{x.NgayTao.Minute}", "H:m", null).ToString("HH:mm"),
-                 Ngay = x.NgayTao.Date.ToString(),
-             
-                
-             })
- .OrderBy(x => x.Ngay)
- .ThenBy(x => x.ThoiGian)
- .ToList();
-
-            return Json(new { Data = result });
-
+            return View();
         }
+
         public static string GetTinhTrang(int trangThai)
         {
             switch (trangThai)
@@ -343,9 +296,13 @@ namespace App_View.Areas.Admin.Controllers
                 case 3:
                     return "Đang giao";
                 case 4:
-                    return "Hoàn thành";
+                    return "Đã giao";
                 case 5:
                     return "Đã hủy";
+                case 6:
+                    return "Trả hàng";
+                case 7:
+                    return "Chờ hủy";
                 default:
                     return "Không xác định";
             }
@@ -354,6 +311,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             switch (trangThai)
             {
+
                 case 0:
                     return "Chưa thanh toán";
                 case 1:
@@ -420,6 +378,113 @@ namespace App_View.Areas.Admin.Controllers
 
             return Json(new { Data = result });
         }
+        /// Doanh thu theo hóa đơn qua khoảng thời gian
+        [HttpGet]
+        public ActionResult BieuDoThongKeHoaDonOnlineTheoNgay(string fromDate, string toDate)
+        {
+            var query = from a in db.HoaDons
+
+                        where a.NgayTao != null
+                        select new ThongKeDoanhThuOnline
+                        {
+                            NgayTao = (DateTime)a.NgayTao,
+                            TongTien = (double)a.TongTien,
+                            MaDonHang = a.MaHoaDon,
+                            NgayNhan = a.NgayNhan,
+                            TrangThaiGiaoHang = a.TrangThaiGiaoHang,
+                            TrangThaiThanhToan = a.TrangThaiThanhToan,
+
+                        };
+            if (!string.IsNullOrEmpty(fromDate))
+            {
+
+                DateTime startDate = DateTime.ParseExact(fromDate, "yyyy-MM-dd", null);
+                query = query.Where(x => x.NgayTao.Date >= startDate);
+            }
+
+            if (!string.IsNullOrEmpty(toDate))
+            {
+                DateTime endDate = DateTime.ParseExact(toDate, "yyyy-MM-dd", null);
+                query = query.Where(x => x.NgayTao.Date <= endDate);
+            }
+
+            if (string.IsNullOrEmpty(toDate) && string.IsNullOrEmpty(fromDate))
+            {
+                DateTime currentDate = DateTime.Now;
+                DateTime startDate = currentDate.AddDays(-7);
+                query = query.Where(x => x.NgayTao.Date >= startDate);
+                query = query.Where(x => x.NgayTao.Date <= currentDate);
+            }
+            var result = query.GroupBy(x => x.NgayTao.Date)
+              .Select(x => new
+              {
+                  NgayTao = x.Key,
+                  TongSoDonHang = x.Count(y => y.MaDonHang != null),
+                  SoLuongDonHangHuy = x.Count(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaHuy || y.TrangThaiThanhToan == (int)TrangThaiHoaDon.Huy),
+                  SoLuongDonHangThanhCong = x.Count(y => (y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao || y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay) && y.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan),
+                  DoanhThuOnline = x.Where(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao && y.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan).Sum(y => y.TongTien),
+                  DoanhThuOfline = x.Where(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay && y.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan).Sum(y => y.TongTien),
+              }).Select(x => new
+              {
+                  NgayTao = x.NgayTao,
+                  TongSoDonHang = x.TongSoDonHang,
+                  SoLuongDonHangThanhCong = x.SoLuongDonHangThanhCong,
+                  SoLuongDonHangHuy = x.SoLuongDonHangHuy,
+                  DoanhThu = x.DoanhThuOnline + x.DoanhThuOfline,
+              }).ToList();
+
+
+            return Json(new { Data = result });
+        }
+        [HttpGet]
+        public ActionResult ThongTinThongKeHoaDonOnlineTheoNgay(string fromDate, string toDate)
+        {
+            if (!string.IsNullOrEmpty(fromDate))
+            {
+
+                DateTime startDate = DateTime.ParseExact(fromDate, "yyyy-MM-dd", null);
+                baseQuery = baseQuery.Where(x => x.NgayTao.Date >= startDate);
+            }
+
+            if (!string.IsNullOrEmpty(toDate))
+            {
+                DateTime endDate = DateTime.ParseExact(toDate, "yyyy-MM-dd", null);
+                baseQuery = baseQuery.Where(x => x.NgayTao.Date <= endDate);
+            }
+
+            if (string.IsNullOrEmpty(toDate) && string.IsNullOrEmpty(fromDate))
+            {
+                DateTime currentDate = DateTime.Now;
+                DateTime startDate = currentDate.AddDays(-7);
+                baseQuery = baseQuery.Where(x => x.NgayTao.Date >= startDate);
+                baseQuery = baseQuery.Where(x => x.NgayTao.Date <= currentDate);
+            }
+            var result = baseQuery.ToList()
+              .Select(x => new
+              {
+                  MaDonHang = x.MaDonHang,
+                  GiaTriDon = x.TongTien,
+                  TinhTrang = GetTinhTrang(x.TrangThaiGiaoHang ?? 10),
+                  TienShip = x.TienShip ?? null,
+                  TenKhach = x.TenKhachHang ?? x.TenNguoiNhan,
+                  SDT = x.SoDt ?? x.SDTKhachHang,
+                  TrangThaiThanhToan = GetTrangThaiThanhToan(x.TrangThaiThanhToan ?? 10),
+                  Lidohuy = x.LiDoHuy,
+                  TinhThanh = GetTinhThanhFromDiaChi(x.DiaChi ?? ""),
+                  ThoiGian = DateTime.ParseExact($"{x.NgayTao.Hour}:{x.NgayTao.Minute}", "H:m", null).ToString("HH:mm"),
+                  Ngay = x.NgayTao.ToString(),
+
+
+              })
+ .OrderBy(x => x.Ngay)
+ .ThenBy(x => x.ThoiGian)
+ .ToList();
+
+
+            return Json(new { Data = result });
+
+        }
+
 
         [HttpGet]
         public ActionResult BieuDoThongKeHoaDonOnlineTheoThang(string fromDate, string toDate)

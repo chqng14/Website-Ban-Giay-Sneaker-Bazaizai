@@ -30,6 +30,10 @@ namespace App_Data.ViewModels.ThongKe
         public string? TenNguoiNhan { get; set; }
         public string? SDT { get; set; }
         public string? DiaChi { get; set; }
+        public string? IdKhachHang { get; set; }
+        public string? IdNguoiDung { get; set; }
+        public string? TenKhachHang { get; set; }
+        public string? SDTKhachHang { get; set; }
 
     }
 }

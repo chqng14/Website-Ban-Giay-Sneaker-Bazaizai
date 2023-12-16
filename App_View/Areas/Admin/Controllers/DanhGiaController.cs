@@ -7,6 +7,7 @@ using App_View.Services;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -18,56 +19,36 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly UserManager<NguoiDung> _userManager;
         private IDanhGiaService _danhGiaService;
-        public HttpClient httpClient { get; set; }
-
-        public DanhGiaController(IDanhGiaService danhGiaService, UserManager<NguoiDung> userManager)
+        private readonly IEmailSender _emailSender;
+        public DanhGiaController(IDanhGiaService danhGiaService, UserManager<NguoiDung> userManager, IEmailSender emailSender)
         {
-            httpClient = new HttpClient();
             _danhGiaService = danhGiaService;
             _userManager = userManager;
+            _emailSender = emailSender;
         }
-        public const int ITEMS_PER_PAGE = 10;
 
-        [BindProperty(SupportsGet = true, Name = "p")]
-        public int currentPage { get; set; }
-        public int countPages { get; set; }
-        public int totalUsers { get; set; }
 
         [HttpPost]
         public async Task<IActionResult> LstDangGiaChuaDuyetTab(int? tab)
         {
-            
 
-            var lstDanhGiaChuaDuyet = await _danhGiaService.GetLstDanhGiaChuaDuyetByDK(tab);
-            return PartialView("_LstDangGiaChuaDuyetPartial", lstDanhGiaChuaDuyet);
+
+            var lstDanhGiaChuaDuyet = (await _danhGiaService.GetLstDanhGiaChuaDuyetByDK(tab)).ToList();
+            return PartialView("_DanhSachDanhGiaChuaDuyetPartial", lstDanhGiaChuaDuyet);
         }
         public async Task<IActionResult> Index()
         {
             var lst = await _danhGiaService.GetAllDanhGia();
             return View(lst);
         }
-        //public async Task<IActionResult> _GetAllDanhGia()
-        //{
-        //    var lst = JsonConvert.DeserializeObject<List<DanhGia>>(await (await httpClient.GetAsync("https://localhost:7038/api/DanhGia")).Content.ReadAsStringAsync()).ToList();
-        //    return PartialView("_GetAllDanhGia", lst);
-        //}
-        //public async Task<IActionResult> GetAllDanhGiaView()
-        //{
-        //    var lst = await GetAllDanhGia();
-        //    ViewBag.DanhGias = lst;
-        //    return View();
-        //}
-        //public async Task<IActionResult> _ChildComment(string id)
-        //{
-        //    var lst = await GetAllDanhGia();
-        //    var data = lst.FirstOrDefault(s => s.ParentId == id);
-        //    return PartialView("_ChildComment", data);
-        //}
 
 
         public async Task<IActionResult> DanhSachDanhGiaChuaDuyet()
         {
-            
+            return View();
+        }
+        public async Task<IActionResult> DanhSachDanhGiaDaDuyet()
+        {
             return View();
         }
 
@@ -92,21 +73,7 @@ namespace App_View.Areas.Admin.Controllers
         //} 
         public async Task<IActionResult> TongSoDanhGiaCuaMoiSpChuaDuyet()
         {
-            //string apiUrl = "https://localhost:7038/api/DanhGia/GetTongSoDanhGiaCuaMoiSpChuaDuyet";
-            //using (var httpClient = new HttpClient())
-            //{
-            //    var apiData = await httpClient.GetStringAsync(apiUrl);
-            //    var result = JsonConvert.DeserializeObject<List<DanhGiaResult>>(apiData);
 
-            //    var danhGiaResults = result.Select(item => new DanhGiaResult
-            //    {
-            //        SanPham = item.SanPham,
-            //        SoLuongDanhGiaChuaDuyet = item.SoLuongDanhGiaChuaDuyet,
-            //        IdSanPham = item.IdSanPham,
-            //    }).ToList();
-
-            //    return View(result);
-            //}
             var result = await _danhGiaService.TongSoDanhGiaCuaMoiSpChuaDuyet();
             var danhGiaResults = result.Select(item => new DanhGiaResult
             {
@@ -124,35 +91,22 @@ namespace App_View.Areas.Admin.Controllers
             var lst = await _danhGiaService.LstChiTietDanhGiaCuaMoiSpChuaDuyet(idSanPham);
             return View(lst);
         }
-
-        public async Task<IActionResult> DuyetDanhGia(string id, string idSanPham)
+        public async Task<IActionResult> DuyetDanhGia(string id)
         {
 
             var result = await _danhGiaService.DuyetDanhGia(id);
 
             if (result)
             {
-                var lst = await _danhGiaService.LstChiTietDanhGiaCuaMoiSpChuaDuyet(idSanPham);
-                if (lst.Count() == 0) return RedirectToAction("TongSoDanhGiaCuaMoiSpChuaDuyet");
-                else
-                    return RedirectToAction("LstChiTietDanhGiaCuaMoiSpChuaDuyet", new { idSanPham });
+                return RedirectToAction("DanhSachDanhGiaChuaDuyet");
             }
             else
             {
                 return BadRequest();
             }
         }
-        public async Task<IActionResult> DuyetNhieuDanhGia(List<string> ids, string idSanPham)
-        {
-            foreach (var id in ids)
-            {
-                await _danhGiaService.DuyetDanhGia(id);
-            }
-            var lst = await _danhGiaService.LstChiTietDanhGiaCuaMoiSpChuaDuyet(idSanPham);
-            if (lst.Count() == 0) return RedirectToAction("TongSoDanhGiaCuaMoiSpChuaDuyet");
-            else
-                return RedirectToAction("LstChiTietDanhGiaCuaMoiSpChuaDuyet", new { idSanPham });
-        }
+
+
 
         public async Task<IActionResult> DuyetTatCaDanhGiaCuaMSp(string idSanPham)
         {
@@ -164,8 +118,61 @@ namespace App_View.Areas.Admin.Controllers
             return RedirectToAction("TongSoDanhGiaCuaMoiSpChuaDuyet");
         }
 
+        public async Task<IActionResult> XoaDanhGia(string id, string liDo)
+        {
+            var dg = await _danhGiaService.GetDanhGiaById(id);
+
+            var user = await _userManager.FindByIdAsync(dg.IdNguoiDung);
+            var ngaydanhgia = dg.NgayDanhGia.Value.ToString("HH:mm:ss, dd/MM/yyyy");
+        
+            var result = await _danhGiaService.DeleteDanhGia(id);
+
+            if (result)
+            {
+                if (user != null)
+                {
+                    await _emailSender.SendEmailAsync(user.Email, "Thông báo về việc xóa đánh giá của bạn",
+    $"Bạn đã vi phạm điều khoản trên Web bán giày thể thao Bazaizai. Đánh giá vào thời gian: {ngaydanhgia} đã bị xóa. Lí do: {liDo} . Mọi thắc mắc xin vui lòng liên hệ đội ngũ hỗ trợ 0369426223.");
+
+                }
+                return RedirectToAction("DanhSachDanhGiaChuaDuyet");
+
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+        public async Task<IActionResult> DuyetNhieuDanhGia(List<string> ids)
+        {
+            foreach (var id in ids)
+            {
+                await _danhGiaService.DuyetDanhGia(id);
+            }
+            return RedirectToAction("DanhSachDanhGiaChuaDuyet");
+        }
+        public async Task<IActionResult> XoaNhieuDanhGia(List<string> ids, string liDo)
+        {
+            foreach (var id in ids)
+            {
+                var dg = await _danhGiaService.GetDanhGiaById(id);
+
+                var user = await _userManager.FindByIdAsync(dg.IdNguoiDung);
+                var ngaydanhgia = dg.NgayDanhGia.Value.ToString("HH:mm:ss, dd/MM/yyyy");
 
 
+                await _danhGiaService.DeleteDanhGia(id);
+                if (user != null)
+                {
+                    await _emailSender.SendEmailAsync(user.Email, "Thông báo về việc xóa đánh giá của bạn",
+   $"Bạn đã vi phạm điều khoản trên Web bán giày thể thao Bazaizai. Đánh giá vào thời gian: {ngaydanhgia} đã bị xóa. Lí do: {liDo} . Mọi thắc mắc xin vui lòng liên hệ đội ngũ hỗ trợ 0369426223.");
+
+                }
+
+
+            }
+            return RedirectToAction("DanhSachDanhGiaChuaDuyet");
+        }
 
 
 

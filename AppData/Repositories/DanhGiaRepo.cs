@@ -251,6 +251,7 @@ namespace App_Data.Repositories
                                       MoTa = a.MoTa,
                                       ChatLuongSanPham = a.ChatLuongSanPham,
                                       IdSanPhamChiTiet = a.IdSanPhamChiTiet,
+
                                   })
 
                 .ToListAsync();
@@ -275,12 +276,15 @@ namespace App_Data.Repositories
                                       IdSanPhamChiTiet = a.IdSanPhamChiTiet,
                                       IdNguoiDung = a.IdNguoiDung,
                                       TrangThai = a.TrangThai,
-                                      TenNguoiDung = b.TenNguoiDung,
+                                      TenNguoiDung = b.UserName,
                                       AnhDaiDien = b.AnhDaiDien,
                                       SaoVanChuyen = a.SaoVanChuyen,
                                       SanPhamTongQuat = d.TenMauSac + "," + e.SoKichCo,
                                       TenSanPham = j.TenSanPham,
-                                      IdSanPham = c.IdSanPham
+                                      IdSanPham = c.IdSanPham,
+                                      MoTa=a.MoTa,
+                                      ChatLuongSanPham=a.ChatLuongSanPham
+                                      
                                   })
                 .OrderByDescending(x => x.NgayDanhGia)
                 .ToListAsync();

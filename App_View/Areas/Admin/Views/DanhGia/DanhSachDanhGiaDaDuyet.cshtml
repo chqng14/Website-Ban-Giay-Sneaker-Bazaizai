@@ -57,7 +57,7 @@
 
                 @for (int i = 0; i <= 6; i++)
                 {
-                    var lst = await _DanhGiaService.GetLstDanhGiaChuaDuyetByDK(i);
+                    var lst = await _DanhGiaService.GetLstDanhGiaDaDuyetByDK(i);
                     <div class="tab-pane fade show @(i == 0 ? "active" : "")" id="tab@(i)-justified" role="tabpanel" aria-labelledby="tab@(i)-tab-justified">
                         @if (lst.Count == 0)
                         {
@@ -204,18 +204,12 @@
 
                                                 </td>
                                                 <td>
-                                                    <button data-toggle="modal" data-target="#duyetdg" data-modal-id="#duyetdg" class="btn btn-primary btn-tone" data-DanhGia-id="@item.IdDanhGia">
-
-                                                        <i class="anticon anticon-check-circle"></i>
-                                                    </button>
+                                                  
                                                     <button data-toggle="modal" data-target="#xoadg" data-modal-id="#xoadg" class="btn btn-primary btn-tone" data-DanhGia-id="@item.IdDanhGia">
 
                                                         <i class="anticon anticon-close-circle"></i>
                                                     </button>
 
-                                                    @* <a class="btn btn-primary btn-tone" href="@Url.Action("EditThuongHieu", new { id = item.IdDanhGia })">
-                                        <i class="anticon anticon-stop"></i>
-                                        </a>*@
 
                                                 </td>
                                                 <td>
@@ -239,28 +233,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="duyetdg">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header" style="background: #3f87f5;">
-                <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <i class="anticon anticon-close"></i>
-                </button>
-            </div>
-            <div class="modal-body" style="background: white;">
-                <span id="thongBao">Bạn có chắc chắn duyệt đánh giá này không?</span>
-            </div>
-            <div class="modal-footer" style="background: white">
-
-                <a id="confirmLink" class="btn btn-primary bd-0 col-md-6" href="#">
-                    Xác nhận
-                </a>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     $(document).ready(function () {
@@ -283,26 +255,6 @@
     <script src="~/Admin/js/pages/datatables.js" defer></script>
 
 }
-<button id="btnNhieu" class="btn btn-primary mr-2" data-toggle="modal" data-target="#cancel" style="color:white">Duyệt các đánh giá đã chọn</button>
-<div class="modal fade" id="cancel">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header" style="background: #3f87f5;">
-                <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <i class="anticon anticon-close"></i>
-                </button>
-            </div>
-            <div class="modal-body" style="background: white;">
-                <span id="thongBao">Bạn có duyệt các đánh giá đã chọn không ?</span>
-            </div>
-            <div class="modal-footer" style="background: white">
-                <button class="btn btn-primary bd-0 col-md-6" id="delete-button">Xác nhận </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <button id="btnXoaNhieu" class="btn btn-primary mr-2" data-toggle="modal" data-target="#cancel1" style="color:white">Xóa các đánh giá đã chọn</button>
 <div class="modal fade" id="cancel1">
@@ -357,6 +309,7 @@
 
         });
 
+
         $('#btnNhieu').hide();
         $('#btnXoaNhieu').hide();
         $('.voucher-checkbox').change(function () {
@@ -376,10 +329,8 @@
             var Checked = $('.voucher-checkbox:checked').length <= 0;
 
             if (Checked) {
-                $('#btnNhieu').hide();
                 $('#btnXoaNhieu').hide();
             } else {
-                $('#btnNhieu').show();
                 $('#btnXoaNhieu').show();
             }
 
@@ -414,61 +365,11 @@
 
 
     });
-    function huyHoatDongVoucher(selectedIds) {
-        $.ajax({
-            url: '/Admin/DanhGia/DuyetNhieuDanhGia',
-            type: 'POST',
-            data: { Ids: selectedIds },
-            success: function (response) {
-                var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                                                     <div class="toast-header">
-                                                                         <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                                                         <strong class="mr-auto">Thông báo</strong>
-                                                                         <small>1 second ago</small>
-                                                                         <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                                                             <span aria-hidden="true">&times;</span>
-                                                                         </button>
-                                                                     </div>
-                                                                     <div class="toast-body">
-                                                                         Duyệt thành công
-                                                                     </div>
-                                                             </div>`
-                $('#notification-toast').append(toastHTML)
-                $('#notification-toast .toast').toast('show');
-                setTimeout(function () {
-                    $('#notification-toast .toast:first-child').remove();
-                }, 3000);
-                $('#cancel').modal('hide');
-                taiLaiTrang();
-            },
-            error: function (error) {
-                var toastHTML = `<div class="toast fade hide" data-delay="3000">
-                                                                         <div class="toast-header">
-                                                                             <i class="anticon anticon-info-circle text-primary m-r-5"></i>
-                                                                             <strong class="mr-auto">Thông báo</strong>
-                                                                             <small>1 second ago</small>
-                                                                             <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
-                                                                                 <span aria-hidden="true">&times;</span>
-                                                                             </button>
-                                                                         </div>
-                                                                         <div class="toast-body">
-                                                                             ${error.responseText}
-                                                                         </div>
-                                                                 </div>`
-                $('#notification-toast').append(toastHTML)
-                $('#notification-toast .toast').toast('show');
-                setTimeout(function () {
-                    $('#notification-toast .toast:first-child').remove();
-                }, 3000);
-                $('#cancel').modal('hide');
-            }
-        });
-    }
     function XoaNhieuDanhGia(selectedIds, reasonInput) {
         $.ajax({
             url: '/Admin/DanhGia/XoaNhieuDanhGia',
             type: 'POST',
-            data: { Ids: selectedIds, liDo: reasonInput },
+            data: { Ids: selectedIds, liDo: selectedIds },
             success: function (response) {
                 var toastHTML = `<div class="toast fade hide" data-delay="3000">
                                                                          <div class="toast-header">
@@ -571,28 +472,11 @@
             window.location.reload();
         }, 1000);
 
-
     }
 
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        var buttons = document.querySelectorAll('[data-modal-id="#duyetdg"]');
-        console.log(buttons);
-        buttons.forEach(function (button) {
-            button.addEventListener('click', function () {
-                var idDanhGia = button.getAttribute('data-DanhGia-id');
-                console.log(idDanhGia);
-                var spanidDanhGia = document.getElementById('spanidDanhGia');
-
-                var confirmLink = document.getElementById('confirmLink');
-
-                if (confirmLink) {
-                    confirmLink.href = "@Url.Action("DuyetDanhGia", new { id = "__ID__" })".replace("__ID__", idDanhGia);
-                }
-            });
-        });
-    });
+  
     document.addEventListener("DOMContentLoaded", function () {
         var buttons = document.querySelectorAll('[data-modal-id="#xoadg"]');
         console.log(buttons);

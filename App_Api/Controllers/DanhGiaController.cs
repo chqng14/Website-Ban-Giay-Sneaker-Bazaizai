@@ -186,9 +186,31 @@ namespace App_Api.Controllers
             }
             else if(Dk==6)
             {
-                lst=lst.Where(x => x.BinhLuan !=null).ToList();
+                lst=lst.Where(x => x.BinhLuan !=null||x.ChatLuongSanPham!=null||x.MoTa!=null).ToList();
             }
             return lst;
         }
+        [HttpGet("GetAllDanhGiaDaDuyetByDkViewModel")]
+        public async Task<List<DanhGiaViewModel>> GetAllDanhGiaDaDuyetByDkViewModel(int? Dk)
+        {
+
+            var lst = (await _danhGiaRepo.LstDanhGia()).Where(x => x.TrangThai == (int)TrangThaiDanhGia.DaDuyet).ToList();
+            if (Dk <= 5 && Dk >= 1)
+            {
+                lst = lst.Where(x => x.SaoSp == Dk).ToList();
+            }
+            else if (Dk == 6)
+            {
+                lst = lst.Where(x => x.BinhLuan != null || x.ChatLuongSanPham != null || x.MoTa != null).ToList();
+            }
+            return lst;
+        }
+        [HttpGet("GetAllDanhGiaDaDuyetByNd")]
+        public async Task<List<DanhGiaViewModel>> GetAllDanhGiaDaDuyetByNd(string idUser)
+        {
+            var lst = (await _danhGiaRepo.LstDanhGia()).Where(x => x.TrangThai == (int)TrangThaiDanhGia.DaDuyet&& x.IdNguoiDung==idUser).ToList();
+            return lst;
+        }
+
     }
 }
