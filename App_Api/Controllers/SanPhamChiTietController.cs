@@ -762,8 +762,7 @@ namespace App_Api.Controllers
                         gr.IdThuongHieu,
                         gr.IdXuatXu
                     })
-                    .Select(gr => gr.FirstOrDefault())
-                    .ToList();
+                    .Select(gr => gr.FirstOrDefault());
                 var sumItem = data.Count();
 
                 var brandLower = brand?.ToLower();
@@ -772,13 +771,13 @@ namespace App_Api.Controllers
                 if (!string.IsNullOrEmpty(brandLower))
                 {
                     data = data.Where(sp =>
-                        sp!.ThuongHieu!.TenThuongHieu!.Contains(brandLower, StringComparison.OrdinalIgnoreCase)).ToList();
+                        sp!.ThuongHieu!.TenThuongHieu!.Contains(brandLower, StringComparison.OrdinalIgnoreCase));
                 }
 
                 if (!string.IsNullOrEmpty(searchLower))
                 {
                     data = data.Where(sp =>
-                        sp!.SanPham.TenSanPham!.Contains(searchLower, StringComparison.OrdinalIgnoreCase)).ToList();
+                        sp!.SanPham.TenSanPham!.Contains(searchLower, StringComparison.OrdinalIgnoreCase));
                 }
 
                 var pageSize = 12;
