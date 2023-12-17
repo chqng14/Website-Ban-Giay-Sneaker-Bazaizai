@@ -209,57 +209,69 @@ namespace App_Api.Controllers
         [HttpGet]
         public async Task<HoaDonTest> GetHoaDonOnlineByMa(string Ma)
         {
-            var hoadon = (await GetHoaDonOnline()).FirstOrDefault(c => c.MaHoaDon.ToUpper() == Ma.ToUpper());
-
-            var hoadonct = (await _hoaDonChiTietController.GetAllHoaDon()).Where(c => c.IdHoaDon == hoadon.IdHoaDon).ToList();
-            var loaithanhtoan = await GetPTThanhToan(hoadon.IdHoaDon);
-
-
-            var sanPhamList = new List<SanPhamTest>();
-
-            foreach (var item in hoadonct)
+            try
             {
-                var sp = await _sanPhamChiTietController.GetSanPhamViewModel(item.IdSanPhamChiTiet);
-                var sanPhamObject = new SanPhamTest
+                var hoadon = (await GetHoaDonOnline()).FirstOrDefault(c => c.MaHoaDon.ToUpper() == Ma.ToUpper());
+                if (hoadon == null)
                 {
-                    IdSanPhamChiTiet = item.IdSanPhamChiTiet,
-                    SoLuong = item.SoLuong,
-                    GiaBan = item.GiaBan,
-                    //GiaGoc = item.GiaGoc,
-                    //GiaNhap = item.GiaGoc,
-                    TenSanPham = sp.SanPham,
-                    LinkAnh = sp.ListTenAnh,
-                    TenMauSac = sp.MauSac,
-                    TenKichCo = sp.KichCo,
-                    TenThuongHieu = sp.ThuongHieu,
+                    return null;
+                }
+                var hoadonct = (await _hoaDonChiTietController.GetAllHoaDon()).Where(c => c.IdHoaDon == hoadon.IdHoaDon).ToList();
+                var loaithanhtoan = await GetPTThanhToan(hoadon.IdHoaDon);
+
+
+                var sanPhamList = new List<SanPhamTest>();
+
+                foreach (var item in hoadonct)
+                {
+                    var sp = await _sanPhamChiTietController.GetSanPhamViewModel(item.IdSanPhamChiTiet);
+                    var sanPhamObject = new SanPhamTest
+                    {
+                        IdSanPhamChiTiet = item.IdSanPhamChiTiet,
+                        SoLuong = item.SoLuong,
+                        GiaBan = item.GiaBan,
+                        //GiaGoc = item.GiaGoc,
+                        //GiaNhap = item.GiaGoc,
+                        TenSanPham = sp.SanPham,
+                        LinkAnh = sp.ListTenAnh,
+                        TenMauSac = sp.MauSac,
+                        TenKichCo = sp.KichCo,
+                        TenThuongHieu = sp.ThuongHieu,
+                        TrangThaiGiaoHang = hoadon.TrangThaiGiaoHang,
+                        TongTien = item.GiaBan * item.SoLuong,
+                    };
+                    sanPhamList.Add(sanPhamObject);
+                }
+
+                var hoadontest = new HoaDonTest()
+                {
+                    IdHoaDon = hoadon.IdHoaDon,
+                    MaHoaDon = hoadon.MaHoaDon,
+                    TienGiam = hoadon.TienGiam,
+                    TienShip = hoadon.TienShip,
+                    TongTien = hoadon.TongTien,
+                    TongGia = hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam ?? 0),
+                    SanPham = sanPhamList,
+                    NgayTao = hoadon.NgayTao,
+                    NgayGiaoDuKien = hoadon.NgayGiaoDuKien,
                     TrangThaiGiaoHang = hoadon.TrangThaiGiaoHang,
-                    TongTien = item.GiaBan * item.SoLuong,
+                    TrangThaiThanhToan = hoadon.TrangThaiThanhToan,
+                    TenNguoiNhan = hoadon.TenNguoiNhan,
+                    DiaChi = hoadon.DiaChi,
+                    SDT = hoadon.SDT,
+                    LoaiThanhToan = loaithanhtoan,
+                    MoTa = hoadon.MoTa,
+                    LiDoHuy = hoadon.LiDoHuy,
                 };
-                sanPhamList.Add(sanPhamObject);
+
+                return hoadontest;
+
             }
-
-            var hoadontest = new HoaDonTest()
+            catch (Exception)
             {
-                IdHoaDon = hoadon.IdHoaDon,
-                MaHoaDon = hoadon.MaHoaDon,
-                TienGiam = hoadon.TienGiam,
-                TienShip = hoadon.TienShip,
-                TongTien = hoadon.TongTien,
-                TongGia = hoadon.TongTien + hoadon.TienShip - (hoadon.TienGiam ?? 0),
-                SanPham = sanPhamList,
-                NgayTao = hoadon.NgayTao,
-                NgayGiaoDuKien = hoadon.NgayGiaoDuKien,
-                TrangThaiGiaoHang = hoadon.TrangThaiGiaoHang,
-                TrangThaiThanhToan = hoadon.TrangThaiThanhToan,
-                TenNguoiNhan = hoadon.TenNguoiNhan,
-                DiaChi = hoadon.DiaChi,
-                SDT = hoadon.SDT,
-                LoaiThanhToan = loaithanhtoan,
-                MoTa = hoadon.MoTa,
-                LiDoHuy = hoadon.LiDoHuy,
-            };
-
-            return hoadontest;
+                return null;
+            }
+           
         }
 
         [HttpGet]
