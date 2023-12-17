@@ -12,7 +12,7 @@
     var kmct = (await khuyenMaiChiTiet.GetAllKhuyenMaiChiTiet()).Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai);
     var model = new App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel();
     model = sanPhamChiTietService.GetDanhSachGiayViewModelAynsc().Result;
-    var lstSpDuocApDungKhuyenMai = model.LstAllSanPham.Where(x => x.GiaThucTe < x.GiaGoc);
+    var lstSpDuocApDungKhuyenMai = model.LstAllSanPham.Where(x => x.GiaThucTe < x.GiaGoc).ToList();
 }
 <head>
     <meta charset="utf-8">

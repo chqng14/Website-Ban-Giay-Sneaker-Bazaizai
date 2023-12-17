@@ -13,7 +13,7 @@
             <div class="dash-l-r">
                 <div>
                     <div class="manage-o__text-2 u-c-secondary">Order #@item.MaHoaDon</div>
-                    <div class="manage-o__text u-c-silver">Ngày đặt: @item.NgayTao @* - Ngày giao dự kiến: @item.NgayGiaoDuKien *@</div>
+                    <div class="manage-o__text u-c-silver">Ngày đặt: @string.Format("{0:dd/MM/yyyy}", item.NgayTao) @* - Ngày giao dự kiến: @item.NgayGiaoDuKien *@</div>
                 </div>
                 @* <div>
             <div class="dash__link dash__link--brand">

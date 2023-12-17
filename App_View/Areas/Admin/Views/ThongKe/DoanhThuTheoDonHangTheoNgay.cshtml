@@ -12,7 +12,7 @@
     .chartMenu {
         width: 100vw;
         height: 40px;
-       /* background: #1A1A1A;*/
+        /* background: #1A1A1A;*/
         background: white;
         color: rgba(54, 162, 235, 1);
     }
@@ -25,7 +25,7 @@
     .chartCard {
         width: 100vw;
         height: calc(80vh - 40px);
-     /*   background: rgba(54, 162, 235, 0.2);*/
+        /*   background: rgba(54, 162, 235, 0.2);*/
         background: white;
         display: flex;
         align-items: center;
@@ -42,10 +42,10 @@
     }
 
     /*    .custom-scroll-table {
-                                                            max-height: 10px;
-                                                            overflow-y: auto;
-                                                        }
-                                                    */
+                                                                    max-height: 10px;
+                                                                    overflow-y: auto;
+                                                                }
+                                                            */
     .ChoXacNhan {
         background-color: burlywood;
     }
@@ -82,9 +82,9 @@
 <h1 style="text-align:center">Thống kê doanh thu theo đơn hàng</h1>
 
 <div class="row">
-@*    <input type="date" id="fromDate">
+    @*    <input type="date" id="fromDate">
     <input type="date" id="toDate">
-*@    <div class="chartCard">
+    *@    <div class="chartCard">
         <div class="row" style="width: 100%;
     margin-left: 7%;
     margin-top: -2%;">
@@ -105,6 +105,7 @@
             <canvas id="myChart" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"></canvas>
 
         </div>
+      @*  <span id="ttNgay" style="text-align:center">Thống kê doanh thu theo đơn hàng </span>*@
     </div>
 
 
@@ -127,15 +128,15 @@
         Tải ảnh biểu đồ
     </span>
 </button>*@
-<table id="dataTable" class="table table-bordered custom-scroll-table">
+<table id="dataTable" class="table table-bordered custom-scroll-table" style="margin-left: 0%;">
     <thead>
         <tr style="background-color:mediumturquoise">
             <th>#</th>
             <th>Mã đơn hàng</th>
             <th>Ngày</th>
             <th>Thời gian</th>
-            <th>Giá trị voucher</th>
-            <th>Giá trị khuyến mãi</th>
+            @*        <th>Giá trị voucher</th>
+            <th>Giá trị khuyến mãi</th>*@
             <th>Giá trị đơn hàng</th>
             <th>Phí vận chuyển</th>
 
@@ -172,18 +173,41 @@
 
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
-
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
-
-
-
-
-
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
     <script src="~/Admin/moment/moment.min.js"></script>
+    <script>
+        // Hàm để lấy chuỗi ngày dạng 'YYYY-MM-DD' cho một ngày
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Hàm để cập nhật giá trị của ô ngày
+        function updateDateInputs() {
+            const currentDate = new Date();
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(currentDate.getDate() - 6);
+
+            // Lấy chuỗi ngày dạng 'YYYY-MM-DD'
+            const fromDateValue = formatDate(sevenDaysAgo);
+            const toDateValue = formatDate(currentDate);
+
+            // Cập nhật giá trị của ô ngày
+            document.getElementById('fromDate').value = fromDateValue;
+            document.getElementById('toDate').value = toDateValue;
+        }
+
+        // Gọi hàm cập nhật khi trang được tải
+        window.onload = function () {
+            updateDateInputs();
+        };
+    </script>
     <script>
 
         var arrDonHang = [];
@@ -286,7 +310,7 @@
                     maintainAspectRatio: false,
                     datasetFill: false,
                     backgroundColor: 'white',
-                
+
                     scales: {
                         y: {
                             //gridLines: {
@@ -294,13 +318,21 @@
                             //},
                             beginAtZero: false,
                             min: 0,
-
+                            title: {
+                                display: true,
+                                text: 'Doanh thu'
+                            }
                         },
                         match: {
                             beginAtZero: true,
                             //precision:0,
-                            position: 'right'
-                        }
+                            position: 'right',
+                                      title: {
+                                display: true,
+                                text: 'SL đơn hàng'
+                            }
+                        },
+                      
                     }
                 }
             };
@@ -321,6 +353,7 @@
             var toDate = $('#toDate').val();
             updateChart(fromDate, toDate);
             updateTable(fromDate, toDate);
+
         });
 
 
@@ -329,9 +362,9 @@
             var totalSoLuongDonHang = 0;
             var totalSoLuongDonHangHoanThanh = 0;
             var totalSoLuongDonHangHuy = 0;
-            var totalVoucher = 0;
+            //var totalVoucher = 0;
             var totalDoanhThu = 0;
-            var totalKhuyenMai = 0;
+            //var totalKhuyenMai = 0;
             var totalShip = 0;
             var tgBatDau = "";
             var tgKetThuc = "";
@@ -351,16 +384,31 @@
                     case "Đang giao":
                         statusClass = 'danggiao';
                         break;
-                    case "Hoàn thành":
+                    case "Đã giao":
                         statusClass = 'hoanthanh';
                         break;
                     case "Đã hủy":
                         statusClass = 'dahuy';
                         break;
+
+
                     // Thêm các trường hợp khác nếu cần
                     default:
                         // Mặc định nếu không khớp trường hợp nào
                         statusClass = 'default';
+                        break;
+                }
+                var statusThanhToanClass = '';
+                switch (item.trangThaiThanhToan) {
+
+                    case "Đã thanh toán":
+                        statusThanhToanClass = 'hoanthanh';
+                        break;
+
+                    // Thêm các trường hợp khác nếu cần
+                    default:
+                        // Mặc định nếu không khớp trường hợp nào
+                        statusThanhToanClass = 'default';
                         break;
                 }
                 strHtml += "<tr>";
@@ -368,11 +416,18 @@
                 strHtml += "<td>" + item.maDonHang + "</td>";
                 strHtml += "<td>" + date + "</td>";
                 strHtml += "<td>" + item.thoiGian + "</td>";
-                strHtml += "<td>" + item.chietKhauHoaDon.toLocaleString('en-US') + "</td>";
-                strHtml += "<td>" + item.tongKhuyenMai.toLocaleString('en-US') + "</td>";
+                //strHtml += "<td>" + item.chietKhauHoaDon.toLocaleString('en-US') + "</td>";
+                //strHtml += "<td>" + item.tongKhuyenMai.toLocaleString('en-US') + "</td>";
                 strHtml += "<td>" + item.giaTriDon.toLocaleString('en-US') + "</td>";
-                strHtml += "<td>" + item.tienShip.toLocaleString('en-US') + "</td>";
-                strHtml += "<td>" + item.trangThaiThanhToan + "</td>";
+                if (item.tienShip === null) {
+                    strHtml += "<td>" + item.tienShip + "</td>";
+
+                }
+                else {
+                    strHtml += "<td>" + item.tienShip.toLocaleString('en-US') + "</td>";
+
+                }
+                strHtml += "<td class='" + statusThanhToanClass + "'>" + item.trangThaiThanhToan + "</td>";
                 strHtml += "<td class='" + statusClass + "'>" + item.tinhTrang + "</td>";
                 strHtml += "<td>" + item.tenKhach + "</td>";
                 strHtml += "<td>" + item.sdt + "</td>";
@@ -380,19 +435,20 @@
                 strHtml += "<td>" + item.lidohuy + "</td>";
                 strHtml += "</tr>";
                 if (i === 0) {
-                    tgBatDau = item.thoiGian + " " + date;
+
+                    tgBatDau = date;
                 }
                 if (i === lastIndex) {
-                    tgKetThuc = item.thoiGian + " " + date;
+                    tgKetThuc = date;
                 }
-                if (item.tinhTrang == "Hoàn thành") {
-                    totalVoucher += item.chietKhauHoaDon;
+                if ((item.tinhTrang == "Đã giao" || item.tinhTrang == "Tại quầy") && item.trangThaiThanhToan == "Đã thanh toán") {
+                    //totalVoucher += item.chietKhauHoaDon;
                     totalDoanhThu += item.giaTriDon;
-                    totalKhuyenMai += item.tongKhuyenMai;
+                    //totalKhuyenMai += item.tongKhuyenMai;
                     totalShip += item.tienShip;
                     totalSoLuongDonHangHoanThanh++;
                 }
-                if (item.tinhTrang == "Đã hủy") {
+                if (item.tinhTrang == "Đã hủy" || item.tinhTrang == "Hủy") {
                     totalSoLuongDonHangHuy++;
                 }
                 //Tính toán tổng
@@ -406,8 +462,8 @@
             strHtml += "<td><strong>Tổng</strong></td>";
             strHtml += "<td><strong>Tổng đơn hàng: " + totalSoLuongDonHang + "</strong></td>";
             strHtml += "<td colspan='2'><strong>Thời gian:" + tgBatDau + " - " + tgKetThuc + "</strong></td>";
-            strHtml += "<td><strong>" + totalVoucher + "</strong></td>";
-            strHtml += "<td><strong>" + totalKhuyenMai + "</strong></td>";
+            //strHtml += "<td><strong>" + totalVoucher + "</strong></td>";
+            //strHtml += "<td><strong>" + totalKhuyenMai + "</strong></td>";
             strHtml += "<td><strong>Doanh thu: " + totalDoanhThu.toLocaleString('en-US') + "</strong></td>";
             strHtml += "<td><strong>Phí vận chuyển: " + totalShip + "</strong></td>";
             strHtml += "<td><strong></strong></td>";
@@ -445,7 +501,7 @@
                 url: "@Url.Action("ThongTinThongKeHoaDonOnlineTheoNgay", "ThongKe")",
                 data: { fromDate: fromDate, toDate: toDate },
                 success: function (rs) {
-                    console.log("hi");
+                    console.log("hiiiiii");
                     console.log(rs.data);
 
                     load_data(rs.data);

@@ -89,7 +89,7 @@ namespace App_View.Controllers
         [HttpGet]
         public async Task<IActionResult> KhuyenMaiDongGiaAsync(string idKhuyenMai)
         {
-            var kmct = (await khuyenMaiChiTietServices.GetAllKhuyenMaiChiTiet()).Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai&&x.IdKhuyenMai== idKhuyenMai);
+            var kmct = (await khuyenMaiChiTietServices.GetAllKhuyenMaiChiTiet()).Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai&&x.IdKhuyenMai== idKhuyenMai).GroupBy(x=>x.SanPham).Select(x=>x.First()).ToList();
             var model = new App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel();
             model = sanPhamChiTietService.GetDanhSachGiayViewModelAynsc().Result;
             var lstSpDuocApDungKhuyenMai = model.LstAllSanPham.Where(x => x.GiaThucTe < x.GiaGoc).ToList();

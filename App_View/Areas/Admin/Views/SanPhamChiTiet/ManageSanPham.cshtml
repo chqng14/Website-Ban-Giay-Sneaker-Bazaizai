@@ -1517,7 +1517,7 @@
                             }
                         }
 
-                        if (opject.GiaBan !== "0" && opject.GiaNhap !== "0" && opject.SoLuongTon !== "0" && opject.KhoiLuong !== "0" && slImage >= 1) {
+                        if (opject.GiaBan !== "0" && opject.GiaNhap !== "0" && opject.KhoiLuong !== "0" && slImage >= 1) {
                             const key = currentItem.find('.collapse').attr('id');
 
 
@@ -1593,17 +1593,6 @@
                             processNextItem();
                         }
                     } else {
-                        console.log({
-                            ...GetDataMain()
-                            , ...dataBienThe
-                            , ...DataInDataset
-                            , ...moTa
-                            , ...{
-                                Day: currentItem.find('.switch-2-day').prop('checked'),
-                                NoiBat: currentItem.find('.switch-2-noibat').prop('checked'),
-                                TrangThaiKhuyenMai: currentItem.find('.switch-2-trangthaikhuyenmai').prop('checked'),
-                            }
-                        });
 
                         if (dataBienThe.GiaBan && dataBienThe.GiaNhap && dataBienThe.SoLuongTon && dataBienThe.KhoiLuong && slImage >= 1) {
                             $.ajax({

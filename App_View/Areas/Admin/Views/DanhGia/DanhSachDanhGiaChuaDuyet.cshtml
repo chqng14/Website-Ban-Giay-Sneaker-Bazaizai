@@ -1,0 +1,642 @@
+﻿@using App_View.IServices;
+@using App_View.Services;
+@inject IDanhGiaService _DanhGiaService
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+    _DanhGiaService = new DanhGiaService();
+}
+<style>
+    .tab-pane {
+        overflow-x: hidden;
+        height: 100%;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    th, td {
+        padding: 8px;
+        vertical-align: middle;
+    }
+
+    td {
+        min-width: 150px;
+    }
+
+    tr {
+        border-bottom: 1px solid #ddd;
+    }
+
+    .gold-star {
+        color: yellow;
+    }
+</style>
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>Quản lý đánh giá</a>
+            <span class="breadcrumb-item active">Danh sách đánh giá chưa duyệt</span>
+        </nav>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="m-t-25">
+            <ul class="nav nav-tabs nav-justified" id="myTabJustified" role="tablist">
+                @for (int i = 0; i <= 6; i++)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(i == 0 ? "active" : "")" id="tab@(i)-tab-justified" data-toggle="tab" href="#tab@(i)-justified" role="tab" aria-controls="tab@(i)-justified" aria-selected="@(i == 0)"
+                           onclick="loadLstDanhGia(@i)">@(i == 6 ? "Có bình luận" : i == 0 ? "Tất cả" : $"{i} sao")</a>
+                    </li>
+                }
+            </ul>
+            <div class="tab-content m-t-15" id="myTabContentJustified">
+
+                @for (int i = 0; i <= 6; i++)
+                {
+                    var lst = await _DanhGiaService.GetLstDanhGiaChuaDuyetByDK(i);
+                    <div class="tab-pane fade show @(i == 0 ? "active" : "")" id="tab@(i)-justified" role="tabpanel" aria-labelledby="tab@(i)-tab-justified">
+                        @if (lst.Count == 0)
+                        {
+                            <div style="text-align: center;  display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 500px;">
+                                <img src="/images/imageedit_danhgia.png" style="width: 200px;" alt="Ảnh đánh giá">
+                                <div class="u-s-m-b-15" style="text-align: center;">
+                                    <h3 class="dash__h1 u-s-m-b-14" style="display: inline-block; margin-top: 10px;">
+                                        Không có đánh giá nào
+                                    </h3>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+
+                            <div class="m-t-20">
+                                <table class="display" id="">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Khách hàng
+                                            </th>
+                                            <th>
+                                                Ngày đánh giá
+                                            </th>
+                                            <th>
+                                                Sản phẩm
+                                            </th>
+                                            <th>
+                                                Sao sản phẩm
+                                            </th>
+                                            <th>
+                                                Đánh giá
+                                            </th>
+                                            <th>
+                                                Hành động
+                                            </th>
+                                            <th>
+                                                <input type="checkbox" id="select-all-checkbox" class="checkbox_css" />
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in lst)
+                                        {
+                                            string NgayDanhGia;
+                                            if (item.NgayDanhGia.HasValue)
+                                            {
+                                                NgayDanhGia = item.NgayDanhGia.Value.ToString("HH:mm:ss, dd/MM/yyyy");
+                                            }
+                                            else NgayDanhGia = item.NgayDanhGia.ToString();
+
+                                            <tr>
+                                                <td>
+                                                    <div class="media align-items-center">
+                                                        <div class="avatar avatar-image">
+                                                            <img src="@item.AnhDaiDien" alt="">
+                                                        </div>
+                                                        <div class="media-body m-l-15">
+
+                                                            <h6 class="mb-0"> <a style="text-decoration: none" class="text-dark" asp-page="/User/UserDetail" asp-route-id="@item.IdNguoiDung">@item.TenNguoiDung</a></h6>
+                                                        </div>
+                                                    </div>
+                                                </td>
+
+                                                <td style="min-width: 120px;">
+                                                    <span class="font-size-13 text-gray">@NgayDanhGia</span>
+                                                </td>
+                                                <td style="display: flex; flex-direction: column;  min-width: 150px;">
+
+                                                    <span class="font-size-13 text-gray">@item.TenSanPham</span>
+                                                    <span class="font-size-13 text-gray">@item.SanPhamTongQuat</span>
+                                                </td>
+                                                <td>
+                                                    <div class="star-rating m-t-15">
+
+                                                        @if (item.SaoSp == 1)
+                                                        {
+                                                            <i class="far fa-star"></i>
+                                                            <i class="far fa-star"></i>
+                                                            <i class="far fa-star"></i>
+                                                            <i class="far fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+
+
+                                                        }
+                                                        else if (item.SaoSp == 2)
+                                                        {
+
+                                                            <i class="far fa-star"></i>
+                                                            <i class="far fa-star"></i>
+                                                            <i class="far fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                        }
+                                                        else if (item.SaoSp == 3)
+                                                        {
+                                                            <i class="far fa-star"></i>
+                                                            <i class="far fa-star"></i>
+
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                        }
+                                                        else if (item.SaoSp == 4)
+                                                        {
+
+                                                            <i class="far fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                        }
+                                                        else if (item.SaoSp == 5)
+                                                        {
+
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                            <i class="fas fa-star"></i>
+                                                        }
+                                                    </div>
+                                                </td>
+                                                <td style="display: flex; flex-direction: column;  min-width: 150px;">
+                                                    @if (item.MoTa != null)
+                                                    {
+                                                        <span class="font-size-13 text-gray">Đúng với mô tả: @item.MoTa</span>
+                                                    }
+
+                                                    @if (item.ChatLuongSanPham != null)
+                                                    {
+                                                        <span class="font-size-13 text-gray">Chất lượng sản phẩm: @item.ChatLuongSanPham</span>
+                                                    }
+                                                    @if (item.BinhLuan != null)
+                                                    {
+                                                        <span class="font-size-13 text-gray">@item.BinhLuan</span>
+
+                                                    }
+
+                                                </td>
+                                                <td>
+                                                    <button data-toggle="modal" data-target="#duyetdg" data-modal-id="#duyetdg" class="btn btn-primary btn-tone" data-DanhGia-id="@item.IdDanhGia">
+
+                                                        <i class="anticon anticon-check-circle"></i>
+                                                    </button>
+                                                    <button data-toggle="modal" data-target="#xoadg" data-modal-id="#xoadg" class="btn btn-primary btn-tone" data-DanhGia-id="@item.IdDanhGia">
+
+                                                        <i class="anticon anticon-close-circle"></i>
+                                                    </button>
+
+                                                    @* <a class="btn btn-primary btn-tone" href="@Url.Action("EditThuongHieu", new { id = item.IdDanhGia })">
+                                        <i class="anticon anticon-stop"></i>
+                                        </a>*@
+
+                                                </td>
+                                                <td>
+                                                    <input type="checkbox" class="voucher-checkbox" data-value="@item.IdDanhGia" />
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                            </div>
+
+
+                        }
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="duyetdg">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: #3f87f5;">
+                <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="background: white;">
+                <span id="thongBao">Bạn có chắc chắn duyệt đánh giá này không?</span>
+            </div>
+            <div class="modal-footer" style="background: white">
+
+                <a id="confirmLink" class="btn btn-primary bd-0 col-md-6" href="#">
+                    Xác nhận
+                </a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('table.display').DataTable({
+            pageLength: 5,
+            lengthMenu: [[5, 10, 30, 50, 100, -1], [5, 10, 30, 50, 100, 'All']]
+        });
+
+    });
+
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+
+}
+<button id="btnNhieu" class="btn btn-primary mr-2" data-toggle="modal" data-target="#cancel" style="color:white">Duyệt các đánh giá đã chọn</button>
+<div class="modal fade" id="cancel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: #3f87f5;">
+                <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="background: white;">
+                <span id="thongBao">Bạn có duyệt các đánh giá đã chọn không ?</span>
+            </div>
+            <div class="modal-footer" style="background: white">
+                <button class="btn btn-primary bd-0 col-md-6" id="delete-button">Xác nhận </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<button id="btnXoaNhieu" class="btn btn-primary mr-2" data-toggle="modal" data-target="#cancel1" style="color:white">Xóa các đánh giá đã chọn</button>
+<div class="modal fade" id="cancel1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: #3f87f5;">
+                <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="background: white;">
+                <span id="thongBao">Bạn có xóa các đánh giá đã chọn không ?</span>
+            </div>
+            <input class="form-control" type="text" id="reasonInput" placeholder="Nhập lí do (ít nhất 30 ký tự)" />
+            <div class="modal-footer" style="background: white">
+                <button class="btn btn-primary bd-0 col-md-6" id="delete1-button" disabled>Xác nhận </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="xoadg">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header" style="background: #3f87f5;">
+                <h5 class="modal-title" id="exampleModalLabel">XÁC NHẬN</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <i class="anticon anticon-close"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="background: white;">
+                <span id="thongBao">Bạn chắc chắn xóa đánh giá này</span>
+            </div>
+            <input type="text" class="form-control" id="reasonInput1" placeholder="Nhập lí do (ít nhất 30 ký tự)" />
+            <input class="form-control" id="reasonInput2" type="hidden" />
+            <div class="modal-footer" style="background: white">
+                <button class="btn btn-primary bd-0 col-md-6" id="Xoadg-button" disabled>Xác nhận </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Hủy</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#data-table').DataTable()
+        $('#select-all-checkbox').click(function () {
+            $('.voucher-checkbox').prop('checked', $(this).prop('checked'));
+
+        });
+
+        $('#btnNhieu').hide();
+        $('#btnXoaNhieu').hide();
+        $('.voucher-checkbox').change(function () {
+            var allChecked = $('.voucher-checkbox:checked').length === $('.voucher-checkbox').length;
+
+            updateButtonVisibility();
+        });
+
+        $('#select-all-checkbox').change(function () {
+            var isChecked = $(this).prop('checked');
+
+            $('.voucher-checkbox').prop('checked', isChecked);
+
+            updateButtonVisibility();
+        });
+        function updateButtonVisibility() {
+            var Checked = $('.voucher-checkbox:checked').length <= 0;
+
+            if (Checked) {
+                $('#btnNhieu').hide();
+                $('#btnXoaNhieu').hide();
+            } else {
+                $('#btnNhieu').show();
+                $('#btnXoaNhieu').show();
+            }
+
+        }
+
+
+
+        $('#delete-button').on('click', function () {
+            var selectedIds = [];
+
+            $('.voucher-checkbox:checked').each(function () {
+                selectedIds.push($(this).data('value'));
+            });
+            huyHoatDongVoucher(selectedIds);
+        });
+
+        $('#delete1-button').on('click', function () {
+            var selectedIds = [];
+            var reasonInput = $("#reasonInput").val();
+            $('.voucher-checkbox:checked').each(function () {
+                selectedIds.push($(this).data('value'));
+            });
+
+            XoaNhieuDanhGia(selectedIds, reasonInput);
+        });
+        $('#Xoadg-button').on('click', function () {
+
+            var reasonInput1 = $("#reasonInput1").val();
+            var reasonInput2 = $("#reasonInput2").val();
+            XoaDanhGia(reasonInput2, reasonInput1);
+        });
+
+
+    });
+    function huyHoatDongVoucher(selectedIds) {
+        $.ajax({
+            url: '/Admin/DanhGia/DuyetNhieuDanhGia',
+            type: 'POST',
+            data: { Ids: selectedIds },
+            success: function (response) {
+                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                                     <div class="toast-header">
+                                                                         <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                                         <strong class="mr-auto">Thông báo</strong>
+                                                                         <small>1 second ago</small>
+                                                                         <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                                             <span aria-hidden="true">&times;</span>
+                                                                         </button>
+                                                                     </div>
+                                                                     <div class="toast-body">
+                                                                         Duyệt thành công
+                                                                     </div>
+                                                             </div>`
+                $('#notification-toast').append(toastHTML)
+                $('#notification-toast .toast').toast('show');
+                setTimeout(function () {
+                    $('#notification-toast .toast:first-child').remove();
+                }, 3000);
+                $('#cancel').modal('hide');
+                taiLaiTrang();
+            },
+            error: function (error) {
+                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                                         <div class="toast-header">
+                                                                             <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                                             <strong class="mr-auto">Thông báo</strong>
+                                                                             <small>1 second ago</small>
+                                                                             <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                                                 <span aria-hidden="true">&times;</span>
+                                                                             </button>
+                                                                         </div>
+                                                                         <div class="toast-body">
+                                                                             ${error.responseText}
+                                                                         </div>
+                                                                 </div>`
+                $('#notification-toast').append(toastHTML)
+                $('#notification-toast .toast').toast('show');
+                setTimeout(function () {
+                    $('#notification-toast .toast:first-child').remove();
+                }, 3000);
+                $('#cancel').modal('hide');
+            }
+        });
+    }
+    function XoaNhieuDanhGia(selectedIds, reasonInput) {
+        $.ajax({
+            url: '/Admin/DanhGia/XoaNhieuDanhGia',
+            type: 'POST',
+            data: { Ids: selectedIds, liDo: reasonInput },
+            success: function (response) {
+                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                                         <div class="toast-header">
+                                                                             <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                                             <strong class="mr-auto">Thông báo</strong>
+                                                                             <small>1 second ago</small>
+                                                                             <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                                                 <span aria-hidden="true">&times;</span>
+                                                                             </button>
+                                                                         </div>
+                                                                         <div class="toast-body">
+                                                                             Xóa thành công
+                                                                         </div>
+                                                                 </div>`
+                $('#notification-toast').append(toastHTML)
+                $('#notification-toast .toast').toast('show');
+                setTimeout(function () {
+                    $('#notification-toast .toast:first-child').remove();
+                }, 3000);
+                $('#cancel').modal('hide');
+                taiLaiTrang();
+            },
+            error: function (error) {
+                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                                             <div class="toast-header">
+                                                                                 <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                                                 <strong class="mr-auto">Thông báo</strong>
+                                                                                 <small>1 second ago</small>
+                                                                                 <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                                                     <span aria-hidden="true">&times;</span>
+                                                                                 </button>
+                                                                             </div>
+                                                                             <div class="toast-body">
+                                                                                 ${error.responseText}
+                                                                             </div>
+                                                                     </div>`
+                $('#notification-toast').append(toastHTML)
+                $('#notification-toast .toast').toast('show');
+                setTimeout(function () {
+                    $('#notification-toast .toast:first-child').remove();
+                }, 3000);
+                $('#cancel').modal('hide');
+            }
+        });
+    }
+    function XoaDanhGia(reasonInput2, reasonInput1) {
+        $.ajax({
+            url: '/Admin/DanhGia/XoaDanhGia',
+            type: 'POST',
+            data: { id: reasonInput2, liDo: reasonInput1 },
+            success: function (response) {
+                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                                             <div class="toast-header">
+                                                                                 <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                                                 <strong class="mr-auto">Thông báo</strong>
+                                                                                 <small>1 second ago</small>
+                                                                                 <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                                                     <span aria-hidden="true">&times;</span>
+                                                                                 </button>
+                                                                             </div>
+                                                                             <div class="toast-body">
+                                                                                 Xóa thành công
+                                                                             </div>
+                                                                     </div>`
+                $('#notification-toast').append(toastHTML)
+                $('#notification-toast .toast').toast('show');
+                setTimeout(function () {
+                    $('#notification-toast .toast:first-child').remove();
+                }, 3000);
+                $('#cancel').modal('hide');
+                taiLaiTrang();
+            },
+            error: function (error) {
+                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+                                                                                 <div class="toast-header">
+                                                                                     <i class="anticon anticon-info-circle text-primary m-r-5"></i>
+                                                                                     <strong class="mr-auto">Thông báo</strong>
+                                                                                     <small>1 second ago</small>
+                                                                                     <button type="button" class="ml-2 close" data-dismiss="toast" aria-label="Close">
+                                                                                         <span aria-hidden="true">&times;</span>
+                                                                                     </button>
+                                                                                 </div>
+                                                                                 <div class="toast-body">
+                                                                                    Xóa thất bại
+                                                                                 </div>
+                                                                         </div>`
+                $('#notification-toast').append(toastHTML)
+                $('#notification-toast .toast').toast('show');
+                setTimeout(function () {
+                    $('#notification-toast .toast:first-child').remove();
+                }, 3000);
+                $('#cancel').modal('hide');
+            }
+        });
+    }
+    function taiLaiTrang() {
+
+
+        setTimeout(function () {
+            window.location.reload();
+        }, 1000);
+
+
+    }
+
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var buttons = document.querySelectorAll('[data-modal-id="#duyetdg"]');
+        console.log(buttons);
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var idDanhGia = button.getAttribute('data-DanhGia-id');
+                console.log(idDanhGia);
+                var spanidDanhGia = document.getElementById('spanidDanhGia');
+
+                var confirmLink = document.getElementById('confirmLink');
+
+                if (confirmLink) {
+                    confirmLink.href = "@Url.Action("DuyetDanhGia", new { id = "__ID__" })".replace("__ID__", idDanhGia);
+                }
+            });
+        });
+    });
+    document.addEventListener("DOMContentLoaded", function () {
+        var buttons = document.querySelectorAll('[data-modal-id="#xoadg"]');
+        console.log(buttons);
+        buttons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                var idDanhGia = button.getAttribute('data-DanhGia-id');
+                $("#reasonInput2").val(idDanhGia);
+            });
+        });
+    });
+
+</script>
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+
+<script>
+    $(document).ready(function () {
+        $("#reasonInput").on("input", function () {
+            var reasonInput = $(this).val();
+            var deleteButton = $("#delete1-button");
+
+            if (reasonInput.length >= 30) {
+                deleteButton.prop("disabled", false);
+
+            } else {
+                deleteButton.prop("disabled", true);
+
+            }
+        });
+        $("#reasonInput1").on("input", function () {
+            var reasonInput = $(this).val();
+
+            var XoadgButton = $("#Xoadg-button");
+
+            // Kiểm tra độ dài của chuỗi nhập vào
+            if (reasonInput.length >= 30) {
+
+                XoadgButton.prop("disabled", false);
+            } else {
+
+                XoadgButton.prop("disabled", true);
+            }
+        });
+
+
+    });
+</script>

@@ -566,11 +566,12 @@ $(document).on('click', '#submit_import', function () {
                             console.log('Error downloading file:', error);
                         };
                     }
-                    window.location.reload();
+                    setTimeout(function () {
+                        window.location.reload();
+                    },100)
 
                 } else if (resultAlert.dismiss === Swal.DismissReason.cancel) {
                     if (resultAlert.value) {
-                        console.log('Nút "Download File Lỗi" được nhấp');
                         window.location.reload();
 
                     } else {
