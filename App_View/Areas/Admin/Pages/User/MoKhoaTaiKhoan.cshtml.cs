@@ -144,7 +144,7 @@ namespace App_View.Areas.Admin.Pages.User
             await _emailSender.SendEmailAsync(user.Email, "Thông báo về việc mở khóa tài khoản của bạn",
                      $"Tài khoản của bạn đã được mở khóa. Mong bạn sẽ tuân thủ điều khoản trên web chúng tôi. Chân thành xin lỗi bạn vì sự bất tiện này. Mọi thắc mắc xin vui lòng liên hệ đội ngũ hỗ trợ 0369426223.");
             await _userManager.UpdateSecurityStampAsync(user);
-            await _signInManager.RefreshSignInAsync(user);
+            //await _signInManager.RefreshSignInAsync(user);
             StatusMessage = $"Bạn vừa mở khóa tài khoản người dùng: {user.UserName}";
             if (i == 1)
             {

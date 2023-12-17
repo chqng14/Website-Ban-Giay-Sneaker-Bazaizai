@@ -1,0 +1,195 @@
+﻿@page "/DanhGiaCuaToi"
+@using System.Security.Claims;
+@model App_View.Areas.Identity.Pages.Account.Manage.DanhGiaCuaToiModel
+@{
+    Layout = "/Views/Shared/_LayoutUser.cshtml";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- page css -->
+<link href="~/Admin/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
+<link href="~/Admin/vendors/select2/select2.css" rel="stylesheet">
+<link href="~/Admin/vendors/datatables/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<!-- Core css -->
+<link href="~/Admin/css/app.min.css" rel="stylesheet">
+<link href="~/Admin/css/style.css" rel="stylesheet" />
+<script src="~/js/toast.js"></script>
+<style>
+    .card {
+        border-radius: 10px;
+    }
+
+        .card .card-header .profile_img {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            margin: 0px auto;
+            border: 1px solid white;
+            border-radius: 50%;
+        }
+
+        .card h2 {
+            margin-top: 15px;
+        }
+
+    .centered-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .fa-star:before {
+        color: orange;
+    }
+
+</style>
+
+<div class="col-lg-9 col-md-12">
+    <partial name="_StatusMessage" for="StatusMessage" />
+    <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
+        <div class="dash__pad-2">
+            <h1 class="dash__h1 u-s-m-b-14">Đánh giá của tôi</h1>
+            <table class="table" id="data-table">
+                <thead>
+                    <tr style="background-color:mediumaquamarine">
+                        <th>Sản Phẩm</th>
+                        <th>Thời gian</th>
+                        <th>Xếp hạng đánh giá</th>
+                        <th>Nội dung</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in @Model.DanhGias)
+                    {
+                        string NgayDanhGia;
+                        if (item.NgayDanhGia.HasValue)
+                        {
+                            NgayDanhGia = item.NgayDanhGia.Value.ToString("HH:mm, dd/MM/yyyy");
+                        }
+                        else NgayDanhGia = item.NgayDanhGia.ToString();
+                        <tr>
+                            <td>
+                            @item.TenSanPham <br />@item.SanPhamTongQuat
+                            </td>
+                            <td>@NgayDanhGia</td>
+                            <td>
+                                <span style="display: none;">@item.SaoSp</span>
+                                <div class="star-rating">
+
+                                    @if (item.SaoSp == 1)
+                                    {
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="fas fa-star"></i>
+
+
+                                    }
+                                    else if (item.SaoSp == 2)
+                                    {
+
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    }
+                                    else if (item.SaoSp == 3)
+                                    {
+                                        <i class="far fa-star"></i>
+                                        <i class="far fa-star"></i>
+
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    }
+                                    else if (item.SaoSp == 4)
+                                    {
+
+                                        <i class="far fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    }
+                                    else if (item.SaoSp == 5)
+                                    {
+
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    }
+                                </div>
+                            </td>
+                            <td style="display: flex; flex-direction: column;  min-width: 150px;">
+                                @if (item.MoTa != null)
+                                {
+                                    <span class="font-size-13 text-gray">Đúng với mô tả: @item.MoTa</span>
+                                }
+
+                                @if (item.ChatLuongSanPham != null)
+                                {
+                                    <span class="font-size-13 text-gray">Chất lượng sản phẩm: @item.ChatLuongSanPham</span>
+                                }
+                                @if (item.BinhLuan != null)
+                                {
+                                    <span class="font-size-13 text-gray">@item.BinhLuan</span>
+
+                                }
+
+                            </td>
+
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+    <script src="~/Admin/js/vendors.min.js"></script>
+
+            }
+<script>
+    $(document).ready(function () {
+        $('#data-table').dataTable({
+            pagingType: 'full_numbers',
+            "dom": 'rtip',
+            "info": false,
+            "language": {
+                "lengthMenu": "Hiển thị _MENU_ mục", "zeroRecords": "Nothing found - sorry", "info": "Showing page _PAGE_ of _PAGES_", "infoEmpty": "No records available", "search": "Tìm kiếm:", "infoFiltered": "(filtered from _MAX_ total records)", "paginate": {
+                    "first": "<i class='anticon anticon-double-left'></i>",
+                    "last": "<i class='anticon anticon-double-right'></i>",
+                    "next": "<i class='anticon anticon-right'></i>",
+                    "previous": "<i class='anticon anticon-left'></i>"
+                },
+            }
+        });
+    });
+    $(document).ready(function () {
+        // Thiết lập DataTable cho bảng có id là 'data-table'
+       
+
+        // Thiết lập DataTable cho bảng có class là 'display' với các tùy chọn hiển thị
+        $('table.display').DataTable({
+            pageLength: 5,
+            lengthMenu: [[5, 10, 30, 50, 100, -1], [5, 10, 30, 50, 100, 'All']]
+        });
+
+        // Thiết lập DataTable cho bảng có id là 'data-table' với các tùy chọn tùy chỉnh
+        
+    });
+</script>
