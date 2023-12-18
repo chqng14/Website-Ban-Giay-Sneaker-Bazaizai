@@ -260,12 +260,12 @@
                                                     </tbody>
                                                     <div class="gl-modal-btn-group">
                                                         <button class="btn btn--e-brand-b-2" id="VoucherUserUse" type="submit">Đồng ý</button>
-                                                        <button class="btn btn--e-grey-b-2" type="button" data-dismiss="modal">Đóng</button>
+                                                        <button class="btn btn--e-grey-b-2 tatmodal" type="button" data-dismiss="modal">Đóng</button>
                                                     </div>
                                                 </form>
                                             </div>
                                         </div>
-                                        <button class="btn dismiss-button fas fa-times" type="button" data-dismiss="modal"></button>
+                                        <button class="btn dismiss-button fas fa-times tatmodal" type="button" data-dismiss="modal"></button>
                                     </div>
                                 </div>
                             </div>
@@ -1359,6 +1359,7 @@
 
         // Hàm áp dụng giảm giá
         function applyDiscount(discountAmount) {
+            $('#voucher-modal .tatmodal').click();
             if (discountAmount == null || discountAmount == 0) {
                 $('#TienGiam').text(discountAmount.toLocaleString("vi-VN") + "đ");
             }
