@@ -309,5 +309,47 @@ namespace App_View.Services
                 return null;
             }
         }
+        public async Task<List<DanhGiaViewModel>> GetLstDanhGiaChuaDuyetByDK(int? dk)
+        {
+            string apiUrl = $"https://localhost:7038/api/DanhGia/GetAllDanhGiaChuaDuyetByDkViewModel?Dk={dk}";
+
+            try
+            {
+                var apiData = await _httpClient.GetStringAsync(apiUrl);
+                return JsonConvert.DeserializeObject<List<DanhGiaViewModel>>(apiData);
+            }
+            catch (HttpRequestException)
+            {
+                return new List<DanhGiaViewModel>();
+            }
+        }
+        public async Task<List<DanhGiaViewModel>> GetLstDanhGiaDaDuyetByDK(int? dk)
+        {
+            string apiUrl = $"https://localhost:7038/api/DanhGia/GetAllDanhGiaDaDuyetByDkViewModel?Dk={dk}";
+
+            try
+            {
+                var apiData = await _httpClient.GetStringAsync(apiUrl);
+                return JsonConvert.DeserializeObject<List<DanhGiaViewModel>>(apiData);
+            }
+            catch (HttpRequestException)
+            {
+                return new List<DanhGiaViewModel>();
+            }
+        } 
+        public async Task<List<DanhGiaViewModel>> GetAllDanhGiaDaDuyetByNd(string idUser)
+        {
+            string apiUrl = $"https://localhost:7038/api/DanhGia/GetAllDanhGiaDaDuyetByNd?idUser={idUser}";
+
+            try
+            {
+                var apiData = await _httpClient.GetStringAsync(apiUrl);
+                return JsonConvert.DeserializeObject<List<DanhGiaViewModel>>(apiData);
+            }
+            catch (HttpRequestException)
+            {
+                return new List<DanhGiaViewModel>();
+            }
+        }
     }
 }

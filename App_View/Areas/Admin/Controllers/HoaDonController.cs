@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 namespace App_View.Areas.Admin.Controllers
@@ -42,7 +43,9 @@ namespace App_View.Areas.Admin.Controllers
         public async Task<IActionResult> QuanLyHoaDonAsync(int trangThaiHD, string search)
         {
             var lstHoaDon = (await _hoaDonServices.GetHoaDon()).ToList();
-            if(!string.IsNullOrEmpty(search))
+            ViewBag.NguoiDung = context.NguoiDungs.AsNoTracking().ToList();
+            ViewBag.KhachHang = context.KhachHangs.AsNoTracking().ToList();
+            if (!string.IsNullOrEmpty(search))
             {
                 lstHoaDon = lstHoaDon.Where(x=>x.MaHoaDon.ToUpper().Contains(search.ToUpper())).ToList();
             }
@@ -53,12 +56,12 @@ namespace App_View.Areas.Admin.Controllers
             }
             if (trangThaiHD == 2)
             {
-                var lstHoaDonOnline = lstHoaDon.Where(x => x.TrangThaiGiaoHang != 0&& x.TrangThaiThanhToan==1);
+                var lstHoaDonOnline = lstHoaDon.Where(x => x.TrangThaiGiaoHang != 0&& x.TrangThaiThanhToan==1 && x.TrangThaiGiaoHang != 5);
                 return PartialView("QuanLyHoaDon", lstHoaDonOnline);
             }
             if (trangThaiHD == 3)
             {
-                var lstHoaDonOnline = lstHoaDon.Where(x => x.TrangThaiGiaoHang != 0 && x.TrangThaiThanhToan == 0);
+                var lstHoaDonOnline = lstHoaDon.Where(x => x.TrangThaiGiaoHang != 0 && x.TrangThaiThanhToan == 0 && x.TrangThaiGiaoHang != 5);
                 return PartialView("QuanLyHoaDon", lstHoaDonOnline);
             }
             if (trangThaiHD == 5)
@@ -69,6 +72,7 @@ namespace App_View.Areas.Admin.Controllers
             if (trangThaiHD == 0)
             {
                 var lstHoaDonTQ = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 0&& x.TrangThaiThanhToan ==1);
+                
                 return PartialView("QuanLyHoaDon", lstHoaDonTQ);
             }
             return PartialView("QuanLyHoaDon", lstHoaDon);

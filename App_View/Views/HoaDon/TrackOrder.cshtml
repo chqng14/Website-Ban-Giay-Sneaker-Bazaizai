@@ -85,6 +85,8 @@
                 isAjaxExecuted = true;
             },
             error: function (xhr, status, error) {
+                isAjaxExecuted = true;
+                $('#content1').empty().html(xhr.responseText);
                 toast({
                     title: "Không có đơn hàng trên hệ thống!",
                     type: "error",

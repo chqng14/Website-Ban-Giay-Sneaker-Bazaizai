@@ -25,7 +25,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = "Admin,NhanVien")]
+    [Authorize(Roles = "Admin")]
     public class KhuyenMaisController : Controller
     {
         private readonly BazaizaiContext _context;
@@ -330,6 +330,7 @@ namespace App_View.Areas.Admin.Controllers
                         var response = await _httpClient.PutAsync($"https://localhost:7038/api/KhuyenMai/{id}?Ten={khuyenMai.TenKhuyenMai}&ngayBD={khuyenMai.NgayBatDau}&ngayKT={khuyenMai.NgayKetThuc}&trangThai={khuyenMai.TrangThai}&mucGiam={khuyenMai.MucGiam}&loaiHinh={khuyenMai.LoaiHinhKM}", content);
                         if (response.IsSuccessStatusCode)
                         {
+
                             return RedirectToAction("Index");
                         }
                         else
