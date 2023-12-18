@@ -18,6 +18,7 @@
 		<Content Remove="wwwroot\images\banners\navbar sale.png" />
 		<Content Remove="wwwroot\js\toast.js" />
 		<Content Remove="wwwroot\PageIdentity\AccessDenied.png" />
+		<Content Remove="wwwroot\PageIdentity\DanhGiaqt.jpg" />
 		<Content Remove="wwwroot\PageIdentity\ForgotPasswordConfirmation.jpg" />
 		<Content Remove="wwwroot\PageIdentity\pagenotfound.png" />
 	</ItemGroup>

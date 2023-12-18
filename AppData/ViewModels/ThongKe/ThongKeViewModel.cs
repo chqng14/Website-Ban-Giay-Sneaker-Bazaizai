@@ -13,5 +13,6 @@ namespace App_Data.ViewModels.ThongKe
         public int SoLuong { get; set; }
         public double GiaGoc { get; set; }
         public double GiaBan { get; set; }
+        public double Tong { get; set; }
     }
 }
