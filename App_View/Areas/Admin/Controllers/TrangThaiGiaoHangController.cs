@@ -95,7 +95,7 @@ namespace App_View.Areas.Admin.Controllers
 
             var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x => x.IdHoaDon == id);
             ViewBag.TenNguoiNhan =hoaDon?.TenNguoiNhan;
-            ViewBag.Sdt = context.thongTinGiaoHangs.AsNoTracking().FirstOrDefault(x => x.SDT == hoaDon.IdThongTinGH).SDT;
+            ViewBag.Sdt = context.thongTinGiaoHangs.AsNoTracking().FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH).SDT;
             var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
 
             return PartialView("ChiTietGiaoHang", hoaDonChiTiet);
