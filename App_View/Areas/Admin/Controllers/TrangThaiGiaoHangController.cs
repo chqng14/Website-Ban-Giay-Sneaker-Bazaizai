@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using OpenXmlPowerTools;
 using System.Linq;
 
 namespace App_View.Areas.Admin.Controllers
@@ -44,15 +46,15 @@ namespace App_View.Areas.Admin.Controllers
         public async Task<IActionResult> QuanLyTrangThaiGiaoHangAsync(int trangThaiHD, string search)
         {
             var lstHoaDon = (await _hoaDonServices.GetHoaDon()).ToList();
-            
-           
+            ViewBag.NguoiDung = context.NguoiDungs.AsNoTracking().ToList();
+
             if (!string.IsNullOrEmpty(search))
             {
                 lstHoaDon = lstHoaDon.Where(x => x.MaHoaDon.ToUpper().Contains(search.ToUpper())).ToList();
             }
             if (trangThaiHD == 0)
             {
-                lstHoaDon = lstHoaDon.Where(x => x.TrangThaiGiaoHang!=0).ToList();
+                lstHoaDon = lstHoaDon.Where(x => x.TrangThaiGiaoHang!=0&& x.TrangThaiGiaoHang != 5 && x.TrangThaiGiaoHang != 7).ToList();
                 return PartialView("QuanLyTrangThaiGiaoHang", lstHoaDon);
             }
             if (trangThaiHD == 1)
