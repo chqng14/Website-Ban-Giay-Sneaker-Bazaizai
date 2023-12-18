@@ -41,14 +41,21 @@ namespace App_View.Areas.Admin.Controllers
                             MaDonHang = a.MaHoaDon,
                             TienShip = a.TienShip,
                             TrangThaiGiaoHang = a.TrangThaiGiaoHang,
-                            TenNguoiNhan = e != null ? e.TenNguoiNhan : null,
-                            SoDt = e != null ? e.SDT : null,
-                            DiaChi = e != null ? e.DiaChi : null,
                             LiDoHuy = a.LiDoHuy,
                             TrangThaiThanhToan = a.TrangThaiThanhToan,
-                            SDTKhachHang = d != null ? d.SDT : null,
-                            TenKhachHang = d != null ? d.TenKhachHang : null
+                            //TenNguoiNhan = e != null ? e.TenNguoiNhan : null,
+                            //SoDt = e != null ? e.SDT : null,
+                            //DiaChi = e != null ? e.DiaChi : null,
 
+
+                            //SDTKhachHang = d != null ? d.SDT : null,
+                            //TenKhachHang = d != null ? d.TenKhachHang : null,
+
+                            TenNguoiNhan = (e != null) ? e.TenNguoiNhan : null,
+                            SoDt = (e != null) ? e.SDT : null,
+                            DiaChi = (e != null) ? e.DiaChi : null,
+                            SDTKhachHang = (d != null) ? d.SDT : null,
+                            TenKhachHang = (d != null) ? d.TenKhachHang : null
                         };
         }
         public IActionResult TongQuan()
@@ -449,21 +456,20 @@ namespace App_View.Areas.Admin.Controllers
             {
 
                 DateTime startDate = DateTime.ParseExact(fromDate, "yyyy-MM-dd", null);
-                baseQuery = baseQuery.Where(x => x.NgayTao.Date >= startDate);
+                baseQuery = baseQuery.Where(x => x.NgayTao.Date >= startDate.Date);
             }
 
             if (!string.IsNullOrEmpty(toDate))
             {
                 DateTime endDate = DateTime.ParseExact(toDate, "yyyy-MM-dd", null);
-                baseQuery = baseQuery.Where(x => x.NgayTao.Date <= endDate);
+                baseQuery = baseQuery.Where(x => x.NgayTao.Date <= endDate.Date);
             }
 
             if (string.IsNullOrEmpty(toDate) && string.IsNullOrEmpty(fromDate))
             {
                 DateTime currentDate = DateTime.Now;
                 DateTime startDate = currentDate.AddDays(-7);
-                baseQuery = baseQuery.Where(x => x.NgayTao.Date >= startDate);
-                baseQuery = baseQuery.Where(x => x.NgayTao.Date <= currentDate);
+                baseQuery = baseQuery.Where(x => x.NgayTao.Date >= startDate.Date && x.NgayTao.Date <= currentDate.Date);
             }
             var result = baseQuery.ToList()
               .Select(x => new
@@ -623,7 +629,7 @@ namespace App_View.Areas.Admin.Controllers
             }
             catch (HttpRequestException)
             {
-                 return "Failed to call the API.";
+                return "Failed to call the API.";
             }
         }
 

@@ -10,5 +10,6 @@ namespace App_View.IServices
         public Task<string> ThongKeBanHang();
         public  Task<List<HoaDon>> DonDatHnagGanDay();
         public Task<JsonResult> DoanhThuTrong7ngay();
+        public Task<List<HoaDon>> DonDonHangGanDay();
     }
 }

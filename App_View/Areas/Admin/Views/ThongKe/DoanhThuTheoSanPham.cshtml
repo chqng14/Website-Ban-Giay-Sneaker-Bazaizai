@@ -12,8 +12,9 @@
         width: 100vw;
         height: 40px;
         background: #1A1A1A;
-/*        color: rgba(54, 162, 235, 1);
-*/    }
+        /*        color: rgba(54, 162, 235, 1);
+    */
+    }
 
         .chartMenu p {
             padding: 10px;
@@ -23,8 +24,8 @@
     .chartCard {
         width: 100vw;
         height: calc(100vh - 40px);
-/*        background: rgba(54, 162, 235, 0.2);
-*/        display: flex;
+        /*        background: rgba(54, 162, 235, 0.2);
+    */ display: flex;
         align-items: center;
         justify-content: center;
         display: flex;
@@ -41,10 +42,10 @@
     }
 
     /*    .custom-scroll-table {
-                                max-height: 10px;
-                                overflow-y: auto;
-                            }
-                        */
+                                    max-height: 10px;
+                                    overflow-y: auto;
+                                }
+                            */
 
 </style>
 
@@ -102,7 +103,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-@*    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    @*    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
     <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
     <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
     <script src="~/Admin/js/pages/datatables.js" defer></script>
@@ -147,7 +148,7 @@
     </script>
 
     <script>
-       
+
 
         var arrSanPham = [];
         var arrDoanhThu = [];
@@ -180,8 +181,8 @@
                     });
 
                     // Cập nhật dữ liệu cho biểu đồ hiện tại
-                    myChart.data.labels = arrSanPham;
-                    myChart.data.datasets[0].data = arrDoanhThu;
+                    myChart.data1.labels = arrSanPham;
+                    myChart.data1.datasets[0].data = arrDoanhThu;
                     console.log(arrDoanhThu);
                     // Cập nhật biểu đồ
                     myChart.update();
@@ -192,7 +193,7 @@
 
         // Khởi tạo biểu đồ ban đầu
         $(document).ready(function () {
-            const data = {
+            const data1 = {
                 labels: [],
                 datasets: [
                     {
@@ -284,7 +285,7 @@
             });
             $('#load_data').html(strHtml);
         }
-          function exportToExcel() {
+        function exportToExcel() {
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
             var mm = String(today.getMonth() + 1).padStart(2, '0');

@@ -59,8 +59,8 @@ namespace App_Api.Controllers
 
 
             var result = query.ToList();
-
-            var tongTien = (double)result.Sum(x => x.TongTien);
+            
+            var tongTien = (double)result.Sum(x => x.TongTien-x.TienGiam);
             if (tongTien >= 0)
             {
                 return tongTien;
@@ -331,6 +331,12 @@ namespace App_Api.Controllers
 
             return Json(new { Data = result });
 
+        }
+        [HttpGet("DonDonHangGanDay")]
+        public async Task<List<HoaDon>> DonDonHangGanDay()
+        {
+            var query = repos.GetAll().Where(x => x.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay).OrderByDescending(x => x.NgayTao).Take(6).ToList();
+            return query;
         }
     }
 }

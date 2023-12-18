@@ -271,43 +271,43 @@
     </div>
 </div>
 <div class="row">
-    @*    <div class="col-lg-4">
-    <div class="card">
-    <div class="card-body">
-    <h5>Customers</h5>
-    <div class="m-v-45 text-center" style="height: 220px">
-    @*                    <canvas class="chart" id="customer-chart"></canvas>style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"
-    <canvas class="chart" id="TrangThaiHoaDon"></canvas>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h5>Customers</h5>
+                <div class="m-v-45 text-center" style="height: 220px">
+                    @*                      <canvas class="chart" id="customer-chart"></canvas>style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"
+                    *@    <canvas class="chart" id="TrangThaiHoaDon"></canvas>
+                </div>
+                <div class="row p-t-25">
+                    <div class="col-md-8 m-h-auto">
+                        <div class="d-flex justify-content-between align-items-center m-b-20">
+                            <p class="m-b-0 d-flex align-items-center">
+                                <span class="badge badge-warning badge-dot m-r-10"></span>
+                                <span>Direct</span>
+                            </p>
+                            <h5 class="m-b-0">350</h5>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center m-b-20">
+                            <p class="m-b-0 d-flex align-items-center">
+                                <span class="badge badge-primary badge-dot m-r-10"></span>
+                                <span>Referral</span>
+                            </p>
+                            <h5 class="m-b-0">450</h5>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center m-b-20">
+                            <p class="m-b-0 d-flex align-items-center">
+                                <span class="badge badge-danger badge-dot m-r-10"></span>
+                                <span>Social Network</span>
+                            </p>
+                            <h5 class="m-b-0">100</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="row p-t-25">
-    <div class="col-md-8 m-h-auto">
-    <div class="d-flex justify-content-between align-items-center m-b-20">
-    <p class="m-b-0 d-flex align-items-center">
-    <span class="badge badge-warning badge-dot m-r-10"></span>
-    <span>Direct</span>
-    </p>
-    <h5 class="m-b-0">350</h5>
-    </div>
-    <div class="d-flex justify-content-between align-items-center m-b-20">
-    <p class="m-b-0 d-flex align-items-center">
-    <span class="badge badge-primary badge-dot m-r-10"></span>
-    <span>Referral</span>
-    </p>
-    <h5 class="m-b-0">450</h5>
-    </div>
-    <div class="d-flex justify-content-between align-items-center m-b-20">
-    <p class="m-b-0 d-flex align-items-center">
-    <span class="badge badge-danger badge-dot m-r-10"></span>
-    <span>Social Network</span>
-    </p>
-    <h5 class="m-b-0">100</h5>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    *@
+
     <div class="col-lg-12">
         <div class="card">
             <div class="card-body">
@@ -336,8 +336,6 @@
                                 {
 
                                     <tr>
-
-
                                         <td>@item.MaHoaDon</td>
 
                                         @if (item.IdNguoiDung != null)
@@ -383,7 +381,31 @@
 
 
                                         <td>@item.NgayTao.Value.ToString("hh:mm dd/MM/yyyy")</td>
-                                        <td>@item.TongTien.Value.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</td>
+
+
+                                        @if (item.TongTien != null && item.TienGiam != null && item.TongTien >= item.TienGiam)
+                                        {
+                                            var giatridon = item.TongTien - item.TienGiam;
+                                            <td>@giatridon.Value.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</td>
+
+                                        }
+                                        else if (item.TongTien != null && item.TienGiam == null)
+                                        {
+
+                                            <td>@item.TongTien.Value.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</td>
+                                        }
+                                        else if (item.TongTien == null || item.TongTien < 0)
+                                        {
+                                            <td>Lỗi tổng tiền</td>
+
+                                        }
+                                        else if (item.TongTien < item.TienGiam)
+                                        {
+                                            double i = 0;
+                                            <td>@i.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</td>
+
+                                        }
+
 
                                         @if (item.TrangThaiThanhToan == (int)TrangThaiHoaDon.ChuaThanhToan)
                                         {
@@ -626,9 +648,9 @@
                 });
                 console.log(arrData);
                 // Cập nhật dữ liệu cho biểu đồ hiện tại
-                myChartPie.data1.labels = arrLabels;
-                myChartPie.data1.datasets[0].data = arrData;
-                myChartPie.update()                // Cập nhật biểu đồ
+                myChartPie.datapie.labels = arrLabels;
+                myChartPie.datapie.datasets[0].data = arrData;
+                myChartPie.update();              // Cập nhật biểu đồ
                 //load_data(rs);
             }
         });
@@ -636,7 +658,7 @@
 
     // Khởi tạo biểu đồ ban đầu
     $(document).ready(function () {
-        const data1 = {
+        const datapie = {
             labels: [],
             datasets: [
                 {
@@ -653,9 +675,9 @@
             ]
         };
 
-        const config1 = {
+        const configpie = {
             type: 'doughnut',//pie
-            data: data1,
+            data: datapie,
             options: {
                 layout: {
                     padding: 10
@@ -670,7 +692,7 @@
                         formatter: (value, ctx) => {
                             console.log(value);
                             console.log(ctx);
-                            const total = ctx.chart.data1.datasets[0].data.reduce((acc, val) => acc + val, 0);
+                            const total = ctx.chart.datapie.datasets[0].data.reduce((acc, val) => acc + val, 0);
                             console.log("Hi, chúng ta lại gặp nhau rồi ");
                             console.log(total);
                             const percentage = total !== 0 ? ((value / total) * 100).toFixed(2) + '%' : '0.00%';
@@ -689,7 +711,7 @@
 
         var myChartPie = new Chart(
             document.getElementById('TrangThaiHoaDon'),
-            config1
+            configpie
         );
 
         updateChartPie();
@@ -697,65 +719,65 @@
 
     });
 
-                    //// Xử lý sự kiện khi ngày thay đổi
-                    //$('#fromDate, #toDate').change(function () {
-                    //    var fromDate = $('#fromDate').val();
-                    //    var toDate = $('#toDate').val();
-                    //    updateChart(fromDate, toDate);
-                    //    //updateTable(fromDate, toDate);
-                    //});
+                            //// Xử lý sự kiện khi ngày thay đổi
+                            //$('#fromDate, #toDate').change(function () {
+                            //    var fromDate = $('#fromDate').val();
+                            //    var toDate = $('#toDate').val();
+                            //    updateChart(fromDate, toDate);
+                            //    //updateTable(fromDate, toDate);
+                            //});
 
-                    //function load_data(data) {
-                    //    var strHtml = "";
-                    //    console.log("mi");
-                    //    console.log(data.data);
-                    //    console.log("mi");
-                    //    $.each(data.data, function (i, item) {
-                    //        console.log("ulatroi1");
-                    //        console.log(i);
+                            //function load_data(data) {
+                            //    var strHtml = "";
+                            //    console.log("mi");
+                            //    console.log(data.data);
+                            //    console.log("mi");
+                            //    $.each(data.data, function (i, item) {
+                            //        console.log("ulatroi1");
+                            //        console.log(i);
 
-                    //        strHtml += "<tr>";
-                    //        strHtml += "<td>" + (i + 1) + "</td>";
-                    //        strHtml += "<td>" + item.maSanPham + "</td>";
-                    //        strHtml += "<td>" + item.sanPham + "</td>";
-                    //        //strHtml += "<td>" + item.soLuongKhachHang + "</td>";
-                    //        strHtml += "<td>" + item.soLuongHangBan + "</td>";
-                    //        strHtml += "<td>" + item.soLuongDonHang + "</td>";
-                    //        //strHtml += "<td>" + item.tienHang + "</td>";
-                    //        strHtml += "<td>" + item.chietKhauSanPham.toLocaleString('en-US') + "</td>";
-                    //        strHtml += "<td>" + item.doanhThu.toLocaleString('en-US') + "</td>";
-                    //        strHtml += "</tr>";
-                    //    });
-                    //    $('#load_data').html(strHtml);
-                    //}
-                    //function exportToExcel() {
-                    //    var today = new Date();
-                    //    var dd = String(today.getDate()).padStart(2, '0');
-                    //    var mm = String(today.getMonth() + 1).padStart(2, '0');
-                    //    var yyyy = today.getFullYear();
-                    //    var currentDate = yyyy + '-' + mm + '-' + dd;
+                            //        strHtml += "<tr>";
+                            //        strHtml += "<td>" + (i + 1) + "</td>";
+                            //        strHtml += "<td>" + item.maSanPham + "</td>";
+                            //        strHtml += "<td>" + item.sanPham + "</td>";
+                            //        //strHtml += "<td>" + item.soLuongKhachHang + "</td>";
+                            //        strHtml += "<td>" + item.soLuongHangBan + "</td>";
+                            //        strHtml += "<td>" + item.soLuongDonHang + "</td>";
+                            //        //strHtml += "<td>" + item.tienHang + "</td>";
+                            //        strHtml += "<td>" + item.chietKhauSanPham.toLocaleString('en-US') + "</td>";
+                            //        strHtml += "<td>" + item.doanhThu.toLocaleString('en-US') + "</td>";
+                            //        strHtml += "</tr>";
+                            //    });
+                            //    $('#load_data').html(strHtml);
+                            //}
+                            //function exportToExcel() {
+                            //    var today = new Date();
+                            //    var dd = String(today.getDate()).padStart(2, '0');
+                            //    var mm = String(today.getMonth() + 1).padStart(2, '0');
+                            //    var yyyy = today.getFullYear();
+                            //    var currentDate = yyyy + '-' + mm + '-' + dd;
 
-                    //    var wb = XLSX.utils.book_new();
+                            //    var wb = XLSX.utils.book_new();
 
-                    //    var ws = XLSX.utils.table_to_sheet(document.getElementById('data-table'));
-                    //    //var ws1 = XLSX.utils.table_to_sheet(document.getElementById('dataTable'));
-                    //    //XLSX.utils.book_append_sheet(wb, ws1, 'DataChart');
-                    //    XLSX.utils.book_append_sheet(wb, ws, 'Dữ liệu thống kê');
+                            //    var ws = XLSX.utils.table_to_sheet(document.getElementById('data-table'));
+                            //    //var ws1 = XLSX.utils.table_to_sheet(document.getElementById('dataTable'));
+                            //    //XLSX.utils.book_append_sheet(wb, ws1, 'DataChart');
+                            //    XLSX.utils.book_append_sheet(wb, ws, 'Dữ liệu thống kê');
 
 
-                    //    var fileName = 'DoanhThuTheoSamPham' + currentDate + '.xlsx';
-                    //    var fileanh = 'DoanhThuTheoSamPham' + currentDate + '.png';
-                    //    XLSX.writeFile(wb, fileName);
-                    //    downloadImg(fileanh);
-                    //}
+                            //    var fileName = 'DoanhThuTheoSamPham' + currentDate + '.xlsx';
+                            //    var fileanh = 'DoanhThuTheoSamPham' + currentDate + '.png';
+                            //    XLSX.writeFile(wb, fileName);
+                            //    downloadImg(fileanh);
+                            //}
 
-                    //function downloadImg(fileanh) {
-                    //    const imageLink = document.createElement('a');
-                    //    const canvas = document.getElementById('myChart');
-                    //    //imageLink.download = 'canvas.png';
-                    //    imageLink.download = fileanh;
-                    //    imageLink.href = canvas.toDataURL('image/png', 1);
-                    //    imageLink.click();
+                            //function downloadImg(fileanh) {
+                            //    const imageLink = document.createElement('a');
+                            //    const canvas = document.getElementById('myChart');
+                            //    //imageLink.download = 'canvas.png';
+                            //    imageLink.download = fileanh;
+                            //    imageLink.href = canvas.toDataURL('image/png', 1);
+                            //    imageLink.click();
 
-                    //}
+                            //}
 </script>

@@ -78,5 +78,19 @@ namespace App_View.Services
                 return "Failed to call the API.";
             }
         }
+        public async Task<List<HoaDon>> DonDonHangGanDay()
+        {
+            string apiUrl = "https://localhost:7038/DonDonHangGanDay";
+
+            try
+            {
+                var apiData = await _httpClient.GetStringAsync(apiUrl);
+                return JsonConvert.DeserializeObject<List<HoaDon>>(apiData);
+            }
+            catch (HttpRequestException)
+            {
+                return new List<HoaDon>();
+            }
+        }
     }
 }
