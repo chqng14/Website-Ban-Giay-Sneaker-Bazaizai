@@ -31,14 +31,13 @@
 
                                 </tr>
                             </thead>
-
                             <tbody>
                                 @foreach (var hoaDon in Model.OrderByDescending(x => x.NgayTao))
                                 {
                                     <tr class="invoice-row btnInvoiceDetail" data-invoice-id="@hoaDon.IdHoaDon">
                                         <td class="column1">@hoaDon.NgayTao</td>
                                         <td class="column2">@hoaDon.MaHoaDon</td>
-                                            <td class="column3">@((hoaDon.TenNguoiNhan == ""||hoaDon.TenNguoiNhan==null) ? "Khách vãng lai"+$" | NV: {((List<NguoiDung>)ViewBag.NguoiDung).FirstOrDefault(x=>x.Id==hoaDon.IdNguoiDung).TenNguoiDung}" : hoaDon.TenNguoiNhan)</td>
+                                        <td class="column3">@(((hoaDon.TenNguoiNhan == "" || hoaDon.TenNguoiNhan == null) && hoaDon.IdKhachHang == null) ? "Khách vãng lai" + $" | NV: {((List<NguoiDung>)ViewBag.NguoiDung).FirstOrDefault(x => x.Id == hoaDon.IdNguoiDung).TenNguoiDung}" : (hoaDon.IdKhachHang != null) ? $"{((List<KhachHang>)ViewBag.KhachHang).FirstOrDefault(x => x.IdKhachHang == hoaDon.IdKhachHang).TenKhachHang}" + $" | NV: {((List<NguoiDung>)ViewBag.NguoiDung).FirstOrDefault(x => x.Id == hoaDon.IdNguoiDung).TenNguoiDung}" : hoaDon.TenNguoiNhan)</td>
                                         <td class="column4">@string.Format("{0:N0}đ",hoaDon.TongTien)</td>
 
                                     </tr>
