@@ -2,22 +2,15 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
-using App_Data.ViewModels.MauSac;
 using App_Data.ViewModels.Voucher;
 using AutoMapper;
-using DocumentFormat.OpenXml.Office.CustomUI;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.VariantTypes;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using QRCoder;
-using System;
 using System.Data;
-using System.Drawing.Imaging;
 using System.Drawing;
+using System.Drawing.Imaging;
 using static App_Data.Repositories.TrangThai;
-using OpenXmlPowerTools.HtmlToWml;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -145,10 +138,10 @@ namespace App_Api.Controllers
         public bool Update(VoucherDTO voucherDTO)
         {
             var voucherGet = allRepo.GetAll().FirstOrDefault(c => c.IdVoucher == voucherDTO.IdVoucher);
-
             DateTime NgayTao = voucherGet.NgayTao;
             if (voucherGet != null)
             {
+                voucherDTO.MaVoucher = voucherGet.MaVoucher;
                 _mapper.Map(voucherDTO, voucherGet);
                 if (voucherDTO.TrangThai == null)
                 {
@@ -278,6 +271,7 @@ namespace App_Api.Controllers
             DateTime NgayTao = voucherGet.NgayTao;
             if (voucherGet != null)
             {
+                voucherDTO.MaVoucher = voucherGet.MaVoucher;
                 _mapper.Map(voucherDTO, voucherGet);
                 if (voucherDTO.TrangThai == null)
                 {

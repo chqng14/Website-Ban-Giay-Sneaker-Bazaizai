@@ -762,8 +762,7 @@ namespace App_Api.Controllers
                         gr.IdThuongHieu,
                         gr.IdXuatXu
                     })
-                    .Select(gr => gr.FirstOrDefault())
-                    .ToList();
+                    .Select(gr => gr.FirstOrDefault());
                 var sumItem = data.Count();
 
                 var brandLower = brand?.ToLower();
@@ -772,13 +771,13 @@ namespace App_Api.Controllers
                 if (!string.IsNullOrEmpty(brandLower))
                 {
                     data = data.Where(sp =>
-                        sp!.ThuongHieu!.TenThuongHieu!.Contains(brandLower, StringComparison.OrdinalIgnoreCase)).ToList();
+                        sp!.ThuongHieu!.TenThuongHieu!.Contains(brandLower, StringComparison.OrdinalIgnoreCase));
                 }
 
                 if (!string.IsNullOrEmpty(searchLower))
                 {
                     data = data.Where(sp =>
-                        sp!.SanPham.TenSanPham!.Contains(searchLower, StringComparison.OrdinalIgnoreCase)).ToList();
+                        sp!.SanPham.TenSanPham!.Contains(searchLower, StringComparison.OrdinalIgnoreCase));
                 }
 
                 var pageSize = 12;
@@ -833,41 +832,38 @@ namespace App_Api.Controllers
                       gr.IdThuongHieu,
                       gr.IdXuatXu
                   })
-                   .Select(gr => gr.FirstOrDefault())
-                   .ToList();
+                   .Select(gr => gr.FirstOrDefault());
 
-                var data = _mapper.Map<List<ItemShopViewModel>>(dataGet);
+                var data = _mapper.Map<IEnumerable<ItemShopViewModel>>(dataGet);
 
                 if (!string.IsNullOrEmpty(filterData.Brand))
                 {
                     var brandLower = filterData.Brand.ToLower();
-                    data = data!.Where(sp => sp.ThuongHieu!.ToLower() == brandLower).ToList();
+                    data = data!.Where(sp => sp.ThuongHieu!.ToLower() == brandLower);
                 }
 
                 if (!string.IsNullOrEmpty(filterData.Sort))
                 {
                     if (filterData.Sort == "price_asc")
                     {
-                        data = data!.OrderBy(it => it.GiaMin).ToList();
+                        data = data!.OrderBy(it => it.GiaMin);
                     }
                     else
                     {
-                        data = data!.OrderByDescending(it => it.GiaMin).ToList();
+                        data = data!.OrderByDescending(it => it.GiaMin);
                     }
                 }
 
                 if (filterData.LstTheLoai!.Any())
                 {
                     data = data!
-                        .Where(sp => filterData.LstTheLoai!.Contains(sp.TheLoai!))
-                        .ToList();
+                        .Where(sp => filterData.LstTheLoai!.Contains(sp.TheLoai!));
                 }
 
                 if (filterData.LstMauSac!.Any())
                 {
                     data = data!
-                        .Where(sp => sp.LstMauSac!.Any(it => filterData.LstMauSac!.Contains(it.Text, StringComparer.OrdinalIgnoreCase)))
-                        .ToList();
+                        .Where(sp => sp.LstMauSac!.Any(it => filterData.LstMauSac!.Contains(it.Text, StringComparer.OrdinalIgnoreCase)));
                 }
 
                 if (filterData.LstRating!.Any())
@@ -877,13 +873,12 @@ namespace App_Api.Controllers
                             filterData.LstRating!.Any(item =>
                                 sp.SoSao >= item && sp.SoSao <= item + 1
                             )
-                        )
-                        .ToList();
+                        );
                 }
 
                 if (filterData.GiaMin != 0 && filterData.GiaMax != 0)
                 {
-                    data = data!.Where(sp => sp.GiaMin >= filterData.GiaMin && sp.GiaMin <= filterData.GiaMax).ToList();
+                    data = data!.Where(sp => sp.GiaMin >= filterData.GiaMin && sp.GiaMin <= filterData.GiaMax);
                 }
 
                 return new FilterDataVM()
