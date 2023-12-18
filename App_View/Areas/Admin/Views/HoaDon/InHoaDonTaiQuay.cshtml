@@ -38,21 +38,29 @@
 								<!-- Row end -->
 								<!-- Row start -->
 								<div class="row gutters" style="display: flex;flex-wrap: wrap;margin-right: -15px;margin-left: -15px;flex-direction: row;">
-									<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12" style="flex: 0 0 75%;max-width: 75%;">
+								@if (Model.IdThongTinGH != null)
+								{
+									<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12" style="flex: 0 0 65%;max-width: 65%;">
 										<div class="invoice-details">
 											<address>
-											@(ViewBag.TTGH == null ? "" : ViewBag.TTGH.DiaChi)
+												@(ViewBag.TTGH == null ? "" : ViewBag.TTGH.DiaChi)
 											</address>
 										</div>
 									</div>
-									<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12" style="flex: 0 0 25%;max-width: 25%;">
-										<div class="invoice-details">
-											<div class="invoice-num">
-												<div>Hóa đơn - @ViewData["MAHD"]</div>
-												<div>@ViewData["NGAYTAO"]</div>
-											</div>
+								}
+								<div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12" style="flex: 0 0 35%;max-width: 35%;float:left">
+									<div class="invoice-details">
+										<div class="invoice-num" style="text-align:left">
+											<div>Hóa đơn - @ViewData["MAHD"]</div>
+											<div>@ViewData["NGAYTAO"]</div>
+											<div>@((ViewBag.TenNguoiNhan != null) ? "Khách hàng: " + ViewBag.TenNguoiNhan : (ViewBag.NguoiDung != null && ViewBag.KhachHang != null) ? "Khách hàng: " + (ViewBag.KhachHang + " | NV:" + ViewBag.NguoiDung) : "Khách vãng lai | " + "NV: " + ViewBag.NguoiDung)</div>
+											@if (ViewBag.Sdt != null)
+											{
+												<div>Sdt: @ViewBag.Sdt</div>
+											}
 										</div>
 									</div>
+								</div>
 								</div>
 								<!-- Row end -->
 							</div>

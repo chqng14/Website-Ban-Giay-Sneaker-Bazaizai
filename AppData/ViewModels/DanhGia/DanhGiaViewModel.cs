@@ -27,5 +27,6 @@ namespace App_Data.ViewModels.DanhGia
         public string? TenSanPham { get; set; }
         public int? countChuaDuyet { get; set; }
         public string? IdSanPham { get; set; }
+        public string? anhSp { get; set; }
     }
 }

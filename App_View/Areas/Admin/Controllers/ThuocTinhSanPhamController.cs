@@ -9,12 +9,14 @@ using App_Data.ViewModels.SanPhamChiTiet.SanPhamDTO;
 using App_Data.ViewModels.SanPhamChiTiet.ThuongHieuDTO;
 using App_Data.ViewModels.ThuocTinh;
 using App_Data.ViewModels.XuatXu;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class ThuocTinhSanPhamController : Controller
     {
         private readonly BazaizaiContext _context;

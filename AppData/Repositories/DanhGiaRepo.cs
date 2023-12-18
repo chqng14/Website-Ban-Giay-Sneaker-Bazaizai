@@ -283,8 +283,13 @@ namespace App_Data.Repositories
                                       TenSanPham = j.TenSanPham,
                                       IdSanPham = c.IdSanPham,
                                       MoTa=a.MoTa,
-                                      ChatLuongSanPham=a.ChatLuongSanPham
-                                      
+                                      ChatLuongSanPham=a.ChatLuongSanPham,
+                                      anhSp = _context.Anh
+                                      .Where(an => an.IdSanPhamChiTiet == c.IdChiTietSp)
+                                      .OrderBy(an => an.IdAnh)
+                                      .Select(an => an.Url)
+                                      .FirstOrDefault(),
+
                                   })
                 .OrderByDescending(x => x.NgayDanhGia)
                 .ToListAsync();

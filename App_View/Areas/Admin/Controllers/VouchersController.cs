@@ -1,28 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using App_Data.DbContextt;
+﻿using App_Data.DbContextt;
 using App_Data.Models;
+using App_Data.ViewModels.Voucher;
+using App_Data.ViewModels.VoucherNguoiDung;
 using App_View.IServices;
 using App_View.Services;
-using App_Data.ViewModels.Voucher;
-using App_Data.ViewModels.SanPhamChiTietDTO;
-using AutoMapper;
-using App_Data.Repositories;
-using static App_Data.Repositories.TrangThai;
-using Microsoft.AspNetCore.Identity;
-using App_Data.ViewModels.VoucherNguoiDung;
-using System.Net.Http;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.ExtendedProperties;
-using PuppeteerSharp;
-using NuGet.Protocol.Core.Types;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]

@@ -1,21 +1,28 @@
 ﻿@page "/DanhGiaCuaToi"
 @using System.Security.Claims;
 @model App_View.Areas.Identity.Pages.Account.Manage.DanhGiaCuaToiModel
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- page css -->
+<link href="~/Admin/vendors/select2/select2.css" rel="stylesheet">
+<link href="~/Admin/vendors/datatables/dataTables.bootstrap.min.css" rel="stylesheet">
+<!-- Core css -->
+<link href="~/Admin/css/app.min.css" rel="stylesheet">
 @{
     Layout = "/Views/Shared/_LayoutUser.cshtml";
 }
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<!-- page css -->
-<link href="~/Admin/vendors/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet">
-<link href="~/Admin/vendors/select2/select2.css" rel="stylesheet">
-<link href="~/Admin/vendors/datatables/dataTables.bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<!-- Core css -->
-<link href="~/Admin/css/app.min.css" rel="stylesheet">
-<link href="~/Admin/css/style.css" rel="stylesheet" />
-<script src="~/js/toast.js"></script>
+
 <style>
+    .mega-text{
+        margin-top: -30%;
+    }
+
+    .input-text {
+        margin-bottom: 6%;
+    }
+
+    .imgUser{
+        margin-bottom: 1px;
+    }
     .card {
         border-radius: 10px;
     }
@@ -51,13 +58,16 @@
     <div class="dash__box dash__box--shadow dash__box--radius dash__box--bg-white u-s-m-b-30">
         <div class="dash__pad-2">
             <h1 class="dash__h1 u-s-m-b-14">Đánh giá của tôi</h1>
-            <table class="table" id="data-table">
+
+@*            <span class="dash__text u-s-m-b-30">Các đánh giá chỉ có thể chỉnh sửa một lần duy nhất trong vòng 15 ngày sau khi đánh giá.</span>
+*@            <table class="table" id="data-table">
                 <thead>
-                    <tr style="background-color:mediumaquamarine">
+                    <tr style="background-color:mediumaquamarine;    text-align: center;">
                         <th>Sản Phẩm</th>
                         <th>Thời gian</th>
                         <th>Xếp hạng đánh giá</th>
                         <th>Nội dung</th>
+                       @* <th></th>*@
                     </tr>
                 </thead>
                 <tbody>
@@ -71,8 +81,19 @@
                         else NgayDanhGia = item.NgayDanhGia.ToString();
                         <tr>
                             <td>
-                            @item.TenSanPham <br />@item.SanPhamTongQuat
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <img style="height: 100%; width: 100%;" src="~/AnhSanPham/@item.anhSp">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a style="text-decoration: none" class="text-dark" asp-action="Details" asp-area="" asp-controller="SanPhamChiTiets" asp-route-id="@item.IdSanPhamChiTiet">
+                                            @item.TenSanPham
+                                        </a>
+                                        <br />@item.SanPhamTongQuat
+                                    </div>
+                                </div>
                             </td>
+
                             <td>@NgayDanhGia</td>
                             <td>
                                 <span style="display: none;">@item.SaoSp</span>
@@ -126,7 +147,8 @@
                                     }
                                 </div>
                             </td>
-                            <td style="display: flex; flex-direction: column;  min-width: 150px;">
+                            <td style="display: flex; flex-direction: column;  min-width: 150px; " >
+                                
                                 @if (item.MoTa != null)
                                 {
                                     <span class="font-size-13 text-gray">Đúng với mô tả: @item.MoTa</span>
@@ -143,7 +165,12 @@
                                 }
 
                             </td>
+                          @*  <td>
+                                <a class="btn btn-primary btn-tone"  >
+                                    <i class="anticon anticon-eye"></i>
+                                </a>
 
+                            </td>*@
 
                         </tr>
                     }
