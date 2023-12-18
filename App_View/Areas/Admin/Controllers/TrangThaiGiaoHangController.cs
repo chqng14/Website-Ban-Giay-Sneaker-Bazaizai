@@ -95,7 +95,7 @@ namespace App_View.Areas.Admin.Controllers
 
             var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x => x.IdHoaDon == id);
             ViewBag.TenNguoiNhan =hoaDon?.TenNguoiNhan;
-            ViewBag.Sdt = context.thongTinGiaoHangs.AsNoTracking().FirstOrDefault(x => x.SDT == hoaDon.IdThongTinGH).SDT;
+            ViewBag.Sdt = context.thongTinGiaoHangs.AsNoTracking().FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH).SDT;
             var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
 
             return PartialView("ChiTietGiaoHang", hoaDonChiTiet);
@@ -104,7 +104,13 @@ namespace App_View.Areas.Admin.Controllers
         public async Task<IActionResult> CapNhatTrangThaiAsync(string trangThaiGH,string id,string? lyDoHuy)
         {
             var hoaDon1 = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == id);
-            if(Convert.ToInt32(trangThaiGH) == 2)
+            var hoaDonAdmin = (await _hoaDonServices.GetAllHoaDon()).FirstOrDefault(x => x.IdHoaDon == id);
+            if (hoaDonAdmin.TrangThaiGiaoHang == 1 && hoaDonAdmin.TrangThaiThanhToan == 0)
+            {
+                return Ok(new { thongBao = "Đơn hàng này chưa thanh toán", trangThai = false });
+            }
+			else
+			if (Convert.ToInt32(trangThaiGH) == 2)
             {
                 var ngayCapNhatGanNhat = DateTime.Now;
                 var user = await _userManager.GetUserAsync(User);
@@ -123,13 +129,14 @@ namespace App_View.Areas.Admin.Controllers
                         });
                     }
                     return Ok(
-                        new { TrangThai = true, }
+                        new { thongBao = "Cập nhập trạng thái thành công", trangThai = true }
                         );
                 }
                 return Ok(new
                 {
-                    TrangThai = false,
-                });
+					thongBao = "Cập nhập thất bại",
+					trangThai = false
+				});
             }
             else
             {
@@ -137,7 +144,9 @@ namespace App_View.Areas.Admin.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 var idUser = await _userManager.GetUserIdAsync(user);
                 var hoadonchitiet = await _hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(id, idUser, Convert.ToInt32(trangThaiGH), lyDoHuy, newUpdate);
-                return Ok();
+                return Ok(
+                        new { thongBao = "Cập nhập trạng thái thành công", trangThai = true }
+                        );
             }
             
         }
@@ -157,13 +166,14 @@ namespace App_View.Areas.Admin.Controllers
             var hoadonchitiet = await _hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(id, idUser, trangthai, lyDoHuy, newUpdate);
             return Ok();
         }
-        public async Task<IActionResult> XacNhanHuy(string id)
+        public async Task<IActionResult> XacNhanHuy(string id,string lyDoHuy)
         {
             var hoadonchitiet = context.hoaDonChiTiets.Where(x => x.IdHoaDon == id);
             var hoadon = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == id);
             if(hoadon.TrangThaiGiaoHang==0)
             {
                 hoadon.TrangThaiThanhToan = 2;
+                hoadon.LiDoHuy = lyDoHuy;
             }
             else
             hoadon.TrangThaiGiaoHang = 5;
