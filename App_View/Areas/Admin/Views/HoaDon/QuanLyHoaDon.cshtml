@@ -26,7 +26,12 @@
                                 <tr class="table100-head">
                                     <th class="column1">Ngày tạo</th>
                                     <th class="column2">Mã hóa đơn</th>
-                                    <th class="column3">Tên khách hàng | Người tạo</th>
+                                    @if (ViewBag.NguoiTao != "")
+                                    {
+                                        <th class="column3">Tên khách hàng | Người tạo</th>
+                                    }else{
+                                        <th class="column3">Tên khách hàng </th>
+                                    }
                                     <th class="column4">Tổng tiền</th>
 
                                 </tr>
