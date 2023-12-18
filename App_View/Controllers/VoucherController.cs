@@ -1,7 +1,6 @@
 ﻿using App_Data.DbContextt;
 using App_Data.Models;
 using App_View.IServices;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using static App_Data.Repositories.TrangThai;
