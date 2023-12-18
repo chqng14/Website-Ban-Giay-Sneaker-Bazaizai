@@ -66,12 +66,12 @@ namespace App_View.Areas.Admin.Controllers
             }
             if (trangThaiHD == 5)
             {
-                var lstHoaDonDaHuy = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 5);
+                var lstHoaDonDaHuy = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 5||x.TrangThaiThanhToan == 2);
                 return PartialView("QuanLyHoaDon", lstHoaDonDaHuy);
             }
             if (trangThaiHD == 0)
             {
-                var lstHoaDonTQ = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 0&& x.TrangThaiThanhToan ==1);
+                var lstHoaDonTQ = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 0 && x.TrangThaiThanhToan ==1);
                 
                 return PartialView("QuanLyHoaDon", lstHoaDonTQ);
             }
@@ -82,8 +82,23 @@ namespace App_View.Areas.Admin.Controllers
         {
            
             var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x => x.IdHoaDon == id);
-            
-            var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
+			var kh = context.KhachHangs.AsNoTracking().FirstOrDefault(x => x.IdKhachHang == hoaDon.IdKhachHang);
+			ViewBag.TenNguoiNhan = hoaDon?.TenNguoiNhan;
+			if (hoaDon?.IdNguoiDung != null)
+			{
+				var nguoiDung = context.NguoiDungs.AsNoTracking().FirstOrDefault(x => x.Id == hoaDon.IdNguoiDung);
+
+				ViewBag.NguoiDung = nguoiDung.TenNguoiDung + " " + nguoiDung.MaNguoiDung;
+				ViewBag.Sdt = kh?.SDT;
+			}
+			else ViewBag.NguoiDung = null;
+
+			if (hoaDon?.IdKhachHang != null)
+			{
+				ViewBag.KhachHang = kh.TenKhachHang;
+			}
+			else ViewBag.KhachHang = null;
+			var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
             ViewBag.TTGH = context.thongTinGiaoHangs.FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH);
             ViewData["MAHD"] = hoaDon.MaHoaDon;
             ViewData["NGAYTAO"] = hoaDon.NgayTao;
@@ -99,6 +114,22 @@ namespace App_View.Areas.Admin.Controllers
         {
             var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x=>x.MaHoaDon==MaHD);
 			var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
+            var kh = context.KhachHangs.AsNoTracking().FirstOrDefault(x => x.IdKhachHang == hoaDon.IdKhachHang);
+			ViewBag.TenNguoiNhan = hoaDon.TenNguoiNhan;
+			if (hoaDon.IdNguoiDung != null)
+			{
+				var nguoiDung = context.NguoiDungs.AsNoTracking().FirstOrDefault(x => x.Id == hoaDon.IdNguoiDung);
+
+				ViewBag.NguoiDung = nguoiDung.TenNguoiDung + " " + nguoiDung.MaNguoiDung;
+                ViewBag.Sdt = kh.SDT;
+			}
+			else ViewBag.NguoiDung = null;
+
+			if (hoaDon.IdKhachHang != null)
+			{
+				ViewBag.KhachHang = kh.TenKhachHang;
+			}
+			else ViewBag.KhachHang = null;
 			ViewBag.TTGH = context.thongTinGiaoHangs.FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH);
 			ViewData["MAHD"] = hoaDon.MaHoaDon;
 			ViewData["NGAYTAO"] = hoaDon.NgayTao;

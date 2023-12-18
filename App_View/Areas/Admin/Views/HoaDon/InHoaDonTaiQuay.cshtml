@@ -50,6 +50,12 @@
 											<div class="invoice-num">
 												<div>Hóa đơn - @ViewData["MAHD"]</div>
 												<div>@ViewData["NGAYTAO"]</div>
+											<div>@((ViewBag.TenNguoiNhan != null) ? "Khách hàng: " + ViewBag.TenNguoiNhan : (ViewBag.NguoiDung != null && ViewBag.KhachHang != null) ? "Khách hàng: " + (ViewBag.KhachHang + " | NV:" + ViewBag.NguoiDung) : "Khách vãng lai | " + "NV: " + ViewBag.NguoiDung)</div>
+											@if (ViewBag.Sdt != null)
+											{
+												<div>Sdt: @ViewBag.Sdt</div>
+											}
+											
 											</div>
 										</div>
 									</div>
