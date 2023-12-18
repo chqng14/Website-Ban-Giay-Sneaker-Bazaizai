@@ -105,10 +105,10 @@ namespace App_View.Areas.Admin.Controllers
         {
             var hoaDon1 = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == id);
             var hoaDonAdmin = (await _hoaDonServices.GetAllHoaDon()).FirstOrDefault(x => x.IdHoaDon == id);
-            if (hoaDonAdmin.TrangThaiGiaoHang == 1 && hoaDonAdmin.TrangThaiThanhToan == 0)
-            {
-                return Ok(new { thongBao = "Đơn hàng này chưa thanh toán", trangThai = false });
-            }
+			if (hoaDonAdmin.TrangThaiGiaoHang == 1 && hoaDonAdmin.TrangThaiThanhToan == 0 && (hoaDonAdmin.LoaiThanhToan == "VNPAY" || hoaDonAdmin.LoaiThanhToan == "MOMO"))
+			{
+				return Ok(new { thongBao = "Đơn hàng này chưa thanh toán", trangThai = false });
+			}
 			else
 			if (Convert.ToInt32(trangThaiGH) == 2)
             {
