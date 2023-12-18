@@ -83,13 +83,16 @@ namespace App_View.Areas.Admin.Controllers
            
             var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x => x.IdHoaDon == id);
 			var kh = context.KhachHangs.AsNoTracking().FirstOrDefault(x => x.IdKhachHang == hoaDon.IdKhachHang);
-			ViewBag.TenNguoiNhan = hoaDon?.TenNguoiNhan;
-			if (hoaDon?.IdNguoiDung != null)
+			ViewBag.TenNguoiNhan = hoaDon.TenNguoiNhan;
+			if (hoaDon.IdNguoiDung != null)
 			{
 				var nguoiDung = context.NguoiDungs.AsNoTracking().FirstOrDefault(x => x.Id == hoaDon.IdNguoiDung);
 
 				ViewBag.NguoiDung = nguoiDung.TenNguoiDung + " " + nguoiDung.MaNguoiDung;
-				ViewBag.Sdt = kh?.SDT;
+				if(kh!=null)
+				{
+					ViewBag.Sdt = kh.SDT;
+				}
 			}
 			else ViewBag.NguoiDung = null;
 
@@ -121,7 +124,10 @@ namespace App_View.Areas.Admin.Controllers
 				var nguoiDung = context.NguoiDungs.AsNoTracking().FirstOrDefault(x => x.Id == hoaDon.IdNguoiDung);
 
 				ViewBag.NguoiDung = nguoiDung.TenNguoiDung + " " + nguoiDung.MaNguoiDung;
-                ViewBag.Sdt = kh.SDT;
+				if(kh!=null)
+				{
+					ViewBag.Sdt = kh.SDT;
+				}
 			}
 			else ViewBag.NguoiDung = null;
 
