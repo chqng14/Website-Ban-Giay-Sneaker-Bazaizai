@@ -14,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using static App_Data.Repositories.TrangThai;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -213,6 +214,14 @@ namespace App_Api.Controllers
             {
                 var hoadon = (await GetHoaDonOnline()).FirstOrDefault(c => c.MaHoaDon.ToUpper() == Ma.ToUpper());
                 if (hoadon == null)
+                {
+                    return null;
+                }
+                if (hoadon.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay)
+                {
+                    return null;
+                }
+                if (!_hoaDon.CheckKhachHang(hoadon.IdThongTinGH))
                 {
                     return null;
                 }

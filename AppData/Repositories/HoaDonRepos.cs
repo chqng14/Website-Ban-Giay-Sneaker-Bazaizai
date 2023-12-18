@@ -164,5 +164,15 @@ namespace App_Data.Repositories
                 return false;
             }
         }
+
+        public bool CheckKhachHang(string idThongTin)
+        {
+            var ThongTin = context.thongTinGiaoHangs.FirstOrDefault(c=>c.IdThongTinGH == idThongTin);
+            if (ThongTin == null||ThongTin.IdNguoiDung!=null)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
