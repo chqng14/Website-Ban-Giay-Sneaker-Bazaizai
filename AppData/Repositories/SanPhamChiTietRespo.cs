@@ -319,7 +319,12 @@ namespace App_Data.Repositories
                 (await _context.sanPhamChiTiets.ToListAsync()).Where(it => it.TrangThai == 0).OrderByDescending(x => x.NgayTao).Select(item => CreateSanPhamDanhSachViewModel(item)).ToList();
             return sanPhamChiTietViewModels;
         }
-
+        public async Task<IEnumerable<SanPhamDanhSachViewModel>> GetAllListViewModelAsync()
+        {
+            var sanPhamChiTietViewModels =
+                (await _context.sanPhamChiTiets.ToListAsync()).OrderByDescending(x => x.NgayTao).Select(item => CreateSanPhamDanhSachViewModel(item)).ToList();
+            return sanPhamChiTietViewModels;
+        }
         public async Task<bool> UpdateAsync(SanPhamChiTiet entity)
         {
             try

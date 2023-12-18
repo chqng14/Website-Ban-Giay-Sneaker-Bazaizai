@@ -140,7 +140,7 @@ namespace App_View.Areas.Admin.Controllers
 			ViewData["MAHD"] = hoaDon.MaHoaDon;
 			ViewData["NGAYTAO"] = hoaDon.NgayTao;
 			ViewData["TIENSHIP"] = hoaDon.TienShip;
-			ViewData["TONGTIEN"] = hoaDon.TongTien;
+			ViewData["TONGTIEN"] = hoaDon.TongTien-hoaDon.TienGiam;
 			ViewData["TIENGIAM"] = hoaDon.TienGiam;
 			var HDCT = context.hoaDonChiTiets.Where(x => x.IdHoaDon == hoaDon.IdHoaDon);
             ViewBag.HDCT = HDCT;

@@ -346,14 +346,18 @@ namespace App_Api.Controllers
         }
 
         [HttpPut]
-        public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, string? idNguoiDung, int TrangThaiGiaoHang, string? Lido, DateTime? ngayCapNhatGanNhat)
+        public async Task<bool> UpdateTrangThaiGiaoHangHoaDon(string idHoaDon, string? idNguoiDung, int trangThaiGiaoHang, string? Lido, DateTime? ngayCapNhatGanNhat)
         {
             var hoadon = _hoaDon.GetHoaDonUpdate().FirstOrDefault(c => c.IdHoaDon == idHoaDon);
             hoadon.IdNguoiSuaGanNhat = idNguoiDung;
-            hoadon.TrangThaiGiaoHang = TrangThaiGiaoHang;
+            hoadon.TrangThaiGiaoHang = trangThaiGiaoHang;
             hoadon.LiDoHuy = Lido;
             hoadon.NgayCapNhatGanNhat = ngayCapNhatGanNhat;
-            return _hoaDon.EditBill(hoadon);
+			if(trangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao)
+			{
+                hoadon.TrangThaiThanhToan = 1;
+			}
+			return _hoaDon.EditBill(hoadon);
         }
 
         [HttpPut]

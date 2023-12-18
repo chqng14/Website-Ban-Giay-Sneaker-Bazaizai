@@ -24,7 +24,7 @@
 										<button class="btn btn-secondary" onclick="printModalContent()" id="printHoaDon" data-id="@Model.IdHoaDon">
 											<i class="icon-printer"></i> Print
 										</button>
-										@if (Model.TrangThaiGiaoHang == 0)
+										@if (Model.TrangThaiGiaoHang == 0&&Model.TrangThaiThanhToan==1)
 										{
 											<button class="btn btn-danger m-r-5" onclick="HuyHoaDon()" id="HuyHoaDon">Hủy</button>
 										}
@@ -79,7 +79,7 @@
 											</thead>
 											<tbody style="border: 1px solid #e6e9f0;">
 												@{
-													var sanPhamChiTietList = await sanPhamChiTietService.GetListSanPhamChiTietViewModelAsync();
+													var sanPhamChiTietList = await sanPhamChiTietService.GetAllListSanPhamChiTietViewModelAsync();
 													//var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
 
 													//foreach (var pro in sanPhamChiTietList)
@@ -186,47 +186,53 @@
 
     }
 	function HuyHoaDon() {
-
 		Swal.fire({
-			title: 'Xác nhận hủy đơn?',
-			text: 'Bạn có chắc muốn hủy đơn hàng này không?',
-			icon: 'warning',
+			title: 'Xác nhận hủy hóa đơn',
+			input: 'text',
+			inputPlaceholder: 'Nhập lý do hủy...',
 			showCancelButton: true,
-			confirmButtonText: 'Có',
-			cancelButtonText: 'Không'
-		}).then((result) => {
-			if (result.isConfirmed) {
-				var idHD = $('#printHoaDon').data('id');
-				$.ajax({
-					type: 'POST',
-					url: "@Url.Action("XacNhanHuy", "TrangThaiGiaoHang")",
-					data: { id: idHD },
-					success: function (result) {
-						Swal.fire({
-							icon: 'success',
-							title: 'Hủy thành công!',
-							showConfirmButton: false,
-							timer: 1500
-						});
-						setTimeout(function () {
-							location.reload();
-						}, 1500);
-					},
-					error: function (error) {
+			confirmButtonText: 'Xác nhận',
+			cancelButtonText: 'Hủy bỏ',
+			showLoaderOnConfirm: true,
+			preConfirm: (lyDoHuy) => {
+				return new Promise((resolve) => {
+					// Kiểm tra nếu lý do không được nhập
+					if (!lyDoHuy) {
+						Swal.showValidationMessage('Vui lòng nhập lý do hủy.');
+						resolve();
+					} else {
+						// Gửi yêu cầu AJAX để hủy hóa đơn
+						var idHD = $('#printHoaDon').data('id');
+						$.ajax({
+							type: 'POST',
+							url: "@Url.Action("XacNhanHuy", "TrangThaiGiaoHang")",
+							data: { id: idHD, lyDoHuy: lyDoHuy },
+							success: function (result) {
+								Swal.fire({
+									icon: 'success',
+									title: 'Hủy thành công!',
+									showConfirmButton: false,
+									timer: 1500
+								});
+								setTimeout(function () {
+									location.reload();
+								}, 1500);
+							},
+							error: function (error) {
 
-						console.error('Error updating status:', error);
+								console.error('Error updating status:', error);
 
-						Swal.fire({
-							icon: 'error',
-							title: 'Đã xảy ra lỗi!',
-							text: 'Vui lòng thử lại sau.',
-							showConfirmButton: false,
-							timer: 1500
+								Swal.fire({
+									icon: 'error',
+									title: 'Đã xảy ra lỗi!',
+									text: 'Vui lòng thử lại sau.',
+									showConfirmButton: false,
+									timer: 1500
+								});
+							}
 						});
 					}
 				});
-			} else {
-				Swal.fire('Hủy bỏ', 'Hành động hủy hóa đơn đã được hủy.', 'info');
 			}
 		});
 	}

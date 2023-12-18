@@ -97,6 +97,11 @@ namespace App_Api.Controllers
         {
             return (await _sanPhamChiTietRes.GetListViewModelAsync()).ToList();
         }
+        [HttpGet("GetAll-List-SanPhamChiTietViewModel")]
+        public async Task<List<SanPhamDanhSachViewModel>> GetAllListSanPham()
+        {
+            return (await _sanPhamChiTietRes.GetAllListViewModelAsync()).ToList();
+        }
 
         [HttpGet("Get-List-SanPhamChiTiet")]
         public async Task<List<SanPhamChiTiet>> GetListSanPhamChiTiet()

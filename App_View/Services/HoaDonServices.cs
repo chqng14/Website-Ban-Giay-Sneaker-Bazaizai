@@ -39,10 +39,11 @@ namespace App_View.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<HoaDon>> GetAllHoaDon()
+        public async Task<List<HoaDonTest>> GetAllHoaDon()
         {
-            throw new NotImplementedException();
-        }
+            return await _httpClient.GetFromJsonAsync<List<HoaDonTest>>("https://localhost:7038/api/HoaDon/GetHoaDonOnlineAdmin");
+
+		}
 
         public async Task<List<HoaDonChoDTO>> GetAllHoaDonCho()
         {
@@ -180,7 +181,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateTrangThaiGiaoHangHoaDon?idHoaDon={idHoaDon}&idNguoiDung={idNguoiDung}&TrangThaiGiaoHang={TrangThai}&Lido={Lido}&ngayCapNhatGanNhat={ngayCapNhatGanNhat}", null);
+                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateTrangThaiGiaoHangHoaDon?idHoaDon={idHoaDon}&idNguoiDung={idNguoiDung}&trangThaiGiaoHang={TrangThai}&Lido={Lido}&ngayCapNhatGanNhat={ngayCapNhatGanNhat}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
