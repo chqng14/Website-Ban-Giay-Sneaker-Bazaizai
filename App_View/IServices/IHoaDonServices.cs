@@ -6,7 +6,7 @@ namespace App_View.IServices
 {
     public interface IHoaDonServices
     {
-        Task<List<HoaDon>> GetAllHoaDon();
+        Task<List<HoaDonTest>> GetAllHoaDon();
         Task<string> CreateHoaDon(HoaDonDTO hoaDonDTO);
         Task<bool> UpdateTrangThaiHoaDon(string idHoaDon, int TrangThai);
         Task<bool> UpdateNgayHoaDon(string idHoaDon, DateTime? NgayThanhToan, DateTime? NgayNhan, DateTime? NgayShip);

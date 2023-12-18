@@ -379,7 +379,17 @@ namespace App_View.Services
                 return new List<SanPhamDanhSachViewModel>();
             }
         }
-
+        public async Task<List<SanPhamDanhSachViewModel>> GetAllListSanPhamChiTietViewModelAsync()
+        {
+            try
+            {
+                return (await _httpClient.GetFromJsonAsync<List<SanPhamDanhSachViewModel>>("/api/SanPhamChiTiet/GetAll-List-SanPhamChiTietViewModel"))!;
+            }
+            catch (Exception)
+            {
+                return new List<SanPhamDanhSachViewModel>();
+            }
+        }
         public async Task<SanPhamChiTietViewModel?> GetSanPhamChiTietViewModelByKeyAsync(string id)
         {
             return await _httpClient.GetFromJsonAsync<SanPhamChiTietViewModel?>($"/api/SanPhamChiTiet/Get-SanPhamChiTietViewModel/{id}");
