@@ -3,6 +3,7 @@ using App_Data.Models;
 using App_Data.Repositories;
 using App_Data.ViewModels.DanhGia;
 using App_Data.ViewModels.ThongKe;
+using App_View.IServices;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Google;
 using Google.Apis.PeopleService.v1.Data;
@@ -22,8 +23,12 @@ namespace App_View.Areas.Admin.Controllers
         private IQueryable<ThongKeDoanhThuOnline> baseQuery;
         private IQueryable<ThongKeDoanhThuOnline> baseQueryNgay;
         private BazaizaiContext db = new BazaizaiContext();
-        public ThongKeController()
+        private IThongKeService _thongKeService;
+        private readonly HttpClient _httpClient;
+        public ThongKeController(IThongKeService thongKeService)
         {
+            _httpClient = new HttpClient();
+            _thongKeService = thongKeService;
             baseQuery = from a in db.HoaDons
                         join e in db.thongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH into thongTinGiaoHangGroup
                         from e in thongTinGiaoHangGroup.DefaultIfEmpty()
@@ -45,10 +50,11 @@ namespace App_View.Areas.Admin.Controllers
                             TenKhachHang = d != null ? d.TenKhachHang : null
 
                         };
-            var m = baseQuery.ToList();
-            var n = m.Count();
         }
-
+        public IActionResult TongQuan()
+        {
+            return View();
+        }
         public IActionResult Index()
         {
             return View();
@@ -137,7 +143,7 @@ namespace App_View.Areas.Admin.Controllers
                         join c in db.sanPhamChiTiets on b.IdSanPhamChiTiet equals c.IdChiTietSp
                         join d in db.SanPhams on c.IdSanPham equals d.IdSanPham
                         //join e in db.thongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH
-                        where (a.TrangThaiGiaoHang != (int)TrangThaiGiaoHang.DaGiao|| a.TrangThaiGiaoHang != (int)TrangThaiGiaoHang.TaiQuay) && a.TrangThaiThanhToan== (int)TrangThaiHoaDon.DaThanhToan
+                        where (a.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao || a.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay) && a.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan
                         select new ThongKeTheoSanPhamBanOnline
                         {
                             NgayTao = (DateTime)a.NgayTao,
@@ -190,7 +196,7 @@ namespace App_View.Areas.Admin.Controllers
 
             }).Select(x => new
             {
-                MaSanPham=x.MaSanPham,
+                MaSanPham = x.MaSanPham,
                 DoanhThu = x.TongBanThucTe,
                 //SoLuongKhachHang = x.SoLuongKhachHang,
                 SoLuongDonHang = x.SoLuongDonHang,
@@ -224,8 +230,8 @@ namespace App_View.Areas.Admin.Controllers
                             IdDonHang = a.IdHoaDon,
                             MaSp = d.MaSanPham,
                             Mactsp = c.Ma,
-                            MaHoaDon=a.MaHoaDon,
-                            
+                            MaHoaDon = a.MaHoaDon,
+
 
 
                         };
@@ -585,6 +591,41 @@ namespace App_View.Areas.Admin.Controllers
         }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // ở đây
+        [HttpGet]
+        public async Task<string> ThongKeBanHang()
+        {
+            return await _thongKeService.ThongKeBanHang();
+        }
+
+        [HttpGet]
+        public async Task<string> TrangThaiHoaDonOnline1thang()
+        {
+            string apiUrl = "https://localhost:7038/TrangThaiHoaDon1thang";
+
+            try
+            {
+                var apiData = await _httpClient.GetStringAsync(apiUrl);
+                return apiData;
+            }
+            catch (HttpRequestException)
+            {
+                 return "Failed to call the API.";
+            }
+        }
 
     }
 }

@@ -7,7 +7,7 @@
 {
     var user = await UserManager.GetUserAsync(User);
     <li class="has-dropdown" data-tooltip="tooltip" data-placement="left">
-        <a><i><img style="margin-bottom:-7px;width:30px;height:30px; object-fit:cover; border-radius:30px" src="@user.AnhDaiDien"></i>&nbsp;@UserManager.GetUserName(User)</a>
+        <a><i><img class="imgUser" style="margin-bottom:-7px;width:30px;height:30px; object-fit:cover; border-radius:30px" src="@user.AnhDaiDien"></i>&nbsp;@UserManager.GetUserName(User)</a>
         <span class="js-menu-toggle"></span>
         <ul>
             <li>
