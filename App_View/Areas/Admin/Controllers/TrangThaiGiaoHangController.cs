@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using OpenXmlPowerTools;
 using System.Linq;
 
 namespace App_View.Areas.Admin.Controllers
@@ -44,15 +46,15 @@ namespace App_View.Areas.Admin.Controllers
         public async Task<IActionResult> QuanLyTrangThaiGiaoHangAsync(int trangThaiHD, string search)
         {
             var lstHoaDon = (await _hoaDonServices.GetHoaDon()).ToList();
-            
-           
+            ViewBag.NguoiDung = context.NguoiDungs.AsNoTracking().ToList();
+
             if (!string.IsNullOrEmpty(search))
             {
                 lstHoaDon = lstHoaDon.Where(x => x.MaHoaDon.ToUpper().Contains(search.ToUpper())).ToList();
             }
             if (trangThaiHD == 0)
             {
-                lstHoaDon = lstHoaDon.Where(x => x.TrangThaiGiaoHang!=0).ToList();
+                lstHoaDon = lstHoaDon.Where(x => x.TrangThaiGiaoHang!=0&& x.TrangThaiGiaoHang != 5 && x.TrangThaiGiaoHang != 7).ToList();
                 return PartialView("QuanLyTrangThaiGiaoHang", lstHoaDon);
             }
             if (trangThaiHD == 1)
@@ -77,7 +79,7 @@ namespace App_View.Areas.Admin.Controllers
             }
             if (trangThaiHD == 5)
             {
-                var lstHoaDonDaHuy = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 5);
+                var lstHoaDonDaHuy = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 5).ToList();
                 return PartialView("QuanLyTrangThaiGiaoHang", lstHoaDonDaHuy);
             }
             if (trangThaiHD == 7)
@@ -92,7 +94,8 @@ namespace App_View.Areas.Admin.Controllers
         {
 
             var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x => x.IdHoaDon == id);
-
+            ViewBag.TenNguoiNhan =hoaDon?.TenNguoiNhan;
+            ViewBag.Sdt = context.thongTinGiaoHangs.AsNoTracking().FirstOrDefault(x => x.SDT == hoaDon.IdThongTinGH).SDT;
             var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
 
             return PartialView("ChiTietGiaoHang", hoaDonChiTiet);
@@ -158,6 +161,11 @@ namespace App_View.Areas.Admin.Controllers
         {
             var hoadonchitiet = context.hoaDonChiTiets.Where(x => x.IdHoaDon == id);
             var hoadon = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == id);
+            if(hoadon.TrangThaiGiaoHang==0)
+            {
+                hoadon.TrangThaiThanhToan = 2;
+            }
+            else
             hoadon.TrangThaiGiaoHang = 5;
             context.Update(hoadon);
             context.SaveChanges();

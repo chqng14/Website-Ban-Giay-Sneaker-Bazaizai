@@ -125,10 +125,10 @@
                     @item.SoLuong
                 </td>
                 <td>
-                    @item.NgayBatDau
+                    @string.Format("{0:dd/MM/yyyy HH:mm}", item.NgayBatDau)
                 </td>
                 <td>
-                    @item.NgayKetThuc
+                    @string.Format("{0:dd/MM/yyyy HH:mm}", item.NgayKetThuc)
                 </td>
                 <td>
                     @if (item.TrangThai == 6)

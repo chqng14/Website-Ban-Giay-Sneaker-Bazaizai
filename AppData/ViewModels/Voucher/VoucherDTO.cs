@@ -1,10 +1,4 @@
-﻿using App_Data.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace App_Data.ViewModels.Voucher
 {
@@ -21,8 +15,10 @@ namespace App_Data.ViewModels.Voucher
         [Required(ErrorMessage = "Loại hình khuyến mãi là trường bắt buộc.")]
         public int? LoaiHinhUuDai { get; set; }
         [Range(0, int.MaxValue, ErrorMessage = "Trường cần nhập tối đa từ 0 đến 999.999.999.")]
+        [Required(ErrorMessage = "Số lượng là trường hợp bắt buộc.")]
         public int? SoLuong { get; set; }
         [CustomMucUuDaiValidation]
+        [Required(ErrorMessage = "Mức ưu đãi là trường bắt buộc.")]
         public double? MucUuDai { get; set; }
         public DateTime NgayTao { get; set; }
         [Required(ErrorMessage = "Ngày bắt đầu là trường bắt buộc.")]
@@ -33,5 +29,53 @@ namespace App_Data.ViewModels.Voucher
         public int? TrangThai { get; set; }
         public int SoLuongVoucherDaIn { get; set; }
         public int SoLuongVoucherChuaIN { get; set; }
+    }
+    public class CustomMucUuDaiValidationAttribute : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var model = (VoucherDTO)validationContext.ObjectInstance;
+
+            if (model.LoaiHinhUuDai == 0)
+            {
+                if (value is double mucUuDai && mucUuDai <= 0)
+                {
+                    return new ValidationResult("Số tiền giảm phải lớn hơn 0.");
+                }
+            }
+            else if (model.LoaiHinhUuDai == 1)
+            {
+                if (value is double mucUuDai && (mucUuDai <= 0 || mucUuDai > 100))
+                {
+                    return new ValidationResult("% giảm phải nằm trong khoảng từ 0 đến 100.");
+                }
+            }
+            else if (model.LoaiHinhUuDai == 2)
+            {
+                // Kiểm tra mức ưu đãi theo điều kiện riêng cho LoaiHinhUuDai là 2
+                // Điều kiện này tương tự với khi LoaiHinhUuDai là 0
+                if (value is double mucUuDai && mucUuDai <= 0)
+                {
+                    return new ValidationResult("Số tiền giảm đãi phải lớn hơn 0.");
+                }
+            }
+
+            return ValidationResult.Success;
+        }
+    }
+    public class CustomNgayKetThucValidationAttribute : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            var ngayKetThuc = (DateTime)value;
+            var model = (VoucherDTO)validationContext.ObjectInstance;
+
+            if (ngayKetThuc <= model.NgayBatDau)
+            {
+                return new ValidationResult("Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.");
+            }
+
+            return ValidationResult.Success;
+        }
     }
 }
