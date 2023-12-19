@@ -354,7 +354,7 @@ namespace App_Api.Controllers
         [HttpGet("DonHangTaiQuayGanDay")]
         public async Task<List<HoaDon>> DonHangTaiQuayGanDay()
         {
-            var query = repos.GetAll().Where(x => x.ThongTinGiaoHang == null).OrderByDescending(x => x.NgayTao).Take(6).ToList();
+            var query = repos.GetAll().Where(x => x.TrangThaiGiaoHang==(int)TrangThaiGiaoHang.TaiQuay).OrderByDescending(x => x.NgayTao).Take(6).ToList();
             return query;
         }
     }
