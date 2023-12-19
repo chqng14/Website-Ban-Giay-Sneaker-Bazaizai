@@ -10,16 +10,15 @@ namespace App_Data.Models
 {
     public class KhuyenMai
     {
-        public string IdKhuyenMai { get; set; }
+        public string? IdKhuyenMai { get; set; }
 
-        [Required(ErrorMessage = "Mã khuyến mãi là trường bắt buộc.")]
-        [MaxLength(50, ErrorMessage = "Mã khuyến mãi không được vượt quá 50 ký tự.")]
-        public string MaKhuyenMai { get; set; }
+
+        public string? MaKhuyenMai { get; set; }
 
         [Required(ErrorMessage = "Tên khuyến mãi là trường bắt buộc.")]
         [MaxLength(100, ErrorMessage = "Tên khuyến mãi không được vượt quá 100 ký tự.")]
-        [RegularExpression(@"^[a-zA-Z0-9\s]*$", ErrorMessage = "Tên Khuyến mại không được chứa ký tự đặc biệt.")]
-        public string TenKhuyenMai { get; set; }
+		[RegularExpression(@"^[a-zA-Z0-9\sàáảãạăắằẳẵặâấầẩẫậèéẻẽẹêềếểễệđìíỉĩịòóỏõọôốồổỗộơớờởỡợùúủũụưứừửữựỳỵỷỹ%]*$", ErrorMessage = "Tên Khuyến mại không được chứa ký tự đặc biệt.")]
+		public string? TenKhuyenMai { get; set; }
 
         [Required(ErrorMessage = "Ngày bắt đầu là trường bắt buộc.")]
         public DateTime? NgayBatDau { get; set; }
@@ -34,11 +33,10 @@ namespace App_Data.Models
         [Required(ErrorMessage = "Mức giảm là trường bắt buộc.")]
         [Range(0, 100, ErrorMessage = "Mức giảm phải nằm trong khoảng từ 0 đến 100.")]
         public decimal? MucGiam { get; set; }
-        [Required(ErrorMessage = "Trạng thái là trường bắt buộc.")]
+
         public int? TrangThai { get; set; }
-        [Required(ErrorMessage = "Url là trường bắt buộc.")]
         public string? Url { get; set; }
-        public virtual ICollection<KhuyenMaiChiTiet> KhuyenMaiChiTiet { get; set; }
+        public virtual ICollection<KhuyenMaiChiTiet>? KhuyenMaiChiTiet { get; set; }
 
     }
     public class CustomNgayKetThucKhuyenMaiValidationAttribute : ValidationAttribute
