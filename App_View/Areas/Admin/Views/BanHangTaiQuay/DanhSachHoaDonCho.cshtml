@@ -141,6 +141,7 @@
                                 if (result.trangThai) {
                                     ThemSanPhamThanhCong();
                                     CapNhapLaiTien(maHoaDon);
+                                    toastr.success('Thêm sản phẩm thành công', 'Thành công');
                                 }
                                 else {
                                     toastr.error("Không thêm được sản phẩm", 'Lỗi');
@@ -190,6 +191,7 @@
                                     }
                                     loading = false;
                                     ThemVoucherThanhCong();
+                                    toastr.success('Đã sử dụng voucher', 'Thành công');
                                 }
                                 else {
                                     var tienVoucher = 0;
@@ -897,7 +899,7 @@
                             $('#DanhSachKhachHang').empty();
 
                             $('#DanhSachKhachHang').append(result);
-
+                            toastr.success('Đã sử dụng voucher', 'Thành công');
                         },
                         error: function (xhr, status, error) {
 
@@ -1102,6 +1104,7 @@
                                 $("#TongGiam").val((tongTienHoaDon - tongTien).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
 
                             }
+                            toastr.success('Đã sử dụng voucher', 'Thành công');
                             loading = false;
                         }
                         else {
