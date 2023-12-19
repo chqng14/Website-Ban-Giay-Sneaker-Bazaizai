@@ -1,25 +1,17 @@
 
-using App_View.IServices;
 using App_Data.DbContextt;
 using App_Data.Models;
+using App_View.Controllers;
+using App_View.IServices;
+using App_View.Models;
+using App_View.Models.Momo;
 using App_View.Services;
+using App_View.Settings;
+using Hangfire;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using System.Configuration;
-using System.Security.Claims;
-using Microsoft.Extensions.Options;
-
-using Microsoft.AspNetCore.Authentication;
-using Google;
-using App_View.Models;
-using Microsoft.Extensions.Hosting;
-
-using App_View.Controllers;
-using Hangfire;
-using App_View.Models.Momo;
-using App_View.Settings;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +24,7 @@ builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 
 
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=LAPTOP-OF-KHAI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"));
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=MSI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"));
 
 //cái này là db online
 //builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Server = tcp:bazaizaidb.database.windows.net,1433; Initial Catalog = bazaizaidb; Persist Security Info = False; User ID = bazaizai; Password = Trinhanh0311; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30;"));
