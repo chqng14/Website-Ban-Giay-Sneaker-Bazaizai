@@ -30,9 +30,10 @@ namespace App_Data.Models
 
         public int? LoaiHinhKM { get; set; }
 
-        [Required(ErrorMessage = "Mức giảm là trường bắt buộc.")]
-        [RegularExpression(@"^\d+$", ErrorMessage = "Mức giảm phải là số không âm.")]
-        public decimal? MucGiam { get; set; }
+		[Required(ErrorMessage = "Mức giảm là trường bắt buộc.")]
+		[RegularExpression(@"^[0-9]+$", ErrorMessage = "Mức giảm không được chứa ký tự đặc biệt.")]
+		[Range(0, int.MaxValue, ErrorMessage = "Mức giảm phải là số không âm.")]
+		public decimal? MucGiam { get; set; }
 
         public int? TrangThai { get; set; }
         public string? Url { get; set; }

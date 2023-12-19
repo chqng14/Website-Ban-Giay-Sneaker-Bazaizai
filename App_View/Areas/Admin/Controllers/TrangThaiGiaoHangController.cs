@@ -114,14 +114,25 @@ namespace App_View.Areas.Admin.Controllers
 			if (Convert.ToInt32(trangThaiGH) == 2)
             {
                 var ngayCapNhatGanNhat = DateTime.Now;
-                var user = await _userManager.GetUserAsync(User);
+				var sanPhamCT = (await sanPhamChiTietService.GetAllListSanPhamChiTietViewModelAsync()).ToList();
+				var user = await _userManager.GetUserAsync(User);
                 var idUser = await _userManager.GetUserIdAsync(user);
-                var updateTrangThaiHoaDon = await _hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(id, idUser, Convert.ToInt32(trangThaiGH), lyDoHuy, ngayCapNhatGanNhat);
+               
                 var hoadonchitiet =  context.hoaDonChiTiets.Where(x=>x.IdHoaDon== id);
                 
                 if (hoadonchitiet.Any())
                 {
-                    foreach (var item in hoadonchitiet)
+					foreach(var item in hoadonchitiet)
+					{
+                        var spct = sanPhamCT.FirstOrDefault(x => x.IdChiTietSp == item.IdSanPhamChiTiet);
+						if (spct.SoLuongTon< item.SoLuong)
+						{
+                            return Ok(new { thongBao = $"Sản phẩm {spct.SanPham} đã hết hàng", trangThai = false }
+                        );
+						}
+					}
+					var updateTrangThaiHoaDon = await _hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(id, idUser, Convert.ToInt32(trangThaiGH), lyDoHuy, ngayCapNhatGanNhat);
+					foreach (var item in hoadonchitiet)
                     {
                         await sanPhamChiTietService.UpDatSoLuongAynsc(new SanPhamSoLuongDTO()
                         {
