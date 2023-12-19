@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace App_View.Areas.Admin.Pages.User
 {
-
-    [Authorize]
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class UserDetailModel : PageModel
     {
         private readonly UserManager<NguoiDung> _userManager;
