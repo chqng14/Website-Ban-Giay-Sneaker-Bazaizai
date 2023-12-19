@@ -281,20 +281,11 @@
                 data: { IdSanPhamChiTiet: idSanPhamChiTiet, SoLuong: soLuong, IdGioHangChiTiet: idGioHangChiTiet },
                 success: function (response) {
 
-                    var inputs = document.getElementsByClassName('input-counter__text');
-                    var sum = 0;
-                    for (var i = 0; i < inputs.length - 1; i++) {
-                        var inputValue = parseInt(inputs[i].value);
-                        if (!isNaN(inputValue)) {
-                            sum += inputValue;
-                        }
-                    }
                     if (response.tongTien != null) {
                         var TongTien = response.tongTien;
                         $('#tamtinh').text(TongTien.toLocaleString("vi-VN") + "đ");
                         $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
                     } else {
-                        $(inputElement).val(soLuongBanDau);
                         Swal.fire({
                             title: 'Sản phẩm lỗi',
                             icon: 'error',
