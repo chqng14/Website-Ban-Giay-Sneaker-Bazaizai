@@ -9,8 +9,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace App_View.Areas.Admin.Pages.User
 {
-
-    [Authorize]
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class EditUserModel : PageModel
     {
         private readonly UserManager<NguoiDung> _userManager;

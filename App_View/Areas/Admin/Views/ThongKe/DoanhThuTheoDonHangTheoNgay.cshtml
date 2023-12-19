@@ -42,10 +42,10 @@
     }
 
     /*    .custom-scroll-table {
-                                                                    max-height: 10px;
-                                                                    overflow-y: auto;
-                                                                }
-                                                            */
+                                                                        max-height: 10px;
+                                                                        overflow-y: auto;
+                                                                    }
+                                                                */
     .ChoXacNhan {
         background-color: burlywood;
     }
@@ -105,7 +105,7 @@
             <canvas id="myChart" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"></canvas>
 
         </div>
-      @*  <span id="ttNgay" style="text-align:center">Thống kê doanh thu theo đơn hàng </span>*@
+        @*  <span id="ttNgay" style="text-align:center">Thống kê doanh thu theo đơn hàng </span>*@
     </div>
 
 
@@ -327,12 +327,12 @@
                             beginAtZero: true,
                             //precision:0,
                             position: 'right',
-                                      title: {
+                            title: {
                                 display: true,
                                 text: 'SL đơn hàng'
                             }
                         },
-                      
+
                     }
                 }
             };
@@ -418,15 +418,15 @@
                 strHtml += "<td>" + item.thoiGian + "</td>";
                 //strHtml += "<td>" + item.chietKhauHoaDon.toLocaleString('en-US') + "</td>";
                 //strHtml += "<td>" + item.tongKhuyenMai.toLocaleString('en-US') + "</td>";
-                strHtml += "<td>" + item.giaTriDon.toLocaleString('en-US') + "</td>";
-                if (item.tienShip === null) {
-                    strHtml += "<td>" + item.tienShip + "</td>";
-
+                if (item.giaTriDon === null) {
+                    strHtml += "<td>" + "Hóa đơn chờ không xác định" + "</td>";
                 }
-                else {
-                    strHtml += "<td>" + item.tienShip.toLocaleString('en-US') + "</td>";
+                else
+                    strHtml += "<td>" + item.giaTriDon.toLocaleString('en-US') + "</td>";
 
-                }
+                strHtml += "<td>" + item.tienShip.toLocaleString('en-US') + "</td>";
+
+
                 strHtml += "<td class='" + statusThanhToanClass + "'>" + item.trangThaiThanhToan + "</td>";
                 strHtml += "<td class='" + statusClass + "'>" + item.tinhTrang + "</td>";
                 strHtml += "<td>" + item.tenKhach + "</td>";
@@ -465,7 +465,7 @@
             //strHtml += "<td><strong>" + totalVoucher + "</strong></td>";
             //strHtml += "<td><strong>" + totalKhuyenMai + "</strong></td>";
             strHtml += "<td><strong>Doanh thu: " + totalDoanhThu.toLocaleString('en-US') + "</strong></td>";
-            strHtml += "<td><strong>Phí vận chuyển: " + totalShip + "</strong></td>";
+            strHtml += "<td><strong></strong></td>";
             strHtml += "<td><strong></strong></td>";
             strHtml += "<td><strong>Đơn hoàn thành: " + totalSoLuongDonHangHoanThanh + "</strong></td>";
             strHtml += "<td><strong></strong></td>";

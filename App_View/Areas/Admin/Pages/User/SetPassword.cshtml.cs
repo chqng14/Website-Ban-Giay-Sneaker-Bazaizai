@@ -11,9 +11,12 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using static App_Data.Repositories.TrangThai;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App_View.Areas.Admin.Pages.User
 {
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class SetPasswordModel : PageModel
     {
         private readonly UserManager<NguoiDung> _userManager;

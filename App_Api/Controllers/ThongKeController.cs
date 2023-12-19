@@ -59,8 +59,9 @@ namespace App_Api.Controllers
 
 
             var result = query.ToList();
-            
-            var tongTien = (double)result.Sum(x => x.TongTien-x.TienGiam);
+
+            var tongTien = result.Sum(x => (x.TongTien ?? 0) - (x.TienGiam ?? 0));
+
             if (tongTien >= 0)
             {
                 return tongTien;
@@ -68,11 +69,22 @@ namespace App_Api.Controllers
             else
                 return 0;
         }
-        [HttpGet("DonDatHangTheoThang/{month}")]
-        public async Task<int> DonDatHangTheoThang(int month)
+
+        [HttpGet("DonHangTheoThang/{month}/{year}")]
+        public async Task<List<HoaDon>> DonHangTheoThang(int month, int year)
         {
             var query = repos.GetAll().
-                        Where(a => a.NgayTao.Value.Month == month && a.TrangThaiGiaoHang != (int)TrangThaiGiaoHang.TaiQuay && a.NgayTao.Value.Year == DateTime.Now.Year);
+                        Where(a => a.NgayTao.Value.Month == month && a.NgayTao.Value.Year == year);
+
+
+            return query.ToList();
+        }
+
+        [HttpGet("DonHangTaiQuayTheoThang/{month}")]
+        public async Task<int> DonHangTaiQuayTheoThang(int month)
+        {
+            var query = repos.GetAll().
+                        Where(a => a.NgayTao.Value.Month == month && a.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay && a.NgayTao.Value.Year == DateTime.Now.Year);
 
 
             var result = query.ToList();
@@ -85,7 +97,6 @@ namespace App_Api.Controllers
             else
                 return 0;
         }
-
         [HttpGet("ThongKeBanHang")]
         public async Task<IActionResult> ThongKeBanHang()
         {
@@ -208,22 +219,31 @@ namespace App_Api.Controllers
             var result = baseQuery.ToList()
               .Select(x => new
               {
+                  //MaDonHang = x.MaDonHang,
+                  //GiaTriDon = ((x.TongTien ?? 0 ) - (x.TienGiam ?? 0)) ,
+                  //TinhTrang = GetTinhTrang(x.TrangThaiGiaoHang ?? 10),
+                  //TienShip = x.TienShip ?? 0,
+                  //TenKhach = x.TenKhachHang ?? x.TenNguoiNhan ?? "",
+                  //SDT = x.SoDt ?? x.SDTKhachHang ?? "",
+                  //TrangThaiThanhToan = GetTrangThaiThanhToan(x.TrangThaiThanhToan ?? 10),
+                  //Lidohuy = x.LiDoHuy ?? "",
+                  //TinhThanh = GetTinhThanhFromDiaChi(x.DiaChi ?? ""),
+                  //ThoiGian = DateTime.ParseExact($"{x.NgayTao.Hour}:{x.NgayTao.Minute}", "H:m", null).ToString("HH:mm"),
+                  //Ngay = x.NgayTao.ToString(),
                   MaDonHang = x.MaDonHang,
-                  GiaTriDon = x.TongTien,
+                  GiaTriDon = ((double)(x.TongTien.GetValueOrDefault()) - (double)(x.TienGiam.GetValueOrDefault())),
                   TinhTrang = GetTinhTrang(x.TrangThaiGiaoHang ?? 10),
-                  TienShip = x.TienShip ?? null,
-                  TenKhach = x.TenKhachHang ?? x.TenNguoiNhan,
-                  SDT = x.SoDt ?? x.SDTKhachHang,
+                  TienShip = x.TienShip ?? 0,
+                  TenKhach = x.TenKhachHang ?? x.TenNguoiNhan ?? "Khách vãng lai",
+                  SDT = x.SoDt ?? x.SDTKhachHang ?? "",
                   TrangThaiThanhToan = GetTrangThaiThanhToan(x.TrangThaiThanhToan ?? 10),
-                  Lidohuy = x.LiDoHuy,
-                  TinhThanh = GetTinhThanhFromDiaChi(x.DiaChi ?? ""),
-                  ThoiGian = DateTime.ParseExact($"{x.NgayTao.Hour}:{x.NgayTao.Minute}", "H:m", null).ToString("HH:mm"),
-                  Ngay = x.NgayTao.ToString(),
+                  Lidohuy = x.LiDoHuy ?? "",
+                  TinhThanh = GetTinhThanhFromDiaChi(x.DiaChi ?? "") ?? "",
+                  ThoiGian = DateTime.ParseExact($"{x.NgayTao.Hour}:{x.NgayTao.Minute}", "H:m", null),
+                  Ngay = x.NgayTao,
 
 
-              })
- .OrderBy(x => x.Ngay)
- .ThenBy(x => x.ThoiGian)
+              }).OrderBy(x => x.Ngay)
  .ToList();
 
 
@@ -315,16 +335,15 @@ namespace App_Api.Controllers
                 {
 
                     SoLuongHoaDonThanhCong = x.Count(y => (y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao || y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay) && y.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan),
-                    SoluongHoaDonThatBai = x.Count(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaHuy || y.TrangThaiThanhToan == (int)TrangThaiHoaDon.Huy),
+                    SoluongHoaDonThatBai = x.Count(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaHuy || y.TrangThaiThanhToan == (int)TrangThaiHoaDon.Huy || y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.ChoHuy),
                     SoLuongHoaDon = x.Count()
 
                 }).
                 Select(x => new
                 {
-                    
                     SoLuongHoaDonThanhCong = x.SoLuongHoaDonThanhCong,
-                    SoluongHoaDonThatBai =x.SoluongHoaDonThatBai,
-                    SoluongHoaDonCho = x.SoLuongHoaDon-x.SoLuongHoaDonThanhCong-x.SoluongHoaDonThatBai
+                    SoluongHoaDonThatBai = x.SoluongHoaDonThatBai,
+                    SoluongHoaDonCho = x.SoLuongHoaDon - x.SoLuongHoaDonThanhCong - x.SoluongHoaDonThatBai
 
                 }).
                 ToList();
@@ -332,10 +351,10 @@ namespace App_Api.Controllers
             return Json(new { Data = result });
 
         }
-        [HttpGet("DonDonHangGanDay")]
-        public async Task<List<HoaDon>> DonDonHangGanDay()
+        [HttpGet("DonHangTaiQuayGanDay")]
+        public async Task<List<HoaDon>> DonHangTaiQuayGanDay()
         {
-            var query = repos.GetAll().Where(x => x.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay).OrderByDescending(x => x.NgayTao).Take(6).ToList();
+            var query = repos.GetAll().Where(x => x.ThongTinGiaoHang == null).OrderByDescending(x => x.NgayTao).Take(6).ToList();
             return query;
         }
     }

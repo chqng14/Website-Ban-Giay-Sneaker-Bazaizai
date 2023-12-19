@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace App_View.Areas.Admin.Pages.User
 {
+    [Area("Admin")]
     [Authorize]
     public class DoiMatKhauModel : PageModel
     {

@@ -8,6 +8,7 @@
 @inject IDanhGiaService _DanhGiaService
 @inject IThongKeService _ThongKeService
 @inject IThongTinGHServices _ThongTinGHServices
+@inject IHoaDonServices _HoaDonServices
 
 @{
     ViewData["Title"] = "Index";
@@ -19,13 +20,26 @@
     _DanhGiaService = new DanhGiaService();
     _ThongKeService = new ThongKeService();
     _ThongTinGHServices = new ThongTinGHServices();
+    _HoaDonServices = new HoaDonServices();
+    var thangTrc = DateTime.Now.AddMonths(-1).Month;
+    var NamCuaThangTrc = DateTime.Now.AddMonths(-1).Year;
+    var thangnay = DateTime.Now.Month;
+    var NamcuathangNay = DateTime.Now.Year;
+    var lsthoaDonthangTrc = await _ThongKeService.DonHangTheoThang(thangTrc, NamCuaThangTrc);
+    var lsthoaDonthangnay = (await _ThongKeService.DonHangTheoThang(thangnay, NamcuathangNay));
+
+
     var slDanhGiaThangNay = (await _DanhGiaService.GetAllDanhGia()).Where(x => x.NgayDanhGia.Value.Month == DateTime.Now.Month && x.NgayDanhGia.Value.Year == DateTime.Now.Year).ToList().Count();
     var slDanhGiaThangTrc = (await _DanhGiaService.GetAllDanhGia()).Where(x => x.NgayDanhGia.Value.Month == DateTime.Now.AddMonths(-1).Month && x.NgayDanhGia.Value.Year == DateTime.Now.Year).ToList().Count();
     var DoanhThuThangNay = (double)(await _ThongKeService.DoanhThuTheoThang(DateTime.Now.Month));
     var DoanhThuThangTruoc = (double)(await _ThongKeService.DoanhThuTheoThang(DateTime.Now.AddMonths(-1).Month));
-    var DonDatHangThangNay = (int)(await _ThongKeService.DonDatHangTheoThang(DateTime.Now.Month));
-    var DonDatHangThangTrc = (int)(await _ThongKeService.DonDatHangTheoThang(DateTime.Now.AddMonths(-1).Month));
+
+    var DonHangTaiQuayThangnay = lsthoaDonthangnay.Where(x => x.IdThongTinGH == null).Count();
+    var DonHangTaiQuayThangTrc = lsthoaDonthangTrc.Where(x => x.IdThongTinGH == null).Count();
     var DonDatHnagGanDay = await _ThongKeService.DonDatHnagGanDay();
+    var DonHangTaiQuayGanDay = await _ThongKeService.DonHangTaiQuayGanDay();
+    var DonDatHangThangNay = lsthoaDonthangnay.Where(x => x.IdThongTinGH != null).Count();
+    var DonDatHangThangTrc = lsthoaDonthangTrc.Where(x => x.IdThongTinGH != null).Count();
 
 }
 
@@ -222,32 +236,73 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-md-6">
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <p class="m-b-0 text-muted">Thành viên</p>
-                                <h2 class="m-b-0">236 <i class="anticon anticon-team"></i></h2>
+                                <p class="m-b-0 text-muted">Đơn hàng tại quầy</p>
+                                <h2 class="m-b-0">@DonHangTaiQuayThangnay.ToString("#,0") đơn hàng</h2>
                             </div>
-                            @*<span class="badge badge-pill badge-gold font-size-12">
-
-                            <i class="anticon anticon-eye"></i>
-                            <span class="font-weight-semibold m-l-5"></span>
-                            </span>*@
+                            @if (DonHangTaiQuayThangnay > DonHangTaiQuayThangTrc)
+                            {
+                                if (DonHangTaiQuayThangTrc > 0)
+                                {
+                                    double TileDoanhThu = ((DonHangTaiQuayThangnay - DonHangTaiQuayThangTrc) / DonHangTaiQuayThangTrc) * 100;
+                                    double TiLeTangGiamDoanhThu = Math.Round(TileDoanhThu, 2);
+                                    <span class="badge badge-pill badge-cyan font-size-12">
+                                        <i class="anticon anticon-arrow-up"></i>
+                                        <span class="font-weight-semibold m-l-5">@TiLeTangGiamDoanhThu %</span>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-pill badge-cyan font-size-12">
+                                        <i class="anticon anticon-arrow-up"></i>
+                                        <span class="font-weight-semibold m-l-5">@DonHangTaiQuayThangnay.ToString("#,0") đơn hàng</span>
+                                    </span>
+                                }
+                            }
+                            else if (DonHangTaiQuayThangnay < DonHangTaiQuayThangTrc)
+                            {
+                                double TileDoanhThu = ((DonHangTaiQuayThangTrc - DonHangTaiQuayThangnay) / DonHangTaiQuayThangTrc) * 100;
+                                double TiLeTangGiamDoanhThu = Math.Round(TileDoanhThu, 2);
+                                <span class="badge badge-pill badge-red font-size-12">
+                                    <i class="anticon anticon-arrow-down"></i>
+                                    <span class="font-weight-semibold m-l-5">@TiLeTangGiamDoanhThu %</span>
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-pill badge-red font-size-12">
+                                    <i class="anticon anticon-arrow-up"></i>
+                                    <span class="font-weight-semibold m-l-5">0 %</span>
+                                </span>
+                            }
                         </div>
+                        <div class="m-t-40">
+                            <div class="d-flex justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge badge-warning badge-dot m-r-10"></span>
+                                    <span class="text-gray font-weight-semibold font-size-13">Tháng trước</span>
+                                </div>
+                                <span class="text-dark font-weight-semibold font-size-13">@DonHangTaiQuayThangTrc.ToString("#,0") đơn hàng </span>
+                            </div>
 
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
     <div class="col-lg-7">
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5>Thống kê bán hàng</h5>
+
                     <div class="dropdown dropdown-animated scale-left">
                         <a class="text-gray font-size-18" href="javascript:void(0);" data-toggle="dropdown">
                             <i class="anticon anticon-ellipsis"></i>
@@ -270,45 +325,24 @@
         </div>
     </div>
 </div>
+
+
 <div class="row">
-    <div class="col-lg-4">
+    <div class="col-lg-5">
         <div class="card">
             <div class="card-body">
-                <h5>Customers</h5>
-                <div class="m-v-45 text-center" style="height: 220px">
-                    @*                      <canvas class="chart" id="customer-chart"></canvas>style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"
-                    *@    <canvas class="chart" id="TrangThaiHoaDon"></canvas>
-                </div>
-                <div class="row p-t-25">
-                    <div class="col-md-8 m-h-auto">
-                        <div class="d-flex justify-content-between align-items-center m-b-20">
-                            <p class="m-b-0 d-flex align-items-center">
-                                <span class="badge badge-warning badge-dot m-r-10"></span>
-                                <span>Direct</span>
-                            </p>
-                            <h5 class="m-b-0">350</h5>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center m-b-20">
-                            <p class="m-b-0 d-flex align-items-center">
-                                <span class="badge badge-primary badge-dot m-r-10"></span>
-                                <span>Referral</span>
-                            </p>
-                            <h5 class="m-b-0">450</h5>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center m-b-20">
-                            <p class="m-b-0 d-flex align-items-center">
-                                <span class="badge badge-danger badge-dot m-r-10"></span>
-                                <span>Social Network</span>
-                            </p>
-                            <h5 class="m-b-0">100</h5>
-                        </div>
-                    </div>
-                </div>
+                <h5>Tỉ lệ Đơn hàng thành công tháng này</h5>
+
+
+
+                <canvas id="myChart" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"></canvas>
+
+
             </div>
         </div>
     </div>
 
-    <div class="col-lg-12">
+    <div class="col-lg-7">
         <div class="card">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center">
@@ -380,7 +414,7 @@
                                         }
 
 
-                                        <td>@item.NgayTao.Value.ToString("hh:mm dd/MM/yyyy")</td>
+                                        <td>@item.NgayTao.Value.ToString("hh:mm tt dd/MM/yyyy")</td>
 
 
                                         @if (item.TongTien != null && item.TienGiam != null && item.TongTien >= item.TienGiam)
@@ -477,12 +511,154 @@
         </div>
     </div>
 </div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5>Đơn hàng tại quầy gần đây</h5>
+                    <div>
+                        <a asp-controller="HoaDon" asp-action="TongQuanHoaDon" class="btn btn-sm btn-default">Xem tất cả</a>
+                    </div>
+                </div>
+                <div class="m-t-30">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Mã Hóa đơn</th>
+                                    <th>Nhân viên </th>
+                                    <th>Ngày tạo</th>
+                                    <th>KhachHang</th>
+                                    <th>Giá trị đơn</th>
+                                    <th>Trạng thái</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in DonHangTaiQuayGanDay)
+                                {
+
+                                    <tr>
+                                        <td>@item.MaHoaDon</td>
+
+                                        @if (item.IdNguoiDung != null)
+                                        {
+                                            var user = await UserManager.FindByIdAsync(item.IdNguoiDung);
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                        <div class="avatar avatar-image" style="height: 30px; min-width: 30px; max-width:30px">
+                                                            <img src="@user.AnhDaiDien" alt="">
+                                                        </div>
+                                                        <h6 class="m-l-10 m-b-0">@user.UserName</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="d-flex align-items-center">
+                                                       
+                                                        <h6 class="m-l-10 m-b-0">Lỗi nhân viên</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        }
+                                        <td>@item.NgayTao.Value.ToString("hh:mm tt dd/MM/yyyy")</td>
+
+
+                                        @if (item.IdKhachHang != null)
+                                        {
+                                            var kh = (await _HoaDonServices.GetKhachHangs()).Where(x => x.IdKhachHang == item.IdKhachHang).FirstOrDefault();
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="d-flex align-items-center">
+
+                                                        <h6 class="m-l-10 m-b-0">@kh.TenKhachHang</h6>
+                                                        <h6 class="m-l-10 m-b-0">@kh.SDT</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <div class="d-flex align-items-center">
+                                                    <div class="d-flex align-items-center">
+
+                                                        <h6 class="m-l-10 m-b-0">Khách vãng lai</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        }
+
+
+                                        @if (item.TongTien != null && item.TienGiam != null && item.TongTien >= item.TienGiam)
+                                        {
+                                            var giatridon = item.TongTien - item.TienGiam;
+                                            <td>@giatridon.Value.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</td>
+
+                                        }
+                                        else if (item.TongTien != null && item.TienGiam == null)
+                                        {
+
+                                            <td>@item.TongTien.Value.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</td>
+                                        }
+                                        else if (item.TongTien == null )
+                                        {
+                                            <td>Hóa đơn đang chờ</td>
+
+                                        }
+                                        else if (item.TongTien < item.TienGiam || item.TongTien < 0)
+                                        {
+                                            double i = 0;
+                                            <td>@i.ToString("C0", new System.Globalization.CultureInfo("vi-VN"))</td>
+
+                                        }
+
+
+
+                                        @if (item.TrangThaiThanhToan == (int)TrangThaiHoaDon.ChuaThanhToan)
+                                        {
+                                            <td>
+                                                Chưa thanh toán
+                                            </td>
+                                        }
+                                        else if (item.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan)
+                                        {
+                                            <td>
+                                                Đã thanh toán
+                                            </td>
+                                        }
+                                        else if (item.TrangThaiThanhToan == (int)TrangThaiHoaDon.Huy)
+                                        {
+                                            <td>
+                                                Hủy
+                                            </td>
+                                        }
+
+                                    </tr>
+                                }
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @*<script src="~/Admin/vendors/chartjs/Chart.min.js"></script>
 *@
 @*<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.css">
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.js"></script>
 *@
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+@*<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <script src="~/Admin/moment/moment.min.js"></script>
 
@@ -492,292 +668,242 @@
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+*@
 
-<script>
 
-    var dates = [];
-    var arrOnline = [];
-    var arrOffline = [];
-    var myChart;
-    console.log("111");
-    function updateChart() {
-        $.ajax({
-            type: "GET",
-            url: "@Url.Action("ThongKeBanHang", "ThongKe")",
-            success: function (rs) {
-                console.log("1111");
-                var jsonData = JSON.parse(rs);
-                console.log(rs);
-
-                dates = [];
-                arrOnline = [];
-                arrOffline = [];
-
-                $.each(jsonData.Data, function (i, item) {
-                    console.log("Hi, chào cậu ");
-
-                    arrOnline.push(item.Online);
-                    arrOffline.push(item.Ofline);
-                    dates.push(item.ThoiGian);
-                    console.log(dates);
-                    console.log(arrOffline);
-
-                });
-                console.log(dates);
-                myChart.data.labels = dates;
-                myChart.data.datasets[0].data = arrOffline;
-                myChart.data.datasets[1].data = arrOnline;
-
-                myChart.update();
-                //load_data(rs.data);
-            }
-        });
+@section scripts{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-    // Khởi tạo biểu đồ ban đầu
-    $(document).ready(function () {
-        const data = {
-            labels: [],
-            datasets: [
-                {
-                    label: 'Online',
-                    backgroundColor: 'rgba(63, 135, 245, 1)',
-                    borderColor: 'rgba(60,141,188,0.8)',
-                    pointRadius: false,
-                    pointColor: '#3b8bba',
-                    pointStrokeColor: 'rgba(60,141,188,1)',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data: []
-                },
-                {
-                    label: 'Offline',
-                    backgroundColor: 'rgba(210, 214, 222, 1)',
-                    borderColor: 'rgba(210, 214, 222, 1)',
-                    pointRadius: false,
-                    pointColor: 'rgba(210, 214, 222, 1)',
-                    pointStrokeColor: '#c1c7d1',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(220,220,220,1)',
-                    data: []
-                }
-            ]
-        };
 
-        const config = {
-            type: 'bar',
-            data: data,
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                datasetFill: false
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="~/Admin/moment/moment.min.js"></script>
+
+    <script>
+
+        var arrLabels = ["Thành công", "Hủy", "Các trạng thái khác"];
+        var arrData = [0, 0, 0];
+        var myChart1;
+        function generateRandomColors(count) {
+            const colors = [];
+            for (let i = 0; i < count; i++) {
+                const color = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.9)`;
+                colors.push(color);
             }
-        };
-
-        myChart = new Chart(
-            document.getElementById('ThongKeBanHang-chart'),
-            config
-        );
-
-        updateChart();
-
-    });
-
-    //// Xử lý sự kiện khi ngày thay đổi
-    //$('#fromDate, #toDate').change(function () {
-    //    var fromDate = $('#fromDate').val();
-    //    var toDate = $('#toDate').val();
-    //    updateChart(fromDate, toDate);
-    //});
-    //function load_data(data) {
-    //    var strHtml = "";
-    //    $.each(data, function (i, item) {
-    //        var strDate = moment(item.date).format('DD/MM/yyyy');
-    //        strHtml += "<tr>";
-    //        strHtml += "<td>" + (i + 1) + "</td>";
-    //        strHtml += "<td>" + strDate + "</td>";
-    //        strHtml += "<td>" + item.doanhThu + "</td>";
-    //        strHtml += "<td>" + item.loiNhuan + "</td>";
-    //        strHtml += "</tr>";
-    //    });
-    //    $('#load_data').html(strHtml);
-    //}
-
-</script>
-
-
-
-<script>
-    var myChartPie;
-    var arrLabels = ["Đơn hàng thành công", "Đơn hàng thất bại", "Các trạng thái khác"];
-    var arrData = [0, 0, 0];
-    //var arrTrangThai = [];
-    //var arrSoLuong = [];
-
-    function generateRandomColors(count) {
-        const colors = [];
-        for (let i = 0; i < count; i++) {
-            const color = `rgba(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, 0.9)`;
-            colors.push(color);
+            return colors;
         }
-        return colors;
-    }
-    console.log(arrLabels);
-    const colors = generateRandomColors(20);
-    function updateChartPie() {
-        $.ajax({
-            type: "GET",
-            url: "@Url.Action("TrangThaiHoaDonOnline1thang", "ThongKe")",
-            success: function (rsr) {
-                console.log("Hi, chào cậu minhlaf Mi ");
-                var jsonData = JSON.parse(rsr);
-                console.log(jsonData);
-                var arrLabels = ["Đơn hàng thành công", "Đơn hàng thất bại", "Các trạng thái khác"];
-                var arrData = [0, 0, 0];
-                $.each(jsonData.Data, function (i, item) {
-                    console.log("Hi, chào cậu minhlaf Mi ");
-                    var soLuongHoaDonThanhCong = jsonData.Data[0].SoLuongHoaDonThanhCong;
-                    var soLuongHoaDonThatBai = jsonData.Data[0].SoluongHoaDonThatBai;
-                    var soLuongHoaDonCho = jsonData.Data[0].SoluongHoaDonCho;
 
-                    // Cập nhật giá trị mới cho biểu đồ
-                    arrData[0] = soLuongHoaDonThanhCong;
-                    arrData[1] = soLuongHoaDonThatBai;
-                    arrData[2] = soLuongHoaDonCho;
+        const colors = generateRandomColors(20);
+        function updateChart1(fromDate, toDate) {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("TrangThaiHoaDonOnline1thang", "ThongKe")",
+                data: { fromDate: '', toDate: '' },
+                success: function (rs) {
+                    var arrData = [0, 0, 0];
+                    var jsonData = JSON.parse(rs);
+                    $.each(jsonData.Data, function (i, item) {
+                        var soLuongHoaDonThanhCong = jsonData.Data[0].SoLuongHoaDonThanhCong;
+                        var soLuongHoaDonThatBai = jsonData.Data[0].SoluongHoaDonThatBai;
+                        var soLuongHoaDonCho = jsonData.Data[0].SoluongHoaDonCho;
 
-                });
-                console.log(arrData);
-                // Cập nhật dữ liệu cho biểu đồ hiện tại
-                myChartPie.datapie.labels = arrLabels;
-                myChartPie.datapie.datasets[0].data = arrData;
-                myChartPie.update();              // Cập nhật biểu đồ
-                //load_data(rs);
-            }
-        });
-    }
+                        // Cập nhật giá trị mới cho biểu đồ
+                        arrData[0] = soLuongHoaDonThanhCong;
+                        arrData[1] = soLuongHoaDonThatBai;
+                        arrData[2] = soLuongHoaDonCho;
 
-    // Khởi tạo biểu đồ ban đầu
-    $(document).ready(function () {
-        const datapie = {
-            labels: [],
-            datasets: [
-                {
-                    label: '',
-                    backgroundColor: colors,
-                    borderColor: colors,
-                    pointRadius: false,
-                    pointColor: '#3b8bba',
-                    pointStrokeColor: 'rgba(60,141,188,1)',
-                    pointHighlightFill: '#fff',
-                    pointHighlightStroke: 'rgba(60,141,188,1)',
-                    data: []
+                    });
+                    // Cập nhật dữ liệu cho biểu đồ hiện tại
+                    myChart1.data.labels = arrLabels;
+                    myChart1.data.datasets[0].data = arrData;
+                    myChart1.update();
                 }
-            ]
-        };
+            });
+        }
 
-        const configpie = {
-            type: 'doughnut',//pie
-            data: datapie,
-            options: {
-                layout: {
-                    padding: 10
-                },
-                plugins: {
-                    legend: {
-                        display: true,
-                        position: 'right',
-                        padding: 30
+        // Khởi tạo biểu đồ ban đầu
+        $(document).ready(function () {
+            const data1 = {
+                labels: [],
+                datasets: [
+                    {
+                        label: '',
+                        backgroundColor: colors,
+                        borderColor: colors,
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: []
+                    }
+                ]
+            };
+
+            const config1 = {
+                type: 'doughnut',
+                data: data1,
+                options: {
+                    layout: {
+                        padding: 10
                     },
-                    datalabels: {
-                        formatter: (value, ctx) => {
-                            console.log(value);
-                            console.log(ctx);
-                            const total = ctx.chart.datapie.datasets[0].data.reduce((acc, val) => acc + val, 0);
-                            console.log("Hi, chúng ta lại gặp nhau rồi ");
-                            console.log(total);
-                            const percentage = total !== 0 ? ((value / total) * 100).toFixed(2) + '%' : '0.00%';
-
-                            return percentage;
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'right',
+                            padding: 30
                         },
-                        anchor: 'center',
-                        align: 'end',
-                        color: 'white',
+                        datalabels: {
+                            formatter: (value, ctx) => {
+                                console.log(value);
+                                console.log(ctx);
+                                const total = ctx.chart.data.datasets[0].data.reduce((acc, val) => acc + val, 0);
+                                console.log("Hi, chúng ta lại gặp nhau rồi ");
+                                console.log(total);
+                                const percentage = total !== 0 ? ((value / total) * 100).toFixed(2) + '%' : '0.00%';
 
+                                return percentage;
+                            },
+                            anchor: 'center',
+                            align: 'end',
+                            color: 'white',
+
+                        },
                     },
                 },
-            },
-            plugins: [ChartDataLabels]
-        };
+                plugins: [ChartDataLabels]
+            };
 
-        var myChartPie = new Chart(
-            document.getElementById('TrangThaiHoaDon'),
-            configpie
-        );
+            myChart1 = new Chart(
+                document.getElementById('myChart'),
+                config1
+            );
 
-        updateChartPie();
-        //updateTable('', '');
+            updateChart1();
 
-    });
-
-                            //// Xử lý sự kiện khi ngày thay đổi
-                            //$('#fromDate, #toDate').change(function () {
-                            //    var fromDate = $('#fromDate').val();
-                            //    var toDate = $('#toDate').val();
-                            //    updateChart(fromDate, toDate);
-                            //    //updateTable(fromDate, toDate);
-                            //});
-
-                            //function load_data(data) {
-                            //    var strHtml = "";
-                            //    console.log("mi");
-                            //    console.log(data.data);
-                            //    console.log("mi");
-                            //    $.each(data.data, function (i, item) {
-                            //        console.log("ulatroi1");
-                            //        console.log(i);
-
-                            //        strHtml += "<tr>";
-                            //        strHtml += "<td>" + (i + 1) + "</td>";
-                            //        strHtml += "<td>" + item.maSanPham + "</td>";
-                            //        strHtml += "<td>" + item.sanPham + "</td>";
-                            //        //strHtml += "<td>" + item.soLuongKhachHang + "</td>";
-                            //        strHtml += "<td>" + item.soLuongHangBan + "</td>";
-                            //        strHtml += "<td>" + item.soLuongDonHang + "</td>";
-                            //        //strHtml += "<td>" + item.tienHang + "</td>";
-                            //        strHtml += "<td>" + item.chietKhauSanPham.toLocaleString('en-US') + "</td>";
-                            //        strHtml += "<td>" + item.doanhThu.toLocaleString('en-US') + "</td>";
-                            //        strHtml += "</tr>";
-                            //    });
-                            //    $('#load_data').html(strHtml);
-                            //}
-                            //function exportToExcel() {
-                            //    var today = new Date();
-                            //    var dd = String(today.getDate()).padStart(2, '0');
-                            //    var mm = String(today.getMonth() + 1).padStart(2, '0');
-                            //    var yyyy = today.getFullYear();
-                            //    var currentDate = yyyy + '-' + mm + '-' + dd;
-
-                            //    var wb = XLSX.utils.book_new();
-
-                            //    var ws = XLSX.utils.table_to_sheet(document.getElementById('data-table'));
-                            //    //var ws1 = XLSX.utils.table_to_sheet(document.getElementById('dataTable'));
-                            //    //XLSX.utils.book_append_sheet(wb, ws1, 'DataChart');
-                            //    XLSX.utils.book_append_sheet(wb, ws, 'Dữ liệu thống kê');
+        });
 
 
-                            //    var fileName = 'DoanhThuTheoSamPham' + currentDate + '.xlsx';
-                            //    var fileanh = 'DoanhThuTheoSamPham' + currentDate + '.png';
-                            //    XLSX.writeFile(wb, fileName);
-                            //    downloadImg(fileanh);
-                            //}
 
-                            //function downloadImg(fileanh) {
-                            //    const imageLink = document.createElement('a');
-                            //    const canvas = document.getElementById('myChart');
-                            //    //imageLink.download = 'canvas.png';
-                            //    imageLink.download = fileanh;
-                            //    imageLink.href = canvas.toDataURL('image/png', 1);
-                            //    imageLink.click();
 
-                            //}
-</script>
+    </script>
+
+    <script>
+
+        var dates = [];
+        var arrOnline = [];
+        var arrOffline = [];
+        var myChart;
+        function updateChart() {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("ThongKeBanHang", "ThongKe")",
+                success: function (rs) {
+                    console.log("1111");
+                    var jsonData = JSON.parse(rs);
+                    console.log(rs);
+
+                    dates = [];
+                    arrOnline = [];
+                    arrOffline = [];
+
+                    $.each(jsonData.Data, function (i, item) {
+                        console.log("Hi, chào cậu ");
+
+                        arrOnline.push(item.Online);
+                        arrOffline.push(item.Ofline);
+                        dates.push(item.ThoiGian);
+                        console.log(dates);
+                        console.log(arrOffline);
+
+                    });
+                    console.log(dates);
+                    myChart.data.labels = dates;
+                    myChart.data.datasets[0].data = arrOffline;
+                    myChart.data.datasets[1].data = arrOnline;
+
+                    myChart.update();
+                    //load_data(rs.data);
+                }
+            });
+        }
+
+        // Khởi tạo biểu đồ ban đầu
+        $(document).ready(function () {
+            const data = {
+                labels: [],
+                datasets: [
+                    {
+                        label: 'Online',
+                        backgroundColor: 'rgba(63, 135, 245, 1)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: []
+                    },
+                    {
+                        label: 'Offline',
+                        backgroundColor: 'rgba(210, 214, 222, 1)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                        data: []
+                    }
+                ]
+            };
+
+            const config = {
+                type: 'bar',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    //datasetFill: false,
+                    //scales: {
+                    //    y: beginAtZero: true,
+                    //} lừa đấy
+                }
+            };
+
+            myChart = new Chart(
+                document.getElementById('ThongKeBanHang-chart'),
+                config
+            );
+
+            updateChart();
+
+        });
+
+                                            //// Xử lý sự kiện khi ngày thay đổi
+                                            //$('#fromDate, #toDate').change(function () {
+                                            //    var fromDate = $('#fromDate').val();
+                                            //    var toDate = $('#toDate').val();
+                                            //    updateChart(fromDate, toDate);
+                                            //});
+                                            //function load_data(data) {
+                                            //    var strHtml = "";
+                                            //    $.each(data, function (i, item) {
+                                            //        var strDate = moment(item.date).format('DD/MM/yyyy');
+                                            //        strHtml += "<tr>";
+                                            //        strHtml += "<td>" + (i + 1) + "</td>";
+                                            //        strHtml += "<td>" + strDate + "</td>";
+                                            //        strHtml += "<td>" + item.doanhThu + "</td>";
+                                            //        strHtml += "<td>" + item.loiNhuan + "</td>";
+                                            //        strHtml += "</tr>";
+                                            //    });
+                                            //    $('#load_data').html(strHtml);
+                                            //}
+
+    </script>
+}

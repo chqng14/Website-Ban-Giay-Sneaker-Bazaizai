@@ -14,9 +14,12 @@ using System.Globalization;
 using System.Text;
 using System.Text.Encodings.Web;
 using static App_Data.Repositories.TrangThai;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App_View.Areas.Admin.Pages.User
 {
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class AddAccountModel : PageModel
     {
         private readonly SignInManager<NguoiDung> _signInManager;

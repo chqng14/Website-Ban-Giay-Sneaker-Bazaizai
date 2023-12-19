@@ -81,6 +81,41 @@
                                 <h1 class="gl-h1">ĐĂNG NHẬP</h1>
                                 @* <div asp-validation-summary="All" class="text-danger"></div>*@
                                 <span class="gl-text u-s-m-b-30">Nếu bạn đã có tài khoản, vui lòng đăng nhập.</span>
+                                @if ((Model.ExternalLogins?.Count ?? 0) != 0)
+                                {
+
+                                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                        <div class="gl-s-api">
+                                            @foreach (var provider in Model.ExternalLogins!)
+                                            {
+                                                @if (@provider.DisplayName == "Google")
+                                                {
+                                                    <div class="u-s-m-b-15">
+
+                                                        <button type="submit" class="gl-s-api__btn gl-s-api__btn--gplus" name="provider" value="@provider.Name">
+                                                            <i class="fab fa-google"></i>
+
+                                                            <span>Đăng nhập với Google</span>
+                                                        </button>
+                                                    </div>
+                                                }
+                                                @*  else if (@provider.DisplayName == "Facebook")
+                                        {
+                                        <div class="u-s-m-b-15">
+
+                                        <button type="submit" class="gl-s-api__btn gl-s-api__btn--fb" name="provider" value="@provider.Name">
+                                        <i class="fab fa-facebook-f"></i>
+
+                                        <span>Đăng nhập với Facebook</span>
+                                        </button>
+                                        </div>
+                                        }*@
+
+                                            }
+
+                                        </div>
+                                    </form>
+                                }
                         
                                 <form class="l-f-o__form" id="account" method="post">
 
@@ -127,41 +162,7 @@
                                     <!--====== End - Check Box ======-->
                                     </div>*@
                                 </form>
-                                @if ((Model.ExternalLogins?.Count ?? 0) != 0)
-                                {
-
-                                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                                        <div class="gl-s-api">
-                                            @foreach (var provider in Model.ExternalLogins!)
-                                            {
-                                                @if (@provider.DisplayName == "Google")
-                                                {
-                                                    <div class="u-s-m-b-15">
-
-                                                        <button type="submit" class="gl-s-api__btn gl-s-api__btn--gplus" name="provider" value="@provider.Name">
-                                                            <i class="fab fa-google"></i>
-
-                                                            <span>Đăng nhập với Google</span>
-                                                        </button>
-                                                    </div>
-                                                }
-                                              @*  else if (@provider.DisplayName == "Facebook")
-                                                {
-                                                    <div class="u-s-m-b-15">
-
-                                                        <button type="submit" class="gl-s-api__btn gl-s-api__btn--fb" name="provider" value="@provider.Name">
-                                                            <i class="fab fa-facebook-f"></i>
-
-                                                            <span>Đăng nhập với Facebook</span>
-                                                        </button>
-                                                    </div>
-                                                }*@
-
-                                            }
-
-                                        </div>
-                                    </form>
-                                }
+                              
                             </div>
                         </div>
                     </div>
