@@ -31,7 +31,7 @@ namespace App_Data.Models
         public int? LoaiHinhKM { get; set; }
 
         [Required(ErrorMessage = "Mức giảm là trường bắt buộc.")]
-        [Range(0, 100, ErrorMessage = "Mức giảm phải nằm trong khoảng từ 0 đến 100.")]
+        [RegularExpression(@"^\d+$", ErrorMessage = "Mức giảm phải là số không âm.")]
         public decimal? MucGiam { get; set; }
 
         public int? TrangThai { get; set; }
