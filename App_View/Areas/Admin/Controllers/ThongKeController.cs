@@ -497,66 +497,7 @@ namespace App_View.Areas.Admin.Controllers
         }
 
 
-        [HttpGet]
-        public ActionResult BieuDoThongKeHoaDonOnlineTheoThang(string fromDate, string toDate)
-        {
-            var query = from a in db.HoaDons
 
-                        where a.NgayTao != null
-                        select new ThongKeDoanhThuOnline
-                        {
-                            NgayTao = (DateTime)a.NgayTao,
-                            TongTien = (double)a.TongTien,
-                            MaDonHang = a.MaHoaDon,
-                            NgayNhan = a.NgayNhan,
-                            TrangThaiGiaoHang = a.TrangThaiGiaoHang,
-                            TrangThaiThanhToan = a.TrangThaiThanhToan,
-                            TienGiam = a.TienGiam
-                        };
-            if (!string.IsNullOrEmpty(fromDate))
-            {
-
-                DateTime startDate = DateTime.ParseExact(fromDate, "yyyy-MM-dd", null);
-                query = query.Where(x => x.NgayTao.Date >= startDate);
-            }
-
-            if (!string.IsNullOrEmpty(toDate))
-            {
-                DateTime endDate = DateTime.ParseExact(toDate, "yyyy-MM-dd", null);
-                query = query.Where(x => x.NgayTao.Date <= endDate);
-            }
-
-            if (string.IsNullOrEmpty(toDate) && string.IsNullOrEmpty(fromDate))
-            {
-                DateTime currentDate = DateTime.Now;
-                DateTime startDate = currentDate.AddDays(-7);
-                query = query.Where(x => x.NgayTao.Date >= startDate);
-                query = query.Where(x => x.NgayTao.Date <= currentDate);
-            }
-            var result = query.GroupBy(x => x.NgayTao.Date)
-              .Select(x => new
-              {
-                  NgayTao = x.Key,
-                  TongSoDonHang = x.Count(y => y.MaDonHang != null),
-                  SoLuongDonHangHuy = x.Count(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaHuy || y.TrangThaiThanhToan == (int)TrangThaiHoaDon.Huy),
-                  SoLuongDonHangThanhCong = x.Count(y => (y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao || y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay) && y.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan),
-                  DoanhThuOnline = x.Where(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao && y.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan).Sum(y => y.TongTien),
-                  DoanhThuOfline = x.Where(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay && y.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan).Sum(y => y.TongTien),
-                  TongGiam = x.Where(y => y.TienGiam != null).Sum(y => y.TienGiam)
-              }).Select(x => new
-              {
-                  NgayTao = x.NgayTao,
-                  TongSoDonHang = x.TongSoDonHang,
-                  SoLuongDonHangThanhCong = x.SoLuongDonHangThanhCong,
-                  SoLuongDonHangHuy = x.SoLuongDonHangHuy,
-                  DoanhThu = x.DoanhThuOnline + x.DoanhThuOfline - x.TongGiam,
-              }).ToList();
-
-
-            return Json(new { Data = result });
-
-
-        }
         [HttpGet]
 
         public ActionResult BieuDoThongKeHoaDonOnlineTheoNam(string fromDate, string toDate)

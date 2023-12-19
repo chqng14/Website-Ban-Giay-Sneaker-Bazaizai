@@ -20,7 +20,9 @@
 		<Content Remove="wwwroot\PageIdentity\AccessDenied.png" />
 		<Content Remove="wwwroot\PageIdentity\DanhGiaqt.jpg" />
 		<Content Remove="wwwroot\PageIdentity\ForgotPasswordConfirmation.jpg" />
+		<Content Remove="wwwroot\PageIdentity\Homthu.jpg" />
 		<Content Remove="wwwroot\PageIdentity\pagenotfound.png" />
+		<Content Remove="wwwroot\user_img\default_image.png" />
 	</ItemGroup>
 
 	<ItemGroup>

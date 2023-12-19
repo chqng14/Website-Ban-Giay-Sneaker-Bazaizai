@@ -281,20 +281,12 @@
 @section Scripts{
     <!--====== Cập nhật số lượng ======-->
     <script>
-        var soLuongBanDau = "";
-        var isload= false;
         $(document).on("input", ".input-counter__text", function () {
-            if (!isNaN(this.value)) {
-                soLuongBanDau = this.value;
-            } 
-            var isload = false;
             updateCart(this);
         });
 
         $(document).on("click", ".input-counter__plus, .input-counter__minus", function () {
             var inputElement = $(this).siblings(".input-counter__text")[0];
-            soLuongBanDau = parseInt($(inputElement).val());
-            var isload = false;
             updateCart(inputElement);
         });
 
@@ -302,42 +294,26 @@
             var soLuong = parseInt($(inputElement).val());
             var idSanPhamChiTiet = $(inputElement).data('product-id');
             var idGioHangChiTiet = $(inputElement).data('cart-id');
-            if (isNaN(soLuong) && isload == false) {
-                isload=true;
-                var soluongcu = document.getElementById('soluong');
-                soluongcu.value = soLuongBanDau;
-                console.log(soluongcu);
-                console.log(soLuongBanDau);
-                toast({
-                    title: "Vui lòng chỉ nhập số!",
-                    type: "warning",
-                    duration: 2000
-                });
-                updateCart(soluongcu);
-            }
-            else {
-                $.ajax({
-                    url: '/GioHangChiTiets/CapNhatSoLuongGioHang',
-                    method: 'POST',
-                    data: { IdSanPhamChiTiet: idSanPhamChiTiet, SoLuong: soLuong, IdGioHangChiTiet: idGioHangChiTiet },
-                    success: function (response) {
-                        //var SumPrice = response.sumPrice;
-                        if (response.tongTien != null) {
-                            var TongTien = response.tongTien;
-                            $('#tamtinh').text(TongTien.toLocaleString("vi-VN") + "đ");
-                            $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
-                        } else {
-                            document.getElementById('soluong').value = soLuongBanDau;
-                            Swal.fire({
-                                title: 'Sản phẩm lỗi',
-                                icon: 'error',
-                                html: response.quantityError,
-                            })
-                        }
-
+            $.ajax({
+                url: '/GioHangChiTiets/CapNhatSoLuongGioHang',
+                method: 'POST',
+                data: { IdSanPhamChiTiet: idSanPhamChiTiet, SoLuong: soLuong, IdGioHangChiTiet: idGioHangChiTiet },
+                success: function (response) {
+                    //var SumPrice = response.sumPrice;
+                    if (response.tongTien != null) {
+                        var TongTien = response.tongTien;
+                        $('#tamtinh').text(TongTien.toLocaleString("vi-VN") + "đ");
+                        $('#tongtien').text(TongTien.toLocaleString("vi-VN") + "đ");
+                    } else {
+                        Swal.fire({
+                            title: 'Sản phẩm lỗi',
+                            icon: 'error',
+                            html: response.quantityError,
+                        })
                     }
-                });
-            }
+
+                }
+            });
 
         }
     </script>

@@ -85,6 +85,9 @@ namespace App_View.Areas.Admin.Controllers
            
             var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x => x.IdHoaDon == id);
 			var kh = context.KhachHangs.AsNoTracking().FirstOrDefault(x => x.IdKhachHang == hoaDon.IdKhachHang);
+			var pttt = context.phuongThucThanhToanChiTiets.AsNoTracking().Where(x => x.IdHoaDon == hoaDon.IdHoaDon).ToList();
+			double tongTien = pttt.Sum(x => Convert.ToDouble(x.SoTien));
+			ViewBag.TienKhachTra = tongTien;
 			ViewBag.TenNguoiNhan = hoaDon.TenNguoiNhan;
 			if (hoaDon.IdNguoiDung != null)
 			{
@@ -120,6 +123,9 @@ namespace App_View.Areas.Admin.Controllers
             var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x=>x.MaHoaDon==MaHD);
 			var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
             var kh = context.KhachHangs.AsNoTracking().FirstOrDefault(x => x.IdKhachHang == hoaDon.IdKhachHang);
+            var pttt = context.phuongThucThanhToanChiTiets.AsNoTracking().Where(x => x.IdHoaDon == hoaDon.IdHoaDon).ToList();
+			double tongTien = pttt.Sum(x => Convert.ToDouble(x.SoTien));
+			ViewBag.TienKhachTra = tongTien;
 			ViewBag.TenNguoiNhan = hoaDon.TenNguoiNhan;
 			if (hoaDon.IdNguoiDung != null)
 			{

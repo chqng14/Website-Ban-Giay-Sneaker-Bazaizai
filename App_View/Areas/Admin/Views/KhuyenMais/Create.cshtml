@@ -48,6 +48,7 @@
                     <label class="control-label">Mức giảm</label>
                     <select asp-for="MucGiam" class="form-control" asp-items="ViewBag.ListGiamGia" id="MucGiamSelect"></select>
                     <input type="text" asp-for="MucGiam" class="form-control" style="display: none" id="MucGiamInput">
+                        <span asp-validation-for="MucGiam" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-row">
