@@ -9,6 +9,7 @@ using System.Globalization;
 
 namespace App_View.Areas.Admin.Pages.User
 {
+    [Area("Admin")]
     [Authorize]
     public class EditProfileModel : PageModel
     {

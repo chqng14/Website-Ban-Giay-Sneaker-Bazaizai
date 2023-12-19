@@ -33,7 +33,10 @@
 								</div>
 							</div>
 		
-							
+							<div class="store-info">
+								<h2>BAZAIZAI STORE</h2>
+								<p>Phố Trịnh Văn Bô, Nam Từ Liêm</p>
+							</div>
 							<!-- Row end -->
 							<!-- Row start -->
 							<div class="row gutters" style="display: flex;flex-wrap: wrap;margin-right: -15px;margin-left: -15px;flex-direction: row;">
@@ -80,23 +83,7 @@
 											<tbody style="border: 1px solid #e6e9f0;">
 												@{
 													var sanPhamChiTietList = await sanPhamChiTietService.GetAllListSanPhamChiTietViewModelAsync();
-													//var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
 
-													//foreach (var pro in sanPhamChiTietList)
-													//{
-													//	var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
-													//	var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
-													//	var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
-													//	var sanPhamSaleViewModel = new SanPhamSaleViewModel
-													//	{
-													//		SanPhamDanhSachView = pro,
-													//		TrangThaiSale = Convert.ToInt32(trangThaiSale),
-													//		TrangThai = Convert.ToInt32(trangThai),
-													//		GiaThucTe = giaThucTe
-													//	};
-
-													//	sanPhamSaleViewModelList.Add(sanPhamSaleViewModel);
-													//}
 												}
 												@foreach (var hdct in ViewBag.HDCT)
 												{

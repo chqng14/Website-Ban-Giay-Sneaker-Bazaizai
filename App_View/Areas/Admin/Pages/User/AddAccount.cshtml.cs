@@ -14,9 +14,12 @@ using System.Globalization;
 using System.Text;
 using System.Text.Encodings.Web;
 using static App_Data.Repositories.TrangThai;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App_View.Areas.Admin.Pages.User
 {
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class AddAccountModel : PageModel
     {
         private readonly SignInManager<NguoiDung> _signInManager;
@@ -143,7 +146,38 @@ namespace App_View.Areas.Admin.Pages.User
                     var userId = await _userManager.GetUserIdAsync(user);
                     await AddCart(userId, 0);
                     StatusMessage = $"Bạn vừa tạo thành công người dùng: {user.UserName}";
-                    return RedirectToPage("./Index");
+                    var LstRole = await _userManager.GetRolesAsync(user);
+                    int i = 0;
+                    foreach (var role in LstRole)
+                    {
+                        if (role == ChucVuMacDinh.NhanVien.ToString())
+                        {
+                            i = 1;
+                        }
+                        if (role == ChucVuMacDinh.Admin.ToString())
+                        {
+                            i = 2;
+                        }
+                        if (role == ChucVuMacDinh.KhachHang.ToString())
+                        {
+                            i = 3;
+                        }
+                    }
+                    if (i == 1)
+                    {
+                        return RedirectToPage("./DanhSachNhanVien");
+                    }
+                    else if (i == 2)
+                    {
+                        return RedirectToPage("./DanhSachQuanly");
+                    }
+                    else if (i == 3)
+                    {
+                        return RedirectToPage("./Index");
+                    }
+                    else return RedirectToPage("./Index");
+
+
                 }
                 foreach (var error in result.Errors)
                 {

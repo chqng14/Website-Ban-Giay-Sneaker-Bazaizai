@@ -15,8 +15,9 @@
                         <tr class="table100-head">
                             <th class="column1">Ngày tạo</th>
                             <th class="column2">Mã hóa đơn</th>
-                            <th class="column3">Tên khách hàng | Người tạo</th>
-                            <th class="column4">Tổng tiền</th>
+                            <th class="column3">Tên khách hàng</th>
+                            <th class="column4">Trạng thái thanh toán</th>
+                            <th class="column5">Tổng tiền</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -26,7 +27,8 @@
                                 <td class="column1">@hoaDon.NgayTao</td>
                                 <td class="column2">@hoaDon.MaHoaDon</td>
                                 <td class="column3">@((hoaDon.TenNguoiNhan == "" || hoaDon.TenNguoiNhan == null) ? "Khách vãng lai" + $" | NV: {((List<NguoiDung>)ViewBag.NguoiDung).FirstOrDefault(x => x.Id == hoaDon.IdNguoiDung).TenNguoiDung}" : hoaDon.TenNguoiNhan)</td>
-                                <td class="column4">@string.Format("{0:N0}đ",hoaDon.TongTien)
+                                <th class="column4">@(((List<HoaDonTest>)ViewBag.HoaDon).FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon).LoaiThanhToan + " | " + ((hoaDon.TrangThaiThanhToan == 1) ? "Đã thanh toán" : "Chưa thanh toán"))</th>
+                                <td class="column5">@string.Format("{0:N0}đ",hoaDon.TongTien)
                                     @if (hoaDon.TrangThaiGiaoHang == 7)
                                     {
                                         <button class="btn btn-danger m-r-5 huyXacNhan" data-id="@hoaDon.IdHoaDon" onclick="XacNhanHuy()" style="float:right">Xác nhận hủy</button>

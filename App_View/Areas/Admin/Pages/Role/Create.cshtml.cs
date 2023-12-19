@@ -1,4 +1,5 @@
 ﻿using App_Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,6 +10,7 @@ using static App_Data.Repositories.TrangThai;
 namespace App_View.Areas.Admin.Pages.Role
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class CreateModel : PageModel
     {
         private readonly RoleManager<ChucVu> _roleManager;

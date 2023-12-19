@@ -45,6 +45,7 @@ namespace App_View.Areas.Admin.Controllers
             var lstHoaDon = (await _hoaDonServices.GetHoaDon()).ToList();
             ViewBag.NguoiDung = context.NguoiDungs.AsNoTracking().ToList();
             ViewBag.KhachHang = context.KhachHangs.AsNoTracking().ToList();
+            ViewBag.NguoiTao = "";
             if (!string.IsNullOrEmpty(search))
             {
                 lstHoaDon = lstHoaDon.Where(x=>x.MaHoaDon.ToUpper().Contains(search.ToUpper())).ToList();
@@ -67,12 +68,13 @@ namespace App_View.Areas.Admin.Controllers
             if (trangThaiHD == 5)
             {
                 var lstHoaDonDaHuy = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 5||x.TrangThaiThanhToan == 2);
+                ViewBag.NguoiTao = "Người tạo";
                 return PartialView("QuanLyHoaDon", lstHoaDonDaHuy);
             }
             if (trangThaiHD == 0)
             {
                 var lstHoaDonTQ = lstHoaDon.Where(x => x.TrangThaiGiaoHang == 0 && x.TrangThaiThanhToan ==1);
-                
+                ViewBag.NguoiTao = "Người tạo";
                 return PartialView("QuanLyHoaDon", lstHoaDonTQ);
             }
             return PartialView("QuanLyHoaDon", lstHoaDon);

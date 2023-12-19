@@ -5,9 +5,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using static App_Data.Repositories.TrangThai;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App_View.Areas.Admin.Pages.User
 {
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class MoKhoaTaiKhoanModel : PageModel
     {
         private readonly UserManager<NguoiDung> _userManager;

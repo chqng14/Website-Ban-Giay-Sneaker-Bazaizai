@@ -6,6 +6,7 @@ using App_Data.ViewModels.SanPhamChiTietDTO;
 using App_View.IServices;
 using App_View.Models.ViewModels;
 using App_View.Services;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using Google.Apis.PeopleService.v1.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -47,7 +48,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             var lstHoaDon = (await _hoaDonServices.GetHoaDon()).ToList();
             ViewBag.NguoiDung = context.NguoiDungs.AsNoTracking().ToList();
-
+            ViewBag.HoaDon = (await _hoaDonServices.GetAllHoaDon()).ToList();
             if (!string.IsNullOrEmpty(search))
             {
                 lstHoaDon = lstHoaDon.Where(x => x.MaHoaDon.ToUpper().Contains(search.ToUpper())).ToList();

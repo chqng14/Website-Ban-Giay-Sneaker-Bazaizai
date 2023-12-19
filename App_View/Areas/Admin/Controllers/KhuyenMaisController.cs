@@ -21,6 +21,7 @@ using App_Data.Repositories;
 using Google.Apis.PeopleService.v1.Data;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace App_View.Areas.Admin.Controllers
 {
@@ -161,19 +162,19 @@ namespace App_View.Areas.Admin.Controllers
                 new SelectListItem { Text = "95%", Value = "95" },
                 new SelectListItem { Text = "100%", Value = "100" }
             };
+
+
             try
             {
-                if (khuyenMai.TenKhuyenMai != null&& khuyenMai.NgayBatDau != null&& khuyenMai.NgayKetThuc != null&& khuyenMai.MucGiam != null && khuyenMai.LoaiHinhKM != null&&khuyenMai.NgayBatDau<=khuyenMai.NgayKetThuc)
+                if (ModelState.IsValid)
                 {
-
+                    var km = _context.khuyenMais.AsNoTracking().FirstOrDefault(x => x.TenKhuyenMai == khuyenMai.TenKhuyenMai);
+                    if(km!=null)
+                    {
+                        ModelState.AddModelError("TenKhuyenMai", "Tên khuyến mại đã tồn tại.");
+                        return View();
+                    }
                     using var content = new MultipartFormDataContent();
-                    //content.Add(new StringContent(khuyenMai.TrangThai.ToString()), "trangThai");
-                    //content.Add(new StringContent(khuyenMai.TenKhuyenMai), "Ten");
-                    //content.Add(new StringContent(khuyenMai.NgayBatDau.ToString()), "ngayBD");
-                    //content.Add(new StringContent(khuyenMai.NgayKetThuc.ToString()), "ngayKT");
-                    //content.Add(new StringContent(khuyenMai.LoaiHinhKM.ToString()), "loaiHinh");
-                    //content.Add(new StringContent(khuyenMai.PhamVi), "PhamVi");
-                    //content.Add(new StringContent(khuyenMai.MucGiam.ToString()), "mucGiam");
                     if (formFile != null && formFile.Length > 0)
                     {
 
@@ -204,15 +205,17 @@ namespace App_View.Areas.Admin.Controllers
                         return View();
                     }
                 }
-            }
+				else
+				{
+					return View();
+				}
+			}
             catch (Exception ex)
             {
 
                 Console.WriteLine(ex);
                 return View();
             }
-
-            return View();
         }
 
         // GET: Admin/KhuyenMais/Edit/5
@@ -271,7 +274,7 @@ namespace App_View.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, KhuyenMai khuyenMai,IFormFile formFile)
+        public async Task<IActionResult> Edit(string id, KhuyenMai khuyenMai,IFormFile? formFile)
         {
             ViewBag.ListLoaiHinh = new List<SelectListItem>
             {
@@ -310,10 +313,15 @@ namespace App_View.Areas.Admin.Controllers
             };
    
 
-           if (khuyenMai.TenKhuyenMai != null && khuyenMai.NgayBatDau != null && khuyenMai.NgayKetThuc != null && khuyenMai.MucGiam != null && khuyenMai.LoaiHinhKM != null && khuyenMai.NgayBatDau <= khuyenMai.NgayKetThuc)
+           if (ModelState.IsValid)
                 {
-
-                    using var content = new MultipartFormDataContent();
+                var km = _context.khuyenMais.AsNoTracking().FirstOrDefault(x => x.TenKhuyenMai == khuyenMai.TenKhuyenMai&&x.IdKhuyenMai!=id);
+                if (km != null)
+                {
+                    ModelState.AddModelError("TenKhuyenMai", "Tên khuyến mại đã tồn tại.");
+                    return View(khuyenMai);
+                }
+                using var content = new MultipartFormDataContent();
                     //content.Add(new StringContent(khuyenMai.TrangThai.ToString()), "trangThai");
                     //content.Add(new StringContent(khuyenMai.TenKhuyenMai), "Ten");
                     //content.Add(new StringContent(khuyenMai.NgayBatDau.ToString()), "ngayBD");
@@ -352,7 +360,7 @@ namespace App_View.Areas.Admin.Controllers
                         return BadRequest();
                     }
                 }
-                }
+            }
             return View(khuyenMai);
         }
 
