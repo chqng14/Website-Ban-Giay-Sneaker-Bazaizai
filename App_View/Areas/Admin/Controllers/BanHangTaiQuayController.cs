@@ -338,7 +338,7 @@ namespace App_View.Areas.Admin.Controllers
             {
                 return Ok(new { TrangThai = false });
             }
-            var voucherReturn = await _voucherNguoiDungServices.GetVocherTaiQuay(id);
+            var voucherReturn = await _voucherNguoiDungServices.GetVocherTaiQuay(id.Trim());
             if (voucherReturn != null&&voucherReturn.IdVouCherNguoiDung !=null && voucherReturn.LoaiHinhUuDai <= 1)
             {
                 return Ok(new

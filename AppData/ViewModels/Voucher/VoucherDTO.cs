@@ -15,10 +15,8 @@ namespace App_Data.ViewModels.Voucher
         [Required(ErrorMessage = "Loại hình khuyến mãi là trường bắt buộc.")]
         public int? LoaiHinhUuDai { get; set; }
         [Range(0, int.MaxValue, ErrorMessage = "Trường cần nhập tối đa từ 0 đến 999.999.999.")]
-        [Required(ErrorMessage = "Số lượng là trường hợp bắt buộc.")]
         public int? SoLuong { get; set; }
         [CustomMucUuDaiValidation]
-        [Required(ErrorMessage = "Mức ưu đãi là trường bắt buộc.")]
         public double? MucUuDai { get; set; }
         public DateTime NgayTao { get; set; }
         [Required(ErrorMessage = "Ngày bắt đầu là trường bắt buộc.")]
