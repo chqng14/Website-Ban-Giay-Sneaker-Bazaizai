@@ -1,0 +1,94 @@
+﻿
+@{
+    ViewData["Title"] = "DanhSachThuocTinhSanPham";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+<style>
+    .tabs {
+        padding: 10px;
+        display: flex;
+        border-bottom: 1px solid #ccc;
+        overflow: hidden;
+        background-color: white;
+        margin-bottom: 15px;
+    }
+
+    .tab-item {
+        flex: 1;
+        text-align: center;
+        padding: 10px 0;
+        cursor: pointer;
+        color: #333333;
+        transition: background-color 0.3s;
+    }
+
+        .tab-item.active {
+            background-color: #ff4500;
+            color: #fff;
+            font-weight: 200;
+        }
+
+    .swal2-title {
+        font-family: 'Arial', sans-serif; /* Chọn font bạn muốn sử dụng cho alert */
+    }
+</style>
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash">
+            <a href="#" class="breadcrumb-item"><i class="anticon anticon-home m-r-5"></i>QUẢN LÝ SẢN PHẨM</a>
+            <a class="breadcrumb-item" href="#">DANH SÁCH THUỘC TÍNH SẢN PHẨM</a>
+        </nav>
+    </div>
+</div>
+<div class="card">
+    <div class="tabs">
+        <div class="tab-item active" data-value="LoadPartialViewDanhSachTenSanPham">Sản phẩm</div>
+        <div class="tab-item" data-value="LoadPartialViewDanhSachThuongHieu">Thương hiệu</div>
+        <div class="tab-item" data-value="LoadPartialViewDanhSachLoaiGiay">Loại giày</div>
+        <div class="tab-item" data-value="LoadPartialViewDanhSachKieuDeGiay">Kiểu đế giày</div>
+        <div class="tab-item" data-value="LoadPartialViewDanhSachXuatXu">Xuất xứ</div>
+        <div class="tab-item" data-value="LoadPartialViewDanhSachChatLieu">Chất liệu</div>
+        <div class="tab-item" data-value="LoadPartialViewDanhSachMauSac">Màu sắc</div>
+        <div class="tab-item" data-value="LoadPartialViewDanhSachKichCo">Kích cỡ</div>
+    </div>
+    <div class="active" id="content"></div>
+</div>
+<script>
+    const tabItems = $('.tab-item');
+    var content = $('#content');
+    $(() => {
+        $.ajax({
+            url: '/admin/thuoctinhsanpham/LoadPartialViewDanhSachTenSanPham',
+            type: 'GET',
+            success: function (result) {
+                content.empty().append(result);
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+            }
+        });
+        tabItems.on('click', function () {
+            $.ajax({
+                url: '/admin/thuoctinhsanpham/' + $(this).attr('data-value'),
+                type: 'GET',
+                success: function (result) {
+                    content.empty().append(result);
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    console.log(status);
+                    console.log(error);
+                    console.log(xhr);
+                }
+            });
+            $(this).addClass('active');
+            $(this).siblings().removeClass('active');
+        });
+    })
+</script>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+}

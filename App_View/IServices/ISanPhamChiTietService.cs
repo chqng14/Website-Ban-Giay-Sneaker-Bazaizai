@@ -25,6 +25,7 @@ namespace App_View.IServices
         Task<List<SanPhamChiTiet>> GetListSanPhamChiTietAsync();
         Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(ListGuildDTO listGuildDTO);
         Task<List<SanPhamDanhSachViewModel>> GetListSanPhamChiTietViewModelAsync();
+        Task<List<SanPhamDanhSachViewModel>> GetAllListSanPhamChiTietViewModelAsync();
         Task<ResponseCheckAddOrUpdate> CheckSanPhamAddOrUpdate(SanPhamChiTietDTO sanPhamChiTietDTO);
         Task CreateAnhAysnc(string IdChiTietSp, List<IFormFile> lstIFormFile);
         Task DeleteAnhAysnc(ImageDTO responseImageDeleteVM);

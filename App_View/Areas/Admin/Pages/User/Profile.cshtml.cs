@@ -6,7 +6,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace App_View.Areas.Admin.Pages.User
 {
-   
+    [Area("Admin")]
+ 
     [Authorize]
     public class ProfileModel : PageModel
     {

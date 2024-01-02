@@ -265,7 +265,7 @@
                                                 </form>
                                             </div>
                                         </div>
-                                        <button class="btn dismiss-button fas fa-times" type="button" data-dismiss="modal"></button>
+                                        <button class="btn dismiss-button fas fa-times tatmodal" type="button" data-dismiss="modal"></button>
                                     </div>
                                 </div>
                             </div>
@@ -544,7 +544,7 @@
 
                                             <span class="gl-text u-s-m-t-6">Thanh toán bằng tiền mặt khi giao hàng.</span>
                                         </div>
-                                        <div class="u-s-m-b-10">
+                                        @* <div class="u-s-m-b-10">
 
                                             <!--====== Radio Box ======-->
                                             <div class="radio-box">
@@ -558,7 +558,7 @@
                                             <!--====== End - Radio Box ======-->
 
                                             <span class="gl-text u-s-m-t-6">Khi bạn nhấp vào "Đặt hàng" bên dưới, chúng tôi sẽ chuyển hướng bạn đến trang web của Momo để thiết lập thông tin thanh toán của bạn.</span>
-                                        </div>
+                                        </div> *@
                                         <div class="u-s-m-b-10">
 
                                             <!--====== Radio Box ======-->
@@ -1365,6 +1365,7 @@
 
         // Hàm áp dụng giảm giá
         function applyDiscount(discountAmount) {
+            $('#voucher-modal .tatmodal').click();
             if (discountAmount == null || discountAmount == 0) {
                 $('#TienGiam').text(discountAmount.toLocaleString("vi-VN") + "đ");
             }

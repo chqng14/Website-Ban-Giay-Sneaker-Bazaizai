@@ -76,17 +76,8 @@ namespace App_View.Controllers
         public async Task<IActionResult> Details(string id)
         {
             var data = await _sanPhamChiTietService.GetItemDetailViewModelAynsc(id);
-            var stopwatch = new System.Diagnostics.Stopwatch();
-            stopwatch.Start();
 
             var checkLogin = _userManager.GetUserId(User);
-
-            stopwatch.Stop();
-            TimeSpan elapsedTime = stopwatch.Elapsed;
-
-            // Log thời gian phản hồi
-            Console.WriteLine($"Thời gian phản hồi của hàm là: {elapsedTime.TotalMilliseconds} ms");
-
 
             if (checkLogin == null)
             {

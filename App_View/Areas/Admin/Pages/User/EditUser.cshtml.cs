@@ -2,27 +2,31 @@
 using App_View.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
 namespace App_View.Areas.Admin.Pages.User
 {
-
-    [Authorize]
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class EditUserModel : PageModel
     {
         private readonly UserManager<NguoiDung> _userManager;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IEmailSender _emailSender;
         public EditUserModel(
             UserManager<NguoiDung> userManager,
             SignInManager<NguoiDung> signInManager,
-            IWebHostEnvironment webHostEnvironment)
+            IWebHostEnvironment webHostEnvironment,
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _webHostEnvironment = webHostEnvironment;
+            _emailSender = emailSender;
         }
 
 
@@ -186,9 +190,15 @@ namespace App_View.Areas.Admin.Pages.User
                 StatusMessage = "Error: Lỗi không mong muốn khi cố gắng cập nhật thông tin.";
             }
 
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser != null)
+            {
+                await _emailSender.SendEmailAsync(user.Email, "Thông báo về việc cập nhật thông tin tài khoản của bạn",
+      $"Có phải bạn đã yêu cầu cập nhật thông tin tài khoản trên Web bán giày thể thao Bazaizai? Tài khoản của bạn được cập nhật thông tin bởi quản trị web: {currentUser.UserName} . Mọi thắc mắc xin vui lòng liên hệ đội ngũ hỗ trợ 0369426223.");
 
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Hồ sơ của bạn đã được cập nhật";
+            }
+            //await _signInManager.RefreshSignInAsync(user);
+            StatusMessage = $"Hồ sơ của người dùng:{user.UserName} đã được cập nhật";
             return RedirectToPage("./UserDetail", new { id });
 
         }

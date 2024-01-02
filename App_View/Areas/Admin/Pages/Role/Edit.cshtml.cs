@@ -12,7 +12,7 @@ namespace App_View.Areas.Admin.Pages.Role
 {
     //[Authorize(Roles = "Madara")]
     [Area("Admin")]
-
+    [Authorize(Roles = "Admin")]
 
     public class EditModel : PageModel
     {

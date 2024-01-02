@@ -4,10 +4,6 @@
     ViewData["Title"] = "Create";
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
-
-<h1>Create</h1>
-
-<h4>KhuyenMai</h4>
 <hr />
 <div class="container">
     <div class="card">
@@ -16,7 +12,7 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label asp-for="TenKhuyenMai" class="control-label"></label>
+                        <label asp-for="TenKhuyenMai" class="control-label">Tên Khuyến mại</label>
                     <input asp-for="TenKhuyenMai" class="form-control" />
                     <span asp-validation-for="TenKhuyenMai" class="text-danger"></span>
                 </div>
@@ -32,12 +28,12 @@
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label asp-for="NgayBatDau" class="control-label"></label>
+                        <label asp-for="NgayBatDau" class="control-label">Ngày bắt đầu</label>
                     <input asp-for="NgayBatDau" class="form-control" />
                     <span asp-validation-for="NgayBatDau" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-6">
-                    <label asp-for="NgayKetThuc" class="control-label"></label>
+                        <label asp-for="NgayKetThuc" class="control-label">Ngày kết thúc</label>
                     <input asp-for="NgayKetThuc" class="form-control" />
                     <span asp-validation-for="NgayKetThuc" class="text-danger"></span>
                 </div>
@@ -52,6 +48,7 @@
                     <label class="control-label">Mức giảm</label>
                     <select asp-for="MucGiam" class="form-control" asp-items="ViewBag.ListGiamGia" id="MucGiamSelect"></select>
                     <input type="text" asp-for="MucGiam" class="form-control" style="display: none" id="MucGiamInput">
+                        <span asp-validation-for="MucGiam" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-row">

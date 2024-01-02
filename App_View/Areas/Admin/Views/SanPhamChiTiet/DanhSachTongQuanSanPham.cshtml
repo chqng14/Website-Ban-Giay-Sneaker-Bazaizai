@@ -24,9 +24,9 @@
                     </button>
                 </div>
                 <div class="modal-body" style="background: #d3f6ff;">
-                    <input hidden type="file" id="chose-img" onchange="displaySelectedFileImages(this)" multiple name="files" />
+                    <input hidden type="file" id="chose-img" onchange="displaySelectedFileImages(this)" multiple name="files" accept="image/*" />
                     <a class="btn btn-kio mt-3" id="btn-chose-img">
-                        <i class="anticon anticon-file-excel m-r-5"></i>
+                        <i class="anticon anticon-paper-clip m-r-5"></i>
                         <span>Chọn ảnh(s)</span>
                     </a>
                     <p class="mt-3" id="file-img-info" style="padding-top: 5px;color: #1c0497;"></p>
@@ -40,8 +40,14 @@
                     </span>
                 </div>
                 <div class="modal-footer" style="background: #d0dae3">
-                    <button class="btn btn-primary submit_file" type="submit">Upload</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Skip</button>
+                    <button class="btn btn-kio submit_file" type="submit">
+                        <i class="anticon anticon-loading m-r-5"></i>
+                        <i class="anticon anticon-upload m-r-5"></i>
+                        <span>
+                            Upload
+                        </span>
+                    </button>
+                    <button type="button" class="btn btn-kio" id="btn_skip">Skip</button>
                 </div>
             </form>
         </div>
@@ -62,21 +68,21 @@
                     <br />
                     <input hidden type="file" id="chose-excel" onchange="displaySelectedFileExcel(this)" name="file" accept=".xlsx, .xls" />
                     <button class="btn btn-kio mt-3" id="btn-chose-import">
-                        <i class="anticon anticon-file-excel m-r-5"></i>
+                        <i class="anticon anticon-paper-clip m-r-5"></i>
                         <span>Chọn file Excel</span>
                     </button>
                     <p class="mt-3" id="file-excel-info" style="padding-top: 5px;color: #1c0497;"></p>
                 </div>
                 <div class="modal-footer" style="background: #d0dae3">
-                    <button class="btn btn-primary" id="submit_import">Import</button>
+                    <button class="btn btn-kio" id="submit_import">Import</button>
                 </div>
             </div>
         </div>
     </div>
 
     <button class="btn btn-kio" style="position: absolute;right: 24px;top: 21px;z-index:1" onclick="window.location.href = '@Url.Action("ManageSanPham", "SanPhamChiTiet")'">
-        <i class="fas fa-cog"></i>
-        <span>Quản lý sản phẩm</span>
+        <i class="anticon anticon-shop"></i>
+        <span>Thêm mới & chỉnh sửa sản phẩm</span>
     </button>
     <div class="modal fade" id="modal-SanPham"></div>
 
@@ -100,7 +106,7 @@
             <a class="nav-link" id="excel-tab" data-toggle="tab" href="#excel" role="tab" aria-controls="excel" aria-selected="false">Thao tác Excel</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" id="sanPhamNgungKinhDoanh-tab" data-toggle="tab" href="#sanPhamNgungKinhDoanh" role="tab" aria-controls="sanPhamNgungKinhDoanh" aria-selected="false">Danh sách thực thể</a>
+            <a class="nav-link" id="sanPhamNgungKinhDoanh-tab" data-toggle="tab" href="#sanPhamNgungKinhDoanh" role="tab" aria-controls="sanPhamNgungKinhDoanh" aria-selected="false">Danh sách</a>
         </li>
         <li class="nav-item">
             <a class="nav-link active" id="timKiemNangCao-tab" data-toggle="tab" href="#timKiemNangCao" role="tab" aria-controls="timKiemNangCao" aria-selected="true">Bộ lọc</a>
@@ -141,13 +147,13 @@
                         <div class="m-b-10">
                             <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/DanhSachSanPhamNgungKinhDoanh">
                                 <i class="far fa-list-alt m-r-5"></i>
-                                <span>Ngừng kinh doanh</span>
+                                <span>Danh sách sản phẩm ngừng kinh doanh</span>
                             </a>
                         </div>
                         <div class="m-b-10 m-l-10">
                             <a class="btn btn-kio" href="/Admin/SanPhamChiTiet/DanhSachSanPham">
                                 <i class="far fa-list-alt m-r-5"></i>
-                                <span>Đang kinh doanh</span>
+                                <span>Danh sách sản phẩm đang kinh doanh</span>
                             </a>
                         </div>
                     </div>
@@ -241,6 +247,12 @@
     var idLoaiGiay;
     var idThuongHieu;
     var tableDSTongQuan;
+
+    $(document).off('click', '#btn_skip')
+    $(document).on('click', '#btn_skip', function () {
+        $('#modal-upload_image').modal('hide');
+        $('#modal-import').modal('show');
+    })
     $(() => {
             tableDSTongQuan = $('#table-sanpham').DataTable({
     ajax: {
@@ -422,20 +434,22 @@
         $('#modal-import').modal('show');
     });
 $(document).off('submit', '#form_upload')
-$(document).on('submit', '#form_upload', function (event) {
-    event.preventDefault()
-    var $form = $(this);
-    $.ajax({
-        url: $(this).attr('action'),
-        type: $(this).attr('method'),
-        data: new FormData(this),
-        contentType: false,
-        processData: false,
-        success: function (result) {
-            if (result) {
-                $form.find('input[type="file"]').val('');
-                $('#file-img-info').text('')
-                var toastHTML = `<div class="toast fade hide" data-delay="3000">
+    $(document).on('submit', '#form_upload', function (event) {
+        event.preventDefault()
+        var $form = $(this);
+        var $btn = $('.submit_file')
+        $btn.addClass('is-loading')
+        $.ajax({
+            url: $(this).attr('action'),
+            type: $(this).attr('method'),
+            data: new FormData(this),
+            contentType: false,
+            processData: false,
+            success: function (result) {
+                if (result) {
+                    $form.find('input[type="file"]').val('');
+                    $('#file-img-info').text('')
+                    var toastHTML = `<div class="toast fade hide" data-delay="3000">
                                         <div class="toast-header">
                                             <i class="anticon anticon-info-circle text-primary m-r-5"></i>
                                             <strong class="mr-auto">Thông báo</strong>
@@ -449,27 +463,30 @@ $(document).on('submit', '#form_upload', function (event) {
                                         </div>
                                     </div>`
 
-                $('#notification-toast').append(toastHTML)
-                $('#notification-toast .toast').toast('show');
-                setTimeout(function () {
-                    $('#notification-toast .toast:first-child').remove();
-                }, 3000);
-                $('#modal-upload_image').modal('hide')
-                $('#modal-import').modal('show')
-            } else {
-                alert('Upload thất bại!')
+                    $('#notification-toast').append(toastHTML)
+                    $('#notification-toast .toast').toast('show');
+                    setTimeout(function () {
+                        $('#notification-toast .toast:first-child').remove();
+                    }, 3000);
+                    $('#modal-upload_image').modal('hide')
+                    $('#modal-import').modal('show')
+                    $btn.removeClass('is-loading')
+                } else {
+                    alert('Upload thất bại!')
+                    $btn.removeClass('is-loading')
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log(xhr.responseText);
+                console.log(status);
+                console.log(error);
+                console.log(xhr);
+                $btn.removeClass('is-loading')
             }
-        },
-        error: function (xhr, status, error) {
-            console.log(xhr.responseText);
-            console.log(status);
-            console.log(error);
-            console.log(xhr);
-        }
+        });
+
+
     });
-
-
-})
 $(document).off('click', '#btn-chose-img')
 $(document).on('click', '#btn-chose-img', function () {
     $('#chose-img').trigger('click');
@@ -549,11 +566,12 @@ $(document).on('click', '#submit_import', function () {
                             console.log('Error downloading file:', error);
                         };
                     }
-                    window.location.reload();
+                    setTimeout(function () {
+                        window.location.reload();
+                    },100)
 
                 } else if (resultAlert.dismiss === Swal.DismissReason.cancel) {
                     if (resultAlert.value) {
-                        console.log('Nút "Download File Lỗi" được nhấp');
                         window.location.reload();
 
                     } else {

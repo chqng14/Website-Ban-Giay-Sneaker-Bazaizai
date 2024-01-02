@@ -251,11 +251,51 @@ namespace App_Data.Repositories
                                       MoTa = a.MoTa,
                                       ChatLuongSanPham = a.ChatLuongSanPham,
                                       IdSanPhamChiTiet = a.IdSanPhamChiTiet,
+
                                   })
 
                 .ToListAsync();
             var danhgia = ViewMode.FirstOrDefault(x => x.IdDanhGia == id);
             return danhgia;
         }
+        public async Task<List<DanhGiaViewModel>> LstDanhGia()
+        {
+            var ViewMode = await (from a in _context.danhGias
+                                  join b in _context.NguoiDungs on a.IdNguoiDung equals b.Id
+                                  join c in _context.sanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
+                                  join d in _context.mauSacs on c.IdMauSac equals d.IdMauSac
+                                  join e in _context.kichCos on c.IdKichCo equals e.IdKichCo
+                                  join j in _context.SanPhams on c.IdSanPham equals j.IdSanPham
+                                  select new DanhGiaViewModel
+                                  {
+                                      IdDanhGia = a.IdDanhGia,
+                                      ParentId = a.ParentId,
+                                      BinhLuan = a.BinhLuan,
+                                      NgayDanhGia = a.NgayDanhGia,
+                                      SaoSp = a.SaoSp,
+                                      IdSanPhamChiTiet = a.IdSanPhamChiTiet,
+                                      IdNguoiDung = a.IdNguoiDung,
+                                      TrangThai = a.TrangThai,
+                                      TenNguoiDung = b.UserName,
+                                      AnhDaiDien = b.AnhDaiDien,
+                                      SaoVanChuyen = a.SaoVanChuyen,
+                                      SanPhamTongQuat = d.TenMauSac + "," + e.SoKichCo,
+                                      TenSanPham = j.TenSanPham,
+                                      IdSanPham = c.IdSanPham,
+                                      MoTa=a.MoTa,
+                                      ChatLuongSanPham=a.ChatLuongSanPham,
+                                      anhSp = _context.Anh
+                                      .Where(an => an.IdSanPhamChiTiet == c.IdChiTietSp)
+                                      .OrderBy(an => an.IdAnh)
+                                      .Select(an => an.Url)
+                                      .FirstOrDefault(),
+
+                                  })
+                .OrderByDescending(x => x.NgayDanhGia)
+                .ToListAsync();
+
+            return ViewMode;
+        }
+      
     }
 }

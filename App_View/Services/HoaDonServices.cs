@@ -39,10 +39,11 @@ namespace App_View.Services
             throw new NotImplementedException();
         }
 
-        public Task<List<HoaDon>> GetAllHoaDon()
+        public async Task<List<HoaDonTest>> GetAllHoaDon()
         {
-            throw new NotImplementedException();
-        }
+            return await _httpClient.GetFromJsonAsync<List<HoaDonTest>>("https://bazaizaiapi-v2.azurewebsites.net/api/HoaDon/GetHoaDonOnlineAdmin");
+
+		}
 
         public async Task<List<HoaDonChoDTO>> GetAllHoaDonCho()
         {

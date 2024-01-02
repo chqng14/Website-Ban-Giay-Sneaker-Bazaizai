@@ -14,12 +14,20 @@
 
             <ul class="list-group">
                 <li class="list-group-item">
-                    <span class="prefix">Ngày tạo:</span>
+                    <span class="prefix">Ngày tạo: </span>
                     <span class="label label-success">@Model.NgayTao</span>
                 </li>
                 <li class="list-group-item">
-                    <span class="prefix">Ngày cập nhật gần nhất:</span>
+                    <span class="prefix">Ngày cập nhật gần nhất: </span>
                     <span class="label label-success">@(Model.NgayCapNhatGanNhat != null ? Model.NgayCapNhatGanNhat : Model.NgayTao)</span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">Tên người nhận: </span>
+                    <span class="label label-success">@(ViewBag.TenNguoiNhan)</span>
+                </li>
+                <li class="list-group-item">
+                    <span class="prefix">SDT: </span>
+                    <span class="label label-success">@(ViewBag.Sdt)</span>
                 </li>
                 <li class="list-group-item">
                     <span class="prefix">Mô tả:</span>
@@ -50,10 +58,10 @@
                     <span class="status">Đã giao</span>
                     <div class="icon"></div>
                 </div>
-                <div class="image-order-status image-order-status-completed active img-circle">
+@*                <div class="image-order-status image-order-status-completed active img-circle">
                     <span class="status">Đã hủy</span>
                     <div class="icon" ></div>
-                </div>
+                </div>*@
 
             </div>
             <div style="text-align:center">
@@ -68,13 +76,11 @@
     var trangThai = @Model.TrangThaiGiaoHang;
 
     $(document).ready(function () {
-        if (trangThai == 5 || trangThai == 7) {
+        if (trangThai == 5 || trangThai == 7 || trangThai == 4) {
             $('.btn-primary').hide();
             $('.huydon').hide();
         }
-        if (trangThai == 4 ) {
-            $('.btn-primary').hide();
-        }
+
 
         var timelineClass = '';
         if (trangThai === 1) {
@@ -85,10 +91,7 @@
             timelineClass = 'c2';
         } else if (trangThai === 4) {
             timelineClass = 'c3';
-        } else if (trangThai === 5) {
-            timelineClass = 'c4';
-        }
-
+        } 
         $('.order-status-timeline-completion').removeClass().addClass('order-status-timeline-completion ' + timelineClass);
     });
 

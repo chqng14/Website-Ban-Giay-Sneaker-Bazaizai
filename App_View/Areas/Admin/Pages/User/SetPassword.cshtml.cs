@@ -7,23 +7,28 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using App_Data.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using static App_Data.Repositories.TrangThai;
+using Microsoft.AspNetCore.Authorization;
 
 namespace App_View.Areas.Admin.Pages.User
 {
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class SetPasswordModel : PageModel
     {
         private readonly UserManager<NguoiDung> _userManager;
         private readonly SignInManager<NguoiDung> _signInManager;
-
+        private readonly IEmailSender _emailSender;
         public SetPasswordModel(
             UserManager<NguoiDung> userManager,
-            SignInManager<NguoiDung> signInManager)
+            SignInManager<NguoiDung> signInManager, IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         [BindProperty]
@@ -109,8 +114,17 @@ namespace App_View.Areas.Admin.Pages.User
                 }
                 return Page();
             }
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser != null)
+            {
+                await _emailSender.SendEmailAsync(user.Email, "Thông báo về việc cập nhật mật khẩu tài khoản của bạn",
+      $"Có phải bạn đã yêu cầu đổi mật khẩu tài khoản trên Web bán giày thể thao Bazaizai. Tài khoản của bạn được đổi mật khẩu bởi quản trị web: {currentUser.UserName} . Mọi thắc mắc xin vui lòng liên hệ đội ngũ hỗ trợ 0369426223.");
 
-            await _signInManager.RefreshSignInAsync(user);
+            }
+            //await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);         
+            //await _signInManager.RefreshSignInAsync(user);
+            await _userManager.UpdateSecurityStampAsync(user);
+            //await _signInManager.RefreshSignInAsync(user);
             StatusMessage = $"Bạn vừa cập nhật mật khẩu cho người dùng: {user.UserName}";
 
             if (i == 1)

@@ -99,23 +99,24 @@
                                                         </button>
                                                     </div>
                                                 }
-                                                else if (@provider.DisplayName == "Facebook")
-                                                {
-                                                    <div class="u-s-m-b-15">
+                                                @*  else if (@provider.DisplayName == "Facebook")
+                                        {
+                                        <div class="u-s-m-b-15">
 
-                                                        <button type="submit" class="gl-s-api__btn gl-s-api__btn--fb" name="provider" value="@provider.Name">
-                                                            <i class="fab fa-facebook-f"></i>
+                                        <button type="submit" class="gl-s-api__btn gl-s-api__btn--fb" name="provider" value="@provider.Name">
+                                        <i class="fab fa-facebook-f"></i>
 
-                                                            <span>Đăng nhập với Facebook</span>
-                                                        </button>
-                                                    </div>
-                                                }
+                                        <span>Đăng nhập với Facebook</span>
+                                        </button>
+                                        </div>
+                                        }*@
 
                                             }
 
                                         </div>
                                     </form>
                                 }
+                        
                                 <form class="l-f-o__form" id="account" method="post">
 
 
@@ -139,7 +140,7 @@
 
                                             <button class="btn btn--e-transparent-brand-b-2" id="login-submit" type="submit">ĐĂNG NHẬP</button>
                                         </div>
-                                        <div class="u-s-m-b-30">
+                                        <div class="u-s-m-b-30" style="margin-left: 230px">
                                             <a class="gl-link" asp-area="Identity" asp-page="/Account/ForgotPassword">
                                                 Quên mật khẩu?
                                             </a>
@@ -161,6 +162,7 @@
                                     <!--====== End - Check Box ======-->
                                     </div>*@
                                 </form>
+                              
                             </div>
                         </div>
                     </div>

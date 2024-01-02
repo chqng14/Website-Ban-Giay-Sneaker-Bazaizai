@@ -1,5 +1,6 @@
 ﻿using App_Data.Models;
 using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -10,6 +11,7 @@ using System.ComponentModel.DataAnnotations;
 namespace App_View.Areas.Admin.Pages.Role
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
 
     public class DeleteModel : PageModel
     {

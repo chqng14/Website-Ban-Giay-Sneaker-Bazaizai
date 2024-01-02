@@ -149,14 +149,50 @@ namespace App_Api.Controllers
                                 mangKhuyenMaiDongGia.Add(Convert.ToInt32(a.MucGiam));
                             }
                         }
-                        if (mangKhuyenMaiDongGia.Count > 0)
+                        if (mangKhuyenMai.Count > 0&& mangKhuyenMaiDongGia.Count>0)
                         {
-                            ctsp.GiaThucTe = mangKhuyenMaiDongGia.Max();
-                        }
+							int tempDongGia = 0;
+							if ((ctsp.GiaBan - (ctsp.GiaBan * mangKhuyenMai.Max() / 100)) > mangKhuyenMaiDongGia.Max())
+							{
+							
+								for (var i = 0; i < mangKhuyenMaiDongGia.Count; i++)
+								{
+									if (ctsp.GiaThucTe > mangKhuyenMaiDongGia[i])
+									{
+										ctsp.GiaThucTe = mangKhuyenMaiDongGia[i];
+										tempDongGia++;
+									}
+								}
+							}
+							if (tempDongGia == 0)
+							{
+								ctsp.GiaThucTe = ctsp.GiaBan - (ctsp.GiaBan * mangKhuyenMai.Max() / 100);
+							}
+						}
+                        else if (mangKhuyenMai.Count > 0)
+                        {
+							ctsp.GiaThucTe = ctsp.GiaBan - (ctsp.GiaBan * mangKhuyenMai.Max() / 100);
+						}
                         else
                         {
-                            ctsp.GiaThucTe = ctsp.GiaBan - (ctsp.GiaBan * mangKhuyenMai.Max() / 100);
-                        }
+                            var tempDongGia = 0;
+                            ctsp.GiaThucTe = ctsp.GiaBan;
+							for (var i = 0; i < mangKhuyenMaiDongGia.Count; i++)
+							{
+								if (ctsp.GiaThucTe > mangKhuyenMaiDongGia[i])
+								{
+									ctsp.GiaThucTe = mangKhuyenMaiDongGia[i];
+                                    tempDongGia++;
+								}
+							}
+                            if (tempDongGia == 0)
+                            {
+                                ctsp.GiaThucTe = ctsp.GiaBan;
+                                var upDateKmct = lstKhuyenMaiDangHoatDong.FirstOrDefault(x => x.IdSanPhamChiTiet == ctsp.IdChiTietSp);
+
+                                KmctRepos.RemoveItem(upDateKmct);
+							}
+						}
                         var gioHangChiTiet = giohang.Where(x => x.IdSanPhamCT == ctsp.IdChiTietSp).ToList();
                         foreach (var item in gioHangChiTiet)
                         {

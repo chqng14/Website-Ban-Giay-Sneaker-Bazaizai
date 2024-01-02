@@ -2,6 +2,9 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.KieuDeGiayDTO;
+using App_Data.ViewModels.LoaiGiayDTO;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,11 +19,13 @@ namespace App_Api.Controllers
         private readonly IAllRepo<KieuDeGiay> allRepo;
         BazaizaiContext dbContext = new BazaizaiContext();
         DbSet<KieuDeGiay> KieuDeGiay;
-        public KieuDeGiayController()
+        private readonly IMapper _mapper;
+        public KieuDeGiayController(IMapper mapper)
         {
             KieuDeGiay = dbContext.kieuDeGiays;
             AllRepo<KieuDeGiay> all = new AllRepo<KieuDeGiay>(dbContext, KieuDeGiay);
             allRepo = all;
+            _mapper = mapper;
         }
         // GET: api/<KieuDeGiayController>
         [HttpGet]
@@ -59,17 +64,26 @@ namespace App_Api.Controllers
             return allRepo.AddItem(KieuDeGiay);
         }
 
-        [HttpPut("SuaKieuDeGiay={id}")]
-        public bool SuaKieuDeGiay(string id, string ma, string ten, int trangthai)
+        [HttpPut("sua-kieu-de-giay")]
+        public bool SuaKieuDeGiay(KieuDeGiayDTO kieuDeGiayDTO)
         {
-            var KieuDeGiay = new KieuDeGiay()
+            try
             {
-                IdKieuDeGiay = id,
-                MaKieuDeGiay = ma,
-                TenKieuDeGiay = ten,
-                Trangthai = trangthai
-            };
-            return allRepo.EditItem(KieuDeGiay);
+                var nameKieuDe = kieuDeGiayDTO.TenKieuDeGiay!.Trim().ToLower();
+                if (!dbContext.kieuDeGiays.Where(x => x.TenKieuDeGiay!.Trim().ToLower() == nameKieuDe).Any())
+                {
+                    var kieuDe = _mapper.Map<KieuDeGiay>(kieuDeGiayDTO);
+                    dbContext.Attach(kieuDe);
+                    dbContext.Entry(kieuDe).Property(sp => sp.TenKieuDeGiay).IsModified = true;
+                    dbContext.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         // DELETE api/<KieuDeGiayController>/5

@@ -1,5 +1,7 @@
-﻿using App_Data.IRepositories;
+﻿using App_Data.DbContextt;
+using App_Data.IRepositories;
 using App_Data.Models;
+using App_Data.ViewModels.LoaiGiayDTO;
 using App_Data.ViewModels.MauSac;
 using AutoMapper;
 using DocumentFormat.OpenXml.Spreadsheet;
@@ -13,11 +15,13 @@ namespace App_Api.Controllers
     {
         private readonly IAllRepo<MauSac> _mauSacRespo;
         private readonly IMapper _mapper;
+        private readonly BazaizaiContext _bazaizaiContext;
 
         public MauSacController(IAllRepo<MauSac> mauSacRespo, IMapper mapper)
         {
             _mauSacRespo = mauSacRespo;
             _mapper = mapper;
+            _bazaizaiContext = new BazaizaiContext();
         }
 
 
@@ -51,21 +55,31 @@ namespace App_Api.Controllers
             if(mauSac != null)
             {
                 mauSac!.TrangThai = 1;
-                return _mauSacRespo.EditItem(mauSac);
+                return _mauSacRespo.RemoveItem(mauSac);
             }
             return false;
         }
 
-        [HttpPut("UpdateMauSac")]
+        [HttpPut("sua-mau-sac")]
         public bool Update(MauSacDTO mauSacDTO)
         {
-            var mauSacGet = GetMauSac(mauSacDTO.IdMauSac);
-            if (mauSacGet != null)
+            try
             {
-                _mapper.Map(mauSacDTO,mauSacGet);
-                return _mauSacRespo.EditItem(mauSacGet);
+                var nameMauSac = mauSacDTO.TenMauSac!.Trim().ToLower();
+                if (!_bazaizaiContext.mauSacs.Where(x => x.TenMauSac!.Trim().ToLower() == nameMauSac).Any())
+                {
+                    var mauSac = _mapper.Map<MauSacDTO>(mauSacDTO);
+                    _bazaizaiContext.Attach(mauSac);
+                    _bazaizaiContext.Entry(mauSac).Property(sp => sp.TenMauSac).IsModified = true;
+                    _bazaizaiContext.SaveChanges();
+                    return true;
+                }
+                return false;
             }
-            return false;
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
     }

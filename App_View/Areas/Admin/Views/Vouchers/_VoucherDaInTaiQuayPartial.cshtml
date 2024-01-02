@@ -1,5 +1,5 @@
 ﻿@using App_Data.DbContextt;
-@model IEnumerable<App_Data.Models.Voucher>
+@model IEnumerable<App_Data.ViewModels.Voucher.VoucherDTO>
 
 @{
     BazaizaiContext context = new BazaizaiContext();
@@ -39,7 +39,7 @@
     <thead>
         <tr>
             <th>
-                Mã Voucher
+                Mã
             </th>
             <th>
                 Tên
@@ -54,7 +54,13 @@
                 Loại hình
             </th>
             <th>
-                Số lượng đã in
+                Voucher đã tạo
+            </th>
+            <th>
+                Voucher đã in
+            </th>
+            <th>
+                Voucher chưa in
             </th>
             <th>
                 Ngày bắt đầu
@@ -114,6 +120,12 @@
                     @item.SoLuong
                 </td>
                 <td>
+                    @item.SoLuongVoucherDaIn
+                </td>
+                <td>
+                    @item.SoLuongVoucherChuaIN
+                </td>
+                <td>
                     @item.NgayBatDau
                 </td>
                 <td>
@@ -148,7 +160,7 @@
                         <button class="btn btn-primary btn-sm" onclick="showDetails('@item.IdVoucher')"> Xuất voucher <i class="anticon anticon-export"></i></button>
                         @*              @Html.ActionLink("Xuất voucher", "XuatVoucher", new { idVoucher = item.IdVoucher }) *@
                     }
-             
+
                 </td>
 
             </tr>
@@ -158,7 +170,10 @@
 <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
 
 <script>
+    var idVoucherSauKhiIn = "";
     $(document).ready(function () {
+
+
         $('#voucherForm').submit(function (event) {
             // Ngăn chặn gửi form mặc định
             event.preventDefault();
@@ -230,13 +245,60 @@
             // Gọi hàm để huỷ hoạt động voucher
             KhoiPhucVoucher(selectedIds);
         });
+        //Đóng modal
+        $(document).ready(function () {
+            $('#myModal').on('hidden.bs.modal', function () {
+                Swal.fire({
+                    title: "Xác nhận đã in voucher ?",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes",
+                    denyButtonText: `Chưa`,
+                    footer: '<a href="#">Khi bạn xác nhận in sẽ không thể in hay xuất lại số voucher đã in trước đó</a>'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $('#preloader').show();
+                        $.ajax({
+                            url: '/Admin/Vouchers/CapNhatVoucherNguoiDungDain',
+                            type: 'POST',
+                            success: function (result) {
+                                if (result) {
+                                    $('#preloader').hide();                                   
+                                    Swal.fire({
+                                        title: "Voucher đã in xong và sẽ ẩn không thể in lại!",
+                                        icon: "success",
+                                        confirmButtonText: "OK",
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            // Nếu người dùng nhấn OK, thì mới thực hiện reload
+                                            window.location.reload();
+                                        }
+                                        else    {
+                                            window.location.reload();
+                                        }
+                                    });
+                                }
+                                else {
+                                    $('#preloader').hide();
+                                    Swal.fire("Có lỗi xảy ra", "", "warning");
+                                }
+                            }, error: function (error) {
+                                console.error(error);
+                            }
+                        });
 
+                    } else if (result.isDenied) {
+                        Swal.fire("Voucher đã bị huỷ in", "", "warning");
+                    }
+                });
+            });
+        });
     });
     function printVourcher(idvoucher) {
         $('#printVoucher').modal('show');
         $('#idVoucherPrint').val(idvoucher);
     }
     function showDetails(idVoucher) {
+        idVoucherSauKhiIn = idVoucher;
         $.ajax({
             url: '/Admin/Vouchers/FilterListDetailsVoucherTaiQuayDaIn',
             type: 'POST',
@@ -245,24 +307,11 @@
                 // Hiển thị modal và cập nhật nội dung partial view
                 $('#myModalContent').html(result);
                 $('#myModal').modal('show');
-            },
-            error: function (error) {
+            }, error: function (error) {
                 console.error(error);
             }
         });
     }
-    // function PrintContent() {
-    //     document.getElementById("btnExportPDF").style.display = "none";
-    //     var printWindow = window.open('', '_blank');
-    //     var contentToPrint = $("#myModalContent").html();
-
-    //     printWindow.document.open();
-    //     printWindow.document.write('<html><head></head><body>' + contentToPrint + '</body></html>');
-    //     printWindow.document.close();
-
-    //     printWindow.print();
-    //     document.getElementById("btnExportPDF").style.display = "block";
-    // }
     function PrintContent() {
         document.getElementById("btnExportPDF").style.display = "none";
         var contentToPrint = $("#myModalContent").html();
@@ -276,6 +325,8 @@
 
         document.getElementById("btnExportPDF").style.display = "block";
     }
+
+
 
 </script>
 

@@ -13,6 +13,9 @@ using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Areas.Admin.Pages.User
 {
+    
+    [Area("Admin")]
+    [Authorize(Roles = "Admin , NhanVien")]
     public class IndexModel : PageModel
     {
 

@@ -57,8 +57,15 @@ builder.Services.AddScoped<ThongTinGHController>();  // Sử dụng AddScoped n�
 builder.Services.AddScoped<GioHangChiTietsController, GioHangChiTietsController>();
 builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 builder.Services.AddScoped<IDanhGiaService, DanhGiaService>();
+
 //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://bazaizaiapi-v2.azurewebsites.net/") });
+
+
+builder.Services.AddScoped<IThongKeService, ThongKeService>();
+builder.Services.AddScoped<IThongTinGHServices, ThongTinGHServices>();
+builder.Services.AddScoped<IHoaDonServices, HoaDonServices>();
+
 //Thêm
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
 .AddEntityFrameworkStores<BazaizaiContext>()
@@ -80,7 +87,9 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredLength = 6; // Số ký tự tối thiểu của password
     options.Password.RequiredUniqueChars = 1; // Số ký tự riêng biệt
 
+
     // Cấu hình Lockout - khóa user
+
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); // Khóa 5 phút
     options.Lockout.MaxFailedAccessAttempts = 5; // Thất bại 5 lần thì khóa
     options.Lockout.AllowedForNewUsers = true;
@@ -91,7 +100,9 @@ builder.Services.Configure<IdentityOptions>(options =>
 
     options.User.RequireUniqueEmail = true;  // Email là duy nhất
 
+
     //Cấu hình đăng nhập.
+
     options.SignIn.RequireConfirmedEmail = true;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
     options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
     options.SignIn.RequireConfirmedAccount = true;// sau khi đăng kí....(tự hiểu)

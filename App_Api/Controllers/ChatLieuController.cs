@@ -2,6 +2,9 @@
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.ChatLieuDTO;
+using App_Data.ViewModels.KieuDeGiayDTO;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,12 +18,14 @@ namespace App_Api.Controllers
     {
         private readonly IAllRepo<ChatLieu> allRepo;
         BazaizaiContext dbContext = new BazaizaiContext();
+        private readonly IMapper _mapper;
         DbSet<ChatLieu> ChatLieu;
-        public ChatLieuController()
+        public ChatLieuController(IMapper mapper)
         {
             ChatLieu = dbContext.ChatLieus;
             AllRepo<ChatLieu> all = new AllRepo<ChatLieu>(dbContext, ChatLieu);
             allRepo = all;
+            _mapper = mapper;
         }
         // GET: api/<ChatLieuController>
         [HttpGet]
@@ -60,20 +65,29 @@ namespace App_Api.Controllers
         }
 
         // PUT api/<ChatLieuController>/5
-        [HttpPut("SuaChatLieu {id}")]
-        public bool SuaChatLieu(string id, string ma, string ten, int trangthai)
+        [HttpPut("sua-chat-lieu")]
+        public bool SuaChatLieu(ChatLieuDTO chatLieuDTO)
         {
-            var chatlieu = new ChatLieu()
+            try
             {
-                IdChatLieu = id,
-                MaChatLieu = ma,
-                TenChatLieu = ten,
-                TrangThai = trangthai
-            };
-            return allRepo.EditItem(chatlieu);
+                var nameChatLieu = chatLieuDTO.TenChatLieu!.Trim().ToLower();
+                if (!dbContext.ChatLieus.Where(x => x.TenChatLieu!.Trim().ToLower() == nameChatLieu).Any())
+                {
+                    var chatLieu = _mapper.Map<ChatLieu>(chatLieuDTO);
+                    dbContext.Attach(chatLieu);
+                    dbContext.Entry(chatLieu).Property(sp => sp.TenChatLieu).IsModified = true;
+                    dbContext.SaveChanges();
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
         // DELETE api/<ChatLieuController>/5
-        [HttpDelete("XoaChatLieu{id}")]
+        [HttpDelete("XoaChatLieu/{id}")]
         public bool Delete(string id)
         {
             var cl = allRepo.GetAll().FirstOrDefault(c => c.IdChatLieu == id);

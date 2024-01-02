@@ -298,5 +298,26 @@ namespace App_View.Services
                 return false;
             }
         }
+
+        public async Task<bool> UpdateTrangThaiKhiXuat(List<string> idVoucherNguoiDung)
+        {
+            try
+            {
+                var reponse = await _httpClient.PutAsJsonAsync($"/api/Voucher/UpdateTrangThaiKhiXuat", idVoucherNguoiDung);
+                if (reponse.IsSuccessStatusCode)
+                {
+                    return await reponse.Content.ReadAsAsync<bool>();
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Lỗi xảy ra: {e}");
+                return false;
+            }
+        }
     }
 }

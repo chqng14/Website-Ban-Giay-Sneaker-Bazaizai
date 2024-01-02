@@ -1,30 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using App_Data.DbContextt;
+﻿using App_Data.DbContextt;
 using App_Data.Models;
+using App_Data.ViewModels.Voucher;
+using App_Data.ViewModels.VoucherNguoiDung;
 using App_View.IServices;
 using App_View.Services;
-using App_Data.ViewModels.Voucher;
-using App_Data.ViewModels.SanPhamChiTietDTO;
-using AutoMapper;
-using App_Data.Repositories;
-using static App_Data.Repositories.TrangThai;
-using Microsoft.AspNetCore.Identity;
-using App_Data.ViewModels.VoucherNguoiDung;
-using System.Net.Http;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.ExtendedProperties;
-using PuppeteerSharp;
-using NuGet.Protocol.Core.Types;
 using Microsoft.AspNetCore.Authorization;
 using Azure.Storage.Blobs;
-
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 namespace App_View.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -48,6 +33,7 @@ namespace App_View.Areas.Admin.Controllers
             _viewRenderService = viewRenderService;
             _context = new BazaizaiContext();
         }
+
         #region Online
 
         public async Task<IActionResult> ShowVoucher(int? trangThai)
@@ -336,16 +322,37 @@ namespace App_View.Areas.Admin.Controllers
             {
                 lstVoucherDaIn = lstVoucherDaIn.Where(c => c.TrangThai == trangThai).ToList();
             }
-            return PartialView("_VoucherDaInTaiQuayPartial", lstVoucherDaIn);
+
+            var voucherDTOs = lstVoucherDaIn.Select(voucher => new VoucherDTO
+            {
+                IdVoucher = voucher.IdVoucher,
+                MaVoucher = voucher.MaVoucher,
+                TenVoucher = voucher.TenVoucher,
+                DieuKien = voucher.DieuKien,
+                LoaiHinhUuDai = voucher.LoaiHinhUuDai,
+                SoLuong = voucher.SoLuong,
+                MucUuDai = voucher.MucUuDai,
+                NgayBatDau = voucher.NgayBatDau,
+                NgayTao = voucher.NgayTao,
+                NgayKetThuc = voucher.NgayKetThuc,
+                TrangThai = voucher.TrangThai,
+                SoLuongVoucherDaIn = voucherTaiQuay.Count(c => c.NgayNhan != null && c.IdVouCher == voucher.IdVoucher),
+                SoLuongVoucherChuaIN = voucherTaiQuay.Count(c => c.NgayNhan == null && c.IdVouCher == voucher.IdVoucher)
+            }).ToList();
+
+
+            return PartialView("_VoucherDaInTaiQuayPartial", voucherDTOs);
         }
         [HttpPost]
         public async Task<IActionResult> FilterListDetailsVoucherTaiQuayDaIn(string idVoucher, int trangThai = 0)
         {
-            var lstVoucherDaIn = (await _voucherND.GetAllVouCherNguoiDung()).Where(c => c.IdVouCher == idVoucher).ToList();
+
+            var lstVoucherDaIn = (await _voucherND.GetAllVouCherNguoiDung()).Where(c => c.IdVouCher == idVoucher && c.NgayNhan == null).ToList();
             List<VoucherNguoiDungDTO> voucherNguoiDungDTOList = new List<VoucherNguoiDungDTO>();
             var blobServiceClient = new BlobServiceClient("DefaultEndpointsProtocol=https;AccountName=bazaizaistg;AccountKey=E5dRTMV054IsGz5zlWw4jTtNDQPXSpabEKn+FY6oKsRs61c0wYvlCzkJ7OM+52M6IsqEV4V+2lU4+AStUJRzlg==;EndpointSuffix=core.windows.net");
             var containerClient = blobServiceClient.GetBlobContainerClient("anhvoucher");
-            foreach (var voucher in lstVoucherDaIn)
+
+            foreach (var voucher in lstVoucherDaIn.Take(500))
             {
                 VoucherNguoiDungDTO voucherNguoiDungDTO = new VoucherNguoiDungDTO();
                 var blobClient = containerClient.GetBlobClient(voucher.IdVouCherNguoiDung + ".png");
@@ -385,13 +392,27 @@ namespace App_View.Areas.Admin.Controllers
                 voucherNguoiDungDTOList.Add(voucherNguoiDungDTO);
             }
             if (trangThai != 0)
-            {
+            {//In 1 lần 500 voucher
                 voucherNguoiDungDTOList = voucherNguoiDungDTOList.Where(c => c.TrangThai == trangThai).ToList();
             }
+            SessionServices.SetLstString(HttpContext.Session, "lstIdVoucherNguoiDung", voucherNguoiDungDTOList.Select(v => v.IdVouCherNguoiDung).Take(500).ToList());
 
             return PartialView("_FilterListDetailsVoucherTaiQuayDaIn", voucherNguoiDungDTOList);
         }
-      
+        public async Task<IActionResult> CapNhatVoucherNguoiDungDain()
+        {
+            var lstIdVoucherNguoiDung = SessionServices.GetLstString(HttpContext.Session, "lstIdVoucherNguoiDung");
+
+            if (lstIdVoucherNguoiDung != null && lstIdVoucherNguoiDung.Any())
+            {
+                if (await _voucherSV.UpdateTrangThaiKhiXuat(lstIdVoucherNguoiDung))
+                {
+                    return Ok(true);
+                }
+                return Ok(false);
+            }
+            return Ok(false);
+        }
         #endregion
     }
 }

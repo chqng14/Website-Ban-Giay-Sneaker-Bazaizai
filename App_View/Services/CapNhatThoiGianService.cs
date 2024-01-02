@@ -1,15 +1,4 @@
 ﻿using App_Data.DbContextt;
-using App_Data.Models;
-using App_Data.Repositories;
-using App_Data.ViewModels.Voucher;
-using App_View.IServices;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Json;
-using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Services
 {
@@ -19,9 +8,9 @@ namespace App_View.Services
         private readonly HttpClient _httpClient;
         bool loading = false;
         public CapNhatThoiGianService()
-        {         
+        {
             _dbContext = new BazaizaiContext();
-            _httpClient =new HttpClient();
+            _httpClient = new HttpClient();
         }
         public async Task<bool> CapNhatThongTinKhuyenMai()
         {

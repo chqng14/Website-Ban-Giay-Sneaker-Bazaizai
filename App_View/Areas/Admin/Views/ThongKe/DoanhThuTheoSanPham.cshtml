@@ -12,7 +12,8 @@
         width: 100vw;
         height: 40px;
         background: #1A1A1A;
-        color: rgba(54, 162, 235, 1);
+        /*        color: rgba(54, 162, 235, 1);
+    */
     }
 
         .chartMenu p {
@@ -23,10 +24,12 @@
     .chartCard {
         width: 100vw;
         height: calc(100vh - 40px);
-        background: rgba(54, 162, 235, 0.2);
-        display: flex;
+        /*        background: rgba(54, 162, 235, 0.2);
+    */ display: flex;
         align-items: center;
         justify-content: center;
+        display: flex;
+        flex-direction: column;
     }
 
     .chartBox {
@@ -39,71 +42,123 @@
     }
 
     /*    .custom-scroll-table {
-                    max-height: 10px;
-                    overflow-y: auto;
-                }
-            */
+                                    max-height: 10px;
+                                    overflow-y: auto;
+                                }
+                            */
 
 </style>
-
-<h1 style="text-align:center">Thống kê doanh thu theo sản phẩm</h1>
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash" style="background-color: white; ">
+            <a href="#" class="breadcrumb-item " style="text-decoration: none;"><i class="anticon anticon-home m-r-5"></i>Thống kê</a>
+            <span class="breadcrumb-item active">Thống kê doanh thu theo sản phẩm</span>
+        </nav>
+    </div>
+</div>
 <div class="row">
-    <input type="date" id="fromDate">
-    <input type="date" id="toDate">
-    <button> Hôm nay</button>
-    <button> Hôm qua</button>
-    <button> Tuần này</button>
     <div class="chartCard">
-
+        <div class="row" style="width: 100%;
+    margin-left: 7%;
+    margin-top: -2%;">
+            <div class="form-group">
+                <div class="d-flex align-items-center">
+                    <label style="margin-right: 2%;
+    width: 50%;
+    margin-top: 2%;">Chọn phạm vi</label>
+                    <input id="fromDate" type="date" class="form-control datepicker-input" name="start" placeholder="From">
+                    <span class="p-h-10">to</span>
+                    <input id="toDate" type="date" class="form-control datepicker-input" name="end" placeholder="To">
+                </div>
+            </div>
+        </div>
         <div class="chartBox">
             <canvas id="myChart" style="min-height: 250px; height: 250px; max-height: 400px; max-width: 100%;"></canvas>
-
         </div>
     </div>
 </div>
-<table class="table table-bordered custom-scroll-table">
+<button class="btn btn-kio" onclick="exportToExcel()">
+    <i class="anticon anticon-file-excel m-r-5"></i>
+    <span>
+        Tải xuống dữ liệu
+    </span>
+</button>
+<table class="table table-bordered custom-scroll-table" style="margin-left: 0%;" id="data-table">
     <thead>
         <tr>
             <th>#</th>
+            <th>Mã sản phẩm</th>
             <th>Tên sản phẩm</th>
-            <th>SL Khách hàng</th>
+            @*            <th>SL Khách hàng</th>
+            *@
             <th>SL hàng bán</th>
             <th>SL đơn hàng</th>
-            <th>Tiền hàng</th>
-            <th>Chiết khấu sản phẩm</th>
-            <th>Chiết khấu hóa đơn</th>
+            @*            <th>Tiền hàng</th>
+            *@
+            <th>Giảm giá sản phẩm</th>
+            @* <th>Chiết khấu hóa đơn</th>*@
             <th>Doanh thu</th>
-            
+
         </tr>
     </thead>
     <tbody id="load_data">
     </tbody>
 </table>
+
 @section scripts{
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <!-- Thêm liên kết DataTables CSS và JS -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.6/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.6/js/jquery.dataTables.js"></script>
-
+    @*    <script src="~/Admin/js/pages/e-commerce-order-list.js"></script>
+    <script src="~/Admin/vendors/datatables/jquery.dataTables.min.js" defer></script>
+    <script src="~/Admin/vendors/datatables/dataTables.bootstrap.min.js" defer></script>
+    <script src="~/Admin/js/pages/datatables.js" defer></script>
+    <script src="~/Admin/js/vendors.min.js"></script>*@
+    
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
     <script src="~/Admin/moment/moment.min.js"></script>
+
     <script>
+        // Hàm để lấy chuỗi ngày dạng 'YYYY-MM-DD' cho một ngày
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        // Hàm để cập nhật giá trị của ô ngày
+        function updateDateInputs() {
+            const currentDate = new Date();
+            const sevenDaysAgo = new Date();
+            sevenDaysAgo.setDate(currentDate.getDate() - 6);
+
+            // Lấy chuỗi ngày dạng 'YYYY-MM-DD'
+            const fromDateValue = formatDate(sevenDaysAgo);
+            const toDateValue = formatDate(currentDate);
+
+            // Cập nhật giá trị của ô ngày
+            document.getElementById('fromDate').value = fromDateValue;
+            document.getElementById('toDate').value = toDateValue;
+        }
+
+        // Gọi hàm cập nhật khi trang được tải
+        window.onload = function () {
+            updateDateInputs();
+        };
+    </script>
+
+    <script>
+
 
         var arrSanPham = [];
         var arrDoanhThu = [];
         var myChart;
-        //const colors = [
-        //    'rgba(60,141,188,0.9)',
-        //    'rgba(255,87,34,0.9)',
-        //    'rgba(0,128,0,0.9)',
-        //    'rgba(255,193,7,0.9)',
-        //    'rgba(138,43,226,0.9)',
-        //    // Thêm màu khác nếu cần
-        //];
         function generateRandomColors(count) {
             const colors = [];
             for (let i = 0; i < count; i++) {
@@ -120,6 +175,7 @@
                 url: "@Url.Action("ThongKeTheoSanPhamOnline", "ThongKe")",
                 data: { fromDate: fromDate, toDate: toDate },
                 success: function (rs) {
+                    console.log("u la tr");
                     console.log(rs.data);
                     arrSanPham = [];
                     arrDoanhThu = [];
@@ -136,6 +192,7 @@
                     console.log(arrDoanhThu);
                     // Cập nhật biểu đồ
                     myChart.update();
+                    load_data(rs);
                 }
             });
         }
@@ -163,14 +220,14 @@
                 type: 'doughnut',//pie
                 data: data,
                 options: {
-                    layout:{
-                    padding:10
+                    layout: {
+                        padding: 10
                     },
                     plugins: {
                         legend: {
                             display: true,
-                            position: 'right', 
-                            padding: 30 
+                            position: 'right',
+                            padding: 30
                         },
                         datalabels: {
                             formatter: (value, ctx) => {
@@ -184,13 +241,13 @@
                                 return percentage;
                             },
                             anchor: 'center',
-                            align:'end',
+                            align: 'end',
                             color: 'white',
 
                         },
                     },
                 },
-                plugins:[ChartDataLabels]
+                plugins: [ChartDataLabels]
             };
 
             myChart = new Chart(
@@ -199,7 +256,7 @@
             );
 
             updateChart('', '');
-            updateTable('', '');
+            //updateTable('', '');
 
         });
 
@@ -208,83 +265,61 @@
             var fromDate = $('#fromDate').val();
             var toDate = $('#toDate').val();
             updateChart(fromDate, toDate);
-            updateTable(fromDate, toDate);
+            //updateTable(fromDate, toDate);
         });
 
-
-
-        //function load_data(data) {
-        //    var strHtml = "";
-        //    $.each(data, function (i, item) {
-        //        strHtml += "<tr>";
-        //        strHtml += "<td>" + (i + 1) + "</td>";
-        //        strHtml += "<td>" + item.sanPham + "</td>";
-        //        strHtml += "<td>" + item.soLuongKhachHang + "</td>";
-        //        strHtml += "<td>" + item.soLuongHangBan + "</td>";
-        //        strHtml += "<td>" + item.soLuongDonHang + "</td>";
-        //        strHtml += "<td>" + item.tienHang + "</td>";
-        //        strHtml += "<td>" + item.chietKhauSanPham + "</td>";
-        //        strHtml += "<td>" + item.doanhThu + "</td>";
-        //        strHtml += "</tr>";
-        //    });
-        //    $('#load_data').html(strHtml);
-        //}
         function load_data(data) {
             var strHtml = "";
-            var totalSoLuongKhachHang = 0;
-            var totalSoLuongHangBan = 0;
-            var totalSoLuongDonHang = 0;
-            var totalTienHang = 0;
-            var totalChietKhauSanPham = 0;
-            var totalDoanhThu = 0;
+            console.log("mi");
+            console.log(data.data);
+            console.log("mi");
+            $.each(data.data, function (i, item) {
+                console.log("ulatroi1");
+                console.log(i);
 
-            $.each(data, function (i, item) {
                 strHtml += "<tr>";
                 strHtml += "<td>" + (i + 1) + "</td>";
+                strHtml += "<td>" + item.maSanPham + "</td>";
                 strHtml += "<td>" + item.sanPham + "</td>";
-                strHtml += "<td>" + item.soLuongKhachHang + "</td>";
+                //strHtml += "<td>" + item.soLuongKhachHang + "</td>";
                 strHtml += "<td>" + item.soLuongHangBan + "</td>";
                 strHtml += "<td>" + item.soLuongDonHang + "</td>";
-                strHtml += "<td>" + item.tienHang + "</td>";
-                strHtml += "<td>" + item.chietKhauSanPham + "</td>";             
-                strHtml += "<td>"  + "</td>";             
-                strHtml += "<td>" + item.doanhThu + "</td>";
+                //strHtml += "<td>" + item.tienHang + "</td>";
+                strHtml += "<td>" + item.chietKhauSanPham.toLocaleString('en-US') + "</td>";
+                strHtml += "<td>" + item.doanhThu.toLocaleString('en-US') + "</td>";
                 strHtml += "</tr>";
-
-                // Tính toán tổng
-                totalSoLuongKhachHang += item.soLuongKhachHang;
-                totalSoLuongHangBan += item.soLuongHangBan;
-                totalSoLuongDonHang += item.soLuongDonHang;
-                totalTienHang += item.tienHang;
-                totalChietKhauSanPham += item.chietKhauSanPham;
-                totalChietKhauHoaDon = item.chietKhauHoaDon;
-                totalDoanhThu += item.doanhThu;
             });
-
-            // Thêm ô cuối cùng chứa tổng
-            strHtml += "<tr>";
-            strHtml += "<td colspan='2'><strong>Tổng</strong></td>";
-            strHtml += "<td><strong>" + totalSoLuongKhachHang + "</strong></td>";
-            strHtml += "<td><strong>" + totalSoLuongHangBan + "</strong></td>";
-            strHtml += "<td><strong>" + totalSoLuongDonHang + "</strong></td>";
-            strHtml += "<td><strong>" + totalTienHang + "</strong></td>";
-            strHtml += "<td><strong>" + totalChietKhauSanPham + "</strong></td>";
-            strHtml += "<td><strong>" + totalChietKhauHoaDon + "</strong></td>";        
-            strHtml += "<td><strong>" + totalDoanhThu + "</strong></td>";
-            strHtml += "</tr>";
-
             $('#load_data').html(strHtml);
         }
-        function updateTable(fromDate, toDate) {
-            $.ajax({
-                type: "GET",
-                url: "@Url.Action("ThongTinThongKeHoaDonOnlineTheoNgay", "ThongKe")",
-                data: { fromDate: fromDate, toDate: toDate },
-                success: function (rs) {
-                            
-                    load_data(rs.data);
-                }
-            });
+        function exportToExcel() {
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0');
+            var yyyy = today.getFullYear();
+            var currentDate = yyyy + '-' + mm + '-' + dd;
+
+            var wb = XLSX.utils.book_new();
+
+            var ws = XLSX.utils.table_to_sheet(document.getElementById('data-table'));
+            //var ws1 = XLSX.utils.table_to_sheet(document.getElementById('dataTable'));
+            //XLSX.utils.book_append_sheet(wb, ws1, 'DataChart');
+            XLSX.utils.book_append_sheet(wb, ws, 'Dữ liệu thống kê');
+
+
+            var fileName = 'DoanhThuTheoSamPham' + currentDate + '.xlsx';
+            var fileanh = 'DoanhThuTheoSamPham' + currentDate + '.png';
+            XLSX.writeFile(wb, fileName);
+            downloadImg(fileanh);
+        }
+
+        function downloadImg(fileanh) {
+            const imageLink = document.createElement('a');
+            const canvas = document.getElementById('myChart');
+            //imageLink.download = 'canvas.png';
+            imageLink.download = fileanh;
+            imageLink.href = canvas.toDataURL('image/png', 1);
+            imageLink.click();
+
         }
     </script>
 }

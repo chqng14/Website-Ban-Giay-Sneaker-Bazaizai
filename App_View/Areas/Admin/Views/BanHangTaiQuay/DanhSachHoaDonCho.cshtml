@@ -14,9 +14,10 @@
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
 }
 <head>
-    	<link rel="stylesheet" type="text/css" href="~/Admin/css/banHangTaiQuay">
+    <link rel="stylesheet" type="text/css" href="~/Admin/css/banHangTaiQuay">
 </head>
-<body></body>
+<body>
+</body>
 <!-- Modal -->
 <div class="modal fade" id="exampleModalScrollable" data-backdrop="static">
     <div class="modal-dialog modal-dialog-scrollable draggable">
@@ -140,8 +141,9 @@
                                 if (result.trangThai) {
                                     ThemSanPhamThanhCong();
                                     CapNhapLaiTien(maHoaDon);
+                                    toastr.success('Thêm sản phẩm thành công', 'Thành công');
                                 }
-                                else{
+                                else {
                                     toastr.error("Không thêm được sản phẩm", 'Lỗi');
 
                                 }
@@ -160,7 +162,8 @@
                         success: function (result) {
                             if (result.trangThai) {
                                 var tongTienHoaDon = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
-                                if (result.dieuKien <= tongTienHoaDon) {
+                                var tongTienPhaiTra = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
+                                if (result.dieuKien <= tongTienPhaiTra) {
                                     $("#MaVoucher").val(result.idVoucher);
                                     if (result.loaiHinhUuDai == 0) {
                                         $("#VoucherGiam").val(result.mucGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
@@ -171,22 +174,24 @@
                                         if (tongTien < 0) {
                                             $("#VoucherGiam").val((result.mucGiam + tongTien).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                                             $("#TongGiam").val((result.mucGiam + KhuyenMaiGiam + tongTien).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
-                                             tongTien = 0;
-                                            }
+                                            tongTien = 0;
+                                        }
                                         $("#SoTienPhaiTra").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
-                                       
+
 
                                     }
                                     else {
                                         $("#VoucherGiam").val(result.mucGiam + "%");
                                         var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
                                         var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
-                                        tongTien = tongTienHoaDon - tongTienHoaDon / 100 * result.mucGiam - KhuyenMaiGiam;
+                                        tongTien = tongTienHoaDon - KhuyenMaiGiam;
+                                        tongTien = tongTien - tongTien / 100 * result.mucGiam;
                                         $("#SoTienPhaiTra").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
-                                        $("#TongGiam").val((tongTienHoaDon / 100 * result.mucGiam + KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                        $("#TongGiam").val((tongTienHoaDon - tongTien).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                                     }
                                     loading = false;
                                     ThemVoucherThanhCong();
+                                    toastr.success('Đã sử dụng voucher', 'Thành công');
                                 }
                                 else {
                                     var tienVoucher = 0;
@@ -322,33 +327,33 @@
                             @{
                                 foreach (var item in Model)
                                 {
-                                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a></li>
+                                    <li><a href="#tab-@item.MaHoaDon">@item.MaHoaDon</a></li>
                                 }
                             }
                         </ul>
                         @{
                             foreach (var item in Model)
                             {
-                                                <div id="tab-@item.MaHoaDon" style="height:300px">
-                                                    <div class="table-responsive" style=" height:250px; overflow-y: scroll; overflow-x: hidden">
+                                <div id="tab-@item.MaHoaDon" style="height:300px">
+                                    <div class="table-responsive" style=" height:250px; overflow-y: scroll; overflow-x: hidden">
 
-                                                        <table class="table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
-                                                                    <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
-                                                                    <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
-                                                                    <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
-                                                                    <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
-                                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
-                                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">STT</th>
+                                                    <th style="width: 0%; position: sticky; top: 0; background-color: white; display: none">IdSanPham</th>
+                                                    <th style="width: 20%; position: sticky; top: 0; background-color: white">Mã sản phẩm</th>
+                                                    <th style="width: 35%; position: sticky; top: 0; background-color: white">Tên sản phẩm</th>
+                                                    <th style="width: 15%; position: sticky; top: 0; background-color: white">Giá bán</th>
+                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Số lượng</th>
+                                                    <th style="width: 10%; position: sticky; top: 0; background-color: white">Xóa sản phẩm</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             }
                         }
                     </div>
@@ -368,7 +373,7 @@
 
                         </div>
                         <div class="row"><input type="text" class="form-control" oninput="timKiemKhachHang(this.value)" placeholder="Tìm kiếm khách hàng" id="TimKhachHang" style="margin-left: 16px;border-radius: 20px;width:200px;"></div>
-                        <div class="row" style="height: 340px; padding-left: 20px; width: 260px; overflow-y: scroll; overflow-x: hidden">
+                        <div class="row" style="height: 340px; margin:10px; width: 230px; overflow-y: scroll; overflow-x: hidden">
                             <div class="row" id="DanhSachKhachHang"></div>
                         </div>
                     </div>
@@ -430,7 +435,7 @@
                                         <td><input class="form-control" type="text" id="TongTienHoaDon" onchange="updateTienThua()" aria-label="default input example" style="border-bottom: 2px solid black;" disabled></td>
                                     </tr>
                                     <tr>
-                                        <td>VouCher: </td>
+                                        <td>Voucher: </td>
                                         <td><input class="form-control" type="text" id="MaVoucher" oninput="GetVoucher(this.value)" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
                                     </tr>
                                     <tr>
@@ -473,8 +478,6 @@
             </div>
             <div class="modal-body">
                 <table>
-
-
                     <tr>
                         <td>Tên khách hàng:</td>
                         <td><input class="form-control" type="text" id="TenKhachHangThem" aria-label="default input example" style="border-bottom: 2px solid black;"></td>
@@ -896,7 +899,7 @@
                             $('#DanhSachKhachHang').empty();
 
                             $('#DanhSachKhachHang').append(result);
-
+                            toastr.success('Đã sử dụng voucher', 'Thành công');
                         },
                         error: function (xhr, status, error) {
 
@@ -1073,13 +1076,13 @@
                 success: function (result) {
                     if (result.trangThai) {
                         var tongTienHoaDon = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
-                        if (result.dieuKien <= tongTienHoaDon) {
+                        var tongTienPhaiTra = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
+                        if (result.dieuKien <= tongTienPhaiTra) {
                             if (result.loaiHinhUuDai == 0) {
                                 $("#VoucherGiam").val(result.mucGiam.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
                                 var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
                                 var tongTienHoaDon = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0; // Assuming there is a variable named tongTienHoaDon
                                 var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
-
                                 $("#TongGiam").val((result.mucGiam + KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
 
                                 tongTien = tongTienHoaDon - result.mucGiam - KhuyenMaiGiam;
@@ -1095,11 +1098,13 @@
                                 $("#VoucherGiam").val(result.mucGiam + "%");
                                 var tongTien = parseFloat($("#SoTienPhaiTra").val().replace(/[^\d]/g, '')) || 0;
                                 var KhuyenMaiGiam = parseFloat($("#KhuyenMaiGiam").val().replace(/[^\d]/g, '')) || 0;
-                                tongTien = tongTienHoaDon - tongTienHoaDon / 100 * result.mucGiam - KhuyenMaiGiam;
+                                tongTien = tongTienHoaDon - KhuyenMaiGiam;
+                                tongTien = tongTien - tongTien / 100 * result.mucGiam;
                                 $("#SoTienPhaiTra").val(tongTien.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
-                                $("#TongGiam").val((tongTienHoaDon / 100 * result.mucGiam + KhuyenMaiGiam).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                                $("#TongGiam").val((tongTienHoaDon - tongTien).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
 
                             }
+                            toastr.success('Đã sử dụng voucher', 'Thành công');
                             loading = false;
                         }
                         else {
@@ -1194,7 +1199,7 @@
             cancelButtonText: 'Hủy bỏ'
         }).then((result) => {
             if (result.isConfirmed) {
-                if(loading){
+                if (loading) {
                     Swal.fire('Đã hủy bỏ', 'Hành động không thể thực hiện bây giờ, thử sau 5s.', 'error');
                     return;
                 }
@@ -1210,7 +1215,7 @@
                     var SDT = $('#SoDienThoai').val();
                     var tongTienChuaGiam = parseFloat($("#TongTienHoaDon").val().replace(/[^\d]/g, '')) || 0;
                     var tongGiam = parseFloat($("#TongGiam").val().replace(/[^\d]/g, '')) || 0;
-                    
+
                     $.ajax({
                         url: '/Admin/BanHangTaiQuay/ThanhToan?maHD=' + maHoaDon + '&SDT=' + SDT + '&TongTien=' + tongTienChuaGiam + '&tienMat=' + tienMat + '&chuyenKhoan=' + tienChuyenKhoan + '&idVoucher=' + maVoucher + '&hinhThuc=' + hinhThucThanhToan + '&tongGiam=' + tongGiam,
                         type: 'POST',
@@ -1244,7 +1249,7 @@
 
                                                 // Chờ cho nội dung được load hoàn tất trước khi kích hoạt hộp thoại in
                                                 printWindow.onload = function () {
-                                                   
+
                                                     printWindow.print();
                                                     printWindow.onafterprint = function () {
                                                         // Đóng cửa sổ trang in sau khi in xong

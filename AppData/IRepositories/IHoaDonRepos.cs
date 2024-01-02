@@ -18,5 +18,6 @@ namespace App_Data.IRepositories
         public bool EditBill(HoaDon item);
         public string HuyHoaDon(string maHD, string lyDoHuy, string idUser);
         public bool ThanhToanTaiQuay(HoaDon item);
+        public bool CheckKhachHang(string idThongTin);
     }
 }

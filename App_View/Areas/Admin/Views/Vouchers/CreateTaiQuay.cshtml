@@ -91,12 +91,7 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label class="font-weight-semibold" id="inputLabel">Nhập số tiền giảm:</label>
-                        <input asp-for="MucUuDai" id="MucGiam"
-                               class="form-control" type="number" />
-                        <span asp-validation-for="MucUuDai" class="text-danger"></span>
-                    </div>
+          
                     <div class="form-group col-md-6">
                         <label class="font-weight-semibold">Ngày bắt đầu:</label>
                         <input asp-for="NgayBatDau" id="NgayBatDau"
@@ -110,6 +105,12 @@
                                class="form-control" />
                         <span asp-validation-for="NgayKetThuc"
                               class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="font-weight-semibold" id="inputLabel">Nhập số tiền giảm:</label>
+                        <input asp-for="MucUuDai" id="MucGiam"
+                               class="form-control" type="number" />
+                        <span asp-validation-for="MucUuDai" class="text-danger"></span>
                     </div>
                     <div class="form-group col-md-6">
                         <label class="font-weight-semibold">Điều kiện (áp dụng cho đơn từ):</label>
@@ -221,7 +222,11 @@
 
         // Thêm sự kiện click vào nút để gọi hàm taiLaiTrang
         nutReload.addEventListener('click', taiLaiTrang);
+
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.8.1/autoNumeric.min.js"></script>
     @section Scripts {
