@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using SixLabors.ImageSharp.Processing;
 
 namespace App_Api.Controllers
 {

@@ -3,6 +3,7 @@ using App_Data.Models;
 using App_Data.ViewModels.Anh;
 using Microsoft.AspNetCore.Mvc;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
 
 namespace App_Api.Controllers
 {
