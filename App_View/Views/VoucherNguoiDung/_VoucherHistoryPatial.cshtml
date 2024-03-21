@@ -2,23 +2,6 @@
 @using static App_Data.Repositories.TrangThai;
 @model IEnumerable<App_Data.ViewModels.VoucherNguoiDung.VoucherNguoiDungDTO>
 
-
-<style>
-    .m-order__list {
-        display: flex;
-        flex-wrap: wrap; /* Cho phép các cột wrap (được xuống dòng) khi không đủ chỗ */
-    }
-
-    .m-order__get {
-        width: 45%; /* Đặt chiều rộng của mỗi cột là 50% để chúng hiển thị trong cùng một cột */
-        padding: 10px;
-        margin-left: 20px;
-        box-sizing: border-box;
-    }
-
-</style>
-
-
 @functions {
     // Hàm trợ giúp để định dạng số nguyên thành tiền tệ Việt Nam
     public string FormatCurrency(int? value)
