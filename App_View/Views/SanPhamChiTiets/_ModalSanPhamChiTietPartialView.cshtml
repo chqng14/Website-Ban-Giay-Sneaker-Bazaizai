@@ -4,8 +4,8 @@
 @inject IDanhGiaService _DanhGiaService
 @{
     _DanhGiaService = new DanhGiaService();
-    var TongSoDanhGia = await _DanhGiaService.GetTongSoDanhGia(Model.IdChiTietSp);
-    var SaoTb = await _DanhGiaService.GetSoSaoTB(Model.IdChiTietSp);
+    var TongSoDanhGia = await _DanhGiaService.GetTongSoDanhGia(Model.IdChiTietSp!);
+    var SaoTb = await _DanhGiaService.GetSoSaoTB(Model.IdChiTietSp!);
 }
 <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content modal--shadow">

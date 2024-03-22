@@ -149,7 +149,7 @@ namespace App_Api.Controllers
             return Ok();
         }
         [HttpPut("EditNoiImage")]
-        public async Task<IActionResult> EditKhuyenMai([FromBody] KhuyenMaiDTO khuyenMai)
+        public async Task<IActionResult> EditKhuyenMai([FromForm] KhuyenMaiDTO khuyenMai)
         {
                 var KhuyenMai = await context.khuyenMais.FindAsync(khuyenMai.IdKhuyenMai);
             KhuyenMai.TenKhuyenMai = khuyenMai.TenKhuyenMai;

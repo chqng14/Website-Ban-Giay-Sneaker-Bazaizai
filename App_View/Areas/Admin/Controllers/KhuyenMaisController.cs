@@ -347,8 +347,15 @@ namespace App_View.Areas.Admin.Controllers
                             }
                             else {
                             khuyenMai.IdKhuyenMai = id;
-                            var a = khuyenMai.NgayBatDau?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
-                            var response = await _httpClient.PutAsJsonAsync($"https://localhost:7038/api/KhuyenMai/EditNoiImage", khuyenMai);
+                            content.Add(new StringContent($"{khuyenMai.LoaiHinhKM}"), "LoaiHinhKM");
+                            content.Add(new StringContent($"{khuyenMai.MucGiam}"), "MucGiam");
+                            content.Add(new StringContent($"{khuyenMai.NgayKetThuc?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")}"), "NgayKetThuc");
+                            content.Add(new StringContent($"{khuyenMai.TenKhuyenMai}"), "TenKhuyenMai");
+                            content.Add(new StringContent($"{id}"), "IdKhuyenMai");
+                            content.Add(new StringContent($"{khuyenMai.NgayBatDau?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")}"), "NgayBatDau");
+                            content.Add(new StringContent("111"), "MaKhuyenMai");
+                            content.Add(new StringContent($"{khuyenMai.TrangThai}"), "TrangThai");
+                            var response = await _httpClient.PutAsync($"https://localhost:7038/api/KhuyenMai/EditNoiImage", content);
                             if (response.IsSuccessStatusCode)
                             {
                                 return RedirectToAction("Index");

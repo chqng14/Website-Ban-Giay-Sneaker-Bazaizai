@@ -20,10 +20,11 @@ namespace App_Api.Controllers
         BazaizaiContext DbContextModel = new BazaizaiContext();
         private readonly IThongTinGHRepos thongTinGHRepos;
         private readonly IMapper _mapper;
-        public ThongTinGiaoHangController(IMapper mapper)
+        public ThongTinGiaoHangController(IMapper mapper, IAllRepo<GioHangChiTiet> allRepo)
         {
             thongTinGHRepos = new ThongTinGHRepos(mapper);
             _mapper = mapper;
+            this.allRepo = allRepo;
         }
         // GET: api/<ThongTinGiaoHangController>
         [HttpGet("GetAll")]

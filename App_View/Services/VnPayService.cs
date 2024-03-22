@@ -12,7 +12,7 @@ namespace App_View.Services
         {
             _configuration = configuration;
         }
-        public async Task<string> CreatePaymentUrl(PaymentInformationModel model, HttpContext context)
+        public string CreatePaymentUrl(PaymentInformationModel model, HttpContext context)
         {
             var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById(_configuration["TimeZoneId"]!);
             var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);
@@ -39,7 +39,7 @@ namespace App_View.Services
             return paymentUrl;
         }
 
-        public async Task<PaymentResponseModel> PaymentExecute(IQueryCollection collections)
+        public PaymentResponseModel PaymentExecute(IQueryCollection collections)
         {
             var pay = new VnPayLibrary();
             var response = pay.GetFullResponseData(collections!, _configuration["Vnpay:HashSecret"]!);
@@ -47,12 +47,12 @@ namespace App_View.Services
             return response;
         }
 
-        public Task<PaymentResponseModel> RePaymentExecute(IQueryCollection collections)
+        public PaymentResponseModel RePaymentExecute(IQueryCollection collections)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<string> RePaymentUrl(PaymentInformationModel model, HttpContext context, string idHoaDon)
+        public string RePaymentUrl(PaymentInformationModel model, HttpContext context, string idHoaDon)
         {
             var timeZoneById = TimeZoneInfo.FindSystemTimeZoneById(_configuration["TimeZoneId"]);
             var timeNow = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZoneById);

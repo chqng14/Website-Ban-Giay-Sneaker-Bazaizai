@@ -1,5 +1,5 @@
 ﻿@model App_Data.ViewModels.HoaDon.HoaDonTest
-@foreach (var item in Model.SanPham.Where(c => c.DanhGia.SaoSp == null))
+@foreach (var item in Model.SanPham!.Where(c => c.DanhGia!.SaoSp == null))
 {
     <div class="manage-o__description" style="margin-top:10px">
         <div class="description__container">
@@ -18,7 +18,7 @@
         </div>
         <div class="description__info-wrap">
             <div>
-                @if (item.DanhGia.SaoSp == null)
+                @if (item.DanhGia!.SaoSp == null)
                 {
                     <span data-product-id="@item.IdSanPhamChiTiet"
                           data-Danhgia-detail-id="@item.IdSanPhamChiTiet*@Model.IdHoaDon"

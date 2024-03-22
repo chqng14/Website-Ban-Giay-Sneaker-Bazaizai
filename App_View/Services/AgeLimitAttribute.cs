@@ -13,11 +13,11 @@ namespace App_View.Services
             _maxAge = maxAge;
         }
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
         {
             if (value is null)
             {
-                return ValidationResult.Success;
+                return ValidationResult.Success!;
             }
             string originalFormat = "dd/MM/yyyy";
             DateTime originalDate = DateTime.ParseExact((string)value, originalFormat, null);
@@ -32,7 +32,7 @@ namespace App_View.Services
                 }
                 if (age <= _maxAge)
                 {
-                    return ValidationResult.Success;
+                    return ValidationResult.Success!;
                 }
             }
           

@@ -5,7 +5,7 @@
 @{
     _DanhGiaService = new DanhGiaService();
     var TongSoDanhGia = await _DanhGiaService.GetTongSoDanhGia(@Model.IdChiTietSp!);
-    var SaoTb = await _DanhGiaService.GetSoSaoTB(@Model.IdChiTietSp);
+    var SaoTb = await _DanhGiaService.GetSoSaoTB(@Model.IdChiTietSp!);
 
 }
 
