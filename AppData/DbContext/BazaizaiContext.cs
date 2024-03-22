@@ -9,7 +9,7 @@ namespace App_Data.DbContext
     {
         public BazaizaiContext()
         {
-
+            
         }
 
         public BazaizaiContext(DbContextOptions options) : base(options)

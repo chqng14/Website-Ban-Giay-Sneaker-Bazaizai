@@ -407,7 +407,7 @@ namespace App_View.Controllers
                 else if (payment.ToUpper() == "VNPAY")
                 {
                     var response = _vnPayService.PaymentExecute(Request.Query);
-                    if (response.Result.VnPayResponseCode == "00")
+                    if (response.VnPayResponseCode == "00")
                     {
                         await PTThanhToanChiTietController.Edit(idpt, (int)PTThanhToanChiTiet.DaThanhToan);
                         await hoaDonServices.UpdateTrangThaiHoaDon(idHoaDonSession, (int)TrangThaiHoaDon.DaThanhToan);
@@ -459,7 +459,7 @@ namespace App_View.Controllers
                 OrderDescription = "Thanh toán tại Bazazai Store",
                 OrderType = "200000",
             };
-            var url = await _vnPayService.CreatePaymentUrl(model, HttpContext);
+            var url =  _vnPayService.CreatePaymentUrl(model, HttpContext);
             var Pay = await PTThanhToanController.GetPTThanhToanByName("VnPay");
             var idPay = await PTThanhToanChiTietController.CreatePTThanhToanChiTiet(idHoaDon, Pay, tien);
             SessionServices.SetIdToSession(HttpContext.Session, "idPay", idPay);
