@@ -141,6 +141,9 @@ namespace App_View.Controllers
         {
             return Ok(await _SanPhamChiTietservice.GetItemDetailViewModelWhenSelectSizeAynsc(id, size));
         }
-
+        public IActionResult test()
+        {
+            return View();
+        }
     }
 }

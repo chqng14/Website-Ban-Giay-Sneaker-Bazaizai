@@ -6,7 +6,7 @@ namespace App_View.Services
     public class NameLimitAttribute: ValidationAttribute
     {
 
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        protected override ValidationResult IsValid(object? value, ValidationContext validationContext)
         {
             if (value is null)
             {
@@ -17,7 +17,7 @@ namespace App_View.Services
                 string regexPattern = @"^[\p{L}]{2,}( [\p{L}]{1,})+$";
                 if (Regex.IsMatch((string)value, regexPattern))
                 {                
-                    return ValidationResult.Success;
+                    return ValidationResult.Success!;
                 }
                 else return new ValidationResult("Tên của bạn không hợp lệ.");
             }
