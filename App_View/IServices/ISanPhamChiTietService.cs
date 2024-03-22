@@ -15,7 +15,7 @@ using static App_View.Areas.Admin.Controllers.SanPhamChiTietController;
 namespace App_View.IServices
 {
  
-    public interface ISanPhamChiTietService
+    public interface ISanPhamChiTietservice
     {
         Task<ResponseCreateDTO> AddAysnc(SanPhamChiTietDTO sanPhamChiTietDTO);
         Task<bool> DeleteAysnc(string id);

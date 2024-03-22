@@ -1,6 +1,6 @@
 
 using App_View.IServices;
-using App_Data.DbContextt;
+using App_Data.DbContext;
 using App_Data.Models;
 using App_View.Services;
 using Microsoft.AspNetCore.Identity;
@@ -46,18 +46,18 @@ builder.Services.AddDbContext<BazaizaiContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddOptions();
 builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
-builder.Services.AddScoped<IVoucherServices, VoucherServices>();
-builder.Services.AddScoped<IVoucherNguoiDungServices, VoucherNguoiDungServices>();
+builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietservice, SanPhamChiTietservice>();
+builder.Services.AddScoped<IVoucherservices, Voucherservices>();
+builder.Services.AddScoped<IVoucherNguoiDungservices, VoucherNguoiDungservices>();
 
-builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
-builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
-builder.Services.AddScoped<IKhuyenMaiChiTietServices, KhuyenMaiChiTietServices>();
-builder.Services.AddScoped<IKhuyenMaiServices, KhuyenMaiServices>();
+builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietservice, SanPhamChiTietservice>();
+builder.Services.AddScoped<IGioHangChiTietservices, GioHangChiTietservices>();
+builder.Services.AddScoped<IKhuyenMaiChiTietservices, KhuyenMaiChiTietservices>();
+builder.Services.AddScoped<IKhuyenMaiservices, KhuyenMaiservices>();
 builder.Services.AddScoped<ThongTinGHController>();  // Sử dụng AddScoped nếu bạn muốn một instance cho mỗi phạm vi của yêu cầu HTTP
 builder.Services.AddScoped<GioHangChiTietsController, GioHangChiTietsController>();
 builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
-builder.Services.AddScoped<IDanhGiaService, DanhGiaService>();
+builder.Services.AddScoped<IDanhGiaservice, DanhGiaservice>();
 
 builder.Services.AddScoped<IThongKeService, ThongKeService>();
 builder.Services.AddScoped<IThongTinGHServices, ThongTinGHServices>();

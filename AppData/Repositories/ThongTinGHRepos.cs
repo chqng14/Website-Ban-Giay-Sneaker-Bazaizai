@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.ViewModels.GioHangChiTiet;
@@ -26,7 +26,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                context.thongTinGiaoHangs.Add(item);
+                context.ThongTinGiaoHangs.Add(item);
                 context.SaveChanges();
                 return true;
             }
@@ -40,8 +40,8 @@ namespace App_Data.Repositories
         {
             try
             {
-                //var id = context.thongTinGiaoHangs.Find(item.IdThongTinGH);
-                context.thongTinGiaoHangs.Update(item);
+                //var id = context.ThongTinGiaoHangs.Find(item.IdThongTinGH);
+                context.ThongTinGiaoHangs.Update(item);
                 context.SaveChanges();
                 return true;
             }
@@ -53,15 +53,15 @@ namespace App_Data.Repositories
 
         public IEnumerable<ThongTinGiaoHang> GetAll()
         {
-            return context.thongTinGiaoHangs.ToList();
+            return context.ThongTinGiaoHangs.ToList();
         }
 
         public bool RemoveThongTinGH(ThongTinGiaoHang item)
         {
             try
             {
-                var id = context.thongTinGiaoHangs.Find(item.IdThongTinGH);
-                context.thongTinGiaoHangs.Remove(item);
+                var id = context.ThongTinGiaoHangs.Find(item.IdThongTinGH);
+                context.ThongTinGiaoHangs.Remove(item);
                 context.SaveChanges();
                 return true;
             }
@@ -73,7 +73,7 @@ namespace App_Data.Repositories
 
         public IEnumerable<ThongTinGHDTO> GetAllDTO()
         {
-            var thongtin = context.thongTinGiaoHangs.ToList();
+            var thongtin = context.ThongTinGiaoHangs.ToList();
             return _mapper.Map<List<ThongTinGHDTO>>(thongtin);
         }
     }

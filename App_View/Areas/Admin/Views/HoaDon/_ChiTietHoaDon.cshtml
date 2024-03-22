@@ -3,7 +3,7 @@
 @using App_View.IServices;
 @using App_View.Models.ViewModels;
 @using static App_Data.Repositories.TrangThai;
-@inject ISanPhamChiTietService sanPhamChiTietService
+@inject ISanPhamChiTietservice SanPhamChiTietservice
 @model HoaDon
 <head>
 	<link rel="stylesheet" type="text/css" href="~/Admin/css/print.css">
@@ -83,7 +83,7 @@
 											</thead>
 											<tbody style="border: 1px solid #e6e9f0;">
 												@{
-													var sanPhamChiTietList = await sanPhamChiTietService.GetAllListSanPhamChiTietViewModelAsync();
+													var sanPhamChiTietList = await SanPhamChiTietservice.GetAllListSanPhamChiTietViewModelAsync();
 
 												}
 												@foreach (var hdct in ViewBag.HDCT)

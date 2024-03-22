@@ -1,6 +1,6 @@
 ﻿@model App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel
 @{ 
-    App_View.IServices.IDanhGiaService _danhGiaService = new App_View.Services.DanhGiaService();
+    App_View.IServices.IDanhGiaservice _DanhGiaservice = new App_View.Services.DanhGiaservice();
     double soSao = 0;
  }
 <div>
@@ -89,7 +89,7 @@
             </span>
             <div class="product-o__rating gl-rating-style">
                 @{
-                    soSao = await _danhGiaService.GetSoSaoTB(item.IdChiTietSp!);
+                    soSao = await _DanhGiaservice.GetSoSaoTB(item.IdChiTietSp!);
                 }
                 @if (soSao < 0.3)
                 {
@@ -181,7 +181,7 @@
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                 }
-                <span class="product-o__review">(@await _danhGiaService.GetTongSoDanhGia(item.IdChiTietSp!))</span>
+                <span class="product-o__review">(@await _DanhGiaservice.GetTongSoDanhGia(item.IdChiTietSp!))</span>
 
             </div>
             <div>
@@ -266,7 +266,7 @@
             </span>
             <div class="product-o__rating gl-rating-style">
                 @{
-                    soSao = await _danhGiaService.GetSoSaoTB(item.IdChiTietSp!);
+                    soSao = await _DanhGiaservice.GetSoSaoTB(item.IdChiTietSp!);
                 }
                 @if (soSao < 0.3)
                 {
@@ -358,7 +358,7 @@
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                 }
-                <span class="product-o__review">(@await _danhGiaService.GetTongSoDanhGia(item.IdChiTietSp!))</span>
+                <span class="product-o__review">(@await _DanhGiaservice.GetTongSoDanhGia(item.IdChiTietSp!))</span>
 
             </div>
             <div>
@@ -443,7 +443,7 @@
             </span>
             <div class="product-o__rating gl-rating-style">
                 @{
-                    soSao = await _danhGiaService.GetSoSaoTB(item.IdChiTietSp!);
+                    soSao = await _DanhGiaservice.GetSoSaoTB(item.IdChiTietSp!);
                 }
                 @if (soSao < 0.3)
                 {
@@ -535,7 +535,7 @@
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                 }
-                <span class="product-o__review">(@await _danhGiaService.GetTongSoDanhGia(item.IdChiTietSp!))</span>
+                <span class="product-o__review">(@await _DanhGiaservice.GetTongSoDanhGia(item.IdChiTietSp!))</span>
 
             </div>
             <div>
@@ -618,7 +618,7 @@
             </span>
             <div class="product-o__rating gl-rating-style">
                 @{
-                    soSao = await _danhGiaService.GetSoSaoTB(item.IdChiTietSp!);
+                    soSao = await _DanhGiaservice.GetSoSaoTB(item.IdChiTietSp!);
                 }
                 @if (soSao < 0.3)
                 {
@@ -710,7 +710,7 @@
                     <i class="fas fa-star"></i>
                     <i class="fas fa-star"></i>
                 }
-                <span class="product-o__review">(@await _danhGiaService.GetTongSoDanhGia(item.IdChiTietSp!))</span>
+                <span class="product-o__review">(@await _DanhGiaservice.GetTongSoDanhGia(item.IdChiTietSp!))</span>
 
             </div>
             <div>

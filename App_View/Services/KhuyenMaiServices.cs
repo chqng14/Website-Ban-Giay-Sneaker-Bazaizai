@@ -6,10 +6,10 @@ using OpenXmlPowerTools;
 
 namespace App_View.Services
 {
-    public class KhuyenMaiServices: IKhuyenMaiServices
+    public class KhuyenMaiservices: IKhuyenMaiservices
     {
         HttpClient _httpClient;
-        public KhuyenMaiServices(HttpClient httpClient)
+        public KhuyenMaiservices(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

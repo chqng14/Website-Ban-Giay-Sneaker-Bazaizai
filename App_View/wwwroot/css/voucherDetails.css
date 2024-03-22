@@ -104,10 +104,10 @@
 :root {
     --theme-color: var(--color-purple);
 }
-
+/*
 .list-group-item {
     white-space: nowrap;
-}
+}*/
 
 .list-group-item {
     float: left;

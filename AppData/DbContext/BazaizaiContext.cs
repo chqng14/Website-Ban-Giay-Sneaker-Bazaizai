@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace App_Data.DbContextt
+namespace App_Data.DbContext
 {
     public class BazaizaiContext : IdentityDbContext<NguoiDung, ChucVu, string>
     {
@@ -20,30 +20,30 @@ namespace App_Data.DbContextt
 
         public DbSet<Anh> Anh { get; set; }
         public DbSet<ChatLieu> ChatLieus { get; set; }
-        public DbSet<ChucVu> chucVus { get; set; }
-        public DbSet<GioHang> gioHangs { get; set; }
-        public DbSet<GioHangChiTiet> gioHangChiTiets { get; set; }
+        public DbSet<ChucVu> ChucVus { get; set; }
+        public DbSet<GioHang> GioHangs { get; set; }
+        public DbSet<GioHangChiTiet> GioHangChiTiets { get; set; }
         public DbSet<HoaDon> HoaDons { get; set; }
-        public DbSet<HoaDonChiTiet> hoaDonChiTiets { get; set; }
-        public DbSet<KhuyenMai> khuyenMais { get; set; }
+        public DbSet<HoaDonChiTiet> HoaDonChiTiets { get; set; }
+        public DbSet<KhuyenMai> KhuyenMais { get; set; }
         public DbSet<KhachHang> KhachHangs { get; set; }
-        public DbSet<KhuyenMaiChiTiet> khuyenMaiChiTiets { get; set; }
-        public DbSet<KichCo> kichCos { get; set; }
-        public DbSet<KieuDeGiay> kieuDeGiays { get; set; }
+        public DbSet<KhuyenMaiChiTiet> KhuyenMaiChiTiets { get; set; }
+        public DbSet<KichCo> KichCos { get; set; }
+        public DbSet<KieuDeGiay> KieuDeGiays { get; set; }
         public DbSet<LoaiGiay> LoaiGiays { get; set; }
-        public DbSet<MauSac> mauSacs { get; set; }
+        public DbSet<MauSac> MauSacs { get; set; }
         public DbSet<NguoiDung> NguoiDungs { get; set; }
         public DbSet<PhuongThucThanhToan> PhuongThucThanhToans { get; set; }
-        public DbSet<PhuongThucThanhToanChiTiet> phuongThucThanhToanChiTiets { get; set; }
+        public DbSet<PhuongThucThanhToanChiTiet> PhuongThucThanhToanChiTiets { get; set; }
         public DbSet<SanPham> SanPhams { get; set; }
-        public DbSet<SanPhamChiTiet> sanPhamChiTiets { get; set; }
-        public DbSet<SanPhamYeuThich> sanPhamYeuThiches { get; set; }
-        public DbSet<ThongTinGiaoHang> thongTinGiaoHangs { get; set; }
-        public DbSet<ThuongHieu> thuongHieus { get; set; }
-        public DbSet<Voucher> vouchers { get; set; }
-        public DbSet<VoucherNguoiDung> voucherNguoiDungs { get; set; }
-        public DbSet<XuatXu> xuatXus { get; set; }
-        public DbSet<DanhGia> danhGias { get; set; }
+        public DbSet<SanPhamChiTiet> SanPhamChiTiets { get; set; }
+        public DbSet<SanPhamYeuThich> SanPhamYeuThichs { get; set; }
+        public DbSet<ThongTinGiaoHang> ThongTinGiaoHangs { get; set; }
+        public DbSet<ThuongHieu> ThuongHieus { get; set; }
+        public DbSet<Voucher> Vouchers { get; set; }
+        public DbSet<VoucherNguoiDung> VoucherNguoiDungs { get; set; }
+        public DbSet<XuatXu> XuatXus { get; set; }
+        public DbSet<DanhGia> DanhGias { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

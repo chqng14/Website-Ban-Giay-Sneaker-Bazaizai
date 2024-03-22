@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.Models;
 using App_Data.Models.ViewModels.MauSac;
 using App_Data.ViewModels.ChatLieuDTO;
@@ -37,7 +37,7 @@ namespace App_View.Areas.Admin.Controllers
                     Id = it.IdSanPham,
                     Ma = it.MaSanPham,
                     Ten = it.TenSanPham,
-                    SoBienTheDangDung = _context.sanPhamChiTiets.Where(sp => sp.IdSanPham == it.IdSanPham).Count(),
+                    SoBienTheDangDung = _context.SanPhamChiTiets.Where(sp => sp.IdSanPham == it.IdSanPham).Count(),
                     TrangThai = it.Trangthai == 0 ? "Hoạt động" : "Không hoạt động"
                 })
                 .AsEnumerable()
@@ -50,14 +50,14 @@ namespace App_View.Areas.Admin.Controllers
         public IActionResult LoadPartialViewDanhSachThuongHieu()
         {
             var lstThuongHieu = _context
-                .thuongHieus
+                .ThuongHieus
                 .AsNoTracking()
                 .Select(it => new ThuocTinhViewModel()
                 {
                     Id = it.IdThuongHieu,
                     Ma = it.MaThuongHieu,
                     Ten = it.TenThuongHieu,
-                    SoBienTheDangDung = _context.sanPhamChiTiets.Where(sp => sp.IdThuongHieu == it.IdThuongHieu).Count(),
+                    SoBienTheDangDung = _context.SanPhamChiTiets.Where(sp => sp.IdThuongHieu == it.IdThuongHieu).Count(),
                     TrangThai = it.TrangThai == 0 ? "Hoạt động" : "Không hoạt động"
                 })
                 .AsEnumerable()
@@ -77,7 +77,7 @@ namespace App_View.Areas.Admin.Controllers
                     Id = it.IdLoaiGiay,
                     Ma = it.MaLoaiGiay,
                     Ten = it.TenLoaiGiay,
-                    SoBienTheDangDung = _context.sanPhamChiTiets.Where(sp => sp.IdLoaiGiay == it.IdLoaiGiay).Count(),
+                    SoBienTheDangDung = _context.SanPhamChiTiets.Where(sp => sp.IdLoaiGiay == it.IdLoaiGiay).Count(),
                     TrangThai = it.TrangThai == 0 ? "Hoạt động" : "Không hoạt động"
                 })
                 .AsEnumerable()
@@ -90,14 +90,14 @@ namespace App_View.Areas.Admin.Controllers
         public IActionResult LoadPartialViewDanhSachKieuDeGiay()
         {
             var lstKieuDeGiay = _context
-                .kieuDeGiays
+                .KieuDeGiays
                 .AsNoTracking()
                 .Select(it => new ThuocTinhViewModel()
                 {
                     Id = it.IdKieuDeGiay,
                     Ma = it.MaKieuDeGiay,
                     Ten = it.TenKieuDeGiay,
-                    SoBienTheDangDung = _context.sanPhamChiTiets.Where(sp => sp.IdKieuDeGiay == it.IdKieuDeGiay).Count(),
+                    SoBienTheDangDung = _context.SanPhamChiTiets.Where(sp => sp.IdKieuDeGiay == it.IdKieuDeGiay).Count(),
                     TrangThai = it.Trangthai == 0 ? "Hoạt động" : "Không hoạt động"
                 })
                 .AsEnumerable()
@@ -110,14 +110,14 @@ namespace App_View.Areas.Admin.Controllers
         public IActionResult LoadPartialViewDanhSachXuatXu()
         {
             var lstXuatXu = _context
-                .xuatXus
+                .XuatXus
                 .AsNoTracking()
                 .Select(it => new ThuocTinhViewModel()
                 {
                     Id = it.IdXuatXu,
                     Ma = it.Ma,
                     Ten = it.Ten,
-                    SoBienTheDangDung = _context.sanPhamChiTiets.Where(sp => sp.IdXuatXu == it.IdXuatXu).Count(),
+                    SoBienTheDangDung = _context.SanPhamChiTiets.Where(sp => sp.IdXuatXu == it.IdXuatXu).Count(),
                     TrangThai = it.TrangThai == 0 ? "Hoạt động" : "Không hoạt động"
                 })
                 .AsEnumerable()
@@ -137,7 +137,7 @@ namespace App_View.Areas.Admin.Controllers
                     Id = it.IdChatLieu,
                     Ma = it.MaChatLieu,
                     Ten = it.TenChatLieu,
-                    SoBienTheDangDung = _context.sanPhamChiTiets.Where(sp => sp.IdChatLieu == it.IdChatLieu).Count(),
+                    SoBienTheDangDung = _context.SanPhamChiTiets.Where(sp => sp.IdChatLieu == it.IdChatLieu).Count(),
                     TrangThai = it.TrangThai == 0 ? "Hoạt động" : "Không hoạt động"
                 })
                 .AsEnumerable()
@@ -150,14 +150,14 @@ namespace App_View.Areas.Admin.Controllers
         public IActionResult LoadPartialViewDanhSachMauSac()
         {
             var lstMauSac = _context
-                .mauSacs
+                .MauSacs
                 .AsNoTracking()
                 .Select(it => new ThuocTinhViewModel()
                 {
                     Id = it.IdMauSac,
                     Ma = it.MaMauSac,
                     Ten = it.TenMauSac,
-                    SoBienTheDangDung = _context.sanPhamChiTiets.Where(sp => sp.IdMauSac == it.IdMauSac).Count(),
+                    SoBienTheDangDung = _context.SanPhamChiTiets.Where(sp => sp.IdMauSac == it.IdMauSac).Count(),
                     TrangThai = it.TrangThai == 0 ? "Hoạt động" : "Không hoạt động"
                 })
                 .AsEnumerable()
@@ -170,14 +170,14 @@ namespace App_View.Areas.Admin.Controllers
         public IActionResult LoadPartialViewDanhSachKichCo()
         {
             var lstKichCo = _context
-                .kichCos
+                .KichCos
                 .AsNoTracking()
                 .Select(it => new ThuocTinhViewModel()
                 {
                     Id = it.IdKichCo,
                     Ma = it.MaKichCo,
                     Ten = it.SoKichCo.ToString(),
-                    SoBienTheDangDung = _context.sanPhamChiTiets.Where(sp => sp.IdKichCo == it.IdKichCo).Count(),
+                    SoBienTheDangDung = _context.SanPhamChiTiets.Where(sp => sp.IdKichCo == it.IdKichCo).Count(),
                     TrangThai = it.TrangThai == 0 ? "Hoạt động" : "Không hoạt động"
                 })
                 .AsEnumerable()

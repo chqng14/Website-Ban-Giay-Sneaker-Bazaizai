@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using System;
@@ -24,7 +24,7 @@ namespace App_Data.Repositories
             hoadonchitiet.IdHoaDonChiTiet = Guid.NewGuid().ToString();
             hoadonchitiet.IdHoaDon = hoaDon.IdHoaDon;
             hoadonchitiet.TrangThai = (int)TrangThaiCoBan.KhongHoatDong;
-            _context.hoaDonChiTiets.Add(hoadonchitiet);
+            _context.HoaDonChiTiets.Add(hoadonchitiet);
             throw new NotImplementedException();
         }
     }

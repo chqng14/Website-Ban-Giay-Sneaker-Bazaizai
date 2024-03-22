@@ -5,7 +5,7 @@ using App_Data.ViewModels.Voucher;
 
 namespace App_View.IServices
 {
-    public interface IDanhGiaService
+    public interface IDanhGiaservice
     {
         public Task<List<DanhGia>> GetAllDanhGia();
         public Task<bool> CreateDanhGia(DanhGia DanhGia);

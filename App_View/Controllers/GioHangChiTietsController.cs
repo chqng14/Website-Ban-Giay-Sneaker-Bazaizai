@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using App_Data.DbContextt;
+using App_Data.DbContext;
 using App_Data.Models;
 
 using App_Data.ViewModels.GioHangChiTiet;
@@ -27,17 +27,17 @@ namespace App_View.Controllers
     public class GioHangChiTietsController : Controller
     {
         private readonly HttpClient httpClient;
-        IGioHangChiTietServices GioHangChiTietServices;
+        IGioHangChiTietservices GioHangChiTietservices;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
-        ISanPhamChiTietService _sanPhamChiTietService;
+        ISanPhamChiTietservice _SanPhamChiTietservice;
         IThongTinGHServices thongTinGHServices;
-        IVoucherNguoiDungServices _voucherND;
-        public GioHangChiTietsController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService, IVoucherNguoiDungServices voucherND)
+        IVoucherNguoiDungservices _voucherND;
+        public GioHangChiTietsController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietservice SanPhamChiTietservice, IVoucherNguoiDungservices voucherND)
         {
             httpClient = new HttpClient();
-            GioHangChiTietServices = new GioHangChiTietServices();
-            _sanPhamChiTietService = sanPhamChiTietService;
+            GioHangChiTietservices = new GioHangChiTietservices();
+            _SanPhamChiTietservice = SanPhamChiTietservice;
             thongTinGHServices = new ThongTinGHServices();
             _signInManager = signInManager;
             _userManager = userManager;
@@ -52,8 +52,8 @@ namespace App_View.Controllers
         public async Task<IActionResult> AddToCart(GioHangChiTietDTOCUD gioHangChiTietDTOCUD)
         {
             var IdCart = GetIdNguoiDung();
-            var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(gioHangChiTietDTOCUD.IdSanPhamCT);
-            //var ListCart = (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == IdCart);
+            var product = await _SanPhamChiTietservice.GetSanPhamChiTietViewModelByKeyAsync(gioHangChiTietDTOCUD.IdSanPhamCT);
+            //var ListCart = (await GioHangChiTietservices.GetAllGioHang()).Where(c => c.IdNguoiDung == IdCart);
             if (IdCart != null)
             {
                 var existing = (await GetGioHangChiTietDTOs()).FirstOrDefault(c => c.IdSanPhamCT == product.IdChiTietSp);
@@ -70,7 +70,7 @@ namespace App_View.Controllers
                         ViewData["QuantityCartUser"] = quantityCartUser;
                         existing.SoLuong = Convert.ToInt32(product.SoLuongTon);
                     }
-                    await GioHangChiTietServices.UpdateGioHang(gioHangChiTietDTOCUD.IdSanPhamCT, Convert.ToInt32(existing.SoLuong), IdCart);
+                    await GioHangChiTietservices.UpdateGioHang(gioHangChiTietDTOCUD.IdSanPhamCT, Convert.ToInt32(existing.SoLuong), IdCart);
                 }
                 else
                 {
@@ -81,13 +81,13 @@ namespace App_View.Controllers
                     giohang.SoLuong = gioHangChiTietDTOCUD.SoLuong;
                     giohang.GiaGoc = product.GiaBan;
                     giohang.GiaBan = product.GiaThucTe;
-                    GioHangChiTietServices.CreateCartDetailDTO(giohang);
+                    GioHangChiTietservices.CreateCartDetailDTO(giohang);
                 }
             }
             else
             {
-                var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-                var existing = giohangSession.FirstOrDefault(c => c.IdSanPhamCT == gioHangChiTietDTOCUD.IdSanPhamCT);
+                var GioHangsession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+                var existing = GioHangsession.FirstOrDefault(c => c.IdSanPhamCT == gioHangChiTietDTOCUD.IdSanPhamCT);
 
                 if (existing != null)
                 {
@@ -100,7 +100,7 @@ namespace App_View.Controllers
                         TempData["quantityCartUser"] = "Số lượng bạn chọn đã đạt mức tối đa của sản phẩm này";
                         existing.SoLuong = Convert.ToInt32(product.SoLuongTon);
                     }
-                    //await GioHangChiTietServices.UpdateGioHangNologin(gioHangChiTietDTOCUD.IdSanPhamCT, Convert.ToInt32(existing.SoLuong));
+                    //await GioHangChiTietservices.UpdateGioHangNologin(gioHangChiTietDTOCUD.IdSanPhamCT, Convert.ToInt32(existing.SoLuong));
                 }
                 else
                 {
@@ -115,9 +115,9 @@ namespace App_View.Controllers
                     giohang.GiaGoc = product.GiaBan;
                     giohang.GiaBan = product.GiaThucTe;
                     giohang.TrangThaiSanPham = product.TrangThai;
-                    giohangSession.Add(giohang);
+                    GioHangsession.Add(giohang);
                 }
-                SessionServices.SetObjToSession(HttpContext.Session, "Cart", giohangSession);
+                SessionServices.SetObjToSession(HttpContext.Session, "Cart", GioHangsession);
             }
             return RedirectToAction("Details", "SanPhamChiTiets", new { id = product.IdChiTietSp });
         }
@@ -206,11 +206,11 @@ namespace App_View.Controllers
         public async Task<IActionResult> CapNhatSoLuongGioHang(string IdGioHangChiTiet, int SoLuong, string IdSanPhamChiTiet)
         {
 
-            //var SumPrice = string.Format(CultureInfo.GetCultureInfo("vi-VN"), "{0:N0}đ", Convert.ToDouble((await _sanPhamChiTietService.GetByKeyAsync(IdSanPhamChiTiet)).GiaBan * SoLuong));
+            //var SumPrice = string.Format(CultureInfo.GetCultureInfo("vi-VN"), "{0:N0}đ", Convert.ToDouble((await _SanPhamChiTietservice.GetByKeyAsync(IdSanPhamChiTiet)).GiaBan * SoLuong));
             var giohang = await GetGioHangChiTietDTOs();
             var results = await Task.WhenAll(giohang.Select(async item =>
             {
-                var sanPhamChiTiet = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                var sanPhamChiTiet = await _SanPhamChiTietservice.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
 
                 if (sanPhamChiTiet.SoLuongTon == 0)
                 {
@@ -252,7 +252,7 @@ namespace App_View.Controllers
                 .ToList();
             if (!outOfStockProducts.Any())
             {
-                var jsonupdate = await GioHangChiTietServices.UpdateGioHang(IdSanPhamChiTiet, SoLuong, GetIdNguoiDung());
+                var jsonupdate = await GioHangChiTietservices.UpdateGioHang(IdSanPhamChiTiet, SoLuong, GetIdNguoiDung());
                 var giohangupdate = await GetGioHangChiTietDTOs();
                 double TongTien = giohangupdate.Sum(item => (double)item.GiaBan * (int)item.SoLuong);
                 return Json(new { /*SumPrice = SumPrice,*/ TongTien = TongTien });
@@ -264,16 +264,16 @@ namespace App_View.Controllers
         }
         public async Task<List<GioHangChiTietDTO>> GetGioHangChiTietDTOs()
         {
-            return (await GioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
+            return (await GioHangChiTietservices.GetAllGioHang()).Where(c => c.IdNguoiDung == GetIdNguoiDung()).ToList();
         }
         public async Task<IActionResult> DeleteCart(string id)
         {
-            var jsondelete = await GioHangChiTietServices.DeleteGioHang(id);
+            var jsondelete = await GioHangChiTietservices.DeleteGioHang(id);
             return RedirectToAction("ShowCartUser");
         }
         public async Task<IActionResult> DeleteCartCheckOut(string id)
         {
-            var jsondelete = await GioHangChiTietServices.DeleteGioHang(id);
+            var jsondelete = await GioHangChiTietservices.DeleteGioHang(id);
             return RedirectToAction("CheckOut");
         }
         public async Task<IActionResult> DeleteAllCart()
@@ -281,7 +281,7 @@ namespace App_View.Controllers
             List<GioHangChiTietDTO> giohang = await GetGioHangChiTietDTOs();
             foreach (var item in giohang)
             {
-                var jsondelete = await GioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
+                var jsondelete = await GioHangChiTietservices.DeleteGioHang(item.IdGioHangChiTiet);
             }
             return RedirectToAction("ShowCartUser");
         }
@@ -290,10 +290,10 @@ namespace App_View.Controllers
             var giohang = await GetGioHangChiTietDTOs();
             foreach (var item in giohang)
             {
-                var sanpham = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                var sanpham = await _SanPhamChiTietservice.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
                 if (sanpham.TrangThai == 1 || sanpham.SoLuongTon == 0)
                 {
-                    var jsondelete = await GioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
+                    var jsondelete = await GioHangChiTietservices.DeleteGioHang(item.IdGioHangChiTiet);
                 }
             }
             return RedirectToAction("ShowCartUser");
@@ -303,14 +303,14 @@ namespace App_View.Controllers
         #region Nologin
         public async Task<IActionResult> ShowCartNoLogin()
         {
-            var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-            if (giohangSession.Count == 0)
+            var GioHangsession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+            if (GioHangsession.Count == 0)
             {
                 return View("Empty");
             }
             else
             {
-                var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(giohangSession);
+                var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(GioHangsession);
                 if (message.Any())
                 {
                     if (outOfStockCount > 0)
@@ -327,19 +327,19 @@ namespace App_View.Controllers
                     }
                     ViewData["QuantityErrorMessages"] = message;
                 }
-                return View(giohangSession);
+                return View(GioHangsession);
             }
         }
         public async Task<IActionResult> CheckOutNoLogin()
         {
-            var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-            if (giohangSession.Count == 0)
+            var GioHangsession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+            if (GioHangsession.Count == 0)
             {
                 return View("Empty");
             }
             else
             {
-                var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(giohangSession);
+                var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(GioHangsession);
                 if (message.Any())
                 {
                     if (outOfStockCount > 0)
@@ -356,16 +356,16 @@ namespace App_View.Controllers
                     }
                     ViewData["QuantityErrorMessages"] = message;
                 }
-                return View(giohangSession);
+                return View(GioHangsession);
             }
         }
         public async Task<IActionResult> CapNhatSoLuongGioHangNologin(string IdGioHangChiTiet, int SoLuong, string IdSanPhamChiTiet)
         {
 
-            var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-            var results = await Task.WhenAll(giohangSession.Select(async item =>
+            var GioHangsession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+            var results = await Task.WhenAll(GioHangsession.Select(async item =>
             {
-                var sanPhamChiTiet = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                var sanPhamChiTiet = await _SanPhamChiTietservice.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
 
                 // Thêm điều kiện kiểm tra số lượng tồn đã hết
                 if (item.SoLuong + SoLuong > sanPhamChiTiet.SoLuongTon && sanPhamChiTiet.SoLuongTon == 0)
@@ -408,15 +408,15 @@ namespace App_View.Controllers
                 .ToList();
             if (!outOfStockProducts.Any())
             {
-                var existingProduct = giohangSession.FirstOrDefault(x => x.IdSanPhamCT == IdSanPhamChiTiet);
-                //var a = giohangSession.Find(c => c.IdSanPhamCT == IdSanPhamChiTiet);
+                var existingProduct = GioHangsession.FirstOrDefault(x => x.IdSanPhamCT == IdSanPhamChiTiet);
+                //var a = GioHangsession.Find(c => c.IdSanPhamCT == IdSanPhamChiTiet);
                 existingProduct.SoLuong = SoLuong;
                 double TongTien = 0;
-                foreach (var item in giohangSession)
+                foreach (var item in GioHangsession)
                 {
                     TongTien += (double)item.GiaBan * (int)item.SoLuong;
                 }
-                SessionServices.SetObjToSession(HttpContext.Session, "Cart", giohangSession);
+                SessionServices.SetObjToSession(HttpContext.Session, "Cart", GioHangsession);
                 return Json(new { /*SumPrice = SumPrice,*/ TongTien = TongTien });
             }
             else
@@ -427,25 +427,25 @@ namespace App_View.Controllers
         }
         public async Task<IActionResult> DeleteCartNoLogin(string id)
         {
-            var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-            var prodct = giohangSession.FirstOrDefault(c => c.IdSanPhamCT == id);
-            giohangSession.Remove(prodct);
-            SessionServices.SetObjToSession(HttpContext.Session, "Cart", giohangSession);
+            var GioHangsession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+            var prodct = GioHangsession.FirstOrDefault(c => c.IdSanPhamCT == id);
+            GioHangsession.Remove(prodct);
+            SessionServices.SetObjToSession(HttpContext.Session, "Cart", GioHangsession);
             return RedirectToAction("ShowCartNoLogin");
         }
         public async Task<IActionResult> DeleteCartCheckOutNoLogin(string id)
         {
-            var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-            var prodct = giohangSession.FirstOrDefault(c => c.IdSanPhamCT == id);
-            giohangSession.Remove(prodct);
-            SessionServices.SetObjToSession(HttpContext.Session, "Cart", giohangSession);
+            var GioHangsession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+            var prodct = GioHangsession.FirstOrDefault(c => c.IdSanPhamCT == id);
+            GioHangsession.Remove(prodct);
+            SessionServices.SetObjToSession(HttpContext.Session, "Cart", GioHangsession);
             return RedirectToAction("CheckOutNoLogin");
         }
         public async Task<IActionResult> DeleteAllCartNoLogin()
         {
-            var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-            giohangSession.Clear();
-            SessionServices.SetObjToSession(HttpContext.Session, "Cart", giohangSession);
+            var GioHangsession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+            GioHangsession.Clear();
+            SessionServices.SetObjToSession(HttpContext.Session, "Cart", GioHangsession);
             return RedirectToAction("ShowCartNoLogin");
         }
         #endregion
@@ -459,7 +459,7 @@ namespace App_View.Controllers
 
             foreach (var item in listcart)
             {
-                var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                var product = await _SanPhamChiTietservice.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
 
                 if (item.SoLuong > product.SoLuongTon && product.SoLuongTon == 0)
                 {
@@ -491,8 +491,8 @@ namespace App_View.Controllers
             }
             else
             {
-                var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-                data = giohangSession.Select(gh => new SanPhamGioHangViewModel()
+                var GioHangsession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+                data = GioHangsession.Select(gh => new SanPhamGioHangViewModel()
                 {
                     Anh = gh.LinkAnh.OrderBy(item => item).ToList().FirstOrDefault(),
                     GiaSanPham = Convert.ToDouble(gh.GiaBan),
@@ -510,14 +510,14 @@ namespace App_View.Controllers
             var idNguoiDung = GetIdNguoiDung();
             if (idNguoiDung != null)
             {
-                await GioHangChiTietServices.DeleteGioHang(id);
+                await GioHangChiTietservices.DeleteGioHang(id);
             }
             else
             {
-                var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-                var prodct = giohangSession.FirstOrDefault(c => c.IdSanPhamCT == id);
-                giohangSession.Remove(prodct);
-                SessionServices.SetObjToSession(HttpContext.Session, "Cart", giohangSession);
+                var GioHangsession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+                var prodct = GioHangsession.FirstOrDefault(c => c.IdSanPhamCT == id);
+                GioHangsession.Remove(prodct);
+                SessionServices.SetObjToSession(HttpContext.Session, "Cart", GioHangsession);
             }
             return ViewComponent("Cart");
         }

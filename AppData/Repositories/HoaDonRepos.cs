@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.ViewModels.HoaDon;
@@ -77,7 +77,7 @@ namespace App_Data.Repositories
         {
             var listHoaDonCho = new List<HoaDonChoDTO>();
             var listHoaDon = context.HoaDons.Where(c => c.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay && c.TrangThaiThanhToan == (int)TrangThaiHoaDon.ChuaThanhToan).AsNoTracking().ToList();
-            var listHoaDonChiTiet = context.hoaDonChiTiets.Where(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay).AsNoTracking().ToList();
+            var listHoaDonChiTiet = context.HoaDonChiTiets.Where(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay).AsNoTracking().ToList();
             foreach (var item in listHoaDon)
             {
                 var hoaDonCho = new HoaDonChoDTO()
@@ -167,7 +167,7 @@ namespace App_Data.Repositories
 
         public bool CheckKhachHang(string idThongTin)
         {
-            var ThongTin = context.thongTinGiaoHangs.FirstOrDefault(c=>c.IdThongTinGH == idThongTin);
+            var ThongTin = context.ThongTinGiaoHangs.FirstOrDefault(c=>c.IdThongTinGH == idThongTin);
             if (ThongTin == null||ThongTin.IdNguoiDung!=null)
             {
                 return false;

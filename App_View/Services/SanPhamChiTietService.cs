@@ -19,11 +19,11 @@ using static App_View.Areas.Admin.Controllers.SanPhamChiTietController;
 
 namespace App_View.Services
 {
-    public class SanPhamChiTietService : ISanPhamChiTietService
+    public class SanPhamChiTietservice : ISanPhamChiTietservice
     {
         private readonly HttpClient _httpClient;
 
-        public SanPhamChiTietService(HttpClient httpClient)
+        public SanPhamChiTietservice(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

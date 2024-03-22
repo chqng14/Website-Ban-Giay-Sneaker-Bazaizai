@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.Models;
 using App_Data.ViewModels.GioHangChiTiet;
 using App_Data.ViewModels.HoaDon;
@@ -30,25 +30,25 @@ namespace App_View.Controllers
         private IMomoService _momoService;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
-        ISanPhamChiTietService _sanPhamChiTietService;
-        IGioHangChiTietServices gioHangChiTietServices;
+        ISanPhamChiTietservice _SanPhamChiTietservice;
+        IGioHangChiTietservices GioHangChiTietservices;
         IHoaDonServices hoaDonServices;
-        IHoaDonChiTietServices hoaDonChiTietServices;
+        IHoaDonChiTietservices HoaDonChiTietservices;
         PTThanhToanChiTietController PTThanhToanChiTietController;
         PTThanhToanController PTThanhToanController;
         private IVnPayService _vnPayService;
         private IEmailSender _emailSender;
         private IViewRenderService _viewRenderService;
         private IThongTinGHServices thongTinGHServices;
-        public HoaDonController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService
+        public HoaDonController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietservice SanPhamChiTietservice
             , IMomoService momoService, IVnPayService vnPayService, IEmailSender emailSender, IViewRenderService viewRenderService)
         {
-            _sanPhamChiTietService = sanPhamChiTietService;
+            _SanPhamChiTietservice = SanPhamChiTietservice;
             _signInManager = signInManager;
             _userManager = userManager;
-            gioHangChiTietServices = new GioHangChiTietServices();
+            GioHangChiTietservices = new GioHangChiTietservices();
             hoaDonServices = new HoaDonServices();
-            hoaDonChiTietServices = new HoaDonChiTietServices();
+            HoaDonChiTietservices = new HoaDonChiTietservices();
             _momoService = momoService;
             PTThanhToanChiTietController = new PTThanhToanChiTietController();
             PTThanhToanController = new PTThanhToanController();
@@ -75,7 +75,7 @@ namespace App_View.Controllers
             thongTinGHDTO.IdNguoiDung = idNguoiDung;
             thongTinGHDTO.TrangThai = trangthai;
             SessionServices.SetIdToSession(HttpContext.Session, "Email", thongTinGHDTO.Email);
-            var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == _userManager.GetUserId(User));
+            var listcart = (await GioHangChiTietservices.GetAllGioHang()).Where(c => c.IdNguoiDung == _userManager.GetUserId(User));
             var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
             {
@@ -105,7 +105,7 @@ namespace App_View.Controllers
         public async Task<IActionResult> ThanhToan(HoaDonDTO hoaDonDTO)
         {
             var UserID = _userManager.GetUserId(User);
-            var listcart = (await gioHangChiTietServices.GetAllGioHang()).Where(c => c.IdNguoiDung == UserID);
+            var listcart = (await GioHangChiTietservices.GetAllGioHang()).Where(c => c.IdNguoiDung == UserID);
             var (quantityErrorCount, outOfStockCount, stoppedSellingCount, message) = await KiemTraGioHang(listcart);
             if (!message.Any())
             {
@@ -136,7 +136,7 @@ namespace App_View.Controllers
                 var spList = new List<SanPhamTest>();
                 foreach (var item in listcart)
                 {
-                    await hoaDonChiTietServices.CreateHoaDonChiTiet(new HoaDonChiTietDTO()
+                    await HoaDonChiTietservices.CreateHoaDonChiTiet(new HoaDonChiTietDTO()
                     {
                         IdHoaDonChiTiet = Guid.NewGuid().ToString(),
                         IdHoaDon = hoadon.IdHoaDon,
@@ -161,8 +161,8 @@ namespace App_View.Controllers
                         GiaBan = item.GiaBan
                     };
                     spList.Add(sanPhamTest);
-                    await gioHangChiTietServices.DeleteGioHang(item.IdGioHangChiTiet);
-                    //await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
+                    await GioHangChiTietservices.DeleteGioHang(item.IdGioHangChiTiet);
+                    //await _SanPhamChiTietservice.UpDatSoLuongAynsc(sanphamupdate);
                 }
                 var hoadontest = new HoaDonTest()
                 {
@@ -273,7 +273,7 @@ namespace App_View.Controllers
                 var spList = new List<SanPhamTest>();
                 foreach (var item in listcart)
                 {
-                    await hoaDonChiTietServices.CreateHoaDonChiTiet(new HoaDonChiTietDTO()
+                    await HoaDonChiTietservices.CreateHoaDonChiTiet(new HoaDonChiTietDTO()
                     {
                         IdHoaDonChiTiet = Guid.NewGuid().ToString(),
                         IdHoaDon = hoadon.IdHoaDon,
@@ -298,7 +298,7 @@ namespace App_View.Controllers
                         GiaBan = item.GiaBan
                     };
                     spList.Add(sanPhamTest);
-                    //await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
+                    //await _SanPhamChiTietservice.UpDatSoLuongAynsc(sanphamupdate);
                 }
                 var hoadontest = new HoaDonTest()
                 {
@@ -454,7 +454,7 @@ namespace App_View.Controllers
 
             foreach (var item in listcart)
             {
-                var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
+                var product = await _SanPhamChiTietservice.GetSanPhamChiTietViewModelByKeyAsync(item.IdSanPhamCT);
 
                 if (item.SoLuong > product.SoLuongTon && product.SoLuongTon == 0)
                 {

@@ -3,7 +3,7 @@
 @using App_View.IServices;
 @using App_View.Models.ViewModels;
 @using static App_Data.Repositories.TrangThai;
-@inject ISanPhamChiTietService sanPhamChiTietService
+@inject ISanPhamChiTietservice SanPhamChiTietservice
 @model HoaDon
 
 <head>
@@ -84,14 +84,14 @@
 												</thead>
 												<tbody style="border: 1px solid #e6e9f0;">
 													@{
-													var sanPhamChiTietList = await sanPhamChiTietService.GetAllListSanPhamChiTietViewModelAsync();
+													var sanPhamChiTietList = await SanPhamChiTietservice.GetAllListSanPhamChiTietViewModelAsync();
 														//var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
 
 														//foreach (var pro in sanPhamChiTietList)
 														//{
-														//	var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
-														//	var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
-														//	var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
+														//	var trangThaiSale = (await SanPhamChiTietservice.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
+														//	var trangThai = (await SanPhamChiTietservice.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
+														//	var giaThucTe = (await SanPhamChiTietservice.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
 														//	var sanPhamSaleViewModel = new SanPhamSaleViewModel
 														//	{
 														//		SanPhamDanhSachView = pro,

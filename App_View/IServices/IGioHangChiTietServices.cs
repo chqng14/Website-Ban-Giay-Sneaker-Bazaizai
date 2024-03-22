@@ -4,7 +4,7 @@ using App_Data.ViewModels.Voucher;
 
 namespace App_View.IServices
 {
-    public interface IGioHangChiTietServices
+    public interface IGioHangChiTietservices
     {
         Task<List<GioHangChiTietDTO>> GetAllGioHang();
         Task<bool> CreateCartDetailDTO(GioHangChiTietDTOCUD gioHangChiTietDTOCUD);

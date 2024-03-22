@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using Microsoft.AspNetCore.Mvc;
 
 namespace App_View.Models.Components
@@ -14,7 +14,7 @@ namespace App_View.Models.Components
 
         public IViewComponentResult Invoke()
         {
-            return View(bazaizaiContext.thuongHieus.ToList());
+            return View(bazaizaiContext.ThuongHieus.ToList());
         }
     }
 }

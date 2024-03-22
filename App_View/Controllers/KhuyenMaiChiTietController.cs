@@ -11,15 +11,15 @@ namespace App_View.Controllers
     public class KhuyenMaiChiTietController : Controller
     {
         public HttpClient httpClient { get; set; }
-        private readonly IKhuyenMaiChiTietServices khuyenMaiChiTietServices;
-        private readonly IKhuyenMaiServices khuyenMaiServices;
-        private readonly ISanPhamChiTietService sanPhamChiTietService;
-        public KhuyenMaiChiTietController(IKhuyenMaiChiTietServices khuyenMaiChiTietServices, IKhuyenMaiServices khuyenMaiServices, ISanPhamChiTietService sanPhamChiTietService)
+        private readonly IKhuyenMaiChiTietservices KhuyenMaiChiTietservices;
+        private readonly IKhuyenMaiservices KhuyenMaiservices;
+        private readonly ISanPhamChiTietservice SanPhamChiTietservice;
+        public KhuyenMaiChiTietController(IKhuyenMaiChiTietservices KhuyenMaiChiTietservices, IKhuyenMaiservices KhuyenMaiservices, ISanPhamChiTietservice SanPhamChiTietservice)
         {
             httpClient = new HttpClient();
-            this.khuyenMaiChiTietServices = khuyenMaiChiTietServices;
-            this.khuyenMaiServices = khuyenMaiServices;
-            this.sanPhamChiTietService = sanPhamChiTietService;
+            this.KhuyenMaiChiTietservices = KhuyenMaiChiTietservices;
+            this.KhuyenMaiservices = KhuyenMaiservices;
+            this.SanPhamChiTietservice = SanPhamChiTietservice;
         }
 
         public async Task<IActionResult> GetAllKhuyenMaiChiTiet()
@@ -89,12 +89,12 @@ namespace App_View.Controllers
         [HttpGet]
         public async Task<IActionResult> KhuyenMaiDongGiaAsync(string idKhuyenMai)
         {
-            var kmct = (await khuyenMaiChiTietServices.GetAllKhuyenMaiChiTiet()).Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai&&x.IdKhuyenMai== idKhuyenMai).GroupBy(x=>x.SanPham).Select(x=>x.First()).ToList();
+            var kmct = (await KhuyenMaiChiTietservices.GetAllKhuyenMaiChiTiet()).Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai&&x.IdKhuyenMai== idKhuyenMai).GroupBy(x=>x.SanPham).Select(x=>x.First()).ToList();
             var model = new App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel();
-            model = sanPhamChiTietService.GetDanhSachGiayViewModelAynsc().Result;
+            model = SanPhamChiTietservice.GetDanhSachGiayViewModelAynsc().Result;
             var lstSpDuocApDungKhuyenMai = model.LstAllSanPham.Where(x => x.GiaThucTe < x.GiaGoc).ToList();
             ViewBag.lstSpct = lstSpDuocApDungKhuyenMai.ToList();
-            var khuyenMai = (await khuyenMaiServices.GetAllKhuyenMai()).Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau);
+            var khuyenMai = (await KhuyenMaiservices.GetAllKhuyenMai()).Where(x => x.TrangThai == (int)TrangThaiSale.DangBatDau);
             ViewBag.KhuyemMai = khuyenMai;
             return PartialView(kmct);
         }

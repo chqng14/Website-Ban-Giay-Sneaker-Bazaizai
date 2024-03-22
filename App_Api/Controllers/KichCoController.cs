@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -17,12 +17,12 @@ namespace App_Api.Controllers
     {
         private readonly IAllRepo<KichCo> repos;
         BazaizaiContext context = new BazaizaiContext();
-        DbSet<KichCo> kichCos;
+        DbSet<KichCo> KichCos;
         private readonly IMapper _mapper;
         public KichCoController(IMapper mapper)
         {
-            kichCos = context.kichCos;
-            AllRepo<KichCo> all = new AllRepo<KichCo>(context, kichCos);
+            KichCos = context.KichCos;
+            AllRepo<KichCo> all = new AllRepo<KichCo>(context, KichCos);
             repos = all;
             _mapper = mapper;
         }
@@ -60,7 +60,7 @@ namespace App_Api.Controllers
             try
             {
                 var kichCo = kichCoDTO.SoKichCo;
-                if (!context.kichCos.Where(x => x.SoKichCo == kichCo).Any())
+                if (!context.KichCos.Where(x => x.SoKichCo == kichCo).Any())
                 {
                     var kichCoGet = _mapper.Map<KichCo>(kichCoDTO);
                     context.Attach(kichCoGet);

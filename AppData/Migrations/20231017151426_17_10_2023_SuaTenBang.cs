@@ -9,7 +9,7 @@ namespace App_Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Anh_sanPhamChiTiets_IdSanPhamChiTiet",
+                name: "FK_Anh_SanPhamChiTiets_IdSanPhamChiTiet",
                 table: "Anh");
 
             migrationBuilder.DropForeignKey(
@@ -17,7 +17,7 @@ namespace App_Data.Migrations
                 table: "Đánh giá");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Đánh giá_sanPhamChiTiets_IdSanPhamChiTiet",
+                name: "FK_Đánh giá_SanPhamChiTiets_IdSanPhamChiTiet",
                 table: "Đánh giá");
 
             migrationBuilder.DropForeignKey(
@@ -25,31 +25,31 @@ namespace App_Data.Migrations
                 table: "Đánh giá");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_gioHangChiTiets_gioHangs_IdNguoiDung",
-                table: "gioHangChiTiets");
+                name: "FK_GioHangChiTiets_GioHangs_IdNguoiDung",
+                table: "GioHangChiTiets");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_gioHangChiTiets_sanPhamChiTiets_IdSanPhamCT",
-                table: "gioHangChiTiets");
+                name: "FK_GioHangChiTiets_SanPhamChiTiets_IdSanPhamCT",
+                table: "GioHangChiTiets");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_gioHangs_Users_NguoiDungId",
-                table: "gioHangs");
+                name: "FK_GioHangs_Users_NguoiDungId",
+                table: "GioHangs");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_hoaDonChiTiets_HoaDons_IdHoaDon",
-                table: "hoaDonChiTiets");
+                name: "FK_HoaDonChiTiets_HoaDons_IdHoaDon",
+                table: "HoaDonChiTiets");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_hoaDonChiTiets_sanPhamChiTiets_IdSanPhamChiTiet",
-                table: "hoaDonChiTiets");
+                name: "FK_HoaDonChiTiets_SanPhamChiTiets_IdSanPhamChiTiet",
+                table: "HoaDonChiTiets");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_HoaDons_KhachHang_IdKhachHang",
                 table: "HoaDons");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_HoaDons_thongTinGiaoHangs_IdThongTinGH",
+                name: "FK_HoaDons_ThongTinGiaoHangs_IdThongTinGH",
                 table: "HoaDons");
 
             migrationBuilder.DropForeignKey(
@@ -57,7 +57,7 @@ namespace App_Data.Migrations
                 table: "HoaDons");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_HoaDons_vouchers_IdVoucher",
+                name: "FK_HoaDons_Vouchers_IdVoucher",
                 table: "HoaDons");
 
             migrationBuilder.DropForeignKey(
@@ -65,64 +65,64 @@ namespace App_Data.Migrations
                 table: "KhachHang");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_KhuyenMaiChiTiet_sanPhamChiTiets_IdSanPhamChiTiet",
+                name: "FK_KhuyenMaiChiTiet_SanPhamChiTiets_IdSanPhamChiTiet",
                 table: "KhuyenMaiChiTiet");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_phuongThucThanhToanChiTiets_HoaDons_IdHoaDon",
-                table: "phuongThucThanhToanChiTiets");
+                name: "FK_PhuongThucThanhToanChiTiets_HoaDons_IdHoaDon",
+                table: "PhuongThucThanhToanChiTiets");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_phuongThucThanhToanChiTiets_PhuongThucThanhToans_IdThanhToan",
-                table: "phuongThucThanhToanChiTiets");
+                name: "FK_PhuongThucThanhToanChiTiets_PhuongThucThanhToans_IdThanhToan",
+                table: "PhuongThucThanhToanChiTiets");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_RoleClaims_Roles_RoleId",
                 table: "RoleClaims");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_sanPhamChiTiets_ChatLieus_IdChatLieu",
-                table: "sanPhamChiTiets");
+                name: "FK_SanPhamChiTiets_ChatLieus_IdChatLieu",
+                table: "SanPhamChiTiets");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_sanPhamChiTiets_kichCos_IdKichCo",
-                table: "sanPhamChiTiets");
+                name: "FK_SanPhamChiTiets_KichCos_IdKichCo",
+                table: "SanPhamChiTiets");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_sanPhamChiTiets_kieuDeGiays_IdKieuDeGiay",
-                table: "sanPhamChiTiets");
+                name: "FK_SanPhamChiTiets_KieuDeGiays_IdKieuDeGiay",
+                table: "SanPhamChiTiets");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_sanPhamChiTiets_LoaiGiays_IdLoaiGiay",
-                table: "sanPhamChiTiets");
+                name: "FK_SanPhamChiTiets_LoaiGiays_IdLoaiGiay",
+                table: "SanPhamChiTiets");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_sanPhamChiTiets_mauSacs_IdMauSac",
-                table: "sanPhamChiTiets");
+                name: "FK_SanPhamChiTiets_MauSacs_IdMauSac",
+                table: "SanPhamChiTiets");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_sanPhamChiTiets_SanPhams_IdSanPham",
-                table: "sanPhamChiTiets");
+                name: "FK_SanPhamChiTiets_SanPhams_IdSanPham",
+                table: "SanPhamChiTiets");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_sanPhamChiTiets_thuongHieus_IdThuongHieu",
-                table: "sanPhamChiTiets");
+                name: "FK_SanPhamChiTiets_ThuongHieus_IdThuongHieu",
+                table: "SanPhamChiTiets");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_sanPhamChiTiets_xuatXus_IdXuatXu",
-                table: "sanPhamChiTiets");
+                name: "FK_SanPhamChiTiets_XuatXus_IdXuatXu",
+                table: "SanPhamChiTiets");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_sanPhamYeuThiches_sanPhamChiTiets_IdSanPhamChiTiet",
-                table: "sanPhamYeuThiches");
+                name: "FK_SanPhamYeuThichs_SanPhamChiTiets_IdSanPhamChiTiet",
+                table: "SanPhamYeuThichs");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_sanPhamYeuThiches_Users_IdNguoiDung",
-                table: "sanPhamYeuThiches");
+                name: "FK_SanPhamYeuThichs_Users_IdNguoiDung",
+                table: "SanPhamYeuThichs");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_thongTinGiaoHangs_Users_IdNguoiDung",
-                table: "thongTinGiaoHangs");
+                name: "FK_ThongTinGiaoHangs_Users_IdNguoiDung",
+                table: "ThongTinGiaoHangs");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_UserClaims_Users_UserId",
@@ -145,24 +145,24 @@ namespace App_Data.Migrations
                 table: "UserTokens");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_voucherNguoiDungs_Users_IdNguoiDung",
-                table: "voucherNguoiDungs");
+                name: "FK_VoucherNguoiDungs_Users_IdNguoiDung",
+                table: "VoucherNguoiDungs");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_voucherNguoiDungs_vouchers_IdVouCher",
-                table: "voucherNguoiDungs");
+                name: "FK_VoucherNguoiDungs_Vouchers_IdVouCher",
+                table: "VoucherNguoiDungs");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_xuatXus",
-                table: "xuatXus");
+                name: "PK_XuatXus",
+                table: "XuatXus");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_vouchers",
-                table: "vouchers");
+                name: "PK_Vouchers",
+                table: "Vouchers");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_voucherNguoiDungs",
-                table: "voucherNguoiDungs");
+                name: "PK_VoucherNguoiDungs",
+                table: "VoucherNguoiDungs");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_UserTokens",
@@ -185,24 +185,24 @@ namespace App_Data.Migrations
                 table: "UserClaims");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_thuongHieus",
-                table: "thuongHieus");
+                name: "PK_ThuongHieus",
+                table: "ThuongHieus");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_thongTinGiaoHangs",
-                table: "thongTinGiaoHangs");
+                name: "PK_ThongTinGiaoHangs",
+                table: "ThongTinGiaoHangs");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_sanPhamYeuThiches",
-                table: "sanPhamYeuThiches");
+                name: "PK_SanPhamYeuThichs",
+                table: "SanPhamYeuThichs");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_SanPhams",
                 table: "SanPhams");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_sanPhamChiTiets",
-                table: "sanPhamChiTiets");
+                name: "PK_SanPhamChiTiets",
+                table: "SanPhamChiTiets");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Roles",
@@ -217,40 +217,40 @@ namespace App_Data.Migrations
                 table: "PhuongThucThanhToans");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_phuongThucThanhToanChiTiets",
-                table: "phuongThucThanhToanChiTiets");
+                name: "PK_PhuongThucThanhToanChiTiets",
+                table: "PhuongThucThanhToanChiTiets");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_mauSacs",
-                table: "mauSacs");
+                name: "PK_MauSacs",
+                table: "MauSacs");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_LoaiGiays",
                 table: "LoaiGiays");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_kieuDeGiays",
-                table: "kieuDeGiays");
+                name: "PK_KieuDeGiays",
+                table: "KieuDeGiays");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_kichCos",
-                table: "kichCos");
+                name: "PK_KichCos",
+                table: "KichCos");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_HoaDons",
                 table: "HoaDons");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_hoaDonChiTiets",
-                table: "hoaDonChiTiets");
+                name: "PK_HoaDonChiTiets",
+                table: "HoaDonChiTiets");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_gioHangs",
-                table: "gioHangs");
+                name: "PK_GioHangs",
+                table: "GioHangs");
 
             migrationBuilder.DropPrimaryKey(
-                name: "PK_gioHangChiTiets",
-                table: "gioHangChiTiets");
+                name: "PK_GioHangChiTiets",
+                table: "GioHangChiTiets");
 
             migrationBuilder.DropPrimaryKey(
                 name: "PK_Đánh giá",
@@ -261,15 +261,15 @@ namespace App_Data.Migrations
                 table: "ChatLieus");
 
             migrationBuilder.RenameTable(
-                name: "xuatXus",
+                name: "XuatXus",
                 newName: "XuatXu");
 
             migrationBuilder.RenameTable(
-                name: "vouchers",
+                name: "Vouchers",
                 newName: "Voucher");
 
             migrationBuilder.RenameTable(
-                name: "voucherNguoiDungs",
+                name: "VoucherNguoiDungs",
                 newName: "VoucherNguoiDung");
 
             migrationBuilder.RenameTable(
@@ -293,15 +293,15 @@ namespace App_Data.Migrations
                 newName: "AspNetUserClaims");
 
             migrationBuilder.RenameTable(
-                name: "thuongHieus",
+                name: "ThuongHieus",
                 newName: "ThuongHieu");
 
             migrationBuilder.RenameTable(
-                name: "thongTinGiaoHangs",
+                name: "ThongTinGiaoHangs",
                 newName: "ThongTinGiaoHang");
 
             migrationBuilder.RenameTable(
-                name: "sanPhamYeuThiches",
+                name: "SanPhamYeuThichs",
                 newName: "SanPhamYeuThich");
 
             migrationBuilder.RenameTable(
@@ -309,7 +309,7 @@ namespace App_Data.Migrations
                 newName: "SanPham");
 
             migrationBuilder.RenameTable(
-                name: "sanPhamChiTiets",
+                name: "SanPhamChiTiets",
                 newName: "SanPhamChiTiet");
 
             migrationBuilder.RenameTable(
@@ -325,11 +325,11 @@ namespace App_Data.Migrations
                 newName: "PhuongThucThanhToan");
 
             migrationBuilder.RenameTable(
-                name: "phuongThucThanhToanChiTiets",
+                name: "PhuongThucThanhToanChiTiets",
                 newName: "PhuongThucThanhToanChiTiet");
 
             migrationBuilder.RenameTable(
-                name: "mauSacs",
+                name: "MauSacs",
                 newName: "MauSac");
 
             migrationBuilder.RenameTable(
@@ -337,11 +337,11 @@ namespace App_Data.Migrations
                 newName: "LoaiGiay");
 
             migrationBuilder.RenameTable(
-                name: "kieuDeGiays",
+                name: "KieuDeGiays",
                 newName: "KieuDeGiay");
 
             migrationBuilder.RenameTable(
-                name: "kichCos",
+                name: "KichCos",
                 newName: "KichCo");
 
             migrationBuilder.RenameTable(
@@ -349,15 +349,15 @@ namespace App_Data.Migrations
                 newName: "HoaDon");
 
             migrationBuilder.RenameTable(
-                name: "hoaDonChiTiets",
+                name: "HoaDonChiTiets",
                 newName: "HoaDonChiTiet");
 
             migrationBuilder.RenameTable(
-                name: "gioHangs",
+                name: "GioHangs",
                 newName: "GioHang");
 
             migrationBuilder.RenameTable(
-                name: "gioHangChiTiets",
+                name: "GioHangChiTiets",
                 newName: "GioHangChiTiet");
 
             migrationBuilder.RenameTable(
@@ -369,12 +369,12 @@ namespace App_Data.Migrations
                 newName: "ChatLieu");
 
             migrationBuilder.RenameIndex(
-                name: "IX_voucherNguoiDungs_IdVouCher",
+                name: "IX_VoucherNguoiDungs_IdVouCher",
                 table: "VoucherNguoiDung",
                 newName: "IX_VoucherNguoiDung_IdVouCher");
 
             migrationBuilder.RenameIndex(
-                name: "IX_voucherNguoiDungs_IdNguoiDung",
+                name: "IX_VoucherNguoiDungs_IdNguoiDung",
                 table: "VoucherNguoiDung",
                 newName: "IX_VoucherNguoiDung_IdNguoiDung");
 
@@ -394,57 +394,57 @@ namespace App_Data.Migrations
                 newName: "IX_AspNetUserClaims_UserId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_thongTinGiaoHangs_IdNguoiDung",
+                name: "IX_ThongTinGiaoHangs_IdNguoiDung",
                 table: "ThongTinGiaoHang",
                 newName: "IX_ThongTinGiaoHang_IdNguoiDung");
 
             migrationBuilder.RenameIndex(
-                name: "IX_sanPhamYeuThiches_IdSanPhamChiTiet",
+                name: "IX_SanPhamYeuThichs_IdSanPhamChiTiet",
                 table: "SanPhamYeuThich",
                 newName: "IX_SanPhamYeuThich_IdSanPhamChiTiet");
 
             migrationBuilder.RenameIndex(
-                name: "IX_sanPhamYeuThiches_IdNguoiDung",
+                name: "IX_SanPhamYeuThichs_IdNguoiDung",
                 table: "SanPhamYeuThich",
                 newName: "IX_SanPhamYeuThich_IdNguoiDung");
 
             migrationBuilder.RenameIndex(
-                name: "IX_sanPhamChiTiets_IdXuatXu",
+                name: "IX_SanPhamChiTiets_IdXuatXu",
                 table: "SanPhamChiTiet",
                 newName: "IX_SanPhamChiTiet_IdXuatXu");
 
             migrationBuilder.RenameIndex(
-                name: "IX_sanPhamChiTiets_IdThuongHieu",
+                name: "IX_SanPhamChiTiets_IdThuongHieu",
                 table: "SanPhamChiTiet",
                 newName: "IX_SanPhamChiTiet_IdThuongHieu");
 
             migrationBuilder.RenameIndex(
-                name: "IX_sanPhamChiTiets_IdSanPham",
+                name: "IX_SanPhamChiTiets_IdSanPham",
                 table: "SanPhamChiTiet",
                 newName: "IX_SanPhamChiTiet_IdSanPham");
 
             migrationBuilder.RenameIndex(
-                name: "IX_sanPhamChiTiets_IdMauSac",
+                name: "IX_SanPhamChiTiets_IdMauSac",
                 table: "SanPhamChiTiet",
                 newName: "IX_SanPhamChiTiet_IdMauSac");
 
             migrationBuilder.RenameIndex(
-                name: "IX_sanPhamChiTiets_IdLoaiGiay",
+                name: "IX_SanPhamChiTiets_IdLoaiGiay",
                 table: "SanPhamChiTiet",
                 newName: "IX_SanPhamChiTiet_IdLoaiGiay");
 
             migrationBuilder.RenameIndex(
-                name: "IX_sanPhamChiTiets_IdKieuDeGiay",
+                name: "IX_SanPhamChiTiets_IdKieuDeGiay",
                 table: "SanPhamChiTiet",
                 newName: "IX_SanPhamChiTiet_IdKieuDeGiay");
 
             migrationBuilder.RenameIndex(
-                name: "IX_sanPhamChiTiets_IdKichCo",
+                name: "IX_SanPhamChiTiets_IdKichCo",
                 table: "SanPhamChiTiet",
                 newName: "IX_SanPhamChiTiet_IdKichCo");
 
             migrationBuilder.RenameIndex(
-                name: "IX_sanPhamChiTiets_IdChatLieu",
+                name: "IX_SanPhamChiTiets_IdChatLieu",
                 table: "SanPhamChiTiet",
                 newName: "IX_SanPhamChiTiet_IdChatLieu");
 
@@ -454,12 +454,12 @@ namespace App_Data.Migrations
                 newName: "IX_AspNetRoleClaims_RoleId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_phuongThucThanhToanChiTiets_IdThanhToan",
+                name: "IX_PhuongThucThanhToanChiTiets_IdThanhToan",
                 table: "PhuongThucThanhToanChiTiet",
                 newName: "IX_PhuongThucThanhToanChiTiet_IdThanhToan");
 
             migrationBuilder.RenameIndex(
-                name: "IX_phuongThucThanhToanChiTiets_IdHoaDon",
+                name: "IX_PhuongThucThanhToanChiTiets_IdHoaDon",
                 table: "PhuongThucThanhToanChiTiet",
                 newName: "IX_PhuongThucThanhToanChiTiet_IdHoaDon");
 
@@ -484,27 +484,27 @@ namespace App_Data.Migrations
                 newName: "IX_HoaDon_IdKhachHang");
 
             migrationBuilder.RenameIndex(
-                name: "IX_hoaDonChiTiets_IdSanPhamChiTiet",
+                name: "IX_HoaDonChiTiets_IdSanPhamChiTiet",
                 table: "HoaDonChiTiet",
                 newName: "IX_HoaDonChiTiet_IdSanPhamChiTiet");
 
             migrationBuilder.RenameIndex(
-                name: "IX_hoaDonChiTiets_IdHoaDon",
+                name: "IX_HoaDonChiTiets_IdHoaDon",
                 table: "HoaDonChiTiet",
                 newName: "IX_HoaDonChiTiet_IdHoaDon");
 
             migrationBuilder.RenameIndex(
-                name: "IX_gioHangs_NguoiDungId",
+                name: "IX_GioHangs_NguoiDungId",
                 table: "GioHang",
                 newName: "IX_GioHang_NguoiDungId");
 
             migrationBuilder.RenameIndex(
-                name: "IX_gioHangChiTiets_IdSanPhamCT",
+                name: "IX_GioHangChiTiets_IdSanPhamCT",
                 table: "GioHangChiTiet",
                 newName: "IX_GioHangChiTiet_IdSanPhamCT");
 
             migrationBuilder.RenameIndex(
-                name: "IX_gioHangChiTiets_IdNguoiDung",
+                name: "IX_GioHangChiTiets_IdNguoiDung",
                 table: "GioHangChiTiet",
                 newName: "IX_GioHangChiTiet_IdNguoiDung");
 
@@ -1173,31 +1173,31 @@ namespace App_Data.Migrations
 
             migrationBuilder.RenameTable(
                 name: "XuatXu",
-                newName: "xuatXus");
+                newName: "XuatXus");
 
             migrationBuilder.RenameTable(
                 name: "VoucherNguoiDung",
-                newName: "voucherNguoiDungs");
+                newName: "VoucherNguoiDungs");
 
             migrationBuilder.RenameTable(
                 name: "Voucher",
-                newName: "vouchers");
+                newName: "Vouchers");
 
             migrationBuilder.RenameTable(
                 name: "ThuongHieu",
-                newName: "thuongHieus");
+                newName: "ThuongHieus");
 
             migrationBuilder.RenameTable(
                 name: "ThongTinGiaoHang",
-                newName: "thongTinGiaoHangs");
+                newName: "ThongTinGiaoHangs");
 
             migrationBuilder.RenameTable(
                 name: "SanPhamYeuThich",
-                newName: "sanPhamYeuThiches");
+                newName: "SanPhamYeuThichs");
 
             migrationBuilder.RenameTable(
                 name: "SanPhamChiTiet",
-                newName: "sanPhamChiTiets");
+                newName: "SanPhamChiTiets");
 
             migrationBuilder.RenameTable(
                 name: "SanPham",
@@ -1205,7 +1205,7 @@ namespace App_Data.Migrations
 
             migrationBuilder.RenameTable(
                 name: "PhuongThucThanhToanChiTiet",
-                newName: "phuongThucThanhToanChiTiets");
+                newName: "PhuongThucThanhToanChiTiets");
 
             migrationBuilder.RenameTable(
                 name: "PhuongThucThanhToan",
@@ -1217,7 +1217,7 @@ namespace App_Data.Migrations
 
             migrationBuilder.RenameTable(
                 name: "MauSac",
-                newName: "mauSacs");
+                newName: "MauSacs");
 
             migrationBuilder.RenameTable(
                 name: "LoaiGiay",
@@ -1225,15 +1225,15 @@ namespace App_Data.Migrations
 
             migrationBuilder.RenameTable(
                 name: "KieuDeGiay",
-                newName: "kieuDeGiays");
+                newName: "KieuDeGiays");
 
             migrationBuilder.RenameTable(
                 name: "KichCo",
-                newName: "kichCos");
+                newName: "KichCos");
 
             migrationBuilder.RenameTable(
                 name: "HoaDonChiTiet",
-                newName: "hoaDonChiTiets");
+                newName: "HoaDonChiTiets");
 
             migrationBuilder.RenameTable(
                 name: "HoaDon",
@@ -1241,11 +1241,11 @@ namespace App_Data.Migrations
 
             migrationBuilder.RenameTable(
                 name: "GioHangChiTiet",
-                newName: "gioHangChiTiets");
+                newName: "GioHangChiTiets");
 
             migrationBuilder.RenameTable(
                 name: "GioHang",
-                newName: "gioHangs");
+                newName: "GioHangs");
 
             migrationBuilder.RenameTable(
                 name: "DanhGia",
@@ -1281,88 +1281,88 @@ namespace App_Data.Migrations
 
             migrationBuilder.RenameIndex(
                 name: "IX_VoucherNguoiDung_IdVouCher",
-                table: "voucherNguoiDungs",
-                newName: "IX_voucherNguoiDungs_IdVouCher");
+                table: "VoucherNguoiDungs",
+                newName: "IX_VoucherNguoiDungs_IdVouCher");
 
             migrationBuilder.RenameIndex(
                 name: "IX_VoucherNguoiDung_IdNguoiDung",
-                table: "voucherNguoiDungs",
-                newName: "IX_voucherNguoiDungs_IdNguoiDung");
+                table: "VoucherNguoiDungs",
+                newName: "IX_VoucherNguoiDungs_IdNguoiDung");
 
             migrationBuilder.RenameIndex(
                 name: "IX_ThongTinGiaoHang_IdNguoiDung",
-                table: "thongTinGiaoHangs",
-                newName: "IX_thongTinGiaoHangs_IdNguoiDung");
+                table: "ThongTinGiaoHangs",
+                newName: "IX_ThongTinGiaoHangs_IdNguoiDung");
 
             migrationBuilder.RenameIndex(
                 name: "IX_SanPhamYeuThich_IdSanPhamChiTiet",
-                table: "sanPhamYeuThiches",
-                newName: "IX_sanPhamYeuThiches_IdSanPhamChiTiet");
+                table: "SanPhamYeuThichs",
+                newName: "IX_SanPhamYeuThichs_IdSanPhamChiTiet");
 
             migrationBuilder.RenameIndex(
                 name: "IX_SanPhamYeuThich_IdNguoiDung",
-                table: "sanPhamYeuThiches",
-                newName: "IX_sanPhamYeuThiches_IdNguoiDung");
+                table: "SanPhamYeuThichs",
+                newName: "IX_SanPhamYeuThichs_IdNguoiDung");
 
             migrationBuilder.RenameIndex(
                 name: "IX_SanPhamChiTiet_IdXuatXu",
-                table: "sanPhamChiTiets",
-                newName: "IX_sanPhamChiTiets_IdXuatXu");
+                table: "SanPhamChiTiets",
+                newName: "IX_SanPhamChiTiets_IdXuatXu");
 
             migrationBuilder.RenameIndex(
                 name: "IX_SanPhamChiTiet_IdThuongHieu",
-                table: "sanPhamChiTiets",
-                newName: "IX_sanPhamChiTiets_IdThuongHieu");
+                table: "SanPhamChiTiets",
+                newName: "IX_SanPhamChiTiets_IdThuongHieu");
 
             migrationBuilder.RenameIndex(
                 name: "IX_SanPhamChiTiet_IdSanPham",
-                table: "sanPhamChiTiets",
-                newName: "IX_sanPhamChiTiets_IdSanPham");
+                table: "SanPhamChiTiets",
+                newName: "IX_SanPhamChiTiets_IdSanPham");
 
             migrationBuilder.RenameIndex(
                 name: "IX_SanPhamChiTiet_IdMauSac",
-                table: "sanPhamChiTiets",
-                newName: "IX_sanPhamChiTiets_IdMauSac");
+                table: "SanPhamChiTiets",
+                newName: "IX_SanPhamChiTiets_IdMauSac");
 
             migrationBuilder.RenameIndex(
                 name: "IX_SanPhamChiTiet_IdLoaiGiay",
-                table: "sanPhamChiTiets",
-                newName: "IX_sanPhamChiTiets_IdLoaiGiay");
+                table: "SanPhamChiTiets",
+                newName: "IX_SanPhamChiTiets_IdLoaiGiay");
 
             migrationBuilder.RenameIndex(
                 name: "IX_SanPhamChiTiet_IdKieuDeGiay",
-                table: "sanPhamChiTiets",
-                newName: "IX_sanPhamChiTiets_IdKieuDeGiay");
+                table: "SanPhamChiTiets",
+                newName: "IX_SanPhamChiTiets_IdKieuDeGiay");
 
             migrationBuilder.RenameIndex(
                 name: "IX_SanPhamChiTiet_IdKichCo",
-                table: "sanPhamChiTiets",
-                newName: "IX_sanPhamChiTiets_IdKichCo");
+                table: "SanPhamChiTiets",
+                newName: "IX_SanPhamChiTiets_IdKichCo");
 
             migrationBuilder.RenameIndex(
                 name: "IX_SanPhamChiTiet_IdChatLieu",
-                table: "sanPhamChiTiets",
-                newName: "IX_sanPhamChiTiets_IdChatLieu");
+                table: "SanPhamChiTiets",
+                newName: "IX_SanPhamChiTiets_IdChatLieu");
 
             migrationBuilder.RenameIndex(
                 name: "IX_PhuongThucThanhToanChiTiet_IdThanhToan",
-                table: "phuongThucThanhToanChiTiets",
-                newName: "IX_phuongThucThanhToanChiTiets_IdThanhToan");
+                table: "PhuongThucThanhToanChiTiets",
+                newName: "IX_PhuongThucThanhToanChiTiets_IdThanhToan");
 
             migrationBuilder.RenameIndex(
                 name: "IX_PhuongThucThanhToanChiTiet_IdHoaDon",
-                table: "phuongThucThanhToanChiTiets",
-                newName: "IX_phuongThucThanhToanChiTiets_IdHoaDon");
+                table: "PhuongThucThanhToanChiTiets",
+                newName: "IX_PhuongThucThanhToanChiTiets_IdHoaDon");
 
             migrationBuilder.RenameIndex(
                 name: "IX_HoaDonChiTiet_IdSanPhamChiTiet",
-                table: "hoaDonChiTiets",
-                newName: "IX_hoaDonChiTiets_IdSanPhamChiTiet");
+                table: "HoaDonChiTiets",
+                newName: "IX_HoaDonChiTiets_IdSanPhamChiTiet");
 
             migrationBuilder.RenameIndex(
                 name: "IX_HoaDonChiTiet_IdHoaDon",
-                table: "hoaDonChiTiets",
-                newName: "IX_hoaDonChiTiets_IdHoaDon");
+                table: "HoaDonChiTiets",
+                newName: "IX_HoaDonChiTiets_IdHoaDon");
 
             migrationBuilder.RenameIndex(
                 name: "IX_HoaDon_IdVoucher",
@@ -1386,18 +1386,18 @@ namespace App_Data.Migrations
 
             migrationBuilder.RenameIndex(
                 name: "IX_GioHangChiTiet_IdSanPhamCT",
-                table: "gioHangChiTiets",
-                newName: "IX_gioHangChiTiets_IdSanPhamCT");
+                table: "GioHangChiTiets",
+                newName: "IX_GioHangChiTiets_IdSanPhamCT");
 
             migrationBuilder.RenameIndex(
                 name: "IX_GioHangChiTiet_IdNguoiDung",
-                table: "gioHangChiTiets",
-                newName: "IX_gioHangChiTiets_IdNguoiDung");
+                table: "GioHangChiTiets",
+                newName: "IX_GioHangChiTiets_IdNguoiDung");
 
             migrationBuilder.RenameIndex(
                 name: "IX_GioHang_NguoiDungId",
-                table: "gioHangs",
-                newName: "IX_gioHangs_NguoiDungId");
+                table: "GioHangs",
+                newName: "IX_GioHangs_NguoiDungId");
 
             migrationBuilder.RenameIndex(
                 name: "IX_DanhGia_ParentId",
@@ -1435,38 +1435,38 @@ namespace App_Data.Migrations
                 newName: "IX_RoleClaims_RoleId");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_xuatXus",
-                table: "xuatXus",
+                name: "PK_XuatXus",
+                table: "XuatXus",
                 column: "IdXuatXu");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_voucherNguoiDungs",
-                table: "voucherNguoiDungs",
+                name: "PK_VoucherNguoiDungs",
+                table: "VoucherNguoiDungs",
                 column: "IdVouCherNguoiDung");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_vouchers",
-                table: "vouchers",
+                name: "PK_Vouchers",
+                table: "Vouchers",
                 column: "IdVoucher");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_thuongHieus",
-                table: "thuongHieus",
+                name: "PK_ThuongHieus",
+                table: "ThuongHieus",
                 column: "IdThuongHieu");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_thongTinGiaoHangs",
-                table: "thongTinGiaoHangs",
+                name: "PK_ThongTinGiaoHangs",
+                table: "ThongTinGiaoHangs",
                 column: "IdThongTinGH");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_sanPhamYeuThiches",
-                table: "sanPhamYeuThiches",
+                name: "PK_SanPhamYeuThichs",
+                table: "SanPhamYeuThichs",
                 column: "IdSanPhamYeuThich");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_sanPhamChiTiets",
-                table: "sanPhamChiTiets",
+                name: "PK_SanPhamChiTiets",
+                table: "SanPhamChiTiets",
                 column: "IdChiTietSp");
 
             migrationBuilder.AddPrimaryKey(
@@ -1475,8 +1475,8 @@ namespace App_Data.Migrations
                 column: "IdSanPham");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_phuongThucThanhToanChiTiets",
-                table: "phuongThucThanhToanChiTiets",
+                name: "PK_PhuongThucThanhToanChiTiets",
+                table: "PhuongThucThanhToanChiTiets",
                 column: "IdPhuongThucThanhToanChiTiet");
 
             migrationBuilder.AddPrimaryKey(
@@ -1490,8 +1490,8 @@ namespace App_Data.Migrations
                 column: "Id");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_mauSacs",
-                table: "mauSacs",
+                name: "PK_MauSacs",
+                table: "MauSacs",
                 column: "IdMauSac");
 
             migrationBuilder.AddPrimaryKey(
@@ -1500,18 +1500,18 @@ namespace App_Data.Migrations
                 column: "IdLoaiGiay");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_kieuDeGiays",
-                table: "kieuDeGiays",
+                name: "PK_KieuDeGiays",
+                table: "KieuDeGiays",
                 column: "IdKieuDeGiay");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_kichCos",
-                table: "kichCos",
+                name: "PK_KichCos",
+                table: "KichCos",
                 column: "IdKichCo");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_hoaDonChiTiets",
-                table: "hoaDonChiTiets",
+                name: "PK_HoaDonChiTiets",
+                table: "HoaDonChiTiets",
                 column: "IdHoaDonChiTiet");
 
             migrationBuilder.AddPrimaryKey(
@@ -1520,13 +1520,13 @@ namespace App_Data.Migrations
                 column: "IdHoaDon");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_gioHangChiTiets",
-                table: "gioHangChiTiets",
+                name: "PK_GioHangChiTiets",
+                table: "GioHangChiTiets",
                 column: "IdGioHangChiTiet");
 
             migrationBuilder.AddPrimaryKey(
-                name: "PK_gioHangs",
-                table: "gioHangs",
+                name: "PK_GioHangs",
+                table: "GioHangs",
                 column: "IdNguoiDung");
 
             migrationBuilder.AddPrimaryKey(
@@ -1570,10 +1570,10 @@ namespace App_Data.Migrations
                 column: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Anh_sanPhamChiTiets_IdSanPhamChiTiet",
+                name: "FK_Anh_SanPhamChiTiets_IdSanPhamChiTiet",
                 table: "Anh",
                 column: "IdSanPhamChiTiet",
-                principalTable: "sanPhamChiTiets",
+                principalTable: "SanPhamChiTiets",
                 principalColumn: "IdChiTietSp");
 
             migrationBuilder.AddForeignKey(
@@ -1584,10 +1584,10 @@ namespace App_Data.Migrations
                 principalColumn: "IdDanhGia");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Đánh giá_sanPhamChiTiets_IdSanPhamChiTiet",
+                name: "FK_Đánh giá_SanPhamChiTiets_IdSanPhamChiTiet",
                 table: "Đánh giá",
                 column: "IdSanPhamChiTiet",
-                principalTable: "sanPhamChiTiets",
+                principalTable: "SanPhamChiTiets",
                 principalColumn: "IdChiTietSp");
 
             migrationBuilder.AddForeignKey(
@@ -1598,38 +1598,38 @@ namespace App_Data.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_gioHangChiTiets_gioHangs_IdNguoiDung",
-                table: "gioHangChiTiets",
+                name: "FK_GioHangChiTiets_GioHangs_IdNguoiDung",
+                table: "GioHangChiTiets",
                 column: "IdNguoiDung",
-                principalTable: "gioHangs",
+                principalTable: "GioHangs",
                 principalColumn: "IdNguoiDung");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_gioHangChiTiets_sanPhamChiTiets_IdSanPhamCT",
-                table: "gioHangChiTiets",
+                name: "FK_GioHangChiTiets_SanPhamChiTiets_IdSanPhamCT",
+                table: "GioHangChiTiets",
                 column: "IdSanPhamCT",
-                principalTable: "sanPhamChiTiets",
+                principalTable: "SanPhamChiTiets",
                 principalColumn: "IdChiTietSp");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_gioHangs_Users_NguoiDungId",
-                table: "gioHangs",
+                name: "FK_GioHangs_Users_NguoiDungId",
+                table: "GioHangs",
                 column: "NguoiDungId",
                 principalTable: "Users",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_hoaDonChiTiets_HoaDons_IdHoaDon",
-                table: "hoaDonChiTiets",
+                name: "FK_HoaDonChiTiets_HoaDons_IdHoaDon",
+                table: "HoaDonChiTiets",
                 column: "IdHoaDon",
                 principalTable: "HoaDons",
                 principalColumn: "IdHoaDon");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_hoaDonChiTiets_sanPhamChiTiets_IdSanPhamChiTiet",
-                table: "hoaDonChiTiets",
+                name: "FK_HoaDonChiTiets_SanPhamChiTiets_IdSanPhamChiTiet",
+                table: "HoaDonChiTiets",
                 column: "IdSanPhamChiTiet",
-                principalTable: "sanPhamChiTiets",
+                principalTable: "SanPhamChiTiets",
                 principalColumn: "IdChiTietSp");
 
             migrationBuilder.AddForeignKey(
@@ -1640,10 +1640,10 @@ namespace App_Data.Migrations
                 principalColumn: "IdKhachHang");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_HoaDons_thongTinGiaoHangs_IdThongTinGH",
+                name: "FK_HoaDons_ThongTinGiaoHangs_IdThongTinGH",
                 table: "HoaDons",
                 column: "IdThongTinGH",
-                principalTable: "thongTinGiaoHangs",
+                principalTable: "ThongTinGiaoHangs",
                 principalColumn: "IdThongTinGH");
 
             migrationBuilder.AddForeignKey(
@@ -1654,10 +1654,10 @@ namespace App_Data.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_HoaDons_vouchers_IdVoucher",
+                name: "FK_HoaDons_Vouchers_IdVoucher",
                 table: "HoaDons",
                 column: "IdVoucher",
-                principalTable: "vouchers",
+                principalTable: "Vouchers",
                 principalColumn: "IdVoucher");
 
             migrationBuilder.AddForeignKey(
@@ -1668,22 +1668,22 @@ namespace App_Data.Migrations
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_KhuyenMaiChiTiet_sanPhamChiTiets_IdSanPhamChiTiet",
+                name: "FK_KhuyenMaiChiTiet_SanPhamChiTiets_IdSanPhamChiTiet",
                 table: "KhuyenMaiChiTiet",
                 column: "IdSanPhamChiTiet",
-                principalTable: "sanPhamChiTiets",
+                principalTable: "SanPhamChiTiets",
                 principalColumn: "IdChiTietSp");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_phuongThucThanhToanChiTiets_HoaDons_IdHoaDon",
-                table: "phuongThucThanhToanChiTiets",
+                name: "FK_PhuongThucThanhToanChiTiets_HoaDons_IdHoaDon",
+                table: "PhuongThucThanhToanChiTiets",
                 column: "IdHoaDon",
                 principalTable: "HoaDons",
                 principalColumn: "IdHoaDon");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_phuongThucThanhToanChiTiets_PhuongThucThanhToans_IdThanhToan",
-                table: "phuongThucThanhToanChiTiets",
+                name: "FK_PhuongThucThanhToanChiTiets_PhuongThucThanhToans_IdThanhToan",
+                table: "PhuongThucThanhToanChiTiets",
                 column: "IdThanhToan",
                 principalTable: "PhuongThucThanhToans",
                 principalColumn: "IdPhuongThucThanhToan");
@@ -1697,78 +1697,78 @@ namespace App_Data.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_sanPhamChiTiets_ChatLieus_IdChatLieu",
-                table: "sanPhamChiTiets",
+                name: "FK_SanPhamChiTiets_ChatLieus_IdChatLieu",
+                table: "SanPhamChiTiets",
                 column: "IdChatLieu",
                 principalTable: "ChatLieus",
                 principalColumn: "IdChatLieu");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_sanPhamChiTiets_kichCos_IdKichCo",
-                table: "sanPhamChiTiets",
+                name: "FK_SanPhamChiTiets_KichCos_IdKichCo",
+                table: "SanPhamChiTiets",
                 column: "IdKichCo",
-                principalTable: "kichCos",
+                principalTable: "KichCos",
                 principalColumn: "IdKichCo");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_sanPhamChiTiets_kieuDeGiays_IdKieuDeGiay",
-                table: "sanPhamChiTiets",
+                name: "FK_SanPhamChiTiets_KieuDeGiays_IdKieuDeGiay",
+                table: "SanPhamChiTiets",
                 column: "IdKieuDeGiay",
-                principalTable: "kieuDeGiays",
+                principalTable: "KieuDeGiays",
                 principalColumn: "IdKieuDeGiay");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_sanPhamChiTiets_LoaiGiays_IdLoaiGiay",
-                table: "sanPhamChiTiets",
+                name: "FK_SanPhamChiTiets_LoaiGiays_IdLoaiGiay",
+                table: "SanPhamChiTiets",
                 column: "IdLoaiGiay",
                 principalTable: "LoaiGiays",
                 principalColumn: "IdLoaiGiay");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_sanPhamChiTiets_mauSacs_IdMauSac",
-                table: "sanPhamChiTiets",
+                name: "FK_SanPhamChiTiets_MauSacs_IdMauSac",
+                table: "SanPhamChiTiets",
                 column: "IdMauSac",
-                principalTable: "mauSacs",
+                principalTable: "MauSacs",
                 principalColumn: "IdMauSac");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_sanPhamChiTiets_SanPhams_IdSanPham",
-                table: "sanPhamChiTiets",
+                name: "FK_SanPhamChiTiets_SanPhams_IdSanPham",
+                table: "SanPhamChiTiets",
                 column: "IdSanPham",
                 principalTable: "SanPhams",
                 principalColumn: "IdSanPham");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_sanPhamChiTiets_thuongHieus_IdThuongHieu",
-                table: "sanPhamChiTiets",
+                name: "FK_SanPhamChiTiets_ThuongHieus_IdThuongHieu",
+                table: "SanPhamChiTiets",
                 column: "IdThuongHieu",
-                principalTable: "thuongHieus",
+                principalTable: "ThuongHieus",
                 principalColumn: "IdThuongHieu");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_sanPhamChiTiets_xuatXus_IdXuatXu",
-                table: "sanPhamChiTiets",
+                name: "FK_SanPhamChiTiets_XuatXus_IdXuatXu",
+                table: "SanPhamChiTiets",
                 column: "IdXuatXu",
-                principalTable: "xuatXus",
+                principalTable: "XuatXus",
                 principalColumn: "IdXuatXu");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_sanPhamYeuThiches_sanPhamChiTiets_IdSanPhamChiTiet",
-                table: "sanPhamYeuThiches",
+                name: "FK_SanPhamYeuThichs_SanPhamChiTiets_IdSanPhamChiTiet",
+                table: "SanPhamYeuThichs",
                 column: "IdSanPhamChiTiet",
-                principalTable: "sanPhamChiTiets",
+                principalTable: "SanPhamChiTiets",
                 principalColumn: "IdChiTietSp");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_sanPhamYeuThiches_Users_IdNguoiDung",
-                table: "sanPhamYeuThiches",
+                name: "FK_SanPhamYeuThichs_Users_IdNguoiDung",
+                table: "SanPhamYeuThichs",
                 column: "IdNguoiDung",
                 principalTable: "Users",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_thongTinGiaoHangs_Users_IdNguoiDung",
-                table: "thongTinGiaoHangs",
+                name: "FK_ThongTinGiaoHangs_Users_IdNguoiDung",
+                table: "ThongTinGiaoHangs",
                 column: "IdNguoiDung",
                 principalTable: "Users",
                 principalColumn: "Id");
@@ -1814,17 +1814,17 @@ namespace App_Data.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_voucherNguoiDungs_Users_IdNguoiDung",
-                table: "voucherNguoiDungs",
+                name: "FK_VoucherNguoiDungs_Users_IdNguoiDung",
+                table: "VoucherNguoiDungs",
                 column: "IdNguoiDung",
                 principalTable: "Users",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_voucherNguoiDungs_vouchers_IdVouCher",
-                table: "voucherNguoiDungs",
+                name: "FK_VoucherNguoiDungs_Vouchers_IdVouCher",
+                table: "VoucherNguoiDungs",
                 column: "IdVouCher",
-                principalTable: "vouchers",
+                principalTable: "Vouchers",
                 principalColumn: "IdVoucher");
         }
     }

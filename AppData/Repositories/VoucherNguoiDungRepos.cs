@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.ViewModels.VoucherNguoiDung;
@@ -23,18 +23,22 @@ namespace App_Data.Repositories
             _context = new BazaizaiContext();
         }
 
-        public async Task<List<NguoiDung>> GetLstNguoiDUngMoi()
+        public async Task<List<NguoiDung>> GetLstNguoiDungMoi()
         {
-            return _context.NguoiDungs.Where(c => c.TongChiTieu == 0 && c.UserName != "Admin").ToList();
+            return await Task.Run(() =>
+            {
+                return _context.NguoiDungs.Where(c => c.TongChiTieu == 0 && c.UserName != "Admin").ToList();
+            });
         }
+
 
         public async Task<VoucherTaiQuayDto> GetVocherTaiQuay(string id)
         {
 
-            var voucherTaiQuay = _context.voucherNguoiDungs.FirstOrDefault(c => c.IdVouCherNguoiDung == id && c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung);
+            var voucherTaiQuay = _context.VoucherNguoiDungs.FirstOrDefault(c => c.IdVouCherNguoiDung == id && c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung);
             if (voucherTaiQuay != null)
             {
-                var voucher = _context.vouchers.FirstOrDefault(c => c.IdVoucher == voucherTaiQuay.IdVouCher && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.HoatDong));
+                var voucher = _context.Vouchers.FirstOrDefault(c => c.IdVoucher == voucherTaiQuay.IdVouCher && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.HoatDong));
                 if (voucher != null)
                 {
                     return new VoucherTaiQuayDto()
@@ -54,10 +58,10 @@ namespace App_Data.Repositories
             }
             else
             {
-                var voucher = _context.vouchers.FirstOrDefault(c => c.MaVoucher == id && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.HoatDong));
+                var voucher = _context.Vouchers.FirstOrDefault(c => c.MaVoucher == id && (c.TrangThai == (int)TrangThaiVoucher.HoatDongTaiQuay || c.TrangThai == (int)TrangThaiVoucher.HoatDong));
                 if (voucher != null)
                 {
-                    voucherTaiQuay = _context.voucherNguoiDungs.FirstOrDefault(c => c.IdVouCher == voucher.IdVoucher && c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung);
+                    voucherTaiQuay = _context.VoucherNguoiDungs.FirstOrDefault(c => c.IdVouCher == voucher.IdVoucher && c.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung);
                     if (voucherTaiQuay == null) { return null; }
                     return new VoucherTaiQuayDto()
                     {
@@ -79,7 +83,7 @@ namespace App_Data.Repositories
 
         public async Task<bool> TangVoucherNguoiDung(AddVoucherRequestDTO addVoucherRequestDTO)
         {
-            var VoucherGet = await _context.vouchers.FirstOrDefaultAsync(c => c.MaVoucher == addVoucherRequestDTO.MaVoucher);
+            var VoucherGet = await _context.Vouchers.FirstOrDefaultAsync(c => c.MaVoucher == addVoucherRequestDTO.MaVoucher);
             try
             {
                 if (VoucherGet != null)
@@ -112,7 +116,7 @@ namespace App_Data.Repositories
 
         public async Task<bool> TangVoucherNguoiDungMoi(string ma, string idUser)
         {
-            var voucher = await _context.vouchers.FirstOrDefaultAsync(c => c.MaVoucher == ma && c.TrangThai == (int)TrangThaiVoucher.HoatDong);
+            var voucher = await _context.Vouchers.FirstOrDefaultAsync(c => c.MaVoucher == ma && c.TrangThai == (int)TrangThaiVoucher.HoatDong);
 
             if (voucher != null)
             {
@@ -125,7 +129,7 @@ namespace App_Data.Repositories
                     NgayNhan = DateTime.Now
                 };
                 //var existsInVoucherNguoiDung = VcNguoiDungRepos.GetAll().FirstOrDefault(vnd => vnd.IdVouCher == VoucherKhaDung.IdVoucher && vnd.IdNguoiDung == item);
-                var existsInVoucherNguoiDung = await _context.voucherNguoiDungs.AnyAsync(vnd => vnd.IdVouCher == voucher.IdVoucher && vnd.IdNguoiDung == idUser);
+                var existsInVoucherNguoiDung = await _context.VoucherNguoiDungs.AnyAsync(vnd => vnd.IdVouCher == voucher.IdVoucher && vnd.IdNguoiDung == idUser);
                 if (!existsInVoucherNguoiDung)
                 {
                     await _context.AddAsync(voucherNguoi);

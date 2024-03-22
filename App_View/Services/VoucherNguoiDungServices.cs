@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -14,13 +14,13 @@ using static App_Data.Repositories.TrangThai;
 
 namespace App_View.Services
 {
-    public class VoucherNguoiDungServices : IVoucherNguoiDungServices
+    public class VoucherNguoiDungservices : IVoucherNguoiDungservices
     {
         private readonly HttpClient _httpClient;
         BazaizaiContext DbContextModel = new BazaizaiContext();
         DbSet<VoucherNguoiDung> voucherNguoiDung;
         DbSet<Voucher> voucher;
-        public VoucherNguoiDungServices(HttpClient httpClient)
+        public VoucherNguoiDungservices(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
@@ -78,7 +78,7 @@ namespace App_View.Services
         //hàm này để check xem voucher đó đã có trong id người dùng chưa
         public bool CheckVoucherInUser(string ma, string idUser)
         {
-            string voucherKhaDung = DbContextModel.vouchers
+            string voucherKhaDung = DbContextModel.Vouchers
                 .FirstOrDefault(c => c.MaVoucher == ma && c.TrangThai == (int)TrangThaiVoucher.HoatDong).IdVoucher;
 
             if (voucherKhaDung == null)
@@ -86,7 +86,7 @@ namespace App_View.Services
                 return false;
             }
 
-            var existsInVoucherNguoiDung = DbContextModel.voucherNguoiDungs
+            var existsInVoucherNguoiDung = DbContextModel.VoucherNguoiDungs
                 .Any(vnd => vnd.IdVouCher == voucherKhaDung && vnd.IdNguoiDung == idUser);
 
             return !existsInVoucherNguoiDung;
@@ -153,7 +153,7 @@ namespace App_View.Services
             }
         }
 
-        public async Task<bool> UpdateVoucherNguoiDungSauKhiDung(VoucherNguoiDungDTO VcDTO)
+        public async Task<bool> UpdateVoucherNguoiDungsauKhiDung(VoucherNguoiDungDTO VcDTO)
         {
             try
             {

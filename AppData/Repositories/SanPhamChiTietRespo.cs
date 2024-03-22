@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Migrations;
 using App_Data.Models;
@@ -41,7 +41,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                await _context.sanPhamChiTiets.AddAsync(entity);
+                await _context.SanPhamChiTiets.AddAsync(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -58,7 +58,7 @@ namespace App_Data.Repositories
             {
                 var entity = await GetByKeyAsync(id)!;
                 if (entity == null) return false;
-                _context.sanPhamChiTiets.Remove(entity);
+                _context.SanPhamChiTiets.Remove(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -71,12 +71,12 @@ namespace App_Data.Repositories
 
         public async Task<SanPhamChiTiet?> GetByKeyAsync(string id)
         {
-            return await _context.sanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == id);
+            return await _context.SanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == id);
         }
 
         public async Task<List<SanPhamChiTietDTO>> GetListSanPhamChiTietDTOAsync(List<string> lstGuid)
         {
-            var lstSanPhamChiTiet = await _context.sanPhamChiTiets
+            var lstSanPhamChiTiet = await _context.SanPhamChiTiets
                  .Where(sp => lstGuid.Contains(sp.IdChiTietSp!))
                  .Include(x => x.Anh)
                  .Include(x => x.SanPham)
@@ -92,7 +92,7 @@ namespace App_Data.Repositories
             using (var dbContext = new BazaizaiContext())
             {
                 var dateTimeNow = DateTime.Now;
-                var query = dbContext.sanPhamChiTiets.AsQueryable();
+                var query = dbContext.SanPhamChiTiets.AsQueryable();
                 var lstAllSp = await query
                       .Include(it => it.Anh)
                       .Include(it => it.SanPham)
@@ -188,7 +188,7 @@ namespace App_Data.Repositories
                     .Select(gr => CreateItemShopViewModelAsync(gr))
                     .ToList();
 
-                var lstIDSPDanhGia = await dbContext.danhGias.Select(it => it.IdSanPhamChiTiet).Distinct().ToListAsync();
+                var lstIDSPDanhGia = await dbContext.DanhGias.Select(it => it.IdSanPhamChiTiet).Distinct().ToListAsync();
                 var lstDanhGia = await query
                    .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong && lstIDSPDanhGia.Contains(sp.IdChiTietSp))
                    .Include(it => it.Anh)
@@ -232,7 +232,7 @@ namespace App_Data.Repositories
         {
             var firstItem = gr.First();
             var grSp = _context
-                .sanPhamChiTiets
+                .SanPhamChiTiets
                 .Where(sp =>
                 sp.IdChatLieu == firstItem.IdChatLieu &&
                 sp.IdSanPham == firstItem.IdSanPham &&
@@ -260,7 +260,7 @@ namespace App_Data.Repositories
         {
             var firstItem = gr.First();
             var grSp = _context
-                .sanPhamChiTiets
+                .SanPhamChiTiets
                 .Where(sp =>
                sp.IdChiTietSp== firstItem.IdChiTietSp)
                 .ToList();
@@ -286,7 +286,7 @@ namespace App_Data.Repositories
 
         public async Task<IEnumerable<SanPhamChiTiet>> GetListAsync()
         {
-            return await _context.sanPhamChiTiets.ToListAsync();
+            return await _context.SanPhamChiTiets.ToListAsync();
         }
 
 
@@ -298,14 +298,14 @@ namespace App_Data.Repositories
                 {
                     IdChiTietSp = sanPham.IdChiTietSp,
                     ChatLieu = context.ChatLieus.ToList().FirstOrDefault(x => x.IdChatLieu == sanPham.IdChatLieu)?.TenChatLieu,
-                    SanPham = context.thuongHieus.ToList().FirstOrDefault(x => x.IdThuongHieu == sanPham.IdThuongHieu)?.TenThuongHieu + " " + context.SanPhams.ToList().FirstOrDefault(x => x.IdSanPham == sanPham.IdSanPham)?.TenSanPham,
+                    SanPham = context.ThuongHieus.ToList().FirstOrDefault(x => x.IdThuongHieu == sanPham.IdThuongHieu)?.TenThuongHieu + " " + context.SanPhams.ToList().FirstOrDefault(x => x.IdSanPham == sanPham.IdSanPham)?.TenSanPham,
                     GiaBan = sanPham.GiaBan,
-                    MauSac = context.mauSacs.ToList().FirstOrDefault(ms => ms.IdMauSac == sanPham.IdMauSac)?.TenMauSac,
-                    KichCo = context.kichCos.ToList().FirstOrDefault(x => x.IdKichCo == sanPham.IdKichCo)?.SoKichCo,
+                    MauSac = context.MauSacs.ToList().FirstOrDefault(ms => ms.IdMauSac == sanPham.IdMauSac)?.TenMauSac,
+                    KichCo = context.KichCos.ToList().FirstOrDefault(x => x.IdKichCo == sanPham.IdKichCo)?.SoKichCo,
                     Anh = context.Anh.ToList().Where(x => x.IdSanPhamChiTiet == sanPham.IdChiTietSp && x.TrangThai == 0).OrderBy(x => x.NgayTao).FirstOrDefault()?.Url,
                     SoLuongDaBan = sanPham.SoLuongDaBan,
-                    XuatXu = context.xuatXus.ToList().FirstOrDefault(x => x.IdXuatXu == sanPham.IdXuatXu)?.Ten,
-                    KieuDeGiay = context.kieuDeGiays.ToList().FirstOrDefault(x => x.IdKieuDeGiay == sanPham.IdKieuDeGiay)?.TenKieuDeGiay,
+                    XuatXu = context.XuatXus.ToList().FirstOrDefault(x => x.IdXuatXu == sanPham.IdXuatXu)?.Ten,
+                    KieuDeGiay = context.KieuDeGiays.ToList().FirstOrDefault(x => x.IdKieuDeGiay == sanPham.IdKieuDeGiay)?.TenKieuDeGiay,
                     LoaiGiay = context.LoaiGiays.ToList().FirstOrDefault(x => x.IdLoaiGiay == sanPham.IdLoaiGiay)?.TenLoaiGiay,
                     SoLuongTon = sanPham.SoLuongTon,
                     Ma = sanPham.Ma
@@ -316,20 +316,20 @@ namespace App_Data.Repositories
         public async Task<IEnumerable<SanPhamDanhSachViewModel>> GetListViewModelAsync()
         {
             var sanPhamChiTietViewModels = 
-                (await _context.sanPhamChiTiets.ToListAsync()).Where(it => it.TrangThai == 0).OrderByDescending(x => x.NgayTao).Select(item => CreateSanPhamDanhSachViewModel(item)).ToList();
+                (await _context.SanPhamChiTiets.ToListAsync()).Where(it => it.TrangThai == 0).OrderByDescending(x => x.NgayTao).Select(item => CreateSanPhamDanhSachViewModel(item)).ToList();
             return sanPhamChiTietViewModels;
         }
         public async Task<IEnumerable<SanPhamDanhSachViewModel>> GetAllListViewModelAsync()
         {
             var sanPhamChiTietViewModels =
-                (await _context.sanPhamChiTiets.ToListAsync()).OrderByDescending(x => x.NgayTao).Select(item => CreateSanPhamDanhSachViewModel(item)).ToList();
+                (await _context.SanPhamChiTiets.ToListAsync()).OrderByDescending(x => x.NgayTao).Select(item => CreateSanPhamDanhSachViewModel(item)).ToList();
             return sanPhamChiTietViewModels;
         }
         public async Task<bool> UpdateAsync(SanPhamChiTiet entity)
         {
             try
             {
-                _context.sanPhamChiTiets.Update(entity);
+                _context.SanPhamChiTiets.Update(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -343,7 +343,7 @@ namespace App_Data.Repositories
         {
             using (var dbContext = new BazaizaiContext())
             {
-                var listSanPham = await dbContext.sanPhamChiTiets
+                var listSanPham = await dbContext.SanPhamChiTiets
                 .Include(it => it.SanPham)
                 .Include(it => it.ThuongHieu)
                 .Include(it => it.LoaiGiay)
@@ -371,7 +371,7 @@ namespace App_Data.Repositories
         {
             using (var dbContext = new BazaizaiContext())
             {
-                var listSanPham = await dbContext.sanPhamChiTiets
+                var listSanPham = await dbContext.SanPhamChiTiets
            .Where(sp => sp.TrangThai == 0)
            .Include(it => it.SanPham)
            .Include(it => it.ThuongHieu)
@@ -411,7 +411,7 @@ namespace App_Data.Repositories
 
         public async Task<List<ItemShopViewModel>> GetDanhSachBienTheItemShopViewModelSaleAsync()
         {
-            var listSanPham = await _context.sanPhamChiTiets
+            var listSanPham = await _context.SanPhamChiTiets
                 .Where(sp => sp.TrangThai == 0 && sp.TrangThaiSale == 2)
                 .Include(x => x.Anh)
                 .Include(x => x.SanPham)
@@ -445,7 +445,7 @@ namespace App_Data.Repositories
 
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelAynsc(string id)
         {
-            var sanPhamChiTiet = await _context.sanPhamChiTiets.
+            var sanPhamChiTiet = await _context.SanPhamChiTiets.
                 Include(x => x.Anh).
                 Include(x => x.SanPham).
                 Include(x => x.ThuongHieu).
@@ -459,7 +459,7 @@ namespace App_Data.Repositories
                 FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
             if (sanPhamChiTiet == null) return null;
             var itemDetailViewModel = _mapper.Map<ItemDetailViewModel>(sanPhamChiTiet);
-            var lstBienThe = await _context.sanPhamChiTiets
+            var lstBienThe = await _context.SanPhamChiTiets
                 .Include(x => x.MauSac)
                 .Include(x => x.KichCo)
                 .Where(sp =>
@@ -478,19 +478,19 @@ namespace App_Data.Repositories
 
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectColorAynsc(string id, string mauSac)
         {
-            var sanPhamGet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
+            var sanPhamGet = await _context.SanPhamChiTiets.FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
 
             if (sanPhamGet == null)
                 return null;
 
-            var mauSacEntity = await _context.mauSacs.FirstOrDefaultAsync(x => x.TenMauSac == mauSac);
+            var mauSacEntity = await _context.MauSacs.FirstOrDefaultAsync(x => x.TenMauSac == mauSac);
 
             if (mauSacEntity == null)
                 return null;
 
             var idMauSac = mauSacEntity.IdMauSac;
 
-            var query = _context.sanPhamChiTiets
+            var query = _context.SanPhamChiTiets
                 .Where(sp =>
                     sp.TrangThai == 0 &&
                     sp.IdKieuDeGiay == sanPhamGet!.IdKieuDeGiay &&
@@ -530,10 +530,10 @@ namespace App_Data.Repositories
 
         public async Task<ItemDetailViewModel?> GetItemDetailViewModelWhenSelectSizeAynsc(string id, int size)
         {
-            var sanPhamGet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
+            var sanPhamGet = await _context.SanPhamChiTiets.FirstOrDefaultAsync(sp => sp.IdChiTietSp == id);
 
-            var idsSize = (await _context.kichCos.FirstOrDefaultAsync(x => x.SoKichCo == size))!.IdKichCo;
-            var sanPhamChiTiet = (await _context.sanPhamChiTiets.Where(sp =>
+            var idsSize = (await _context.KichCos.FirstOrDefaultAsync(x => x.SoKichCo == size))!.IdKichCo;
+            var sanPhamChiTiet = (await _context.SanPhamChiTiets.Where(sp =>
                 sp.IdXuatXu == sanPhamGet!.IdXuatXu &&
                 sp.IdMauSac == sanPhamGet.IdMauSac &&
                 sp.IdLoaiGiay == sanPhamGet.IdLoaiGiay &&
@@ -558,7 +558,7 @@ namespace App_Data.Repositories
 
         public async Task<SanPhamChiTietViewModel?> GetSanPhamChiTietViewModelAynsc(string id)
         {
-            var sanPhamChiTiet = await _context.sanPhamChiTiets
+            var sanPhamChiTiet = await _context.SanPhamChiTiets
                 .Include(x => x.Anh)
                 .Include(x => x.ChatLieu)
                 .Include(x => x.XuatXu)
@@ -574,7 +574,7 @@ namespace App_Data.Repositories
 
         public async Task<IEnumerable<SanPhamDanhSachViewModel>> GetListSanPhamNgungKinhDoanhViewModelAsync()
         {
-            var sanPhamChiTietViewModels = (await _context.sanPhamChiTiets.ToListAsync()).Where(it => it.TrangThai == (int)TrangThaiCoBan.KhongHoatDong).Select(item => CreateSanPhamDanhSachViewModel(item)).ToList();
+            var sanPhamChiTietViewModels = (await _context.SanPhamChiTiets.ToListAsync()).Where(it => it.TrangThai == (int)TrangThaiCoBan.KhongHoatDong).Select(item => CreateSanPhamDanhSachViewModel(item)).ToList();
             return sanPhamChiTietViewModels;
         }
 
@@ -582,7 +582,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                var sanPhams = await _context.sanPhamChiTiets
+                var sanPhams = await _context.SanPhamChiTiets
                     .Where(sp => lstguid.Contains(sp.IdChiTietSp!))
                     .ToListAsync();
 
@@ -594,7 +594,7 @@ namespace App_Data.Repositories
                 foreach (var sanPham in sanPhams)
                 {
                     sanPham.TrangThai = (int)TrangThaiCoBan.KhongHoatDong;
-                    _context.sanPhamChiTiets.Update(sanPham);
+                    _context.SanPhamChiTiets.Update(sanPham);
                 }
 
                 await _context.SaveChangesAsync();
@@ -611,7 +611,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                var sanPhams = await _context.sanPhamChiTiets
+                var sanPhams = await _context.SanPhamChiTiets
                     .Where(sp => lstguid.Contains(sp.IdChiTietSp!))
                     .ToListAsync();
 
@@ -623,7 +623,7 @@ namespace App_Data.Repositories
                 foreach (var sanPham in sanPhams)
                 {
                     sanPham.TrangThai = (int)TrangThaiCoBan.HoatDong;
-                    _context.sanPhamChiTiets.Update(sanPham);
+                    _context.SanPhamChiTiets.Update(sanPham);
                 }
 
                 await _context.SaveChangesAsync();
@@ -643,7 +643,7 @@ namespace App_Data.Repositories
                 var entity = await GetByKeyAsync(id)!;
                 if (entity == null) return false;
                 entity.TrangThai = (int)TrangThaiCoBan.HoatDong;
-                _context.sanPhamChiTiets.Update(entity);
+                _context.SanPhamChiTiets.Update(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -656,7 +656,7 @@ namespace App_Data.Repositories
 
         public async Task<List<SanPhamChiTietExcelViewModel>> GetListSanPhamExcelAynsc()
         {
-            var listSanPhamChiTiet = (await _context.sanPhamChiTiets
+            var listSanPhamChiTiet = (await _context.SanPhamChiTiets
                 .Include(sp => sp.ThuongHieu)
                 .Include(sp => sp.MauSac)
                 .Include(sp => sp.KichCo)
@@ -689,44 +689,44 @@ namespace App_Data.Repositories
                 }
 
                 var xuatXuLower = bienTheDTO.XuatXu!.Trim().ToLower();
-                var xuatXu = await _context.xuatXus.FirstOrDefaultAsync(cl => cl.Ten!.Trim().ToLower() == xuatXuLower);
+                var xuatXu = await _context.XuatXus.FirstOrDefaultAsync(cl => cl.Ten!.Trim().ToLower() == xuatXuLower);
                 if (xuatXu == null)
                 {
                     xuatXu = new XuatXu()
                     {
                         IdXuatXu = Guid.NewGuid().ToString(),
-                        Ma = !_context.xuatXus.Any() ? "XX1" : "XX" + (_context.ChatLieus.Count() + 1),
+                        Ma = !_context.XuatXus.Any() ? "XX1" : "XX" + (_context.ChatLieus.Count() + 1),
                         Ten = bienTheDTO.XuatXu.Trim(),
                         TrangThai = 0
                     };
-                    await _context.xuatXus.AddAsync(xuatXu);
+                    await _context.XuatXus.AddAsync(xuatXu);
                 }
 
                 var mauSacLower = bienTheDTO.MauSac!.Trim().ToLower();
-                var mauSac = await _context.mauSacs.FirstOrDefaultAsync(cl => cl.TenMauSac!.Trim().ToLower() == mauSacLower);
+                var mauSac = await _context.MauSacs.FirstOrDefaultAsync(cl => cl.TenMauSac!.Trim().ToLower() == mauSacLower);
                 if (mauSac == null)
                 {
                     mauSac = new MauSac()
                     {
                         IdMauSac = Guid.NewGuid().ToString(),
-                        MaMauSac = !_context.mauSacs.Any() ? "MS1" : "MS" + (_context.mauSacs.Count() + 1),
+                        MaMauSac = !_context.MauSacs.Any() ? "MS1" : "MS" + (_context.MauSacs.Count() + 1),
                         TenMauSac = bienTheDTO.MauSac.Trim(),
                         TrangThai = 0
                     };
-                    await _context.mauSacs.AddAsync(mauSac);
+                    await _context.MauSacs.AddAsync(mauSac);
                 }
 
-                var kichCo = await _context.kichCos.FirstOrDefaultAsync(cl => cl.SoKichCo == Convert.ToInt32(bienTheDTO.KichCo!.Trim()));
+                var kichCo = await _context.KichCos.FirstOrDefaultAsync(cl => cl.SoKichCo == Convert.ToInt32(bienTheDTO.KichCo!.Trim()));
                 if (kichCo == null)
                 {
                     kichCo = new KichCo()
                     {
                         IdKichCo = Guid.NewGuid().ToString(),
-                        MaKichCo = !_context.kichCos.Any() ? "KC1" : "KC" + (_context.kichCos.Count() + 1),
+                        MaKichCo = !_context.KichCos.Any() ? "KC1" : "KC" + (_context.KichCos.Count() + 1),
                         SoKichCo = Convert.ToInt32(bienTheDTO.KichCo!.Trim()),
                         TrangThai = 0
                     };
-                    await _context.kichCos.AddAsync(kichCo);
+                    await _context.KichCos.AddAsync(kichCo);
                 }
 
                 var loaiGiayLower = bienTheDTO.LoaiGiay!.Trim().ToLower();
@@ -744,17 +744,17 @@ namespace App_Data.Repositories
                 }
 
                 var kieuDeGiayLower = bienTheDTO.KieuDeGiay!.Trim().ToLower();
-                var kieuDeGiay = await _context.kieuDeGiays.FirstOrDefaultAsync(cl => cl.TenKieuDeGiay!.Trim().ToLower() == kieuDeGiayLower);
+                var kieuDeGiay = await _context.KieuDeGiays.FirstOrDefaultAsync(cl => cl.TenKieuDeGiay!.Trim().ToLower() == kieuDeGiayLower);
                 if (kieuDeGiay == null)
                 {
                     kieuDeGiay = new KieuDeGiay()
                     {
                         IdKieuDeGiay = Guid.NewGuid().ToString(),
-                        MaKieuDeGiay = !_context.kieuDeGiays.Any() ? "KDG1" : "KDG" + (_context.kieuDeGiays.Count() + 1),
+                        MaKieuDeGiay = !_context.KieuDeGiays.Any() ? "KDG1" : "KDG" + (_context.KieuDeGiays.Count() + 1),
                         TenKieuDeGiay = bienTheDTO.KieuDeGiay.Trim(),
                         Trangthai = 0
                     };
-                    await _context.kieuDeGiays.AddAsync(kieuDeGiay);
+                    await _context.KieuDeGiays.AddAsync(kieuDeGiay);
                 }
 
                 var sanSanPhamLower = bienTheDTO.SanPham!.Trim().ToLower();
@@ -772,17 +772,17 @@ namespace App_Data.Repositories
                 }
 
                 var thuongHieuLower = bienTheDTO.ThuongHieu!.Trim().ToLower();
-                var thuongHieu = await _context.thuongHieus.FirstOrDefaultAsync(cl => cl.TenThuongHieu!.Trim().ToLower() == thuongHieuLower);
+                var thuongHieu = await _context.ThuongHieus.FirstOrDefaultAsync(cl => cl.TenThuongHieu!.Trim().ToLower() == thuongHieuLower);
                 if (thuongHieu == null)
                 {
                     thuongHieu = new ThuongHieu()
                     {
                         IdThuongHieu = Guid.NewGuid().ToString(),
-                        MaThuongHieu = !_context.thuongHieus.Any() ? "TH1" : "TH" + (_context.thuongHieus.Count() + 1),
+                        MaThuongHieu = !_context.ThuongHieus.Any() ? "TH1" : "TH" + (_context.ThuongHieus.Count() + 1),
                         TenThuongHieu = bienTheDTO.ThuongHieu.Trim(),
                         TrangThai = 0
                     };
-                    await _context.thuongHieus.AddAsync(thuongHieu);
+                    await _context.ThuongHieus.AddAsync(thuongHieu);
                 }
 
                 await _context.SaveChangesAsync();
@@ -812,10 +812,10 @@ namespace App_Data.Repositories
         {
             try
             {
-                var sanPhamChiTiet = await _context.sanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == IdSanPhamChiTiet);
+                var sanPhamChiTiet = await _context.SanPhamChiTiets.FirstOrDefaultAsync(x => x.IdChiTietSp == IdSanPhamChiTiet);
                 sanPhamChiTiet!.SoLuongTon = sanPhamChiTiet.SoLuongTon - soLuong;
                 sanPhamChiTiet!.SoLuongDaBan += soLuong;
-                _context.sanPhamChiTiets.Update(sanPhamChiTiet);
+                _context.SanPhamChiTiets.Update(sanPhamChiTiet);
                 await _context.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -830,7 +830,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                var query = _context.sanPhamChiTiets
+                var query = _context.SanPhamChiTiets
                         .Where(sp => sp.TrangThai == (int)TrangThaiCoBan.HoatDong)
                         .Include(sp => sp.MauSac)
                         .Include(sp => sp.ThuongHieu)
@@ -926,7 +926,7 @@ namespace App_Data.Repositories
 
         public async Task<bool> ProductIsNull(SanPhamChiTietCopyDTO sanPhamChiTietCopyDTO)
         {
-            var sanPhamChiTiet = await _context.sanPhamChiTiets
+            var sanPhamChiTiet = await _context.SanPhamChiTiets
                 .FirstOrDefaultAsync(x =>
                 x.IdSanPham == sanPhamChiTietCopyDTO.SanPhamChiTietData!.IdSanPham &&
                 x.IdChatLieu == sanPhamChiTietCopyDTO.SanPhamChiTietData.IdChatLieu &&
@@ -971,7 +971,7 @@ namespace App_Data.Repositories
                 var idXuatXu = listGuid[4];
                 var idChatLieu = listGuid[5];
                 return _context
-                        .sanPhamChiTiets
+                        .SanPhamChiTiets
                         .Where(sp =>
                         sp.IdSanPham == idSanPham &&
                         sp.IdThuongHieu == idThuongHieu &&
@@ -1015,7 +1015,7 @@ namespace App_Data.Repositories
 
         public async Task<List<SPDanhSachViewModel>> GetFilteredDaTaDSTongQuanAynsc(ParametersTongQuanDanhSach parametersTongQuanDanhSach)
         {
-            var query = _context.sanPhamChiTiets.AsQueryable();
+            var query = _context.SanPhamChiTiets.AsQueryable();
 
             if (!string.IsNullOrEmpty(parametersTongQuanDanhSach.IdSanPham))
             {
@@ -1098,7 +1098,7 @@ namespace App_Data.Repositories
         {
             using (var context = new BazaizaiContext())
             {
-                return _context.sanPhamChiTiets.AsNoTracking();
+                return _context.SanPhamChiTiets.AsNoTracking();
             }
         }
     }

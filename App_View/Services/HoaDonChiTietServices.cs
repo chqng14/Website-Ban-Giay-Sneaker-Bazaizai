@@ -7,10 +7,10 @@ using System.Net.Http.Json;
 
 namespace App_View.Services
 {
-    public class HoaDonChiTietServices : IHoaDonChiTietServices
+    public class HoaDonChiTietservices : IHoaDonChiTietservices
     {
         private readonly HttpClient httpClient;
-        public HoaDonChiTietServices()
+        public HoaDonChiTietservices()
         {
             httpClient = new HttpClient();
         }

@@ -1,4 +1,4 @@
-﻿@using App_Data.DbContextt;
+﻿@using App_Data.DbContext;
 @model IEnumerable<App_Data.ViewModels.Voucher.VoucherDTO>
 
 @{
@@ -170,7 +170,7 @@
 <iframe name="print_frame" width="0" height="0" frameborder="0" src="about:blank"></iframe>
 
 <script>
-    var idVoucherSauKhiIn = "";
+    var idVouchersauKhiIn = "";
     $(document).ready(function () {
 
 
@@ -298,7 +298,7 @@
         $('#idVoucherPrint').val(idvoucher);
     }
     function showDetails(idVoucher) {
-        idVoucherSauKhiIn = idVoucher;
+        idVouchersauKhiIn = idVoucher;
         $.ajax({
             url: '/Admin/Vouchers/FilterListDetailsVoucherTaiQuayDaIn',
             type: 'POST',

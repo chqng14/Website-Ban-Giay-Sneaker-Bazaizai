@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.Models;
 using App_Data.Repositories;
 using App_Data.ViewModels.HoaDon;
@@ -22,21 +22,21 @@ namespace App_View.Areas.Admin.Controllers
     [Authorize(Roles = "Admin,NhanVien")]
     public class TrangThaiGiaoHangController : Controller
     {
-        private readonly IVoucherNguoiDungServices _voucherNguoiDungServices;
-        private readonly IVoucherServices _voucherServices;
-        private readonly IHoaDonChiTietServices _hoaDonChiTietServices; private readonly SignInManager<NguoiDung> _signInManager;
+        private readonly IVoucherNguoiDungservices _VoucherNguoiDungservices;
+        private readonly IVoucherservices _Voucherservices;
+        private readonly IHoaDonChiTietservices _HoaDonChiTietservices; private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IHoaDonServices _hoaDonServices;
-        private readonly ISanPhamChiTietService sanPhamChiTietService;
+        private readonly ISanPhamChiTietservice SanPhamChiTietservice;
         BazaizaiContext context;
-        public TrangThaiGiaoHangController(ISanPhamChiTietService sanPhamChiTietService, IVoucherNguoiDungServices voucherNguoiDungServices, IVoucherServices voucherServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
+        public TrangThaiGiaoHangController(ISanPhamChiTietservice SanPhamChiTietservice, IVoucherNguoiDungservices VoucherNguoiDungservices, IVoucherservices Voucherservices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
         {
             _hoaDonServices = new HoaDonServices();
             context = new BazaizaiContext();
-            this.sanPhamChiTietService = sanPhamChiTietService;
-            _voucherNguoiDungServices = voucherNguoiDungServices;
-            _voucherServices = voucherServices;
-            _hoaDonChiTietServices = new HoaDonChiTietServices();
+            this.SanPhamChiTietservice = SanPhamChiTietservice;
+            _VoucherNguoiDungservices = VoucherNguoiDungservices;
+            _Voucherservices = Voucherservices;
+            _HoaDonChiTietservices = new HoaDonChiTietservices();
             _signInManager = signInManager;
             _userManager = userManager;
         }
@@ -96,7 +96,7 @@ namespace App_View.Areas.Admin.Controllers
 
             var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x => x.IdHoaDon == id);
             ViewBag.TenNguoiNhan =hoaDon?.TenNguoiNhan;
-            ViewBag.Sdt = context.thongTinGiaoHangs.AsNoTracking().FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH).SDT;
+            ViewBag.Sdt = context.ThongTinGiaoHangs.AsNoTracking().FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH).SDT;
             var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
 
             return PartialView("ChiTietGiaoHang", hoaDonChiTiet);
@@ -114,11 +114,11 @@ namespace App_View.Areas.Admin.Controllers
 			if (Convert.ToInt32(trangThaiGH) == 2)
             {
                 var ngayCapNhatGanNhat = DateTime.Now;
-				var sanPhamCT = (await sanPhamChiTietService.GetAllListSanPhamChiTietViewModelAsync()).ToList();
+				var sanPhamCT = (await SanPhamChiTietservice.GetAllListSanPhamChiTietViewModelAsync()).ToList();
 				var user = await _userManager.GetUserAsync(User);
                 var idUser = await _userManager.GetUserIdAsync(user);
                
-                var hoadonchitiet =  context.hoaDonChiTiets.Where(x=>x.IdHoaDon== id);
+                var hoadonchitiet =  context.HoaDonChiTiets.Where(x=>x.IdHoaDon== id);
                 
                 if (hoadonchitiet.Any())
                 {
@@ -134,7 +134,7 @@ namespace App_View.Areas.Admin.Controllers
 					var updateTrangThaiHoaDon = await _hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(id, idUser, Convert.ToInt32(trangThaiGH), lyDoHuy, ngayCapNhatGanNhat);
 					foreach (var item in hoadonchitiet)
                     {
-                        await sanPhamChiTietService.UpDatSoLuongAynsc(new SanPhamSoLuongDTO()
+                        await SanPhamChiTietservice.UpDatSoLuongAynsc(new SanPhamSoLuongDTO()
                         {
                             IdChiTietSanPham = item.IdSanPhamChiTiet,
                             SoLuong = (int)item.SoLuong,
@@ -180,7 +180,7 @@ namespace App_View.Areas.Admin.Controllers
         }
         public async Task<IActionResult> XacNhanHuy(string id,string lyDoHuy)
         {
-            var hoadonchitiet = context.hoaDonChiTiets.Where(x => x.IdHoaDon == id);
+            var hoadonchitiet = context.HoaDonChiTiets.Where(x => x.IdHoaDon == id);
             var hoadon = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == id);
             if(hoadon.TrangThaiGiaoHang==0)
             {
@@ -195,7 +195,7 @@ namespace App_View.Areas.Admin.Controllers
             {
                 foreach (var item in hoadonchitiet)
                 {
-                    await sanPhamChiTietService.UpDatSoLuongAynsc(new SanPhamSoLuongDTO()
+                    await SanPhamChiTietservice.UpDatSoLuongAynsc(new SanPhamSoLuongDTO()
                     {
                         IdChiTietSanPham = item.IdSanPhamChiTiet,
                         SoLuong = -(int)item.SoLuong,

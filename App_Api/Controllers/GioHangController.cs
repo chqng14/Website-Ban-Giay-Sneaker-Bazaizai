@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -18,7 +18,7 @@ namespace App_Api.Controllers
         DbSet<GioHang> GioHang;
         public GioHangController()
         {
-            GioHang = dbContext.gioHangs;
+            GioHang = dbContext.GioHangs;
             AllRepo<GioHang> all = new AllRepo<GioHang>(dbContext, GioHang);
             allRepo = all;
         }

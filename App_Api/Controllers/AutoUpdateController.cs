@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -23,17 +23,17 @@ namespace App_Api.Controllers
         private readonly IAllRepo<SanPhamChiTiet> SpctRepos;
         private readonly ISanPhamChiTietRespo _sanPhamChiTietRes;
         private readonly IMapper _mapper;
-        DbSet<Voucher> vouchers;
+        DbSet<Voucher> Vouchers;
         DbSet<VoucherNguoiDung> voucherNguoiDung;
         BazaizaiContext _dbContext = new BazaizaiContext();
         bool loading = false;
         public AutoUpdateController(IMapper mapper, IAllRepo<KhuyenMai> kMRepos, IAllRepo<KhuyenMaiChiTiet> kmctRepos, IAllRepo<SanPhamChiTiet> spctRepos, ISanPhamChiTietRespo sanPhamChiTietRes)
         {
-            voucherNguoiDung = _dbContext.voucherNguoiDungs;
+            voucherNguoiDung = _dbContext.VoucherNguoiDungs;
             AllRepo<VoucherNguoiDung> VcNd = new AllRepo<VoucherNguoiDung>(_dbContext, voucherNguoiDung);
             VcNguoiDungRepos = VcNd;
-            vouchers = _dbContext.vouchers;
-            AllRepo<Voucher> all = new AllRepo<Voucher>(_dbContext, vouchers);
+            Vouchers = _dbContext.Vouchers;
+            AllRepo<Voucher> all = new AllRepo<Voucher>(_dbContext, Vouchers);
             VoucherRepo = all;
             _mapper = mapper;
             _dbContext = new BazaizaiContext();
@@ -121,9 +121,9 @@ namespace App_Api.Controllers
 
             // Hàm CapNhatGiaBanThucTe
             var KhuyenMaiCTs = KmctRepos.GetAll().ToList();
-            var khuyenMais = KMRepos.GetAll().ToList();
+            var KhuyenMais = KMRepos.GetAll().ToList();
             var lstKhuyenMaiDangHoatDong = KmctRepos.GetAll().Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai).ToList();
-            var giohang = _dbContext.gioHangChiTiets.ToList();
+            var giohang = _dbContext.GioHangChiTiets.ToList();
             var lstCTSP = SpctRepos.GetAll().Where(x => x.TrangThaiSale == (int)TrangThaiSaleInProductDetail.DaApDungSale && x.TrangThai == (int)TrangThaiCoBan.HoatDong).ToList();
             if (lstCTSP != null && lstCTSP.Count() > 0)
             {
@@ -138,7 +138,7 @@ namespace App_Api.Controllers
                         List<int> mangKhuyenMaiDongGia = new List<int>();
                         foreach (var khuyenMai in giaThucTe)
                         {
-                            var a = khuyenMais.FirstOrDefault(x => x.IdKhuyenMai == khuyenMai.IdKhuyenMai);
+                            var a = KhuyenMais.FirstOrDefault(x => x.IdKhuyenMai == khuyenMai.IdKhuyenMai);
                             if (a.LoaiHinhKM == 1)
                             {
                                 mangKhuyenMai.Add(Convert.ToInt32(a.MucGiam));
@@ -212,8 +212,8 @@ namespace App_Api.Controllers
                     }
 
                 }
-                _dbContext.sanPhamChiTiets.UpdateRange(lstCTSP);
-                _dbContext.gioHangChiTiets.UpdateRange(giohang);
+                _dbContext.SanPhamChiTiets.UpdateRange(lstCTSP);
+                _dbContext.GioHangChiTiets.UpdateRange(giohang);
                 _dbContext.SaveChanges();
             }
         }

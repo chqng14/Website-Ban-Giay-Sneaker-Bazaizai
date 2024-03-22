@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.Models;
 using App_View.IServices;
 using Microsoft.AspNetCore.Identity;
@@ -11,13 +11,13 @@ namespace App_View.Controllers
     public class VoucherController : Controller
     {
         private readonly BazaizaiContext _context;
-        private readonly IVoucherServices _voucherSV;
+        private readonly IVoucherservices _VouchersV;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
 
-        public VoucherController(IVoucherServices voucherServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
+        public VoucherController(IVoucherservices Voucherservices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
         {
-            _voucherSV = voucherServices;
+            _VouchersV = Voucherservices;
             _context = new BazaizaiContext();
             _signInManager = signInManager;
             _userManager = userManager;
@@ -41,7 +41,7 @@ namespace App_View.Controllers
             }
             else ViewBag.NguoiDung = idNguoiDung;
 
-            var allVouchers = (await _voucherSV.GetAllVoucher()).Where(c => c.TrangThai == 0 && c.SoLuong > 0);
+            var allVouchers = (await _VouchersV.GetAllVoucher()).Where(c => c.TrangThai == 0 && c.SoLuong > 0);
             switch (LoaiHinh)
             {
                 case "TienMat":
@@ -62,7 +62,7 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> GetVoucherById(string idVoucher)
         {
-            var Voucher = await _voucherSV.GetVoucherDTOById(idVoucher);
+            var Voucher = await _VouchersV.GetVoucherDTOById(idVoucher);
             double mucuidai = 0;
             string IdVoucher = "";
             int loaiuudai = 0;
@@ -78,15 +78,15 @@ namespace App_View.Controllers
         public async Task<IActionResult> UpdateVoucherAfterUseIt(string idVoucher)
         {
             var idNguoiDung = _userManager.GetUserId(User);
-            if (await _voucherSV.UpdateVoucherAfterUseIt(idVoucher, idNguoiDung))
+            if (await _VouchersV.UpdateVoucherAfterUseIt(idVoucher, idNguoiDung))
             {
                 return Ok();
             }
             return BadRequest();
         }
-        public async Task<IActionResult> UpdateVoucherSoluong(string idVoucher)
+        public async Task<IActionResult> UpdateVouchersoluong(string idVoucher)
         {
-            if (await _voucherSV.UpdateVoucherSoluong(idVoucher))
+            if (await _VouchersV.UpdateVouchersoluong(idVoucher))
             {
                 return Ok();
             }
@@ -94,18 +94,18 @@ namespace App_View.Controllers
         }
         public async Task<IActionResult> VoucherDetails(string ma)
         {
-            var Voucher = await _voucherSV.GetVoucherByMa(ma);
+            var Voucher = await _VouchersV.GetVoucherByMa(ma);
             return View(Voucher);
         }
         public async Task<IActionResult> VoucherDetailsPartial(string ma)
         {
-            var Voucher = await _voucherSV.GetVoucherByMa(ma);
+            var Voucher = await _VouchersV.GetVoucherByMa(ma);
             return PartialView("_VoucherDetailsPartial", Voucher);
         }
 
         public async Task<IActionResult> GetVoucherByMa(string ma)
         {
-            var Voucher = await _voucherSV.GetVoucherByMa(ma);
+            var Voucher = await _VouchersV.GetVoucherByMa(ma);
             double mucuidai = 0;
             string IdVoucher = "";
             int loaiuudai = 0;

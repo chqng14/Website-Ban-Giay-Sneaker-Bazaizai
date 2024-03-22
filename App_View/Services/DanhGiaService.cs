@@ -10,10 +10,10 @@ using System.Net.Http;
 
 namespace App_View.Services
 {
-    public class DanhGiaService : IDanhGiaService
+    public class DanhGiaservice : IDanhGiaservice
     {
         private readonly HttpClient _httpClient;
-        public DanhGiaService()
+        public DanhGiaservice()
         {
             _httpClient = new HttpClient();
         }
@@ -93,8 +93,8 @@ namespace App_View.Services
 
             //var response = await _httpClient.GetAsync(apiUrl);
             //string apiData = await response.Content.ReadAsStringAsync();       
-            //var danhgias = JsonConvert.DeserializeObject<List<DanhGia>>(apiData);
-            //return danhgias;
+            //var DanhGias = JsonConvert.DeserializeObject<List<DanhGia>>(apiData);
+            //return DanhGias;
         }
 
         public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string Idchitietsp)

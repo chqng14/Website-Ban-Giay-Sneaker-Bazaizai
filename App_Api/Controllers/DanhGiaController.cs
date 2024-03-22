@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -21,12 +21,12 @@ namespace App_Api.Controllers
         private readonly IDanhGiaRepo _danhGiaRepo;
         private readonly IAllRepo<DanhGia> repos;
         BazaizaiContext context = new BazaizaiContext();
-        DbSet<DanhGia> danhGias;
+        DbSet<DanhGia> DanhGias;
         public DanhGiaController()
         {
             _danhGiaRepo = new DanhGiaRepo();
-            danhGias = context.danhGias;
-            AllRepo<DanhGia> all = new AllRepo<DanhGia>(context, danhGias);
+            DanhGias = context.DanhGias;
+            AllRepo<DanhGia> all = new AllRepo<DanhGia>(context, DanhGias);
             repos = all;
         }
         [HttpGet("GetListAsyncViewModel")]

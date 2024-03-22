@@ -31,8 +31,8 @@ namespace App_View.Models.Components
             }
             else
             {
-                var giohangSession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
-                data = giohangSession.Select(gh => new SanPhamGioHangViewModel()
+                var GioHangsession = SessionServices.GetObjFomSession(HttpContext.Session, "Cart");
+                data = GioHangsession.Select(gh => new SanPhamGioHangViewModel()
                 {
                     Anh = gh.LinkAnh.OrderBy(item=>item).ToList().FirstOrDefault(),
                     GiaSanPham = Convert.ToDouble(gh.GiaBan),

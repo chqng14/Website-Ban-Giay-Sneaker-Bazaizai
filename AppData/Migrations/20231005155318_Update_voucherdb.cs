@@ -10,11 +10,11 @@ namespace App_Data.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "PhamViSanPham",
-                table: "vouchers");
+                table: "Vouchers");
 
             migrationBuilder.AlterColumn<int>(
                 name: "SoLuong",
-                table: "vouchers",
+                table: "Vouchers",
                 type: "int",
                 nullable: false,
                 defaultValue: 0,
@@ -24,7 +24,7 @@ namespace App_Data.Migrations
 
             migrationBuilder.AlterColumn<int>(
                 name: "LoaiHinhUuDai",
-                table: "vouchers",
+                table: "Vouchers",
                 type: "int",
                 nullable: false,
                 defaultValue: 0,
@@ -34,7 +34,7 @@ namespace App_Data.Migrations
 
             migrationBuilder.AlterColumn<int>(
                 name: "DieuKien",
-                table: "vouchers",
+                table: "Vouchers",
                 type: "int",
                 nullable: false,
                 defaultValue: 0,
@@ -47,7 +47,7 @@ namespace App_Data.Migrations
         {
             migrationBuilder.AlterColumn<int>(
                 name: "SoLuong",
-                table: "vouchers",
+                table: "Vouchers",
                 type: "int",
                 nullable: true,
                 oldClrType: typeof(int),
@@ -55,7 +55,7 @@ namespace App_Data.Migrations
 
             migrationBuilder.AlterColumn<int>(
                 name: "LoaiHinhUuDai",
-                table: "vouchers",
+                table: "Vouchers",
                 type: "int",
                 nullable: true,
                 oldClrType: typeof(int),
@@ -63,7 +63,7 @@ namespace App_Data.Migrations
 
             migrationBuilder.AlterColumn<int>(
                 name: "DieuKien",
-                table: "vouchers",
+                table: "Vouchers",
                 type: "int",
                 nullable: true,
                 oldClrType: typeof(int),
@@ -71,7 +71,7 @@ namespace App_Data.Migrations
 
             migrationBuilder.AddColumn<string>(
                 name: "PhamViSanPham",
-                table: "vouchers",
+                table: "Vouchers",
                 type: "nvarchar(300)",
                 nullable: true);
         }

@@ -127,9 +127,9 @@ namespace App_Data.Migrations
                         principalTable: "Đánh giá",
                         principalColumn: "IdDanhGia");
                     table.ForeignKey(
-                        name: "FK_Đánh giá_sanPhamChiTiets_IdSanPhamChiTiet",
+                        name: "FK_Đánh giá_SanPhamChiTiets_IdSanPhamChiTiet",
                         column: x => x.IdSanPhamChiTiet,
-                        principalTable: "sanPhamChiTiets",
+                        principalTable: "SanPhamChiTiets",
                         principalColumn: "IdChiTietSp");
                     table.ForeignKey(
                         name: "FK_Đánh giá_Users_IdNguoiDung",

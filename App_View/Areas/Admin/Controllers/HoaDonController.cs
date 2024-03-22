@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.Models;
 using App_Data.ViewModels.HoaDon;
 using App_Data.ViewModels.SanPhamChiTietDTO;
@@ -19,20 +19,20 @@ namespace App_View.Areas.Admin.Controllers
     public class HoaDonController : Controller
     {
 
-		private readonly IVoucherNguoiDungServices _voucherNguoiDungServices;
-		private readonly IVoucherServices _voucherServices;
-		private readonly IHoaDonChiTietServices _hoaDonChiTietServices; private readonly SignInManager<NguoiDung> _signInManager;
+		private readonly IVoucherNguoiDungservices _VoucherNguoiDungservices;
+		private readonly IVoucherservices _Voucherservices;
+		private readonly IHoaDonChiTietservices _HoaDonChiTietservices; private readonly SignInManager<NguoiDung> _signInManager;
 		private readonly UserManager<NguoiDung> _userManager;
 		private readonly IHoaDonServices _hoaDonServices;
-        private readonly ISanPhamChiTietService sanPhamChiTietService;
+        private readonly ISanPhamChiTietservice SanPhamChiTietservice;
         BazaizaiContext context;
-		public HoaDonController(ISanPhamChiTietService sanPhamChiTietService, IVoucherNguoiDungServices voucherNguoiDungServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
+		public HoaDonController(ISanPhamChiTietservice SanPhamChiTietservice, IVoucherNguoiDungservices VoucherNguoiDungservices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
 		{
 			_hoaDonServices = new HoaDonServices();
 			context = new BazaizaiContext();
-			this.sanPhamChiTietService = sanPhamChiTietService;
-			_voucherNguoiDungServices = voucherNguoiDungServices;
-			_hoaDonChiTietServices = new HoaDonChiTietServices();
+			this.SanPhamChiTietservice = SanPhamChiTietservice;
+			_VoucherNguoiDungservices = VoucherNguoiDungservices;
+			_HoaDonChiTietservices = new HoaDonChiTietservices();
 			_signInManager = signInManager;
 			_userManager = userManager;
 		}
@@ -85,7 +85,7 @@ namespace App_View.Areas.Admin.Controllers
            
             var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x => x.IdHoaDon == id);
 			var kh = context.KhachHangs.AsNoTracking().FirstOrDefault(x => x.IdKhachHang == hoaDon.IdKhachHang);
-			var pttt = context.phuongThucThanhToanChiTiets.AsNoTracking().Where(x => x.IdHoaDon == hoaDon.IdHoaDon).ToList();
+			var pttt = context.PhuongThucThanhToanChiTiets.AsNoTracking().Where(x => x.IdHoaDon == hoaDon.IdHoaDon).ToList();
 			double tongTien = pttt.Sum(x => Convert.ToDouble(x.SoTien));
 			ViewBag.TienKhachTra = tongTien;
 			ViewBag.TenNguoiNhan = hoaDon.TenNguoiNhan;
@@ -107,13 +107,13 @@ namespace App_View.Areas.Admin.Controllers
 			}
 			else ViewBag.KhachHang = null;
 			var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
-            ViewBag.TTGH = context.thongTinGiaoHangs.FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH);
+            ViewBag.TTGH = context.ThongTinGiaoHangs.FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH);
             ViewData["MAHD"] = hoaDon.MaHoaDon;
             ViewData["NGAYTAO"] = hoaDon.NgayTao;
 			ViewData["TIENSHIP"] = hoaDon.TienShip;
             ViewData["TONGTIEN"] = hoaDon.TongTien;
             ViewData["TIENGIAM"] = hoaDon.TienGiam;
-			var HDCT = context.hoaDonChiTiets.Where(x => x.IdHoaDon == hoaDon.IdHoaDon);
+			var HDCT = context.HoaDonChiTiets.Where(x => x.IdHoaDon == hoaDon.IdHoaDon);
             ViewBag.HDCT= HDCT;
             return PartialView("_ChiTietHoaDon", hoaDonChiTiet);
         }
@@ -123,7 +123,7 @@ namespace App_View.Areas.Admin.Controllers
             var hoaDon = (await _hoaDonServices.GetHoaDon()).FirstOrDefault(x=>x.MaHoaDon==MaHD);
 			var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
             var kh = context.KhachHangs.AsNoTracking().FirstOrDefault(x => x.IdKhachHang == hoaDon.IdKhachHang);
-            var pttt = context.phuongThucThanhToanChiTiets.AsNoTracking().Where(x => x.IdHoaDon == hoaDon.IdHoaDon).ToList();
+            var pttt = context.PhuongThucThanhToanChiTiets.AsNoTracking().Where(x => x.IdHoaDon == hoaDon.IdHoaDon).ToList();
 			double tongTien = pttt.Sum(x => Convert.ToDouble(x.SoTien));
 			ViewBag.TienKhachTra = tongTien;
 			ViewBag.TenNguoiNhan = hoaDon.TenNguoiNhan;
@@ -144,13 +144,13 @@ namespace App_View.Areas.Admin.Controllers
 				ViewBag.KhachHang = kh.TenKhachHang;
 			}
 			else ViewBag.KhachHang = null;
-			ViewBag.TTGH = context.thongTinGiaoHangs.FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH);
+			ViewBag.TTGH = context.ThongTinGiaoHangs.FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH);
 			ViewData["MAHD"] = hoaDon.MaHoaDon;
 			ViewData["NGAYTAO"] = hoaDon.NgayTao;
 			ViewData["TIENSHIP"] = hoaDon.TienShip;
 			ViewData["TONGTIEN"] = hoaDon.TongTien-hoaDon.TienGiam;
 			ViewData["TIENGIAM"] = hoaDon.TienGiam;
-			var HDCT = context.hoaDonChiTiets.Where(x => x.IdHoaDon == hoaDon.IdHoaDon);
+			var HDCT = context.HoaDonChiTiets.Where(x => x.IdHoaDon == hoaDon.IdHoaDon);
             ViewBag.HDCT = HDCT;
             return PartialView("InHoaDonTaiQuay", hoaDonChiTiet);
         }

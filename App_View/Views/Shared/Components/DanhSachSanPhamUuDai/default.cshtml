@@ -56,7 +56,7 @@
 ">-@((int)Math.Round(Convert.ToDecimal((item.GiaGoc - item.GiaKhuyenMai) / item.GiaGoc * 100)))%</span>
 
                                     </div>
-                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/sanphamchitiets/details/@item.IdChiTietSp">
+                                    <a class="aspect aspect--bg-grey aspect--square u-d-block" href="/SanPhamChiTiets/details/@item.IdChiTietSp">
 
                                         <img class="aspect__img product-o2__img" src="/AnhSanPham/@item.Anh" alt="">
                                     </a>
@@ -85,7 +85,7 @@
 
                                     <span class="product-o2__category">
 
-                                        <a href="/sanphamchitiets">@item.ThuongHieu/@item.TheLoai</a>
+                                        <a href="/SanPhamChiTiets">@item.ThuongHieu/@item.TheLoai</a>
                                     </span>
 
                                     <span class="product-o2__name">
@@ -156,7 +156,7 @@
             page: trangHienTai,
         };
         $.ajax({
-            url: '/SanPhamChiTietS/LoadComponentDanhSachSanPhamUuDai',
+            url: '/SanPhamChiTiets/LoadComponentDanhSachSanPhamUuDai',
             type: 'POST',
             data: data,
             success: function (result) {

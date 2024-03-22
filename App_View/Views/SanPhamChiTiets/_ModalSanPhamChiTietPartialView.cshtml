@@ -1,11 +1,11 @@
 ﻿@model App_Data.ViewModels.SanPhamChiTietViewModel.ItemDetailViewModel
 @using App_View.IServices;
 @using App_View.Services;
-@inject IDanhGiaService _DanhGiaService
+@inject IDanhGiaservice _DanhGiaservice
 @{
-    _DanhGiaService = new DanhGiaService();
-    var TongSoDanhGia = await _DanhGiaService.GetTongSoDanhGia(Model.IdChiTietSp);
-    var SaoTb = await _DanhGiaService.GetSoSaoTB(Model.IdChiTietSp);
+    _DanhGiaservice = new DanhGiaservice();
+    var TongSoDanhGia = await _DanhGiaservice.GetTongSoDanhGia(Model.IdChiTietSp);
+    var SaoTb = await _DanhGiaservice.GetSoSaoTB(Model.IdChiTietSp);
 }
 <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content modal--shadow">
@@ -24,7 +24,7 @@
                             </li>
                             <li class="is-marked">
 
-                                <a href="/sanphamchitiets">GIAN HÀNG</a>
+                                <a href="/SanPhamChiTiets">GIAN HÀNG</a>
                             </li>
                         </ul>
                     </div>

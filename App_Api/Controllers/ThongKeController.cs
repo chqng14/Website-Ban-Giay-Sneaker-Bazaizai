@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -17,16 +17,16 @@ namespace App_Api.Controllers
     {
         private readonly IAllRepo<HoaDon> repos;
         BazaizaiContext context = new BazaizaiContext();
-        DbSet<HoaDon> danhGias;
+        DbSet<HoaDon> DanhGias;
         private IQueryable<ThongKeDoanhThuOnline> baseQuery;
 
         public ThongKeController()
         {
-            danhGias = context.HoaDons;
-            AllRepo<HoaDon> all = new AllRepo<HoaDon>(context, danhGias);
+            DanhGias = context.HoaDons;
+            AllRepo<HoaDon> all = new AllRepo<HoaDon>(context, DanhGias);
             repos = all;
             baseQuery = from a in context.HoaDons
-                        join e in context.thongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH into thongTinGiaoHangGroup
+                        join e in context.ThongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH into thongTinGiaoHangGroup
                         from e in thongTinGiaoHangGroup.DefaultIfEmpty()
                         join d in context.KhachHangs on a.IdKhachHang equals d.IdKhachHang into khachHangGroup
                         from d in khachHangGroup.DefaultIfEmpty()

@@ -11,12 +11,12 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
     {
 
         private readonly UserManager<NguoiDung> _userManager;
-        private readonly IDanhGiaService _danhGiaService;
+        private readonly IDanhGiaservice _DanhGiaservice;
 
-        public DanhGiaCuaToiModel(UserManager<NguoiDung> userManager, IDanhGiaService danhGiaService)
+        public DanhGiaCuaToiModel(UserManager<NguoiDung> userManager, IDanhGiaservice DanhGiaservice)
         {
             _userManager = userManager;
-            _danhGiaService = danhGiaService;
+            _DanhGiaservice = DanhGiaservice;
         }
         public List<DanhGiaViewModel> DanhGias { get; set; }
 
@@ -40,7 +40,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             {
                 return RedirectToPage("/Account/PageNotFound");
             }
-            DanhGias = await _danhGiaService.GetAllDanhGiaDaDuyetByNd(userid);
+            DanhGias = await _DanhGiaservice.GetAllDanhGiaDaDuyetByNd(userid);
             return Page();
         }
     }

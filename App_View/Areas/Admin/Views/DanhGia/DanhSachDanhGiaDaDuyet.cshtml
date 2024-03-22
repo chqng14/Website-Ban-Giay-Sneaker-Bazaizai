@@ -1,9 +1,9 @@
 ﻿@using App_View.IServices;
 @using App_View.Services;
-@inject IDanhGiaService _DanhGiaService
+@inject IDanhGiaservice _DanhGiaservice
 @{
     Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
-    _DanhGiaService = new DanhGiaService();
+    _DanhGiaservice = new DanhGiaservice();
 }
 <style>
     .tab-pane {
@@ -57,7 +57,7 @@
 
                 @for (int i = 0; i <= 6; i++)
                 {
-                    var lst = await _DanhGiaService.GetLstDanhGiaDaDuyetByDK(i);
+                    var lst = await _DanhGiaservice.GetLstDanhGiaDaDuyetByDK(i);
                     <div class="tab-pane fade show @(i == 0 ? "active" : "")" id="tab@(i)-justified" role="tabpanel" aria-labelledby="tab@(i)-tab-justified">
                         @if (lst.Count == 0)
                         {

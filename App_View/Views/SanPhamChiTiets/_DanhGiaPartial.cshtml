@@ -4,18 +4,18 @@
 @using Microsoft.AspNetCore.Identity
 @using Newtonsoft.Json;
 @using System.Net.Http;
-@inject IDanhGiaService _DanhGiaService
+@inject IDanhGiaservice _DanhGiaservice
 @{
-    _DanhGiaService = new DanhGiaService();
-    var lst = await _DanhGiaService.GetListAsyncViewModel(@Model.IdChiTietSp);
-    var SaoTb = await _DanhGiaService.GetSoSaoTB(@Model.IdChiTietSp);
-    var TongSoDanhGia = await _DanhGiaService.GetTongSoDanhGia(@Model.IdChiTietSp);
-    var lstby1sao = await _DanhGiaService.GetListAsyncViewModelWithSao(@Model.IdChiTietSp, 1);
-    var lstby2sao = await _DanhGiaService.GetListAsyncViewModelWithSao(@Model.IdChiTietSp, 2);
-    var lstby3sao = await _DanhGiaService.GetListAsyncViewModelWithSao(@Model.IdChiTietSp, 3);
-    var lstby4sao = await _DanhGiaService.GetListAsyncViewModelWithSao(@Model.IdChiTietSp, 4);
-    var lstby5sao = await _DanhGiaService.GetListAsyncViewModelWithSao(@Model.IdChiTietSp, 5);
-    var lstbybinhLuan = await _DanhGiaService.GetListAsyncViewModelbyBl(@Model.IdChiTietSp);
+    _DanhGiaservice = new DanhGiaservice();
+    var lst = await _DanhGiaservice.GetListAsyncViewModel(@Model.IdChiTietSp);
+    var SaoTb = await _DanhGiaservice.GetSoSaoTB(@Model.IdChiTietSp);
+    var TongSoDanhGia = await _DanhGiaservice.GetTongSoDanhGia(@Model.IdChiTietSp);
+    var lstby1sao = await _DanhGiaservice.GetListAsyncViewModelWithSao(@Model.IdChiTietSp, 1);
+    var lstby2sao = await _DanhGiaservice.GetListAsyncViewModelWithSao(@Model.IdChiTietSp, 2);
+    var lstby3sao = await _DanhGiaservice.GetListAsyncViewModelWithSao(@Model.IdChiTietSp, 3);
+    var lstby4sao = await _DanhGiaservice.GetListAsyncViewModelWithSao(@Model.IdChiTietSp, 4);
+    var lstby5sao = await _DanhGiaservice.GetListAsyncViewModelWithSao(@Model.IdChiTietSp, 5);
+    var lstbybinhLuan = await _DanhGiaservice.GetListAsyncViewModelbyBl(@Model.IdChiTietSp);
 
 }
 <link href="~/css/hoadon.css" rel="stylesheet" />

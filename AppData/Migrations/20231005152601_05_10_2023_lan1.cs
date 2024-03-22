@@ -10,7 +10,7 @@ namespace App_Data.Migrations
         {
             migrationBuilder.AddColumn<double>(
                 name: "GiaThucTe",
-                table: "sanPhamChiTiets",
+                table: "SanPhamChiTiets",
                 type: "float",
                 nullable: true);
         }
@@ -19,7 +19,7 @@ namespace App_Data.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "GiaThucTe",
-                table: "sanPhamChiTiets");
+                table: "SanPhamChiTiets");
         }
     }
 }

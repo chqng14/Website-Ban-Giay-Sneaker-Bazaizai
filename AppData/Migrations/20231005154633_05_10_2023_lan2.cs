@@ -10,7 +10,7 @@ namespace App_Data.Migrations
         {
             migrationBuilder.AddColumn<double>(
                 name: "GiaBan",
-                table: "gioHangChiTiets",
+                table: "GioHangChiTiets",
                 type: "float",
                 nullable: true);
         }
@@ -19,7 +19,7 @@ namespace App_Data.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "GiaBan",
-                table: "gioHangChiTiets");
+                table: "GioHangChiTiets");
         }
     }
 }

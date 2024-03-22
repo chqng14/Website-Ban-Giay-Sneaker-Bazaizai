@@ -14,7 +14,7 @@
 
                             <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-top: -60px; height: 300px; width: 100%; background-repeat: no-repeat; background-size: contain; background-position: center; background-image: url('https://www.beevidhya.com/assets/images/no_result.gif');">
                                 <span style="margin-top: 380px">Không tìm thấy sản phẩm!!!</span>
-                                <a class="nav-link btn--e-white-brand-shadow" href="/sanphamchitiets">XÓA BỘ LỌC</a>
+                                <a class="nav-link btn--e-white-brand-shadow" href="/SanPhamChiTiets">XÓA BỘ LỌC</a>
                             </div>
                         </div>
                     </div>
@@ -295,7 +295,7 @@ else
                 };
 
                 $.ajax({
-                    url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+                    url: brandParam != null ? '/SanPhamChiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamChiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
                     type: 'POST',
                     data: JSON.stringify(filterdata),
                     contentType: 'application/json',
@@ -386,7 +386,7 @@ else
             };
 
             $.ajax({
-                url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+                url: brandParam != null ? '/SanPhamChiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamChiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
                 type: 'POST',
                 data: JSON.stringify(filterdata),
                 contentType: 'application/json',

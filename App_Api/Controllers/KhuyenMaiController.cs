@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -18,11 +18,11 @@ namespace App_Api.Controllers
     {
         private readonly IAllRepo<KhuyenMai> repos;
         BazaizaiContext context = new BazaizaiContext();
-        DbSet<KhuyenMai> khuyenMais;
+        DbSet<KhuyenMai> KhuyenMais;
         public KhuyenMaiController()
         {
-            khuyenMais = context.khuyenMais;
-            AllRepo<KhuyenMai> all = new AllRepo<KhuyenMai>(context, khuyenMais);
+            KhuyenMais = context.KhuyenMais;
+            AllRepo<KhuyenMai> all = new AllRepo<KhuyenMai>(context, KhuyenMais);
             repos = all;
         }
         [HttpGet]
@@ -137,7 +137,7 @@ namespace App_Api.Controllers
             }
             else 
             {
-                var KhuyenMai = await context.khuyenMais.FindAsync(id);
+                var KhuyenMai = await context.KhuyenMais.FindAsync(id);
                 KhuyenMai.TenKhuyenMai = Ten;
                 KhuyenMai.TrangThai = trangThai;
                 KhuyenMai.NgayBatDau = ngayBD;
@@ -151,7 +151,7 @@ namespace App_Api.Controllers
         [HttpPut("EditNoiImage")]
         public async Task<IActionResult> EditKhuyenMai(string id, string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, int loaiHinh)
         {
-                var KhuyenMai = await context.khuyenMais.FindAsync(id);
+                var KhuyenMai = await context.KhuyenMais.FindAsync(id);
                 KhuyenMai.TenKhuyenMai = Ten;
                 KhuyenMai.TrangThai = trangThai;
                 KhuyenMai.NgayBatDau = ngayBD;

@@ -1,4 +1,4 @@
-﻿@using App_Data.DbContextt;
+﻿@using App_Data.DbContext;
 @using System.Globalization;
 @using App_Data.Models;
 @using App_View.IServices;
@@ -59,13 +59,13 @@
 </style>
 @{
     var httpClient = new HttpClient(); // Tạo đối tượng HttpClient
-    var _voucherND = new VoucherNguoiDungServices(httpClient); // Truyền đối tượng HttpClient vào constructor của VoucherNguoiDungServices
+    var _voucherND = new VoucherNguoiDungservices(httpClient); // Truyền đối tượng HttpClient vào constructor của VoucherNguoiDungservices
 }
 
 @functions {
     // Hàm trợ giúp để định dạng số nguyên thành tiền tệ Việt Nam
 
-    // Thay thế 'YourVoucherNguoiDungServices' bằng tên thực của dịch vụ của bạn
+    // Thay thế 'YourVoucherNguoiDungservices' bằng tên thực của dịch vụ của bạn
     public string FormatCurrency(int? value)
     {
         return string.Format(new CultureInfo("vi-VN"), "{0:C0}", value);

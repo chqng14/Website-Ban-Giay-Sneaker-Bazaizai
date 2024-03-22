@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using App_Data.DbContextt;
+using App_Data.DbContext;
 using App_Data.Models;
 using Newtonsoft.Json;
 using System.Net.Http;
@@ -75,12 +75,12 @@ namespace App_View.Areas.Admin.Controllers
         // GET: Admin/KhuyenMais/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.khuyenMais == null)
+            if (id == null || _context.KhuyenMais == null)
             {
                 return NotFound();
             }
 
-            var khuyenMai = await _context.khuyenMais
+            var khuyenMai = await _context.KhuyenMais
                 .FirstOrDefaultAsync(m => m.IdKhuyenMai == id);
             if (khuyenMai == null)
             {
@@ -133,7 +133,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             khuyenMai.IdKhuyenMai = Guid.NewGuid().ToString();
             khuyenMai.TrangThai = 0;
-            ViewData["IdKhuyenMai"] = new SelectList(_context.khuyenMais, "IdKhuyenMai", "IdKhuyenMai");
+            ViewData["IdKhuyenMai"] = new SelectList(_context.KhuyenMais, "IdKhuyenMai", "IdKhuyenMai");
             ViewBag.ListLoaiHinh = new List<SelectListItem>
             {
                 new SelectListItem { Text = "Khuyến mại giảm giá", Value = "1" },
@@ -168,7 +168,7 @@ namespace App_View.Areas.Admin.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    var km = _context.khuyenMais.AsNoTracking().FirstOrDefault(x => x.TenKhuyenMai == khuyenMai.TenKhuyenMai);
+                    var km = _context.KhuyenMais.AsNoTracking().FirstOrDefault(x => x.TenKhuyenMai == khuyenMai.TenKhuyenMai);
                     if(km!=null)
                     {
                         ModelState.AddModelError("TenKhuyenMai", "Tên khuyến mại đã tồn tại.");
@@ -185,7 +185,7 @@ namespace App_View.Areas.Admin.Controllers
                         if (response.IsSuccessStatusCode)
                         {
                             var lstUser = await _userManager.GetUsersInRoleAsync(ChucVuMacDinh.KhachHang.ToString());
-                            var KM = _context.khuyenMais.Find(khuyenMai.IdKhuyenMai);
+                            var KM = _context.KhuyenMais.Find(khuyenMai.IdKhuyenMai);
                             var htmlMessage = await _viewRenderService.RenderToStringAsync("KhuyenMai/ViewMail", KM);
                             foreach (var user in lstUser)
                             {
@@ -256,12 +256,12 @@ namespace App_View.Areas.Admin.Controllers
                 new SelectListItem { Text = "95%", Value = "95" },
                 new SelectListItem { Text = "100%", Value = "100" }
             };
-            if (id == null || _context.khuyenMais == null)
+            if (id == null || _context.KhuyenMais == null)
             {
                 return NotFound();
             }
 
-            var khuyenMai = await _context.khuyenMais.FirstOrDefaultAsync(x=>x.IdKhuyenMai == id);
+            var khuyenMai = await _context.KhuyenMais.FirstOrDefaultAsync(x=>x.IdKhuyenMai == id);
             if (khuyenMai == null)
             {
                 return NotFound();
@@ -315,7 +315,7 @@ namespace App_View.Areas.Admin.Controllers
 
            if (ModelState.IsValid)
                 {
-                var km = _context.khuyenMais.AsNoTracking().FirstOrDefault(x => x.TenKhuyenMai == khuyenMai.TenKhuyenMai&&x.IdKhuyenMai!=id);
+                var km = _context.KhuyenMais.AsNoTracking().FirstOrDefault(x => x.TenKhuyenMai == khuyenMai.TenKhuyenMai&&x.IdKhuyenMai!=id);
                 if (km != null)
                 {
                     ModelState.AddModelError("TenKhuyenMai", "Tên khuyến mại đã tồn tại.");
@@ -367,12 +367,12 @@ namespace App_View.Areas.Admin.Controllers
         // GET: Admin/KhuyenMais/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.khuyenMais == null)
+            if (id == null || _context.KhuyenMais == null)
             {
                 return NotFound();
             }
 
-            var khuyenMai = await _context.khuyenMais
+            var khuyenMai = await _context.KhuyenMais
                 .FirstOrDefaultAsync(m => m.IdKhuyenMai == id);
             if (khuyenMai == null)
             {
@@ -387,14 +387,14 @@ namespace App_View.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.khuyenMais == null)
+            if (_context.KhuyenMais == null)
             {
-                return Problem("Entity set 'BazaizaiContext.khuyenMais'  is null.");
+                return Problem("Entity set 'BazaizaiContext.KhuyenMais'  is null.");
             }
-            var khuyenMai = await _context.khuyenMais.FindAsync(id);
+            var khuyenMai = await _context.KhuyenMais.FindAsync(id);
             if (khuyenMai != null)
             {
-                _context.khuyenMais.Remove(khuyenMai);
+                _context.KhuyenMais.Remove(khuyenMai);
             }
 
             await _context.SaveChangesAsync();
@@ -403,12 +403,12 @@ namespace App_View.Areas.Admin.Controllers
 
         private bool KhuyenMaiExists(string id)
         {
-            return (_context.khuyenMais?.Any(e => e.IdKhuyenMai == id)).GetValueOrDefault();
+            return (_context.KhuyenMais?.Any(e => e.IdKhuyenMai == id)).GetValueOrDefault();
         }
         [HttpPost]
         public JsonResult CapNhatTrangThai(string id, int trangThai)
         {
-            var khuyenMai = _context.khuyenMais.Find(id);
+            var khuyenMai = _context.KhuyenMais.Find(id);
             string mess;
             if (trangThai == (int)TrangThaiSale.BuocDung)
             {
@@ -429,7 +429,7 @@ namespace App_View.Areas.Admin.Controllers
             {
                 khuyenMai.TrangThai = (int)TrangThaiSale.BuocDung;
             }
-            _context.khuyenMais.Update(khuyenMai);
+            _context.KhuyenMais.Update(khuyenMai);
             _context.SaveChanges();
             return Json(new { success = true });
         }

@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.ViewModels.GioHangChiTiet;
@@ -28,7 +28,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                context.hoaDonChiTiets.Add(item);
+                context.HoaDonChiTiets.Add(item);
                 context.SaveChanges();
                 return true;
             }
@@ -42,8 +42,8 @@ namespace App_Data.Repositories
         {
             try
             {
-                var id = context.hoaDonChiTiets.Find(item.IdHoaDonChiTiet);
-                context.hoaDonChiTiets.Update(id);
+                var id = context.HoaDonChiTiets.Find(item.IdHoaDonChiTiet);
+                context.HoaDonChiTiets.Update(id);
                 context.SaveChanges();
                 return true;
             }
@@ -55,12 +55,12 @@ namespace App_Data.Repositories
 
         public IEnumerable<HoaDonChiTiet> GetAll()
         {
-            return context.hoaDonChiTiets.ToList();
+            return context.HoaDonChiTiets.ToList();
         }
 
         public HoaDonChiTietViewModel GetHoaDonDTO(string idHoaDon)
         {
-            var hoadon = context.hoaDonChiTiets
+            var hoadon = context.HoaDonChiTiets
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.SanPham)
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.MauSac)
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.KichCo)
@@ -74,8 +74,8 @@ namespace App_Data.Repositories
         {
             try
             {
-                var id = context.hoaDonChiTiets.Find(item.IdHoaDonChiTiet);
-                context.hoaDonChiTiets.Remove(id);
+                var id = context.HoaDonChiTiets.Find(item.IdHoaDonChiTiet);
+                context.HoaDonChiTiets.Remove(id);
                 context.SaveChanges();
                 return true;
             }
@@ -88,17 +88,17 @@ namespace App_Data.Repositories
         {
             try
             {
-                var hoadDonChiTietTrung = context.hoaDonChiTiets.FirstOrDefault(c => c.IdSanPhamChiTiet == hoaDonChiTiet.IdSanPhamChiTiet && c.IdHoaDon == hoaDonChiTiet.IdHoaDon && c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay);
+                var hoadDonChiTietTrung = context.HoaDonChiTiets.FirstOrDefault(c => c.IdSanPhamChiTiet == hoaDonChiTiet.IdSanPhamChiTiet && c.IdHoaDon == hoaDonChiTiet.IdHoaDon && c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay);
                 if (hoadDonChiTietTrung == null)
                 {
-                    context.hoaDonChiTiets.Add(hoaDonChiTiet);
+                    context.HoaDonChiTiets.Add(hoaDonChiTiet);
                     context.SaveChanges();
                     return hoaDonChiTiet;
                 }
                 else
                 {
                     hoadDonChiTietTrung.SoLuong = hoadDonChiTietTrung.SoLuong + 1;
-                    context.hoaDonChiTiets.Update(hoadDonChiTietTrung);
+                    context.HoaDonChiTiets.Update(hoadDonChiTietTrung);
                     context.SaveChanges();
                     return hoadDonChiTietTrung;
 
@@ -115,20 +115,20 @@ namespace App_Data.Repositories
         public string UpdateSoLuong(string idHD, string idSanPham, int SoLuongMoi, string SoluongTon)
         {
 
-            var hoaDonChiTiet = context.hoaDonChiTiets.FirstOrDefault(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD && c.IdSanPhamChiTiet == idSanPham);
+            var hoaDonChiTiet = context.HoaDonChiTiets.FirstOrDefault(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD && c.IdSanPhamChiTiet == idSanPham);
             int soLuongThayDoi = (int)SoLuongMoi - (int)hoaDonChiTiet.SoLuong;
             if (soLuongThayDoi <= int.Parse(SoluongTon))
             {
                 if (SoLuongMoi != 0)
                 {
                     hoaDonChiTiet.SoLuong = SoLuongMoi;
-                    context.hoaDonChiTiets.Update(hoaDonChiTiet);
+                    context.HoaDonChiTiets.Update(hoaDonChiTiet);
                     context.SaveChanges();
                     return soLuongThayDoi.ToString();
                 }
                 else
                 {
-                    context.hoaDonChiTiets.Remove(hoaDonChiTiet);
+                    context.HoaDonChiTiets.Remove(hoaDonChiTiet);
                     context.SaveChanges();
                     return soLuongThayDoi.ToString();
                 }
@@ -141,9 +141,9 @@ namespace App_Data.Repositories
 
         public string XoaSanPhamKhoiHoaDon(string idHD, string idSanPham)
         {
-            var hoaDonChiTiet = context.hoaDonChiTiets.FirstOrDefault(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD && c.IdSanPhamChiTiet == idSanPham);
+            var hoaDonChiTiet = context.HoaDonChiTiets.FirstOrDefault(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD && c.IdSanPhamChiTiet == idSanPham);
             var soLuongSanPham = hoaDonChiTiet.SoLuong;
-            context.hoaDonChiTiets.Remove(hoaDonChiTiet);
+            context.HoaDonChiTiets.Remove(hoaDonChiTiet);
             context.SaveChanges();
             return soLuongSanPham.ToString();
         }
@@ -156,7 +156,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                var hoaDonChiTiet = context.hoaDonChiTiets.Where(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD).ToList();
+                var hoaDonChiTiet = context.HoaDonChiTiets.Where(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD).ToList();
                 if (hoaDonChiTiet.Any())
                 {
                     foreach (var item in hoaDonChiTiet)
@@ -182,7 +182,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                var hoaDonChiTiet = context.hoaDonChiTiets.Where(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD).ToList();
+                var hoaDonChiTiet = context.HoaDonChiTiets.Where(c => c.TrangThai == (int)TrangThaiHoaDonChiTiet.ChoTaiQuay && c.IdHoaDon == idHD).ToList();
                 if (hoaDonChiTiet.Any())
                 {
                     foreach (var item in hoaDonChiTiet)

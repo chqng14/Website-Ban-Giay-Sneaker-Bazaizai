@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.ViewModels.DonHang;
 using App_Data.ViewModels.DonHangChiTiet;
@@ -60,7 +60,7 @@ namespace App_Api.Controllers
         [HttpGet("GetDonHangDetail")]
         public async Task<DonHangChiTietViewModel> GetDonHangDetails(string idDonHang)
         {
-            var hoaDonChiTiets = await _bazaizaiContext.hoaDonChiTiets
+            var HoaDonChiTiets = await _bazaizaiContext.HoaDonChiTiets
                .Where(hdct => hdct.IdHoaDon == idDonHang)
                .Include(it => it.SanPhamChiTiet).ThenInclude(it => it.Anh)
                .Include(it => it.SanPhamChiTiet).ThenInclude(it => it.SanPham)
@@ -73,13 +73,13 @@ namespace App_Api.Controllers
             var donHangChiTietViewModel = new DonHangChiTietViewModel()
             {
                 IdDonHang = idDonHang,
-                MaDonHang = hoaDonChiTiets.FirstOrDefault()!.HoaDon.MaHoaDon,
-                VoucherShop = hoaDonChiTiets.FirstOrDefault()?.HoaDon.TienGiam,
-                NgayTao = hoaDonChiTiets.FirstOrDefault()!.HoaDon.NgayTao.GetValueOrDefault().ToString("dd-MM-yyyy"),
-                PhiShip = hoaDonChiTiets.FirstOrDefault()!.HoaDon.TienShip.GetValueOrDefault(),
-                TongTien = (hoaDonChiTiets.FirstOrDefault()!.HoaDon.TongTien.GetValueOrDefault() - hoaDonChiTiets.FirstOrDefault()?.HoaDon.TienGiam + hoaDonChiTiets.FirstOrDefault()!.HoaDon.TienShip.GetValueOrDefault()).GetValueOrDefault(),
-                TrangThaiHoaDon = hoaDonChiTiets.FirstOrDefault()!.HoaDon.TrangThaiGiaoHang.GetValueOrDefault(),
-                SanPhamGioHangViewModels = hoaDonChiTiets.Select(hdct => new SanPhamGioHangViewModel()
+                MaDonHang = HoaDonChiTiets.FirstOrDefault()!.HoaDon.MaHoaDon,
+                Vouchershop = HoaDonChiTiets.FirstOrDefault()?.HoaDon.TienGiam,
+                NgayTao = HoaDonChiTiets.FirstOrDefault()!.HoaDon.NgayTao.GetValueOrDefault().ToString("dd-MM-yyyy"),
+                PhiShip = HoaDonChiTiets.FirstOrDefault()!.HoaDon.TienShip.GetValueOrDefault(),
+                TongTien = (HoaDonChiTiets.FirstOrDefault()!.HoaDon.TongTien.GetValueOrDefault() - HoaDonChiTiets.FirstOrDefault()?.HoaDon.TienGiam + HoaDonChiTiets.FirstOrDefault()!.HoaDon.TienShip.GetValueOrDefault()).GetValueOrDefault(),
+                TrangThaiHoaDon = HoaDonChiTiets.FirstOrDefault()!.HoaDon.TrangThaiGiaoHang.GetValueOrDefault(),
+                SanPhamGioHangViewModels = HoaDonChiTiets.Select(hdct => new SanPhamGioHangViewModel()
                 {
                     Anh = hdct.SanPhamChiTiet.Anh.OrderBy(a => a.NgayTao).FirstOrDefault()!.Url,
                     GiaSanPham = hdct.SanPhamChiTiet.GiaBan.GetValueOrDefault(),
@@ -88,11 +88,11 @@ namespace App_Api.Controllers
                     TenSanPham = $"{hdct.SanPhamChiTiet.SanPham.TenSanPham} {hdct.SanPhamChiTiet.MauSac.TenMauSac} {hdct.SanPhamChiTiet.KichCo.SoKichCo}",
                 })
                 .ToList(),
-                DiaChiNhanHang = hoaDonChiTiets.FirstOrDefault()?.HoaDon.ThongTinGiaoHang?.DiaChi,
-                NgayGiaoDuKien = hoaDonChiTiets.FirstOrDefault()!.HoaDon.NgayGiaoDuKien.GetValueOrDefault().ToString("dd-MM-yyyy"),
-                SDT = hoaDonChiTiets.FirstOrDefault()?.HoaDon.ThongTinGiaoHang?.SDT,
-                TenNguoiNhan = hoaDonChiTiets.FirstOrDefault()?.HoaDon.ThongTinGiaoHang?.TenNguoiNhan,
-                //PhuongThucThanhToan = hoaDonChiTiets.FirstOrDefault()?.HoaDon.PhuongThucThanhToanChiTiet!.FirstOrDefault()!.PhuongThucThanhToan.TenPhuongThucThanhToan
+                DiaChiNhanHang = HoaDonChiTiets.FirstOrDefault()?.HoaDon.ThongTinGiaoHang?.DiaChi,
+                NgayGiaoDuKien = HoaDonChiTiets.FirstOrDefault()!.HoaDon.NgayGiaoDuKien.GetValueOrDefault().ToString("dd-MM-yyyy"),
+                SDT = HoaDonChiTiets.FirstOrDefault()?.HoaDon.ThongTinGiaoHang?.SDT,
+                TenNguoiNhan = HoaDonChiTiets.FirstOrDefault()?.HoaDon.ThongTinGiaoHang?.TenNguoiNhan,
+                //PhuongThucThanhToan = HoaDonChiTiets.FirstOrDefault()?.HoaDon.PhuongThucThanhToanChiTiet!.FirstOrDefault()!.PhuongThucThanhToan.TenPhuongThucThanhToan
             };
             return donHangChiTietViewModel;
         }
