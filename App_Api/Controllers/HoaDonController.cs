@@ -353,13 +353,19 @@ namespace App_Api.Controllers
             hoadon.TrangThaiGiaoHang = trangThaiGiaoHang;
             hoadon.LiDoHuy = Lido;
             hoadon.NgayCapNhatGanNhat = ngayCapNhatGanNhat;
-			if(trangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao)
-			{
+            if (trangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao)
+            {
                 hoadon.TrangThaiThanhToan = 1;
-			}
-			return _hoaDon.EditBill(hoadon);
+            }
+            return _hoaDon.EditBill(hoadon);
         }
-
+        [HttpPut]
+        public async Task<bool> UpdateDiaChi(string idHoaDon, string diaChi)
+        {
+            var hoadon = _hoaDon.GetHoaDonUpdate().FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            hoadon.DiaChi = diaChi;
+            return _hoaDon.EditBill(hoadon);
+        }
         [HttpPut]
         public async Task<bool> UpdateTrangThaiHoaDonOnline(string idHoaDon, int TrangThaiThanhToan)
         {

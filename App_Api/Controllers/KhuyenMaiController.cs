@@ -138,7 +138,7 @@ namespace App_Api.Controllers
             }
             else 
             {
-                var KhuyenMai = await context.khuyenMais.FindAsync(khuyenMai.IdKhuyenMai);
+                var KhuyenMai = await context.KhuyenMais.FindAsync(khuyenMai.IdKhuyenMai);
                 KhuyenMai.TenKhuyenMai = khuyenMai.TenKhuyenMai;
                 KhuyenMai.TrangThai = khuyenMai.TrangThai;
                 KhuyenMai.NgayBatDau = khuyenMai.NgayBatDau;
@@ -152,7 +152,7 @@ namespace App_Api.Controllers
         [HttpPut("EditNoiImage")]
         public async Task<IActionResult> EditKhuyenMai([FromBody] KhuyenMaiDTO khuyenMai)
         {
-                var KhuyenMai = await context.khuyenMais.FindAsync(khuyenMai.IdKhuyenMai);
+                var KhuyenMai = await context.KhuyenMais.FindAsync(khuyenMai.IdKhuyenMai);
             KhuyenMai.TenKhuyenMai = khuyenMai.TenKhuyenMai;
             KhuyenMai.TrangThai = khuyenMai.TrangThai;
             KhuyenMai.NgayBatDau = khuyenMai.NgayBatDau;

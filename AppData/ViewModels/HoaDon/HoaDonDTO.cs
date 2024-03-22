@@ -22,6 +22,7 @@ namespace App_Data.ViewModels.HoaDon
         public DateTime? NgayNhan { get; set; }
         public DateTime? NgayGiaoDuKien { get; set; }
         public double? TienShip { get; set; }
+        public string ? DiaChi { get; set; }
         public double? TienGiam { get; set; }
         public double? TongTien { get; set; }
         public string? MoTa { get; set; }

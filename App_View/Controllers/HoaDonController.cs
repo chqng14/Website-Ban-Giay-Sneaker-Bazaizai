@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using NuGet.Packaging.Signing;
 using static App_Data.Repositories.TrangThai;
@@ -121,6 +122,7 @@ namespace App_View.Controllers
                     NgayShip = null,
                     NgayNhan = null,
                     NgayThanhToan = null,
+                    DiaChi = hoaDonDTO.DiaChi,
                     NgayGiaoDuKien = hoaDonDTO.NgayGiaoDuKien,
                     TienGiam = hoaDonDTO.TienGiam == null ? 0 : hoaDonDTO.TienGiam,
                     TongTien = hoaDonDTO.TongTien,
@@ -164,6 +166,16 @@ namespace App_View.Controllers
                     await GioHangChiTietservices.DeleteGioHang(item.IdGioHangChiTiet);
                     //await _SanPhamChiTietservice.UpDatSoLuongAynsc(sanphamupdate);
                 }
+
+                var ThongTinGiaoHang =
+                    (await thongTinGHServices.GetAllThongTin()).FirstOrDefault(c =>
+                        c.IdThongTinGH == hoaDonDTO.IdThongTinGH);
+                if (!ThongTinGiaoHang.DiaChi.IsNullOrEmpty())
+                {
+                    hoadon.DiaChi = ThongTinGiaoHang.DiaChi;
+                    hoaDonServices.UpdateDiaChi(hoadon.IdHoaDon, hoadon.DiaChi);
+                }
+                hoaDonDTO.DiaChi = ThongTinGiaoHang.DiaChi;
                 var hoadontest = new HoaDonTest()
                 {
                     TienShip = hoadon.TienShip,
@@ -264,6 +276,7 @@ namespace App_View.Controllers
                     TienGiam = hoaDonDTO.TienGiam == null ? 0 : hoaDonDTO.TienGiam,
                     TongTien = hoaDonDTO.TongTien,
                     TienShip = hoaDonDTO.TienShip,
+                    DiaChi = hoaDonDTO.DiaChi,
                     MoTa = hoaDonDTO.MoTa,
                     TrangThaiGiaoHang = (int)TrangThaiGiaoHang.ChoXacNhan,
                     TrangThaiThanhToan = (int)TrangThaiHoaDon.ChuaThanhToan
@@ -299,6 +312,14 @@ namespace App_View.Controllers
                     };
                     spList.Add(sanPhamTest);
                     //await _SanPhamChiTietservice.UpDatSoLuongAynsc(sanphamupdate);
+                }
+                var ThongTinGiaoHang =
+                    (await thongTinGHServices.GetAllThongTin()).FirstOrDefault(c =>
+                        c.IdThongTinGH == hoaDonDTO.IdThongTinGH);
+                if (!ThongTinGiaoHang.DiaChi.IsNullOrEmpty())
+                {
+                    hoadon.DiaChi = ThongTinGiaoHang.DiaChi;
+                    hoaDonServices.UpdateDiaChi(hoadon.IdHoaDon, hoadon.DiaChi);
                 }
                 var hoadontest = new HoaDonTest()
                 {

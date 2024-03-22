@@ -106,8 +106,8 @@ namespace App_View.Areas.Admin.Controllers
 				ViewBag.KhachHang = kh.TenKhachHang;
 			}
 			else ViewBag.KhachHang = null;
-			var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon.IdHoaDon);
-            ViewBag.TTGH = context.ThongTinGiaoHangs.FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH);
+			var hoaDonChiTiet = context.HoaDons.FirstOrDefault(x => x.IdHoaDon == hoaDon!.IdHoaDon!);
+            ViewBag.TTGH = context.HoaDons.FirstOrDefault(x => x.IdThongTinGH == hoaDon!.IdThongTinGH!)!.DiaChi!;
             ViewData["MAHD"] = hoaDon.MaHoaDon;
             ViewData["NGAYTAO"] = hoaDon.NgayTao;
 			ViewData["TIENSHIP"] = hoaDon.TienShip;
@@ -144,7 +144,7 @@ namespace App_View.Areas.Admin.Controllers
 				ViewBag.KhachHang = kh.TenKhachHang;
 			}
 			else ViewBag.KhachHang = null;
-			ViewBag.TTGH = context.ThongTinGiaoHangs.FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH);
+			ViewBag.TTGH = context.HoaDons.FirstOrDefault(x => x.IdThongTinGH == hoaDon.IdThongTinGH!)!.DiaChi!; 
 			ViewData["MAHD"] = hoaDon.MaHoaDon;
 			ViewData["NGAYTAO"] = hoaDon.NgayTao;
 			ViewData["TIENSHIP"] = hoaDon.TienShip;
