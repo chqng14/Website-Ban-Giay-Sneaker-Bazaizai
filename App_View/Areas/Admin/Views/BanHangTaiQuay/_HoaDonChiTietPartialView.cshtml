@@ -9,7 +9,16 @@
             <td hidden>@hoaDonChiTiet.IdSanPhamChiTiet</td>
             <td>@hoaDonChiTiet.MaSanPham</td>
             <td>@hoaDonChiTiet.TenSanPham</td>
-            <td>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", hoaDonChiTiet.GiaBan)</td>
+            @{
+                if (hoaDonChiTiet.GiaGoc != hoaDonChiTiet.GiaBan)
+                {
+                    <td><strike>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", hoaDonChiTiet.GiaGoc)</strike> <br>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", hoaDonChiTiet.GiaBan)</td>
+                }
+                else
+                {
+                    <td>@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}", hoaDonChiTiet.GiaBan)</td>
+                }
+            }
             <td><input type="number" max="1000" min="1" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')" onchange="suaSoLuongSanPham('@hoaDonChiTiet.IdSanPhamChiTiet',this)" value="@hoaDonChiTiet.SoLuong" /></td>
             <td><a class="btn btn-tone" onclick="XoaSanPhamTrongHoaDon('hdct-@hoaDonChiTiet.IdSanPhamChiTiet','@hoaDonChiTiet.IdSanPhamChiTiet')">X</a></td>
         </tr>

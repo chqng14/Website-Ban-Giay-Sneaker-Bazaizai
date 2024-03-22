@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +21,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                await _context.mauSacs.AddAsync(entity);
+                await _context.MauSacs.AddAsync(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -38,7 +38,7 @@ namespace App_Data.Repositories
             {
                 var entity = await GetByKeyAsync(id);
                 if (entity == null) return false;
-                _context.mauSacs.Remove(entity);
+                _context.MauSacs.Remove(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -51,19 +51,19 @@ namespace App_Data.Repositories
 
         public async Task<MauSac?> GetByKeyAsync(string id)
         {
-            return await _context.mauSacs.FirstOrDefaultAsync(x => x.IdMauSac == id);
+            return await _context.MauSacs.FirstOrDefaultAsync(x => x.IdMauSac == id);
         }
 
         public async Task<IEnumerable<MauSac>> GetListAsync()
         {
-            return await _context.mauSacs.ToListAsync();
+            return await _context.MauSacs.ToListAsync();
         }
 
         public async Task<bool> UpdateAsync(MauSac entity)
         {
             try
             {
-                _context.mauSacs.Update(entity);
+                _context.MauSacs.Update(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }

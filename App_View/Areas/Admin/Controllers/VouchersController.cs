@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.Models;
 using App_Data.ViewModels.Voucher;
 using App_Data.ViewModels.VoucherNguoiDung;
@@ -16,16 +16,16 @@ namespace App_View.Areas.Admin.Controllers
     public class VouchersController : Controller
     {
         private readonly BazaizaiContext _context;
-        private readonly IVoucherServices _voucherSV;
-        private readonly IVoucherNguoiDungServices _voucherND;
+        private readonly IVoucherservices _VouchersV;
+        private readonly IVoucherNguoiDungservices _voucherND;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IEmailSender _emailSender;
         private IViewRenderService _viewRenderService;
-        public VouchersController(IVoucherServices voucherServices, IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IEmailSender emailSender, IViewRenderService viewRenderService)
+        public VouchersController(IVoucherservices Voucherservices, IVoucherNguoiDungservices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IEmailSender emailSender, IViewRenderService viewRenderService)
         {
             _voucherND = voucherNDServices;
-            _voucherSV = voucherServices;
+            _VouchersV = Voucherservices;
             _signInManager = signInManager;
             _userManager = userManager;
             _emailSender = emailSender;
@@ -42,7 +42,7 @@ namespace App_View.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> FilterVoucherByStatus(int? trangThai)
         {
-            var lstVoucher = (await _voucherSV.GetAllVoucher())
+            var lstVoucher = (await _VouchersV.GetAllVoucher())
                .Where(c => c.TrangThai >= 0 && c.TrangThai <= 3).OrderByDescending(c => c.NgayTao).ToList();
             if (trangThai != null)
             {
@@ -61,7 +61,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await _voucherSV.CreateVoucher(voucherDTO))
+                if (await _VouchersV.CreateVoucher(voucherDTO))
                 {
                     return Ok(new { message = " Thêm mới thành công" });
                 }
@@ -72,7 +72,7 @@ namespace App_View.Areas.Admin.Controllers
 
         public async Task<ActionResult> Edit(string id)
         {
-            var Voucher = await _voucherSV.GetVoucherDTOById(id);
+            var Voucher = await _VouchersV.GetVoucherDTOById(id);
             return View(Voucher);
         }
         [HttpPost]
@@ -81,7 +81,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await _voucherSV.UpdateVoucher(voucherDTO))
+                if (await _VouchersV.UpdateVoucher(voucherDTO))
                 {
                     return RedirectToAction("ShowVoucher");
                 }
@@ -91,7 +91,7 @@ namespace App_View.Areas.Admin.Controllers
 
         public async Task<ActionResult> Delete(string id)
         {
-            await _voucherSV.DeleteVoucher(id);
+            await _VouchersV.DeleteVoucher(id);
             return RedirectToAction("Index");
         }
 
@@ -99,7 +99,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             if (voucherIds.Any())
             {
-                if (await _voucherSV.DeleteVoucherWithList(voucherIds) == true)
+                if (await _VouchersV.DeleteVoucherWithList(voucherIds) == true)
                 {
                     return Ok(true);
                 }
@@ -111,7 +111,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             if (voucherIds.Any())
             {
-                await _voucherSV.RestoreVoucherWithList(voucherIds);
+                await _VouchersV.RestoreVoucherWithList(voucherIds);
                 return Ok(true);
             }
             return Ok(false);
@@ -208,7 +208,7 @@ namespace App_View.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> FilterVoucherByStatusTaiQuay(int? trangThai)
         {
-            var lstVoucher = (await _voucherSV.GetAllVoucher())
+            var lstVoucher = (await _VouchersV.GetAllVoucher())
                 .Where(c => c.TrangThai >= 6 && c.TrangThai <= 9).OrderByDescending(c => c.NgayTao).ToList();
 
             if (trangThai != null)
@@ -228,7 +228,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await _voucherSV.CreateTaiQuay(voucherDTO))
+                if (await _VouchersV.CreateTaiQuay(voucherDTO))
                 {
                     return Ok(new { message = " Thêm mới thành công" });
                 }
@@ -238,7 +238,7 @@ namespace App_View.Areas.Admin.Controllers
         }
         public async Task<ActionResult> EditTaiQuay(string id)
         {
-            var Voucher = await _voucherSV.GetVoucherDTOById(id);
+            var Voucher = await _VouchersV.GetVoucherDTOById(id);
             return View(Voucher);
         }
         [HttpPost]
@@ -247,7 +247,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (await _voucherSV.UpdateTaiQuay(voucherDTO))
+                if (await _VouchersV.UpdateTaiQuay(voucherDTO))
                 {
                     return RedirectToAction("ShowVoucherTaiQuay");
                 }
@@ -257,7 +257,7 @@ namespace App_View.Areas.Admin.Controllers
 
         public async Task<ActionResult> DeleteTaiQuay(string id)
         {
-            await _voucherSV.DeleteTaiQuay(id);
+            await _VouchersV.DeleteTaiQuay(id);
             return RedirectToAction("ShowVoucherTaiQuay");
         }
 
@@ -265,7 +265,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             if (voucherIds.Any())
             {
-                if (await _voucherSV.DeleteVoucherWithListTaiQuay(voucherIds) == true)
+                if (await _VouchersV.DeleteVoucherWithListTaiQuay(voucherIds) == true)
                 {
                     return Ok(true);
                 }
@@ -277,7 +277,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             if (voucherIds.Any())
             {
-                await _voucherSV.RestoreVoucherWithListTaiQuay(voucherIds);
+                await _VouchersV.RestoreVoucherWithListTaiQuay(voucherIds);
                 return Ok(true);
             }
             return Ok(false);
@@ -286,12 +286,12 @@ namespace App_View.Areas.Admin.Controllers
         public async Task<IActionResult> InVoucherTaiQuay(string idVoucher, int soLuong)
         {
             var IdAdmin = await _userManager.FindByEmailAsync("bazaizaistore@gmail.com");
-            var VoucherKhaDung = await _voucherSV.GetVoucherDTOById(idVoucher);
+            var VoucherKhaDung = await _VouchersV.GetVoucherDTOById(idVoucher);
             if (IdAdmin == null || soLuong <= 0 || VoucherKhaDung == null)
             {
                 return Ok(false);
             }
-            else if (await _voucherSV.AddVoucherCungBanTaiQuay(idVoucher, IdAdmin.Id, soLuong))
+            else if (await _VouchersV.AddVoucherCungBanTaiQuay(idVoucher, IdAdmin.Id, soLuong))
             {
                 return Ok(true);
             }
@@ -314,7 +314,7 @@ namespace App_View.Areas.Admin.Controllers
             List<Voucher> lstVoucherDaIn = new List<Voucher>();
             foreach (var item in idVoucher)
             {
-                var lstVoucher = (await _voucherSV.GetAllVoucher()).FirstOrDefault(c => c.IdVoucher == item);
+                var lstVoucher = (await _VouchersV.GetAllVoucher()).FirstOrDefault(c => c.IdVoucher == item);
                 lstVoucherDaIn.Add(lstVoucher);
             }
             if (trangThai != null)
@@ -380,7 +380,7 @@ namespace App_View.Areas.Admin.Controllers
 
             if (lstIdVoucherNguoiDung != null && lstIdVoucherNguoiDung.Any())
             {
-                if (await _voucherSV.UpdateTrangThaiKhiXuat(lstIdVoucherNguoiDung))
+                if (await _VouchersV.UpdateTrangThaiKhiXuat(lstIdVoucherNguoiDung))
                 {
                     return Ok(true);
                 }

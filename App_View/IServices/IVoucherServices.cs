@@ -3,7 +3,7 @@ using App_Data.ViewModels.Voucher;
 
 namespace App_View.IServices
 {
-    public interface IVoucherServices
+    public interface IVoucherservices
     {
         Task<List<Voucher>> GetAllVoucher();
         Task<bool> CreateVoucher(VoucherDTO voucherDTO);
@@ -14,7 +14,7 @@ namespace App_View.IServices
         Task<Voucher> GetVoucherByMa(string ma);
         Task<VoucherDTO> GetVoucherDTOById(string id);
         Task<bool> UpdateVoucherAfterUseIt(string idVoucher, string IdNguoiDung);
-        Task<bool> UpdateVoucherSoluong(string idVoucher);
+        Task<bool> UpdateVouchersoluong(string idVoucher);
 
         // TaiQuay
 

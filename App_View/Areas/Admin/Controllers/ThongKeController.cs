@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.Models;
 using App_Data.Repositories;
 using App_Data.ViewModels.DanhGia;
@@ -29,7 +29,7 @@ namespace App_View.Areas.Admin.Controllers
             _httpClient = new HttpClient();
             _thongKeService = thongKeService;
             baseQuery = from a in db.HoaDons
-                        join e in db.thongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH into thongTinGiaoHangGroup
+                        join e in db.ThongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH into thongTinGiaoHangGroup
                         from e in thongTinGiaoHangGroup.DefaultIfEmpty()
                         join d in db.KhachHangs on a.IdKhachHang equals d.IdKhachHang into khachHangGroup
                         from d in khachHangGroup.DefaultIfEmpty()
@@ -91,8 +91,8 @@ namespace App_View.Areas.Admin.Controllers
         public ActionResult GetStatistical(string fromDate, string toDate)
         {
             var query = from a in db.HoaDons
-                        join b in db.hoaDonChiTiets on a.IdHoaDon equals b.IdHoaDon
-                        join c in db.sanPhamChiTiets on b.IdSanPhamChiTiet equals c.IdChiTietSp
+                        join b in db.HoaDonChiTiets on a.IdHoaDon equals b.IdHoaDon
+                        join c in db.SanPhamChiTiets on b.IdSanPhamChiTiet equals c.IdChiTietSp
                         where a.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay || a.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao && a.NgayTao != null
                         select new ThongKeViewModel
                         {
@@ -145,10 +145,10 @@ namespace App_View.Areas.Admin.Controllers
         {
 
             var query = from a in db.HoaDons
-                        join b in db.hoaDonChiTiets on a.IdHoaDon equals b.IdHoaDon
-                        join c in db.sanPhamChiTiets on b.IdSanPhamChiTiet equals c.IdChiTietSp
+                        join b in db.HoaDonChiTiets on a.IdHoaDon equals b.IdHoaDon
+                        join c in db.SanPhamChiTiets on b.IdSanPhamChiTiet equals c.IdChiTietSp
                         join d in db.SanPhams on c.IdSanPham equals d.IdSanPham
-                        //join e in db.thongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH
+                        //join e in db.ThongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH
                         where (a.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao || a.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay) && a.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan
                         select new ThongKeTheoSanPhamBanOnline
                         {
@@ -221,8 +221,8 @@ namespace App_View.Areas.Admin.Controllers
         {
 
             var query = from a in db.HoaDons
-                        join b in db.hoaDonChiTiets on a.IdHoaDon equals b.IdHoaDon
-                        join c in db.sanPhamChiTiets on b.IdSanPhamChiTiet equals c.IdChiTietSp
+                        join b in db.HoaDonChiTiets on a.IdHoaDon equals b.IdHoaDon
+                        join c in db.SanPhamChiTiets on b.IdSanPhamChiTiet equals c.IdChiTietSp
                         join d in db.SanPhams on c.IdSanPham equals d.IdSanPham
                         select new ThongKeTheoSanPhamBanOnline
                         {
@@ -497,66 +497,7 @@ namespace App_View.Areas.Admin.Controllers
         }
 
 
-        [HttpGet]
-        public ActionResult BieuDoThongKeHoaDonOnlineTheoThang(string fromDate, string toDate)
-        {
-            var query = from a in db.HoaDons
 
-                        where a.NgayTao != null
-                        select new ThongKeDoanhThuOnline
-                        {
-                            NgayTao = (DateTime)a.NgayTao,
-                            TongTien = (double)a.TongTien,
-                            MaDonHang = a.MaHoaDon,
-                            NgayNhan = a.NgayNhan,
-                            TrangThaiGiaoHang = a.TrangThaiGiaoHang,
-                            TrangThaiThanhToan = a.TrangThaiThanhToan,
-                            TienGiam = a.TienGiam
-                        };
-            if (!string.IsNullOrEmpty(fromDate))
-            {
-
-                DateTime startDate = DateTime.ParseExact(fromDate, "yyyy-MM-dd", null);
-                query = query.Where(x => x.NgayTao.Date >= startDate);
-            }
-
-            if (!string.IsNullOrEmpty(toDate))
-            {
-                DateTime endDate = DateTime.ParseExact(toDate, "yyyy-MM-dd", null);
-                query = query.Where(x => x.NgayTao.Date <= endDate);
-            }
-
-            if (string.IsNullOrEmpty(toDate) && string.IsNullOrEmpty(fromDate))
-            {
-                DateTime currentDate = DateTime.Now;
-                DateTime startDate = currentDate.AddDays(-7);
-                query = query.Where(x => x.NgayTao.Date >= startDate);
-                query = query.Where(x => x.NgayTao.Date <= currentDate);
-            }
-            var result = query.GroupBy(x => x.NgayTao.Date)
-              .Select(x => new
-              {
-                  NgayTao = x.Key,
-                  TongSoDonHang = x.Count(y => y.MaDonHang != null),
-                  SoLuongDonHangHuy = x.Count(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaHuy || y.TrangThaiThanhToan == (int)TrangThaiHoaDon.Huy),
-                  SoLuongDonHangThanhCong = x.Count(y => (y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao || y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay) && y.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan),
-                  DoanhThuOnline = x.Where(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao && y.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan).Sum(y => y.TongTien),
-                  DoanhThuOfline = x.Where(y => y.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay && y.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan).Sum(y => y.TongTien),
-                  TongGiam = x.Where(y => y.TienGiam != null).Sum(y => y.TienGiam)
-              }).Select(x => new
-              {
-                  NgayTao = x.NgayTao,
-                  TongSoDonHang = x.TongSoDonHang,
-                  SoLuongDonHangThanhCong = x.SoLuongDonHangThanhCong,
-                  SoLuongDonHangHuy = x.SoLuongDonHangHuy,
-                  DoanhThu = x.DoanhThuOnline + x.DoanhThuOfline - x.TongGiam,
-              }).ToList();
-
-
-            return Json(new { Data = result });
-
-
-        }
         [HttpGet]
 
         public ActionResult BieuDoThongKeHoaDonOnlineTheoNam(string fromDate, string toDate)
@@ -650,10 +591,10 @@ namespace App_View.Areas.Admin.Controllers
         {
 
             var query = from a in db.HoaDons
-                        join b in db.hoaDonChiTiets on a.IdHoaDon equals b.IdHoaDon
-                        join c in db.sanPhamChiTiets on b.IdSanPhamChiTiet equals c.IdChiTietSp
+                        join b in db.HoaDonChiTiets on a.IdHoaDon equals b.IdHoaDon
+                        join c in db.SanPhamChiTiets on b.IdSanPhamChiTiet equals c.IdChiTietSp
                         join d in db.SanPhams on c.IdSanPham equals d.IdSanPham
-                        //join e in db.thongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH
+                        //join e in db.ThongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH
                         where (a.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao || a.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay) && a.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan
                         select new ThongKeTheoSanPhamBanOnline
                         {

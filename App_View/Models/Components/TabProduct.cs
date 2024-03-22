@@ -5,11 +5,11 @@ namespace App_View.Models.Components
 {
     public class TabProduct: ViewComponent
     {
-        private readonly ISanPhamChiTietService _sanPhamChiTietService;
+        private readonly ISanPhamChiTietservice _SanPhamChiTietservice;
 
-        public TabProduct(ISanPhamChiTietService sanPhamChiTietService)
+        public TabProduct(ISanPhamChiTietservice SanPhamChiTietservice)
         {
-            _sanPhamChiTietService = sanPhamChiTietService;
+            _SanPhamChiTietservice = SanPhamChiTietservice;
         }
 
         public IViewComponentResult Invoke()
@@ -17,7 +17,7 @@ namespace App_View.Models.Components
             var model = new App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel();
             try
             {
-                model = _sanPhamChiTietService.GetDanhSachGiayViewModelAynsc().Result;
+                model = _SanPhamChiTietservice.GetDanhSachGiayViewModelAynsc().Result;
             }
             catch (Exception)
             {

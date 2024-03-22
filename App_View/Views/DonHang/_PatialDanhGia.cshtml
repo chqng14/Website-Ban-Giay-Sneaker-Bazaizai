@@ -29,7 +29,7 @@
                           data-modal="modal"
                           data-modal-id="#add-danh-gia"
                           class="btn btn--e-transparent-brand-b-2 order"
-                          style="width: 100px; text-align:center" onclick="DanhgiaSanPham()">
+                          style="width: 100px; text-align:center" onclick="DanhGiasanPham()">
                         Đánh giá
                     </span>
                 }
@@ -233,7 +233,7 @@
 </div>
 
 <script>
-    function DanhgiaSanPham() {
+    function DanhGiasanPham() {
         var danhGiaButtons = document.querySelectorAll('[data-modal-id="#add-danh-gia"]');
         danhGiaButtons.forEach(function (button) {
             var productId = button.dataset.productId;

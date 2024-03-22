@@ -5,10 +5,10 @@ using System.Net.Http;
 
 namespace App_View.Services
 {
-    public class KhuyenMaiChiTietServices : IKhuyenMaiChiTietServices
+    public class KhuyenMaiChiTietservices : IKhuyenMaiChiTietservices
     {
         HttpClient _httpClient;
-        public KhuyenMaiChiTietServices(HttpClient httpClient)
+        public KhuyenMaiChiTietservices(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

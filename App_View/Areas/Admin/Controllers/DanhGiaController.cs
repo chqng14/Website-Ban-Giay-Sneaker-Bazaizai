@@ -18,11 +18,11 @@ namespace App_View.Areas.Admin.Controllers
     public class DanhGiaController : Controller
     {
         private readonly UserManager<NguoiDung> _userManager;
-        private IDanhGiaService _danhGiaService;
+        private IDanhGiaservice _DanhGiaservice;
         private readonly IEmailSender _emailSender;
-        public DanhGiaController(IDanhGiaService danhGiaService, UserManager<NguoiDung> userManager, IEmailSender emailSender)
+        public DanhGiaController(IDanhGiaservice DanhGiaservice, UserManager<NguoiDung> userManager, IEmailSender emailSender)
         {
-            _danhGiaService = danhGiaService;
+            _DanhGiaservice = DanhGiaservice;
             _userManager = userManager;
             _emailSender = emailSender;
         }
@@ -33,12 +33,12 @@ namespace App_View.Areas.Admin.Controllers
         {
 
 
-            var lstDanhGiaChuaDuyet = (await _danhGiaService.GetLstDanhGiaChuaDuyetByDK(tab)).ToList();
+            var lstDanhGiaChuaDuyet = (await _DanhGiaservice.GetLstDanhGiaChuaDuyetByDK(tab)).ToList();
             return PartialView("_DanhSachDanhGiaChuaDuyetPartial", lstDanhGiaChuaDuyet);
         }
         public async Task<IActionResult> Index()
         {
-            var lst = await _danhGiaService.GetAllDanhGia();
+            var lst = await _DanhGiaservice.GetAllDanhGia();
             return View(lst);
         }
 
@@ -59,7 +59,7 @@ namespace App_View.Areas.Admin.Controllers
 
         //public async Task<IActionResult> TongSoDanhGiaCuaMoiSpChuaDuyet()
         //{
-        //    var result = await _danhGiaService.TongSoDanhGiaCuaMoiSpChuaDuyet();
+        //    var result = await _DanhGiaservice.TongSoDanhGiaCuaMoiSpChuaDuyet();
 
         //    // Chuyển đổi từ Tuple sang DanhGiaResult
         //    var danhGiaResults = result.Select(tuple => new DanhGiaResult
@@ -74,7 +74,7 @@ namespace App_View.Areas.Admin.Controllers
         public async Task<IActionResult> TongSoDanhGiaCuaMoiSpChuaDuyet()
         {
 
-            var result = await _danhGiaService.TongSoDanhGiaCuaMoiSpChuaDuyet();
+            var result = await _DanhGiaservice.TongSoDanhGiaCuaMoiSpChuaDuyet();
             var danhGiaResults = result.Select(item => new DanhGiaResult
             {
                 SanPham = item.SanPham,
@@ -88,13 +88,13 @@ namespace App_View.Areas.Admin.Controllers
 
         public async Task<IActionResult> LstChiTietDanhGiaCuaMoiSpChuaDuyet(string idSanPham)
         {
-            var lst = await _danhGiaService.LstChiTietDanhGiaCuaMoiSpChuaDuyet(idSanPham);
+            var lst = await _DanhGiaservice.LstChiTietDanhGiaCuaMoiSpChuaDuyet(idSanPham);
             return View(lst);
         }
         public async Task<IActionResult> DuyetDanhGia(string id)
         {
 
-            var result = await _danhGiaService.DuyetDanhGia(id);
+            var result = await _DanhGiaservice.DuyetDanhGia(id);
 
             if (result)
             {
@@ -110,22 +110,22 @@ namespace App_View.Areas.Admin.Controllers
 
         public async Task<IActionResult> DuyetTatCaDanhGiaCuaMSp(string idSanPham)
         {
-            var lst = await _danhGiaService.LstChiTietDanhGiaCuaMoiSpChuaDuyet(idSanPham);
+            var lst = await _DanhGiaservice.LstChiTietDanhGiaCuaMoiSpChuaDuyet(idSanPham);
             foreach (var item in lst)
             {
-                await _danhGiaService.DuyetDanhGia(item.IdDanhGia);
+                await _DanhGiaservice.DuyetDanhGia(item.IdDanhGia);
             }
             return RedirectToAction("TongSoDanhGiaCuaMoiSpChuaDuyet");
         }
 
         public async Task<IActionResult> XoaDanhGia(string id, string liDo)
         {
-            var dg = await _danhGiaService.GetDanhGiaById(id);
+            var dg = await _DanhGiaservice.GetDanhGiaById(id);
 
             var user = await _userManager.FindByIdAsync(dg.IdNguoiDung);
             var ngaydanhgia = dg.NgayDanhGia.Value.ToString("HH:mm:ss, dd/MM/yyyy");
         
-            var result = await _danhGiaService.DeleteDanhGia(id);
+            var result = await _DanhGiaservice.DeleteDanhGia(id);
 
             if (result)
             {
@@ -147,7 +147,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             foreach (var id in ids)
             {
-                await _danhGiaService.DuyetDanhGia(id);
+                await _DanhGiaservice.DuyetDanhGia(id);
             }
             return RedirectToAction("DanhSachDanhGiaChuaDuyet");
         }
@@ -155,13 +155,13 @@ namespace App_View.Areas.Admin.Controllers
         {
             foreach (var id in ids)
             {
-                var dg = await _danhGiaService.GetDanhGiaById(id);
+                var dg = await _DanhGiaservice.GetDanhGiaById(id);
 
                 var user = await _userManager.FindByIdAsync(dg.IdNguoiDung);
                 var ngaydanhgia = dg.NgayDanhGia.Value.ToString("HH:mm:ss, dd/MM/yyyy");
 
 
-                await _danhGiaService.DeleteDanhGia(id);
+                await _DanhGiaservice.DeleteDanhGia(id);
                 if (user != null)
                 {
                     await _emailSender.SendEmailAsync(user.Email, "Thông báo về việc xóa đánh giá của bạn",

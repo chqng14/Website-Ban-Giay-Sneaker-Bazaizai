@@ -3,7 +3,7 @@
 @using App_View.IServices;
 @using App_View.Models.ViewModels;
 @using static App_Data.Repositories.TrangThai;
-@inject ISanPhamChiTietService sanPhamChiTietService
+@inject ISanPhamChiTietservice SanPhamChiTietservice
 @model HoaDon
 
 <head>
@@ -34,7 +34,11 @@
 									</div>
 								</div>
 
-
+							<div class="store-info">
+								<h2>BAZAIZAI STORE</h2>
+								<p>Phố Trịnh Văn Bô, Nam Từ Liêm</p>
+								<p>Hotline: 0374232108</p>
+							</div>
 								<!-- Row end -->
 								<!-- Row start -->
 								<div class="row gutters" style="display: flex;flex-wrap: wrap;margin-right: -15px;margin-left: -15px;flex-direction: row;">
@@ -80,14 +84,14 @@
 												</thead>
 												<tbody style="border: 1px solid #e6e9f0;">
 													@{
-													var sanPhamChiTietList = await sanPhamChiTietService.GetAllListSanPhamChiTietViewModelAsync();
+													var sanPhamChiTietList = await SanPhamChiTietservice.GetAllListSanPhamChiTietViewModelAsync();
 														//var sanPhamSaleViewModelList = new List<SanPhamSaleViewModel>();
 
 														//foreach (var pro in sanPhamChiTietList)
 														//{
-														//	var trangThaiSale = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
-														//	var trangThai = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
-														//	var giaThucTe = (await sanPhamChiTietService.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
+														//	var trangThaiSale = (await SanPhamChiTietservice.GetByKeyAsync(pro.IdChiTietSp)).TrangThaiSale;
+														//	var trangThai = (await SanPhamChiTietservice.GetByKeyAsync(pro.IdChiTietSp)).TrangThai;
+														//	var giaThucTe = (await SanPhamChiTietservice.GetByKeyAsync(pro.IdChiTietSp)).GiaThucTe;
 														//	var sanPhamSaleViewModel = new SanPhamSaleViewModel
 														//	{
 														//		SanPhamDanhSachView = pro,
@@ -136,10 +140,20 @@
 																		Tiền ship <br>
 																	</p>
 																}
-																Tiền giảm
+																Tiền giảm<br>
+															@if (Model.TrangThaiGiaoHang == 0)
+															{
+																<text>
+																	Tiền khách trả <br>
+																	Tiền thừa <br>
+																</text>
+															}
 															</p>
 															<h5 class="text-success"><strong>Tổng Cộng</strong></h5>
 														</td>
+														@{
+															var tongTien = Convert.ToDouble(ViewData["TONGTIEN"]) + Convert.ToDouble((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] != "") ? ViewData["TIENSHIP"] : "0") - Convert.ToDouble((ViewData["TIENGIAM"] != null && ViewData["TIENGIAM"] != "") ? ViewData["TIENGIAM"] : "0");
+														}
 														<td>
 															<p>
 																@string.Format("{0:N0}đ",ViewData["TONGTIEN"])<br>
@@ -149,10 +163,13 @@
 																<br>
 															}
 															@((ViewData["TIENGIAM"] != null && ViewData["TIENGIAM"] != "") ? string.Format("{0:N0}đ", ViewData["TIENGIAM"]) : string.Format("{0:N0}đ", "0"))
-
-															</p>@{
-															var tongTien = Convert.ToDouble(ViewData["TONGTIEN"]) + Convert.ToDouble((ViewData["TIENSHIP"] != null && ViewData["TIENSHIP"] != "") ? ViewData["TIENSHIP"] : "0") - Convert.ToDouble((ViewData["TIENGIAM"] != null && ViewData["TIENGIAM"] != "") ? ViewData["TIENGIAM"] : "0");
+															@if (Model.TrangThaiGiaoHang == 0)
+															{
+																@(string.Format("{0:N0}đ", ViewBag.TienKhachTra))
+																<br>
+																@(string.Format("{0:N0}đ", Convert.ToDouble(ViewBag.TienKhachTra - tongTien)))
 															}
+															</p>
 															<h5 class="text-success"><strong>@string.Format("{0:N0}đ",tongTien)</strong></h5>
 														</td>
 													</tr>

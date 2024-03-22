@@ -188,7 +188,7 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
             {
                 user.GioiTinh = Input.GioiTinh;
             }
-
+            var anhdaidien = user.AnhDaiDien;
             if (Request.Form.Files.Count > 0)
             {
                 IFormFile file = Request.Form.Files.FirstOrDefault();
@@ -209,10 +209,14 @@ namespace App_View.Areas.Identity.Pages.Account.Manage
                 var setImgResult = await _userManager.UpdateAsync(user);
                 if (setImgResult.Succeeded)
                 {
-                    if (System.IO.File.Exists(oldImagePath))
+                    if (anhdaidien != "/user_img/default_image.png")
                     {
-                        System.IO.File.Delete(oldImagePath);
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
                     }
+                  
                 }
 
             }

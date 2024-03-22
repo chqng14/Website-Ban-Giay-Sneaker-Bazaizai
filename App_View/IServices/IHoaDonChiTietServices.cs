@@ -3,7 +3,7 @@ using App_Data.ViewModels.HoaDonChiTietDTO;
 
 namespace App_View.IServices
 {
-    public interface IHoaDonChiTietServices
+    public interface IHoaDonChiTietservices
     {
         Task<List<HoaDonChiTietViewModel>> GetAllHoaDonChiTiet();
         Task<bool> CreateHoaDonChiTiet(HoaDonChiTietDTO hoaDonChiTietDTO);

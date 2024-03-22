@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.ViewModels.DanhGia;
@@ -24,7 +24,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                await _context.danhGias.AddAsync(danhGia);
+                await _context.DanhGias.AddAsync(danhGia);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -41,7 +41,7 @@ namespace App_Data.Repositories
             {
                 var entity = await GetByKeyAsync(id);
                 if (entity == null) return false;
-                _context.danhGias.Remove(entity);
+                _context.DanhGias.Remove(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -54,22 +54,22 @@ namespace App_Data.Repositories
 
         public async Task<DanhGia?> GetByKeyAsync(string id)
         {
-            return await _context.danhGias.Where(x => x.IdDanhGia == id).FirstOrDefaultAsync();
+            return await _context.DanhGias.Where(x => x.IdDanhGia == id).FirstOrDefaultAsync();
         }
 
         //public async Task<List<DanhGia>> GetListAsync(string productId, string parentId)
         //{
-        //    return await _context.danhGias.Where(x => x.ParentId == parentId && x.IdSanPhamChiTiet == productId).ToListAsync();
+        //    return await _context.DanhGias.Where(x => x.ParentId == parentId && x.IdSanPhamChiTiet == productId).ToListAsync();
         //}
 
         public async Task<List<DanhGia>> GetAllAsync()
         {
-            return await _context.danhGias.ToListAsync();
+            return await _context.DanhGias.ToListAsync();
         }
         public async Task<float> SoSaoTB(string IdProductChiTiet)
         {
-            var danhGias = await GetListAsyncViewModel(IdProductChiTiet);
-            var lstdanhGia = danhGias.Where(x => x.SaoSp != 0 && x.TrangThai == (int)TrangThaiDanhGia.DaDuyet);
+            var DanhGias = await GetListAsyncViewModel(IdProductChiTiet);
+            var lstdanhGia = DanhGias.Where(x => x.SaoSp != 0 && x.TrangThai == (int)TrangThaiDanhGia.DaDuyet);
             var SoSao = lstdanhGia.Count();
             int? Tong = 0;
             if (SoSao == 0)
@@ -100,16 +100,16 @@ namespace App_Data.Repositories
             var lstdanhGia = await GetListAsyncViewModel(IdProductChiTiet);
             return lstdanhGia.Where(x => x.SaoSp != 0 && x.TrangThai == (int)TrangThaiDanhGia.ChuaDuyet).Count();
         }
-        //var lstdanhGia =await _context.danhGias.ToListAsync();
+        //var lstdanhGia =await _context.DanhGias.ToListAsync();
         //return lstdanhGia.Where(x => x.SaoSp != 0 && x.TrangThai == (int)TrangThaiDanhGia.ChuaDuyet).Count();
-        //var IDsanPham = _context.sanPhamChiTiets
+        //var IDsanPham = _context.SanPhamChiTiets
         //   .Where(x => x.IdChiTietSp == IdProductChiTiet)
         //   .Select(x => x.IdSanPham)
         //   .FirstOrDefault();
         //public async Task<int> GetTongSoDanhGiaChuaDuyet()
         //{
-        //    var ViewMode = await (from a in _context.danhGias                                
-        //                          join c in _context.sanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp                       
+        //    var ViewMode = await (from a in _context.DanhGias                                
+        //                          join c in _context.SanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp                       
         //                          join j in _context.SanPhams on c.IdSanPham equals j.IdSanPham
         //                          where  a.TrangThai == (int)TrangThaiDanhGia.ChuaDuyet // Lọc đánh giá theo IdSanPham
         //                          select new DanhGiaViewModel
@@ -128,8 +128,8 @@ namespace App_Data.Repositories
         //}
         public async Task<List<Tuple<string, int, string, string>>> TongSoDanhGiaCuaMoiSpChuaDuyet()
         {
-            var result = await (from a in _context.danhGias
-                                join c in _context.sanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
+            var result = await (from a in _context.DanhGias
+                                join c in _context.SanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
                                 join j in _context.SanPhams on c.IdSanPham equals j.IdSanPham
                                 where a.TrangThai == (int)TrangThaiDanhGia.ChuaDuyet // Lọc đánh giá theo IdSanPham
                                 select new DanhGiaViewModel
@@ -146,11 +146,11 @@ namespace App_Data.Repositories
         }
         public async Task<List<DanhGiaViewModel>> LstChiTietDanhGiaCuaMoiSpChuaDuyet(string idSanPham)
         {
-            var ViewMode = await (from a in _context.danhGias
+            var ViewMode = await (from a in _context.DanhGias
                                   join b in _context.NguoiDungs on a.IdNguoiDung equals b.Id
-                                  join c in _context.sanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
-                                  join d in _context.mauSacs on c.IdMauSac equals d.IdMauSac
-                                  join e in _context.kichCos on c.IdKichCo equals e.IdKichCo
+                                  join c in _context.SanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
+                                  join d in _context.MauSacs on c.IdMauSac equals d.IdMauSac
+                                  join e in _context.KichCos on c.IdKichCo equals e.IdKichCo
                                   join j in _context.SanPhams on c.IdSanPham equals j.IdSanPham
                                   where c.IdSanPham == idSanPham && a.TrangThai == (int)TrangThaiDanhGia.ChuaDuyet
                                   select new DanhGiaViewModel
@@ -177,16 +177,16 @@ namespace App_Data.Repositories
         }
         public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string IdProductChiTiet)
         {
-            var IDsanPham = _context.sanPhamChiTiets
+            var IDsanPham = _context.SanPhamChiTiets
                 .Where(x => x.IdChiTietSp == IdProductChiTiet)
                 .Select(x => x.IdSanPham)
                 .FirstOrDefault();
 
-            var ViewMode = await (from a in _context.danhGias
+            var ViewMode = await (from a in _context.DanhGias
                                   join b in _context.NguoiDungs on a.IdNguoiDung equals b.Id
-                                  join c in _context.sanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
-                                  join d in _context.mauSacs on c.IdMauSac equals d.IdMauSac
-                                  join e in _context.kichCos on c.IdKichCo equals e.IdKichCo
+                                  join c in _context.SanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
+                                  join d in _context.MauSacs on c.IdMauSac equals d.IdMauSac
+                                  join e in _context.KichCos on c.IdKichCo equals e.IdKichCo
                                   join j in _context.SanPhams on c.IdSanPham equals j.IdSanPham
                                   where c.IdSanPham == IDsanPham && a.TrangThai == (int)TrangThaiDanhGia.DaDuyet // Lọc đánh giá theo IdSanPham
                                   select new DanhGiaViewModel
@@ -217,7 +217,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                _context.danhGias.Update(danhGia);
+                _context.DanhGias.Update(danhGia);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -229,16 +229,16 @@ namespace App_Data.Repositories
         }
         public async Task<DanhGia?> FindbyId(string id)
         {
-            return await _context.danhGias.Where(x => x.IdDanhGia == id).FirstOrDefaultAsync();
+            return await _context.DanhGias.Where(x => x.IdDanhGia == id).FirstOrDefaultAsync();
         }
 
         public async Task<DanhGiaViewModel?> GetViewModelByKeyAsync(string id)
         {
-            var ViewMode = await (from a in _context.danhGias
+            var ViewMode = await (from a in _context.DanhGias
                                   join b in _context.NguoiDungs on a.IdNguoiDung equals b.Id
-                                  join c in _context.sanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
-                                  join d in _context.mauSacs on c.IdMauSac equals d.IdMauSac
-                                  join e in _context.kichCos on c.IdKichCo equals e.IdKichCo
+                                  join c in _context.SanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
+                                  join d in _context.MauSacs on c.IdMauSac equals d.IdMauSac
+                                  join e in _context.KichCos on c.IdKichCo equals e.IdKichCo
                                   join j in _context.SanPhams on c.IdSanPham equals j.IdSanPham
                                   select new DanhGiaViewModel
                                   {
@@ -260,11 +260,11 @@ namespace App_Data.Repositories
         }
         public async Task<List<DanhGiaViewModel>> LstDanhGia()
         {
-            var ViewMode = await (from a in _context.danhGias
+            var ViewMode = await (from a in _context.DanhGias
                                   join b in _context.NguoiDungs on a.IdNguoiDung equals b.Id
-                                  join c in _context.sanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
-                                  join d in _context.mauSacs on c.IdMauSac equals d.IdMauSac
-                                  join e in _context.kichCos on c.IdKichCo equals e.IdKichCo
+                                  join c in _context.SanPhamChiTiets on a.IdSanPhamChiTiet equals c.IdChiTietSp
+                                  join d in _context.MauSacs on c.IdMauSac equals d.IdMauSac
+                                  join e in _context.KichCos on c.IdKichCo equals e.IdKichCo
                                   join j in _context.SanPhams on c.IdSanPham equals j.IdSanPham
                                   select new DanhGiaViewModel
                                   {

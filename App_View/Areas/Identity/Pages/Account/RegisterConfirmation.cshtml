@@ -2,85 +2,45 @@
 @model RegisterConfirmationModel
 @{
     ViewData["Title"] = "Liên kết gửi qua Email";
-    Layout = "/Views/Shared/_LayoutQMK.cshtml";
+    //Layout = "/Views/Shared/_LayoutQMK.cshtml";
+    Layout = "/Views/Shared/_Layout.cshtml";
+
 }
+<style>
+    .u-img-fluid {
+        margin-left: 20%;
+        width: 60%;
+        max-width: 60%;
+    }
+</style>
+<div class="new-l">
+    <div class="modal-dialog modal-dialog-centered" style="height:420px;">
+        <div class="modal-content modal--shadow">
+            <h5 class="new-l__h3" style="text-align:center">Xác minh bằng liên kết gửi qua Email</h5>
+            <div class="modal-body">
+                <div class="row u-s-m-x-0">
+                   
+                    <div class="col-lg-12 new-l__col-2">
+                        <div class="new-l__section u-s-m-t-30">
+                            <div class="u-s-m-b-30 new-l--center">
 
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Form sau khi gửi mail</title>
-    <link rel="stylesheet" href="~/assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="~/assets/fonts/font-awesome.min.css">
-    <link rel="stylesheet" href="~/assets/fonts/ionicons.min.css">
-    <link rel="stylesheet" href="~/assets/css/Login-Form-Clean.css">
-    <link rel="stylesheet" href="~/assets/css/styles.css">
-</head>
+                                    <img  class="u-img-fluid u-d-block" src="/PageIdentity/Homthu.jpg" alt="">
+                            </div>
+                            <div class="u-s-m-b-30 new-l--center">
+                                <span>Vui lòng nhấn vào liên kết xác thực đã được gửi đến địa chỉ Email của bạn</span>
+                            </div>
+                           
 
-<body>
-    <section class="login-clean">
-        <form>
-            <h2 style="font-size: 13px;margin-top: -20px;margin-left: -30px;margin-right: 0px;">
-                <strong>&nbsp;</strong>
-                <a href="#" id="backLink" style="color:black"><i class="fa fa-arrow-left" style="margin-right: 20px;"></i></a>
-                <strong>Xác minh bằng liên kết gửi qua Email</strong>
-            </h2>
-            <div class="illustration" style="height: 200px;">
-                <span class="forgot" style="margin-top: 25px;">Vui lòng nhấn vào liên kết xác thực đã được gửi đến địa chỉ Email&nbsp;<br></span>
-                <span class="forgot">@Model.Email<br></span>
-                <i class="icon ion-email" style="color: var(--bs-cyan);"></i>
-               
-                <span id="demo" class="forgot"><br></span>
-           
+                        </div>
+                    </div>
+                </div>
             </div>
-        </form>
-    </section>
-    <script src="~/assets/bootstrap/js/bootstrap.min.js"></script>
-    <script>
-        document.getElementById("backLink").addEventListener("click", function (event) {
-            event.preventDefault();
-            window.history.back();
-        });
-    </script>
+        </div>
+    </div>
+</div>
 
-</body>
 
-</html>
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-    <script>
-
-        var countDownDate = new Date();
-        countDownDate.setSeconds(countDownDate.getSeconds() + 60);
-        var x;
-
-        function startCountdown() {
-            x = setInterval(function () {
-                var now = new Date().getTime();
-                var distance = countDownDate - now;
-                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                document.getElementById("demo").innerHTML = "Vui lòng chờ trong " + seconds + " giây để gửi lại.";
-                if (distance < 0) {
-                    clearInterval(x);
-                    showResendButton();
-                }
-            }, 1000);
-        }
-
-        function showResendButton() {
-            document.getElementById("demo").innerHTML = "Bạn vẫn chưa nhận được? <a id='resendButton' href='#'style='text-decoration: none; color: red'> Gửi lại </a>";
-            document.getElementById("resendButton").addEventListener("click", function (event) {
-                event.preventDefault();
-                clearInterval(x);
-                countDownDate = new Date();
-                countDownDate.setSeconds(countDownDate.getSeconds() + 60);
-                startCountdown();
-            });
-        }
-
-        startCountdown();
-    </script>
-
 }

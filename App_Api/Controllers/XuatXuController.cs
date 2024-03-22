@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -73,7 +73,7 @@ namespace App_Api.Controllers
             try
             {
                 var nameXuatXu = xuaXuDTO.Ten!.Trim().ToLower();
-                if (!_bazaizaiContext.xuatXus.Where(x => x.Ten!.Trim().ToLower() == nameXuatXu).Any())
+                if (!_bazaizaiContext.XuatXus.Where(x => x.Ten!.Trim().ToLower() == nameXuatXu).Any())
                 {
                     var xuatXu = _mapper.Map<XuatXu>(xuaXuDTO);
                     _bazaizaiContext.Attach(xuatXu);

@@ -1,4 +1,4 @@
-﻿using App_Data.ViewModels.Voucher;
+﻿                                                                                                                                 using App_Data.ViewModels.Voucher;
 using System.ComponentModel.DataAnnotations;
 
 namespace App_Data.Models

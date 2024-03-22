@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.Models;
 using App_Data.Repositories;
 using App_Data.ViewModels.DashBox;
@@ -25,7 +25,7 @@ namespace App_View.Models.Components
             {
                 SoHoaDonCho = _bazaizaiContext.HoaDons.Where(hd=>hd.IdNguoiDung==idNguoiDung && hd.TrangThaiGiaoHang == (int)TrangThai.TrangThaiGiaoHang.ChoXacNhan).ToList().Count(),
                 SoHoaDonHuy = _bazaizaiContext.HoaDons.Where(hd=>hd.IdNguoiDung==idNguoiDung && hd.TrangThaiGiaoHang == (int)TrangThai.TrangThaiGiaoHang.DaHuy).ToList().Count(),
-                SoSanPhamYeuThich = _bazaizaiContext.sanPhamYeuThiches.Where(spyt=>spyt.IdNguoiDung==idNguoiDung).ToList().Count(),
+                SoSanPhamYeuThich = _bazaizaiContext.SanPhamYeuThichs.Where(spyt=>spyt.IdNguoiDung==idNguoiDung).ToList().Count(),
             };
             return View(dashbox);
         }

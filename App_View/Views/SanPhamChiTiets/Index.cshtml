@@ -131,7 +131,7 @@
         };
 
         $.ajax({
-            url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+            url: brandParam != null ? '/SanPhamChiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamChiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
             type: 'POST',
             data: JSON.stringify(filterdata),
             contentType: 'application/json',

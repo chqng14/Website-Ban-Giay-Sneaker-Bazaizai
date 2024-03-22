@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -217,6 +217,14 @@ namespace App_Api.Controllers
                 {
                     return null;
                 }
+                if (hoadon.TrangThaiGiaoHang == (int)TrangThaiGiaoHang.TaiQuay)
+                {
+                    return null;
+                }
+                if (!_hoaDon.CheckKhachHang(hoadon.IdThongTinGH))
+                {
+                    return null;
+                }
                 var hoadonct = (await _hoaDonChiTietController.GetAllHoaDon()).Where(c => c.IdHoaDon == hoadon.IdHoaDon).ToList();
                 var loaithanhtoan = await GetPTThanhToan(hoadon.IdHoaDon);
 
@@ -345,13 +353,19 @@ namespace App_Api.Controllers
             hoadon.TrangThaiGiaoHang = trangThaiGiaoHang;
             hoadon.LiDoHuy = Lido;
             hoadon.NgayCapNhatGanNhat = ngayCapNhatGanNhat;
-			if(trangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao)
-			{
+            if (trangThaiGiaoHang == (int)TrangThaiGiaoHang.DaGiao)
+            {
                 hoadon.TrangThaiThanhToan = 1;
-			}
-			return _hoaDon.EditBill(hoadon);
+            }
+            return _hoaDon.EditBill(hoadon);
         }
-
+        [HttpPut]
+        public async Task<bool> UpdateDiaChi(string idHoaDon, string diaChi)
+        {
+            var hoadon = _hoaDon.GetHoaDonUpdate().FirstOrDefault(c => c.IdHoaDon == idHoaDon);
+            hoadon.DiaChi = diaChi;
+            return _hoaDon.EditBill(hoadon);
+        }
         [HttpPut]
         public async Task<bool> UpdateTrangThaiHoaDonOnline(string idHoaDon, int TrangThaiThanhToan)
         {

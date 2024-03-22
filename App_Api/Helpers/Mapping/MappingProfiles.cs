@@ -24,7 +24,7 @@ using static Peg.Base.PegBaseParser;
 
 using App_Data.ViewModels.ThongTinGHDTO;
 using App_Data.ViewModels.HoaDon;
-using App_Data.DbContextt;
+using App_Data.DbContext;
 using App_Data.ViewModels.SanPhamYeuThichDTO;
 using App_Data.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -356,7 +356,7 @@ namespace App_Api.Helpers.Mapping
                     )
                 .ForMember(
                         dest => dest.GiaMin,
-                        opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
+                        opt => opt.MapFrom(src => bazaizaiContext.SanPhamChiTiets
                         .Where(x =>
                         x.TrangThai == 0 &&
                         x.IdXuatXu == src.IdXuatXu &&
@@ -371,7 +371,7 @@ namespace App_Api.Helpers.Mapping
                     )
                  .ForMember(
                         dest => dest.GiaMax,
-                        opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
+                        opt => opt.MapFrom(src => bazaizaiContext.SanPhamChiTiets
                         .Where(x =>
                         x.TrangThai == 0 &&
                         x.IdXuatXu == src.IdXuatXu &&
@@ -386,7 +386,7 @@ namespace App_Api.Helpers.Mapping
                     )
                  .ForMember(
                         dest => dest.LstMauSac,
-                        opt => opt.MapFrom(src => bazaizaiContext.sanPhamChiTiets
+                        opt => opt.MapFrom(src => bazaizaiContext.SanPhamChiTiets
                         .Where(x =>
                         x.TrangThai == 0 &&
                         x.IdXuatXu == src.IdXuatXu &&

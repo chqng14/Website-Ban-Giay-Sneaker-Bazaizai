@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.Models;
 using App_Data.ViewModels.DonHang;
 using App_Data.ViewModels.DonHangChiTiet;
@@ -29,21 +29,21 @@ namespace App_View.Controllers
         private readonly UserManager<NguoiDung> _userManager;
         private readonly BazaizaiContext _bazaizaiContext;
         private readonly IHoaDonServices hoaDonServices;
-        private ISanPhamChiTietService _sanPhamChiTietService;
-        private IGioHangChiTietServices GioHangChiTietServices;
+        private ISanPhamChiTietservice _SanPhamChiTietservice;
+        private IGioHangChiTietservices GioHangChiTietservices;
         private IMomoService _momoService;
         private PTThanhToanChiTietController PTThanhToanChiTietController;
         private PTThanhToanController PTThanhToanController;
         private IVnPayService _vnPayService;
-        public DonHangController(HttpClient httpclient, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietService sanPhamChiTietService, IMomoService momoService, IVnPayService vnPayService)
+        public DonHangController(HttpClient httpclient, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietservice SanPhamChiTietservice, IMomoService momoService, IVnPayService vnPayService)
         {
             _httpclient = httpclient;
             _signInManager = signInManager;
             _userManager = userManager;
             _bazaizaiContext = new BazaizaiContext();
             hoaDonServices = new HoaDonServices();
-            _sanPhamChiTietService = sanPhamChiTietService;
-            GioHangChiTietServices = new GioHangChiTietServices();
+            _SanPhamChiTietservice = SanPhamChiTietservice;
+            GioHangChiTietservices = new GioHangChiTietservices();
             _momoService = momoService;
             PTThanhToanChiTietController = new PTThanhToanChiTietController();
             PTThanhToanController = new PTThanhToanController();
@@ -139,7 +139,7 @@ namespace App_View.Controllers
                             IdChiTietSanPham = item.IdSanPhamChiTiet,
                             SoLuong = -(int)item.SoLuong
                         };
-                        await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
+                        await _SanPhamChiTietservice.UpDatSoLuongAynsc(sanphamupdate);
                     }
                 }
                 else
@@ -159,7 +159,7 @@ namespace App_View.Controllers
                             IdChiTietSanPham = item.IdSanPhamChiTiet,
                             SoLuong = -(int)item.SoLuong
                         };
-                        await _sanPhamChiTietService.UpDatSoLuongAynsc(sanphamupdate);
+                        await _SanPhamChiTietservice.UpDatSoLuongAynsc(sanphamupdate);
                     }
                     await hoaDonServices.UpdateTrangThaiGiaoHangHoaDon(idHoaDon, UserID, (int)TrangThaiGiaoHang.DaHuy, Lido, ngayCapNhatGanNhat);
                 }
@@ -178,8 +178,8 @@ namespace App_View.Controllers
             var message = new List<string>();
             foreach (var sp in listHoaDon.SanPham)
             {
-                var product = await _sanPhamChiTietService.GetSanPhamChiTietViewModelByKeyAsync(sp.IdSanPhamChiTiet);
-                var existing = (await GioHangChiTietServices.GetAllGioHang()).FirstOrDefault(x => x.IdSanPhamCT == product.IdChiTietSp && x.IdNguoiDung == UserID);
+                var product = await _SanPhamChiTietservice.GetSanPhamChiTietViewModelByKeyAsync(sp.IdSanPhamChiTiet);
+                var existing = (await GioHangChiTietservices.GetAllGioHang()).FirstOrDefault(x => x.IdSanPhamCT == product.IdChiTietSp && x.IdNguoiDung == UserID);
                 if (existing != null)
                 {
                     if (existing.SoLuong + sp.SoLuong <= product.SoLuongTon)
@@ -191,7 +191,7 @@ namespace App_View.Controllers
                         existing.SoLuong = Convert.ToInt32(product.SoLuongTon);
                         message.Add($"{product.SanPham} màu {product.MauSac} size {product.KichCo} số lượn chỉ còn {product.SoLuongTon},Trong giỏ hàng bạn đã có!");
                     }
-                    await GioHangChiTietServices.UpdateGioHang(sp.IdSanPhamChiTiet, Convert.ToInt32(existing.SoLuong), UserID);
+                    await GioHangChiTietservices.UpdateGioHang(sp.IdSanPhamChiTiet, Convert.ToInt32(existing.SoLuong), UserID);
                 }
                 else if (product.TrangThai == 1)
                 {
@@ -210,7 +210,7 @@ namespace App_View.Controllers
                     giohang.SoLuong = sp.SoLuong;
                     giohang.GiaGoc = product.GiaBan;
                     giohang.GiaBan = product.GiaThucTe;
-                    GioHangChiTietServices.CreateCartDetailDTO(giohang);
+                    GioHangChiTietservices.CreateCartDetailDTO(giohang);
                 }
             }
             if (message.Any())

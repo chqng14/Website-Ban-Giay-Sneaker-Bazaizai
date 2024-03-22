@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -17,12 +17,12 @@ namespace App_Api.Controllers
     {
         private readonly IAllRepo<ThuongHieu> repos;
         BazaizaiContext context = new BazaizaiContext();
-        DbSet<ThuongHieu> thuongHieus;
+        DbSet<ThuongHieu> ThuongHieus;
         private readonly IMapper _mapper;
         public ThuongHieuController(IMapper mapper)
         {
-            thuongHieus = context.thuongHieus;
-            AllRepo<ThuongHieu> all = new AllRepo<ThuongHieu>(context, thuongHieus);
+            ThuongHieus = context.ThuongHieus;
+            AllRepo<ThuongHieu> all = new AllRepo<ThuongHieu>(context, ThuongHieus);
             repos = all;
             _mapper = mapper;
         }
@@ -59,7 +59,7 @@ namespace App_Api.Controllers
             try
             {
                 var nameThuongHieuLower = thuongHieuDTO.TenThuongHieu!.Trim().ToLower();
-                if (!context.thuongHieus.Where(x => x.TenThuongHieu!.Trim().ToLower() == nameThuongHieuLower).Any())
+                if (!context.ThuongHieus.Where(x => x.TenThuongHieu!.Trim().ToLower() == nameThuongHieuLower).Any())
                 {
                     var thuongHieu = _mapper.Map<ThuongHieu>(thuongHieuDTO);
                     context.Attach(thuongHieu);

@@ -1,17 +1,17 @@
 ﻿@using App_View.IServices;
 @using App_View.Models.ViewModels;
-@inject IKhuyenMaiServices _khuyenMaiService;
+@inject IKhuyenMaiservices _KhuyenMaiservice;
 @using static App_Data.Repositories.TrangThai;
-@inject ISanPhamChiTietService sanPhamChiTietService;
-@inject IKhuyenMaiChiTietServices khuyenMaiChiTiet;
+@inject ISanPhamChiTietservice SanPhamChiTietservice;
+@inject IKhuyenMaiChiTietservices khuyenMaiChiTiet;
 @{
-    var max = (await _khuyenMaiService.GetAllKhuyenMai()).Where(x => (x.TrangThai == (int)TrangThaiSale.DangBatDau || x.TrangThai == (int)TrangThaiSale.ChuaBatDau) && x.LoaiHinhKM==1).Max(x => x.MucGiam);
-    var flashSale = (await _khuyenMaiService.GetAllKhuyenMai()).FirstOrDefault(x => x.MucGiam == max&&x.TrangThai==(int)TrangThaiSale.DangBatDau||x.TrangThai==(int)TrangThaiSale.ChuaBatDau);
-    var saleChuaBatDau =  (await _khuyenMaiService.GetAllKhuyenMai()).FirstOrDefault(x => x.MucGiam == max && x.TrangThai == (int)TrangThaiSale.ChuaBatDau);
-    var khuyenMai = (await _khuyenMaiService.GetAllKhuyenMai()).Where(x => x.TrangThai==(int)TrangThaiSale.DangBatDau);
+    var max = (await _KhuyenMaiservice.GetAllKhuyenMai()).Where(x => (x.TrangThai == (int)TrangThaiSale.DangBatDau || x.TrangThai == (int)TrangThaiSale.ChuaBatDau) && x.LoaiHinhKM==1).Max(x => x.MucGiam);
+    var flashSale = (await _KhuyenMaiservice.GetAllKhuyenMai()).FirstOrDefault(x => x.MucGiam == max&&x.TrangThai==(int)TrangThaiSale.DangBatDau||x.TrangThai==(int)TrangThaiSale.ChuaBatDau);
+    var saleChuaBatDau =  (await _KhuyenMaiservice.GetAllKhuyenMai()).FirstOrDefault(x => x.MucGiam == max && x.TrangThai == (int)TrangThaiSale.ChuaBatDau);
+    var khuyenMai = (await _KhuyenMaiservice.GetAllKhuyenMai()).Where(x => x.TrangThai==(int)TrangThaiSale.DangBatDau);
     var kmct = (await khuyenMaiChiTiet.GetAllKhuyenMaiChiTiet()).Where(x => x.TrangThai == (int)TrangThaiSaleDetail.DangKhuyenMai);
     var model = new App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel();
-    model = sanPhamChiTietService.GetDanhSachGiayViewModelAynsc().Result;
+    model = SanPhamChiTietservice.GetDanhSachGiayViewModelAynsc().Result;
     var lstSpDuocApDungKhuyenMai = model.LstAllSanPham.Where(x => x.GiaThucTe < x.GiaGoc).ToList();
 }
 <head>
@@ -354,7 +354,7 @@
                                             <div class="fX9y5D rsM6mQ"></div>
                                             <div>
                                                 <div class="hJ4n7F lShvj+">
-                                                    <a href="/sanphamchitiets" role="button"
+                                                    <a href="/SanPhamChiTiets" role="button"
                                                        data-is-ssr-see-all-button="true"
                                                        class="tQx6Fj PwG79a Gge7KH"
                                                        style="color: rgb(0, 0, 0);">
@@ -429,7 +429,7 @@
                                                                                                 @string.Format("{0:N0}đ",@spct.GiaGoc)
 
                                                                                             </div>
-                                                                                            <div class="_0w738K _5650Ab"
+                                                                                            <div cl ass="_0w738K _5650Ab"
                                                                                                  manifest="[object Object]">
                                                                                                 <span aria-label="current price"></span><span class="yi6wjz yS8ee6"></span><span class="Fh3XjX _2cK8Gd">@string.Format("{0:N0}đ",@spct.GiaThucTe)</span>
 
@@ -450,7 +450,7 @@
                                                                      style="width: 16.67%;">
                                                                     <div class="_00qJSX kK-mfd">
                                                                         <div class="hJ4n7F u4f1Yx">
-                                                                            <a href="/sanphamchitiets"
+                                                                            <a href="/SanPhamChiTiets"
                                                                                role="button"
                                                                                data-is-ssr-see-all-button="false"
                                                                                class="tQx6Fj _5Hogue PwG79a _5+DP0m">
@@ -549,7 +549,7 @@
                                         <div class="fX9y5D rsM6mQ"></div>
                                         <div>
                                             <div class="hJ4n7F lShvj+">
-                                                <a href="/sanphamchitiets"
+                                                <a href="/SanPhamChiTiets"
                                                 role="button" data-is-ssr-see-all-button="true"
                                                 class="tQx6Fj PwG79a Gge7KH"
                                                 style="color: rgb(0, 0, 0);">

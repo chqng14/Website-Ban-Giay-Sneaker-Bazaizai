@@ -5,10 +5,10 @@ using System.Net.Http;
 
 namespace App_View.Services
 {
-    public class GioHangChiTietServices : IGioHangChiTietServices
+    public class GioHangChiTietservices : IGioHangChiTietservices
     {
         private readonly HttpClient _httpClient;
-        public GioHangChiTietServices()
+        public GioHangChiTietservices()
         {
             _httpClient = new HttpClient();
         }

@@ -1,18 +1,18 @@
-﻿@using App_Data.DbContextt;
+﻿@using App_Data.DbContext;
 @using App_Data.Models;
 @using App_View.IServices;
 @using App_View.Models.ViewModels;
 @using App_View.Services;
 @using static App_Data.Repositories.TrangThai;
-@inject ISanPhamChiTietService sanPhamChiTietService;
-@inject IKhuyenMaiServices khuyenMaiService;
-@inject IDanhGiaService _DanhGiaService
-@inject IKhuyenMaiChiTietServices khuyenMaiChiTiet;
+@inject ISanPhamChiTietservice SanPhamChiTietservice;
+@inject IKhuyenMaiservices KhuyenMaiservice;
+@inject IDanhGiaservice _DanhGiaservice
+@inject IKhuyenMaiChiTietservices khuyenMaiChiTiet;
 @{
     BazaizaiContext context = new BazaizaiContext();
-    _DanhGiaService = new DanhGiaService();
+    _DanhGiaservice = new DanhGiaservice();
     var model = new App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel();
-    model = sanPhamChiTietService.GetDanhSachGiayViewModelAynsc().Result;
+    model = SanPhamChiTietservice.GetDanhSachGiayViewModelAynsc().Result;
     var lstSpDuocApDungKhuyenMai = model.LstAllSanPham.Where(x => x.GiaThucTe < x.GiaGoc).GroupBy(x => x.TenSanPham)
     .Select(group => group.First())
     .ToList(); 
@@ -25,7 +25,7 @@
     }
     foreach (var id in temp.Distinct().ToList())
     {
-        var km = (await khuyenMaiService.GetAllKhuyenMai()).FirstOrDefault(x => x.IdKhuyenMai == id);
+        var km = (await KhuyenMaiservice.GetAllKhuyenMai()).FirstOrDefault(x => x.IdKhuyenMai == id);
         tempKM.Add(km);
     }
     var saleMax = tempKM.Max(x => x.MucGiam);
@@ -67,7 +67,7 @@
                                                                     Bắt đầu tại
                                                                     <span class="u-c-brand">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}",lstSpDuocApDungKhuyenMai.Min(x=>x.GiaThucTe))</span>
                                                                 </span>
-                                                                <a class="shop-now-link btn--e-brand" href="/sanphamchitiets">SHOP NOW</a>
+                                                                <a class="shop-now-link btn--e-brand" href="/SanPhamChiTiets">SHOP NOW</a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -96,7 +96,7 @@
                                                                 <span class="u-c-brand">@string.Format(new System.Globalization.CultureInfo("vi-VN"), "{0:C0}",lstSpDuocApDungKhuyenMai.Min(x=>x.GiaThucTe))</span>
                                                             </span>
 
-                                                            <a class="shop-now-link btn--e-brand" href="/sanphamchitiets">SHOP NOW</a>
+                                                            <a class="shop-now-link btn--e-brand" href="/SanPhamChiTiets">SHOP NOW</a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -136,7 +136,7 @@
                     <div class="row">
                         <div class="col-lg-5 col-md-5 u-s-m-b-30">
 
-                            <a class="collection" href="/sanphamchitiets">
+                            <a class="collection" href="/SanPhamChiTiets">
                                 <div class="aspect aspect--bg-grey aspect--square">
 
                                     <img class="aspect__img collection__img" src="/images/Advertisement/SERMON TITLESERMON TOPIC - Made with PosterMyWall.jpg" alt="">
@@ -145,7 +145,7 @@
                         </div>
                         <div class="col-lg-7 col-md-7 u-s-m-b-30">
 
-                            <a class="collection" href="/sanphamchitiets">
+                            <a class="collection" href="/SanPhamChiTiets">
                                 <div class="aspect aspect--bg-grey aspect--1286-890">
 
                                     <img class="aspect__img collection__img" src="~/images/Advertisement/New collection fashion sale twitter post - Made with PosterMyWall.jpg" alt="">
@@ -154,7 +154,7 @@
                         </div>
                         <div class="col-lg-7 col-md-7 u-s-m-b-30">
 
-                            <a class="collection" href="/sanphamchitiets">
+                            <a class="collection" href="/SanPhamChiTiets">
                                 <div class="aspect aspect--bg-grey aspect--1286-890">
 
                                     <img class="aspect__img collection__img" src="images/Advertisement/FLYER SHOES - Made with PosterMyWall.jpg" alt="">
@@ -163,7 +163,7 @@
                         </div>
                         <div class="col-lg-5 col-md-5 u-s-m-b-30">
 
-                            <a class="collection" href="/sanphamchitiets">
+                            <a class="collection" href="/SanPhamChiTiets">
                                 <div class="aspect aspect--bg-grey aspect--square">
 
                                     <img class="aspect__img collection__img" src="/images/Advertisement/Yellow Shoe Drive Charity Instagram Post Temp - Made with PosterMyWall.jpg" alt="">
@@ -255,8 +255,8 @@
                                                     var spGroup = lstSpDuocApDungKhuyenMai.Where(x => x.TenSanPham.ToUpper().Contains(item.SanPham.ToUpper()));
                                                     if (spGroup.Any())
                                                     {
-                                                    var SaoTb = await _DanhGiaService.GetSoSaoTB(item.IdSanPhamChiTiet);
-                                                    var TongSoDanhGia = await _DanhGiaService.GetTongSoDanhGia(item.IdSanPhamChiTiet);
+                                                    var SaoTb = await _DanhGiaservice.GetSoSaoTB(item.IdSanPhamChiTiet);
+                                                    var TongSoDanhGia = await _DanhGiaservice.GetTongSoDanhGia(item.IdSanPhamChiTiet);
                                                     <div class="u-s-m-b-30">
                                                         <div class="product-o product-o--hover-on" data-id="@item.IdSanPhamChiTiet">
                                                             <div class="product-o__wrap">

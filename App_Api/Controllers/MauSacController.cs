@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.ViewModels.LoaiGiayDTO;
@@ -66,7 +66,7 @@ namespace App_Api.Controllers
             try
             {
                 var nameMauSac = mauSacDTO.TenMauSac!.Trim().ToLower();
-                if (!_bazaizaiContext.mauSacs.Where(x => x.TenMauSac!.Trim().ToLower() == nameMauSac).Any())
+                if (!_bazaizaiContext.MauSacs.Where(x => x.TenMauSac!.Trim().ToLower() == nameMauSac).Any())
                 {
                     var mauSac = _mapper.Map<MauSacDTO>(mauSacDTO);
                     _bazaizaiContext.Attach(mauSac);

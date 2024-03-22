@@ -14,7 +14,7 @@ namespace App_Data.ViewModels.DonHangChiTiet
         public string? DiaChiNhanHang { get; set; }
         public string? TenNguoiNhan { get; set; }
         public string? SDT { get; set; }
-        public double? VoucherShop { get; set; }
+        public double? Vouchershop { get; set; }
         public string? PhuongThucThanhToan { get; set; }
     }
 }

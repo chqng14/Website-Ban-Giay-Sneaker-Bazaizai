@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -17,19 +17,19 @@ namespace App_Api.Controllers
     {
         private readonly IAllRepo<KhuyenMaiChiTiet> repos;
         BazaizaiContext context = new BazaizaiContext();
-        DbSet<KhuyenMaiChiTiet> khuyenMaiChiTiets;
+        DbSet<KhuyenMaiChiTiet> KhuyenMaiChiTiets;
         private readonly IMapper _mapper;
         public KhuyenMaiChiTietController(IMapper mapper)
         {
-            khuyenMaiChiTiets = context.khuyenMaiChiTiets;
-            AllRepo<KhuyenMaiChiTiet> all = new AllRepo<KhuyenMaiChiTiet>(context, khuyenMaiChiTiets);
+            KhuyenMaiChiTiets = context.KhuyenMaiChiTiets;
+            AllRepo<KhuyenMaiChiTiet> all = new AllRepo<KhuyenMaiChiTiet>(context, KhuyenMaiChiTiets);
             repos = all;
             _mapper=mapper;
         }
         [HttpGet]
         public async Task<IEnumerable<KhuyenMaiChiTietDTO>> GetAllKhuyenMai()
         {
-            var allSale = (await khuyenMaiChiTiets.Include(c=>c.KhuyenMai).Include(c=>c.SanPhamChiTiet).ThenInclude(c=>c.SanPham).ToListAsync()).ToList();
+            var allSale = (await KhuyenMaiChiTiets.Include(c=>c.KhuyenMai).Include(c=>c.SanPhamChiTiet).ThenInclude(c=>c.SanPham).ToListAsync()).ToList();
             var allSaleDTO = _mapper.Map<List<KhuyenMaiChiTietDTO>>(allSale);
             return allSaleDTO;
         }

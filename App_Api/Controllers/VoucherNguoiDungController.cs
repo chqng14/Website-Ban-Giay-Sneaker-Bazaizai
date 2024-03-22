@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -29,8 +29,8 @@ namespace App_Api.Controllers
         DbSet<Voucher> voucher;
         public VoucherNguoiDungController(IMapper mapper)
         {
-            voucherNguoiDung = DbContextModel.voucherNguoiDungs;
-            voucher = DbContextModel.vouchers;
+            voucherNguoiDung = DbContextModel.VoucherNguoiDungs;
+            voucher = DbContextModel.Vouchers;
             AllRepo<VoucherNguoiDung> VcNd = new AllRepo<VoucherNguoiDung>(DbContextModel, voucherNguoiDung);
             VcNguoiDungRepos = VcNd;
             voucherNguoiDungRep = new VoucherNguoiDungRepos();
@@ -101,7 +101,7 @@ namespace App_Api.Controllers
 
         // PUT api/<ChatLieuController>/5
         [HttpPut("UpdateVoucherNguoiDung{id}")]
-        public bool UpdateVoucherNguoiDungSauKhiDung(VoucherNguoiDungDTO VcDTO)
+        public bool UpdateVoucherNguoiDungsauKhiDung(VoucherNguoiDungDTO VcDTO)
         {
             var voucherGet = VcNguoiDungRepos.GetAll().FirstOrDefault(c => c.IdVouCherNguoiDung == VcDTO.IdVouCherNguoiDung);
             if (voucherGet != null)
@@ -157,7 +157,7 @@ namespace App_Api.Controllers
         public async Task<bool> TangVoucherChoNguoiDungMoi(string ma)
         {
             int i = 0;
-            var lstNguoidungNew = await voucherNguoiDungRep.GetLstNguoiDUngMoi();
+            var lstNguoidungNew = await voucherNguoiDungRep.GetLstNguoiDungMoi();
             if (lstNguoidungNew.Any())
             {
                 foreach (var item in lstNguoidungNew)

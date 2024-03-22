@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -15,11 +15,11 @@ namespace App_Api.Controllers
     {
         private readonly IAllRepo<PhuongThucThanhToanChiTiet> allRepo;
         BazaizaiContext dbContext = new BazaizaiContext();
-        DbSet<PhuongThucThanhToanChiTiet> phuongThucThanhToanChiTiets;
+        DbSet<PhuongThucThanhToanChiTiet> PhuongThucThanhToanChiTiets;
         public PTThanhToanChiTietController()
         {
-            phuongThucThanhToanChiTiets = dbContext.phuongThucThanhToanChiTiets;
-            AllRepo<PhuongThucThanhToanChiTiet> all = new AllRepo<PhuongThucThanhToanChiTiet>(dbContext, phuongThucThanhToanChiTiets);
+            PhuongThucThanhToanChiTiets = dbContext.PhuongThucThanhToanChiTiets;
+            AllRepo<PhuongThucThanhToanChiTiet> all = new AllRepo<PhuongThucThanhToanChiTiet>(dbContext, PhuongThucThanhToanChiTiets);
             allRepo = all;
         }
         // GET: api/<PTThanhToanChiTiet>

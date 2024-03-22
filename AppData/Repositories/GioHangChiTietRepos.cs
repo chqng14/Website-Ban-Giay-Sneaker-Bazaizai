@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.ViewModels.GioHangChiTiet;
@@ -29,7 +29,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                context.gioHangChiTiets.Add(item);
+                context.GioHangChiTiets.Add(item);
                 context.SaveChanges();
                 return true;
             }
@@ -43,8 +43,8 @@ namespace App_Data.Repositories
         {
             try
             {
-                var id = context.gioHangChiTiets.Find(item.IdGioHangChiTiet);
-                context.gioHangChiTiets.Update(id);
+                var id = context.GioHangChiTiets.Find(item.IdGioHangChiTiet);
+                context.GioHangChiTiets.Update(id);
                 context.SaveChanges();
                 return true;
             }
@@ -56,12 +56,12 @@ namespace App_Data.Repositories
 
         public IEnumerable<GioHangChiTiet> GetAll()
         {
-            return context.gioHangChiTiets.Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.SanPham).ToList();
+            return context.GioHangChiTiets.Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.SanPham).ToList();
         }
 
         public IEnumerable<GioHangChiTietDTO> GetAllGioHangDTO()
         {
-            var giohang = context.gioHangChiTiets
+            var giohang = context.GioHangChiTiets
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.SanPham)
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.MauSac)
                 .Include(x => x.SanPhamChiTiet).ThenInclude(spct => spct.KichCo)
@@ -75,8 +75,8 @@ namespace App_Data.Repositories
         {
             try
             {
-                var id = context.gioHangChiTiets.Find(item.IdGioHangChiTiet);
-                context.gioHangChiTiets.Remove(item);
+                var id = context.GioHangChiTiets.Find(item.IdGioHangChiTiet);
+                context.GioHangChiTiets.Remove(item);
                 context.SaveChanges();
                 return true;
             }
@@ -88,7 +88,7 @@ namespace App_Data.Repositories
 
         public async Task<List<SanPhamGioHangViewModel>> GetAllSanPhamGioHangWhenLoginAynsc(string idNguoiDung)
         {
-            var data = await context.gioHangChiTiets
+            var data = await context.GioHangChiTiets
                 .Where(gh => gh.IdNguoiDung == idNguoiDung)
                 .Include(it => it.SanPhamChiTiet).ThenInclude(it => it.Anh)
                 .Include(it => it.SanPhamChiTiet).ThenInclude(it => it.SanPham)

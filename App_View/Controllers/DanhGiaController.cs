@@ -13,14 +13,14 @@ namespace App_View.Controllers
 
         private readonly UserManager<NguoiDung> _userManager;
         private readonly SignInManager<NguoiDung> _signInManager;
-        private IDanhGiaService _danhGiaService;
+        private IDanhGiaservice _DanhGiaservice;
 
-        public DanhGiaController(IDanhGiaService danhGiaService, UserManager<NguoiDung> userManager,
+        public DanhGiaController(IDanhGiaservice DanhGiaservice, UserManager<NguoiDung> userManager,
             SignInManager<NguoiDung> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _danhGiaService = danhGiaService;
+            _DanhGiaservice = DanhGiaservice;
         }
 
 
@@ -32,7 +32,7 @@ namespace App_View.Controllers
         [HttpPost]
         public async Task<IActionResult> AddDanhGia(DanhGia danhgia)
         {
-            var listdanhgia = await _danhGiaService.GetDanhGiaById(danhgia.IdDanhGia);
+            var listdanhgia = await _DanhGiaservice.GetDanhGiaById(danhgia.IdDanhGia);
             if (listdanhgia != null)
             {
                 return Json(new { mess = "Bạn đã đánh giá sản phẩm này rồi!" });
@@ -40,7 +40,7 @@ namespace App_View.Controllers
             var user = await _userManager.GetUserAsync(User);
             danhgia.IdNguoiDung = await _userManager.GetUserIdAsync(user);
             danhgia.ParentId = null;
-            await _danhGiaService.CreateDanhGia(danhgia);
+            await _DanhGiaservice.CreateDanhGia(danhgia);
             string[] parts = danhgia.IdDanhGia.Split('*');
             var idHoaDon = parts[1];
             return Json(new { iddanhgia = danhgia.IdDanhGia });

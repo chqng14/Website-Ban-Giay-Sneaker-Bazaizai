@@ -6,11 +6,11 @@ using Newtonsoft.Json;
 
 namespace App_View.Services
 {
-    public class VoucherServices : IVoucherServices
+    public class Voucherservices : IVoucherservices
     {
         private readonly HttpClient _httpClient;
 
-        public VoucherServices(HttpClient httpClient)
+        public Voucherservices(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
@@ -258,7 +258,7 @@ namespace App_View.Services
                 return false;
             }
         }
-        public async Task<bool> UpdateVoucherSoluong(string idVoucher)
+        public async Task<bool> UpdateVouchersoluong(string idVoucher)
         {
             try
             {

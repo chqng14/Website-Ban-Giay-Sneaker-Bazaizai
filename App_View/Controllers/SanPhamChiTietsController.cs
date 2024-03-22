@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using App_Data.DbContextt;
+using App_Data.DbContext;
 using App_Data.Models;
 using App_Data.IRepositories;
 using App_View.IServices;
@@ -20,13 +20,13 @@ namespace App_View.Controllers
 {
     public class SanPhamChiTietsController : Controller
     {
-        private readonly ISanPhamChiTietService _sanPhamChiTietService;
+        private readonly ISanPhamChiTietservice _SanPhamChiTietservice;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         private readonly HttpClient _httpClient;
-        public SanPhamChiTietsController(ISanPhamChiTietService sanPhamChiTietService, UserManager<NguoiDung> userManager, SignInManager<NguoiDung> signInManager, HttpClient httpClient)
+        public SanPhamChiTietsController(ISanPhamChiTietservice SanPhamChiTietservice, UserManager<NguoiDung> userManager, SignInManager<NguoiDung> signInManager, HttpClient httpClient)
         {
-            _sanPhamChiTietService = sanPhamChiTietService;
+            _SanPhamChiTietservice = SanPhamChiTietservice;
             _userManager = userManager;
             _signInManager = signInManager;
             _httpClient = httpClient;
@@ -69,13 +69,13 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> LoadPartialViewSanPhamChiTiet(string idSanPhamChiTiet)
         {
-            var model = await _sanPhamChiTietService.GetItemDetailViewModelAynsc(idSanPhamChiTiet);
+            var model = await _SanPhamChiTietservice.GetItemDetailViewModelAynsc(idSanPhamChiTiet);
             return PartialView("_ModalSanPhamChiTietPartialView", model);
         }
 
         public async Task<IActionResult> Details(string id)
         {
-            var data = await _sanPhamChiTietService.GetItemDetailViewModelAynsc(id);
+            var data = await _SanPhamChiTietservice.GetItemDetailViewModelAynsc(id);
 
             var checkLogin = _userManager.GetUserId(User);
 
@@ -100,7 +100,7 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> LoadPartialDetailProduct(string id)
         {
-            var data = await _sanPhamChiTietService.GetItemDetailViewModelAynsc(id);
+            var data = await _SanPhamChiTietservice.GetItemDetailViewModelAynsc(id);
 
             var stopwatch = new System.Diagnostics.Stopwatch();
             stopwatch.Start();
@@ -134,13 +134,16 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> GetItemDetailViewModelWhenSelectColor([FromQuery] string id, [FromQuery] string mauSac)
         {
-            return Ok(await _sanPhamChiTietService.GetItemDetailViewModelWhenSelectColorAynsc(id, mauSac));
+            return Ok(await _SanPhamChiTietservice.GetItemDetailViewModelWhenSelectColorAynsc(id, mauSac));
         }
 
         public async Task<IActionResult> GetItemDetailViewModelWhenSelectSize([FromQuery] string id, [FromQuery] int size)
         {
-            return Ok(await _sanPhamChiTietService.GetItemDetailViewModelWhenSelectSizeAynsc(id, size));
+            return Ok(await _SanPhamChiTietservice.GetItemDetailViewModelWhenSelectSizeAynsc(id, size));
         }
-
+        public IActionResult test()
+        {
+            return View();
+        }
     }
 }

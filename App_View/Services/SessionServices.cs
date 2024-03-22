@@ -13,8 +13,8 @@ namespace App_View.Services
             var JsonData = session.GetString(key);
             if (JsonData == null) return new List<GioHangChiTietDTO>();
             //chuyển dữ liệu
-            var giohangSession = JsonConvert.DeserializeObject<List<GioHangChiTietDTO>>(JsonData);
-            return giohangSession;
+            var GioHangsession = JsonConvert.DeserializeObject<List<GioHangChiTietDTO>>(JsonData);
+            return GioHangsession;
         }
         public static void SetObjToSession(ISession session, string key, List<GioHangChiTietDTO> value)
         {
@@ -32,8 +32,8 @@ namespace App_View.Services
             var JsonData = session.GetString(key);
             if (JsonData == null) return new HoaDonTest();
             //chuyển dữ liệu
-            var giohangSession = JsonConvert.DeserializeObject<HoaDonTest>(JsonData);
-            return giohangSession;
+            var GioHangsession = JsonConvert.DeserializeObject<HoaDonTest>(JsonData);
+            return GioHangsession;
         }
         public static void SetIdToSession(ISession session, string key, string value)
         {
@@ -49,8 +49,8 @@ namespace App_View.Services
                 return null;
             }
             //chuyển dữ liệu
-            var giohangSession = JsonConvert.DeserializeObject<string>(JsonData);
-            return giohangSession;
+            var GioHangsession = JsonConvert.DeserializeObject<string>(JsonData);
+            return GioHangsession;
         }
 
         public static void SetIPNToSession(ISession session, string key, OrderInfoModel value)
@@ -63,8 +63,8 @@ namespace App_View.Services
             //lấy string
             var JsonData = session.GetString(key);
             //chuyển dữ liệu
-            var giohangSession = JsonConvert.DeserializeObject<OrderInfoModel>(JsonData);
-            return giohangSession;
+            var GioHangsession = JsonConvert.DeserializeObject<OrderInfoModel>(JsonData);
+            return GioHangsession;
         }
         public static List<string> GetLstString(ISession session, string key)
         {

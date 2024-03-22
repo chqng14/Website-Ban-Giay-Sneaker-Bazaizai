@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.Models;
 using App_View.IServices;
 using App_View.Services;
@@ -15,17 +15,17 @@ namespace App_View.Controllers
     {
 
         private readonly BazaizaiContext _context;
-        private readonly IVoucherNguoiDungServices _voucherND;
+        private readonly IVoucherNguoiDungservices _voucherND;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
-        private readonly IVoucherServices _voucherSV;
-        public VoucherNguoiDungController(IVoucherNguoiDungServices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IVoucherServices voucherServices)
+        private readonly IVoucherservices _VouchersV;
+        public VoucherNguoiDungController(IVoucherNguoiDungservices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IVoucherservices Voucherservices)
         {
             _voucherND = voucherNDServices;
             _context = new BazaizaiContext();
             _signInManager = signInManager;
             _userManager = userManager;
-            _voucherSV = voucherServices;
+            _VouchersV = Voucherservices;
         }
         public async Task<IActionResult> Voucher_wallet(int? loaiHinh)
         {
@@ -136,7 +136,7 @@ namespace App_View.Controllers
         {
             var idNguoiDung = _userManager.GetUserId(User);
             var voucherNguoiDung = await _voucherND.GetAllVoucherNguoiDungByID(idNguoiDung);
-            var voucher = await _voucherSV.GetVoucherByMa(ma);
+            var voucher = await _VouchersV.GetVoucherByMa(ma);
             foreach (var item in voucherNguoiDung)
             {
                 if (item.IdVouCher == voucher.IdVoucher && item.TrangThai == (int)TrangThaiVoucherNguoiDung.KhaDung)

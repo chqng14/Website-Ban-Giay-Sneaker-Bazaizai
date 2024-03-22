@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -22,7 +22,7 @@ namespace App_Api.Controllers
         private readonly IMapper _mapper;
         public KieuDeGiayController(IMapper mapper)
         {
-            KieuDeGiay = dbContext.kieuDeGiays;
+            KieuDeGiay = dbContext.KieuDeGiays;
             AllRepo<KieuDeGiay> all = new AllRepo<KieuDeGiay>(dbContext, KieuDeGiay);
             allRepo = all;
             _mapper = mapper;
@@ -70,7 +70,7 @@ namespace App_Api.Controllers
             try
             {
                 var nameKieuDe = kieuDeGiayDTO.TenKieuDeGiay!.Trim().ToLower();
-                if (!dbContext.kieuDeGiays.Where(x => x.TenKieuDeGiay!.Trim().ToLower() == nameKieuDe).Any())
+                if (!dbContext.KieuDeGiays.Where(x => x.TenKieuDeGiay!.Trim().ToLower() == nameKieuDe).Any())
                 {
                     var kieuDe = _mapper.Map<KieuDeGiay>(kieuDeGiayDTO);
                     dbContext.Attach(kieuDe);

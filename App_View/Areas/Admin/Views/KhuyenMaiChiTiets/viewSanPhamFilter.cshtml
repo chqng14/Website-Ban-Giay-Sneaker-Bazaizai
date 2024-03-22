@@ -1,4 +1,4 @@
-﻿@using App_Data.DbContextt;
+﻿@using App_Data.DbContext;
 @using App_Data.ViewModels.SanPhamChiTietViewModel;
 @using App_View.Models.ViewModels;
 @using static App_Data.Repositories.TrangThai;
@@ -43,7 +43,7 @@
         @foreach (var product in Model)
         {
             BazaizaiContext bazaizaiContext = new BazaizaiContext();
-            var spct = bazaizaiContext.sanPhamChiTiets.Find(product.IdChiTietSp);
+            var spct = bazaizaiContext.SanPhamChiTiets.Find(product.IdChiTietSp);
             <tr>
                 <td class="sorting_1">
 

@@ -1,13 +1,15 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using App_Data.ViewModels.KhuyenMaiDTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SixLabors.ImageSharp.Formats.Jpeg;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using SixLabors.ImageSharp.Processing;
 
 namespace App_Api.Controllers
 {
@@ -17,11 +19,11 @@ namespace App_Api.Controllers
     {
         private readonly IAllRepo<KhuyenMai> repos;
         BazaizaiContext context = new BazaizaiContext();
-        DbSet<KhuyenMai> khuyenMais;
+        DbSet<KhuyenMai> KhuyenMais;
         public KhuyenMaiController()
         {
-            khuyenMais = context.khuyenMais;
-            AllRepo<KhuyenMai> all = new AllRepo<KhuyenMai>(context, khuyenMais);
+            KhuyenMais = context.KhuyenMais;
+            AllRepo<KhuyenMai> all = new AllRepo<KhuyenMai>(context, KhuyenMais);
             repos = all;
         }
         [HttpGet]
@@ -32,7 +34,7 @@ namespace App_Api.Controllers
 
         [HttpPost("Create-KhuyenMai")]
 
-        public async Task<IActionResult> CreateKhuyenMaiAsync(string id,string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, int loaiHinh, IFormFile formFile)
+        public async Task<IActionResult> CreateKhuyenMaiAsync([FromForm] KhuyenMaiDTO khuyenMai, IFormFile formFile)
         {
             try
             {
@@ -72,14 +74,14 @@ namespace App_Api.Controllers
                     using var outputStream = new FileStream(outputPath, FileMode.Create);
                     await image.SaveAsync(outputStream, encoder);
                     KhuyenMai KhuyenMai = new KhuyenMai();
-                    KhuyenMai.TenKhuyenMai = Ten;
+                    KhuyenMai.TenKhuyenMai = khuyenMai.TenKhuyenMai;
                     KhuyenMai.MaKhuyenMai = MaTS;
-                    KhuyenMai.IdKhuyenMai = id;
-                    KhuyenMai.TrangThai = trangThai;
-                    KhuyenMai.NgayBatDau = ngayBD;
-                    KhuyenMai.NgayKetThuc = ngayKT;
-                    KhuyenMai.MucGiam = mucGiam;
-                    KhuyenMai.LoaiHinhKM = loaiHinh;
+                    KhuyenMai.IdKhuyenMai = khuyenMai.IdKhuyenMai;
+                    KhuyenMai.TrangThai = khuyenMai.TrangThai;
+                    KhuyenMai.NgayBatDau = khuyenMai.NgayBatDau;
+                    KhuyenMai.NgayKetThuc = khuyenMai.NgayKetThuc;
+                    KhuyenMai.MucGiam = khuyenMai.MucGiam;
+                    KhuyenMai.LoaiHinhKM = khuyenMai.LoaiHinhKM;
                     KhuyenMai.Url = fileName;
 
                     repos.AddItem(KhuyenMai);
@@ -94,8 +96,8 @@ namespace App_Api.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> EditKhuyenMaiAsync(string id, string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, int loaiHinh, IFormFile formFile)
+        [HttpPut("Edit")]
+        public async Task<IActionResult> EditKhuyenMaiAsync([FromForm] KhuyenMaiDTO khuyenMai, IFormFile formFile)
         {
             string currentDirectory = Directory.GetCurrentDirectory();
             string rootPath = Directory.GetParent(currentDirectory).FullName;
@@ -124,40 +126,40 @@ namespace App_Api.Controllers
 
                 using var outputStream = new FileStream(outputPath, FileMode.Create);
                 await image.SaveAsync(outputStream, encoder);
-                var KhuyenMai = repos.GetAll().First(p => p.IdKhuyenMai == id);
-                KhuyenMai.TenKhuyenMai = Ten;
-                KhuyenMai.TrangThai = trangThai;
-                KhuyenMai.NgayBatDau = ngayBD;
-                KhuyenMai.NgayKetThuc = ngayKT;
-                KhuyenMai.MucGiam = mucGiam;
-                KhuyenMai.LoaiHinhKM = loaiHinh;
+                var KhuyenMai = repos.GetAll().First(p => p.IdKhuyenMai == khuyenMai.IdKhuyenMai);
+                KhuyenMai.TenKhuyenMai = khuyenMai.TenKhuyenMai;
+                KhuyenMai.TrangThai = khuyenMai.TrangThai;
+                KhuyenMai.NgayBatDau = khuyenMai.NgayBatDau;
+                KhuyenMai.NgayKetThuc = khuyenMai.NgayKetThuc;
+                KhuyenMai.MucGiam = khuyenMai.MucGiam;
+                KhuyenMai.LoaiHinhKM = khuyenMai.LoaiHinhKM;
                 KhuyenMai.Url = fileName;
                 repos.EditItem(KhuyenMai);
             }
             else 
             {
-                var KhuyenMai = await context.khuyenMais.FindAsync(id);
-                KhuyenMai.TenKhuyenMai = Ten;
-                KhuyenMai.TrangThai = trangThai;
-                KhuyenMai.NgayBatDau = ngayBD;
-                KhuyenMai.NgayKetThuc = ngayKT;
-                KhuyenMai.MucGiam = mucGiam;
-                KhuyenMai.LoaiHinhKM = loaiHinh;
+                var KhuyenMai = await context.KhuyenMais.FindAsync(khuyenMai.IdKhuyenMai);
+                KhuyenMai.TenKhuyenMai = khuyenMai.TenKhuyenMai;
+                KhuyenMai.TrangThai = khuyenMai.TrangThai;
+                KhuyenMai.NgayBatDau = khuyenMai.NgayBatDau;
+                KhuyenMai.NgayKetThuc = khuyenMai.NgayKetThuc;
+                KhuyenMai.MucGiam = khuyenMai.MucGiam;
+                KhuyenMai.LoaiHinhKM = khuyenMai.LoaiHinhKM;
                 repos.EditItem(KhuyenMai);
             }
             return Ok();
         }
         [HttpPut("EditNoiImage")]
-        public async Task<IActionResult> EditKhuyenMai(string id, string Ten, DateTime ngayBD, DateTime ngayKT, int trangThai, decimal mucGiam, int loaiHinh)
+        public async Task<IActionResult> EditKhuyenMai([FromBody] KhuyenMaiDTO khuyenMai)
         {
-                var KhuyenMai = await context.khuyenMais.FindAsync(id);
-                KhuyenMai.TenKhuyenMai = Ten;
-                KhuyenMai.TrangThai = trangThai;
-                KhuyenMai.NgayBatDau = ngayBD;
-                KhuyenMai.NgayKetThuc = ngayKT;
-                KhuyenMai.MucGiam = mucGiam;
-                KhuyenMai.LoaiHinhKM = loaiHinh;
-                repos.EditItem(KhuyenMai);
+                var KhuyenMai = await context.KhuyenMais.FindAsync(khuyenMai.IdKhuyenMai);
+            KhuyenMai.TenKhuyenMai = khuyenMai.TenKhuyenMai;
+            KhuyenMai.TrangThai = khuyenMai.TrangThai;
+            KhuyenMai.NgayBatDau = khuyenMai.NgayBatDau;
+            KhuyenMai.NgayKetThuc = khuyenMai.NgayKetThuc;
+            KhuyenMai.MucGiam = khuyenMai.MucGiam;
+            KhuyenMai.LoaiHinhKM = khuyenMai.LoaiHinhKM;
+            repos.EditItem(KhuyenMai);
             return Ok();
         }
 

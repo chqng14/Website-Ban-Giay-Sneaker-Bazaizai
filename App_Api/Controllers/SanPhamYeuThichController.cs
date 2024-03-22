@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.ViewModels.SanPhamYeuThichDTO;
@@ -28,7 +28,7 @@ namespace App_Api.Controllers
         public List<SanPhamYeuThichViewModel> GetDanhSachSanPhamYeuThich(string idNguoiDung)
         {
             var lstSanPhamYeuThich = _bazaizaiContext
-             .sanPhamYeuThiches
+             .SanPhamYeuThichs
              .Where(spyt => spyt.IdNguoiDung == idNguoiDung)
              .Include(yt => yt.SanPhamChiTiet).ThenInclude(sp => sp.SanPham)
              .Include(yt => yt.SanPhamChiTiet).ThenInclude(sp => sp.LoaiGiay)
@@ -42,7 +42,7 @@ namespace App_Api.Controllers
         [HttpPost("add-sanphamyeuthich")]
         public void AddSanPhamYeuThich(SanPhamYeuThichDTO sanPhamYeuThichDTO)
         {
-            var exists = _bazaizaiContext.sanPhamYeuThiches
+            var exists = _bazaizaiContext.SanPhamYeuThichs
                  .Any(spyt =>
                  spyt.IdNguoiDung == sanPhamYeuThichDTO.IdNguoiDung &&
                  spyt.IdSanPhamChiTiet == sanPhamYeuThichDTO.IdSanPhamChiTiet
@@ -59,7 +59,7 @@ namespace App_Api.Controllers
         public void RemoveSanPhamYeuThich(SanPhamYeuThichDTO sanPhamYeuThichDTO)
         {
             var sanPhamYeuThich = _bazaizaiContext
-                .sanPhamYeuThiches
+                .SanPhamYeuThichs
                 .Where(yt => yt.IdNguoiDung == sanPhamYeuThichDTO.IdNguoiDung && yt.IdSanPhamChiTiet == sanPhamYeuThichDTO.IdSanPhamChiTiet).FirstOrDefault();
             _allRepoSanPhamYeuThich.RemoveItem(sanPhamYeuThich!);
         }

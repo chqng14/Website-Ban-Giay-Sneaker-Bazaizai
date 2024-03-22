@@ -11,7 +11,7 @@ namespace App_Data.Migrations
         {
             migrationBuilder.AddColumn<DateTime>(
                 name: "NgayTao",
-                table: "vouchers",
+                table: "Vouchers",
                 type: "datetime2",
                 nullable: false,
                 defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
@@ -21,7 +21,7 @@ namespace App_Data.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "NgayTao",
-                table: "vouchers");
+                table: "Vouchers");
         }
     }
 }

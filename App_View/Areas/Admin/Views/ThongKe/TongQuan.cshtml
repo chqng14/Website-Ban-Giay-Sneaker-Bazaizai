@@ -5,7 +5,7 @@
 @using static App_Data.Repositories.TrangThai;
 @inject SignInManager<NguoiDung> SignInManager
 @inject UserManager<NguoiDung> UserManager
-@inject IDanhGiaService _DanhGiaService
+@inject IDanhGiaservice _DanhGiaservice
 @inject IThongKeService _ThongKeService
 @inject IThongTinGHServices _ThongTinGHServices
 @inject IHoaDonServices _HoaDonServices
@@ -17,7 +17,7 @@
 
 
 @{
-    _DanhGiaService = new DanhGiaService();
+    _DanhGiaservice = new DanhGiaservice();
     _ThongKeService = new ThongKeService();
     _ThongTinGHServices = new ThongTinGHServices();
     _HoaDonServices = new HoaDonServices();
@@ -29,8 +29,8 @@
     var lsthoaDonthangnay = (await _ThongKeService.DonHangTheoThang(thangnay, NamcuathangNay));
 
 
-    var slDanhGiaThangNay = (await _DanhGiaService.GetAllDanhGia()).Where(x => x.NgayDanhGia.Value.Month == DateTime.Now.Month && x.NgayDanhGia.Value.Year == DateTime.Now.Year).ToList().Count();
-    var slDanhGiaThangTrc = (await _DanhGiaService.GetAllDanhGia()).Where(x => x.NgayDanhGia.Value.Month == DateTime.Now.AddMonths(-1).Month && x.NgayDanhGia.Value.Year == DateTime.Now.Year).ToList().Count();
+    var slDanhGiaThangNay = (await _DanhGiaservice.GetAllDanhGia()).Where(x => x.NgayDanhGia.Value.Month == DateTime.Now.Month && x.NgayDanhGia.Value.Year == DateTime.Now.Year).ToList().Count();
+    var slDanhGiaThangTrc = (await _DanhGiaservice.GetAllDanhGia()).Where(x => x.NgayDanhGia.Value.Month == DateTime.Now.AddMonths(-1).Month && x.NgayDanhGia.Value.Year == DateTime.Now.Year).ToList().Count();
     var DoanhThuThangNay = (double)(await _ThongKeService.DoanhThuTheoThang(DateTime.Now.Month));
     var DoanhThuThangTruoc = (double)(await _ThongKeService.DoanhThuTheoThang(DateTime.Now.AddMonths(-1).Month));
 
@@ -42,7 +42,14 @@
     var DonDatHangThangTrc = lsthoaDonthangTrc.Where(x => x.IdThongTinGH != null).Count();
 
 }
-
+<div class="page-header">
+    <div class="header-sub-title">
+        <nav class="breadcrumb breadcrumb-dash" style="background-color: white; ">
+            <a href="#" class="breadcrumb-item " style="text-decoration: none;"><i class="anticon anticon-home m-r-5"></i>Thống kê</a>
+            <span class="breadcrumb-item active">Tổng quan</span>
+        </nav>
+    </div>
+</div>
 <div class="row">
     <div class="col-lg-5">
         <div class="row">

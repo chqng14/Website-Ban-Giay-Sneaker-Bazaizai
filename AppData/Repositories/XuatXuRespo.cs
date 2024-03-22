@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +22,7 @@ namespace App_Data.Repositories
         {
             try
             {
-                await _context.xuatXus.AddAsync(entity);
+                await _context.XuatXus.AddAsync(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -39,7 +39,7 @@ namespace App_Data.Repositories
             {
                 var entity = await GetByKeyAsync(id);
                 if (entity == null) return false;
-                _context.xuatXus.Remove(entity);
+                _context.XuatXus.Remove(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -52,19 +52,19 @@ namespace App_Data.Repositories
 
         public async Task<XuatXu?> GetByKeyAsync(string id)
         {
-            return await _context.xuatXus.FirstOrDefaultAsync(x => x.IdXuatXu == id);
+            return await _context.XuatXus.FirstOrDefaultAsync(x => x.IdXuatXu == id);
         }
 
         public async Task<IEnumerable<XuatXu>> GetListAsync()
         {
-            return await _context.xuatXus.ToListAsync();
+            return await _context.XuatXus.ToListAsync();
         }
 
         public async Task<bool> UpdateAsync(XuatXu entity)
         {
             try
             {
-                _context.xuatXus.Update(entity);
+                _context.XuatXus.Update(entity);
                 await _context.SaveChangesAsync();
                 return true;
             }

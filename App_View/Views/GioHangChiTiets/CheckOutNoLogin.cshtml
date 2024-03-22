@@ -742,7 +742,7 @@
                         $('#textvoucher').text("");
                         loaiuudai = result.loaiuudai;
                         // Áp dụng giảm giá từ voucher
-                        var storedVouchers = JSON.parse(localStorage.getItem("vouchers")) || {}
+                        var storedVouchers = JSON.parse(localStorage.getItem("Vouchers")) || {}
                         if (storedVouchers[result.idVoucher]) {
                             toast({
                                 title: "Bạn đã sử dụng voucher này rồi,vui lòng sử dụng voucher khác!",
@@ -808,11 +808,11 @@
         function UpdateVoucher() {
             if (MucUuDai != null) {
                 $.ajax({
-                    url: '/Voucher/UpdateVoucherSoluong',
+                    url: '/Voucher/UpdateVouchersoluong',
                     type: 'POST',
                     data: { idVoucher: IdVoucher },
                     success: function (result) {
-                        console.log("UpdateVoucherSoluong");
+                        console.log("UpdateVouchersoluong");
                     },
                     error: function (xhr, status, error) {
                         console.log(error);
@@ -831,7 +831,7 @@
 
             // Thời gian hết hiệu lực của JWT (ví dụ: 5 năm)
             var expirationTime = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 * 5;
-            var storedVouchers = JSON.parse(localStorage.getItem("vouchers")) || {};
+            var storedVouchers = JSON.parse(localStorage.getItem("Vouchers")) || {};
             // Đặt giá trị cho Issuer và Audience
             var issuer = "BazaizaiStore"; // Người phát hành
             var audience = "User"; // Đối tượng
@@ -849,7 +849,7 @@
 
             // Lưu JWT vào danh sách các voucher trong localStorage
             storedVouchers[voucherCode] = true;
-            localStorage.setItem("vouchers", JSON.stringify(storedVouchers));
+            localStorage.setItem("Vouchers", JSON.stringify(storedVouchers));
 
             // Thực hiện các hành động khác nếu cần
         }

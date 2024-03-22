@@ -1,7 +1,7 @@
 ﻿@using App_Data.ViewModels.KhuyenMaiChiTietDTO;
 @using App_Data.ViewModels.SanPhamChiTietViewModel;
 @using App_View.IServices;
-@inject ISanPhamChiTietService sanPhamChiTietService;
+@inject ISanPhamChiTietservice SanPhamChiTietservice;
 @foreach (var spSale in Model)
 {
     var spct = ((List<ItemShopViewModel>)ViewBag.lstSpct).FirstOrDefault(x => x.IdChiTietSp == spSale.IdSanPhamChiTiet);
@@ -72,7 +72,7 @@
      style="width: 16.67%;">
     <div class="_00qJSX kK-mfd">
         <div class="hJ4n7F u4f1Yx">
-            <a href="/sanphamchitiets"
+            <a href="/SanPhamChiTiets"
                role="button"
                data-is-ssr-see-all-button="false"
                class="tQx6Fj _5Hogue PwG79a _5+DP0m">

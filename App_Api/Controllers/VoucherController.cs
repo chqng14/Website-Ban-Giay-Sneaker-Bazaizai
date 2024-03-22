@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -24,15 +24,15 @@ namespace App_Api.Controllers
         private readonly IAllRepo<Voucher> allRepo;
         private readonly IMapper _mapper;
         BazaizaiContext DbContextModel = new BazaizaiContext();
-        DbSet<Voucher> vouchers;
+        DbSet<Voucher> Vouchers;
         DbSet<VoucherNguoiDung> voucherNguoiDung;
         public VoucherController(IMapper mapper)
         {
-            voucherNguoiDung = DbContextModel.voucherNguoiDungs;
+            voucherNguoiDung = DbContextModel.VoucherNguoiDungs;
             AllRepo<VoucherNguoiDung> VcNd = new AllRepo<VoucherNguoiDung>(DbContextModel, voucherNguoiDung);
             VcNguoiDungRepos = VcNd;
-            vouchers = DbContextModel.vouchers;
-            AllRepo<Voucher> all = new AllRepo<Voucher>(DbContextModel, vouchers);
+            Vouchers = DbContextModel.Vouchers;
+            AllRepo<Voucher> all = new AllRepo<Voucher>(DbContextModel, Vouchers);
             allRepo = all;
             _mapper = mapper;
         }
@@ -57,14 +57,14 @@ namespace App_Api.Controllers
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             var random = new Random();
-            List<Voucher> vouchers = GetAllVoucher(); // Lấy danh sách các mã khuyến mãi hiện có
+            List<Voucher> Vouchers = GetAllVoucher(); // Lấy danh sách các mã khuyến mãi hiện có
             bool isDuplicate = false; // Biến kiểm tra trùng lặp
             string voucherCode = ""; // Biến lưu mã khuyến mãi ngẫu nhiên
             do
             {
                 voucherCode = new string(Enumerable.Repeat(chars, 8)
                     .Select(s => s[random.Next(s.Length)]).ToArray()); // Tạo mã khuyến mãi ngẫu nhiên
-                isDuplicate = vouchers.Any(v => v.MaVoucher == voucherCode); // Kiểm tra xem mã khuyến mãi có trùng với mã nào trong danh sách không
+                isDuplicate = Vouchers.Any(v => v.MaVoucher == voucherCode); // Kiểm tra xem mã khuyến mãi có trùng với mã nào trong danh sách không
             } while (isDuplicate); // Nếu trùng thì lặp lại quá trình tạo và kiểm tra
 
             return voucherCode; // Trả về mã khuyến mãi không trùng

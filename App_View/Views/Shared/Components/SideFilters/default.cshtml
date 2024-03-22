@@ -21,7 +21,7 @@
                                 <ul class="shop-w__category-list gl-scroll">
                                     <li>
 
-                                        <a href="/sanphamchitiets">Tất cả</a>
+                                        <a href="/SanPhamChiTiets">Tất cả</a>
 
                                         <span class="category-list__text u-s-m-l-6">(All)</span>
                                     </li>
@@ -32,7 +32,7 @@
                                         {
                                             <li>
 
-                                                <a href="/sanphamchitiets?brand=@item.Ten">@item.Ten</a>
+                                                <a href="/SanPhamChiTiets?brand=@item.Ten">@item.Ten</a>
 
                                                 <span class="category-list__text u-s-m-l-6">(@item.SoLuong)</span>
                                             </li>
@@ -300,7 +300,7 @@
                 ...data
             };
             $.ajax({
-                url: brandParam != null ? '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamchiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
+                url: brandParam != null ? '/SanPhamChiTiets/LoadPartialViewDanhSachSanPhamNguoiDung?brand=' + brandParam : '/SanPhamChiTiets/LoadPartialViewDanhSachSanPhamNguoiDung',
                 type: 'POST',
                 data: JSON.stringify(filterdata),
                 contentType: 'application/json',

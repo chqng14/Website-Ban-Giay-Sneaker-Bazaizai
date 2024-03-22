@@ -1,4 +1,4 @@
-﻿using App_Data.DbContextt;
+﻿using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
@@ -79,9 +79,9 @@ namespace App_Api.Controllers
         [HttpPut("UpdateTrangThai")]
         public async Task<bool> UpdateTrangThai(string idThongTin)
         {
-            var thongTinGiaoHangs = thongTinGHRepos.GetAll();
+            var ThongTinGiaoHangs = thongTinGHRepos.GetAll();
 
-            foreach (var item in thongTinGiaoHangs)
+            foreach (var item in ThongTinGiaoHangs)
             {
                 if (item.TrangThai == 0)
                 {
@@ -90,7 +90,7 @@ namespace App_Api.Controllers
                 }
             }
 
-            var thongTinGiaoHang = thongTinGiaoHangs.FirstOrDefault(c => c.IdThongTinGH == idThongTin);
+            var thongTinGiaoHang = ThongTinGiaoHangs.FirstOrDefault(c => c.IdThongTinGH == idThongTin);
             thongTinGiaoHang.TrangThai = 0;
             return thongTinGHRepos.EditThongTinGH(thongTinGiaoHang);
         }

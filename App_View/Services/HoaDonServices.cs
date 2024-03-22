@@ -231,5 +231,24 @@ namespace App_View.Services
                 return false;
             }
         }
+
+        public async Task<bool> UpdateDiaChi(string idHoaDon, string diaChi)
+        {
+            try
+            {
+                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateDiaChi?idHoaDon={idHoaDon}&diaChi={diaChi}", null);
+                if (res.IsSuccessStatusCode)
+                {
+                    return await res.Content.ReadAsAsync<bool>();
+                }
+                Console.WriteLine(await res.Content.ReadAsStringAsync());
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception("Not IsSuccessStatusCode");
+            }
+        }
     }
 }

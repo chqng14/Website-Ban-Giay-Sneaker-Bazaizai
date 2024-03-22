@@ -1,4 +1,4 @@
-﻿@using App_Data.DbContextt;
+﻿@using App_Data.DbContext;
 @using System.Globalization;
 @using App_Data.Models;
 @using App_View.IServices;
@@ -16,7 +16,7 @@
 
 @{
     var httpClient = new HttpClient(); // Tạo đối tượng HttpClient
-    var _voucherND = new VoucherNguoiDungServices(httpClient); // Truyền đối tượng HttpClient vào constructor của VoucherNguoiDungServices
+    var _voucherND = new VoucherNguoiDungservices(httpClient); // Truyền đối tượng HttpClient vào constructor của VoucherNguoiDungservices
 }
 <style>
     .modal-content {
@@ -36,7 +36,7 @@
 @functions {
     // Hàm trợ giúp để định dạng số nguyên thành tiền tệ Việt Nam
 
-    // Thay thế 'YourVoucherNguoiDungServices' bằng tên thực của dịch vụ của bạn
+    // Thay thế 'YourVoucherNguoiDungservices' bằng tên thực của dịch vụ của bạn
     public string FormatCurrency(int? value)
     {
         return string.Format(new CultureInfo("vi-VN"), "{0:C0}", value);
@@ -60,7 +60,7 @@
         justify-content: center;
         min-height: 500px;
 margin:auto">
-        <img src="/images/CatForNotThing.gif" style="width: 480px;height:360px" alt="Ảnh thông báo">
+        <img src="/images/CatForNotThing.gif" alt="Ảnh thông báo">
         <div class="u-s-m-b-15" style="text-align: center;">
             <h1 class="dash__h1 u-s-m-b-14" style="display: inline-block; margin-top: 10px;">Hiện chưa có voucher nào. </h1>
         </div>

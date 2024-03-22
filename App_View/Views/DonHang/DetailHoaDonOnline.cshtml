@@ -1,11 +1,11 @@
 ﻿@using App_View.IServices;
 @using App_View.Services;
 @model App_Data.ViewModels.HoaDon.HoaDonTest
-@inject IDanhGiaService _DanhGiaService;
+@inject IDanhGiaservice _DanhGiaservice;
 @{
     ViewData["Title"] = "DetailHoaDonOnline";
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
-    _DanhGiaService = new DanhGiaService();
+    _DanhGiaservice = new DanhGiaservice();
 }
 <link href="~/css/hoadon.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
@@ -1041,8 +1041,8 @@
             var danhGiaButtons = document.querySelectorAll('[data-modal-id="#add-danh-gia"]');
             danhGiaButtons.forEach(function (button) {
                 button.addEventListener('click', function () {
-                    var storedDanhgias = JSON.parse(localStorage.getItem("danhgias")) || {}
-                    if (storedDanhgias[button.dataset.danhgiaDetailId]) {
+                    var storedDanhGias = JSON.parse(localStorage.getItem("DanhGias")) || {}
+                    if (storedDanhGias[button.dataset.danhgiaDetailId]) {
                         toast({
                             title: "Bạn đã đánh giá sản phẩm này rồi!",
                             type: "warning",
@@ -1082,7 +1082,7 @@
 
                 // Thời gian hết hiệu lực của JWT (ví dụ: 5 năm)
                 var expirationTime = Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 365 * 5;
-                var storedDanhgias = JSON.parse(localStorage.getItem("danhgias")) || {};
+                var storedDanhGias = JSON.parse(localStorage.getItem("DanhGias")) || {};
                 // Đặt giá trị cho Issuer và Audience
                 var issuer = "BazaizaiStore"; // Người phát hành
                 var audience = "User"; // Đối tượng
@@ -1099,8 +1099,8 @@
                 var jwtToken = KJUR.jws.JWS.sign(null, { alg: "HS256", cty: "JWT" }, payload, secretKey);
 
                 // Lưu JWT vào danh sách các danhgia trong localStorage
-                storedDanhgias[danhGiaCode] = true;
-                localStorage.setItem("danhgias", JSON.stringify(storedDanhgias));
+                storedDanhGias[danhGiaCode] = true;
+                localStorage.setItem("DanhGias", JSON.stringify(storedDanhGias));
 
                 // Thực hiện các hành động khác nếu cần
             }

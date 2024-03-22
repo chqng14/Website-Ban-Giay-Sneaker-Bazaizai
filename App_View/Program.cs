@@ -1,5 +1,6 @@
 
-using App_Data.DbContextt;
+using App_View.IServices;
+using App_Data.DbContext;
 using App_Data.Models;
 using App_View.Controllers;
 using App_View.IServices;
@@ -24,7 +25,7 @@ builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 
 
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=MSI;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"));
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=(localdb)\mssqllocaldb;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"));
 
 //cái này là db online
 //builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Server = tcp:bazaizaidb.database.windows.net,1433; Initial Catalog = bazaizaidb; Persist Security Info = False; User ID = bazaizai; Password = Trinhanh0311; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30;"));
@@ -38,21 +39,21 @@ builder.Services.AddDbContext<BazaizaiContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddOptions();
 builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
-builder.Services.AddScoped<IVoucherServices, VoucherServices>();
-builder.Services.AddScoped<IVoucherNguoiDungServices, VoucherNguoiDungServices>();
+builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietservice, SanPhamChiTietservice>();
+builder.Services.AddScoped<IVoucherservices, Voucherservices>();
+builder.Services.AddScoped<IVoucherNguoiDungservices, VoucherNguoiDungservices>();
 
-builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietService, SanPhamChiTietService>();
-builder.Services.AddScoped<IGioHangChiTietServices, GioHangChiTietServices>();
-builder.Services.AddScoped<IKhuyenMaiChiTietServices, KhuyenMaiChiTietServices>();
-builder.Services.AddScoped<IKhuyenMaiServices, KhuyenMaiServices>();
+builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietservice, SanPhamChiTietservice>();
+builder.Services.AddScoped<IGioHangChiTietservices, GioHangChiTietservices>();
+builder.Services.AddScoped<IKhuyenMaiChiTietservices, KhuyenMaiChiTietservices>();
+builder.Services.AddScoped<IKhuyenMaiservices, KhuyenMaiservices>();
 builder.Services.AddScoped<ThongTinGHController>();  // Sử dụng AddScoped nếu bạn muốn một instance cho mỗi phạm vi của yêu cầu HTTP
 builder.Services.AddScoped<GioHangChiTietsController, GioHangChiTietsController>();
 builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
-builder.Services.AddScoped<IDanhGiaService, DanhGiaService>();
+builder.Services.AddScoped<IDanhGiaservice, DanhGiaservice>();
+builder.Services.AddScoped<IHoaDonServices, HoaDonServices>();
 builder.Services.AddScoped<IThongKeService, ThongKeService>();
 builder.Services.AddScoped<IThongTinGHServices, ThongTinGHServices>();
-builder.Services.AddScoped<IHoaDonServices, HoaDonServices>();
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
 //builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://bazaizaiapi.azurewebsites.net/") });
 //Thêm
@@ -76,15 +77,18 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.Password.RequiredLength = 6; // Số ký tự tối thiểu của password
     options.Password.RequiredUniqueChars = 1; // Số ký tự riêng biệt
 
+    // Cấu hình Lockout - khóa user
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); // Khóa 5 phút
     options.Lockout.MaxFailedAccessAttempts = 5; // Thất bại 5 lần thì khóa
     options.Lockout.AllowedForNewUsers = true;
 
+    // Cấu hình về User.
     options.User.AllowedUserNameCharacters = // các ký tự đặt tên user
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.";
 
     options.User.RequireUniqueEmail = true;  // Email là duy nhất
 
+    //Cấu hình đăng nhập.
     options.SignIn.RequireConfirmedEmail = true;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
     options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
     options.SignIn.RequireConfirmedAccount = true;// sau khi đăng kí....(tự hiểu)
