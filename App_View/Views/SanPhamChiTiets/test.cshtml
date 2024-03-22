@@ -1,0 +1,24 @@
+﻿@{
+    ViewData["Title"] = "test";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div data-src="https://apingocbaohan.ssoftware.vn/images/ProductImage/V%C3%B2ng%20v%C3%A0ng%20limited001023001023Da%20saphire2512nhan-nam-vang.png">
+
+    <img src="https://apingocbaohan.ssoftware.vn/images/ProductImage/V%C3%B2ng%20v%C3%A0ng%20limited001023001023Da%20saphire2512nhan-nam-vang.png" data-zoom-image="https://apingocbaohan.ssoftware.vn/images/ProductImage/V%C3%B2ng%20v%C3%A0ng%20limited001023001023Da%20saphire2512nhan-nam-vang.png" alt="">
+</div>
+<script>
+    $(document).ready(function () {
+        loadScripts();
+    });
+         function loadScripts() {
+            setTimeout(function () {
+                $.getScript('/js/vendor.js', function () {
+                    $.getScript('/js/jquery.shopnav.js', function () {
+                        $.getScript('/js/app.js', function () { });
+                    });
+                });
+            }, 1)
+        }
+</script>
