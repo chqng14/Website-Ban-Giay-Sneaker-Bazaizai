@@ -6,7 +6,7 @@ services:
     container_name: sqlserver
     environment:
       - ACCEPT_EULA=Y
-      - SA_PASSWORD=YourStrong@Passw0rd
+      - SA_PASSWORD=${SA_PASSWORD:-YourStrong@Passw0rd}
       - MSSQL_PID=Express
     ports:
       - "1433:1433"
@@ -15,7 +15,7 @@ services:
     networks:
       - bazaizai-network
     healthcheck:
-      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "YourStrong@Passw0rd" -Q "SELECT 1" -b -o /dev/null
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$${SA_PASSWORD:-YourStrong@Passw0rd}" -Q "SELECT 1" -b -o /dev/null
       interval: 10s
       timeout: 5s
       retries: 10
@@ -29,8 +29,8 @@ services:
     ports:
       - "7038:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=DuAnTotNghiep_BazaizaiStore;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=${DB_NAME:-DuAnTotNghiep_BazaizaiStore};User Id=sa;Password=${SA_PASSWORD:-YourStrong@Passw0rd};TrustServerCertificate=True
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -45,8 +45,8 @@ services:
     ports:
       - "7214:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=DuAnTotNghiep_BazaizaiStore;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=${DB_NAME:-DuAnTotNghiep_BazaizaiStore};User Id=sa;Password=${SA_PASSWORD:-YourStrong@Passw0rd};TrustServerCertificate=True
       - ApiSettings__BaseUrl=http://app-api:80/
     depends_on:
       sqlserver:
