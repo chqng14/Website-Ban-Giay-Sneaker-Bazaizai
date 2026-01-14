@@ -1,5 +1,6 @@
 using App_Data.DbContext;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace App_Api.Controllers
@@ -33,15 +34,15 @@ namespace App_Api.Controllers
                 
                 if (!string.IsNullOrEmpty(connectionString))
                 {
-                    var parts = connectionString.Split(';');
-                    var dbPart = parts.FirstOrDefault(x => x.Contains("Database", StringComparison.OrdinalIgnoreCase));
-                    if (dbPart != null)
+                    try
                     {
-                        var dbValue = dbPart.Split('=');
-                        if (dbValue.Length > 1)
-                        {
-                            databaseName = dbValue[1].Trim();
-                        }
+                        var builder = new SqlConnectionStringBuilder(connectionString);
+                        databaseName = builder.InitialCatalog ?? "Unknown";
+                    }
+                    catch
+                    {
+                        // Nếu không thể parse connection string, giữ giá trị mặc định
+                        databaseName = "Unknown";
                     }
                 }
                 
@@ -83,9 +84,20 @@ namespace App_Api.Controllers
                 var safeConnectionString = "";
                 if (!string.IsNullOrEmpty(connectionString))
                 {
-                    var parts = connectionString.Split(';')
-                        .Where(x => !x.Contains("Password", StringComparison.OrdinalIgnoreCase));
-                    safeConnectionString = string.Join(";", parts);
+                    try
+                    {
+                        var builder = new SqlConnectionStringBuilder(connectionString);
+                        builder.Password = "";
+                        safeConnectionString = builder.ToString();
+                    }
+                    catch
+                    {
+                        // Nếu không thể parse, dùng phương pháp đơn giản hơn
+                        var parts = connectionString.Split(';')
+                            .Where(x => !x.Contains("Password", StringComparison.OrdinalIgnoreCase) 
+                                     && !x.Contains("Pwd", StringComparison.OrdinalIgnoreCase));
+                        safeConnectionString = string.Join(";", parts);
+                    }
                 }
 
                 return Ok(new
