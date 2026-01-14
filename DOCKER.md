@@ -284,8 +284,9 @@ docker compose logs --tail=100 app-api
 # Truy cập vào container (bash shell)
 docker exec -it app-api /bin/bash
 
-# Truy cập vào SQL Server container (sử dụng biến môi trường từ .env)
-docker exec -it sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD"
+# Truy cập vào SQL Server container (cần source .env trước hoặc thay $SA_PASSWORD bằng mật khẩu thực)
+# source .env && docker exec -it sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD"
+docker exec -it sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa
 ```
 
 ### Quản lý images và volumes
@@ -393,8 +394,9 @@ docker build -t test-app-api -f App_Api/Dockerfile .
 
 1. **Sử dụng mật khẩu mạnh, ngẫu nhiên**
    ```bash
-   # Tạo mật khẩu ngẫu nhiên và lưu vào .env
-   echo "SA_PASSWORD=$(openssl rand -base64 16 | tr -d '=' | head -c 16)@1Aa" >> .env
+   # Tạo mật khẩu ngẫu nhiên (chỉ chạy 1 lần khi cài đặt lần đầu)
+   # Kiểm tra xem SA_PASSWORD đã tồn tại chưa trước khi thêm
+   grep -q "^SA_PASSWORD=" .env || echo "SA_PASSWORD=$(openssl rand -base64 16 | tr -d '=' | head -c 16)@1Aa" >> .env
    ```
 
 2. **Sử dụng HTTPS** - Cấu hình reverse proxy (Nginx, Traefik, Caddy)
@@ -449,8 +451,9 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ### Backup Database
 
 ```bash
-# Load biến môi trường từ file .env
-source .env
+# Load biến môi trường từ file .env (tương thích sh/bash)
+# Sử dụng: . .env hoặc source .env (bash only)
+. .env
 
 # Tạo thư mục backup trong container (nếu chưa có)
 docker exec sqlserver mkdir -p /var/opt/mssql/backup
@@ -466,8 +469,8 @@ docker cp sqlserver:/var/opt/mssql/backup/backup.bak ./backup.bak
 ### Restore Database
 
 ```bash
-# Load biến môi trường từ file .env
-source .env
+# Load biến môi trường từ file .env (tương thích sh/bash)
+. .env
 
 # Copy backup vào container
 docker cp ./backup.bak sqlserver:/var/opt/mssql/backup/backup.bak
