@@ -27,13 +27,30 @@ namespace App_Api.Controllers
                 // Thử kết nối đến database bằng cách thực hiện một query đơn giản
                 await _dbContext.Database.CanConnectAsync();
                 
+                // Trích xuất tên database từ connection string một cách an toàn
+                var connectionString = _dbContext.Database.GetConnectionString();
+                var databaseName = "Unknown";
+                
+                if (!string.IsNullOrEmpty(connectionString))
+                {
+                    var parts = connectionString.Split(';');
+                    var dbPart = parts.FirstOrDefault(x => x.Contains("Database", StringComparison.OrdinalIgnoreCase));
+                    if (dbPart != null)
+                    {
+                        var dbValue = dbPart.Split('=');
+                        if (dbValue.Length > 1)
+                        {
+                            databaseName = dbValue[1].Trim();
+                        }
+                    }
+                }
+                
                 return Ok(new
                 {
                     status = "Healthy",
                     message = "Kết nối database thành công",
                     timestamp = DateTime.UtcNow,
-                    database = _dbContext.Database.GetConnectionString()?.Split(';')
-                        .FirstOrDefault(x => x.Contains("Database"))?.Split('=').LastOrDefault()
+                    database = databaseName
                 });
             }
             catch (Exception ex)
@@ -55,26 +72,21 @@ namespace App_Api.Controllers
         [HttpGet("detailed")]
         public async Task<IActionResult> CheckDetailedHealth()
         {
-            var healthStatus = new
-            {
-                database = new
-                {
-                    canConnect = false,
-                    connectionString = "",
-                    errorMessage = ""
-                },
-                timestamp = DateTime.UtcNow
-            };
-
+            var timestamp = DateTime.UtcNow;
+            
             try
             {
                 var canConnect = await _dbContext.Database.CanConnectAsync();
                 var connectionString = _dbContext.Database.GetConnectionString();
                 
                 // Ẩn mật khẩu trong connection string khi trả về
-                var safeConnectionString = connectionString?.Split(';')
-                    .Where(x => !x.Contains("Password", StringComparison.OrdinalIgnoreCase))
-                    .Aggregate((a, b) => a + ";" + b);
+                var safeConnectionString = "";
+                if (!string.IsNullOrEmpty(connectionString))
+                {
+                    var parts = connectionString.Split(';')
+                        .Where(x => !x.Contains("Password", StringComparison.OrdinalIgnoreCase));
+                    safeConnectionString = string.Join(";", parts);
+                }
 
                 return Ok(new
                 {
@@ -85,7 +97,7 @@ namespace App_Api.Controllers
                         errorMessage = ""
                     },
                     status = canConnect ? "Healthy" : "Unhealthy",
-                    timestamp = healthStatus.timestamp
+                    timestamp = timestamp
                 });
             }
             catch (Exception ex)
@@ -99,7 +111,7 @@ namespace App_Api.Controllers
                         errorMessage = ex.Message
                     },
                     status = "Unhealthy",
-                    timestamp = healthStatus.timestamp
+                    timestamp = timestamp
                 });
             }
         }
