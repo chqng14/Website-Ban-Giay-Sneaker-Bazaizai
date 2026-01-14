@@ -37,7 +37,8 @@ namespace App_Api.Controllers
                     try
                     {
                         var builder = new SqlConnectionStringBuilder(connectionString);
-                        databaseName = builder.InitialCatalog ?? "Unknown";
+                        // SqlConnectionStringBuilder maps both "Database" and "Initial Catalog" to InitialCatalog property
+                        databaseName = !string.IsNullOrEmpty(builder.InitialCatalog) ? builder.InitialCatalog : "Unknown";
                     }
                     catch
                     {
