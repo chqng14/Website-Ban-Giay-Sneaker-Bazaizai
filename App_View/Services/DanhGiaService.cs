@@ -13,16 +13,17 @@ namespace App_View.Services
     public class DanhGiaservice : IDanhGiaservice
     {
         private readonly HttpClient _httpClient;
-        public DanhGiaservice()
+        public DanhGiaservice() : this(HttpClientFactory.CreateClient()) { }
+        public DanhGiaservice(HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
         }
 
         public async Task<bool> CreateDanhGia(DanhGia danhGia)
         {
             try
             {
-                string apiUrl = $"https://localhost:7038/api/DanhGia/AddDanhGia?IdDanhGia={danhGia.IdDanhGia}&BinhLuan={danhGia.BinhLuan}&ParentId={danhGia.ParentId}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}&MoTa={danhGia.MoTa}&ChatLuongSanPham={danhGia.ChatLuongSanPham}";
+                string apiUrl = $"api/DanhGia/AddDanhGia?IdDanhGia={danhGia.IdDanhGia}&BinhLuan={danhGia.BinhLuan}&ParentId={danhGia.ParentId}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}&MoTa={danhGia.MoTa}&ChatLuongSanPham={danhGia.ChatLuongSanPham}";
                 var response = await _httpClient.PostAsync(apiUrl, null);
                 if (response.IsSuccessStatusCode)
                 {
@@ -43,7 +44,7 @@ namespace App_View.Services
         {
             try
             {
-                string apiUrl = $"https://localhost:7038/api/DanhGia/AddDanhGia?IdDanhGia={IdDanhGia}&BinhLuan={BinhLuan}&ParentId={ParentId}&SaoSp={SaoSp}&SaoVanChuyen={SaoVanChuyen}&IdNguoiDung={IdNguoiDung}&IdSanPhamChiTiet={IdSanPhamChiTiet}&MoTa={MoTa}&ChatLuongSanPham={ChatLuongSanPham}";
+                string apiUrl = $"api/DanhGia/AddDanhGia?IdDanhGia={IdDanhGia}&BinhLuan={BinhLuan}&ParentId={ParentId}&SaoSp={SaoSp}&SaoVanChuyen={SaoVanChuyen}&IdNguoiDung={IdNguoiDung}&IdSanPhamChiTiet={IdSanPhamChiTiet}&MoTa={MoTa}&ChatLuongSanPham={ChatLuongSanPham}";
                 var response = await _httpClient.PostAsync(apiUrl, null);
                 if (response.IsSuccessStatusCode)
                 {
@@ -63,7 +64,7 @@ namespace App_View.Services
 
         public async Task<bool> DeleteDanhGia(string id)
         {
-            string apiUrl = $"https://localhost:7038/api/DanhGia/XoaDanhGia/{id}";
+            string apiUrl = $"api/DanhGia/XoaDanhGia/{id}";
             try
             {
                 var response = await _httpClient.DeleteAsync(apiUrl);
@@ -78,7 +79,7 @@ namespace App_View.Services
 
         public async Task<List<DanhGia>> GetAllDanhGia()
         {
-            string apiUrl = "https://localhost:7038/api/DanhGia/GetAllDanhGia";
+            string apiUrl = "api/DanhGia/GetAllDanhGia";
 
             try
             {
@@ -89,17 +90,11 @@ namespace App_View.Services
             {
                 return new List<DanhGia>();
             }
-            //string apiUrl = "https://localhost:7038/api/DanhGia/GetAllDanhGia";
-
-            //var response = await _httpClient.GetAsync(apiUrl);
-            //string apiData = await response.Content.ReadAsStringAsync();       
-            //var DanhGias = JsonConvert.DeserializeObject<List<DanhGia>>(apiData);
-            //return DanhGias;
         }
 
         public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string Idchitietsp)
         {
-            string apiUrl = $"https://localhost:7038/api/DanhGia/GetListAsyncViewModel?idspchitiet={Idchitietsp}";
+            string apiUrl = $"api/DanhGia/GetListAsyncViewModel?idspchitiet={Idchitietsp}";
             try
             {
                 var apiData = await _httpClient.GetStringAsync(apiUrl);
@@ -150,7 +145,7 @@ namespace App_View.Services
         }
         public async Task<DanhGia?> GetDanhGiaById(string id)
         {
-            string apiUrl = $"https://localhost:7038/api/DanhGia/GetDanhGiaById/{id}";
+            string apiUrl = $"api/DanhGia/GetDanhGiaById/{id}";
             try
             {
                 var response = await _httpClient.GetAsync(apiUrl);
@@ -177,7 +172,7 @@ namespace App_View.Services
         {
             try
             {
-                string apiUrl = $"https://localhost:7038/api/DanhGia/ChinhSuaDanhGia?IdDanhGia={danhGia.IdDanhGia}&BinhLuan={danhGia.BinhLuan}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}";
+                string apiUrl = $"api/DanhGia/ChinhSuaDanhGia?IdDanhGia={danhGia.IdDanhGia}&BinhLuan={danhGia.BinhLuan}&SaoSp={danhGia.SaoSp}&SaoVanChuyen={danhGia.SaoVanChuyen}&IdNguoiDung={danhGia.IdNguoiDung}&IdSanPhamChiTiet={danhGia.IdSanPhamChiTiet}";
 
                 var content = new StringContent(string.Empty);
 
@@ -205,7 +200,7 @@ namespace App_View.Services
 
         public async Task<List<DanhGiaResult>> TongSoDanhGiaCuaMoiSpChuaDuyet()
         {
-            string apiUrl = $"https://localhost:7038/api/DanhGia/GetTongSoDanhGiaCuaMoiSpChuaDuyet";
+            string apiUrl = $"api/DanhGia/GetTongSoDanhGiaCuaMoiSpChuaDuyet";
 
             try
             {
@@ -219,7 +214,7 @@ namespace App_View.Services
         }
         public async Task<List<DanhGiaViewModel>> LstChiTietDanhGiaCuaMoiSpChuaDuyet(string idSanPham)
         {
-            string apiUrl = $"https://localhost:7038/api/DanhGia/GetLstChiTietDanhGiaCuaMoiSpChuaDuyet?idSanPham={idSanPham}";
+            string apiUrl = $"api/DanhGia/GetLstChiTietDanhGiaCuaMoiSpChuaDuyet?idSanPham={idSanPham}";
 
             try
             {
@@ -237,7 +232,7 @@ namespace App_View.Services
         {
             try
             {
-                string apiUrl = $"https://localhost:7038/api/DanhGia/DuyetDanhGia?IdDanhGia={IdDanhGia}";
+                string apiUrl = $"api/DanhGia/DuyetDanhGia?IdDanhGia={IdDanhGia}";
 
                 var content = new StringContent(string.Empty);
 
@@ -259,7 +254,7 @@ namespace App_View.Services
         }
         public async Task<int> GetTongSoDanhGia(string idspchitiet)
         {
-            string apiUrl = $"https://localhost:7038/api/DanhGia/GetTongSoDanhGia?idspchitiet={idspchitiet}";
+            string apiUrl = $"api/DanhGia/GetTongSoDanhGia?idspchitiet={idspchitiet}";
 
             try
             {
@@ -273,7 +268,7 @@ namespace App_View.Services
         }
         public async Task<float> GetSoSaoTB(string IdProductChiTiet)
         {
-            string apiUrl = $"https://localhost:7038/api/DanhGia/GetSoSaoTB?idspchitiet={IdProductChiTiet}";
+            string apiUrl = $"api/DanhGia/GetSoSaoTB?idspchitiet={IdProductChiTiet}";
 
             try
             {
@@ -288,7 +283,7 @@ namespace App_View.Services
 
         public async Task<DanhGiaViewModel?> GetViewModelByKeyAsync(string id)
         {
-            string apiUrl = $"https://localhost:7038/api/DanhGia/GetDanhGiaViewModelById/{id}";
+            string apiUrl = $"api/DanhGia/GetDanhGiaViewModelById/{id}";
             try
             {
                 var response = await _httpClient.GetAsync(apiUrl);
@@ -311,7 +306,7 @@ namespace App_View.Services
         }
         public async Task<List<DanhGiaViewModel>> GetLstDanhGiaChuaDuyetByDK(int? dk)
         {
-            string apiUrl = $"https://localhost:7038/api/DanhGia/GetAllDanhGiaChuaDuyetByDkViewModel?Dk={dk}";
+            string apiUrl = $"api/DanhGia/GetAllDanhGiaChuaDuyetByDkViewModel?Dk={dk}";
 
             try
             {
@@ -325,7 +320,7 @@ namespace App_View.Services
         }
         public async Task<List<DanhGiaViewModel>> GetLstDanhGiaDaDuyetByDK(int? dk)
         {
-            string apiUrl = $"https://localhost:7038/api/DanhGia/GetAllDanhGiaDaDuyetByDkViewModel?Dk={dk}";
+            string apiUrl = $"api/DanhGia/GetAllDanhGiaDaDuyetByDkViewModel?Dk={dk}";
 
             try
             {
@@ -339,7 +334,7 @@ namespace App_View.Services
         } 
         public async Task<List<DanhGiaViewModel>> GetAllDanhGiaDaDuyetByNd(string idUser)
         {
-            string apiUrl = $"https://localhost:7038/api/DanhGia/GetAllDanhGiaDaDuyetByNd?idUser={idUser}";
+            string apiUrl = $"api/DanhGia/GetAllDanhGiaDaDuyetByNd?idUser={idUser}";
 
             try
             {

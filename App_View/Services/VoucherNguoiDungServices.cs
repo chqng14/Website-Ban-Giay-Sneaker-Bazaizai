@@ -29,9 +29,8 @@ namespace App_View.Services
         {
             try
             {
-                var httpClient = new HttpClient();
-                string apiUrl = $"https://localhost:7038/api/VoucherNguoiDung/AddVoucherNguoiDung?MaVoucher={MaVoucher}&idNguoiDung={idNguoiDung}";
-                var response = await httpClient.PostAsync(apiUrl, null);
+                string apiUrl = $"api/VoucherNguoiDung/AddVoucherNguoiDung?MaVoucher={MaVoucher}&idNguoiDung={idNguoiDung}";
+                var response = await _httpClient.PostAsync(apiUrl, null);
                 var check = await response.Content.ReadAsStringAsync();
                 if (check == "true")
                 {
@@ -133,9 +132,8 @@ namespace App_View.Services
             ///api/VoucherNguoiDung/TangVoucherChoNguoiDungMoi
             try
             {
-                var httpClient = new HttpClient();
-                string apiUrl = $"https://localhost:7038/api/VoucherNguoiDung/TangVoucherChoNguoiDungMoi?ma={ma}";
-                var response = await httpClient.PostAsync(apiUrl, null);
+                string apiUrl = $"api/VoucherNguoiDung/TangVoucherChoNguoiDungMoi?ma={ma}";
+                var response = await _httpClient.PostAsync(apiUrl, null);
                 var check = await response.Content.ReadAsStringAsync();
                 if (check == "true")
                 {

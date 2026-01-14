@@ -8,16 +8,17 @@ namespace App_View.Services
     public class GioHangChiTietservices : IGioHangChiTietservices
     {
         private readonly HttpClient _httpClient;
-        public GioHangChiTietservices()
+        public GioHangChiTietservices() : this(HttpClientFactory.CreateClient()) { }
+        public GioHangChiTietservices(HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
         }
         public async Task<bool> CreateCartDetailDTO(GioHangChiTietDTOCUD gioHangChiTietDTOCUD)
         {
 
             try
             {
-                var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/GioHangChiTiet/Create", gioHangChiTietDTOCUD);
+                var res = await _httpClient.PostAsJsonAsync("api/GioHangChiTiet/Create", gioHangChiTietDTOCUD);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -34,13 +35,13 @@ namespace App_View.Services
 
         public async Task<bool> DeleteGioHang(string id)
         {
-            var httpResponse = await _httpClient.DeleteAsync($"https://localhost:7038/api/GioHangChiTiet/Delete?id={id}");
+            var httpResponse = await _httpClient.DeleteAsync($"api/GioHangChiTiet/Delete?id={id}");
             return httpResponse.IsSuccessStatusCode;
         }
 
         public async Task<List<GioHangChiTietDTO>> GetAllGioHang()
         {
-            return await _httpClient.GetFromJsonAsync<List<GioHangChiTietDTO>>("https://localhost:7038/api/GioHangChiTiet/Get-List-GioHangChiTietDTO");
+            return await _httpClient.GetFromJsonAsync<List<GioHangChiTietDTO>>("api/GioHangChiTiet/Get-List-GioHangChiTietDTO");
 
         }
 
@@ -48,7 +49,7 @@ namespace App_View.Services
         {
             try
             {
-                var httpResponse = await _httpClient.PutAsync($"https://localhost:7038/api/GioHangChiTiet/Edit?IdSanPhamChiTiet={IdSanPhamChiTiet}&SoLuong={SoLuong}&IdNguoiDung={IdNguoiDung}", null);
+                var httpResponse = await _httpClient.PutAsync($"api/GioHangChiTiet/Edit?IdSanPhamChiTiet={IdSanPhamChiTiet}&SoLuong={SoLuong}&IdNguoiDung={IdNguoiDung}", null);
                 if (httpResponse.IsSuccessStatusCode)
                 {
                     return await httpResponse.Content.ReadAsAsync<bool>();

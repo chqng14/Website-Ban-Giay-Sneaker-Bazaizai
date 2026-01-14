@@ -8,15 +8,16 @@ namespace App_View.Services
     public class PTThanhToanChiTietServices : IPTThanhToanChiTietServices
     {
         private readonly HttpClient _httpClient;
-        public PTThanhToanChiTietServices()
+        public PTThanhToanChiTietServices() : this(HttpClientFactory.CreateClient()) { }
+        public PTThanhToanChiTietServices(HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
         }
         public async Task<string> CreatePTThanhToanChiTietAsync(string IdHoaDon, string IdThanhToan, double SoTien)
         {
             try
             {
-                var res = await _httpClient.PostAsync($"https://localhost:7038/api/PTThanhToanChiTiet?IdHoaDon={IdHoaDon}&IdThanhToan={IdThanhToan}&SoTien={SoTien}", null);
+                var res = await _httpClient.PostAsync($"api/PTThanhToanChiTiet?IdHoaDon={IdHoaDon}&IdThanhToan={IdThanhToan}&SoTien={SoTien}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsStringAsync();
@@ -50,7 +51,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://localhost:7038/api/PTThanhToanChiTiet/SuaTrangThaiPTThanhToanChiTiet?IdPhuongThucThanhToanChiTiet={IdPhuongThucThanhToanChiTiet}&TrangThai={TrangThai}", null);
+                var res = await _httpClient.PutAsync($"api/PTThanhToanChiTiet/SuaTrangThaiPTThanhToanChiTiet?IdPhuongThucThanhToanChiTiet={IdPhuongThucThanhToanChiTiet}&TrangThai={TrangThai}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
