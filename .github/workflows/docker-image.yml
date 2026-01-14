@@ -1,0 +1,28 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build App_Api image
+        run: |
+          docker build \
+            -t my-app-api:${{ github.sha }} \
+            -f App_Api/Dockerfile \
+            .
+
+      - name: Build App_View image
+        run: |
+          docker build \
+            -t my-app-view:${{ github.sha }} \
+            -f App_View/Dockerfile \
+            .
