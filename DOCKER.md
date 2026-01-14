@@ -218,6 +218,8 @@ Sau khi các containers đã khởi động thành công, bạn có thể truy c
 |---------|-----|-------|
 | **Website (View)** | http://localhost:8080 | Giao diện người dùng |
 | **API** | http://localhost:80 | Backend API |
+| **API Health Check** | http://localhost:80/api/health | Kiểm tra kết nối database |
+| **API Health Check (Chi tiết)** | http://localhost:80/api/health/detailed | Thông tin chi tiết về kết nối database |
 | **SQL Server** | localhost:1433 | Database server |
 
 ### Kết nối SQL Server từ công cụ quản lý
@@ -229,6 +231,40 @@ Sử dụng các công cụ như **SQL Server Management Studio (SSMS)**, **Azur
 - **Username**: `sa`
 - **Password**: Giá trị `SA_PASSWORD` trong file `.env`
 - **Database**: `DuAnTotNghiep_BazaizaiStore`
+
+### Kiểm tra tình trạng kết nối database
+
+API cung cấp endpoint để kiểm tra kết nối database:
+
+```bash
+# Kiểm tra kết nối cơ bản
+curl http://localhost:80/api/health
+
+# Hoặc mở trong trình duyệt
+# http://localhost:80/api/health
+
+# Kết quả mẫu khi thành công:
+# {
+#   "status": "Healthy",
+#   "message": "Kết nối database thành công",
+#   "timestamp": "2024-01-14T08:23:20.330Z",
+#   "database": "DuAnTotNghiep_BazaizaiStore"
+# }
+
+# Kiểm tra chi tiết
+curl http://localhost:80/api/health/detailed
+
+# Kết quả mẫu:
+# {
+#   "database": {
+#     "canConnect": true,
+#     "connectionString": "Server=sqlserver;Database=DuAnTotNghiep_BazaizaiStore;User Id=sa;TrustServerCertificate=True",
+#     "errorMessage": ""
+#   },
+#   "status": "Healthy",
+#   "timestamp": "2024-01-14T08:23:20.330Z"
+# }
+```
 
 ---
 

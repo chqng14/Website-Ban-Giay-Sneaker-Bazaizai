@@ -1,12 +1,21 @@
 using App_Api.Controllers;
 using App_Api.Helpers.CustomJson;
+using App_Data.DbContext;
 using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// Configure database connection with DATABASE_URL support
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL") 
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<BazaizaiContext>(options =>
+    options.UseSqlServer(connectionString));
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
