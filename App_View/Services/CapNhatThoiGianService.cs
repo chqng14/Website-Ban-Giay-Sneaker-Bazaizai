@@ -7,16 +7,17 @@ namespace App_View.Services
         BazaizaiContext _dbContext = new BazaizaiContext();
         private readonly HttpClient _httpClient;
         bool loading = false;
-        public CapNhatThoiGianService()
+        public CapNhatThoiGianService() : this(HttpClientFactory.CreateClient()) { }
+        public CapNhatThoiGianService(HttpClient httpClient)
         {
             _dbContext = new BazaizaiContext();
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
         }
         public async Task<bool> CapNhatThongTinKhuyenMai()
         {
             try
             {
-                var response = await _httpClient.PutAsync("https://localhost:7038/api/AutoUpdate/CapNhatThongTinKhuyenMai", null);
+                var response = await _httpClient.PutAsync("api/AutoUpdate/CapNhatThongTinKhuyenMai", null);
                 if (response.IsSuccessStatusCode)
                 {
                     return await response.Content.ReadAsAsync<bool>();
@@ -36,7 +37,7 @@ namespace App_View.Services
         {
             try
             {
-                var response = await _httpClient.PutAsync("https://localhost:7038/api/AutoUpdate/CapNhatThoiGianVoucher", null);
+                var response = await _httpClient.PutAsync("api/AutoUpdate/CapNhatThoiGianVoucher", null);
                 if (response.IsSuccessStatusCode)
                 {
                     return await response.Content.ReadAsAsync<bool>();

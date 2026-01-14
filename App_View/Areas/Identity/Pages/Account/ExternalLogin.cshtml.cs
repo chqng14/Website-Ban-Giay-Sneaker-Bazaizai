@@ -249,7 +249,7 @@ namespace App_View.Areas.Identity.Pages.Account
 
         public async Task<bool> AddCart(string idUser, int trangThai)
         {
-            var response= await _httpClient.PostAsync($"https://localhost:7038/api/GioHang?id={idUser}&trangthai={trangThai}", null);
+            var response= await _httpClient.PostAsync($"api/GioHang?id={idUser}&trangthai={trangThai}", null);
             if (response.IsSuccessStatusCode)
             {
                 return true;
@@ -258,7 +258,7 @@ namespace App_View.Areas.Identity.Pages.Account
         }
         public async Task<GioHang> GetGioHangById(string idUser)
         {        
-            var response = await _httpClient.GetAsync($"https://localhost:7038/api/GioHang/{idUser}");
+            var response = await _httpClient.GetAsync($"api/GioHang/{idUser}");
             if (response.IsSuccessStatusCode)
             {
                 string apiData = await response.Content.ReadAsStringAsync();

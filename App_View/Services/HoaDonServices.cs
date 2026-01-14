@@ -11,15 +11,16 @@ namespace App_View.Services
     public class HoaDonServices : IHoaDonServices
     {
         private readonly HttpClient _httpClient;
-        public HoaDonServices()
+        public HoaDonServices() : this(HttpClientFactory.CreateClient()) { }
+        public HoaDonServices(HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
         }
         public async Task<string> CreateHoaDon(HoaDonDTO hoaDonDTO)
         {
             try
             {
-                var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/HoaDon/TaoHoaDonOnlineDTO", hoaDonDTO);
+                var res = await _httpClient.PostAsJsonAsync("api/HoaDon/TaoHoaDonOnlineDTO", hoaDonDTO);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsStringAsync();
@@ -41,50 +42,50 @@ namespace App_View.Services
 
         public async Task<List<HoaDonTest>> GetAllHoaDon()
         {
-            return await _httpClient.GetFromJsonAsync<List<HoaDonTest>>("https://localhost:7038/api/HoaDon/GetHoaDonOnlineAdmin");
+            return await _httpClient.GetFromJsonAsync<List<HoaDonTest>>("api/HoaDon/GetHoaDonOnlineAdmin");
 
 		}
 
         public async Task<List<HoaDonChoDTO>> GetAllHoaDonCho()
         {
-            return await _httpClient.GetFromJsonAsync<List<HoaDonChoDTO>>("https://localhost:7038/api/HoaDon/GetAllHoaDonCho");
+            return await _httpClient.GetFromJsonAsync<List<HoaDonChoDTO>>("api/HoaDon/GetAllHoaDonCho");
         }
 
         public async Task<List<HoaDonViewModel>> GetHoaDon()
         {
-            return await _httpClient.GetFromJsonAsync<List<HoaDonViewModel>>("https://localhost:7038/api/HoaDon/GetHoaDonOnline");
+            return await _httpClient.GetFromJsonAsync<List<HoaDonViewModel>>("api/HoaDon/GetHoaDonOnline");
         }
 
         public async Task<List<HoaDonTest>> GetHoaDonOnline(string idNguoiDung)
         {
-            return await _httpClient.GetFromJsonAsync<List<HoaDonTest>>($"https://localhost:7038/api/HoaDon/GetHoaDonOnlineTest?idNguoiDung={idNguoiDung}");
+            return await _httpClient.GetFromJsonAsync<List<HoaDonTest>>($"api/HoaDon/GetHoaDonOnlineTest?idNguoiDung={idNguoiDung}");
         }
         public async Task<HoaDonTest> GetHoaDonOnlineById(string idHoaDon, string idNguoiDung)
         {
-            return await _httpClient.GetFromJsonAsync<HoaDonTest>($"https://localhost:7038/api/HoaDon/GetHoaDonOnlineById?idHoadon={idHoaDon}&idNguoiDung={idNguoiDung}");
+            return await _httpClient.GetFromJsonAsync<HoaDonTest>($"api/HoaDon/GetHoaDonOnlineById?idHoadon={idHoaDon}&idNguoiDung={idNguoiDung}");
         }
         public async Task<HoaDonTest> GetHoaDonOnlineByMa(string Ma)
         {
-            return await _httpClient.GetFromJsonAsync<HoaDonTest>($"https://localhost:7038/api/HoaDon/GetHoaDonOnlineByMa?Ma={Ma}");
+            return await _httpClient.GetFromJsonAsync<HoaDonTest>($"api/HoaDon/GetHoaDonOnlineByMa?Ma={Ma}");
         }
 
         public async Task<List<KhachHang>> GetKhachHangs()
         {
-            var lst = await _httpClient.GetFromJsonAsync<List<KhachHang>>("https://localhost:7038/api/HoaDon/GetAllKhachHang");
+            var lst = await _httpClient.GetFromJsonAsync<List<KhachHang>>("api/HoaDon/GetAllKhachHang");
 
             return lst;
         }
 
         public async Task<string> GetPayMent(string idHoaDon)
         {
-            return await _httpClient.GetStringAsync($"https://localhost:7038/api/HoaDon/GetPTThanhToan?idhoadon={idHoaDon}");
+            return await _httpClient.GetStringAsync($"api/HoaDon/GetPTThanhToan?idhoadon={idHoaDon}");
         }
 
         public async Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon)
         {
             try
             {
-                var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/HoaDon/TaoHoaDonTaiQuay", hoaDon);
+                var res = await _httpClient.PostAsJsonAsync("api/HoaDon/TaoHoaDonTaiQuay", hoaDon);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<HoaDon>();
@@ -103,7 +104,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/HoaDon/TaoKhachHang", khachHang);
+                var res = await _httpClient.PostAsJsonAsync("api/HoaDon/TaoKhachHang", khachHang);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsStringAsync();
@@ -121,7 +122,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PostAsync($"https://localhost:7038/api/PTThanhToanChiTiet/AddPhuongThucThanhToanChiTietTaiQuay?IdHoaDon={idHoaDon}&IdThanhToan={idPTTT}&SoTien={soTien}&TrangThai={trangThai}", null);
+                var res = await _httpClient.PostAsync($"api/PTThanhToanChiTiet/AddPhuongThucThanhToanChiTietTaiQuay?IdHoaDon={idHoaDon}&IdThanhToan={idPTTT}&SoTien={soTien}&TrangThai={trangThai}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -137,14 +138,14 @@ namespace App_View.Services
         }
         public async Task<string> GetPTTT(string ten)
         {
-            return await _httpClient.GetStringAsync($"https://localhost:7038/api/PTThanhToan/PhuongThucThanhToanByName?ten={ten}");
+            return await _httpClient.GetStringAsync($"api/PTThanhToan/PhuongThucThanhToanByName?ten={ten}");
         }
 
         public async Task<bool> UpdateNgayHoaDon(string idHoaDon, DateTime? NgayThanhToan, DateTime? NgayNhan, DateTime? NgayShip)
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateNgayHoaDonOnline?idHoaDon={idHoaDon}&NgayThanhToan={NgayThanhToan}&NgayNhan={NgayNhan}&NgayShip={NgayShip}", null);
+                var res = await _httpClient.PutAsync($"api/HoaDon/UpdateNgayHoaDonOnline?idHoaDon={idHoaDon}&NgayThanhToan={NgayThanhToan}&NgayNhan={NgayNhan}&NgayShip={NgayShip}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -162,7 +163,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.DeleteAsync($"https://localhost:7038/api/HoaDon/XoaPhuongThucThanhToanChiTietBangIdHoaDon?idHoaDon={idHoaDon}");
+                var res = await _httpClient.DeleteAsync($"api/HoaDon/XoaPhuongThucThanhToanChiTietBangIdHoaDon?idHoaDon={idHoaDon}");
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -181,7 +182,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateTrangThaiGiaoHangHoaDon?idHoaDon={idHoaDon}&idNguoiDung={idNguoiDung}&trangThaiGiaoHang={TrangThai}&Lido={Lido}&ngayCapNhatGanNhat={ngayCapNhatGanNhat}", null);
+                var res = await _httpClient.PutAsync($"api/HoaDon/UpdateTrangThaiGiaoHangHoaDon?idHoaDon={idHoaDon}&idNguoiDung={idNguoiDung}&trangThaiGiaoHang={TrangThai}&Lido={Lido}&ngayCapNhatGanNhat={ngayCapNhatGanNhat}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -200,7 +201,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateTrangThaiHoaDonOnline?idHoaDon={idHoaDon}&TrangThaiThanhToan={TrangThai}", null);
+                var res = await _httpClient.PutAsync($"api/HoaDon/UpdateTrangThaiHoaDonOnline?idHoaDon={idHoaDon}&TrangThaiThanhToan={TrangThai}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -218,7 +219,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PutAsJsonAsync("https://localhost:7038/api/HoaDon/ThanhToanTaiQuay", hoaDon);
+                var res = await _httpClient.PutAsJsonAsync("api/HoaDon/ThanhToanTaiQuay", hoaDon);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -236,7 +237,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://localhost:7038/api/HoaDon/UpdateDiaChi?idHoaDon={idHoaDon}&diaChi={diaChi}", null);
+                var res = await _httpClient.PutAsync($"api/HoaDon/UpdateDiaChi?idHoaDon={idHoaDon}&diaChi={diaChi}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();

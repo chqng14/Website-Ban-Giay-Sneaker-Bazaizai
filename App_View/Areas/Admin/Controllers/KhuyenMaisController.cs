@@ -54,12 +54,12 @@ namespace App_View.Areas.Admin.Controllers
             {
                 ViewBag.ThongBao = TempData["ThongBao"].ToString();
             }
-            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("https://localhost:7038/api/KhuyenMai")).Content.ReadAsStringAsync());
+            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("api/KhuyenMai")).Content.ReadAsStringAsync());
             return View(KhuyenMais);
         }
         public async Task<IActionResult> LstSaleAsync(string trangThaiSale,string loaiHinhKM, string tenKM)
         {
-            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("https://localhost:7038/api/KhuyenMai")).Content.ReadAsStringAsync());
+            var KhuyenMais = JsonConvert.DeserializeObject<List<KhuyenMai>>(await (await _httpClient.GetAsync("api/KhuyenMai")).Content.ReadAsStringAsync());
             if(!string.IsNullOrEmpty(trangThaiSale))
             {
                 KhuyenMais = KhuyenMais.Where(x => x.TrangThai == Convert.ToInt32(trangThaiSale)).ToList();
@@ -184,7 +184,7 @@ namespace App_View.Areas.Admin.Controllers
                         var streamContent = new StreamContent(formFile.OpenReadStream());
                         streamContent.Headers.Add("Content-Type", formFile.ContentType);
                         content.Add(streamContent, "formFile", formFile.FileName);
-                        var response = await _httpClient.PostAsync($"https://localhost:7038/api/KhuyenMai/Create-KhuyenMai", content);
+                        var response = await _httpClient.PostAsync($"api/KhuyenMai/Create-KhuyenMai", content);
                         if (response.IsSuccessStatusCode)
                         {
                             var lstUser = await _userManager.GetUsersInRoleAsync(ChucVuMacDinh.KhachHang.ToString());
@@ -332,7 +332,7 @@ namespace App_View.Areas.Admin.Controllers
                             var streamContent = new StreamContent(formFile.OpenReadStream());
                             streamContent.Headers.Add("Content-Type", formFile.ContentType);
                             content.Add(streamContent, "formFile", formFile.FileName);
-                            string urlApi = $"https://localhost:7038/api/KhuyenMai/Edit";
+                            string urlApi = $"api/KhuyenMai/Edit";
                             var response = await _httpClient.PutAsync(urlApi, content);
                                 if (response.IsSuccessStatusCode)
                                 {
@@ -355,7 +355,7 @@ namespace App_View.Areas.Admin.Controllers
                             content.Add(new StringContent($"{khuyenMai.NgayBatDau?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")}"), "NgayBatDau");
                             content.Add(new StringContent("111"), "MaKhuyenMai");
                             content.Add(new StringContent($"{khuyenMai.TrangThai}"), "TrangThai");
-                            var response = await _httpClient.PutAsync($"https://localhost:7038/api/KhuyenMai/EditNoiImage", content);
+                            var response = await _httpClient.PutAsync($"api/KhuyenMai/EditNoiImage", content);
                             if (response.IsSuccessStatusCode)
                             {
                                 return RedirectToAction("Index");

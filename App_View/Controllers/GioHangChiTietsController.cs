@@ -487,7 +487,7 @@ namespace App_View.Controllers
             var data = new List<SanPhamGioHangViewModel>();
             if (idNguoiDung != null)
             {
-                data = await httpClient.GetFromJsonAsync<List<SanPhamGioHangViewModel>>($"https://localhost:7038/api/GioHangChiTiet/Get-List-SanPhamGioHangVM/{idNguoiDung}");
+                data = await httpClient.GetFromJsonAsync<List<SanPhamGioHangViewModel>>($"api/GioHangChiTiet/Get-List-SanPhamGioHangVM/{idNguoiDung}");
             }
             else
             {

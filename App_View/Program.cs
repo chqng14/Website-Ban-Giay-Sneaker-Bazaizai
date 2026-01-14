@@ -40,6 +40,10 @@ builder.Services.AddScoped<IDanhGiaservice, DanhGiaservice>();
 builder.Services.AddScoped<IHoaDonServices, HoaDonServices>();
 builder.Services.AddScoped<IThongKeService, ThongKeService>();
 builder.Services.AddScoped<IThongTinGHServices, ThongTinGHServices>();
+builder.Services.AddScoped<IHoaDonChiTietservices, HoaDonChiTietservices>();
+builder.Services.AddScoped<IPTThanhToanServices, PTThanhToanServices>();
+builder.Services.AddScoped<IPTThanhToanChiTietServices, PTThanhToanChiTietServices>();
+builder.Services.AddScoped<CapNhatThoiGianService>();
 var apiBaseUrl = builder.Configuration.GetValue<string>("ApiSettings:BaseUrl") ?? "https://localhost:7038/";
 builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiBaseUrl) });
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
@@ -168,16 +172,19 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseHangfireDashboard();
-var capNhatTime = new CapNhatThoiGianService();
-Task.Run(() =>
+using (var scope = app.Services.CreateScope())
 {
-    while (true)
+    var capNhatTime = scope.ServiceProvider.GetRequiredService<CapNhatThoiGianService>();
+    Task.Run(async () =>
     {
-        capNhatTime.CapNhatThongTinKhuyenMai();
-        capNhatTime.CapNhatThoiGianVoucher();
-        Thread.Sleep(TimeSpan.FromSeconds(5));
-    }
-});
+        while (true)
+        {
+            await capNhatTime.CapNhatThongTinKhuyenMai();
+            await capNhatTime.CapNhatThoiGianVoucher();
+            await Task.Delay(TimeSpan.FromSeconds(5));
+        }
+    });
+}
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapRazorPages();

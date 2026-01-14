@@ -10,15 +10,16 @@ namespace App_View.Services
     public class HoaDonChiTietservices : IHoaDonChiTietservices
     {
         private readonly HttpClient httpClient;
-        public HoaDonChiTietservices()
+        public HoaDonChiTietservices() : this(HttpClientFactory.CreateClient()) { }
+        public HoaDonChiTietservices(HttpClient _httpClient)
         {
-            httpClient = new HttpClient();
+            httpClient = _httpClient;
         }
         public async Task<bool> CreateHoaDonChiTiet(HoaDonChiTietDTO hoaDonChiTietDTO)
         {
             try
             {
-                var res = await httpClient.PostAsJsonAsync("https://localhost:7038/api/HoaDonChiTiet/Create", hoaDonChiTietDTO);
+                var res = await httpClient.PostAsJsonAsync("api/HoaDonChiTiet/Create", hoaDonChiTietDTO);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -47,7 +48,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await httpClient.PostAsJsonAsync("https://localhost:7038/api/HoaDonChiTiet/ThemSanPhamVaoHoaDon", hoaDonChiTiet);
+                var res = await httpClient.PostAsJsonAsync("api/HoaDonChiTiet/ThemSanPhamVaoHoaDon", hoaDonChiTiet);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<HoaDonChiTiet>();
@@ -66,7 +67,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await httpClient.PutAsync($"https://localhost:7038/api/HoaDonChiTiet/SuaTrangThaiHoaDon?idHoaDon={idHoaDon}&TrangThai={TrangThai}", null);
+                var res = await httpClient.PutAsync($"api/HoaDonChiTiet/SuaTrangThaiHoaDon?idHoaDon={idHoaDon}&TrangThai={TrangThai}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -85,7 +86,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await httpClient.PutAsync("https://localhost:7038/api/HoaDonChiTiet/SuaSoLuong?idHD="+idHD+"&idSanPham="+idSanPham+"&SoLuongMoi="+SoLuongMoi+"&SoluongTon="+SoluongTon,null);
+                var res = await httpClient.PutAsync("api/HoaDonChiTiet/SuaSoLuong?idHD="+idHD+"&idSanPham="+idSanPham+"&SoLuongMoi="+SoLuongMoi+"&SoluongTon="+SoluongTon,null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsStringAsync();
@@ -103,7 +104,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await httpClient.DeleteAsync("https://localhost:7038/api/HoaDonChiTiet/XoaSanPhamKhoiHoaDon?idHD=" + idHD + "&idSanPham=" + idSanPham);
+                var res = await httpClient.DeleteAsync("api/HoaDonChiTiet/XoaSanPhamKhoiHoaDon?idHD=" + idHD + "&idSanPham=" + idSanPham);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsStringAsync();
@@ -121,7 +122,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await httpClient.PutAsync("https://localhost:7038/api/HoaDon/HuyHoaDon?maHD=" + maHD +"&lyDoHuy="+lyDoHuy+"&idUser="+idUser, null );
+                var res = await httpClient.PutAsync("api/HoaDon/HuyHoaDon?maHD=" + maHD +"&lyDoHuy="+lyDoHuy+"&idUser="+idUser, null );
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<List<HoaDonChiTiet>>();
@@ -139,7 +140,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await httpClient.PutAsync("https://localhost:7038/api/HoaDon/ThanhToanHoaDonChiTiet?maHD=" + maHD, null);
+                var res = await httpClient.PutAsync("api/HoaDon/ThanhToanHoaDonChiTiet?maHD=" + maHD, null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();

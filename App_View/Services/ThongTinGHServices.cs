@@ -8,15 +8,16 @@ namespace App_View.Services
     public class ThongTinGHServices : IThongTinGHServices
     {
         private readonly HttpClient _httpClient;
-        public ThongTinGHServices()
+        public ThongTinGHServices() : this(HttpClientFactory.CreateClient()) { }
+        public ThongTinGHServices(HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
         }
         public async Task<bool> CreateThongTin(ThongTinGHDTO thongTinGHDTO)
         {
             try
             {
-                var res = await _httpClient.PostAsJsonAsync("https://localhost:7038/api/ThongTinGiaoHang/Create", thongTinGHDTO);
+                var res = await _httpClient.PostAsJsonAsync("api/ThongTinGiaoHang/Create", thongTinGHDTO);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -33,31 +34,31 @@ namespace App_View.Services
 
         public async Task<bool> DeleteThongTin(string id)
         {
-            var res = await _httpClient.DeleteAsync($"https://localhost:7038/api/ThongTinGiaoHang/Delete?id={id}");
+            var res = await _httpClient.DeleteAsync($"api/ThongTinGiaoHang/Delete?id={id}");
             return res.IsSuccessStatusCode;
         }
 
         public async Task<List<ThongTinGiaoHang>> GetAllThongTin()
         {
-            return await _httpClient.GetFromJsonAsync<List<ThongTinGiaoHang>>("https://localhost:7038/api/ThongTinGiaoHang/GetAll");
+            return await _httpClient.GetFromJsonAsync<List<ThongTinGiaoHang>>("api/ThongTinGiaoHang/GetAll");
         }
 
         public async Task<List<ThongTinGHDTO>> GetAllThongTinDTO()
         {
-            return await _httpClient.GetFromJsonAsync<List<ThongTinGHDTO>>("https://localhost:7038/api/ThongTinGiaoHang/GetAllDTO");
+            return await _httpClient.GetFromJsonAsync<List<ThongTinGHDTO>>("api/ThongTinGiaoHang/GetAllDTO");
         }
 
         public async Task<List<ThongTinGiaoHang>> GetThongTinByIdUser(string idNguoiDung)
         {
 
-            return await _httpClient.GetFromJsonAsync<List<ThongTinGiaoHang>>($"https://localhost:7038/api/ThongTinGiaoHang/GetByIdUser?idNguoiDung={idNguoiDung}");
+            return await _httpClient.GetFromJsonAsync<List<ThongTinGiaoHang>>($"api/ThongTinGiaoHang/GetByIdUser?idNguoiDung={idNguoiDung}");
         }
 
         public async Task<bool> UpdateThongTin(ThongTinGHDTO thongTinGHDTO)
         {
             try
             {
-                var res = await _httpClient.PutAsJsonAsync("https://localhost:7038/api/ThongTinGiaoHang/Edit", thongTinGHDTO);
+                var res = await _httpClient.PutAsJsonAsync("api/ThongTinGiaoHang/Edit", thongTinGHDTO);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
@@ -76,7 +77,7 @@ namespace App_View.Services
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://localhost:7038/api/ThongTinGiaoHang/UpdateTrangThai?idThongTin={idThongTin}", null);
+                var res = await _httpClient.PutAsync($"api/ThongTinGiaoHang/UpdateTrangThai?idThongTin={idThongTin}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();
