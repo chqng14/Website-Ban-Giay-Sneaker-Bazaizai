@@ -121,12 +121,12 @@ Mở file `.env` và chỉnh sửa các giá trị theo nhu cầu:
 
 ```env
 # Database Configuration - Cấu hình cơ sở dữ liệu
-SA_PASSWORD=YourStrong@Passw0rd    # Mật khẩu SQL Server (yêu cầu ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt)
-DB_NAME=DuAnTotNghiep_BazaizaiStore # Tên database
-DB_SERVER=sqlserver                 # Tên container SQL Server
+SA_PASSWORD=<Thay_bằng_mật_khẩu_mạnh>  # Mật khẩu SQL Server (xem yêu cầu bên dưới)
+DB_NAME=DuAnTotNghiep_BazaizaiStore    # Tên database
+DB_SERVER=sqlserver                    # Tên container SQL Server
 
 # Database URL (connection string đầy đủ - tùy chọn, sẽ ghi đè các cài đặt ở trên)
-# DATABASE_URL=Server=sqlserver;Database=DuAnTotNghiep_BazaizaiStore;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+# DATABASE_URL=Server=sqlserver;Database=DuAnTotNghiep_BazaizaiStore;User Id=sa;Password=<Thay_bằng_mật_khẩu>;TrustServerCertificate=True
 
 # API Configuration - Cấu hình API
 API_URL=http://app-api:80/          # URL nội bộ của API (trong Docker network)
@@ -144,7 +144,13 @@ Mật khẩu SQL Server (`SA_PASSWORD`) phải đáp ứng các yêu cầu sau:
 - Bao gồm **số** (0-9)
 - Bao gồm **ký tự đặc biệt** (!@#$%^&*...)
 
-Ví dụ mật khẩu hợp lệ: `MyP@ssw0rd123`
+**Tạo mật khẩu ngẫu nhiên mạnh (khuyến nghị):**
+```bash
+# Linux/macOS
+openssl rand -base64 16 | tr -d '=' | head -c 16 && echo '@1Aa'
+
+# Hoặc sử dụng công cụ tạo mật khẩu online có uy tín
+```
 
 ---
 
@@ -278,8 +284,8 @@ docker compose logs --tail=100 app-api
 # Truy cập vào container (bash shell)
 docker exec -it app-api /bin/bash
 
-# Truy cập vào SQL Server container
-docker exec -it sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "YourStrong@Passw0rd"
+# Truy cập vào SQL Server container (sử dụng biến môi trường từ .env)
+docker exec -it sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD"
 ```
 
 ### Quản lý images và volumes
@@ -385,9 +391,10 @@ docker build -t test-app-api -f App_Api/Dockerfile .
 
 ### Cấu hình bảo mật
 
-1. **Thay đổi mật khẩu mặc định**
-   ```env
-   SA_PASSWORD=P@ssw0rd_R@nd0m_V3ry_Str0ng!
+1. **Sử dụng mật khẩu mạnh, ngẫu nhiên**
+   ```bash
+   # Tạo mật khẩu ngẫu nhiên và lưu vào .env
+   echo "SA_PASSWORD=$(openssl rand -base64 16 | tr -d '=' | head -c 16)@1Aa" >> .env
    ```
 
 2. **Sử dụng HTTPS** - Cấu hình reverse proxy (Nginx, Traefik, Caddy)
@@ -442,8 +449,14 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 ### Backup Database
 
 ```bash
-# Tạo backup
-docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "YourStrong@Passw0rd" \
+# Load biến môi trường từ file .env
+source .env
+
+# Tạo thư mục backup trong container (nếu chưa có)
+docker exec sqlserver mkdir -p /var/opt/mssql/backup
+
+# Tạo backup (sử dụng biến môi trường SA_PASSWORD)
+docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" \
   -Q "BACKUP DATABASE [DuAnTotNghiep_BazaizaiStore] TO DISK = N'/var/opt/mssql/backup/backup.bak' WITH NOFORMAT, NOINIT, NAME = 'Full Backup', SKIP, NOREWIND, NOUNLOAD, STATS = 10"
 
 # Copy backup ra host
@@ -453,11 +466,14 @@ docker cp sqlserver:/var/opt/mssql/backup/backup.bak ./backup.bak
 ### Restore Database
 
 ```bash
+# Load biến môi trường từ file .env
+source .env
+
 # Copy backup vào container
 docker cp ./backup.bak sqlserver:/var/opt/mssql/backup/backup.bak
 
-# Restore
-docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "YourStrong@Passw0rd" \
+# Restore (sử dụng biến môi trường SA_PASSWORD)
+docker exec sqlserver /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$SA_PASSWORD" \
   -Q "RESTORE DATABASE [DuAnTotNghiep_BazaizaiStore] FROM DISK = N'/var/opt/mssql/backup/backup.bak' WITH FILE = 1, NOUNLOAD, REPLACE, STATS = 5"
 ```
 
