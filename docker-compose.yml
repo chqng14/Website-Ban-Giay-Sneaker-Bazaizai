@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong@Passw0rd
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - bazaizai-network
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "YourStrong@Passw0rd" -Q "SELECT 1" -b -o /dev/null
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  app-api:
+    build:
+      context: .
+      dockerfile: App_Api/Dockerfile
+    container_name: app-api
+    ports:
+      - "7038:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=DuAnTotNghiep_BazaizaiStore;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - bazaizai-network
+
+  app-view:
+    build:
+      context: .
+      dockerfile: App_View/Dockerfile
+    container_name: app-view
+    ports:
+      - "7214:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=DuAnTotNghiep_BazaizaiStore;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True
+      - ApiSettings__BaseUrl=http://app-api:80/
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+      app-api:
+        condition: service_started
+    networks:
+      - bazaizai-network
+
+volumes:
+  sqlserver_data:
+
+networks:
+  bazaizai-network:
+    driver: bridge

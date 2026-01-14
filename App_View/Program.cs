@@ -1,9 +1,7 @@
-
 using App_View.IServices;
 using App_Data.DbContext;
 using App_Data.Models;
 using App_View.Controllers;
-using App_View.IServices;
 using App_View.Models;
 using App_View.Models.Momo;
 using App_View.Services;
@@ -20,43 +18,30 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.AddScoped<IMomoService, MomoService>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
-// Add services to the container.
-//BAZAIZAI\SQLEXPRESS
 
-
-
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=(localdb)\mssqllocaldb;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"));
-
-//cái này là db online
-//builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Server = tcp:bazaizaidb.database.windows.net,1433; Initial Catalog = bazaizaidb; Persist Security Info = False; User ID = bazaizai; Password = Trinhanh0311; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30;"));
-//Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
-
-
-builder.Services.AddHangfireServer();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(connectionString));
+builder.Services.AddHangfireServer();
 builder.Services.AddDbContext<BazaizaiContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddOptions();
 builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietservice, SanPhamChiTietservice>();
+builder.Services.AddScoped<ISanPhamChiTietservice, SanPhamChiTietservice>();
 builder.Services.AddScoped<IVoucherservices, Voucherservices>();
 builder.Services.AddScoped<IVoucherNguoiDungservices, VoucherNguoiDungservices>();
-
-builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietservice, SanPhamChiTietservice>();
 builder.Services.AddScoped<IGioHangChiTietservices, GioHangChiTietservices>();
 builder.Services.AddScoped<IKhuyenMaiChiTietservices, KhuyenMaiChiTietservices>();
 builder.Services.AddScoped<IKhuyenMaiservices, KhuyenMaiservices>();
-builder.Services.AddScoped<ThongTinGHController>();  // Sử dụng AddScoped nếu bạn muốn một instance cho mỗi phạm vi của yêu cầu HTTP
+builder.Services.AddScoped<ThongTinGHController>();
 builder.Services.AddScoped<GioHangChiTietsController, GioHangChiTietsController>();
 builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 builder.Services.AddScoped<IDanhGiaservice, DanhGiaservice>();
 builder.Services.AddScoped<IHoaDonServices, HoaDonServices>();
 builder.Services.AddScoped<IThongKeService, ThongKeService>();
 builder.Services.AddScoped<IThongTinGHServices, ThongTinGHServices>();
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
-//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://bazaizaiapi.azurewebsites.net/") });
-//Thêm
+var apiBaseUrl = builder.Configuration.GetValue<string>("ApiSettings:BaseUrl") ?? "https://localhost:7038/";
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(apiBaseUrl) });
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
 .AddEntityFrameworkStores<BazaizaiContext>()
 .AddDefaultTokenProviders();
@@ -101,61 +86,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/Lockout/";
     options.AccessDeniedPath = "/KhongDuocTruyCap.html";
 });
-//builder.Services.ConfigureApplicationCookie(options =>
-//{
-//    options.ExpireTimeSpan = TimeSpan.FromDays(14);
-//    options.LoginPath = "/Login/";
-//    options.LogoutPath = "/Lockout/";
-//    options.AccessDeniedPath = "/KhongDuocTruyCap.html";
-//    options.ReturnUrlParameter = "/Admin/";
-//    options.Events = new CookieAuthenticationEvents
-//    {
-//        OnValidatePrincipal = context =>
-//        {
-
-//            Kiểm tra vai trò người dùng
-//            var userRoles = context.Principal.Claims
-//                .Where(c => c.Type == ClaimTypes.Role)
-//                .Select(c => c.Value)
-//                .ToList();
-
-//            Xác định thời gian hết hạn dựa trên vai trò
-//            var expireTimeSpan = userRoles.Contains("Admin")
-
-//                ? TimeSpan.FromDays(14)  // Thời gian hết hạn cho vai trò Admin là 30 ngày
-//                : userRoles.Contains("NhanVien") ? TimeSpan.FromDays(14) : TimeSpan.FromMinutes(1); // Mặc định cho các vai trò khác là 14 ngày
-
-//            Cập nhật thời gian hết hạn
-//            context.Properties.ExpiresUtc = DateTimeOffset.UtcNow.Add(expireTimeSpan);
-
-//            return Task.CompletedTask;
-
-//        },
-//        OnRedirectToReturnUrl = context =>
-//        {
-//            var userRoles = context.HttpContext.User.Claims
-//                .Where(c => c.Type == ClaimTypes.Role)
-//                .Select(c => c.Value)
-//                .ToList();
-
-//            Kiểm tra vai trò và chuyển hướng tương ứng
-//            if (userRoles.Contains("Admin"))
-//            {
-//                context.RedirectUri = "/admin";
-//            }
-//            else if (userRoles.Contains("NhanVien"))
-//            {
-//                context.RedirectUri = "/admin";
-//            }
-//            else
-//            {
-//                context.RedirectUri = "/Index";
-//            }
-
-//            return Task.CompletedTask;
-//        }
-//    };
-//});
 builder.Services.AddAuthentication()
      .AddCookie()
     .AddGoogle(googleOptions =>
@@ -192,7 +122,7 @@ builder.Services.AddSession(Options =>
 });
 builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("TwilioSettings"));
 builder.Services.AddScoped<ISMSSenderService, SMSSenderService>();
-//thêm
+
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
