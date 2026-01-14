@@ -16,17 +16,15 @@ namespace App_View.Services
 
         public async Task<List<KhuyenMai>> GetAllKhuyenMai()
         {
-            var lstKM = (await _httpClient.GetFromJsonAsync<List<KhuyenMai>>("https://localhost:7038/api/KhuyenMai"));
+            var lstKM = (await _httpClient.GetFromJsonAsync<List<KhuyenMai>>("api/KhuyenMai"));
             return lstKM;
         }
 
         public async Task<bool> CreateKhuyenMai(KhuyenMai khuyenMai,IFormFile formFile)
         {
-            var _httpClient = new HttpClient();
             try
             {
-                string apiUrl = "/api/KhuyenMai/Create-KhuyenMai";
-                var httpClient = new HttpClient();
+                string apiUrl = "api/KhuyenMai/Create-KhuyenMai";
 
                 var content = new MultipartFormDataContent();
                 content.Add(new StringContent(khuyenMai.MaKhuyenMai), "ma");

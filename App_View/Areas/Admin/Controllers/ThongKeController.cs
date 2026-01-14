@@ -572,7 +572,7 @@ namespace App_View.Areas.Admin.Controllers
         [HttpGet]
         public async Task<string> TrangThaiHoaDonOnline1thang()
         {
-            string apiUrl = "https://localhost:7038/TrangThaiHoaDon1thang";
+            string apiUrl = "TrangThaiHoaDon1thang";
 
             try
             {
