@@ -45,3 +45,4 @@ docker compose up -d --build
 # 3. Truy cập ứng dụng
 # Website: http://localhost:8080
 # API: http://localhost:80
+# Health Check: http://localhost:80/api/health
