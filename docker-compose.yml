@@ -27,10 +27,10 @@ services:
       dockerfile: App_Api/Dockerfile
     container_name: app-api
     ports:
-      - "7038:80"
+      - "${API_PORT:-7038}:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=${DB_NAME:-DuAnTotNghiep_BazaizaiStore};User Id=sa;Password=${SA_PASSWORD:-YourStrong@Passw0rd};TrustServerCertificate=True
+      - ConnectionStrings__DefaultConnection=${DATABASE_URL:-Server=${DB_SERVER:-sqlserver};Database=${DB_NAME:-DuAnTotNghiep_BazaizaiStore};User Id=sa;Password=${SA_PASSWORD:-YourStrong@Passw0rd};TrustServerCertificate=True}
     depends_on:
       sqlserver:
         condition: service_healthy
@@ -43,11 +43,11 @@ services:
       dockerfile: App_View/Dockerfile
     container_name: app-view
     ports:
-      - "7214:80"
+      - "${APP_PORT:-7214}:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
-      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=${DB_NAME:-DuAnTotNghiep_BazaizaiStore};User Id=sa;Password=${SA_PASSWORD:-YourStrong@Passw0rd};TrustServerCertificate=True
-      - ApiSettings__BaseUrl=http://app-api:80/
+      - ConnectionStrings__DefaultConnection=${DATABASE_URL:-Server=${DB_SERVER:-sqlserver};Database=${DB_NAME:-DuAnTotNghiep_BazaizaiStore};User Id=sa;Password=${SA_PASSWORD:-YourStrong@Passw0rd};TrustServerCertificate=True}
+      - ApiSettings__BaseUrl=${API_URL:-http://app-api:80/}
     depends_on:
       sqlserver:
         condition: service_healthy
