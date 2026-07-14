@@ -7,7 +7,6 @@ using AutoMapper;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using OpenXmlPowerTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +21,9 @@ namespace App_Data.Repositories
     {
         private readonly BazaizaiContext context;
         private readonly IMapper _mapper;
-        public HoaDonRepos(IMapper mapper)
+        public HoaDonRepos(IMapper mapper, BazaizaiContext dbContext)
         {
-            context = new BazaizaiContext();
+            context = dbContext;
             //_mapper = new MapperConfiguration(cfg =>
             //{
             //    cfg.CreateMap<HoaDon, HoaDonDTO>();

@@ -5,7 +5,6 @@ using App_Data.ViewModels.HoaDon;
 using App_Data.ViewModels.Voucher;
 using App_View.IServices;
 using Newtonsoft.Json;
-using OpenXmlPowerTools;
 using System.Net.Http;
 
 namespace App_View.Services
@@ -13,7 +12,6 @@ namespace App_View.Services
     public class DanhGiaservice : IDanhGiaservice
     {
         private readonly HttpClient _httpClient;
-        public DanhGiaservice() : this(HttpClientFactory.CreateClient()) { }
         public DanhGiaservice(HttpClient httpClient)
         {
             _httpClient = httpClient;

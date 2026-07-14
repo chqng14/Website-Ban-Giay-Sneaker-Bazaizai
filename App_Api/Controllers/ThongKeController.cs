@@ -16,15 +16,13 @@ namespace App_Api.Controllers
     public class ThongKeController : Controller
     {
         private readonly IAllRepo<HoaDon> repos;
-        BazaizaiContext context = new BazaizaiContext();
-        DbSet<HoaDon> DanhGias;
+        private readonly BazaizaiContext context;
         private IQueryable<ThongKeDoanhThuOnline> baseQuery;
 
-        public ThongKeController()
+        public ThongKeController(IAllRepo<HoaDon> repository, BazaizaiContext dbContext)
         {
-            DanhGias = context.HoaDons;
-            AllRepo<HoaDon> all = new AllRepo<HoaDon>(context, DanhGias);
-            repos = all;
+            context = dbContext;
+            repos = repository;
             baseQuery = from a in context.HoaDons
                         join e in context.ThongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH into thongTinGiaoHangGroup
                         from e in thongTinGiaoHangGroup.DefaultIfEmpty()

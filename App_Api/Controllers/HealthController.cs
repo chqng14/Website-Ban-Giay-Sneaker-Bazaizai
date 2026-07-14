@@ -1,4 +1,5 @@
 using App_Data.DbContext;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -21,12 +22,22 @@ namespace App_Api.Controllers
         /// </summary>
         /// <returns>Trạng thái kết nối database</returns>
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> CheckHealth()
         {
             try
             {
                 // Thử kết nối đến database bằng cách thực hiện một query đơn giản
-                await _dbContext.Database.CanConnectAsync();
+                var canConnect = await _dbContext.Database.CanConnectAsync();
+                if (!canConnect)
+                {
+                    return StatusCode(StatusCodes.Status503ServiceUnavailable, new
+                    {
+                        status = "Unhealthy",
+                        message = "Không thể kết nối database",
+                        timestamp = DateTime.UtcNow
+                    });
+                }
                 
                 // Trích xuất tên database từ connection string một cách an toàn
                 var connectionString = _dbContext.Database.GetConnectionString();
@@ -57,7 +68,7 @@ namespace App_Api.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, new
                 {
                     status = "Unhealthy",
                     message = "Kết nối database thất bại",
@@ -101,21 +112,24 @@ namespace App_Api.Controllers
                     }
                 }
 
-                return Ok(new
+                var result = new
                 {
                     database = new
                     {
                         canConnect = canConnect,
-                        connectionString = safeConnectionString,
-                        errorMessage = ""
+                        connectionString = safeConnectionString
                     },
                     status = canConnect ? "Healthy" : "Unhealthy",
                     timestamp = timestamp
-                });
+                };
+
+                return canConnect
+                    ? Ok(result)
+                    : StatusCode(StatusCodes.Status503ServiceUnavailable, result);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new
+                return StatusCode(StatusCodes.Status503ServiceUnavailable, new
                 {
                     database = new
                     {

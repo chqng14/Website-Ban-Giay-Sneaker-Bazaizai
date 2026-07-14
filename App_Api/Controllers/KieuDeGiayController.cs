@@ -17,14 +17,10 @@ namespace App_Api.Controllers
     public class KieuDeGiayController : ControllerBase
     {
         private readonly IAllRepo<KieuDeGiay> allRepo;
-        BazaizaiContext dbContext = new BazaizaiContext();
-        DbSet<KieuDeGiay> KieuDeGiay;
         private readonly IMapper _mapper;
-        public KieuDeGiayController(IMapper mapper)
+        public KieuDeGiayController(IMapper mapper, IAllRepo<KieuDeGiay> repository)
         {
-            KieuDeGiay = dbContext.KieuDeGiays;
-            AllRepo<KieuDeGiay> all = new AllRepo<KieuDeGiay>(dbContext, KieuDeGiay);
-            allRepo = all;
+            allRepo = repository;
             _mapper = mapper;
         }
         // GET: api/<KieuDeGiayController>
@@ -70,13 +66,11 @@ namespace App_Api.Controllers
             try
             {
                 var nameKieuDe = kieuDeGiayDTO.TenKieuDeGiay!.Trim().ToLower();
-                if (!dbContext.KieuDeGiays.Where(x => x.TenKieuDeGiay!.Trim().ToLower() == nameKieuDe).Any())
+                if (!allRepo.GetAll().Any(x => x.TenKieuDeGiay!.Trim().ToLower() == nameKieuDe && x.IdKieuDeGiay != kieuDeGiayDTO.IdKieuDeGiay))
                 {
-                    var kieuDe = _mapper.Map<KieuDeGiay>(kieuDeGiayDTO);
-                    dbContext.Attach(kieuDe);
-                    dbContext.Entry(kieuDe).Property(sp => sp.TenKieuDeGiay).IsModified = true;
-                    dbContext.SaveChanges();
-                    return true;
+                    var kieuDe = allRepo.GetAll().First(x => x.IdKieuDeGiay == kieuDeGiayDTO.IdKieuDeGiay);
+                    kieuDe.TenKieuDeGiay = kieuDeGiayDTO.TenKieuDeGiay;
+                    return allRepo.EditItem(kieuDe);
                 }
                 return false;
             }

@@ -3,7 +3,6 @@
 @using App_View.Services;
 @inject IDanhGiaservice _DanhGiaservice
 @{
-    _DanhGiaservice = new DanhGiaservice();
     var TongSoDanhGia = await _DanhGiaservice.GetTongSoDanhGia(Model.IdChiTietSp);
     var SaoTb = await _DanhGiaservice.GetSoSaoTB(Model.IdChiTietSp);
 }

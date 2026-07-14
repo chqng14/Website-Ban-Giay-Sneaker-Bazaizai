@@ -15,17 +15,17 @@ namespace App_View.Areas.Admin.Pages.User
     {
         private readonly UserManager<NguoiDung> _userManager;
         private readonly SignInManager<NguoiDung> _signInManager;
-        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IUserImageStorage _imageStorage;
         private readonly IEmailSender _emailSender;
         public EditUserModel(
             UserManager<NguoiDung> userManager,
             SignInManager<NguoiDung> signInManager,
-            IWebHostEnvironment webHostEnvironment,
+            IUserImageStorage imageStorage,
             IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _webHostEnvironment = webHostEnvironment;
+            _imageStorage = imageStorage;
             _emailSender = emailSender;
         }
 
@@ -158,27 +158,20 @@ namespace App_View.Areas.Admin.Pages.User
             if (Request.Form.Files.Count > 0)
             {
                 IFormFile file = Request.Form.Files.FirstOrDefault();
-                string uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "user_img");
-                if (!Directory.Exists(uploadsFolder))
+                var oldAvatar = user.AnhDaiDien;
+                try
                 {
-                    Directory.CreateDirectory(uploadsFolder);
+                    user.AnhDaiDien = await _imageStorage.SaveAvatarAsync(file, HttpContext.RequestAborted);
                 }
-                string imageFileName = user.AnhDaiDien.Replace("/user_img/", "");
-                string oldImagePath = Path.Combine(uploadsFolder, imageFileName);
-                string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                using (var stream = new FileStream(filePath, FileMode.Create))
+                catch (InvalidDataException exception)
                 {
-                    await file.CopyToAsync(stream);
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                    return Page();
                 }
-                user.AnhDaiDien = "/user_img/" + uniqueFileName;
                 var setImgResult = await _userManager.UpdateAsync(user);
                 if (setImgResult.Succeeded)
                 {
-                    if (System.IO.File.Exists(oldImagePath))
-                    {
-                        System.IO.File.Delete(oldImagePath);
-                    }
+                    _imageStorage.DeleteAvatar(oldAvatar);
                 }
 
             }

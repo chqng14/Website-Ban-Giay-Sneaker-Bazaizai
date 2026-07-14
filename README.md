@@ -1,48 +1,37 @@
-# Website Bán Giày Sneaker Bazaizai
+# Website bán giày Sneaker Bazaizai
 
-## Giới thiệu
+Ứng dụng ASP.NET Core gồm ba thành phần chạy bằng Docker:
 
-Website này là một nền tảng bán giày sneaker trực tuyến, được xây dựng để cung cấp trải nghiệm mua sắm tốt nhất cho khách hàng.
+- `app-view`: website MVC, cổng mặc định `8080`.
+- `app-api`: API nội bộ, cổng mặc định `80` trên máy host.
+- `sqlserver`: SQL Server, cổng mặc định `1433`.
 
-## Các công nghệ sử dụng
+## Khởi động nhanh
 
-- **JavaScript**: Sử dụng cho các tương tác phía client.
-- **HTML**: Ngôn ngữ đánh dấu để xây dựng cấu trúc trang web.
-- **CSS**: Định kiểu và thiết kế giao diện trang web.
-- **SCSS**: Một phiên bản nâng cao của CSS.
-- **C#**: Sử dụng cho phía server với ASP.NET.
-- **Docker**: Container hóa ứng dụng để dễ dàng triển khai.
-
-## Thư viện và Frameworks
-
-- **Bootstrap**: Framework front-end để phát triển các dự án web responsive và mobile-first.
-- **jQuery**: Thư viện JavaScript nhanh và nhỏ gọn để thao tác với DOM.
-- **Perfect Scrollbar**: Thư viện giúp thêm scrollbar tùy chỉnh vào các phần tử HTML.
-- **Popper.js**: Thư viện để quản lý các phần tử popover, tooltip và các vị trí gắn kèm.
-
-## Cài đặt
-
-### Clone repo
-
-```bash
-git clone https://github.com/chqng14/Website-Ban-Giay-Sneaker-Bazaizai.git
-cd Website-Ban-Giay-Sneaker-Bazaizai
+```powershell
+Copy-Item .env.example .env
+# Sửa SA_PASSWORD và INTERNAL_API_KEY trong .env
+.\deploy-docker.ps1
 ```
 
-### Triển khai với Docker (Khuyến nghị)
+Trên Linux/macOS có PowerShell 7: `pwsh ./deploy-docker.ps1`. Script tự kiểm tra cấu hình,
+build, chờ healthcheck và kiểm thử bảo vệ API. Có thể deploy thủ công bằng
+`docker compose up -d --build --wait` nếu cần.
 
-📖 **[Xem hướng dẫn chi tiết triển khai với Docker tại DOCKER.md](./DOCKER.md)**
+Mở website tại `http://localhost:8080` và kiểm tra API tại
+`http://localhost/api/Health`.
 
-**Khởi chạy nhanh:**
+Không commit file `.env` lên Git và không dùng `docker compose down -v` nếu
+chưa sao lưu dữ liệu.
 
-```bash
-# 1. Tạo file cấu hình môi trường
-cp .env.example .env
+## Tài liệu
 
-# 2. Khởi chạy tất cả services
-docker compose up -d --build
+- [Chỉ mục tài liệu](docs/README.md)
+- [Deploy Docker trên máy khác](docs/01-DEPLOY-DOCKER.md)
+- [Đổi email hệ thống](docs/02-CHANGE-SYSTEM-EMAIL.md)
+- [Vận hành, cập nhật và sao lưu](docs/03-OPERATIONS-BACKUP-UPDATE.md)
+- [Xử lý sự cố](docs/04-TROUBLESHOOTING.md)
+- [Checklist bảo mật trước khi public](docs/05-SECURITY-CHECKLIST.md)
 
-# 3. Truy cập ứng dụng
-# Website: http://localhost:8080
-# API: http://localhost:80
-# Health Check: http://localhost:80/api/health
+Tài liệu `DOCKER.md` cũ được giữ lại như đường dẫn tương thích và trỏ tới hướng
+dẫn mới.

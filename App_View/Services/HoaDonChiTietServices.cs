@@ -10,7 +10,6 @@ namespace App_View.Services
     public class HoaDonChiTietservices : IHoaDonChiTietservices
     {
         private readonly HttpClient httpClient;
-        public HoaDonChiTietservices() : this(HttpClientFactory.CreateClient()) { }
         public HoaDonChiTietservices(HttpClient _httpClient)
         {
             httpClient = _httpClient;
@@ -34,14 +33,17 @@ namespace App_View.Services
             }
         }
 
-        public Task<bool> DeleteHoaDonChiTiet(string idHoaDonChiTiet)
+        public async Task<bool> DeleteHoaDonChiTiet(string idHoaDonChiTiet)
         {
-            throw new NotImplementedException();
+            var response = await httpClient.DeleteAsync(
+                $"api/HoaDonChiTiet/Delete?id={Uri.EscapeDataString(idHoaDonChiTiet)}");
+            return response.IsSuccessStatusCode && await response.Content.ReadAsAsync<bool>();
         }
 
-        public Task<List<HoaDonChiTietViewModel>> GetAllHoaDonChiTiet()
+        public async Task<List<HoaDonChiTietViewModel>> GetAllHoaDonChiTiet()
         {
-            throw new NotImplementedException();
+            return await httpClient.GetFromJsonAsync<List<HoaDonChiTietViewModel>>(
+                "api/HoaDonChiTiet/GetAllViewModels") ?? new();
         }
 
         public async Task<HoaDonChiTiet> ThemSanPhamVaoHoaDon(HoaDonChiTiet hoaDonChiTiet)

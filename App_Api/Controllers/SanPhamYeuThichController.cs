@@ -17,10 +17,10 @@ namespace App_Api.Controllers
         private readonly BazaizaiContext _bazaizaiContext;
         private readonly IMapper _mapper;
 
-        public SanPhamYeuThichController(IAllRepo<SanPhamYeuThich> allRepoSanPhamYeuThich, IMapper mapper)
+        public SanPhamYeuThichController(IAllRepo<SanPhamYeuThich> allRepoSanPhamYeuThich, IMapper mapper, BazaizaiContext dbContext)
         {
             _allRepoSanPhamYeuThich = allRepoSanPhamYeuThich;
-            _bazaizaiContext = new BazaizaiContext();
+            _bazaizaiContext = dbContext;
             _mapper = mapper;
         }
 

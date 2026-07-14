@@ -16,14 +16,10 @@ namespace App_Api.Controllers
     public class SanPhamController : ControllerBase
     {
         private readonly IAllRepo<SanPham> allRepo;
-        BazaizaiContext dbContext = new BazaizaiContext();
-        DbSet<SanPham> SanPham;
         private readonly IMapper _mapper;
-        public SanPhamController(IMapper mapper)
+        public SanPhamController(IMapper mapper, IAllRepo<SanPham> repository)
         {
-            SanPham = dbContext.SanPhams;
-            AllRepo<SanPham> all = new AllRepo<SanPham>(dbContext, SanPham);
-            allRepo = all;
+            allRepo = repository;
             _mapper = mapper;
         }
         // GET: api/<SanPhamController>
@@ -69,13 +65,11 @@ namespace App_Api.Controllers
             try
             {
                 var nameSanPhamLower = sanPham.TenSanPham!.Trim().ToLower();
-                if (!dbContext.SanPhams.Where(x => x.TenSanPham!.Trim().ToLower() == nameSanPhamLower).Any())
+                if (!allRepo.GetAll().Any(x => x.TenSanPham!.Trim().ToLower() == nameSanPhamLower && x.IdSanPham != sanPham.IdSanPham))
                 {
-                    var sanPhamGet = _mapper.Map<SanPham>(sanPham);
-                    dbContext.Attach(sanPhamGet);
-                    dbContext.Entry(sanPhamGet).Property(sp => sp.TenSanPham).IsModified = true;
-                    dbContext.SaveChanges();
-                    return true;
+                    var sanPhamGet = allRepo.GetAll().First(x => x.IdSanPham == sanPham.IdSanPham);
+                    sanPhamGet.TenSanPham = sanPham.TenSanPham;
+                    return allRepo.EditItem(sanPhamGet);
                 }
                 return false;
             }

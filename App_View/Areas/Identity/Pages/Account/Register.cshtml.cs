@@ -40,13 +40,15 @@ namespace App_View.Areas.Identity.Pages.Account
         private readonly IUserPhoneNumberStore<NguoiDung> _phoneStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly HttpClient _httpClient;
 
         public RegisterModel(
             UserManager<NguoiDung> userManager,
             IUserStore<NguoiDung> userStore,
             SignInManager<NguoiDung> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender
+            IEmailSender emailSender,
+            HttpClient apiClient
             )
 
         {
@@ -57,6 +59,7 @@ namespace App_View.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _phoneStore = GetPhoneStore();
+            _httpClient = apiClient;
         }
 
         [BindProperty]
@@ -233,9 +236,8 @@ namespace App_View.Areas.Identity.Pages.Account
         }
         public async Task<bool> AddCart(string idUser, int trangThai)
         {
-            var httpClient = new HttpClient();
-            var response = await httpClient.PostAsync($"api/GioHang?id={idUser}&trangthai={trangThai}", null);
-            return true;
+            var response = await _httpClient.PostAsync($"api/GioHang?id={idUser}&trangthai={trangThai}", null);
+            return response.IsSuccessStatusCode;
         }
 
 

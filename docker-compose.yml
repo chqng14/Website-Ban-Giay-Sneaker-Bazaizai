@@ -1,25 +1,29 @@
-version: '3.8'
-
 services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: sqlserver
     environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=${SA_PASSWORD:-YourStrong@Passw0rd}
-      - MSSQL_PID=Express
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: ${SA_PASSWORD:?Set SA_PASSWORD in .env}
+      MSSQL_PID: Express
     ports:
-      - "1433:1433"
+      - "${DB_PORT:-1433}:1433"
     volumes:
       - sqlserver_data:/var/opt/mssql
     networks:
       - bazaizai-network
     healthcheck:
-      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "$${SA_PASSWORD:-YourStrong@Passw0rd}" -Q "SELECT 1" -b -o /dev/null
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$${SA_PASSWORD}" -C -Q "SELECT 1" -b -o /dev/null
       interval: 10s
       timeout: 5s
       retries: 10
       start_period: 30s
+    restart: unless-stopped
+    stop_grace_period: 30s
+    logging: &default-logging
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   app-api:
     build:
@@ -27,15 +31,29 @@ services:
       dockerfile: App_Api/Dockerfile
     container_name: app-api
     ports:
-      - "80:80"
+      - "${API_PORT:-80}:8080"
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
-      - ConnectionStrings__DefaultConnection=${DATABASE_URL:-Server=${DB_SERVER:-sqlserver};Database=${DB_NAME:-DuAnTotNghiep_BazaizaiStore};User Id=sa;Password=${SA_PASSWORD:-YourStrong@Passw0rd};TrustServerCertificate=True}
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__DefaultConnection: ${DATABASE_URL:-Server=${DB_SERVER:-sqlserver};Database=${DB_NAME:-DuAnTotNghiep_BazaizaiStore};User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True}
+      Storage__RootPath: /app/storage
+      ApiSecurity__InternalKey: ${INTERNAL_API_KEY:?Set INTERNAL_API_KEY in .env}
     depends_on:
       sqlserver:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/localhost/8080'"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
     networks:
       - bazaizai-network
+    volumes:
+      - uploads_data:/app/storage
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 30s
+    logging: *default-logging
 
   app-view:
     build:
@@ -43,21 +61,60 @@ services:
       dockerfile: App_View/Dockerfile
     container_name: app-view
     ports:
-      - "8080:80"
+      - "${VIEW_PORT:-8080}:8080"
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Production}
-      - ConnectionStrings__DefaultConnection=${DATABASE_URL:-Server=${DB_SERVER:-sqlserver};Database=${DB_NAME:-DuAnTotNghiep_BazaizaiStore};User Id=sa;Password=${SA_PASSWORD:-YourStrong@Passw0rd};TrustServerCertificate=True}
-      - ApiSettings__BaseUrl=${API_URL:-http://app-api:80/}
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__DefaultConnection: ${DATABASE_URL:-Server=${DB_SERVER:-sqlserver};Database=${DB_NAME:-DuAnTotNghiep_BazaizaiStore};User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True}
+      ApiSettings__BaseUrl: ${API_URL:-http://app-api:8080/}
+      Storage__RootPath: /app/storage
+      DataProtection__KeysPath: /app/keys
+      ApiSecurity__InternalKey: ${INTERNAL_API_KEY:?Set INTERNAL_API_KEY in .env}
+      MailSettings__Mail: ${MAIL_ADDRESS:-}
+      MailSettings__Password: ${MAIL_PASSWORD:-}
+      Authentication__Google__ClientId: ${GOOGLE_CLIENT_ID:-}
+      Authentication__Google__ClientSecret: ${GOOGLE_CLIENT_SECRET:-}
+      Authentication__Facebook__AppId: ${FACEBOOK_APP_ID:-}
+      Authentication__Facebook__AppSecret: ${FACEBOOK_APP_SECRET:-}
+      MomoAPI__PartnerCode: ${MOMO_PARTNER_CODE:-}
+      MomoAPI__AccessKey: ${MOMO_ACCESS_KEY:-}
+      MomoAPI__SecretKey: ${MOMO_SECRET_KEY:-}
+      MomoAPI__redirectUrl: ${MOMO_REDIRECT_URL:-}
+      MomoAPI__ipnUrl: ${MOMO_IPN_URL:-}
+      TwilioSettings__AccountSId: ${TWILIO_ACCOUNT_SID:-}
+      TwilioSettings__AuthToken: ${TWILIO_AUTH_TOKEN:-}
+      TwilioSettings__FromPhoneNumber: ${TWILIO_FROM_PHONE_NUMBER:-}
+      Vnpay__TmnCode: ${VNPAY_TMN_CODE:-}
+      Vnpay__HashSecret: ${VNPAY_HASH_SECRET:-}
+      PaymentCallBack__ReturnUrl: ${PAYMENT_RETURN_URL:-}
+      SeedAdmin__Email: ${ADMIN_EMAIL:-}
+      SeedAdmin__UserName: ${ADMIN_USERNAME:-Admin}
+      SeedAdmin__Password: ${ADMIN_PASSWORD:-}
+      SeedAdmin__EnsurePassword: ${ADMIN_ENSURE_PASSWORD:-false}
     depends_on:
       sqlserver:
         condition: service_healthy
       app-api:
-        condition: service_started
+        condition: service_healthy
     networks:
       - bazaizai-network
+    volumes:
+      - uploads_data:/app/storage
+      - keys_data:/app/keys
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 30s
+    logging: *default-logging
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 2 bash -c '</dev/tcp/localhost/8080'"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 30s
 
 volumes:
   sqlserver_data:
+  uploads_data:
+  keys_data:
 
 networks:
   bazaizai-network:

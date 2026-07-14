@@ -14,13 +14,9 @@ namespace App_Api.Controllers
     public class PTThanhToanChiTietController : ControllerBase
     {
         private readonly IAllRepo<PhuongThucThanhToanChiTiet> allRepo;
-        BazaizaiContext dbContext = new BazaizaiContext();
-        DbSet<PhuongThucThanhToanChiTiet> PhuongThucThanhToanChiTiets;
-        public PTThanhToanChiTietController()
+        public PTThanhToanChiTietController(IAllRepo<PhuongThucThanhToanChiTiet> repository)
         {
-            PhuongThucThanhToanChiTiets = dbContext.PhuongThucThanhToanChiTiets;
-            AllRepo<PhuongThucThanhToanChiTiet> all = new AllRepo<PhuongThucThanhToanChiTiet>(dbContext, PhuongThucThanhToanChiTiets);
-            allRepo = all;
+            allRepo = repository;
         }
         // GET: api/<PTThanhToanChiTiet>
         [HttpGet]
@@ -77,6 +73,7 @@ namespace App_Api.Controllers
         public bool XoaPhuongThucThanhToanChiTiet(string id)
         {
             var PhuongThucThanhToanChiTiet = allRepo.GetAll().FirstOrDefault(c => c.IdPhuongThucThanhToanChiTiet == id);
+            if (PhuongThucThanhToanChiTiet is null) return false;
             return allRepo.RemoveItem(PhuongThucThanhToanChiTiet);
         }
         [HttpPost("AddPhuongThucThanhToanChiTietTaiQuay")]

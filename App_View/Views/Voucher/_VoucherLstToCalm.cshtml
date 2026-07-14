@@ -7,17 +7,13 @@
 @model IEnumerable<App_Data.Models.Voucher>
 @inject SignInManager<NguoiDung> SignInManager
 @inject UserManager<NguoiDung> UserManager
+@inject IVoucherNguoiDungservices VoucherNguoiDungService
 
 @{
 
-    BazaizaiContext context = new BazaizaiContext();
     var idNguoiDung = UserManager.GetUserId(User);
 }
 
-@{
-    var httpClient = new HttpClient(); // Tạo đối tượng HttpClient
-    var _voucherND = new VoucherNguoiDungservices(httpClient); // Truyền đối tượng HttpClient vào constructor của VoucherNguoiDungservices
-}
 <style>
     .modal-content {
         margin: auto;
@@ -133,7 +129,7 @@ else
                 }
                 else
                 {
-                    @if (_voucherND.CheckVoucherInUser(item.MaVoucher, idNguoiDung) == true)
+                    @if (VoucherNguoiDungService.CheckVoucherInUser(item.MaVoucher, idNguoiDung) == true)
                     {
                         @*   <form asp-action="SaveVoucher" asp-controller="VoucherNguoiDung" method="post"> *@
                         <div class="description__info-wrap">

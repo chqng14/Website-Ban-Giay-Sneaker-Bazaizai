@@ -8,7 +8,6 @@ namespace App_View.Services
     public class ThongKeService : IThongKeService
     {
         private readonly HttpClient _httpClient;
-        public ThongKeService() : this(HttpClientFactory.CreateClient()) { }
         public ThongKeService(HttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -31,7 +30,9 @@ namespace App_View.Services
 
         public async Task<JsonResult> DoanhThuTrong7ngay()
         {
-            throw new NotImplementedException();
+            var data = await _httpClient.GetFromJsonAsync<System.Text.Json.JsonElement>(
+                "DoanhThuTrong7ngay");
+            return new JsonResult(data);
         }
 
         public async Task<List<HoaDon>> DonHangTheoThang(int month, int year)

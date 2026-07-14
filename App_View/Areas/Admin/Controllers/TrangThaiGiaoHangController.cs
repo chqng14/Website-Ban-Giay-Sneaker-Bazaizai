@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OpenXmlPowerTools;
 using System.Linq;
 
 namespace App_View.Areas.Admin.Controllers
@@ -29,14 +28,14 @@ namespace App_View.Areas.Admin.Controllers
         private readonly IHoaDonServices _hoaDonServices;
         private readonly ISanPhamChiTietservice SanPhamChiTietservice;
         BazaizaiContext context;
-        public TrangThaiGiaoHangController(ISanPhamChiTietservice SanPhamChiTietservice, IVoucherNguoiDungservices VoucherNguoiDungservices, IVoucherservices Voucherservices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
+        public TrangThaiGiaoHangController(ISanPhamChiTietservice SanPhamChiTietservice, IVoucherNguoiDungservices VoucherNguoiDungservices, IVoucherservices Voucherservices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IHoaDonServices invoiceService, IHoaDonChiTietservices invoiceDetailService, BazaizaiContext dbContext)
         {
-            _hoaDonServices = new HoaDonServices();
-            context = new BazaizaiContext();
+            _hoaDonServices = invoiceService;
+            context = dbContext;
             this.SanPhamChiTietservice = SanPhamChiTietservice;
             _VoucherNguoiDungservices = VoucherNguoiDungservices;
             _Voucherservices = Voucherservices;
-            _HoaDonChiTietservices = new HoaDonChiTietservices();
+            _HoaDonChiTietservices = invoiceDetailService;
             _signInManager = signInManager;
             _userManager = userManager;
         }

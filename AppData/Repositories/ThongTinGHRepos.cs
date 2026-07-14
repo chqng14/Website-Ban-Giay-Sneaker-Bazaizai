@@ -17,10 +17,10 @@ namespace App_Data.Repositories
     {
         BazaizaiContext context;
         private readonly IMapper _mapper;
-        public ThongTinGHRepos(IMapper mapper)
+        public ThongTinGHRepos(IMapper mapper, BazaizaiContext dbContext)
         {
             _mapper = mapper;
-            context = new BazaizaiContext();
+            context = dbContext;
         }
         public bool AddThongTinGH(ThongTinGiaoHang item)
         {

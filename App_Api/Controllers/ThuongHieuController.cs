@@ -16,14 +16,10 @@ namespace App_Api.Controllers
     public class ThuongHieuController : ControllerBase
     {
         private readonly IAllRepo<ThuongHieu> repos;
-        BazaizaiContext context = new BazaizaiContext();
-        DbSet<ThuongHieu> ThuongHieus;
         private readonly IMapper _mapper;
-        public ThuongHieuController(IMapper mapper)
+        public ThuongHieuController(IMapper mapper, IAllRepo<ThuongHieu> repository)
         {
-            ThuongHieus = context.ThuongHieus;
-            AllRepo<ThuongHieu> all = new AllRepo<ThuongHieu>(context, ThuongHieus);
-            repos = all;
+            repos = repository;
             _mapper = mapper;
         }
         [HttpGet]
@@ -59,13 +55,11 @@ namespace App_Api.Controllers
             try
             {
                 var nameThuongHieuLower = thuongHieuDTO.TenThuongHieu!.Trim().ToLower();
-                if (!context.ThuongHieus.Where(x => x.TenThuongHieu!.Trim().ToLower() == nameThuongHieuLower).Any())
+                if (!repos.GetAll().Any(x => x.TenThuongHieu!.Trim().ToLower() == nameThuongHieuLower && x.IdThuongHieu != thuongHieuDTO.IdThuongHieu))
                 {
-                    var thuongHieu = _mapper.Map<ThuongHieu>(thuongHieuDTO);
-                    context.Attach(thuongHieu);
-                    context.Entry(thuongHieu).Property(sp => sp.TenThuongHieu).IsModified = true;
-                    context.SaveChanges();
-                    return true;
+                    var thuongHieu = repos.GetAll().First(x => x.IdThuongHieu == thuongHieuDTO.IdThuongHieu);
+                    thuongHieu.TenThuongHieu = thuongHieuDTO.TenThuongHieu;
+                    return repos.EditItem(thuongHieu);
                 }
                 return false;
             }

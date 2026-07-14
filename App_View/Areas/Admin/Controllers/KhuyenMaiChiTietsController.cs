@@ -26,7 +26,6 @@ using Org.BouncyCastle.Crypto;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics.Metrics;
-using OpenXmlPowerTools;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Engineering;
 using NuGet.Packaging.Signing;
 
@@ -45,12 +44,11 @@ namespace App_View.Areas.Admin.Controllers
         private readonly IMapper _mapper;
         HttpClient httpClient;
 
-        public KhuyenMaiChiTietsController(IKhuyenMaiChiTietservices KhuyenMaiChiTietservices, ISanPhamChiTietservice SanPhamChiTietservice, IMapper mapper, IKhuyenMaiservices KhuyenMaiservices)
+        public KhuyenMaiChiTietsController(IKhuyenMaiChiTietservices KhuyenMaiChiTietservices, ISanPhamChiTietservice SanPhamChiTietservice, IMapper mapper, IKhuyenMaiservices KhuyenMaiservices, BazaizaiContext dbContext, HttpClient apiClient, IAllRepo<KhuyenMaiChiTiet> repository)
         {
-            _context = new BazaizaiContext();
-
-            httpClient = new HttpClient();
-            allRepo = new AllRepo<KhuyenMaiChiTiet>();
+            _context = dbContext;
+            httpClient = apiClient;
+            allRepo = repository;
             this.KhuyenMaiChiTietservices = KhuyenMaiChiTietservices;
             this.SanPhamChiTietservice = SanPhamChiTietservice;
             _mapper = mapper;

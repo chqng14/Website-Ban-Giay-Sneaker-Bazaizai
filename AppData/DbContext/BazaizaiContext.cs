@@ -68,7 +68,23 @@ namespace App_Data.DbContext
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Data Source=(localdb)\mssqllocaldb;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
+                var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
+                    ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
+
+                if (!string.IsNullOrWhiteSpace(connectionString))
+                {
+                    optionsBuilder.UseSqlServer(connectionString);
+                }
+                else if (OperatingSystem.IsWindows())
+                {
+                    optionsBuilder.UseSqlServer(
+                        @"Data Source=(localdb)\mssqllocaldb;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        "Database connection is not configured. Set DATABASE_URL or ConnectionStrings__DefaultConnection.");
+                }
             }
         }
 

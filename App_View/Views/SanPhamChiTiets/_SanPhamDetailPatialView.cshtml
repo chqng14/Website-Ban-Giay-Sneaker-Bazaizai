@@ -3,7 +3,6 @@
 @model App_Data.ViewModels.SanPhamChiTietViewModel.ItemDetailViewModel
 @inject IDanhGiaservice _DanhGiaservice
 @{
-    _DanhGiaservice = new DanhGiaservice();
     var TongSoDanhGia = await _DanhGiaservice.GetTongSoDanhGia(@Model.IdChiTietSp!);
     var SaoTb = await _DanhGiaservice.GetSoSaoTB(@Model.IdChiTietSp);
 

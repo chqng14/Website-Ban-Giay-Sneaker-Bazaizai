@@ -26,14 +26,13 @@ namespace App_View.Areas.Admin.Controllers
         private readonly IVoucherservices _Voucherservices;
         private readonly IHoaDonChiTietservices _HoaDonChiTietservices; private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
-        public BanHangTaiQuayController(ISanPhamChiTietservice SanPhamChiTietservice, IVoucherNguoiDungservices VoucherNguoiDungservices,IVoucherservices Voucherservices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
+        public BanHangTaiQuayController(ISanPhamChiTietservice SanPhamChiTietservice, IVoucherNguoiDungservices VoucherNguoiDungservices,IVoucherservices Voucherservices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IHoaDonServices invoiceService, IHoaDonChiTietservices invoiceDetailService)
         {
-            HttpClient httpClient = new HttpClient();
-            _hoaDonServices = new HoaDonServices();
+            _hoaDonServices = invoiceService;
             _SanPhamChiTietservice = SanPhamChiTietservice;
             _VoucherNguoiDungservices = VoucherNguoiDungservices;
             _Voucherservices = Voucherservices;
-            _HoaDonChiTietservices = new HoaDonChiTietservices();
+            _HoaDonChiTietservices = invoiceDetailService;
             _signInManager = signInManager;
             _userManager = userManager;
         }

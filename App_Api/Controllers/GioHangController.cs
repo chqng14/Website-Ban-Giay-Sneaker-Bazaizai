@@ -14,13 +14,9 @@ namespace App_Api.Controllers
     public class GioHangController : ControllerBase
     {
         private readonly IAllRepo<GioHang> allRepo;
-        BazaizaiContext dbContext = new BazaizaiContext();
-        DbSet<GioHang> GioHang;
-        public GioHangController()
+        public GioHangController(IAllRepo<GioHang> repository)
         {
-            GioHang = dbContext.GioHangs;
-            AllRepo<GioHang> all = new AllRepo<GioHang>(dbContext, GioHang);
-            allRepo = all;
+            allRepo = repository;
         }
         // GET: api/<GioHangController>
         [HttpGet]

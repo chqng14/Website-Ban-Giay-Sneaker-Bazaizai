@@ -45,7 +45,8 @@ namespace App_View.Areas.Identity.Pages.Account
             UserManager<NguoiDung> userManager,
             IUserStore<NguoiDung> userStore,
             ILogger<ExternalLoginModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            HttpClient apiClient)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -53,7 +54,7 @@ namespace App_View.Areas.Identity.Pages.Account
             _emailStore = GetEmailStore();
             _logger = logger;
             _emailSender = emailSender;
-            _httpClient = new HttpClient();
+            _httpClient = apiClient;
         }
 
 

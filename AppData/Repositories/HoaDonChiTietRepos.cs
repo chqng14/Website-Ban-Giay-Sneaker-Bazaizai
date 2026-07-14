@@ -5,7 +5,6 @@ using App_Data.ViewModels.GioHangChiTiet;
 using App_Data.ViewModels.HoaDonChiTietDTO;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using OpenXmlPowerTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,9 +18,9 @@ namespace App_Data.Repositories
     {
         BazaizaiContext context;
         private readonly IMapper _mapper;
-        public HoaDonChiTietRepos(IMapper mapper)
+        public HoaDonChiTietRepos(IMapper mapper, BazaizaiContext dbContext)
         {
-            context = new BazaizaiContext();
+            context = dbContext;
             _mapper = mapper;
         }
         public bool AddBillDetail(HoaDonChiTiet item)
@@ -149,7 +148,15 @@ namespace App_Data.Repositories
         }
         public List<HoaDonChiTiet> GetAllHoaDonOnline()
         {
-            throw new NotImplementedException();
+            return context.HoaDonChiTiets
+                .AsNoTracking()
+                .Include(item => item.SanPhamChiTiet).ThenInclude(product => product.SanPham)
+                .Include(item => item.SanPhamChiTiet).ThenInclude(product => product.MauSac)
+                .Include(item => item.SanPhamChiTiet).ThenInclude(product => product.KichCo)
+                .Include(item => item.HoaDon).ThenInclude(invoice => invoice.ThongTinGiaoHang)
+                .Include(item => item.HoaDon).ThenInclude(invoice => invoice.Voucher)
+                .Where(item => item.TrangThai != (int)TrangThaiHoaDonChiTiet.ChoTaiQuay)
+                .ToList();
         }
 
         public List<HoaDonChiTiet> HuyHoaDonChiTiet(string idHD)

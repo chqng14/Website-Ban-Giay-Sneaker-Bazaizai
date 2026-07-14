@@ -12,9 +12,9 @@ namespace App_View.Models.Components
         private readonly BazaizaiContext _bazaizaiContext;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
-        public DashBox(UserManager<NguoiDung> userManager, SignInManager<NguoiDung> signInManager = null)
+        public DashBox(UserManager<NguoiDung> userManager, BazaizaiContext dbContext, SignInManager<NguoiDung> signInManager = null)
         {
-            _bazaizaiContext = new BazaizaiContext();
+            _bazaizaiContext = dbContext;
             _userManager = userManager;
             _signInManager = signInManager;
         }

@@ -21,9 +21,9 @@ namespace App_View.Areas.Admin.Controllers
     {
         private readonly BazaizaiContext _context;
         private readonly HttpClient _httpClient;
-        public ThuocTinhSanPhamController(HttpClient httpClient)
+        public ThuocTinhSanPhamController(HttpClient httpClient, BazaizaiContext dbContext)
         {
-            _context = new BazaizaiContext();
+            _context = dbContext;
             _httpClient = httpClient;
         }
 

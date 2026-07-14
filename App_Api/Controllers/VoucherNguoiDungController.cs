@@ -24,18 +24,22 @@ namespace App_Api.Controllers
         private readonly IVoucherNguoiDungRepos voucherNguoiDungRep;
         private readonly IAllRepo<Voucher> VcRepos;
         private readonly IMapper _mapper;
-        BazaizaiContext DbContextModel = new BazaizaiContext();
-        DbSet<VoucherNguoiDung> voucherNguoiDung;
-        DbSet<Voucher> voucher;
-        public VoucherNguoiDungController(IMapper mapper)
+        private readonly BazaizaiContext DbContextModel;
+        private readonly DbSet<VoucherNguoiDung> voucherNguoiDung;
+        private readonly DbSet<Voucher> voucher;
+        public VoucherNguoiDungController(
+            IMapper mapper,
+            BazaizaiContext dbContext,
+            IAllRepo<VoucherNguoiDung> userVoucherRepository,
+            IAllRepo<Voucher> voucherRepository,
+            IVoucherNguoiDungRepos userVoucherQueries)
         {
+            DbContextModel = dbContext;
             voucherNguoiDung = DbContextModel.VoucherNguoiDungs;
             voucher = DbContextModel.Vouchers;
-            AllRepo<VoucherNguoiDung> VcNd = new AllRepo<VoucherNguoiDung>(DbContextModel, voucherNguoiDung);
-            VcNguoiDungRepos = VcNd;
-            voucherNguoiDungRep = new VoucherNguoiDungRepos();
-            AllRepo<Voucher> Vc = new AllRepo<Voucher>(DbContextModel, voucher);
-            VcRepos = Vc;
+            VcNguoiDungRepos = userVoucherRepository;
+            voucherNguoiDungRep = userVoucherQueries;
+            VcRepos = voucherRepository;
             _mapper = mapper;
         }
         // GET: api/<ChatLieuController>

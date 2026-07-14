@@ -22,7 +22,7 @@ namespace App_View.Areas.Admin.Controllers
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IEmailSender _emailSender;
         private IViewRenderService _viewRenderService;
-        public VouchersController(IVoucherservices Voucherservices, IVoucherNguoiDungservices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IEmailSender emailSender, IViewRenderService viewRenderService)
+        public VouchersController(IVoucherservices Voucherservices, IVoucherNguoiDungservices voucherNDServices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IEmailSender emailSender, IViewRenderService viewRenderService, BazaizaiContext dbContext)
         {
             _voucherND = voucherNDServices;
             _VouchersV = Voucherservices;
@@ -30,7 +30,7 @@ namespace App_View.Areas.Admin.Controllers
             _userManager = userManager;
             _emailSender = emailSender;
             _viewRenderService = viewRenderService;
-            _context = new BazaizaiContext();
+            _context = dbContext;
         }
 
         #region Online

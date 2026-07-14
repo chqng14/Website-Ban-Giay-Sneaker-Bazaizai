@@ -20,12 +20,14 @@ namespace App_View.Areas.Identity.Pages.Account
         private IThongTinGHServices thongTinGHServices;
         public ManageMyAccountModel(
             UserManager<NguoiDung> userManager,
-            SignInManager<NguoiDung> signInManager)
+            SignInManager<NguoiDung> signInManager,
+            IHoaDonServices invoiceService,
+            IThongTinGHServices shippingInformationService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            hoaDonServices = new HoaDonServices();
-            thongTinGHServices = new ThongTinGHServices();
+            hoaDonServices = invoiceService;
+            thongTinGHServices = shippingInformationService;
         }
         public string FirstName { get; set; }
         public string Username { get; set; }

@@ -2,7 +2,6 @@
 using App_Data.ViewModels.KhuyenMaiChiTietDTO;
 using App_View.IServices;
 using Microsoft.AspNetCore.Http;
-using OpenXmlPowerTools;
 
 namespace App_View.Services
 {

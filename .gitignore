@@ -5,6 +5,7 @@
 
 # Environment files
 .env
+.cloudflared/
 .env.local
 .env.*.local
 

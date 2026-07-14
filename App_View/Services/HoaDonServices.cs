@@ -11,7 +11,6 @@ namespace App_View.Services
     public class HoaDonServices : IHoaDonServices
     {
         private readonly HttpClient _httpClient;
-        public HoaDonServices() : this(HttpClientFactory.CreateClient()) { }
         public HoaDonServices(HttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -35,9 +34,11 @@ namespace App_View.Services
             }
         }
 
-        public Task<bool> DeleteHoaDon(string idHoaDon)
+        public async Task<bool> DeleteHoaDon(string idHoaDon)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.DeleteAsync(
+                $"api/HoaDon/DeleteHoaDon?idHoaDon={Uri.EscapeDataString(idHoaDon)}");
+            return response.IsSuccessStatusCode && await response.Content.ReadAsAsync<bool>();
         }
 
         public async Task<List<HoaDonTest>> GetAllHoaDon()

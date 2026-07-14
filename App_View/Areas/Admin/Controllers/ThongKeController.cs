@@ -10,7 +10,6 @@ using Google.Apis.PeopleService.v1.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OpenXmlPowerTools;
 using System.Globalization;
 using static App_Data.Repositories.TrangThai;
 
@@ -21,12 +20,13 @@ namespace App_View.Areas.Admin.Controllers
     public class ThongKeController : Controller
     {
         private IQueryable<ThongKeDoanhThuOnline> baseQuery;
-        private BazaizaiContext db = new BazaizaiContext();
+        private readonly BazaizaiContext db;
         private IThongKeService _thongKeService;
         private readonly HttpClient _httpClient;
-        public ThongKeController(IThongKeService thongKeService)
+        public ThongKeController(IThongKeService thongKeService, HttpClient httpClient, BazaizaiContext dbContext)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
+            db = dbContext;
             _thongKeService = thongKeService;
             baseQuery = from a in db.HoaDons
                         join e in db.ThongTinGiaoHangs on a.IdThongTinGH equals e.IdThongTinGH into thongTinGiaoHangGroup

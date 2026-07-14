@@ -20,14 +20,15 @@ namespace App_Api.Controllers
     {
         private readonly IDanhGiaRepo _danhGiaRepo;
         private readonly IAllRepo<DanhGia> repos;
-        BazaizaiContext context = new BazaizaiContext();
-        DbSet<DanhGia> DanhGias;
-        public DanhGiaController()
+        private readonly BazaizaiContext context;
+        public DanhGiaController(
+            IDanhGiaRepo danhGiaRepo,
+            IAllRepo<DanhGia> repository,
+            BazaizaiContext dbContext)
         {
-            _danhGiaRepo = new DanhGiaRepo();
-            DanhGias = context.DanhGias;
-            AllRepo<DanhGia> all = new AllRepo<DanhGia>(context, DanhGias);
-            repos = all;
+            _danhGiaRepo = danhGiaRepo;
+            repos = repository;
+            context = dbContext;
         }
         [HttpGet("GetListAsyncViewModel")]
         public async Task<List<DanhGiaViewModel>> GetListAsyncViewModel(string idspchitiet)

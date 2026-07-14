@@ -37,10 +37,10 @@ namespace App_View.Areas.Admin.Controllers
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
         private readonly IViewRenderService _viewRenderService;
-        public KhuyenMaisController(BazaizaiContext context, IEmailSender emailSender, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IViewRenderService viewRenderService)
+        public KhuyenMaisController(BazaizaiContext context, IEmailSender emailSender, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IViewRenderService viewRenderService, HttpClient apiClient)
         {
             _context = context;
-            _httpClient = new HttpClient();
+            _httpClient = apiClient;
             _emailSender = emailSender;
             _signInManager = signInManager;
             _userManager = userManager;

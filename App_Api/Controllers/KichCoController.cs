@@ -16,14 +16,10 @@ namespace App_Api.Controllers
     public class KichCoController : ControllerBase
     {
         private readonly IAllRepo<KichCo> repos;
-        BazaizaiContext context = new BazaizaiContext();
-        DbSet<KichCo> KichCos;
         private readonly IMapper _mapper;
-        public KichCoController(IMapper mapper)
+        public KichCoController(IMapper mapper, IAllRepo<KichCo> repository)
         {
-            KichCos = context.KichCos;
-            AllRepo<KichCo> all = new AllRepo<KichCo>(context, KichCos);
-            repos = all;
+            repos = repository;
             _mapper = mapper;
         }
         [HttpGet]
@@ -60,13 +56,11 @@ namespace App_Api.Controllers
             try
             {
                 var kichCo = kichCoDTO.SoKichCo;
-                if (!context.KichCos.Where(x => x.SoKichCo == kichCo).Any())
+                if (!repos.GetAll().Any(x => x.SoKichCo == kichCo && x.IdKichCo != kichCoDTO.IdKichCo))
                 {
-                    var kichCoGet = _mapper.Map<KichCo>(kichCoDTO);
-                    context.Attach(kichCoGet);
-                    context.Entry(kichCoGet).Property(sp => sp.SoKichCo).IsModified = true;
-                    context.SaveChanges();
-                    return true;
+                    var kichCoGet = repos.GetAll().First(x => x.IdKichCo == kichCoDTO.IdKichCo);
+                    kichCoGet.SoKichCo = kichCoDTO.SoKichCo;
+                    return repos.EditItem(kichCoGet);
                 }
                 return false;
             }

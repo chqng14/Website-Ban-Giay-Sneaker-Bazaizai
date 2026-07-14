@@ -8,7 +8,6 @@ namespace App_View.Services
     public class ThongTinGHServices : IThongTinGHServices
     {
         private readonly HttpClient _httpClient;
-        public ThongTinGHServices() : this(HttpClientFactory.CreateClient()) { }
         public ThongTinGHServices(HttpClient httpClient)
         {
             _httpClient = httpClient;

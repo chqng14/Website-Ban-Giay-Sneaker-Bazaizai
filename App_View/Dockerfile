@@ -1,9 +1,9 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0.28 AS base
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+ENV ASPNETCORE_HTTP_PORTS=8080
+EXPOSE 8080
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0.422 AS build
 WORKDIR /src
 COPY ["App_View/App_View.csproj", "App_View/"]
 COPY ["AppData/App_Data.csproj", "AppData/"]
@@ -17,5 +17,7 @@ RUN dotnet publish "App_View.csproj" -c Release -o /app/publish /p:UseAppHost=fa
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+RUN mkdir -p /app/storage /app/keys && chown -R $APP_UID:$APP_UID /app
+COPY --from=publish --chown=$APP_UID:$APP_UID /app/publish .
+USER $APP_UID
 ENTRYPOINT ["dotnet", "App_View.dll"]

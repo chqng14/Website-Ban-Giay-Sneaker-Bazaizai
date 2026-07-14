@@ -5,7 +5,6 @@ using App_Data.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OpenXmlPowerTools;
 using static App_Data.Repositories.TrangThai;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -23,27 +22,29 @@ namespace App_Api.Controllers
         private readonly IAllRepo<SanPhamChiTiet> SpctRepos;
         private readonly ISanPhamChiTietRespo _sanPhamChiTietRes;
         private readonly IMapper _mapper;
-        DbSet<Voucher> Vouchers;
-        DbSet<VoucherNguoiDung> voucherNguoiDung;
-        BazaizaiContext _dbContext = new BazaizaiContext();
-        bool loading = false;
-        public AutoUpdateController(IMapper mapper, IAllRepo<KhuyenMai> kMRepos, IAllRepo<KhuyenMaiChiTiet> kmctRepos, IAllRepo<SanPhamChiTiet> spctRepos, ISanPhamChiTietRespo sanPhamChiTietRes)
+        private readonly BazaizaiContext _dbContext;
+
+        public AutoUpdateController(
+            IMapper mapper,
+            IAllRepo<KhuyenMai> kMRepos,
+            IAllRepo<KhuyenMaiChiTiet> kmctRepos,
+            IAllRepo<SanPhamChiTiet> spctRepos,
+            ISanPhamChiTietRespo sanPhamChiTietRes,
+            IAllRepo<Voucher> voucherRepo,
+            IAllRepo<VoucherNguoiDung> voucherNguoiDungRepo,
+            BazaizaiContext dbContext)
         {
-            voucherNguoiDung = _dbContext.VoucherNguoiDungs;
-            AllRepo<VoucherNguoiDung> VcNd = new AllRepo<VoucherNguoiDung>(_dbContext, voucherNguoiDung);
-            VcNguoiDungRepos = VcNd;
-            Vouchers = _dbContext.Vouchers;
-            AllRepo<Voucher> all = new AllRepo<Voucher>(_dbContext, Vouchers);
-            VoucherRepo = all;
+            VcNguoiDungRepos = voucherNguoiDungRepo;
+            VoucherRepo = voucherRepo;
             _mapper = mapper;
-            _dbContext = new BazaizaiContext();
+            _dbContext = dbContext;
             KMRepos = kMRepos;
             KmctRepos = kmctRepos;
             SpctRepos = spctRepos;
             _sanPhamChiTietRes = sanPhamChiTietRes;
         }
         [HttpPut("CapNhatThongTinKhuyenMai")]
-        public void CapNhatThongTinKhuyenMai()
+        public bool CapNhatThongTinKhuyenMai()
         {
             // Hàm CheckNgayKetThucKhuyenMai
             var ngayKetThucSale = KMRepos.GetAll()
@@ -216,11 +217,12 @@ namespace App_Api.Controllers
                 _dbContext.GioHangChiTiets.UpdateRange(giohang);
                 _dbContext.SaveChanges();
             }
+
+            return true;
         }
 
-
         [HttpPut("CapNhatThoiGianVoucher")]
-        public void CapNhatThoiGianVoucher()
+        public bool CapNhatThoiGianVoucher()
         {
             #region VoucherOn
             // Update Voucher Online đã hết hạn
@@ -315,6 +317,7 @@ namespace App_Api.Controllers
             }
 
             #endregion
+            return true;
         }
     }
 }

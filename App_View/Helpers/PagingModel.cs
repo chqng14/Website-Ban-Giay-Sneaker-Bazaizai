@@ -1,5 +1,3 @@
-﻿using OpenXmlPowerTools;
-
 namespace XTL.Helpers
 {
     public class PagingModel

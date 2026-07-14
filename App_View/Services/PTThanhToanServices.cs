@@ -9,7 +9,6 @@ namespace App_View.Services
     public class PTThanhToanServices : IPTThanhToanServices
     {
         private readonly HttpClient _httpClient;
-        public PTThanhToanServices() : this(HttpClientFactory.CreateClient()) { }
         public PTThanhToanServices(HttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -33,19 +32,22 @@ namespace App_View.Services
             }
         }
 
-        public Task<bool> DeletePTThanhToanAsync(string idPhuongThucThanhToan)
+        public async Task<bool> DeletePTThanhToanAsync(string idPhuongThucThanhToan)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.DeleteAsync(
+                $"api/PTThanhToan/XoaPhuongThucThanhToan={Uri.EscapeDataString(idPhuongThucThanhToan)}");
+            return response.IsSuccessStatusCode && await response.Content.ReadAsAsync<bool>();
         }
 
         public async Task<List<PhuongThucThanhToan>> GetAllPTThanhToanAsync()
         {
-            return await _httpClient.GetFromJsonAsync<List<PhuongThucThanhToan>>("api/PTThanhToan");
+            return await _httpClient.GetFromJsonAsync<List<PhuongThucThanhToan>>("api/PTThanhToan") ?? new();
         }
 
-        public Task<PhuongThucThanhToan> GetPTThanhToanByIDAsync(string idPhuongThucThanhToan)
+        public async Task<PhuongThucThanhToan> GetPTThanhToanByIDAsync(string idPhuongThucThanhToan)
         {
-            throw new NotImplementedException();
+            return await _httpClient.GetFromJsonAsync<PhuongThucThanhToan>(
+                $"api/PTThanhToan/PhuongThucThanhToan={Uri.EscapeDataString(idPhuongThucThanhToan)}");
         }
 
         public async Task<string> GetPTThanhToanByNameAsync(string ten)
@@ -53,9 +55,15 @@ namespace App_View.Services
             return await _httpClient.GetStringAsync($"api/PTThanhToan/PhuongThucThanhToanByName?ten={ten}");
         }
 
-        public Task<bool> UpdatePTThanhToanAsync(string idPhuongThucThanhToan, string ten, string mota, int trangthai)
+        public async Task<bool> UpdatePTThanhToanAsync(string idPhuongThucThanhToan, string ten, string mota, int trangthai)
         {
-            throw new NotImplementedException();
+            var id = Uri.EscapeDataString(idPhuongThucThanhToan);
+            var name = Uri.EscapeDataString(ten);
+            var description = Uri.EscapeDataString(mota);
+            var response = await _httpClient.PutAsync(
+                $"api/PTThanhToan/SuaPhuongThucThanhToan={id}?ma=&ten={name}&mota={description}&trangthai={trangthai}",
+                null);
+            return response.IsSuccessStatusCode && await response.Content.ReadAsAsync<bool>();
         }
     }
 }

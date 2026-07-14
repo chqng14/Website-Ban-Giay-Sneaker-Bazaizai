@@ -42,21 +42,21 @@ namespace App_View.Controllers
         private IViewRenderService _viewRenderService;
         private IThongTinGHServices thongTinGHServices;
         public HoaDonController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietservice SanPhamChiTietservice
-            , IMomoService momoService, IVnPayService vnPayService, IEmailSender emailSender, IViewRenderService viewRenderService)
+            , IMomoService momoService, IVnPayService vnPayService, IEmailSender emailSender, IViewRenderService viewRenderService, IGioHangChiTietservices cartDetailService, IHoaDonServices invoiceService, IHoaDonChiTietservices invoiceDetailService, PTThanhToanChiTietController paymentDetailController, PTThanhToanController paymentController, IThongTinGHServices shippingInformationService)
         {
             _SanPhamChiTietservice = SanPhamChiTietservice;
             _signInManager = signInManager;
             _userManager = userManager;
-            GioHangChiTietservices = new GioHangChiTietservices();
-            hoaDonServices = new HoaDonServices();
-            HoaDonChiTietservices = new HoaDonChiTietservices();
+            GioHangChiTietservices = cartDetailService;
+            hoaDonServices = invoiceService;
+            HoaDonChiTietservices = invoiceDetailService;
             _momoService = momoService;
-            PTThanhToanChiTietController = new PTThanhToanChiTietController();
-            PTThanhToanController = new PTThanhToanController();
+            PTThanhToanChiTietController = paymentDetailController;
+            PTThanhToanController = paymentController;
             _vnPayService = vnPayService;
             _emailSender = emailSender;
             _viewRenderService = viewRenderService;
-            thongTinGHServices = new ThongTinGHServices();
+            thongTinGHServices = shippingInformationService;
         }
         #region User
         public async Task<IActionResult> DataBill(ThongTinGHDTO thongTinGHDTO)

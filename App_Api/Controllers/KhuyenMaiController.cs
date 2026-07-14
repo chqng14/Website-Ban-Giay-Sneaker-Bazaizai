@@ -3,13 +3,12 @@ using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.Repositories;
 using App_Data.ViewModels.KhuyenMaiDTO;
+using App_Api.Storage;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using SixLabors.ImageSharp.Formats.Jpeg;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using SixLabors.ImageSharp.Processing;
 
 namespace App_Api.Controllers
 {
@@ -17,14 +16,19 @@ namespace App_Api.Controllers
     [ApiController]
     public class KhuyenMaiController : ControllerBase
     {
+        private const string PromotionImageFolder = "AnhSale";
         private readonly IAllRepo<KhuyenMai> repos;
-        BazaizaiContext context = new BazaizaiContext();
-        DbSet<KhuyenMai> KhuyenMais;
-        public KhuyenMaiController()
+        private readonly BazaizaiContext context;
+        private readonly IImageStorage _imageStorage;
+
+        public KhuyenMaiController(
+            IAllRepo<KhuyenMai> repository,
+            BazaizaiContext dbContext,
+            IImageStorage imageStorage)
         {
-            KhuyenMais = context.KhuyenMais;
-            AllRepo<KhuyenMai> all = new AllRepo<KhuyenMai>(context, KhuyenMais);
-            repos = all;
+            repos = repository;
+            context = dbContext;
+            _imageStorage = imageStorage;
         }
         [HttpGet]
         public IEnumerable<KhuyenMai> GetAllKhuyenMai()
@@ -38,9 +42,6 @@ namespace App_Api.Controllers
         {
             try
             {
-                string currentDirectory = Directory.GetCurrentDirectory();
-                string rootPath = Directory.GetParent(currentDirectory).FullName;
-                string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSale");
                 string MaTS;
                 if (repos.GetAll().Count() == 0)
                 {
@@ -50,29 +51,12 @@ namespace App_Api.Controllers
                 {
                     MaTS = "KM" + (repos.GetAll().Count() + 1);
                 }
-                if (formFile.Length > 0)
+                if (formFile is null || formFile.Length == 0)
                 {
-                    using var stream = new MemoryStream();
-                    formFile.CopyTo(stream);
-                    stream.Position = 0;
+                    return BadRequest("Ảnh khuyến mãi là bắt buộc.");
+                }
 
-                    using var image = SixLabors.ImageSharp.Image.Load(stream);
-
-                    image.Mutate(x => x.Resize(new ResizeOptions
-                    {
-                        Size = new SixLabors.ImageSharp.Size(1600, 1600),
-                        Mode = ResizeMode.Max
-                    }));
-
-                    var encoder = new JpegEncoder
-                    {
-                        Quality = 80
-                    };
-
-                    string fileName = Guid.NewGuid().ToString() +formFile.FileName;
-                    string outputPath = Path.Combine(uploadDirectory, fileName);
-                    using var outputStream = new FileStream(outputPath, FileMode.Create);
-                    await image.SaveAsync(outputStream, encoder);
+                var fileName = await _imageStorage.SaveAsync(formFile, PromotionImageFolder);
                     KhuyenMai KhuyenMai = new KhuyenMai();
                     KhuyenMai.TenKhuyenMai = khuyenMai.TenKhuyenMai;
                     KhuyenMai.MaKhuyenMai = MaTS;
@@ -84,7 +68,10 @@ namespace App_Api.Controllers
                     KhuyenMai.LoaiHinhKM = khuyenMai.LoaiHinhKM;
                     KhuyenMai.Url = fileName;
 
-                    repos.AddItem(KhuyenMai);
+                if (!repos.AddItem(KhuyenMai))
+                {
+                    _imageStorage.Delete(PromotionImageFolder, fileName);
+                    return StatusCode(500, "Không thể lưu khuyến mãi.");
                 }
                 return Ok();
             }
@@ -97,36 +84,13 @@ namespace App_Api.Controllers
         }
 
         [HttpPut("Edit")]
-        public async Task<IActionResult> EditKhuyenMaiAsync([FromForm] KhuyenMaiDTO khuyenMai, IFormFile formFile)
+        public async Task<IActionResult> EditKhuyenMaiAsync([FromForm] KhuyenMaiDTO khuyenMai, IFormFile? formFile)
         {
-            string currentDirectory = Directory.GetCurrentDirectory();
-            string rootPath = Directory.GetParent(currentDirectory).FullName;
-            string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSale");
-            if (formFile.Length > 0 && formFile != null)
+            if (formFile is { Length: > 0 })
             {
-                using var stream = new MemoryStream();
-                formFile.CopyTo(stream);
-                stream.Position = 0;
-
-                using var image = SixLabors.ImageSharp.Image.Load(stream);
-
-                image.Mutate(x => x.Resize(new ResizeOptions
-                {
-                    Size = new SixLabors.ImageSharp.Size(1600, 1600),
-                    Mode = ResizeMode.Max
-                }));
-
-                var encoder = new JpegEncoder
-                {
-                    Quality = 80
-                };
-
-                string fileName = Guid.NewGuid().ToString() + formFile.FileName;
-                string outputPath = Path.Combine(uploadDirectory, fileName);
-
-                using var outputStream = new FileStream(outputPath, FileMode.Create);
-                await image.SaveAsync(outputStream, encoder);
+                var fileName = await _imageStorage.SaveAsync(formFile, PromotionImageFolder);
                 var KhuyenMai = repos.GetAll().First(p => p.IdKhuyenMai == khuyenMai.IdKhuyenMai);
+                var oldFileName = KhuyenMai.Url;
                 KhuyenMai.TenKhuyenMai = khuyenMai.TenKhuyenMai;
                 KhuyenMai.TrangThai = khuyenMai.TrangThai;
                 KhuyenMai.NgayBatDau = khuyenMai.NgayBatDau;
@@ -135,6 +99,10 @@ namespace App_Api.Controllers
                 KhuyenMai.LoaiHinhKM = khuyenMai.LoaiHinhKM;
                 KhuyenMai.Url = fileName;
                 repos.EditItem(KhuyenMai);
+                if (!string.IsNullOrWhiteSpace(oldFileName))
+                {
+                    _imageStorage.Delete(PromotionImageFolder, oldFileName);
+                }
             }
             else 
             {

@@ -8,7 +8,6 @@ namespace App_View.Services
     public class PTThanhToanChiTietServices : IPTThanhToanChiTietServices
     {
         private readonly HttpClient _httpClient;
-        public PTThanhToanChiTietServices() : this(HttpClientFactory.CreateClient()) { }
         public PTThanhToanChiTietServices(HttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -32,19 +31,23 @@ namespace App_View.Services
             }
         }
 
-        public Task<bool> DeletePTThanhToanChiTietAsync(string idPhuongThucThanhToan)
+        public async Task<bool> DeletePTThanhToanChiTietAsync(string idPhuongThucThanhToan)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.DeleteAsync(
+                $"api/PTThanhToanChiTiet/XoaPhuongThucThanhToanChiTiet={Uri.EscapeDataString(idPhuongThucThanhToan)}");
+            return response.IsSuccessStatusCode && await response.Content.ReadAsAsync<bool>();
         }
 
-        public Task<List<PhuongThucThanhToanChiTiet>> GetAllPTThanhToanChiTietAsync()
+        public async Task<List<PhuongThucThanhToanChiTiet>> GetAllPTThanhToanChiTietAsync()
         {
-            throw new NotImplementedException();
+            return await _httpClient.GetFromJsonAsync<List<PhuongThucThanhToanChiTiet>>(
+                "api/PTThanhToanChiTiet") ?? new();
         }
 
-        public Task<PhuongThucThanhToanChiTiet> GetPTThanhToanChiTietByIDAsync(string idPhuongThucThanhToan)
+        public async Task<PhuongThucThanhToanChiTiet> GetPTThanhToanChiTietByIDAsync(string idPhuongThucThanhToan)
         {
-            throw new NotImplementedException();
+            return await _httpClient.GetFromJsonAsync<PhuongThucThanhToanChiTiet>(
+                $"api/PTThanhToanChiTiet/TimPhuongThucThanhToanChiTiet={Uri.EscapeDataString(idPhuongThucThanhToan)}");
         }
 
         public async Task<bool> UpdatePTThanhToanChiTietAsync(string IdPhuongThucThanhToanChiTiet, int TrangThai)

@@ -8,7 +8,6 @@ namespace App_View.Services
     public class GioHangChiTietservices : IGioHangChiTietservices
     {
         private readonly HttpClient _httpClient;
-        public GioHangChiTietservices() : this(HttpClientFactory.CreateClient()) { }
         public GioHangChiTietservices(HttpClient httpClient)
         {
             _httpClient = httpClient;

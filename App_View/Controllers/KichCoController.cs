@@ -3,7 +3,6 @@ using App_Data.Repositories;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using OpenXmlPowerTools;
 using System.Net.Http;
 
 namespace App_View.Controllers
