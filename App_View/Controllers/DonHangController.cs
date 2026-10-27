@@ -35,18 +35,18 @@ namespace App_View.Controllers
         private PTThanhToanChiTietController PTThanhToanChiTietController;
         private PTThanhToanController PTThanhToanController;
         private IVnPayService _vnPayService;
-        public DonHangController(HttpClient httpclient, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietservice SanPhamChiTietservice, IMomoService momoService, IVnPayService vnPayService)
+        public DonHangController(HttpClient httpclient, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietservice SanPhamChiTietservice, IMomoService momoService, IVnPayService vnPayService, BazaizaiContext dbContext, IHoaDonServices invoiceService, IGioHangChiTietservices cartDetailService, PTThanhToanChiTietController paymentDetailController, PTThanhToanController paymentController)
         {
             _httpclient = httpclient;
             _signInManager = signInManager;
             _userManager = userManager;
-            _bazaizaiContext = new BazaizaiContext();
-            hoaDonServices = new HoaDonServices();
+            _bazaizaiContext = dbContext;
+            hoaDonServices = invoiceService;
             _SanPhamChiTietservice = SanPhamChiTietservice;
-            GioHangChiTietservices = new GioHangChiTietservices();
+            GioHangChiTietservices = cartDetailService;
             _momoService = momoService;
-            PTThanhToanChiTietController = new PTThanhToanChiTietController();
-            PTThanhToanController = new PTThanhToanController();
+            PTThanhToanChiTietController = paymentDetailController;
+            PTThanhToanController = paymentController;
             _vnPayService = vnPayService;
         }
 

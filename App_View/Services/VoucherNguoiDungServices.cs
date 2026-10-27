@@ -17,21 +17,19 @@ namespace App_View.Services
     public class VoucherNguoiDungservices : IVoucherNguoiDungservices
     {
         private readonly HttpClient _httpClient;
-        BazaizaiContext DbContextModel = new BazaizaiContext();
-        DbSet<VoucherNguoiDung> voucherNguoiDung;
-        DbSet<Voucher> voucher;
-        public VoucherNguoiDungservices(HttpClient httpClient)
+        private readonly BazaizaiContext DbContextModel;
+        public VoucherNguoiDungservices(HttpClient httpClient, BazaizaiContext dbContext)
         {
             _httpClient = httpClient;
+            DbContextModel = dbContext;
         }
 
         public async Task<bool> AddVoucherNguoiDung(string MaVoucher, string idNguoiDung)
         {
             try
             {
-                var httpClient = new HttpClient();
-                string apiUrl = $"https://localhost:7038/api/VoucherNguoiDung/AddVoucherNguoiDung?MaVoucher={MaVoucher}&idNguoiDung={idNguoiDung}";
-                var response = await httpClient.PostAsync(apiUrl, null);
+                string apiUrl = $"api/VoucherNguoiDung/AddVoucherNguoiDung?MaVoucher={MaVoucher}&idNguoiDung={idNguoiDung}";
+                var response = await _httpClient.PostAsync(apiUrl, null);
                 var check = await response.Content.ReadAsStringAsync();
                 if (check == "true")
                 {
@@ -78,8 +76,10 @@ namespace App_View.Services
         //hàm này để check xem voucher đó đã có trong id người dùng chưa
         public bool CheckVoucherInUser(string ma, string idUser)
         {
-            string voucherKhaDung = DbContextModel.Vouchers
-                .FirstOrDefault(c => c.MaVoucher == ma && c.TrangThai == (int)TrangThaiVoucher.HoatDong).IdVoucher;
+            string? voucherKhaDung = DbContextModel.Vouchers
+                .Where(c => c.MaVoucher == ma && c.TrangThai == (int)TrangThaiVoucher.HoatDong)
+                .Select(c => c.IdVoucher)
+                .FirstOrDefault();
 
             if (voucherKhaDung == null)
             {
@@ -133,9 +133,8 @@ namespace App_View.Services
             ///api/VoucherNguoiDung/TangVoucherChoNguoiDungMoi
             try
             {
-                var httpClient = new HttpClient();
-                string apiUrl = $"https://localhost:7038/api/VoucherNguoiDung/TangVoucherChoNguoiDungMoi?ma={ma}";
-                var response = await httpClient.PostAsync(apiUrl, null);
+                string apiUrl = $"api/VoucherNguoiDung/TangVoucherChoNguoiDungMoi?ma={ma}";
+                var response = await _httpClient.PostAsync(apiUrl, null);
                 var check = await response.Content.ReadAsStringAsync();
                 if (check == "true")
                 {

@@ -3,7 +3,6 @@ using App_Data.Repositories;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using OpenXmlPowerTools;
 using System.Net.Http;
 
 namespace App_View.Controllers
@@ -11,20 +10,20 @@ namespace App_View.Controllers
     public class KichCoController : Controller
     {
         public HttpClient httpClient { get; set; }
-        public KichCoController()
+        public KichCoController(HttpClient _httpClient)
         {
-            httpClient = new HttpClient();
+            httpClient = _httpClient;
         }
 
         public async Task<IActionResult> GetAllKickCo()
         {
-            var KichCos = JsonConvert.DeserializeObject<List<KichCo>>(await (await httpClient.GetAsync("https://localhost:7038/api/KichCo")).Content.ReadAsStringAsync());
+            var KichCos = JsonConvert.DeserializeObject<List<KichCo>>(await (await httpClient.GetAsync("api/KichCo")).Content.ReadAsStringAsync());
             return View(KichCos);
         }
         public async Task<IActionResult> DetailKickCo(string id)
         {
 
-            var kichCo = (JsonConvert.DeserializeObject<List<KichCo>>(await (await httpClient.GetAsync("https://localhost:7038/api/KichCo")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKichCo == id);
+            var kichCo = (JsonConvert.DeserializeObject<List<KichCo>>(await (await httpClient.GetAsync("api/KichCo")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKichCo == id);
             return View(kichCo);
 
         }
@@ -37,20 +36,20 @@ namespace App_View.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateKichCo(KichCo q)
         {
-            await httpClient.PostAsync($"https://localhost:7038/api/KichCo?TrangThai={q.TrangThai}&KichCo={q.SoKichCo}", null);
+            await httpClient.PostAsync($"api/KichCo?TrangThai={q.TrangThai}&KichCo={q.SoKichCo}", null);
             return RedirectToAction("GetAllKickCo");
         }
 
 
         public async Task<IActionResult> DeleteKichCo(string id)
         {
-            await httpClient.DeleteAsync($"https://localhost:7038/api/KichCo/{id}");
+            await httpClient.DeleteAsync($"api/KichCo/{id}");
             return RedirectToAction("GetAllKickCo");
         }
 
         public async Task<IActionResult> EditKichCo(string IdKichCo)
         {
-            var kichCo = (JsonConvert.DeserializeObject<List<KichCo>>(await (await httpClient.GetAsync("https://localhost:7038/api/KichCo")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKichCo ==IdKichCo);
+            var kichCo = (JsonConvert.DeserializeObject<List<KichCo>>(await (await httpClient.GetAsync("api/KichCo")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKichCo ==IdKichCo);
 
             if (kichCo == null)
             {
@@ -63,7 +62,7 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> EditKichCo(KichCo a)
         {
-            var apiUrl = $"https://localhost:7038/api/KichCo/{a.IdKichCo}?TrangThai={a.TrangThai}&KichCo={a.SoKichCo}";
+            var apiUrl = $"api/KichCo/{a.IdKichCo}?TrangThai={a.TrangThai}&KichCo={a.SoKichCo}";
 
             var response = await httpClient.PutAsync(apiUrl, null);
 

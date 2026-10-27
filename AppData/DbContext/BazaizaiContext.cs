@@ -66,10 +66,26 @@ namespace App_Data.DbContext
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=(localdb)\mssqllocaldb;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
+            if (!optionsBuilder.IsConfigured)
+            {
+                var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
+                    ?? Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection");
 
-            //cái này là db online
-            //optionsBuilder.UseSqlServer("Server = tcp:bazaizaidb.database.windows.net,1433; Initial Catalog = bazaizaidb; Persist Security Info = False; User ID = bazaizai; Password = Trinhanh0311; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30;");
+                if (!string.IsNullOrWhiteSpace(connectionString))
+                {
+                    optionsBuilder.UseSqlServer(connectionString);
+                }
+                else if (OperatingSystem.IsWindows())
+                {
+                    optionsBuilder.UseSqlServer(
+                        @"Data Source=(localdb)\mssqllocaldb;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True");
+                }
+                else
+                {
+                    throw new InvalidOperationException(
+                        "Database connection is not configured. Set DATABASE_URL or ConnectionStrings__DefaultConnection.");
+                }
+            }
         }
 
 

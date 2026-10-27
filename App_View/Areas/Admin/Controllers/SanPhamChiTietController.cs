@@ -1084,9 +1084,9 @@ namespace App_View.Areas.Admin.Controllers
             var response = await _httpClient.PostAsync("/api/anh/upload-anh", formData);
             if (response.IsSuccessStatusCode)
             {
-                return Ok(await response.Content.ReadAsAsync<bool>());
+                return Ok(true);
             }
-            return Ok(false);
+            return StatusCode((int)response.StatusCode, await response.Content.ReadAsStringAsync());
         }
 
     }

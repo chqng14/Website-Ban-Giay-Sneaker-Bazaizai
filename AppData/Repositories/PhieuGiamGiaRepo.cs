@@ -25,7 +25,8 @@ namespace App_Data.Repositories
             hoadonchitiet.IdHoaDon = hoaDon.IdHoaDon;
             hoadonchitiet.TrangThai = (int)TrangThaiCoBan.KhongHoatDong;
             _context.HoaDonChiTiets.Add(hoadonchitiet);
-            throw new NotImplementedException();
+            _context.SaveChanges();
+            return hoaDon;
         }
     }
 }

@@ -6,7 +6,6 @@
 @using System.Net.Http;
 @inject IDanhGiaservice _DanhGiaservice
 @{
-    _DanhGiaservice = new DanhGiaservice();
     var lst = await _DanhGiaservice.GetListAsyncViewModel(@Model.IdChiTietSp);
     var SaoTb = await _DanhGiaservice.GetSoSaoTB(@Model.IdChiTietSp);
     var TongSoDanhGia = await _DanhGiaservice.GetTongSoDanhGia(@Model.IdChiTietSp);

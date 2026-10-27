@@ -20,7 +20,6 @@ namespace App_Api.Controllers
     public class GioHangChiTietController : ControllerBase
     {
         private readonly IAllRepo<GioHangChiTiet> allRepo;
-        BazaizaiContext DbContextModel = new BazaizaiContext();
         private readonly IGioHangChiTietRepos _gioHangChiTiet;
         private readonly IAllRepo<KichCo> _kickcoRes;
         private readonly IAllRepo<SanPham> _sanPhamRes;
@@ -31,9 +30,9 @@ namespace App_Api.Controllers
         private readonly IMapper _mapper;
         //private readonly SignInManager<NguoiDung> _signInManager;
         //private readonly UserManager<NguoiDung> _userManager;
-        public GioHangChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes, IAllRepo<NguoiDung> nguoiDung)
+        public GioHangChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes, IAllRepo<NguoiDung> nguoiDung, IGioHangChiTietRepos cartDetailRepository)
         {
-            _gioHangChiTiet = new GioHangChiTietRepos(mapper);
+            _gioHangChiTiet = cartDetailRepository;
             _kickcoRes = kickcoRes;
             _sanPhamRes = sanPhamRes;
             _mauSacRes = mauSacRes;

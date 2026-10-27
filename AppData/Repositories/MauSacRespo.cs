@@ -13,9 +13,9 @@ namespace App_Data.Repositories
     public class MauSacRespo:IMauSacRespo
     {
         private readonly BazaizaiContext _context;
-        public MauSacRespo()
+        public MauSacRespo(BazaizaiContext dbContext)
         {
-            _context = new BazaizaiContext();
+            _context = dbContext;
         }
         public async Task<bool> AddAsync(MauSac entity)
         {

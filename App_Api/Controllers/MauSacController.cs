@@ -17,11 +17,11 @@ namespace App_Api.Controllers
         private readonly IMapper _mapper;
         private readonly BazaizaiContext _bazaizaiContext;
 
-        public MauSacController(IAllRepo<MauSac> mauSacRespo, IMapper mapper)
+        public MauSacController(IAllRepo<MauSac> mauSacRespo, IMapper mapper, BazaizaiContext dbContext)
         {
             _mauSacRespo = mauSacRespo;
             _mapper = mapper;
-            _bazaizaiContext = new BazaizaiContext();
+            _bazaizaiContext = dbContext;
         }
 
 

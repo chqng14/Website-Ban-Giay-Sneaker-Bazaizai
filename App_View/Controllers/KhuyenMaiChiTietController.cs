@@ -14,9 +14,9 @@ namespace App_View.Controllers
         private readonly IKhuyenMaiChiTietservices KhuyenMaiChiTietservices;
         private readonly IKhuyenMaiservices KhuyenMaiservices;
         private readonly ISanPhamChiTietservice SanPhamChiTietservice;
-        public KhuyenMaiChiTietController(IKhuyenMaiChiTietservices KhuyenMaiChiTietservices, IKhuyenMaiservices KhuyenMaiservices, ISanPhamChiTietservice SanPhamChiTietservice)
+        public KhuyenMaiChiTietController(HttpClient _httpClient, IKhuyenMaiChiTietservices KhuyenMaiChiTietservices, IKhuyenMaiservices KhuyenMaiservices, ISanPhamChiTietservice SanPhamChiTietservice)
         {
-            httpClient = new HttpClient();
+            httpClient = _httpClient;
             this.KhuyenMaiChiTietservices = KhuyenMaiChiTietservices;
             this.KhuyenMaiservices = KhuyenMaiservices;
             this.SanPhamChiTietservice = SanPhamChiTietservice;
@@ -24,13 +24,13 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> GetAllKhuyenMaiChiTiet()
         {
-            var KhuyenMaiChiTiet = JsonConvert.DeserializeObject<List<KhuyenMaiChiTiet>>(await (await httpClient.GetAsync("https://localhost:7038/api/KhuyenMaiChiTiet")).Content.ReadAsStringAsync());
+            var KhuyenMaiChiTiet = JsonConvert.DeserializeObject<List<KhuyenMaiChiTiet>>(await (await httpClient.GetAsync("api/KhuyenMaiChiTiet")).Content.ReadAsStringAsync());
             return View(KhuyenMaiChiTiet);
         }
         public async Task<IActionResult> DetailKhuyenMaiChiTiet(string id)
         {
 
-            var kichCo = (JsonConvert.DeserializeObject<List<KhuyenMaiChiTiet>>(await (await httpClient.GetAsync("https://localhost:7038/api/KhuyenMaiChiTiet")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKhuyenMaiChiTiet == id);
+            var kichCo = (JsonConvert.DeserializeObject<List<KhuyenMaiChiTiet>>(await (await httpClient.GetAsync("api/KhuyenMaiChiTiet")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKhuyenMaiChiTiet == id);
             return View(kichCo);
 
         }
@@ -43,20 +43,20 @@ namespace App_View.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateKhuyenMaiChiTiet(KhuyenMaiChiTiet q)
         {
-            await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={q.MoTa}&trangThai={q.TrangThai}&IDKm={q.IdKhuyenMai}&IDSpCt={q.IdSanPhamChiTiet}", null);
+            await httpClient.PostAsync($"api/KhuyenMaiChiTiet?mota={q.MoTa}&trangThai={q.TrangThai}&IDKm={q.IdKhuyenMai}&IDSpCt={q.IdSanPhamChiTiet}", null);
             return RedirectToAction("GetAllKhuyenMaiChiTiet");
         }
 
 
         public async Task<IActionResult> DeleteKhuyenMaiChiTiet(string id)
         {
-            await httpClient.DeleteAsync($"https://localhost:7038/api/KhuyenMaiChiTiet/{id}");
+            await httpClient.DeleteAsync($"api/KhuyenMaiChiTiet/{id}");
             return RedirectToAction("GetAllKhuyenMaiChiTiet");
         }
 
         public async Task<IActionResult> EditKhuyenMaiChiTiet(string IdKhuyenMaiChiTiet)
         {
-            var kichCo = (JsonConvert.DeserializeObject<List<KhuyenMaiChiTiet>>(await (await httpClient.GetAsync("https://localhost:7038/api/KhuyenMaiChiTiet")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKhuyenMaiChiTiet == IdKhuyenMaiChiTiet);
+            var kichCo = (JsonConvert.DeserializeObject<List<KhuyenMaiChiTiet>>(await (await httpClient.GetAsync("api/KhuyenMaiChiTiet")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdKhuyenMaiChiTiet == IdKhuyenMaiChiTiet);
 
             if (kichCo == null)
             {
@@ -69,7 +69,7 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> EditKhuyenMaiChiTiet(KhuyenMaiChiTiet a)
         {
-            var apiUrl = $"https://localhost:7038/api/KhuyenMaiChiTiet/{a.IdKhuyenMaiChiTiet}?mota={a.MoTa}&trangThai={a.TrangThai}&IDKm={a.IdKhuyenMai}&IDSpCt={a.IdSanPhamChiTiet}";
+            var apiUrl = $"api/KhuyenMaiChiTiet/{a.IdKhuyenMaiChiTiet}?mota={a.MoTa}&trangThai={a.TrangThai}&IDKm={a.IdKhuyenMai}&IDSpCt={a.IdSanPhamChiTiet}";
 
             var response = await httpClient.PutAsync(apiUrl, null);
 

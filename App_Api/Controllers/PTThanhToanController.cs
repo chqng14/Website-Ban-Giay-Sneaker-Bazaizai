@@ -15,13 +15,9 @@ namespace App_Api.Controllers
     {
         // GET: api/<PTThanhToanController>
         private readonly IAllRepo<PhuongThucThanhToan> allRepo;
-        BazaizaiContext dbContext = new BazaizaiContext();
-        DbSet<PhuongThucThanhToan> PhuongThucThanhToan;
-        public PTThanhToanController()
+        public PTThanhToanController(IAllRepo<PhuongThucThanhToan> repository)
         {
-            PhuongThucThanhToan = dbContext.PhuongThucThanhToans;
-            AllRepo<PhuongThucThanhToan> all = new AllRepo<PhuongThucThanhToan>(dbContext, PhuongThucThanhToan);
-            allRepo = all;
+            allRepo = repository;
         }
         // GET: api/<PhuongThucThanhToanController>
         [HttpGet]
@@ -74,7 +70,10 @@ namespace App_Api.Controllers
         public bool SuaPhuongThucThanhToan(string id, string ma, string ten, string mota, int trangthai)
         {
             var PhuongThucThanhToan = allRepo.GetAll().FirstOrDefault(c => c.IdPhuongThucThanhToan == id);
-            PhuongThucThanhToan.MaPhuongThucThanhToan = ma;
+            if (!string.IsNullOrWhiteSpace(ma))
+            {
+                PhuongThucThanhToan.MaPhuongThucThanhToan = ma;
+            }
             PhuongThucThanhToan.TenPhuongThucThanhToan = ten;
             PhuongThucThanhToan.MoTa = mota;
             PhuongThucThanhToan.TrangThai = trangthai;
@@ -86,6 +85,7 @@ namespace App_Api.Controllers
         public bool XoaPhuongThucThanhToan(string id)
         {
             var PhuongThucThanhToan = allRepo.GetAll().FirstOrDefault(c => c.IdPhuongThucThanhToan == id);
+            if (PhuongThucThanhToan is null) return false;
             return allRepo.RemoveItem(PhuongThucThanhToan);
         }
     }

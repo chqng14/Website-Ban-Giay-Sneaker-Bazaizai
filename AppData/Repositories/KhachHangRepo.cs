@@ -12,9 +12,9 @@ namespace App_Data.Repositories
     public class KhachHangRepo : IKhachHangRepo
     {
         private BazaizaiContext context;
-        public KhachHangRepo()
+        public KhachHangRepo(BazaizaiContext dbContext)
         {
-            context = new BazaizaiContext();    
+            context = dbContext;
         }
 
         public List<KhachHang> GetKhachHangs()

@@ -9,8 +9,6 @@
 @inject IDanhGiaservice _DanhGiaservice
 @inject IKhuyenMaiChiTietservices khuyenMaiChiTiet;
 @{
-    BazaizaiContext context = new BazaizaiContext();
-    _DanhGiaservice = new DanhGiaservice();
     var model = new App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel();
     model = SanPhamChiTietservice.GetDanhSachGiayViewModelAynsc().Result;
     var lstSpDuocApDungKhuyenMai = model.LstAllSanPham.Where(x => x.GiaThucTe < x.GiaGoc).GroupBy(x => x.TenSanPham)

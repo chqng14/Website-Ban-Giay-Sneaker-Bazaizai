@@ -42,8 +42,7 @@
     <tbody>
         @foreach (var product in Model)
         {
-            BazaizaiContext bazaizaiContext = new BazaizaiContext();
-            var spct = bazaizaiContext.SanPhamChiTiets.Find(product.IdChiTietSp);
+            var spct = context.SanPhamChiTiets.Find(product.IdChiTietSp);
             <tr>
                 <td class="sorting_1">
 

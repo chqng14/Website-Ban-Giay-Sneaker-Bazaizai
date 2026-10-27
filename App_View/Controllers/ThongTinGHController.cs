@@ -14,9 +14,9 @@ namespace App_View.Controllers
         IThongTinGHServices thongTinGHServices;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
-        public ThongTinGHController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
+        public ThongTinGHController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IThongTinGHServices shippingInformationService)
         {
-            thongTinGHServices = new ThongTinGHServices();
+            thongTinGHServices = shippingInformationService;
             _signInManager = signInManager;
             _userManager = userManager;
         }

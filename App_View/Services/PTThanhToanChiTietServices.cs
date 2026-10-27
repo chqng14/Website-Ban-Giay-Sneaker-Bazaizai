@@ -8,15 +8,15 @@ namespace App_View.Services
     public class PTThanhToanChiTietServices : IPTThanhToanChiTietServices
     {
         private readonly HttpClient _httpClient;
-        public PTThanhToanChiTietServices()
+        public PTThanhToanChiTietServices(HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
         }
         public async Task<string> CreatePTThanhToanChiTietAsync(string IdHoaDon, string IdThanhToan, double SoTien)
         {
             try
             {
-                var res = await _httpClient.PostAsync($"https://localhost:7038/api/PTThanhToanChiTiet?IdHoaDon={IdHoaDon}&IdThanhToan={IdThanhToan}&SoTien={SoTien}", null);
+                var res = await _httpClient.PostAsync($"api/PTThanhToanChiTiet?IdHoaDon={IdHoaDon}&IdThanhToan={IdThanhToan}&SoTien={SoTien}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsStringAsync();
@@ -31,26 +31,30 @@ namespace App_View.Services
             }
         }
 
-        public Task<bool> DeletePTThanhToanChiTietAsync(string idPhuongThucThanhToan)
+        public async Task<bool> DeletePTThanhToanChiTietAsync(string idPhuongThucThanhToan)
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.DeleteAsync(
+                $"api/PTThanhToanChiTiet/XoaPhuongThucThanhToanChiTiet={Uri.EscapeDataString(idPhuongThucThanhToan)}");
+            return response.IsSuccessStatusCode && await response.Content.ReadAsAsync<bool>();
         }
 
-        public Task<List<PhuongThucThanhToanChiTiet>> GetAllPTThanhToanChiTietAsync()
+        public async Task<List<PhuongThucThanhToanChiTiet>> GetAllPTThanhToanChiTietAsync()
         {
-            throw new NotImplementedException();
+            return await _httpClient.GetFromJsonAsync<List<PhuongThucThanhToanChiTiet>>(
+                "api/PTThanhToanChiTiet") ?? new();
         }
 
-        public Task<PhuongThucThanhToanChiTiet> GetPTThanhToanChiTietByIDAsync(string idPhuongThucThanhToan)
+        public async Task<PhuongThucThanhToanChiTiet> GetPTThanhToanChiTietByIDAsync(string idPhuongThucThanhToan)
         {
-            throw new NotImplementedException();
+            return await _httpClient.GetFromJsonAsync<PhuongThucThanhToanChiTiet>(
+                $"api/PTThanhToanChiTiet/TimPhuongThucThanhToanChiTiet={Uri.EscapeDataString(idPhuongThucThanhToan)}");
         }
 
         public async Task<bool> UpdatePTThanhToanChiTietAsync(string IdPhuongThucThanhToanChiTiet, int TrangThai)
         {
             try
             {
-                var res = await _httpClient.PutAsync($"https://localhost:7038/api/PTThanhToanChiTiet/SuaTrangThaiPTThanhToanChiTiet?IdPhuongThucThanhToanChiTiet={IdPhuongThucThanhToanChiTiet}&TrangThai={TrangThai}", null);
+                var res = await _httpClient.PutAsync($"api/PTThanhToanChiTiet/SuaTrangThaiPTThanhToanChiTiet?IdPhuongThucThanhToanChiTiet={IdPhuongThucThanhToanChiTiet}&TrangThai={TrangThai}", null);
                 if (res.IsSuccessStatusCode)
                 {
                     return await res.Content.ReadAsAsync<bool>();

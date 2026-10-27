@@ -9,9 +9,9 @@ namespace App_View.Controllers
     public class PTThanhToanController : Controller
     {
         IPTThanhToanServices PTThanhToanServices;
-        public PTThanhToanController()
+        public PTThanhToanController(IPTThanhToanServices paymentService)
         {
-            PTThanhToanServices = new PTThanhToanServices();
+            PTThanhToanServices = paymentService;
         }
         // GET: PTThanhToanController
         public async Task<List<PhuongThucThanhToan>> GetAll()

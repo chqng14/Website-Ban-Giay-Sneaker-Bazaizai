@@ -14,7 +14,6 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.VariantTypes;
 using Microsoft.EntityFrameworkCore;
-using OpenXmlPowerTools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,11 +30,14 @@ namespace App_Data.Repositories
         private readonly IDanhGiaRepo _danhGiaRespo;
         private readonly IMapper _mapper;
 
-        public SanPhamChiTietRespo(IMapper mapper)
+        public SanPhamChiTietRespo(
+            IMapper mapper,
+            BazaizaiContext dbContext,
+            IDanhGiaRepo danhGiaRepository)
         {
             _mapper = mapper;
-            _danhGiaRespo = new DanhGiaRepo();
-            _context = new BazaizaiContext();
+            _danhGiaRespo = danhGiaRepository;
+            _context = dbContext;
         }
         public async Task<bool> AddAsync(SanPhamChiTiet entity)
         {
@@ -89,8 +91,8 @@ namespace App_Data.Repositories
 
         public async Task<DanhSachGiayViewModel> GetDanhSachGiayViewModelAsync()
         {
-            using (var dbContext = new BazaizaiContext())
             {
+                var dbContext = _context;
                 var dateTimeNow = DateTime.Now;
                 var query = dbContext.SanPhamChiTiets.AsQueryable();
                 var lstAllSp = await query
@@ -292,8 +294,8 @@ namespace App_Data.Repositories
 
         public SanPhamDanhSachViewModel CreateSanPhamDanhSachViewModel(SanPhamChiTiet sanPham)
         {
-            using (var context = new BazaizaiContext())
             {
+                var context = _context;
                 return new SanPhamDanhSachViewModel()
                 {
                     IdChiTietSp = sanPham.IdChiTietSp,
@@ -341,8 +343,8 @@ namespace App_Data.Repositories
         }
         public async Task<List<ItemShopViewModel>> GetDanhSachItemShopViewModelAsync()
         {
-            using (var dbContext = new BazaizaiContext())
             {
+                var dbContext = _context;
                 var listSanPham = await dbContext.SanPhamChiTiets
                 .Include(it => it.SanPham)
                 .Include(it => it.ThuongHieu)
@@ -369,8 +371,8 @@ namespace App_Data.Repositories
 
         public async Task<List<ItemShopViewModel>> GetDanhSachBienTheItemShopViewModelAsync()
         {
-            using (var dbContext = new BazaizaiContext())
             {
+                var dbContext = _context;
                 var listSanPham = await dbContext.SanPhamChiTiets
            .Where(sp => sp.TrangThai == 0)
            .Include(it => it.SanPham)
@@ -1096,10 +1098,7 @@ namespace App_Data.Repositories
 
         public IQueryable<SanPhamChiTiet> GetQuerySanPhamChiTiet()
         {
-            using (var context = new BazaizaiContext())
-            {
-                return _context.SanPhamChiTiets.AsNoTracking();
-            }
+            return _context.SanPhamChiTiets.AsNoTracking();
         }
     }
 }

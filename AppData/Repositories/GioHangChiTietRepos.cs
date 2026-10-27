@@ -19,10 +19,10 @@ namespace App_Data.Repositories
         private readonly IMapper _mapper;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly UserManager<NguoiDung> _userManager;
-        public GioHangChiTietRepos(IMapper mapper)
+        public GioHangChiTietRepos(IMapper mapper, BazaizaiContext dbContext)
         {
             _mapper = mapper;
-            context = new BazaizaiContext();
+            context = dbContext;
         }
 
         public bool AddCartDetail(GioHangChiTiet item)

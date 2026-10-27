@@ -26,7 +26,6 @@ using Org.BouncyCastle.Crypto;
 using DocumentFormat.OpenXml.Office2010.Excel;
 using Microsoft.AspNetCore.Authorization;
 using System.Diagnostics.Metrics;
-using OpenXmlPowerTools;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Engineering;
 using NuGet.Packaging.Signing;
 
@@ -45,12 +44,11 @@ namespace App_View.Areas.Admin.Controllers
         private readonly IMapper _mapper;
         HttpClient httpClient;
 
-        public KhuyenMaiChiTietsController(IKhuyenMaiChiTietservices KhuyenMaiChiTietservices, ISanPhamChiTietservice SanPhamChiTietservice, IMapper mapper, IKhuyenMaiservices KhuyenMaiservices)
+        public KhuyenMaiChiTietsController(IKhuyenMaiChiTietservices KhuyenMaiChiTietservices, ISanPhamChiTietservice SanPhamChiTietservice, IMapper mapper, IKhuyenMaiservices KhuyenMaiservices, BazaizaiContext dbContext, HttpClient apiClient, IAllRepo<KhuyenMaiChiTiet> repository)
         {
-            _context = new BazaizaiContext();
-
-            httpClient = new HttpClient();
-            allRepo = new AllRepo<KhuyenMaiChiTiet>();
+            _context = dbContext;
+            httpClient = apiClient;
+            allRepo = repository;
             this.KhuyenMaiChiTietservices = KhuyenMaiChiTietservices;
             this.SanPhamChiTietservice = SanPhamChiTietservice;
             _mapper = mapper;
@@ -101,7 +99,7 @@ namespace App_View.Areas.Admin.Controllers
         {
             khuyenMaiChiTiet.IdKhuyenMaiChiTiet = Guid.NewGuid().ToString();
             khuyenMaiChiTiet.TrangThai = 1;
-            await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={khuyenMaiChiTiet.MoTa}&trangThai={khuyenMaiChiTiet.TrangThai}&IDKm={khuyenMaiChiTiet.IdKhuyenMai}&IDSpCt={khuyenMaiChiTiet.IdSanPhamChiTiet}", null);
+            await httpClient.PostAsync($"api/KhuyenMaiChiTiet?mota={khuyenMaiChiTiet.MoTa}&trangThai={khuyenMaiChiTiet.TrangThai}&IDKm={khuyenMaiChiTiet.IdKhuyenMai}&IDSpCt={khuyenMaiChiTiet.IdSanPhamChiTiet}", null);
             ViewData["IdKhuyenMai"] = new SelectList(_context.KhuyenMais, "IdKhuyenMai", "IdKhuyenMai", khuyenMaiChiTiet.IdKhuyenMai);
             ViewData["IdSanPhamChiTiet"] = new SelectList(_context.SanPhamChiTiets, "IdChiTietSp", "IdChiTietSp", khuyenMaiChiTiet.IdSanPhamChiTiet);
             return RedirectToAction("Index");
@@ -352,7 +350,7 @@ namespace App_View.Areas.Admin.Controllers
                                             idChiTietSanPham.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DaApDungSale;
                                             _context.SanPhamChiTiets.Update(idChiTietSanPham);
                                             _context.SaveChanges();
-                                            await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
+                                            await httpClient.PostAsync($"api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
                                             DataMessage.Add($"Áp dụng thành công chương trình giảm giá {nameSale.TenKhuyenMai} với sản phẩm {name}");
                                         }
                                     }
@@ -369,7 +367,7 @@ namespace App_View.Areas.Admin.Controllers
                                         idChiTietSanPham.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DaApDungSale;
                                         _context.SanPhamChiTiets.Update(idChiTietSanPham);
                                         _context.SaveChanges();
-                                        await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
+                                        await httpClient.PostAsync($"api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
                                         DataMessage.Add($"Áp dụng thành công chương trình giảm giá {nameSale.TenKhuyenMai} với sản phẩm {name}");
                                     }
                                     
@@ -392,7 +390,7 @@ namespace App_View.Areas.Admin.Controllers
                                         idChiTietSanPham.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DaApDungSale;
                                         _context.SanPhamChiTiets.Update(idChiTietSanPham);
                                         _context.SaveChanges();
-                                        await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
+                                        await httpClient.PostAsync($"api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
                                         successApllySale = $"Ap dụng thành công chương trình {nameSale.TenKhuyenMai} với sản phẩm đã chọn";
                                     }
                                 }
@@ -409,7 +407,7 @@ namespace App_View.Areas.Admin.Controllers
                                     idChiTietSanPham.TrangThaiSale = (int)TrangThaiSaleInProductDetail.DaApDungSale;
                                     _context.SanPhamChiTiets.Update(idChiTietSanPham);
                                     _context.SaveChanges();
-                                    await httpClient.PostAsync($"https://localhost:7038/api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
+                                    await httpClient.PostAsync($"api/KhuyenMaiChiTiet?mota={addSale.MoTa}&trangThai={addSale.TrangThai}&IDKm={addSale.IdKhuyenMai}&IDSpCt={addSale.IdSanPhamChiTiet}", null);
                                     successApllySale = $"Ap dụng thành công chương trình {nameSale.TenKhuyenMai} với sản phẩm đã chọn";
                                 }
                             }

@@ -1,165 +1,178 @@
-﻿using App_Data.IRepositories;
+using App_Api.Storage;
+using App_Data.IRepositories;
 using App_Data.Models;
 using App_Data.ViewModels.Anh;
 using Microsoft.AspNetCore.Mvc;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Processing;
 
-namespace App_Api.Controllers
+namespace App_Api.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class AnhController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AnhController : ControllerBase
+    private const string ProductImageFolder = "AnhSanPham";
+
+    private readonly IAllRepo<Anh> _imageRepository;
+    private readonly IImageStorage _imageStorage;
+    private readonly ILogger<AnhController> _logger;
+
+    public AnhController(
+        IAllRepo<Anh> imageRepository,
+        IImageStorage imageStorage,
+        ILogger<AnhController> logger)
     {
-        private readonly IAllRepo<Anh> _allRepoImage;
+        _imageRepository = imageRepository;
+        _imageStorage = imageStorage;
+        _logger = logger;
+    }
 
-        public AnhController(IAllRepo<Anh> allRepoImage)
+    [HttpPost("create-list-image")]
+    [RequestSizeLimit(30 * 1024 * 1024)]
+    public async Task<IActionResult> CreateImage(
+        [FromForm] string idProductDetail,
+        [FromForm] List<IFormFile> lstIFormFile,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(idProductDetail) || lstIFormFile.Count == 0)
         {
-            _allRepoImage = allRepoImage;
+            return BadRequest("Thiếu mã sản phẩm hoặc danh sách ảnh.");
         }
-        [HttpPost("create-list-image")]
-        public async Task<IActionResult> CreateImage([FromForm] string idProductDetail, [FromForm] List<IFormFile> lstIFormFile)
+
+        var savedFiles = new List<string>();
+        try
         {
-            try
+            foreach (var file in lstIFormFile)
             {
-                string currentDirectory = Directory.GetCurrentDirectory();
-                string rootPath = Directory.GetParent(currentDirectory)!.FullName;
-                string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSanPham");
+                var fileName = await _imageStorage.SaveAsync(
+                    file,
+                    ProductImageFolder,
+                    cancellationToken: cancellationToken);
 
-                foreach (var file in lstIFormFile)
+                var saved = _imageRepository.AddItem(new Anh
                 {
-                    if (file.Length > 0)
-                    {
-                        using var stream = new MemoryStream();
-                        file.CopyTo(stream);
-                        stream.Position = 0;
+                    IdAnh = Guid.NewGuid().ToString(),
+                    IdSanPhamChiTiet = idProductDetail,
+                    NgayTao = DateTime.UtcNow,
+                    Url = fileName,
+                    TrangThai = 0
+                });
 
-                        using var image = SixLabors.ImageSharp.Image.Load(stream);
-
-                        image.Mutate(x => x.Resize(new ResizeOptions
-                        {
-                            Size = new SixLabors.ImageSharp.Size(1600, 1600),
-                            Mode = ResizeMode.Max
-                        }));
-
-                        var encoder = new JpegEncoder
-                        {
-                            Quality = 80
-                        };
-
-                        string fileName = Guid.NewGuid().ToString() + file.FileName;
-                        string outputPath = Path.Combine(uploadDirectory, fileName);
-
-                        using var outputStream = new FileStream(outputPath, FileMode.Create);
-                        await image.SaveAsync(outputStream, encoder);
-                        _allRepoImage.AddItem(new Anh { IdAnh = Guid.NewGuid().ToString(), IdSanPhamChiTiet = idProductDetail, NgayTao = DateTime.Now, Url = fileName, TrangThai = 0 });
-                    }
+                if (!saved)
+                {
+                    _imageStorage.Delete(ProductImageFolder, fileName);
+                    throw new InvalidOperationException("Không thể lưu thông tin ảnh vào database.");
                 }
 
-                return Ok();
+                savedFiles.Add(fileName);
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return BadRequest(ex.Message);
-            }
-        }
 
-        [HttpPost("upload-anh")]
-        public async Task<bool> CreateImage([FromForm]List<IFormFile> files)
+            return Ok(new { files = savedFiles });
+        }
+        catch (InvalidDataException exception)
         {
-            try
-            {
-                string currentDirectory = Directory.GetCurrentDirectory();
-                string rootPath = Directory.GetParent(currentDirectory)!.FullName;
-                string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSanPham");
-
-                foreach (var file in files)
-                {
-                    if (file.Length > 0)
-                    {
-                        using var stream = new MemoryStream();
-                        file.CopyTo(stream);
-                        stream.Position = 0;
-
-                        using var image = SixLabors.ImageSharp.Image.Load(stream);
-
-                        image.Mutate(x => x.Resize(new ResizeOptions
-                        {
-                            Size = new SixLabors.ImageSharp.Size(1600, 1600),
-                            Mode = ResizeMode.Max
-                        }));
-
-                        var encoder = new JpegEncoder
-                        {
-                            Quality = 80
-                        };
-
-                        string fileName = file.FileName;
-                        string outputPath = Path.Combine(uploadDirectory, fileName);
-
-                        using var outputStream = new FileStream(outputPath, FileMode.Create);
-                        await image.SaveAsync(outputStream, encoder);
-                    }
-                }
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex);
-                return false;
-            }
+            return BadRequest(exception.Message);
         }
-
-
-        [HttpDelete("delete-list-image")]
-        public IActionResult DeleteListImage(ImageDTO responseImageDeleteVM)
+        catch (Exception exception)
         {
-            string currentDirectory = Directory.GetCurrentDirectory();
-            string rootPath = Directory.GetParent(currentDirectory)!.FullName;
-            string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "AnhSanPham");
-            try
-            {
-                foreach (var item in _allRepoImage.GetAll().Where(im => im.IdSanPhamChiTiet == responseImageDeleteVM.idProductDetail && responseImageDeleteVM.lstImageRemove!.Contains(im.Url!)))
-                {
-                    item.TrangThai = 1;
-                    _allRepoImage.EditItem(item);
-                }
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return BadRequest();
-            }
+            _logger.LogError(exception, "Không thể lưu ảnh cho sản phẩm {ProductDetailId}.", idProductDetail);
+            return StatusCode(StatusCodes.Status500InternalServerError, "Không thể lưu ảnh sản phẩm.");
         }
+    }
 
-        [HttpPost("create-list-model-image")]
-        public bool CreateModelNameImage([FromForm]string idProductDetail,[FromForm]List<string> lstNameImage)
+    [HttpPost("upload-anh")]
+    [RequestSizeLimit(100 * 1024 * 1024)]
+    public async Task<IActionResult> UploadImages(
+        [FromForm] List<IFormFile> files,
+        CancellationToken cancellationToken)
+    {
+        if (files.Count == 0)
         {
-            try
+            return BadRequest("Chưa chọn ảnh để tải lên.");
+        }
+
+        try
+        {
+            var savedFiles = new List<string>();
+            foreach (var file in files)
             {
-                foreach (var item in lstNameImage)
-                {
-                    var modelAnh = new Anh()
-                    {
-                        IdAnh = Guid.NewGuid().ToString(),
-                        IdSanPhamChiTiet = idProductDetail,
-                        NgayTao = DateTime.Now,
-                        TrangThai = 0,
-                        Url = item
-                    };
-                    _allRepoImage.AddItem(modelAnh);
-                };
-                return true;
+                savedFiles.Add(await _imageStorage.SaveAsync(
+                    file,
+                    ProductImageFolder,
+                    preserveFileName: true,
+                    cancellationToken));
             }
-            catch (Exception ex)
+
+            return Ok(new { files = savedFiles });
+        }
+        catch (InvalidDataException exception)
+        {
+            return BadRequest(exception.Message);
+        }
+        catch (IOException exception)
+        {
+            return Conflict(exception.Message);
+        }
+        catch (Exception exception)
+        {
+            _logger.LogError(exception, "Không thể tải danh sách ảnh sản phẩm.");
+            return StatusCode(StatusCodes.Status500InternalServerError, "Không thể tải ảnh lên.");
+        }
+    }
+
+    [HttpDelete("delete-list-image")]
+    public IActionResult DeleteListImage([FromBody] ImageDTO request)
+    {
+        if (request.lstImageRemove is null || request.lstImageRemove.Count == 0)
+        {
+            return BadRequest("Danh sách ảnh cần xóa đang trống.");
+        }
+
+        var images = _imageRepository.GetAll()
+            .Where(image => image.IdSanPhamChiTiet == request.idProductDetail
+                && request.lstImageRemove.Contains(image.Url!))
+            .ToList();
+
+        foreach (var image in images)
+        {
+            image.TrangThai = 1;
+            _imageRepository.EditItem(image);
+            if (!string.IsNullOrWhiteSpace(image.Url))
             {
-                Console.WriteLine(ex);
-                return false;
+                _imageStorage.Delete(ProductImageFolder, image.Url);
             }
         }
 
+        return Ok(new { deleted = images.Count });
+    }
+
+    [HttpPost("create-list-model-image")]
+    public IActionResult CreateModelNameImage(
+        [FromForm] string idProductDetail,
+        [FromForm] List<string> lstNameImage)
+    {
+        if (string.IsNullOrWhiteSpace(idProductDetail) || lstNameImage.Count == 0)
+        {
+            return BadRequest("Thiếu mã sản phẩm hoặc tên ảnh.");
+        }
+
+        foreach (var name in lstNameImage.Select(Path.GetFileName))
+        {
+            var fullPath = Path.Combine(_imageStorage.GetDirectory(ProductImageFolder), name);
+            if (!System.IO.File.Exists(fullPath))
+            {
+                return BadRequest($"Ảnh '{name}' chưa được tải lên.");
+            }
+
+            _imageRepository.AddItem(new Anh
+            {
+                IdAnh = Guid.NewGuid().ToString(),
+                IdSanPhamChiTiet = idProductDetail,
+                NgayTao = DateTime.UtcNow,
+                TrangThai = 0,
+                Url = name
+            });
+        }
+
+        return Ok();
     }
 }

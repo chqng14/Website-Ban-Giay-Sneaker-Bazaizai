@@ -17,12 +17,11 @@ namespace App_Api.Controllers
     [ApiController]
     public class HoaDonChiTietController : ControllerBase
     {
-        BazaizaiContext DbContextModel = new BazaizaiContext();
         private readonly IHoaDonChiTietRepos _hoaDonChiTiet;
         private readonly IMapper _mapper;
-        public HoaDonChiTietController(IMapper mapper)
+        public HoaDonChiTietController(IMapper mapper, IHoaDonChiTietRepos hoaDonChiTiet)
         {
-            _hoaDonChiTiet = new HoaDonChiTietRepos(mapper);
+            _hoaDonChiTiet = hoaDonChiTiet;
             _mapper = mapper;
         }
         // GET: api/<HoaDonChiTietController>
@@ -36,6 +35,13 @@ namespace App_Api.Controllers
         public async Task<IEnumerable<HoaDonChiTiet>> GetAllHoaDon()
         {
             return _hoaDonChiTiet.GetAll();
+        }
+
+        [HttpGet("GetAllViewModels")]
+        public ActionResult<List<HoaDonChiTietViewModel>> GetAllViewModels()
+        {
+            return _mapper.Map<List<HoaDonChiTietViewModel>>(
+                _hoaDonChiTiet.GetAllHoaDonOnline());
         }
 
         // GET api/<HoaDonChiTietController>/5

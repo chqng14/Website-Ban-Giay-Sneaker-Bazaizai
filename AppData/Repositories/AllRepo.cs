@@ -16,16 +16,10 @@ namespace App_Data.Repositories
 
         private DbSet<T> dbset;
 
-        public AllRepo()
-        {
-            context = new BazaizaiContext();
-            dbset = context.Set<T>();
-        }
-
-        public AllRepo(BazaizaiContext context, DbSet<T> dbset)
+        public AllRepo(BazaizaiContext context)
         {
             this.context = context;
-            this.dbset = dbset;
+            dbset = context.Set<T>();
         }
 
         public BazaizaiContext Context => context;

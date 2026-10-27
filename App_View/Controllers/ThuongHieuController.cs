@@ -7,20 +7,20 @@ namespace App_View.Controllers
     public class ThuongHieuController : Controller
     {
         public HttpClient httpClient { get; set; }
-        public ThuongHieuController()
+        public ThuongHieuController(HttpClient _httpClient)
         {
-            httpClient = new HttpClient();
+            httpClient = _httpClient;
         }
 
         public async Task<IActionResult> GetAllThuongHieu()
         {
-            var KichCos = JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("https://localhost:7038/api/ThuongHieu")).Content.ReadAsStringAsync());
+            var KichCos = JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("api/ThuongHieu")).Content.ReadAsStringAsync());
             return View(KichCos);
         }
         public async Task<IActionResult> DetailThuongHieu(string id)
         {
 
-            var kichCo = (JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("https://localhost:7038/api/ThuongHieu")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdThuongHieu == id);
+            var kichCo = (JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("api/ThuongHieu")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdThuongHieu == id);
             return View(kichCo);
 
         }
@@ -33,20 +33,20 @@ namespace App_View.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateThuongHieu(ThuongHieu q)
         {
-            await httpClient.PostAsync($"https://localhost:7038/api/ThuongHieu?TrangThai={q.TrangThai}&Ten={q.TenThuongHieu}", null);
+            await httpClient.PostAsync($"api/ThuongHieu?TrangThai={q.TrangThai}&Ten={q.TenThuongHieu}", null);
             return RedirectToAction("GetAllThuongHieu");
         }
 
 
         public async Task<IActionResult> DeleteThuongHieu(string id)
         {
-            await httpClient.DeleteAsync($"https://localhost:7038/api/ThuongHieu/{id}");
+            await httpClient.DeleteAsync($"api/ThuongHieu/{id}");
             return RedirectToAction("GetAllThuongHieu");
         }
 
         public async Task<IActionResult> EditThuongHieu(string Id)
         {
-            var kichCo = (JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("https://localhost:7038/api/ThuongHieu")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdThuongHieu == Id);
+            var kichCo = (JsonConvert.DeserializeObject<List<ThuongHieu>>(await (await httpClient.GetAsync("api/ThuongHieu")).Content.ReadAsStringAsync())).FirstOrDefault(x => x.IdThuongHieu == Id);
 
             if (kichCo == null)
             {
@@ -59,7 +59,7 @@ namespace App_View.Controllers
 
         public async Task<IActionResult> EditThuongHieu(ThuongHieu a)
         {
-            var apiUrl = $"https://localhost:7038/api/ThuongHieu/{a.IdThuongHieu}?TrangThai={a.TrangThai}&Ten={a.TenThuongHieu}";
+            var apiUrl = $"api/ThuongHieu/{a.IdThuongHieu}?TrangThai={a.TrangThai}&Ten={a.TenThuongHieu}";
 
             var response = await httpClient.PutAsync(apiUrl, null);
 

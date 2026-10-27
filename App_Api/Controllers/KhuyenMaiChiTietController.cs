@@ -7,7 +7,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OpenXmlPowerTools;
 
 namespace App_Api.Controllers
 {
@@ -16,14 +15,17 @@ namespace App_Api.Controllers
     public class KhuyenMaiChiTietController : ControllerBase
     {
         private readonly IAllRepo<KhuyenMaiChiTiet> repos;
-        BazaizaiContext context = new BazaizaiContext();
-        DbSet<KhuyenMaiChiTiet> KhuyenMaiChiTiets;
+        private readonly BazaizaiContext context;
+        private readonly DbSet<KhuyenMaiChiTiet> KhuyenMaiChiTiets;
         private readonly IMapper _mapper;
-        public KhuyenMaiChiTietController(IMapper mapper)
+        public KhuyenMaiChiTietController(
+            IMapper mapper,
+            IAllRepo<KhuyenMaiChiTiet> repository,
+            BazaizaiContext dbContext)
         {
+            context = dbContext;
             KhuyenMaiChiTiets = context.KhuyenMaiChiTiets;
-            AllRepo<KhuyenMaiChiTiet> all = new AllRepo<KhuyenMaiChiTiet>(context, KhuyenMaiChiTiets);
-            repos = all;
+            repos = repository;
             _mapper=mapper;
         }
         [HttpGet]

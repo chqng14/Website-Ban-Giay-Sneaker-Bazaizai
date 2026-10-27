@@ -26,13 +26,13 @@ namespace App_View.Areas.Admin.Controllers
 		private readonly IHoaDonServices _hoaDonServices;
         private readonly ISanPhamChiTietservice SanPhamChiTietservice;
         BazaizaiContext context;
-		public HoaDonController(ISanPhamChiTietservice SanPhamChiTietservice, IVoucherNguoiDungservices VoucherNguoiDungservices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager)
+		public HoaDonController(ISanPhamChiTietservice SanPhamChiTietservice, IVoucherNguoiDungservices VoucherNguoiDungservices, SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, IHoaDonServices invoiceService, IHoaDonChiTietservices invoiceDetailService, BazaizaiContext dbContext)
 		{
-			_hoaDonServices = new HoaDonServices();
-			context = new BazaizaiContext();
+			_hoaDonServices = invoiceService;
+			context = dbContext;
 			this.SanPhamChiTietservice = SanPhamChiTietservice;
 			_VoucherNguoiDungservices = VoucherNguoiDungservices;
-			_HoaDonChiTietservices = new HoaDonChiTietservices();
+			_HoaDonChiTietservices = invoiceDetailService;
 			_signInManager = signInManager;
 			_userManager = userManager;
 		}

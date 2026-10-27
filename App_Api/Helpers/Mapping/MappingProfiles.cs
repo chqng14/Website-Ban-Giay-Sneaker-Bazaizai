@@ -19,7 +19,6 @@ using App_Data.ViewModels.KhuyenMaiChiTietDTO;
 
 using App_Data.ViewModels.HoaDonChiTietDTO;
 
-using static Peg.Base.PegBaseParser;
 
 
 using App_Data.ViewModels.ThongTinGHDTO;
@@ -34,8 +33,6 @@ namespace App_Api.Helpers.Mapping
 {
     public class MappingProfiles : Profile
     {
-        private readonly BazaizaiContext bazaizaiContext = new BazaizaiContext();
-        private readonly DanhGiaRepo _danhGiaRepo = new DanhGiaRepo();
         public MappingProfiles()
         {
             CreateMap<HoaDon, HoaDonDTO>();
@@ -348,62 +345,30 @@ namespace App_Api.Helpers.Mapping
                     )
                 .ForMember(
                         dest => dest.SoSao,
-                        opt => opt.MapFrom(src => _danhGiaRepo.SoSaoTB(src.IdChiTietSp!).Result)
+                        opt => opt.MapFrom(src => 0)
                     )
                 .ForMember(
                         dest => dest.SoLanDanhGia,
-                        opt => opt.MapFrom(src => _danhGiaRepo.GetTongSoDanhGia(src.IdChiTietSp!).Result)
+                        opt => opt.MapFrom(src => 0)
                     )
                 .ForMember(
                         dest => dest.GiaMin,
-                        opt => opt.MapFrom(src => bazaizaiContext.SanPhamChiTiets
-                        .Where(x =>
-                        x.TrangThai == 0 &&
-                        x.IdXuatXu == src.IdXuatXu &&
-                        x.IdSanPham == src.IdSanPham &&
-                        x.IdLoaiGiay == src.IdLoaiGiay &&
-                        x.IdThuongHieu == src.IdThuongHieu &&
-                        x.IdKieuDeGiay == src.IdKieuDeGiay &&
-                        x.IdChatLieu == src.IdChatLieu
-                        )
-                        .Select(x => x.GiaThucTe).Min()
-                        )
+                        opt => opt.MapFrom(src => src.GiaThucTe)
                     )
                  .ForMember(
                         dest => dest.GiaMax,
-                        opt => opt.MapFrom(src => bazaizaiContext.SanPhamChiTiets
-                        .Where(x =>
-                        x.TrangThai == 0 &&
-                        x.IdXuatXu == src.IdXuatXu &&
-                        x.IdSanPham == src.IdSanPham &&
-                        x.IdLoaiGiay == src.IdLoaiGiay &&
-                        x.IdThuongHieu == src.IdThuongHieu &&
-                        x.IdKieuDeGiay == src.IdKieuDeGiay &&
-                        x.IdChatLieu == src.IdChatLieu
-                        )
-                        .Select(x => x.GiaThucTe).Max()
-                        )
+                        opt => opt.MapFrom(src => src.GiaThucTe)
                     )
                  .ForMember(
                         dest => dest.LstMauSac,
-                        opt => opt.MapFrom(src => bazaizaiContext.SanPhamChiTiets
-                        .Where(x =>
-                        x.TrangThai == 0 &&
-                        x.IdXuatXu == src.IdXuatXu &&
-                        x.IdSanPham == src.IdSanPham &&
-                        x.IdLoaiGiay == src.IdLoaiGiay &&
-                        x.IdThuongHieu == src.IdThuongHieu &&
-                        x.IdKieuDeGiay == src.IdKieuDeGiay &&
-                        x.IdChatLieu == src.IdChatLieu
-                        )
-                        .Select(sp => new SelectListItem()
+                        opt => opt.MapFrom(src => new List<SelectListItem>
                         {
-                            Text = sp.MauSac.TenMauSac,
-                            Value = sp.MauSac.IdMauSac!.ToString()
+                            new SelectListItem
+                            {
+                                Text = src.MauSac.TenMauSac,
+                                Value = src.MauSac.IdMauSac!.ToString()
+                            }
                         })
-                        .Distinct()
-                        .ToList()
-                        )
                     )
                 ;
             CreateMap<SanPhamChiTiet, ItemDetailViewModel>()

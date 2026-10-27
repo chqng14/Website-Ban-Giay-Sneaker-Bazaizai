@@ -4,7 +4,6 @@
 @using App_View.IServices;
 @using App_View.Services;
 @{
-    BazaizaiContext context = new BazaizaiContext();
 }
 <style>
     .m-order__list {
@@ -41,11 +40,6 @@
     }
 
 </style>
-@{
-    var httpClient = new HttpClient(); // Tạo đối tượng HttpClient
-    var _voucherND = new VoucherNguoiDungservices(httpClient); // Truyền đối tượng HttpClient vào constructor của VoucherNguoiDungservices
-}
-
 @functions {
     // Hàm trợ giúp để định dạng số nguyên thành tiền tệ Việt Nam
 

@@ -18,9 +18,9 @@ namespace App_Data.Repositories
     public class VoucherNguoiDungRepos : IVoucherNguoiDungRepos
     {
         private readonly BazaizaiContext _context;
-        public VoucherNguoiDungRepos()
+        public VoucherNguoiDungRepos(BazaizaiContext dbContext)
         {
-            _context = new BazaizaiContext();
+            _context = dbContext;
         }
 
         public async Task<List<NguoiDung>> GetLstNguoiDungMoi()

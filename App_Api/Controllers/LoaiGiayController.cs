@@ -17,13 +17,10 @@ namespace App_Api.Controllers
     public class LoaiGiayController : ControllerBase
     {
         private readonly IAllRepo<LoaiGiay> allRepo;
-        BazaizaiContext DbContextModel = new BazaizaiContext();
-        DbSet<LoaiGiay> loaiGiays;
         private readonly IMapper _mapper;
-        public LoaiGiayController(IMapper mapper)
+        public LoaiGiayController(IMapper mapper, IAllRepo<LoaiGiay> repository)
         {
-            loaiGiays = DbContextModel.LoaiGiays;
-            allRepo = new AllRepo<LoaiGiay>(DbContextModel, loaiGiays);
+            allRepo = repository;
             _mapper = mapper;
         }
         // GET: api/<LoaiGiayController>
@@ -70,13 +67,11 @@ namespace App_Api.Controllers
             try
             {
                 var nameLoaiGiay = loaiGiayDTO.TenLoaiGiay!.Trim().ToLower();
-                if (!DbContextModel.LoaiGiays.Where(x => x.TenLoaiGiay!.Trim().ToLower() == nameLoaiGiay).Any())
+                if (!allRepo.GetAll().Any(x => x.TenLoaiGiay!.Trim().ToLower() == nameLoaiGiay && x.IdLoaiGiay != loaiGiayDTO.IdLoaiGiay))
                 {
-                    var loaiGiay = _mapper.Map<LoaiGiay>(loaiGiayDTO);
-                    DbContextModel.Attach(loaiGiay);
-                    DbContextModel.Entry(loaiGiay).Property(sp => sp.TenLoaiGiay).IsModified = true;
-                    DbContextModel.SaveChanges();
-                    return true;
+                    var loaiGiay = allRepo.GetAll().First(x => x.IdLoaiGiay == loaiGiayDTO.IdLoaiGiay);
+                    loaiGiay.TenLoaiGiay = loaiGiayDTO.TenLoaiGiay;
+                    return allRepo.EditItem(loaiGiay);
                 }
                 return false;
             }

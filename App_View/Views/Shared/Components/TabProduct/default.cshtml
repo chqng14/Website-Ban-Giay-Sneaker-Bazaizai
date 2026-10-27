@@ -1,6 +1,6 @@
 ﻿@model App_Data.ViewModels.SanPhamChiTietViewModel.DanhSachGiayViewModel
+@inject App_View.IServices.IDanhGiaservice _DanhGiaservice
 @{ 
-    App_View.IServices.IDanhGiaservice _DanhGiaservice = new App_View.Services.DanhGiaservice();
     double soSao = 0;
  }
 <div>

@@ -15,9 +15,9 @@ namespace App_Api.Controllers
     public class DonHangController : ControllerBase
     {
         private readonly BazaizaiContext _bazaizaiContext;
-        public DonHangController()
+        public DonHangController(BazaizaiContext dbContext)
         {
-            _bazaizaiContext = new BazaizaiContext();
+            _bazaizaiContext = dbContext;
         }
 
 

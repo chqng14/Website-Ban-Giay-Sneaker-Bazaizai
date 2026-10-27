@@ -17,14 +17,10 @@ namespace App_Api.Controllers
     public class ChatLieuController : ControllerBase
     {
         private readonly IAllRepo<ChatLieu> allRepo;
-        BazaizaiContext dbContext = new BazaizaiContext();
         private readonly IMapper _mapper;
-        DbSet<ChatLieu> ChatLieu;
-        public ChatLieuController(IMapper mapper)
+        public ChatLieuController(IMapper mapper, IAllRepo<ChatLieu> repository)
         {
-            ChatLieu = dbContext.ChatLieus;
-            AllRepo<ChatLieu> all = new AllRepo<ChatLieu>(dbContext, ChatLieu);
-            allRepo = all;
+            allRepo = repository;
             _mapper = mapper;
         }
         // GET: api/<ChatLieuController>
@@ -71,13 +67,11 @@ namespace App_Api.Controllers
             try
             {
                 var nameChatLieu = chatLieuDTO.TenChatLieu!.Trim().ToLower();
-                if (!dbContext.ChatLieus.Where(x => x.TenChatLieu!.Trim().ToLower() == nameChatLieu).Any())
+                if (!allRepo.GetAll().Any(x => x.TenChatLieu!.Trim().ToLower() == nameChatLieu && x.IdChatLieu != chatLieuDTO.IdChatLieu))
                 {
-                    var chatLieu = _mapper.Map<ChatLieu>(chatLieuDTO);
-                    dbContext.Attach(chatLieu);
-                    dbContext.Entry(chatLieu).Property(sp => sp.TenChatLieu).IsModified = true;
-                    dbContext.SaveChanges();
-                    return true;
+                    var chatLieu = allRepo.GetAll().First(x => x.IdChatLieu == chatLieuDTO.IdChatLieu);
+                    chatLieu.TenChatLieu = chatLieuDTO.TenChatLieu;
+                    return allRepo.EditItem(chatLieu);
                 }
                 return false;
             }

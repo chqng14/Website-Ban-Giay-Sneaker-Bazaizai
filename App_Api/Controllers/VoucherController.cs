@@ -11,6 +11,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using static App_Data.Repositories.TrangThai;
+using App_Api.Storage;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,18 +24,21 @@ namespace App_Api.Controllers
         private readonly IAllRepo<VoucherNguoiDung> VcNguoiDungRepos;
         private readonly IAllRepo<Voucher> allRepo;
         private readonly IMapper _mapper;
-        BazaizaiContext DbContextModel = new BazaizaiContext();
-        DbSet<Voucher> Vouchers;
-        DbSet<VoucherNguoiDung> voucherNguoiDung;
-        public VoucherController(IMapper mapper)
+        private readonly BazaizaiContext DbContextModel;
+        private readonly IImageStorage _imageStorage;
+
+        public VoucherController(
+            IMapper mapper,
+            BazaizaiContext dbContext,
+            IAllRepo<Voucher> voucherRepository,
+            IAllRepo<VoucherNguoiDung> userVoucherRepository,
+            IImageStorage imageStorage)
         {
-            voucherNguoiDung = DbContextModel.VoucherNguoiDungs;
-            AllRepo<VoucherNguoiDung> VcNd = new AllRepo<VoucherNguoiDung>(DbContextModel, voucherNguoiDung);
-            VcNguoiDungRepos = VcNd;
-            Vouchers = DbContextModel.Vouchers;
-            AllRepo<Voucher> all = new AllRepo<Voucher>(DbContextModel, Vouchers);
-            allRepo = all;
+            DbContextModel = dbContext;
+            VcNguoiDungRepos = userVoucherRepository;
+            allRepo = voucherRepository;
             _mapper = mapper;
+            _imageStorage = imageStorage;
         }
         [HttpGet("GetVoucher")]
         public List<Voucher> GetAllVoucher()
@@ -340,9 +344,7 @@ namespace App_Api.Controllers
                     //soLuongDaIn += 1;
 
                     // Tạo và lưu hình ảnh QR nếu thêm voucher người dùng thành công
-                    string currentDirectory = Directory.GetCurrentDirectory();
-                    string rootPath = Directory.GetParent(currentDirectory)!.FullName;
-                    string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "VoucherNguoiDungQRCode");
+                    string uploadDirectory = _imageStorage.GetDirectory("images/VoucherNguoiDungQRCode");
 
                     if (!string.IsNullOrEmpty(uploadDirectory) && !string.IsNullOrEmpty(VcNguoiDungCanThem.IdVouCherNguoiDung))
                     {
@@ -357,14 +359,8 @@ namespace App_Api.Controllers
                         {
                             QRCodeGenerator qrGenerator = new QRCodeGenerator();
                             QRCodeData qrCodeData = qrGenerator.CreateQrCode(VcNguoiDungCanThem.IdVouCherNguoiDung, QRCodeGenerator.ECCLevel.Q);
-                            QRCode qrCode = new QRCode(qrCodeData);
-
-                            Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
-
-                            using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
-                            {
-                                qrCodeImage.Save(stream, ImageFormat.Png);
-                            }
+                            PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+                            System.IO.File.WriteAllBytes(qrCodeImagePath, qrCode.GetGraphic(20));
                         }
                     }
                 }
@@ -382,9 +378,7 @@ namespace App_Api.Controllers
         {
             try
             {
-                string currentDirectory = Directory.GetCurrentDirectory();
-                string rootPath = Directory.GetParent(currentDirectory)!.FullName;
-                string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "VoucherNguoiDungQRCode");
+                string uploadDirectory = _imageStorage.GetDirectory("images/VoucherNguoiDungQRCode");
 
                 foreach (var item in idVoucherNguoiDung)
                 {

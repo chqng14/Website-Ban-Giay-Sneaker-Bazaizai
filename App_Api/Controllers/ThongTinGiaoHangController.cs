@@ -17,12 +17,14 @@ namespace App_Api.Controllers
     public class ThongTinGiaoHangController : ControllerBase
     {
         private readonly IAllRepo<GioHangChiTiet> allRepo;
-        BazaizaiContext DbContextModel = new BazaizaiContext();
         private readonly IThongTinGHRepos thongTinGHRepos;
         private readonly IMapper _mapper;
-        public ThongTinGiaoHangController(IMapper mapper, IAllRepo<GioHangChiTiet> allRepo)
+        public ThongTinGiaoHangController(
+            IMapper mapper,
+            IAllRepo<GioHangChiTiet> allRepo,
+            IThongTinGHRepos shippingInformationRepository)
         {
-            thongTinGHRepos = new ThongTinGHRepos(mapper);
+            thongTinGHRepos = shippingInformationRepository;
             _mapper = mapper;
             this.allRepo = allRepo;
         }

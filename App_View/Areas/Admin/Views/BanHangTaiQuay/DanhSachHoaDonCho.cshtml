@@ -5,9 +5,8 @@
 @using Microsoft.AspNetCore.Identity;
 @using static App_Data.Repositories.TrangThai;
 @model IEnumerable<App_Data.ViewModels.HoaDon.HoaDonChoDTO>
+@inject IHoaDonServices hoaDonServices
 @{
-    BazaizaiContext context = new BazaizaiContext();
-    IHoaDonServices hoaDonServices = new HoaDonServices();
 }
 @{
     ViewData["Title"] = "DanhSachHoaDonCho";

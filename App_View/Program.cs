@@ -1,18 +1,20 @@
-
 using App_View.IServices;
 using App_Data.DbContext;
 using App_Data.Models;
+using App_Data.IRepositories;
+using App_Data.Repositories;
 using App_View.Controllers;
-using App_View.IServices;
 using App_View.Models;
 using App_View.Models.Momo;
 using App_View.Services;
 using App_View.Settings;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,43 +22,68 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<MomoOptionModel>(builder.Configuration.GetSection("MomoAPI"));
 builder.Services.AddScoped<IMomoService, MomoService>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
-// Add services to the container.
-//BAZAIZAI\SQLEXPRESS
 
-
-
-builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Data Source=(localdb)\mssqllocaldb;Initial Catalog=DuAnTotNghiep_BazaizaiStore;Integrated Security=True"));
-
-//cái này là db online
-//builder.Services.AddHangfire(x => x.UseSqlServerStorage(@"Server = tcp:bazaizaidb.database.windows.net,1433; Initial Catalog = bazaizaidb; Persist Security Info = False; User ID = bazaizai; Password = Trinhanh0311; MultipleActiveResultSets = False; Encrypt = True; TrustServerCertificate = False; Connection Timeout = 30;"));
-//Đoạn này ai chạy lỗi thì đổi đường dẫn trong này nha
-
-
+var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException(
+        "Database connection is not configured. Set DATABASE_URL or ConnectionStrings:DefaultConnection.");
+}
+builder.Services.AddHangfire(x => x.UseSqlServerStorage(connectionString));
 builder.Services.AddHangfireServer();
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<BazaizaiContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddOptions();
 builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietservice, SanPhamChiTietservice>();
+builder.Services.AddScoped<ISanPhamChiTietservice, SanPhamChiTietservice>();
 builder.Services.AddScoped<IVoucherservices, Voucherservices>();
 builder.Services.AddScoped<IVoucherNguoiDungservices, VoucherNguoiDungservices>();
-
-builder.Services.AddControllersWithViews(); builder.Services.AddScoped<ISanPhamChiTietservice, SanPhamChiTietservice>();
 builder.Services.AddScoped<IGioHangChiTietservices, GioHangChiTietservices>();
 builder.Services.AddScoped<IKhuyenMaiChiTietservices, KhuyenMaiChiTietservices>();
 builder.Services.AddScoped<IKhuyenMaiservices, KhuyenMaiservices>();
-builder.Services.AddScoped<ThongTinGHController>();  // Sử dụng AddScoped nếu bạn muốn một instance cho mỗi phạm vi của yêu cầu HTTP
+builder.Services.AddScoped<ThongTinGHController>();
 builder.Services.AddScoped<GioHangChiTietsController, GioHangChiTietsController>();
 builder.Services.AddScoped<IViewRenderService, ViewRenderService>();
 builder.Services.AddScoped<IDanhGiaservice, DanhGiaservice>();
 builder.Services.AddScoped<IHoaDonServices, HoaDonServices>();
 builder.Services.AddScoped<IThongKeService, ThongKeService>();
 builder.Services.AddScoped<IThongTinGHServices, ThongTinGHServices>();
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:7038/") });
-//builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://bazaizaiapi.azurewebsites.net/") });
-//Thêm
+builder.Services.AddScoped<IHoaDonChiTietservices, HoaDonChiTietservices>();
+builder.Services.AddScoped<IPTThanhToanServices, PTThanhToanServices>();
+builder.Services.AddScoped<IPTThanhToanChiTietServices, PTThanhToanChiTietServices>();
+builder.Services.AddScoped<IAllRepo<KhuyenMaiChiTiet>, AllRepo<KhuyenMaiChiTiet>>();
+builder.Services.AddScoped<PTThanhToanController>();
+builder.Services.AddScoped<PTThanhToanChiTietController>();
+builder.Services.AddScoped<CapNhatThoiGianService>();
+builder.Services.AddSingleton<IUserImageStorage, LocalUserImageStorage>();
+builder.Services.AddHostedService<PromotionUpdateBackgroundService>();
+var configuredKeyPath = builder.Configuration["DataProtection:KeysPath"] ?? "keys";
+var dataProtectionKeyPath = Path.GetFullPath(Path.IsPathRooted(configuredKeyPath)
+    ? configuredKeyPath
+    : Path.Combine(builder.Environment.ContentRootPath, configuredKeyPath));
+Directory.CreateDirectory(dataProtectionKeyPath);
+builder.Services.AddDataProtection()
+    .SetApplicationName("BazaizaiStore")
+    .PersistKeysToFileSystem(new DirectoryInfo(dataProtectionKeyPath));
+var apiBaseUrl = builder.Configuration.GetValue<string>("ApiSettings:BaseUrl") ?? "https://localhost:7038/";
+if (!Uri.TryCreate(apiBaseUrl, UriKind.Absolute, out var apiBaseUri))
+{
+    throw new InvalidOperationException("ApiSettings:BaseUrl must be a valid absolute URL.");
+}
+builder.Services.AddHttpClient("BazaizaiApi", client =>
+{
+    client.BaseAddress = apiBaseUri;
+    client.Timeout = TimeSpan.FromSeconds(30);
+    var internalApiKey = builder.Configuration["ApiSecurity:InternalKey"];
+    if (!string.IsNullOrWhiteSpace(internalApiKey))
+    {
+        client.DefaultRequestHeaders.Add("X-Internal-Api-Key", internalApiKey);
+    }
+});
+builder.Services.AddScoped(sp =>
+    sp.GetRequiredService<IHttpClientFactory>().CreateClient("BazaizaiApi"));
 builder.Services.AddIdentity<NguoiDung, ChucVu>()
 .AddEntityFrameworkStores<BazaizaiContext>()
 .AddDefaultTokenProviders();
@@ -101,85 +128,37 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/Lockout/";
     options.AccessDeniedPath = "/KhongDuocTruyCap.html";
 });
-//builder.Services.ConfigureApplicationCookie(options =>
-//{
-//    options.ExpireTimeSpan = TimeSpan.FromDays(14);
-//    options.LoginPath = "/Login/";
-//    options.LogoutPath = "/Lockout/";
-//    options.AccessDeniedPath = "/KhongDuocTruyCap.html";
-//    options.ReturnUrlParameter = "/Admin/";
-//    options.Events = new CookieAuthenticationEvents
-//    {
-//        OnValidatePrincipal = context =>
-//        {
-
-//            Kiểm tra vai trò người dùng
-//            var userRoles = context.Principal.Claims
-//                .Where(c => c.Type == ClaimTypes.Role)
-//                .Select(c => c.Value)
-//                .ToList();
-
-//            Xác định thời gian hết hạn dựa trên vai trò
-//            var expireTimeSpan = userRoles.Contains("Admin")
-
-//                ? TimeSpan.FromDays(14)  // Thời gian hết hạn cho vai trò Admin là 30 ngày
-//                : userRoles.Contains("NhanVien") ? TimeSpan.FromDays(14) : TimeSpan.FromMinutes(1); // Mặc định cho các vai trò khác là 14 ngày
-
-//            Cập nhật thời gian hết hạn
-//            context.Properties.ExpiresUtc = DateTimeOffset.UtcNow.Add(expireTimeSpan);
-
-//            return Task.CompletedTask;
-
-//        },
-//        OnRedirectToReturnUrl = context =>
-//        {
-//            var userRoles = context.HttpContext.User.Claims
-//                .Where(c => c.Type == ClaimTypes.Role)
-//                .Select(c => c.Value)
-//                .ToList();
-
-//            Kiểm tra vai trò và chuyển hướng tương ứng
-//            if (userRoles.Contains("Admin"))
-//            {
-//                context.RedirectUri = "/admin";
-//            }
-//            else if (userRoles.Contains("NhanVien"))
-//            {
-//                context.RedirectUri = "/admin";
-//            }
-//            else
-//            {
-//                context.RedirectUri = "/Index";
-//            }
-
-//            return Task.CompletedTask;
-//        }
-//    };
-//});
-builder.Services.AddAuthentication()
-     .AddCookie()
-    .AddGoogle(googleOptions =>
+var authenticationBuilder = builder.Services.AddAuthentication();
+var googleClientId = builder.Configuration["Authentication:Google:ClientId"];
+var googleClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+if (!string.IsNullOrWhiteSpace(googleClientId) && !string.IsNullOrWhiteSpace(googleClientSecret))
+{
+    authenticationBuilder.AddGoogle(googleOptions =>
     {
         // Đọc thông tin Authentication:Google từ appsettings.json
-        IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
-
         // Thiết lập ClientID và ClientSecret để truy cập API google
-        googleOptions.ClientId = googleAuthNSection["ClientId"];
-        googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+        googleOptions.ClientId = googleClientId;
+        googleOptions.ClientSecret = googleClientSecret;
         //googleOptions.AccessDeniedPath = "/login/";
         //googleOptions.Scope.Add("https://www.googleapis.com/auth/user.birthday.read");
         googleOptions.ClaimActions.MapJsonKey("urn:google:picture", "picture", "url");
         googleOptions.ClaimActions.MapJsonKey("urn:google:locale", "locale", "string");
         googleOptions.SaveTokens = true;
-    })
-    .AddFacebook(facebookOptions =>
+    });
+}
+
+var facebookAppId = builder.Configuration["Authentication:Facebook:AppId"];
+var facebookAppSecret = builder.Configuration["Authentication:Facebook:AppSecret"];
+if (!string.IsNullOrWhiteSpace(facebookAppId) && !string.IsNullOrWhiteSpace(facebookAppSecret))
+{
+    authenticationBuilder.AddFacebook(facebookOptions =>
     {
         // Đọc cấu hình
-        IConfigurationSection facebookAuthNSection = builder.Configuration.GetSection("Authentication:Facebook");
-        facebookOptions.AppId = facebookAuthNSection["AppId"];
-        facebookOptions.AppSecret = facebookAuthNSection["AppSecret"];
+        facebookOptions.AppId = facebookAppId;
+        facebookOptions.AppSecret = facebookAppSecret;
 
     });
+}
 builder.Services.AddSingleton<IdentityErrorDescriber, AppIdentityErrorDescriber>();
 builder.Services.Configure<SecurityStampValidatorOptions>(option =>
 {
@@ -192,7 +171,7 @@ builder.Services.AddSession(Options =>
 });
 builder.Services.Configure<TwilioSettings>(builder.Configuration.GetSection("TwilioSettings"));
 builder.Services.AddScoped<ISMSSenderService, SMSSenderService>();
-//thêm
+
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
@@ -204,8 +183,9 @@ using (var scope = app.Services.CreateScope())
         var userManager = services.GetRequiredService<UserManager<NguoiDung>>();
         var roleManager = services.GetRequiredService<RoleManager<ChucVu>>();
         await ContextdDefault.SeedRolesAsync(userManager, roleManager);
-        await ContextdDefault.SeeAdminAsync(userManager, roleManager);
-        await ContextdDefault.PhuongThucThanhToan();
+        await ContextdDefault.SeedAdminAsync(userManager, builder.Configuration);
+        await ContextdDefault.PhuongThucThanhToan(
+            services.GetRequiredService<IPTThanhToanServices>());
 
     }
     catch (Exception ex)
@@ -230,24 +210,35 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+if (app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 app.UseStaticFiles();
+var configuredStorageRoot = builder.Configuration["Storage:RootPath"] ?? "storage";
+var storageRoot = Path.GetFullPath(Path.IsPathRooted(configuredStorageRoot)
+    ? configuredStorageRoot
+    : Path.Combine(app.Environment.ContentRootPath, configuredStorageRoot));
+Directory.CreateDirectory(storageRoot);
+foreach (var publicFolder in new[] { "AnhSanPham", "AnhSale", "images", "user_img" })
+{
+    var publicDirectory = Path.Combine(storageRoot, publicFolder);
+    Directory.CreateDirectory(publicDirectory);
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(publicDirectory),
+        RequestPath = $"/{publicFolder}"
+    });
+}
 app.UseSession();
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseHangfireDashboard();
-var capNhatTime = new CapNhatThoiGianService();
-Task.Run(() =>
+if (app.Environment.IsDevelopment())
 {
-    while (true)
-    {
-        capNhatTime.CapNhatThongTinKhuyenMai();
-        capNhatTime.CapNhatThoiGianVoucher();
-        Thread.Sleep(TimeSpan.FromSeconds(5));
-    }
-});
+    app.UseHangfireDashboard();
+}
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapRazorPages();

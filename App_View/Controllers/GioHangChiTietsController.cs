@@ -33,12 +33,12 @@ namespace App_View.Controllers
         ISanPhamChiTietservice _SanPhamChiTietservice;
         IThongTinGHServices thongTinGHServices;
         IVoucherNguoiDungservices _voucherND;
-        public GioHangChiTietsController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietservice SanPhamChiTietservice, IVoucherNguoiDungservices voucherND)
+        public GioHangChiTietsController(SignInManager<NguoiDung> signInManager, UserManager<NguoiDung> userManager, ISanPhamChiTietservice SanPhamChiTietservice, IVoucherNguoiDungservices voucherND, HttpClient apiClient, IGioHangChiTietservices cartDetailService, IThongTinGHServices shippingInformationService)
         {
-            httpClient = new HttpClient();
-            GioHangChiTietservices = new GioHangChiTietservices();
+            httpClient = apiClient;
+            GioHangChiTietservices = cartDetailService;
             _SanPhamChiTietservice = SanPhamChiTietservice;
-            thongTinGHServices = new ThongTinGHServices();
+            thongTinGHServices = shippingInformationService;
             _signInManager = signInManager;
             _userManager = userManager;
             _voucherND = voucherND;
@@ -487,7 +487,7 @@ namespace App_View.Controllers
             var data = new List<SanPhamGioHangViewModel>();
             if (idNguoiDung != null)
             {
-                data = await httpClient.GetFromJsonAsync<List<SanPhamGioHangViewModel>>($"https://localhost:7038/api/GioHangChiTiet/Get-List-SanPhamGioHangVM/{idNguoiDung}");
+                data = await httpClient.GetFromJsonAsync<List<SanPhamGioHangViewModel>>($"api/GioHangChiTiet/Get-List-SanPhamGioHangVM/{idNguoiDung}");
             }
             else
             {

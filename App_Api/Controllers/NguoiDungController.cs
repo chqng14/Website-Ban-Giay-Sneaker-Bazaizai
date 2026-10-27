@@ -19,13 +19,9 @@ namespace App_Api.Controllers
     public class NguoiDungController : ControllerBase
     {      
         private readonly IAllRepo<NguoiDung> repos;
-        BazaizaiContext context = new BazaizaiContext();
-        DbSet<NguoiDung> nguoiDungs;
-        public NguoiDungController()
+        public NguoiDungController(IAllRepo<NguoiDung> repository)
         {
-            nguoiDungs = context.NguoiDungs;
-            AllRepo<NguoiDung> all = new AllRepo<NguoiDung>(context, nguoiDungs);
-            repos = all;
+            repos = repository;
         }
         [HttpPut("ChinhSuaTongTien")]
         public bool UpdateTongTien(string IdNguoiDung,double? Tien)

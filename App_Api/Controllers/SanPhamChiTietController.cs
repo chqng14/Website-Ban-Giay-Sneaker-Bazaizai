@@ -20,13 +20,13 @@ using System.Drawing.Imaging;
 using System.Drawing;
 using System.Reflection;
 using App_Data.ViewModels.FilterViewModel;
-using System.Management.Automation;
 using App_Data.ViewModels.FilterDTO;
 using Microsoft.EntityFrameworkCore;
 using DocumentFormat.OpenXml.InkML;
 using static App_Data.Repositories.TrangThai;
 using System.Data;
 using DocumentFormat.OpenXml.Spreadsheet;
+using App_Api.Storage;
 
 namespace App_Api.Controllers
 {
@@ -47,8 +47,9 @@ namespace App_Api.Controllers
         private readonly IAllRepo<Anh> _AnhRes;
         private readonly IMapper _mapper;
         private readonly AnhController _anhController;
+        private readonly IImageStorage _imageStorage;
 
-        public SanPhamChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<ThuongHieu> thuongHieuRes, IAllRepo<LoaiGiay> loaiGiayRes, IAllRepo<KieuDeGiay> kieuDeGiayRes, IAllRepo<ChatLieu> chatLieuRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<XuatXu> xuatXuRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes, AnhController anhController)
+        public SanPhamChiTietController(IAllRepo<KichCo> kickcoRes, IAllRepo<ThuongHieu> thuongHieuRes, IAllRepo<LoaiGiay> loaiGiayRes, IAllRepo<KieuDeGiay> kieuDeGiayRes, IAllRepo<ChatLieu> chatLieuRes, IAllRepo<SanPham> sanPhamRes, IAllRepo<XuatXu> xuatXuRes, IAllRepo<MauSac> mauSacRes, ISanPhamChiTietRespo sanPhamChiTietRes, IMapper mapper, IAllRepo<Anh> anhRes, AnhController anhController, IImageStorage imageStorage)
         {
             _kickcoRes = kickcoRes;
             _thuongHieuRes = thuongHieuRes;
@@ -62,6 +63,7 @@ namespace App_Api.Controllers
             _mapper = mapper;
             _AnhRes = anhRes;
             _anhController = anhController;
+            _imageStorage = imageStorage;
         }
 
         [HttpPost("check-add-or-update")]
@@ -205,9 +207,7 @@ namespace App_Api.Controllers
                 );
                 if (sanPhamChiTietCheck == null)
                 {
-                    string currentDirectory = Directory.GetCurrentDirectory();
-                    string rootPath = Directory.GetParent(currentDirectory)!.FullName;
-                    string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "QRCode");
+                    string uploadDirectory = _imageStorage.GetDirectory("images/QRCode");
 
                     var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietDTO);
                     sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
@@ -231,14 +231,8 @@ namespace App_Api.Controllers
                         {
                             QRCodeGenerator qrGenerator = new QRCodeGenerator();
                             QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
-                            QRCode qrCode = new QRCode(qrCodeData);
-
-                            Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
-
-                            using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
-                            {
-                                qrCodeImage.Save(stream, ImageFormat.Png);
-                            }
+                            PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
+                            await System.IO.File.WriteAllBytesAsync(qrCodeImagePath, qrCode.GetGraphic(20));
                         }
                     }
 
@@ -273,9 +267,7 @@ namespace App_Api.Controllers
             {
                 if ((await _sanPhamChiTietRes.ProductIsNull(sanPhamChiTietCopyDTO)))
                 {
-                    string currentDirectory = Directory.GetCurrentDirectory();
-                    string rootPath = Directory.GetParent(currentDirectory)!.FullName;
-                    string uploadDirectory = Path.Combine(rootPath, "App_View", "wwwroot", "images", "QRCode");
+                    string uploadDirectory = _imageStorage.GetDirectory("images/QRCode");
 
                     var sanPhamChiTiet = _mapper.Map<SanPhamChiTiet>(sanPhamChiTietCopyDTO.SanPhamChiTietData);
                     sanPhamChiTiet.IdChiTietSp = Guid.NewGuid().ToString();
@@ -289,16 +281,11 @@ namespace App_Api.Controllers
                     QRCodeGenerator qrGenerator = new QRCodeGenerator();
 
                     QRCodeData qrCodeData = qrGenerator.CreateQrCode(sanPhamChiTiet.Ma, QRCodeGenerator.ECCLevel.Q);
-                    QRCode qrCode = new QRCode(qrCodeData);
-
-                    Bitmap qrCodeImage = qrCode.GetGraphic(20, System.Drawing.Color.DarkBlue, System.Drawing.Color.White, true);
+                    PngByteQRCode qrCode = new PngByteQRCode(qrCodeData);
 
                     string qrCodeImagePath = Path.Combine(uploadDirectory, sanPhamChiTiet.Ma + ".png");
 
-                    using (var stream = new FileStream(qrCodeImagePath, FileMode.Create))
-                    {
-                        qrCodeImage.Save(stream, ImageFormat.Png);
-                    }
+                    await System.IO.File.WriteAllBytesAsync(qrCodeImagePath, qrCode.GetGraphic(20));
 
                     await _sanPhamChiTietRes.AddAsync(sanPhamChiTiet);
 

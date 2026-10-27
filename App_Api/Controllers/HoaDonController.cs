@@ -33,17 +33,26 @@ namespace App_Api.Controllers
         private readonly IKhachHangRepo _khachHangRepo;
         private readonly IHoaDonChiTietRepos _hoaDonChiTietRepos;
         private DanhGiaController _danhGiaController;
-        public HoaDonController(IMapper mapper, SanPhamChiTietController sanPhamChiTietController)
+        public HoaDonController(
+            IMapper mapper,
+            SanPhamChiTietController sanPhamChiTietController,
+            IHoaDonRepos hoaDonRepository,
+            IHoaDonChiTietRepos hoaDonChiTietRepository,
+            IKhachHangRepo khachHangRepository,
+            HoaDonChiTietController hoaDonChiTietController,
+            PTThanhToanChiTietController paymentDetailController,
+            PTThanhToanController paymentController,
+            DanhGiaController reviewController)
         {
-            _hoaDon = new HoaDonRepos(mapper);
+            _hoaDon = hoaDonRepository;
             _mapper = mapper;
-            _hoaDonChiTietController = new HoaDonChiTietController(mapper);
-            _PTThanhToanChiTietController = new PTThanhToanChiTietController();
-            _PTThanhToanController = new PTThanhToanController();
+            _hoaDonChiTietController = hoaDonChiTietController;
+            _PTThanhToanChiTietController = paymentDetailController;
+            _PTThanhToanController = paymentController;
             _sanPhamChiTietController = sanPhamChiTietController;
-            _khachHangRepo = new KhachHangRepo();
-            _hoaDonChiTietRepos = new HoaDonChiTietRepos(mapper);
-            _danhGiaController = new DanhGiaController();
+            _khachHangRepo = khachHangRepository;
+            _hoaDonChiTietRepos = hoaDonChiTietRepository;
+            _danhGiaController = reviewController;
         }
         [HttpPost]
         public async Task<HoaDon> TaoHoaDonTaiQuay(HoaDon hoaDon)
@@ -445,6 +454,21 @@ namespace App_Api.Controllers
                 return false;
             }
 
+        }
+
+        [HttpDelete]
+        public bool DeleteHoaDon(string idHoaDon)
+        {
+            var invoice = _hoaDon.GetHoaDonUpdate()
+                .FirstOrDefault(item => item.IdHoaDon == idHoaDon);
+            if (invoice is null || invoice.TrangThaiThanhToan == (int)TrangThaiHoaDon.DaThanhToan)
+            {
+                return false;
+            }
+
+            invoice.TrangThaiThanhToan = (int)TrangThaiHoaDon.Huy;
+            invoice.TrangThaiGiaoHang = (int)TrangThaiGiaoHang.DaHuy;
+            return _hoaDon.EditBill(invoice);
         }
     }
 }

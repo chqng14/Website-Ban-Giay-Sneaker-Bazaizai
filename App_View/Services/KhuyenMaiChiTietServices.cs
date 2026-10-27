@@ -15,7 +15,7 @@ namespace App_View.Services
 
         public async Task<List<KhuyenMaiChiTietDTO>> GetAllKhuyenMaiChiTiet()
         {
-            var lstKMCT = (await _httpClient.GetFromJsonAsync<List<KhuyenMaiChiTietDTO>>("https://localhost:7038/api/KhuyenMaiChiTiet"));
+            var lstKMCT = (await _httpClient.GetFromJsonAsync<List<KhuyenMaiChiTietDTO>>("api/KhuyenMaiChiTiet"));
             return lstKMCT;
         }
     }

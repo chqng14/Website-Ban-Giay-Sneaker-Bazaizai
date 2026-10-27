@@ -8,14 +8,14 @@ namespace App_View.Services
     public class ThongKeService : IThongKeService
     {
         private readonly HttpClient _httpClient;
-        public ThongKeService()
+        public ThongKeService(HttpClient httpClient)
         {
-            _httpClient = new HttpClient();
+            _httpClient = httpClient;
         }
 
         public async Task<double> DoanhThuTheoThang(int month)
         {
-            string apiUrl = $"https://localhost:7038/DoanhThuTheoThang/{month}";
+            string apiUrl = $"DoanhThuTheoThang/{month}";
 
             try
             {
@@ -30,12 +30,14 @@ namespace App_View.Services
 
         public async Task<JsonResult> DoanhThuTrong7ngay()
         {
-            throw new NotImplementedException();
+            var data = await _httpClient.GetFromJsonAsync<System.Text.Json.JsonElement>(
+                "DoanhThuTrong7ngay");
+            return new JsonResult(data);
         }
 
         public async Task<List<HoaDon>> DonHangTheoThang(int month, int year)
         {
-            string apiUrl = $"https://localhost:7038/DonHangTheoThang/{month}/{year}";
+            string apiUrl = $"DonHangTheoThang/{month}/{year}";
 
             try
             {
@@ -49,7 +51,7 @@ namespace App_View.Services
         }
         public async Task<int> DonHangTaiQuayTheoThang(int month)
         {
-            string apiUrl = $"https://localhost:7038/DonHangTaiQuayTheoThang/{month}";
+            string apiUrl = $"DonHangTaiQuayTheoThang/{month}";
 
             try
             {
@@ -64,7 +66,7 @@ namespace App_View.Services
 
         public async Task<List<HoaDon>> DonDatHnagGanDay()
         {
-            string apiUrl = "https://localhost:7038/DonDatHnagGanDay";
+            string apiUrl = "DonDatHnagGanDay";
 
             try
             {
@@ -79,7 +81,7 @@ namespace App_View.Services
 
         public async Task<string> ThongKeBanHang()
         {
-            string apiUrl = "https://localhost:7038/ThongKeBanHang";
+            string apiUrl = "ThongKeBanHang";
 
             try
             {
@@ -94,7 +96,7 @@ namespace App_View.Services
         }
         public async Task<List<HoaDon>> DonHangTaiQuayGanDay()
         {
-            string apiUrl = "https://localhost:7038/DonHangTaiQuayGanDay";
+            string apiUrl = "DonHangTaiQuayGanDay";
 
             try
             {
